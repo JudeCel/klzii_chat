@@ -1,0 +1,31 @@
+defmodule KlziiChat.Session do
+  use KlziiChat.Web, :model
+
+  schema "Sessions" do
+    field :name, :string
+    field :brand_project_id,  :integer
+    field :start_time, Ecto.DateTime
+    field :end_time, Ecto.DateTime
+    field :incentive_details, :string
+    field :active, :boolean
+    field :colours_used, :string
+    has_many :session_topics, KlziiChat.SessionTopic, [foreign_key: :SesionId]
+    has_many :topics, through: [:session_topics, :topic]
+
+    # timestamps
+  end
+
+  @required_fields ~w(name start_time end_time active )
+  @optional_fields ~w()
+
+  @doc """
+  Creates a changeset based on the `model` and `params`.
+
+  If no params are provided, an invalid changeset is returned
+  with no validation performed.
+  """
+  def changeset(model, params \\ :empty) do
+    model
+    |> cast(params, @required_fields, @optional_fields)
+  end
+end
