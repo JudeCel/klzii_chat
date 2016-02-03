@@ -2,7 +2,7 @@ defmodule KlziiChat.UserSocket do
   use Phoenix.Socket
 
   ## Channels
-  channel "rooms:*", KlziiChat.RoomChannel
+  channel "sessions:*", KlziiChat.SessionChannel
 
   ## Transports
   transport :websocket, Phoenix.Transports.WebSocket
@@ -19,7 +19,7 @@ defmodule KlziiChat.UserSocket do
   #
   # See `Phoenix.Token` documentation for examples in
   # performing token verification on connect.
-  def connect(_params, socket) do
+  def connect(params, socket) do
     {:ok, socket}
   end
 

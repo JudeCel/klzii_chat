@@ -1,7 +1,0 @@
-/* Phoenix flash messages */
-.alert:empty { display: none; }
-#chat-app-container{}
-.chat-messages {
-  min-height: 500px;
-  max-height: 75%;
-}

@@ -1,8 +1,8 @@
-defmodule KlziiChat.RoomChannel do
+defmodule KlziiChat.SessionChannel do
   use KlziiChat.Web, :channel
   intercept ["new_message"]
 
-  def join("rooms:" <> room_id, payload, socket) do
+  def join("sessions:" <> session_id, payload, socket) do
     if authorized?(payload) do
       {:ok, socket}
     else

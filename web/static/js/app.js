@@ -1,28 +1,17 @@
-// Brunch automatically concatenates all files in your
-// watched paths. Those paths can be configured at
-// config.paths.watched in "brunch-config.js".
-//
-// However, those files will only be executed if
-// explicitly imported. The only exception are files
-// in vendor, which are never wrapped in imports and
-// therefore are always executed.
 
-// Import dependencies
-//
-// If you no longer want to use a dependency, remember
-// to also remove its path from "config.paths.watched".
-import "phoenix_html"
+import { Router, Route, browserHistory } from 'react-router'
+import { Provider }             from 'react-redux';
+import React                    from 'react';
+import ReactDOM                 from 'react-dom';
+import configureStore           from './store';
+import Chat                     from "./views/chat.js"
+const store  = configureStore();
+const target = document.getElementById('main_container');
 
-// Import local files
-//
-// Local files can be imported directly using relative
-// paths "./socket" or full ones "web/static/js/socket".
+const node = (
+  <Provider store={store}>
+    <Chat/>
+  </Provider>
+)
 
-import channel from "./socket"
-import ChatControler from "./app/controllers/conversation"
-
-var app = angular.module('KlziiChat', [])
-app.factory("channelFactory", () => { return channel});
-
-app.controller('ChatControler', ChatControler)
-ChatControler.$inject = ['$scope', 'channelFactory'];
+ReactDOM.render(node, target);

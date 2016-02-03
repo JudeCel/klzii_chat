@@ -3,16 +3,16 @@ defmodule KlziiChat.SessionMember do
 
   schema "sessionMembers" do
     field :username, :string
-    belongs_to :user, KlziiChat.User, [foreign_key: :userId]
+    belongs_to :user, KlziiChat.AccountUser, [foreign_key: :accountUserId]
     belongs_to :session, KlziiChat.Session, [foreign_key: :sessionId]
     field :colour, :string, default: "0:3:0:0:0:0"
     field :online, :boolean, default: false
     field :avatar_info, :string
+    field :token, :string
     field :role, :string
-    # timestamps
   end
 
-  @required_fields ~w(username userId sessionId colour online avatar_info role)
+  @required_fields ~w(token username userId sessionId colour online avatar_info role)
   @optional_fields ~w()
 
   @doc """
