@@ -41,12 +41,12 @@ function newEntry(dispatch, data) {
 const Actions = {
   connectToChannel: () => {
     return dispatch => {
-      dispatch({ type: Constants.SOCKET_CONNECTION_FETCHING});
       return joinChannal(dispatch);
     };
   },
   subscribeToEvents: (channel) =>{
     return dispatch => {
+      dispatch({ type: Constants.SET_SOCKET_EVENTS});
       channel.on("new_message", (resp) =>{
         return newEntry(dispatch, resp);
       });

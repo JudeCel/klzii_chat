@@ -8,7 +8,7 @@ const ChatView = React.createClass({
     this.props.dispatch(Actions.connectToChannel());
   },
   componentWillReceiveProps(nextProps){
-    if (nextProps.chat.channel && nextProps.chat.channel.state == 'joined') {
+    if (nextProps.chat.needSetEvents && nextProps.chat.channel) {
       this.props.dispatch(Actions.subscribeToEvents(nextProps.chat.channel));
     }
   },
