@@ -8,7 +8,7 @@ defmodule KlziiChat.SessionMembersView do
       colour: session_member.colour,
       online: session_member.online,
       avatar_info: session_member.avatar_info,
-      role: session_member.avatar_info
+      role: session_member.role
     }
   end
 end

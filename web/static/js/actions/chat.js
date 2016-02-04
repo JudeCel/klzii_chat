@@ -23,7 +23,7 @@ export function joinChannal(dispatch) {
         });
     })
     .receive('error', (resp) =>{
-      dispatch({
+      return dispatch({
           type: Constants.SOCKET_CONNECTED,
           error: resp
         });
@@ -31,17 +31,40 @@ export function joinChannal(dispatch) {
   }
 };
 
+function newEntry(dispatch, data) {
+  return dispatch({
+      type: Constants.NEW_MESSAGE,
+      message: data
+    });
+}
+
 const Actions = {
   connectToChannel: () => {
     return dispatch => {
-      joinChannal(dispatch);
+      dispatch({ type: Constants.SOCKET_CONNECTION_FETCHING});
+      return joinChannal(dispatch);
     };
   },
-  connectToChannel: () => {
+  subscribeToEvents: (channel) =>{
     return dispatch => {
-      joinChannal(dispatch);
+      channel.on("new_message", (resp) =>{
+        return newEntry(dispatch, resp);
+      });
+    }
+  },
+
+  newEntry: (channel, payload) => {
+    return dispatch => {
+      channel.push('new_message', payload)
+      .receive('error', (data) => {
+        dispatch({
+          type: Constants.NEW_MESSAGE_ERROR,
+          error: data.error
+        });
+      });
     };
   }
+
 }
 
 export default Actions;
