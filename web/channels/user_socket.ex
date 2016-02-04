@@ -1,6 +1,6 @@
 defmodule KlziiChat.UserSocket do
   use Phoenix.Socket
-
+  import KlziiChat.Services.SessionMembersService, only: [find_by_token: 1]
   ## Channels
   channel "sessions:*", KlziiChat.SessionChannel
 
@@ -19,8 +19,11 @@ defmodule KlziiChat.UserSocket do
   #
   # See `Phoenix.Token` documentation for examples in
   # performing token verification on connect.
-  def connect(params, socket) do
-    {:ok, socket}
+  def connect(%{"token" => token}, socket) do
+    case find_by_token(token) do
+      session_member ->
+        {:ok, assign(socket, :session_member, session_member)}
+    end
   end
 
   # Socket id's are topics that allow you to identify all sockets for a given user:

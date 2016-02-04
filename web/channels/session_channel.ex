@@ -3,8 +3,8 @@ defmodule KlziiChat.SessionChannel do
   intercept ["new_message"]
 
   def join("sessions:" <> session_id, payload, socket) do
-    if authorized?(payload) do
-      {:ok, socket}
+    if authorized?(socket) do
+      {:ok, socket.assigns.session_member, socket}
     else
       {:error, %{reason: "unauthorized"}}
     end
@@ -38,7 +38,7 @@ defmodule KlziiChat.SessionChannel do
   end
 
   # Add authorization logic here as required.
-  defp authorized?(_payload) do
-    true
+  defp authorized?(socket) do
+    is_map(socket.assigns.session_member)
   end
 end

@@ -2,11 +2,9 @@ import Constants                          from '../constants';
 import { Socket }                         from 'phoenix';
 
 export function joinChannal(dispatch) {
-  let localStorageData = JSON.parse(localStorage.getItem("currentSession"));
   const socket = new Socket('/socket', {
     params: {
-      token: localStorageData.memberToken,
-      sessionId: localStorageData.sessionId
+      token: localStorage.getItem("sessionMemberToken")
     },
     logger: (kind, msg, data) => { console.log(`${kind}: ${msg}`, data); },
   });
