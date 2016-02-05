@@ -1,9 +1,12 @@
 defmodule KlziiChat.SessionChannel do
   use KlziiChat.Web, :channel
+  alias KlziiChat.Services.EventsService
+
   intercept ["new_message"]
 
   def join("sessions:" <> session_id, payload, socket) do
     if authorized?(socket) do
+      assign(socket, :session_id, session_id)
       {:ok, socket.assigns.session_member, socket}
     else
       {:error, %{reason: "unauthorized"}}
@@ -17,7 +20,12 @@ defmodule KlziiChat.SessionChannel do
   end
 
   def handle_in("new_message", payload, socket) do
-    broadcast socket, "new_message", payload
+    case EventsService.create(socket.assigns.session_member.id, payload) do
+      {:ok, entry} ->
+        broadcast! socket, "new_message", entry
+        {:reply, :ok, socket}
+      {:error, _reason} ->
+    end
     {:noreply, socket}
   end
 

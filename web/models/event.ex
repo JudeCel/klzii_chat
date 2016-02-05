@@ -2,14 +2,15 @@ defmodule KlziiChat.Event do
   use KlziiChat.Web, :model
 
   schema "Events" do
-    belongs_to :accountUser, KlziiChat.User, [foreign_key: :accountUserId]
     belongs_to :topic, KlziiChat.Account, [foreign_key: :topicId]
+    belongs_to :session_member, KlziiChat.SessionMember, [foreign_key: :sessionMemberId]
+    belongs_to :reply, KlziiChat.Event, [foreign_key: :replyId]
+    has_many :replis, KlziiChat.Event, [foreign_key: :replyId]
     field :event, :map
-    field :timestamp, Ecto.Time
-    # timestamps
+    timestamps [inserted_at: :createdAt, updated_at: :updatedAt]
   end
 
-  @required_fields ~w(accountUserId event timestamp)
+  @required_fields ~w(topic topicId event timestamp sessionMemberId)
   @optional_fields ~w()
 
   @doc """

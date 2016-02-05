@@ -16,12 +16,10 @@ const ChatView = React.createClass({
   sendMessage(e){
     if (e.charCode == 13) {
       let payload ={
-        ownerId: this.props.chat.currentUser.id,
-        body: e.target.value,
-        id: Date.now() / 1000
+        body: e.target.value
       }
-      e.target.value = "";
       this.props.dispatch(Actions.newEntry(this.props.chat.channel, payload));
+      e.target.value = "";
     }
   },
   render() {
