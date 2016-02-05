@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react';
 import { connect }          from 'react-redux';
 import Actions              from '../actions/chat';
 import CurrentMember        from '../components/members/current.js'
+import Messages             from '../components/messages/messages.js'
 
 const ChatView = React.createClass({
   componentWillMount() {
@@ -17,7 +18,7 @@ const ChatView = React.createClass({
       let payload ={
         ownerId: this.props.chat.currentUser.id,
         body: e.target.value,
-        id: Date.now() / 10000
+        id: Date.now() / 1000
       }
       e.target.value = "";
       this.props.dispatch(Actions.newEntry(this.props.chat.channel, payload));
@@ -31,14 +32,7 @@ const ChatView = React.createClass({
         <div className="members"></div>
         <div className="whiteboard"></div>
         <div className='col-md-3 jumbotron chat-messages pull-right'>
-          <ul>
-            {this.props.chat.messages.map( message =>
-              <li key={message.id}>
-                Message: {message.body}
-                Owner ID: {message.ownerId}
-              </li>
-            )}
-          </ul>
+          <Messages messagesCollection={this.props.chat.messages}/>
         </div>
         <div className="form-group ">
           <input onKeyPress={ this.sendMessage } type="text" className="form-control" placeholder="Message"/>

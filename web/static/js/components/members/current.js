@@ -1,5 +1,4 @@
 import React, {PropTypes}       from 'react';
-var createFragment = require('react-addons-create-fragment');
 
 const CurrentMember =  React.createClass({
   render() {
