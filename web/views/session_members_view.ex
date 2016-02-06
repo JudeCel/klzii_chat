@@ -1,7 +1,7 @@
 defmodule KlziiChat.SessionMembersView do
   use KlziiChat.Web, :view
 
-  def render("session_member.json", %{session_member: session_member}) do
+  def render("session_member.json", %{ session_member: session_member}) do
     %{id: session_member.id,
       username: session_member.username,
       online: session_member.online,
@@ -11,4 +11,12 @@ defmodule KlziiChat.SessionMembersView do
       role: session_member.role
     }
   end
+
+  def render("session_member.json", %{ session_members: session_member}) do
+    %{
+      id: session_member.id,
+      username: session_member.username
+    }
+  end
+
 end

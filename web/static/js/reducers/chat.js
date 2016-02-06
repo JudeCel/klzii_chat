@@ -1,42 +1,23 @@
 import Constants from '../constants';
-
 const initialState = {
-  messages: [],
-  currentUser: {},
+  session: {},
   socket: null,
+  currentTopic: null,
   channel: null,
   error: null,
-  fetching: true,
-  needSetEvents: true
+  ready: false
 };
 
 export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
-    case Constants.SOCKET_CONNECTED_FETCHING:
-      return { ...state, fetching: true };
-
-    case Constants.SOCKET_EVENT_FETCHING:
-      return { ...state, fetching: true };
-
     case Constants.SET_SOCKET_EVENTS:
-      return { ...state, needSetEvents: false };
+      return { ...state, ready: true };
 
-    case Constants.CURRENT_USER:
-      return { ...state, currentUser: action.currentUser, error: null };
+    case Constants.SET_SESSION_CHANNEL:
+      return {  ...state, socket: action.socket, channel: action.channel };
 
-    case Constants.SOCKET_CONNECTED:
-      return {  ...state,
-                fetching: false,
-                currentUser: action.currentUser,
-                socket: action.socket,
-                channel: action.channel
-             };
-
-    case Constants.HISTORY_MESSAGES:
-      return { ...state, messages:  action.messages.concat(messages) };
-
-    case Constants.NEW_MESSAGE:
-      return { ...state, messages: [...state.messages, action.message ] };
+    case Constants.SET_SESSION:
+      return {  ...state, session: action.session, ready: true };
 
     case Constants.SOCKET_CONNECTION_ERROR:
       return { ...state, error: action.error };

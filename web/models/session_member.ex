@@ -11,6 +11,8 @@ defmodule KlziiChat.SessionMember do
     field :avatar_info, :string, default: "0:3:0:0:0:0"
     field :token, :string
     field :role, :string
+    timestamps [inserted_at: :createdAt, updated_at: :updatedAt]
+
   end
 
   @required_fields ~w(token username colour online avatar_info, role)

@@ -9,8 +9,10 @@ defmodule KlziiChat.Session do
     field :incentive_details, :string
     field :active, :boolean
     field :colours_used, :string
-    has_many :session_topics, KlziiChat.SessionTopic, [foreign_key: :SesionId]
+    has_many :session_members, KlziiChat.SessionMember, [foreign_key: :sessionId]
+    has_many :session_topics, KlziiChat.SessionTopic, [foreign_key: :SessionId]
     has_many :topics, through: [:session_topics, :topic]
+    timestamps [inserted_at: :createdAt, updated_at: :updatedAt]
 
     # timestamps
   end

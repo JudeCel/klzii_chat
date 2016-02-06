@@ -10,17 +10,24 @@ export function joinChannal(dispatch) {
   });
 
   socket.connect();
+
   const channel = socket.channel(`sessions:${1}`);
+
+  dispatch({
+    type: Constants.SET_SESSION_CHANNEL,
+    socket: socket,
+    channel: channel
+  });
+  dispatch(Actions.subscribeToSeesionEvents(channel))
+
 
   if (channel.state != 'joined') {
     channel.join()
     .receive('ok', (resp) => {
       dispatch({
-          type: Constants.SOCKET_CONNECTED,
-          socket: socket,
-          channel: channel,
-          currentUser: resp
-        });
+        type: Constants.SET_SESSION,
+        session: resp
+      });
     })
     .receive('error', (resp) =>{
       return dispatch({
@@ -31,10 +38,10 @@ export function joinChannal(dispatch) {
   }
 };
 
-function newEntry(dispatch, data) {
+function currentMember(dispatch, data) {
   return dispatch({
-      type: Constants.NEW_MESSAGE,
-      message: data
+      type: Constants.SET_CURRENT_USER,
+      user: data
     });
 }
 
@@ -44,27 +51,14 @@ const Actions = {
       return joinChannal(dispatch);
     };
   },
-  subscribeToEvents: (channel) =>{
+  subscribeToSeesionEvents: (channel) =>{
     return dispatch => {
-      dispatch({ type: Constants.SET_SOCKET_EVENTS});
-      channel.on("new_message", (resp) =>{
-        return newEntry(dispatch, resp);
+      dispatch({ type: Constants.SET_SESSION_EVENTS});
+      channel.on("self_info", (resp) =>{
+        return currentMember(dispatch, resp);
       });
     }
-  },
-
-  newEntry: (channel, payload) => {
-    return dispatch => {
-      channel.push('new_message', payload)
-      .receive('error', (data) => {
-        dispatch({
-          type: Constants.NEW_MESSAGE_ERROR,
-          error: data.error
-        });
-      });
-    };
   }
-
 }
 
 export default Actions;

@@ -13,7 +13,8 @@ defmodule KlziiChat.Services.EventsService do
 
     case Repo.insert(changeset) do
       {:ok, event} ->
-        {:ok, Phoenix.View.render(EventView, "event.json", %{username: session_member.username, event: event} )}
+        event = event |> Repo.preload(:session_member)
+        {:ok, Phoenix.View.render(EventView, "event.json", %{event: event} )}
       {:error, changeset} ->
         {:error, changeset}
     end

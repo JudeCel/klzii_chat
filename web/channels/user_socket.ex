@@ -3,6 +3,7 @@ defmodule KlziiChat.UserSocket do
   import KlziiChat.Services.SessionMembersService, only: [find_by_token: 1]
   ## Channels
   channel "sessions:*", KlziiChat.SessionChannel
+  channel "topics:*", KlziiChat.TopicChannel
 
   ## Transports
   transport :websocket, Phoenix.Transports.WebSocket
@@ -36,5 +37,5 @@ defmodule KlziiChat.UserSocket do
   #     KlziiChat.Endpoint.broadcast("users_socket:#{user.id}", "disconnect", %{})
   #
   # Returning `nil` makes this socket anonymous.
-  def id(_socket), do: nil
+  def id(socket), do: "session_member_socket:#{socket.assigns.session_member.id}"
 end

@@ -4,7 +4,7 @@ const Message =  React.createClass({
   render() {
     return (
       <div>
-        User Name: {this.props.singleMessage.username}
+        User Name: {this.props.singleMessage.session_member.username}
         <br />
         Message: {this.props.singleMessage.body}
       </div>
