@@ -1,9 +1,10 @@
 import React, { PropTypes } from 'react';
 import { connect }          from 'react-redux';
-import sessionActions              from '../actions/session';
-import topicActions              from '../actions/topic';
+import sessionActions       from '../actions/session';
+import topicActions         from '../actions/topic';
 import CurrentMember        from '../components/members/current.js'
 import Messages             from '../components/messages/messages.js'
+import Whiteboard           from '../components/whiteboard'
 
 const ChatView = React.createClass({
   componentWillMount() {
@@ -30,11 +31,11 @@ const ChatView = React.createClass({
         <div className="info-section"></div>
         <CurrentMember member={this.props.currentUser}/>
         <div className="members"></div>
-        <div className="whiteboard"></div>
+        <Whiteboard currentUser={this.props.currentUser}/>
         <div className='col-md-3 jumbotron chat-messages pull-right'>
           <Messages messagesCollection={this.props.topicMessages}/>
         </div>
-        <div className="form-group ">
+        <div className="form-group">
           <input onKeyPress={ this.sendMessage } type="text" className="form-control" placeholder="Message"/>
         </div>
       </div>

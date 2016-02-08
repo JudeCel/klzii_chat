@@ -25,15 +25,21 @@
     "extract-text-webpack-plugin": "^1.0.1",
     "node-libs-browser": "^0.5.3",
     "node-sass": "^3.4.2",
+    "redux-devtools": "^3.1.0",
+    "redux-devtools-diff-monitor": "^4.0.1",
+    "redux-devtools-dock-monitor": "^1.0.1",
+    "redux-devtools-log-monitor": "^1.0.4",
     "sass-loader": "^3.1.2",
     "style-loader": "^0.13.0",
     "webpack": "^1.12.11"
   },
   "dependencies": {
+    "eve": "^0.5.0",
     "history": "^1.17.0",
     "moment": "^2.11.1",
     "phoenix": "file:deps/phoenix",
     "phoenix_html": "file:deps/phoenix_html",
+    "raphael": "^2.1.4",
     "react": "^0.14.5",
     "react-dom": "^0.14.5",
     "react-redux": "^4.0.4",
@@ -41,6 +47,7 @@
     "react-router-redux": "^2.0.3",
     "redux": "^3.0.5",
     "redux-logger": "^2.3.2",
-    "redux-thunk": "^1.0.2"
+    "redux-thunk": "^1.0.2",
+    "webpack-raphael": "^2.1.4"
   }
 }

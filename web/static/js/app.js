@@ -1,16 +1,18 @@
-
 import { Router, Route, browserHistory } from 'react-router'
 import { Provider }             from 'react-redux';
 import React                    from 'react';
 import ReactDOM                 from 'react-dom';
 import configureStore           from './store';
 import Chat                     from "./views/chat.js"
+import DevTools                 from './containers/DevTools';
 const store  = configureStore();
 const target = document.getElementById('main_container');
 
 const node = (
   <Provider store={store}>
-    <Chat/>
+    <div>
+      <Chat/>
+    </div>
   </Provider>
 )
 

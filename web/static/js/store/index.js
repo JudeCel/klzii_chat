@@ -1,15 +1,25 @@
-import { createStore, applyMiddleware } from 'redux';
+import { createStore, applyMiddleware, compose } from 'redux';
 import createLogger                     from 'redux-logger';
 import thunkMiddleware                  from 'redux-thunk';
 import reducers                         from '../reducers';
+import DevTools from '../containers/DevTools';
+
 
 const loggerMiddleware = createLogger({
   level: 'info',
   collapsed: true,
 });
 
-export default function configureStore() {
-  const createStoreWithMiddleware = applyMiddleware(thunkMiddleware, loggerMiddleware)(createStore);
 
-  return createStoreWithMiddleware(reducers);
+const enhancer = compose(
+  // Middleware you want to use in development:
+  applyMiddleware(thunkMiddleware, loggerMiddleware),
+  // Required! Enable Redux DevTools with the monitors you chose
+  DevTools.instrument()
+);
+
+export default function configureStore() {
+  const store = createStore(reducers, {}, enhancer);
+
+  return store;
 }

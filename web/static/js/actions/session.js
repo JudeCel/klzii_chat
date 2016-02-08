@@ -6,7 +6,7 @@ export function joinChannal(dispatch) {
     params: {
       token: localStorage.getItem("sessionMemberToken")
     },
-    logger: (kind, msg, data) => { console.log(`${kind}: ${msg}`, data); },
+    // logger: (kind, msg, data) => { console.log(`${kind}: ${msg}`, data); },
   });
 
   socket.connect();

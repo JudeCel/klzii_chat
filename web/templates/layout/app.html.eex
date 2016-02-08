@@ -23,7 +23,7 @@
     </div> <!-- /container -->
 
     <script type="text/javascript">
-        localStorage.setItem('sessionMemberToken', '322fe830-cc18-11e5-bd7b-9d9bed50a675');
+        localStorage.setItem('sessionMemberToken', '38bdf990-cd20-11e5-a433-2747fdde9a44');
     </script>
     <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
   </body>
