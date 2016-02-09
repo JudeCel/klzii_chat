@@ -7,6 +7,9 @@ var DEFAULT_SPEED = 0,
     LOREM_IPSUM = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.";
 
 
+window.getRectToPath = getRectToPath;
+window.getCircleToPath = getCircleToPath;
+
 //	make sure console.log works in IE
 (function () {
     if (!window.console) {
