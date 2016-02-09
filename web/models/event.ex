@@ -7,6 +7,9 @@ defmodule KlziiChat.Event do
     belongs_to :reply, KlziiChat.Event, [foreign_key: :replyId]
     has_many :replis, KlziiChat.Event, [foreign_key: :replyId]
     field :event, :map
+    field :uid, :string
+    field :cmd, :string
+    field :tag, :string, default: "message"
     timestamps [inserted_at: :createdAt, updated_at: :updatedAt]
   end
 

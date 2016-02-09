@@ -18,7 +18,7 @@ const ChatView = React.createClass({
   },
   sendMessage(e){
     if (e.charCode == 13) {
-      let payload ={
+      let payload = {
         body: e.target.value
       }
       this.props.dispatch(topicActions.newTopicMessage(this.props.topicChannal, payload));
@@ -31,7 +31,7 @@ const ChatView = React.createClass({
         <div className="info-section"></div>
         <CurrentMember member={this.props.currentUser}/>
         <div className="members"></div>
-        <Whiteboard currentUser={this.props.currentUser}/>
+        <Whiteboard currentUser={this.props.currentUser} dispatch={this.props.dispatch} channal={this.props.topicChannal}/>
         <div className='col-md-3 jumbotron chat-messages pull-right'>
           <Messages messagesCollection={this.props.topicMessages}/>
         </div>

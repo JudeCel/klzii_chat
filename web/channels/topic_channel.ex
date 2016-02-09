@@ -23,11 +23,23 @@ defmodule KlziiChat.TopicChannel do
   end
 
   def handle_in("new_message", payload, socket) do
-    case EventsService.create(socket.assigns.session_member.id, payload) do
+    case EventsService.create_message(socket.assigns.session_member.id, payload) do
       {:ok, entry} ->
         broadcast! socket, "new_message", entry
         {:reply, :ok, socket}
-      {:error, _reason} ->
+      {:error, reason} ->
+        {:error, %{reason: reason}}
+    end
+    {:noreply, socket}
+  end
+
+  def handle_in("sendobject", payload, socket) do
+    case EventsService.create_object(socket.assigns.session_member.id, payload) do
+      {:ok, entry} ->
+        # broadcast! socket, "new_message", entry
+        {:reply, :ok, socket}
+      {:error, reason} ->
+        {:error, %{reason: reason}}
     end
     {:noreply, socket}
   end

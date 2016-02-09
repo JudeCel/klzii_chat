@@ -1,10 +1,11 @@
-import React          from 'react';
-import whiteboard     from '../../whiteboard' ;
-import OnParticipants from '../../whiteboard/onParticipants' ;
-import Raphael        from 'webpack-raphael' ;
+import React                from 'react';
+import whiteboardActions    from '../../actions/whiteboard';
+import Raphael              from 'webpack-raphael' ;
 window.Raphael = Raphael;
-require('../../whiteboard/scale.raphael') ;
-require('../../whiteboard/raphael.free_transform') ;
+require('../../whiteboard');
+require('../../whiteboard/scale.raphael');
+require('../../whiteboard/raphael.free_transform');
+import OnParticipants        from '../../whiteboard/onParticipants' ;
 
 const Whiteboard =  React.createClass({
   componentWillMount() {
@@ -17,12 +18,14 @@ const Whiteboard =  React.createClass({
         // socket.emit(json.type);					//	don't need to pass any arguments
       } else {
         if (isEmpty(json.all)) {
+          console.log(this.props);
+          this.props.dispatch(whiteboardActions.sendobject(this.props.channal, json));
           // socket.emit(json.type, json.message);
         } else {
           // socket.emit(json.type, json.message, json.all);
         }
       }
-    };
+    }.bind(this);
     window.WHITEBOARD_MODE_NONE = 0;
     window.WHITEBOARD_MODE_MOVE = 1,				//	we can move objects
     window.WHITEBOARD_MODE_SCALE = 2;				//	we can delete objects
