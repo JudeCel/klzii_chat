@@ -397,7 +397,6 @@ window.onEnd = function (event, json) {
 			attachFreeTransformToObject('always', me.paint.paper, element);
 
 			var newElement = null;
-			console.log("((((((((((((((((((9))))))))))))))))))");
 			newElement = {...element}
 			// Object.assign({}, element)
 			// jQuery.extend(true, {}, element);	//	this clones the object
