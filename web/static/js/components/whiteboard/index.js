@@ -25,7 +25,7 @@ const Whiteboard =  React.createClass({
     };
     window.currentUser = this.props.currentUser;
     window.currentUser.colour = "66666"
-    window.role = this.props.currentUser.role;
+    window.role = "facilitator"
     window.WHITEBOARD_MODE_NONE = 0;
     window.WHITEBOARD_MODE_MOVE = 1,				//	we can move objects
     window.WHITEBOARD_MODE_SCALE = 2;				//	we can delete objects

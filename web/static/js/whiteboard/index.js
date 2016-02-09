@@ -333,10 +333,10 @@ view.Whiteboard.prototype.controls = function() {
 	}
 
 	var icons = this.json.board.paper.set();
-	var paths = null;
-	var cmd = null;
 	var offset = 0;
 	for (var ndx = 0, ni = buttonsJSON.icons.length; ndx < ni; ndx++) {
+		let paths = null;
+		let cmd = null;
 		cmd = "paths = getWhiteboard" + buttonsJSON.icons[ndx].id + "Paths()";
 		eval(cmd);	//	need to find a better way to do this
 

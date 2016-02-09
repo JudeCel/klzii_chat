@@ -23,6 +23,8 @@ var distanceJSON = {
 var	scale = null;
 var rotate = null;
 
+
+window.showFreeTransformToObjects = showFreeTransformToObjects;
 //----------------------------------------------------------------------------
 //	this is only good for a free transform object
 //	returns true if the object was updated, otherwise false
@@ -372,6 +374,8 @@ function getFTSetup() {
 		rotate = false,
 		size = 10,		//	default
 		drag = true,
+		entre = 0,
+		centre = 0,
 		draw = [];
 
 	switch(window.whiteboardMode) {
