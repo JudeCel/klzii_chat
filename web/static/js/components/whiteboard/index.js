@@ -23,9 +23,6 @@ const Whiteboard =  React.createClass({
         }
       }
     };
-    window.currentUser = this.props.currentUser;
-    window.currentUser.colour = "66666"
-    window.role = "facilitator"
     window.WHITEBOARD_MODE_NONE = 0;
     window.WHITEBOARD_MODE_MOVE = 1,				//	we can move objects
     window.WHITEBOARD_MODE_SCALE = 2;				//	we can delete objects
@@ -55,22 +52,28 @@ const Whiteboard =  React.createClass({
       height: 460
     };
     window.whiteboardSetup = "drawing";
-    window.um = new sf.ifs.View.UndoManager();
     window.whiteboardMode =  window.WHITEBOARD_MODE_NONE;
     window.buildWhiteboard = null;
     window.Raphael = Raphael
   },
+  componentWillReceiveProps(nextProps){
+    if (this.props.currentUser.id) {
+      window.um = new sf.ifs.View.UndoManager();
+      window.currentUser = this.props.currentUser;
+      window.currentUser.colour = this.props.currentUser.colour;
+      window.role = this.props.currentUser.role;
+      window.paperWhiteboard = Raphael("whiteboard");
+      window.paperCanvas = ScaleRaphael("canvas", 950, 460);
+      window.paperExpand = Raphael("expand");
+      window.paperShrink = Raphael("shrink");
+      window.paperTextbox = Raphael("textbox");
+      window.paperTextboxHTML = Raphael("textbox-html");
+      window.paperTitleWhiteboard = Raphael("title-whiteboard");
+      window.whiteboard = document.getElementById('whiteboard');
+      OnParticipants()
+    }
+  },
   componentDidMount(){
-    window.paperWhiteboard = Raphael("whiteboard");
-    window.paperCanvas = ScaleRaphael("canvas", 950, 460);
-    window.paperExpand = Raphael("expand");
-    window.paperShrink = Raphael("shrink");
-    window.paperTextbox = Raphael("textbox");
-    window.paperTextboxHTML = Raphael("textbox-html");
-    window.paperTitleWhiteboard = Raphael("title-whiteboard");
-
-    window.whiteboard = document.getElementById('whiteboard');
-    OnParticipants()
   },
   onExpandClick(e){
     window.whiteboard.json.onClick('expand');

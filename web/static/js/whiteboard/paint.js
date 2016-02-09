@@ -40,7 +40,6 @@ view.Paint = function(json) {
 
 	//	we draw in this canvas.  if we send it to the back, then we can manipulate the objects underneath...
 	//	we attach the onStart, onMove and onUp events to this object...
-	console.log("_______________________________");
 	this.paint = this.json.paper.rect(0, 0, canvasWidth, canvasHeight).attr({
 		fill: "white",
 		"opacity": 0,

@@ -210,43 +210,10 @@ view.Poplist.prototype.draw = function (icons, types) {
 				}
 				break;
 				case 'EraseAll': {
-					window.dashboard.showMessage({
-						message: {
-							text: "Do you wish to erase everything\non the whiteboard?\n \n(this cannot be undone)",
-							attr: {
-								'font-size': 36,
-								fill: "white"
-							}
-						},
-						dismiss: {
-							yes: {						//	check using window.dashboard.YES
-								text:	"Yes",
-								attr: {
-									'font-size': 24,
-									fill: "white"
-								}
-							},
-							cancel: {						//	check using window.dashboard.NO
-								text:	"Cancel",
-								attr: {
-									'font-size': 24,
-									fill: "white"
-								}
-							}
-						}
-					}, function(value) {
-						switch (value) {
-							case window.dashboard.YES: {
-								me.icons.EraseAll.attr({fill: WHITEBOARD_ICON_BACKGROUND_COLOUR});
-								paint.setEraseAll();
-							}
-								break;
-							case window.dashboard.CANCEL: {
-							}
-								break;
-						}
-						window.dashboard.toBack();	//	time to hide the dashboard
-					});
+					if (confirm("Do you wish to erase everything\non the whiteboard?\n \n(this cannot be undone)")) {
+						me.icons.EraseAll.attr({fill: WHITEBOARD_ICON_BACKGROUND_COLOUR});
+						paint.setEraseAll();
+					}
 				}
 				break;
 				case 'Move': {
