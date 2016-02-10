@@ -5,6 +5,7 @@ const CurrentMember =  React.createClass({
     return (
       <div>
         Name: {this.props.member.username}
+        <br />
         Role: {this.props.member.role}
       </div>
     );

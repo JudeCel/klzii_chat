@@ -9,7 +9,32 @@ import OnParticipants        from '../../whiteboard/onParticipants' ;
 
 const Whiteboard =  React.createClass({
   componentWillMount() {
+    window.clearWhiteboard = function () {
+      if (isEmpty(window.paperCanvas)) return;
+
+      var localStack = new Array();
+      var addToStack = false;
+      paperCanvas.forEach(function (el) {
+        addToStack = true;
+        if (typeof el.data != "undefined") {
+          if (typeof el.data("dont_remove") != "undefined") {
+            if (el.data("dont_remove") === true) {
+              addToStack = false;
+            }
+          }
+        }
+
+        if (addToStack) {
+          localStack.push(el);
+        }
+      });
+
+      for (var ndx = 0, ll = localStack.length; ndx < ll; ndx++) {
+        localStack[ndx].remove();
+      }
+    };
     window.sendMessage = function (json) {
+      console.log(json);
     //	make sure we have enough information
       if (isEmpty(json)) return;
       if (isEmpty(json.type)) return;
@@ -18,14 +43,19 @@ const Whiteboard =  React.createClass({
         // socket.emit(json.type);					//	don't need to pass any arguments
       } else {
         if (isEmpty(json.all)) {
-          console.log(this.props);
-          this.props.dispatch(whiteboardActions.sendobject(this.props.channal, json));
+
+          this.props.dispatch(whiteboardActions.sendobject(this.props.channal, json.message));
           // socket.emit(json.type, json.message);
         } else {
           // socket.emit(json.type, json.message, json.all);
         }
       }
     }.bind(this);
+
+    window.getUserID = function () {
+      return window.userID
+
+    };
     window.WHITEBOARD_MODE_NONE = 0;
     window.WHITEBOARD_MODE_MOVE = 1,				//	we can move objects
     window.WHITEBOARD_MODE_SCALE = 2;				//	we can delete objects
@@ -60,11 +90,12 @@ const Whiteboard =  React.createClass({
     window.Raphael = Raphael
   },
   componentWillReceiveProps(nextProps){
-    if (this.props.currentUser.id) {
-      window.um = new sf.ifs.View.UndoManager();
-      window.currentUser = this.props.currentUser;
-      window.currentUser.colour = this.props.currentUser.colour;
-      window.role = this.props.currentUser.role;
+    if (nextProps.channal && nextProps.whiteboard.needEvents) {
+      nextProps.dispatch(whiteboardActions.subscribeWhiteboardEvents(nextProps.channal));
+      nextProps.dispatch(whiteboardActions.getWhiteboardHistory(nextProps.channal));
+    }
+    if (nextProps.whiteboard.readyToBuild && !nextProps.whiteboard.isBuild ) {
+      window.whiteboard = document.getElementById('whiteboard');
       window.paperWhiteboard = Raphael("whiteboard");
       window.paperCanvas = ScaleRaphael("canvas", 950, 460);
       window.paperExpand = Raphael("expand");
@@ -72,8 +103,16 @@ const Whiteboard =  React.createClass({
       window.paperTextbox = Raphael("textbox");
       window.paperTextboxHTML = Raphael("textbox-html");
       window.paperTitleWhiteboard = Raphael("title-whiteboard");
-      window.whiteboard = document.getElementById('whiteboard');
+      window.um = new sf.ifs.View.UndoManager();
+      window.currentUser = this.props.currentUser;
+      window.userID = this.props.currentUser.id;
+      window.currentUser.colour = this.props.currentUser.colour;
+      window.role = this.props.currentUser.role;
+      buildWhiteboard = new sf.ifs.Build.Whiteboard();
+    	window.clearWhiteboard();
+      window.buildWhiteboard = new sf.ifs.Build.Whiteboard();
       OnParticipants()
+      nextProps.dispatch(whiteboardActions.setWhiteboardBuilt());
     }
   },
   componentDidMount(){

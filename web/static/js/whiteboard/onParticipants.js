@@ -12,8 +12,8 @@ var getWhiteboardJSON = function(size) {
   var result = null;
   switch(size) {
     case "small": {
-      if (!window.whiteboard) {
-        if (!window.whiteboard.paint) {
+      if (!isEmpty(window.whiteboard)) {
+        if (!isEmpty(window.whiteboard.paint)) {
           window.whiteboard.paint.paint.toBack();
         }
       }

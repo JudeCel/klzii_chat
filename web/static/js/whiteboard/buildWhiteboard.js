@@ -14,7 +14,7 @@ build.Whiteboard = function() {
 	//if ((window.topic)) return;			//	we need this class up and running too
 
 	//	lets get some chats
-	window.socket.emit('getobjects');
+	// window.socket.emit('getobjects');
 }
 
 /*
@@ -50,16 +50,15 @@ build.Whiteboard.prototype.processWhiteboard = function(data) {
 	var personalImageContent = window.personalImageContent;		//	destroyed in here by accident...
 
 	//	make sure we have valid data
-	if (!(data)) {
-		data = JSON.parse(data);
+	if (!isEmpty(data)) {
+		// data = data
 
 		//	basically we just need to iterate through 'data' and
 		//	add a chat to the chat history
-		var event = null;
+		// var event = null;
 		for (var ndx = 0, ld = data.length; ndx < ld; ndx++) {
-			event = JSON.parse(decodeURI(data[ndx].event));
-
-			switch(data[ndx].cmd) {
+			let event = data[ndx].event
+			switch(data[ndx].tag) {
 				case 'deleteall':
 				break;
 				case 'shareresource': {
@@ -67,7 +66,8 @@ build.Whiteboard.prototype.processWhiteboard = function(data) {
 				}
 				break;
 				case 'object': {
-					if (!(window.whiteboard.updateCanvas)) {
+					console.log(event);
+					if (!isEmpty(window.whiteboard.updateCanvas)) {
 						window.whiteboard.updateCanvas(event.name, event, true);
 					}
 				}
@@ -79,7 +79,6 @@ build.Whiteboard.prototype.processWhiteboard = function(data) {
 		window.sendGetPersonalImages = sendGetPersonalImages;
 		window.personalImageContent = personalImageContent;
 	}
-
 
 	//	has our playback finished yet?
 	window.initFinished = window.initFinished + window.FINISHED_WHITEBOARD;

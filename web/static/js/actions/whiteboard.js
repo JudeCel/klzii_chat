@@ -1,9 +1,9 @@
 import Constants                          from '../constants';
-function new_whiteboard_object(dispatch, data) {
-  return dispatch({
-      type: Constants.NEW_WHITEBOARD_OBJECT,
-      message: data
-    });
+function whiteboardHistory(dispatch, data) {
+  dispatch({
+    type: Constants.SET_WHITEBOARD_READY_TO_BUILD,
+    objects: data
+  });
 }
 
 const Actions = {
@@ -12,17 +12,43 @@ const Actions = {
       return joinChannal(dispatch, socket, topicId);
     };
   },
-  subscribeTopicEvents: (channel) =>{
+  setWhiteboardBuilt: (socket, topicId) => {
+    return dispatch => {
+      dispatch({type: Constants.SET_WHITEBOARD_BUILT})
+    };
+  },
+  subscribeWhiteboardEvents: (channel) =>{
     return dispatch => {
       dispatch({ type: Constants.SET_WHITEBOARD_EVENTS});
-      channel.on("objects", (resp) =>{
-        return new_whiteboard_object(dispatch, resp);
+      channel.on("draw", (resp) =>{
+        console.log("draw");
+        console.log(resp);
+        window.buildWhiteboard.processWhiteboard([resp]);
       });
     }
   },
   sendobject: (channel, payload) => {
     return dispatch => {
-      channel.push('sendobject', payload)
+      channel.push(payload.action, payload)
+      .receive('error', (data) => {
+        dispatch({
+          type: Constants.SEND_OBJECT_ERROR,
+          error: data.error
+        });
+      });
+    };
+  },
+  getWhiteboardHistory: (channel) => {
+    return dispatch => {
+      channel.push('whiteboardHistory')
+      .receive('ok', (data)=>{
+        dispatch({
+          type: Constants.SET_WHITEBOARD_HISTORY,
+          objects: data.history
+        });
+        console.log(data.history);
+        window.buildWhiteboard.processWhiteboard(data.history);
+      })
       .receive('error', (data) => {
         dispatch({
           type: Constants.SEND_OBJECT_ERROR,

@@ -896,7 +896,7 @@ view.Paint.prototype.clearDrawing = function () {
 		} else {
 			if (typeof el.data != "undefined") {
 				if (typeof el.data("send_to_back") != "undefined") {
-					if (el.data("send_to_back") === true) {
+					if (el.data("send_to_back") == true) {
 						el.remove();
 						var json = {
 							target: "whiteboard",

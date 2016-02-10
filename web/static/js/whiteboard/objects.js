@@ -15,7 +15,7 @@ view.Objects.prototype.updateEvent = function (topicid, data) {
 }
 
 view.Objects.prototype.attachHandler = function (element, json) {
-	if ((json)) json = {
+	if (isEmpty(json)) json = {
 		move: true,
 		remove: true
 	};
@@ -117,7 +117,7 @@ view.Objects.prototype.attachHandler = function (element, json) {
 		// }
 
 		if (me.json.paint.attribute["pencilShape"] === "eraser") {
-			if (!(this.message)) {
+			if (!isEmpty(this.message)) {
 				var message = this.message;
 				message.action = "delete";
 
@@ -133,7 +133,7 @@ view.Objects.prototype.attachHandler = function (element, json) {
 
 				this.remove();
 			} else {
-				if (!(this.data("send_to_back"))) {
+				if (!isEmpty(this.data("send_to_back"))) {
 					if (this.data("send_to_back") === true) {
 						this.remove();
 						var json = {

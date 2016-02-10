@@ -168,7 +168,7 @@ view.Whiteboard.prototype.draw = function() {
 
 			//	I don't know why, but it just seems "paint" needs to be in front to perform correctly
 			me.paint.paint.toFront();
-			if (!(me.json.onClick)) me.json.onClick("shrink");	//	onParticipants.whiteboardClick
+			if (!isEmpty(me.json.onClick)) me.json.onClick("shrink");	//	onParticipants.whiteboardClick
 		});
 	} else {
 		//	icon to expand the whiteboard
@@ -183,7 +183,7 @@ view.Whiteboard.prototype.draw = function() {
 		icon.data("this", this);
 		icon.click(function() {
 			var me = this.data("this");
-			if (!(me.json.onClick)) me.json.onClick("expand");	//	onParticipants.whiteboardClick
+			if (!isEmpty(me.json.onClick)) me.json.onClick("expand");	//	onParticipants.whiteboardClick
 		});
 	}
 
@@ -208,9 +208,9 @@ view.Whiteboard.prototype.updateJSON = function(json) {
 };
 
 view.Whiteboard.prototype.updateCanvas = function(name, data, removeDragEvents) {
-	if ((removeDragEvents)) removeDragEvents = false;
+	if (isEmpty(removeDragEvents)) removeDragEvents = false;
 
-	if (!(this.paint)) {
+	if (!isEmpty(this.paint)) {
 		this.paint.updateCanvas(name, data, removeDragEvents);
 	};
 };
@@ -502,14 +502,14 @@ view.Whiteboard.prototype.getTargetAsJSON = function() {
 };
 
 view.Whiteboard.prototype.setResource = function(json, clearWhiteboard) {
-	if ((json)) return;
-	if ((json.type)) return;
+	if (isEmpty(json)) return;
+	if (isEmpty(json.type)) return;
 
-	if ((clearWhiteboard)) clearWhiteboard = false;
+	if (isEmpty(clearWhiteboard)) clearWhiteboard = false;
 
 	switch(json.type) {
 		case 'image': {
-			if (!(this.paint)) this.paint.setImage(json, clearWhiteboard);
+			if (!isEmpty(this.paint)) this.paint.setImage(json, clearWhiteboard);
 		}
 		break;
 	}
@@ -554,6 +554,7 @@ view.Whiteboard.prototype.undo = function(object) {
 		}
 		break;
 		case 'create': {
+				doSave = true;
 			// socket.emit('deleteobject', object.object.freeTransform.subject.message.id);
 
 			object.object.freeTransform.hideHandles();
@@ -561,6 +562,7 @@ view.Whiteboard.prototype.undo = function(object) {
 		}
 		break;
 		case 'delete': {
+			doSave = true;
 			// socket.emit('restoreobject', object.object.subject.message.id, object.object.subject.message);
 		}
 		break;
@@ -619,6 +621,7 @@ view.Whiteboard.prototype.redo = function(object) {
 		}
 		break;
 		case 'delete': {
+			doSave = true;
 			// socket.emit('deleteobject', object.object.subject.message.id);
 
 			object.object.hideHandles();

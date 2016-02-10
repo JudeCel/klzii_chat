@@ -569,6 +569,7 @@ function removeFreeTransformObjects(paper) {
 };
 
 //----------------------------------------------------------------------------
+window.findObjectByID = findObjectByID;
 function findObjectByID(paper, id) {
 	//	are our arguments valid?
 	if (isEmpty(paper)) return null;

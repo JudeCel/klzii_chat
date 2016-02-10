@@ -10,15 +10,23 @@ defmodule KlziiChat.TopicChannel do
 
   def join("topics:" <> topic_id, payload, socket) do
     if authorized?(socket) do
-      assign(socket, :topic_id, topic_id)
-      case TopicsService.history(topic_id) do
+      case TopicsService.history(topic_id, "message") do
         {:ok, history} ->
-          {:ok, history, socket}
+          {:ok, history, assign(socket, :topic_id, topic_id)}
         {:error, reason} ->
           {:error, %{reason: reason}}
       end
     else
       {:error, %{reason: "unauthorized"}}
+    end
+  end
+
+  def handle_in("whiteboardHistory", payload, socket) do
+    case TopicsService.history(socket.assigns.topic_id, "object") do
+      {:ok, history} ->
+        {:reply, {:ok, %{history: history}}, socket}
+      {:error, reason} ->
+        {:error, %{reason: reason}}
     end
   end
 
@@ -30,18 +38,28 @@ defmodule KlziiChat.TopicChannel do
       {:error, reason} ->
         {:error, %{reason: reason}}
     end
-    {:noreply, socket}
   end
 
-  def handle_in("sendobject", payload, socket) do
-    case EventsService.create_object(socket.assigns.session_member.id, payload) do
+  def handle_in("draw", payload, socket) do
+    session_member_id = socket.assigns.session_member.id
+    topic_id = socket.assigns.topic_id
+    case EventsService.create_object(session_member_id, topic_id,  payload) do
       {:ok, entry} ->
-        # broadcast! socket, "new_message", entry
+        broadcast! socket, "draw", entry
         {:reply, :ok, socket}
       {:error, reason} ->
         {:error, %{reason: reason}}
     end
     {:noreply, socket}
+  end
+
+  def handle_in("deleteAll", payload, socket) do
+    session_member_id = socket.assigns.session_member.id
+    topic_id = socket.assigns.topic_id
+    EventsService.deleteAll(session_member_id, topic_id,  payload)
+    broadcast! socket, "deleteAll", %{}
+    {:reply, :ok, socket}
+
   end
 
   def handle_out(event, payload, socket) do

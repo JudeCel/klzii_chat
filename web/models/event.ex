@@ -13,7 +13,7 @@ defmodule KlziiChat.Event do
     timestamps [inserted_at: :createdAt, updated_at: :updatedAt]
   end
 
-  @required_fields ~w(topic topicId event timestamp sessionMemberId)
+  @required_fields ~w(topic tag uid topicId cmd event timestamp sessionMemberId)
   @optional_fields ~w()
 
   @doc """

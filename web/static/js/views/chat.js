@@ -31,7 +31,12 @@ const ChatView = React.createClass({
         <div className="info-section"></div>
         <CurrentMember member={this.props.currentUser}/>
         <div className="members"></div>
-        <Whiteboard currentUser={this.props.currentUser} dispatch={this.props.dispatch} channal={this.props.topicChannal}/>
+        <Whiteboard
+          currentUser={this.props.currentUser}
+          whiteboard={this.props.whiteboard}
+          dispatch={this.props.dispatch}
+          channal={this.props.topicChannal}
+        />
         <div className='col-md-3 jumbotron chat-messages pull-right'>
           <Messages messagesCollection={this.props.topicMessages}/>
         </div>
@@ -46,6 +51,7 @@ const ChatView = React.createClass({
 const mapStateToProps = (state) => {
   return {
     sessionReady: state.chat.ready,
+    whiteboard: state.whiteboard,
     topicReady: state.topic.ready,
     topicChannal: state.topic.channel,
     topicMessages: state.topic.messages,
