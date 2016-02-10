@@ -25,6 +25,7 @@ var rotate = null;
 
 
 window.showFreeTransformToObjects = showFreeTransformToObjects;
+window.updatePathForObject = updatePathForObject;
 //----------------------------------------------------------------------------
 //	this is only good for a free transform object
 //	returns true if the object was updated, otherwise false
@@ -143,6 +144,7 @@ function callbackFT(object, events) {
 	if (isEmpty(object.subject.message.transY)) object.subject.message.transY = 0;
 
 	var doSave = false;
+	var type = null;
 
 
 	//	OK, lets process our event
@@ -218,7 +220,7 @@ function callbackFT(object, events) {
 					uid: object.subject.message.id,
 					object: object
 				});
-
+				type = 'move'
 				doSave = updatePathForObject(object, x, y);
 			}
 		}
@@ -247,6 +249,7 @@ function callbackFT(object, events) {
 			});
 
 			object.subject.message.rotate = object.attrs.rotate;
+			type = 'rotate';
 			doSave = true;
 		}
 		break;
@@ -277,6 +280,7 @@ function callbackFT(object, events) {
 			});
 
 			object.subject.message.scale = object.attrs.scale;
+			type = 'scale'
 			doSave = true;
 		}
 		break;
@@ -290,10 +294,9 @@ function callbackFT(object, events) {
 
 	if (doSave) {
 		var messageJSON = {
-			type: 'sendobject',
+			type: type || 'sendobject',
 			message: object.subject.message
 		}
-
 		window.sendMessage(messageJSON);
 	}
 };

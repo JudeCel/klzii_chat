@@ -4,6 +4,7 @@ defmodule KlziiChat.Services.EventsService do
   import Ecto.Query
 
   def create_message(session_member_id, params) do
+
     session_member = Repo.get!(SessionMember, session_member_id)
     changeset = build_assoc(
       session_member, :events,
@@ -15,7 +16,23 @@ defmodule KlziiChat.Services.EventsService do
     create(changeset)
   end
 
-  def create_object(session_member_id, topicId, params) do
+  def update_object(session_member_id, topic_id, params) do
+    Repo.get_by!(Event, uid: params["id"])
+      |> Ecto.Changeset.change(event: params)
+      |> update
+  end
+
+  def update(changeset) do
+    case Repo.update changeset do
+      {:ok, event} ->
+        event = event |> Repo.preload(:session_member)
+        {:ok, Phoenix.View.render(EventView, "event.json", %{event: event} )}
+      {:error, changeset} ->
+        {:error, changeset}
+    end
+  end
+
+  def create_object(session_member_id, topic_id, params) do
     session_member = Repo.get!(SessionMember, session_member_id)
     changeset = build_assoc(
       session_member, :events,

@@ -32,8 +32,8 @@ defmodule KlziiChat.TopicChannel do
 
   def handle_in("new_message", payload, socket) do
     case EventsService.create_message(socket.assigns.session_member.id, payload) do
-      {:ok, entry} ->
-        broadcast! socket, "new_message", entry
+      {:ok, event} ->
+        broadcast! socket, "new_message", event
         {:reply, :ok, socket}
       {:error, reason} ->
         {:error, %{reason: reason}}
@@ -44,8 +44,21 @@ defmodule KlziiChat.TopicChannel do
     session_member_id = socket.assigns.session_member.id
     topic_id = socket.assigns.topic_id
     case EventsService.create_object(session_member_id, topic_id,  payload) do
-      {:ok, entry} ->
-        broadcast! socket, "draw", entry
+      {:ok, event} ->
+        broadcast! socket, "draw", event
+        {:reply, :ok, socket}
+      {:error, reason} ->
+        {:error, %{reason: reason}}
+    end
+    {:noreply, socket}
+  end
+
+  def handle_in("update_object", %{"object" => object}, socket) do
+    session_member_id = socket.assigns.session_member.id
+    topic_id = socket.assigns.topic_id
+    case EventsService.update_object(session_member_id, topic_id,  object) do
+      {:ok, event} ->
+        broadcast! socket, "update_object", event
         {:reply, :ok, socket}
       {:error, reason} ->
         {:error, %{reason: reason}}
@@ -72,7 +85,6 @@ defmodule KlziiChat.TopicChannel do
     EventsService.deleteAll(session_member_id, topic_id,  payload)
     broadcast! socket, "delete_all", %{}
     {:reply, :ok, socket}
-
   end
 
   def handle_out(event, payload, socket) do

@@ -27,8 +27,16 @@ const Actions = {
       channel.on("delete_object", (resp) =>{
         window.whiteboard.paint.deleteObject(resp.uid);
       });
+
       channel.on("delete_all", (resp) =>{
         window.clearWhiteboard();
+      });
+
+      channel.on("update_object", (resp) =>{
+        console.log("+++++++++++");
+        console.log(resp);
+        console.log("+++++++++++");
+        window.buildWhiteboard.processWhiteboard([resp]);
       });
     }
   },
@@ -64,6 +72,20 @@ const Actions = {
   deleteObject: (channel, uid) => {
     return dispatch => {
       channel.push('delete_object', {uid: uid})
+      .receive('ok', (data)=>{
+        console.log(data);
+      })
+      .receive('error', (data) => {
+        dispatch({
+          type: Constants.SEND_OBJECT_ERROR,
+          error: data.error
+        });
+      });
+    };
+  },
+  updateObject: (channel, object) => {
+    return dispatch => {
+      channel.push('update_object', {object: object})
       .receive('ok', (data)=>{
         console.log(data);
       })

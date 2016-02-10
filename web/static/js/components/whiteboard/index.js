@@ -38,6 +38,11 @@ const Whiteboard =  React.createClass({
         case 'sendobject':
           this.props.dispatch(whiteboardActions.sendobject(this.props.channal, json.message));
           break;
+        case 'move':
+        case 'scale':
+        case 'rotate':
+          this.props.dispatch(whiteboardActions.updateObject(this.props.channal, json.message));
+          break;
 
         case 'delete':
           this.props.dispatch(whiteboardActions.deleteObject(this.props.channal, json.id));
