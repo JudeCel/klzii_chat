@@ -21,9 +21,14 @@ const Actions = {
     return dispatch => {
       dispatch({ type: Constants.SET_WHITEBOARD_EVENTS});
       channel.on("draw", (resp) =>{
-        console.log("draw");
-        console.log(resp);
         window.buildWhiteboard.processWhiteboard([resp]);
+      });
+
+      channel.on("delete_object", (resp) =>{
+        window.whiteboard.paint.deleteObject(resp.uid);
+      });
+      channel.on("delete_all", (resp) =>{
+        window.clearWhiteboard();
       });
     }
   },
@@ -46,8 +51,21 @@ const Actions = {
           type: Constants.SET_WHITEBOARD_HISTORY,
           objects: data.history
         });
-        console.log(data.history);
         window.buildWhiteboard.processWhiteboard(data.history);
+      })
+      .receive('error', (data) => {
+        dispatch({
+          type: Constants.SEND_OBJECT_ERROR,
+          error: data.error
+        });
+      });
+    };
+  },
+  deleteObject: (channel, uid) => {
+    return dispatch => {
+      channel.push('delete_object', {uid: uid})
+      .receive('ok', (data)=>{
+        console.log(data);
       })
       .receive('error', (data) => {
         dispatch({

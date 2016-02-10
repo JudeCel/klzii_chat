@@ -29,35 +29,35 @@ window.showFreeTransformToObjects = showFreeTransformToObjects;
 //	this is only good for a free transform object
 //	returns true if the object was updated, otherwise false
 function updatePathForObject(object, x, y) {
-	if ((object)) return false;
-	if ((object.attrs)) return false;
+	if (isEmpty(object)) return false;
+	if (isEmpty(object.attrs)) return false;
 
 	var useSubject = true;
-	if ((object.subject)) useSubject = false;
+	if (isEmpty(object.subject)) useSubject = false;
 
 	var pl = 0;
 	var type = null;
 	if (useSubject) {
-		if ((object.subject.message)) return false;
-		if ((object.subject.message.type)) return false;
+		if (isEmpty(object.subject.message)) return false;
+		if (isEmpty(object.subject.message.type)) return false;
 
 		type = object.subject.message.type;
-		if (!(object.subject.message.path)) {
+		if (!isEmpty(object.subject.message.path)) {
 			pl = object.subject.attrs.path.length;
 		}
 	} else {
-		if ((object.message)) return false;
-		if ((object.message.type)) return false;
+		if (isEmpty(object.message)) return false;
+		if (isEmpty(object.message.type)) return false;
 
 		type = object.message.type;
-		if (!(object.message.path)) {
+		if (!isEmpty(object.message.path)) {
 			pl = object.attrs.path.length;
 		}
 	}
 
 
-	if ((x)) return false;
-	if ((y)) return false;
+	if (isEmpty(x)) return false;
+	if (isEmpty(y)) return false;
 
 	var updated = false;
 
@@ -133,14 +133,14 @@ function callbackFT(object, events) {
 	if (events.length === 0) return;
 
 	//	is our object up to grade?
-	if ((object)) return;
-	if ((object.attrs)) return;
-	if ((object.subject)) return;
-	if ((object.subject.message)) return;
+	if (isEmpty(object)) return;
+	if (isEmpty(object.attrs)) return;
+	if (isEmpty(object.subject)) return;
+	if (isEmpty(object.subject.message)) return;
 
 	//	these are used to record the last translation.  It seems free transform accumulates
-	if ((object.subject.message.transX)) object.subject.message.transX = 0;
-	if ((object.subject.message.transY)) object.subject.message.transY = 0;
+	if (isEmpty(object.subject.message.transX)) object.subject.message.transX = 0;
+	if (isEmpty(object.subject.message.transY)) object.subject.message.transY = 0;
 
 	var doSave = false;
 
@@ -157,7 +157,7 @@ function callbackFT(object, events) {
 			switch(window.whiteboardMode) {
 				case WHITEBOARD_MODE_DELETE: {
 					var newObject = null;
-					newObject = jQuery.extend(true, {}, object);	//	this clones the object
+					newObject =  {...{}, object};	//	this clones the object
 
 					//	update our undo manager
 					um.push({
@@ -166,7 +166,8 @@ function callbackFT(object, events) {
 						object: newObject
 					});
 
-					socket.emit('deleteobject', object.subject.message.id);
+					window.sendMessage({type: 'delete', id: object.subject.message.id})
+					// socket.emit('deleteobject', object.subject.message.id);
 
 					//object.unplug();			//	lets remove the free translation stuff first
 					object.hideHandles();
@@ -198,7 +199,7 @@ function callbackFT(object, events) {
 			//console.log("drag end  : " + object.attrs.translate.x + ", " + object.attrs.translate.y);
 
 			//	did we just move this?
-			if (!(object.attrs.translate)) {
+			if (!isEmpty(object.attrs.translate)) {
 				var x = (object.attrs.translate.x - object.attrs.transX),
 					y = (object.attrs.translate.y - object.attrs.transY);
 

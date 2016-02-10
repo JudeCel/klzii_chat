@@ -355,11 +355,11 @@ view.Paint.prototype.updateCanvas = function (name, data, removeDragEvents) {
 
 	//	lets remove transX & transY before saving...
 	if (!isEmpty(data.transX)) {
-		delete self.data.transX;
+		delete data.transX;
 	}
 
 	if (!isEmpty(data.transY)) {
-		delete self.data.transY;
+		delete data.transY;
 	}
 	//	does this object already exist
 	var object = findObjectByID(this.paint.paper, data.id);

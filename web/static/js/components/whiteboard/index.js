@@ -34,21 +34,24 @@ const Whiteboard =  React.createClass({
       }
     };
     window.sendMessage = function (json) {
-      console.log(json);
+      switch (json.type) {
+        case 'sendobject':
+          this.props.dispatch(whiteboardActions.sendobject(this.props.channal, json.message));
+          break;
+
+        case 'delete':
+          this.props.dispatch(whiteboardActions.deleteObject(this.props.channal, json.id));
+          break;
+        default:
+
+      }
     //	make sure we have enough information
       if (isEmpty(json)) return;
       if (isEmpty(json.type)) return;
 
-      if (isEmpty(json.message)) {
+      if (json.message) {
         // socket.emit(json.type);					//	don't need to pass any arguments
       } else {
-        if (isEmpty(json.all)) {
-
-          this.props.dispatch(whiteboardActions.sendobject(this.props.channal, json.message));
-          // socket.emit(json.type, json.message);
-        } else {
-          // socket.emit(json.type, json.message, json.all);
-        }
       }
     }.bind(this);
 

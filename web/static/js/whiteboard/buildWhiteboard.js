@@ -66,7 +66,6 @@ build.Whiteboard.prototype.processWhiteboard = function(data) {
 				}
 				break;
 				case 'object': {
-					console.log(event);
 					if (!isEmpty(window.whiteboard.updateCanvas)) {
 						window.whiteboard.updateCanvas(event.name, event, true);
 					}
