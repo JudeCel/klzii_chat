@@ -18,9 +18,7 @@ const ChatView = React.createClass({
   },
   sendMessage(e){
     if (e.charCode == 13) {
-      let payload = {
-        body: e.target.value
-      }
+      let payload = { body: e.target.value }
       this.props.dispatch(topicActions.newTopicMessage(this.props.topicChannal, payload));
       e.target.value = "";
     }
@@ -32,16 +30,17 @@ const ChatView = React.createClass({
         <CurrentMember member={this.props.currentUser}/>
         <div className="members"></div>
         <Whiteboard
-          currentUser={this.props.currentUser}
-          whiteboard={this.props.whiteboard}
-          dispatch={this.props.dispatch}
-          channal={this.props.topicChannal}
+          currentUser={ this.props.currentUser }
+          whiteboard={ this.props.whiteboard }
+          dispatch={ this.props.dispatch }
+          channal={ this.props.topicChannal }
         />
         <div className='col-md-3 jumbotron chat-messages pull-right'>
           <Messages
-            channal={this.props.topicChannal}
-            dispatch={this.props.dispatch}
-            messagesCollection={this.props.topicMessages}/>
+            channal={ this.props.topicChannal }
+            dispatch={ this.props.dispatch }
+            messages={ this.props.topicMessages }
+          />
         </div>
         <div className="form-group">
           <input onKeyPress={ this.sendMessage } type="text" className="form-control" placeholder="Message"/>

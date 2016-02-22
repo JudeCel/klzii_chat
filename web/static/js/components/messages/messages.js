@@ -12,11 +12,11 @@ const Messages =  React.createClass({
   render() {
     return (
       <div>
-        {this.props.messagesCollection.map( (message) =>
+        {this.props.messages.map( (message) =>
           <Message
             message={ message }
             deleteMessage={ this.deleteMessage }
-            messageStar= {this.messageStar}
+            messageStar= { this.messageStar }
             key={ message.id }
           />
         )}
