@@ -40,6 +40,27 @@ defmodule KlziiChat.TopicChannel do
     end
   end
 
+
+  def handle_in("delete_message", %{"id" => id}, socket) do
+    case EventsService.deleteById(id) do
+      {:ok} ->
+        broadcast! socket, "delete_message", %{id: id}
+        {:reply, :ok, socket}
+      {:error, reason} ->
+        {:error, %{reason: reason}}
+    end
+  end
+
+  def handle_in("message_star", %{"id" => id}, socket) do
+    case EventsService.star(id) do
+      {:ok, event} ->
+        broadcast! socket, "message_star", event
+        {:reply, :ok, socket}
+      {:error, reason} ->
+        {:error, %{reason: reason}}
+    end
+  end
+
   def handle_in("draw", payload, socket) do
     session_member_id = socket.assigns.session_member.id
     topic_id = socket.assigns.topic_id

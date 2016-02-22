@@ -10,11 +10,12 @@ defmodule KlziiChat.Event do
     field :uid, :string
     field :cmd, :string
     field :tag, :string, default: "message"
+    field :star, :boolean, default: false
     timestamps [inserted_at: :createdAt, updated_at: :updatedAt]
   end
 
-  @required_fields ~w(topic tag uid topicId cmd event timestamp sessionMemberId)
-  @optional_fields ~w()
+  @required_fields ~w(topic uid topicId cmd timestamp sessionMemberId )
+  @optional_fields ~w(star tag event)
 
   @doc """
   Creates a changeset based on the `model` and `params`.

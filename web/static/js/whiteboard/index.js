@@ -1,10 +1,9 @@
-require('./namespace');
+require('./utilities');
 require('./buildWhiteboard');
 require('./paint');
 require('./objects');
 require('./poplist');
 require('./mouse');
-require('./utilities');
 require('./undoManager');
 require('./paintUtilities');
 require('./path');
@@ -51,8 +50,8 @@ view.Whiteboard = function(json) {
 
 	this.target = {					//	specifies the area to highlight when dragging
 		target:			"whiteboard",
-		x:				0,
-		y:				0,
+		x:					0,
+		y:					0,
 		width: 			0,
 		height:			0
 	}
@@ -87,10 +86,10 @@ view.Whiteboard.prototype.initialise = function(json) {
 	this.whiteboard = null;
 
 	var paintJSON = {
-		scale: 			this.json.scale, 		//	default to small scale
+		scale: 			  this.json.scale, 		//	default to small scale
 		actualScale:	this.json.actualScale,
-		window: 		this.json.window,
-		paper: 			this.json.canvas.paper
+		window: 		  this.json.window,
+		paper: 			  this.json.canvas.paper
 	}
 
 	this.paint.setJSON(paintJSON);			//	I don't think this is used
@@ -334,8 +333,8 @@ view.Whiteboard.prototype.controls = function() {
 
 	var icons = this.json.board.paper.set();
 	var offset = 0;
+	var paths = null;
 	for (var ndx = 0, ni = buttonsJSON.icons.length; ndx < ni; ndx++) {
-		let paths = null;
 		let cmd = null;
 		cmd = "paths = getWhiteboard" + buttonsJSON.icons[ndx].id + "Paths()";
 		eval(cmd);	//	need to find a better way to do this
@@ -362,7 +361,7 @@ view.Whiteboard.prototype.controls = function() {
 
 		if (window.role != "observer") {
 			icon.click(function() {
-				if (window.whiteboardSetup === "corkboard") return;
+				if (window.whiteboardSetup == "corkboard") return;
 
 				var me = this.data("this");
 				var id = this.data("id");
@@ -377,7 +376,7 @@ view.Whiteboard.prototype.controls = function() {
 				me.icons.Draw.attr({fill: '#9f928b'});
 				me.icons.Shapes.attr({fill: '#9f928b'});
 				me.icons.Settings.attr({fill: '#9f928b'});
-				if (window.role === 'participant') {
+				if (window.role == 'participant') {
 					me.icons.EraseOne.attr({fill: '#9f928b'});
 				} else {
 					me.icons.Erase.attr({fill: '#9f928b'});
@@ -410,7 +409,7 @@ view.Whiteboard.prototype.controls = function() {
 					}
 					break;
 					case "EraseOne":{
-						if (window.whiteboardMode === WHITEBOARD_MODE_DELETE) {
+						if (window.whiteboardMode == WHITEBOARD_MODE_DELETE) {
 							hideFreeTransformToObjects(me.paint.getPaper());
 						} else {
 							me.icons.EraseOne.attr({fill: WHITEBOARD_ICON_BACKGROUND_COLOUR});

@@ -28,9 +28,8 @@ view.Poplist.prototype.draw = function (icons, types) {
 	var radius = 10;
 	this.clearPoplist();
 
-	if (this.types === types) {
+	if (this.types == types) {
 		this.types = null;
-
 		return;
 	}
 

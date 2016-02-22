@@ -1,7 +1,23 @@
 .alert:empty
   display: none
-  
+
 #chat-app-container
 .chat-messages
   min-height: 500px
   max-height: 75%
+  .message-container
+    width: 100%
+    height: 10%
+    .message-action-list
+      float: right
+      .star.active
+        color: red
+      .star
+        margin-right: 10px
+        color: grey
+        cursor: pointer
+        cursor: hand
+      .remove
+        color: grey
+        cursor: pointer
+        cursor: hand

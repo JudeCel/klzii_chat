@@ -27,9 +27,21 @@ export function joinChannal(dispatch, socket, topicId) {
 
 function new_message(dispatch, data) {
   return dispatch({
-      type: Constants.NEW_TOPIC_MESSAGE,
-      message: data
-    });
+    type: Constants.NEW_TOPIC_MESSAGE,
+    message: data
+  });
+}
+function delete_mesage(dispatch, data) {
+  return dispatch({
+    type: Constants.DELETE_TOPIC_MESSAGE,
+    message: data
+  });
+}
+function update_mesage(dispatch, data) {
+  return dispatch({
+    type: Constants.UPDATE_TOPIC_MESSAGE,
+    message: data
+  });
 }
 
 const Actions = {
@@ -44,11 +56,41 @@ const Actions = {
       channel.on("new_message", (resp) =>{
         return new_message(dispatch, resp);
       });
+
+      channel.on("delete_message", (resp) =>{
+        return delete_mesage(dispatch, resp);
+      });
+
+      channel.on("message_star", (resp) =>{
+        return update_mesage(dispatch, resp);
+      });
     }
   },
   newTopicMessage: (channel, payload) => {
     return dispatch => {
       channel.push('new_message', payload)
+      .receive('error', (data) => {
+        dispatch({
+          type: Constants.NEW_MESSAGE_ERROR,
+          error: data.error
+        });
+      });
+    };
+  },
+  deleteMessage: (channel, id) => {
+    return dispatch => {
+      channel.push('delete_message', {id: id})
+      .receive('error', (data) => {
+        dispatch({
+          type: Constants.NEW_MESSAGE_ERROR,
+          error: data.error
+        });
+      });
+    };
+  },
+  messageStar: (channel, id) => {
+    return dispatch => {
+      channel.push('message_star', {id: id})
       .receive('error', (data) => {
         dispatch({
           type: Constants.NEW_MESSAGE_ERROR,

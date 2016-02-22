@@ -38,7 +38,10 @@ const ChatView = React.createClass({
           channal={this.props.topicChannal}
         />
         <div className='col-md-3 jumbotron chat-messages pull-right'>
-          <Messages messagesCollection={this.props.topicMessages}/>
+          <Messages
+            channal={this.props.topicChannal}
+            dispatch={this.props.dispatch}
+            messagesCollection={this.props.topicMessages}/>
         </div>
         <div className="form-group">
           <input onKeyPress={ this.sendMessage } type="text" className="form-control" placeholder="Message"/>

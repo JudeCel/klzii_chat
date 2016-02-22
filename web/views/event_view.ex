@@ -8,7 +8,8 @@ defmodule KlziiChat.EventView do
       session_member: render_one(event.session_member, SessionMembersView, "session_member.json"),
       event: event.event,
       tag: event.tag,
-      time: event.createdAt
+      time: event.createdAt,
+      star: event.star
     }
   end
 
@@ -18,7 +19,8 @@ defmodule KlziiChat.EventView do
       session_member: render_one(event.session_member, SessionMembersView, "session_member.json"),
       event: event.event,
       tag: event.tag,
-      time: event.createdAt
+      time: event.createdAt,
+      star: event.star
     }
   end
 end
