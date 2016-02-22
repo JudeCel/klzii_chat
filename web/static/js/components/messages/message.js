@@ -4,9 +4,8 @@ const Message =  React.createClass({
   star(message){
     if(message.star) {
       return "active"
-    }else {
-      return ""
     }
+    return ""
   },
   render() {
     let message = this.props.message;
