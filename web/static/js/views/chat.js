@@ -2,8 +2,11 @@ import React, { PropTypes } from 'react';
 import { connect }          from 'react-redux';
 import sessionActions       from '../actions/session';
 import topicActions         from '../actions/topic';
+import CurrentInputActions  from '../actions/currentInput';
+import MessagesActions      from '../actions/messages';
 import CurrentMember        from '../components/members/current.js'
 import Messages             from '../components/messages/messages.js'
+import Input                from '../components/messages/input.js'
 import Whiteboard           from '../components/whiteboard'
 
 const ChatView = React.createClass({
@@ -18,10 +21,11 @@ const ChatView = React.createClass({
   },
   sendMessage(e){
     if (e.charCode == 13) {
-      let payload = { body: e.target.value }
-      this.props.dispatch(topicActions.newTopicMessage(this.props.topicChannal, payload));
-      e.target.value = "";
+      this.props.dispatch(MessagesActions.sendMessage(this.props.topicChannal, this.props.currentInput));
     }
+  },
+  handleChange(e){
+    this.props.dispatch(CurrentInputActions.changeValue(e.target.value));
   },
   render() {
     return (
@@ -39,12 +43,15 @@ const ChatView = React.createClass({
           <Messages
             channal={ this.props.topicChannal }
             dispatch={ this.props.dispatch }
-            messages={ this.props.topicMessages }
+            messages={ this.props.messages }
           />
         </div>
-        <div className="form-group">
-          <input onKeyPress={ this.sendMessage } type="text" className="form-control" placeholder="Message"/>
-        </div>
+        <Input
+          onKeyPress={ this.sendMessage }
+          handleChange={ this.handleChange }
+          action={ this.props.currentInput.action }
+          value={ this.props.currentInput.value }
+        />
       </div>
     )
   }
@@ -52,11 +59,12 @@ const ChatView = React.createClass({
 
 const mapStateToProps = (state) => {
   return {
+    messages: state.messages.all,
+    currentInput: state.currentInput,
     sessionReady: state.chat.ready,
     whiteboard: state.whiteboard,
     topicReady: state.topic.ready,
     topicChannal: state.topic.channel,
-    topicMessages: state.topic.messages,
     socket: state.chat.socket,
     currentUser: state.members.currentUser,
     members: state.members.all

@@ -6,8 +6,6 @@ defmodule KlziiChat.TopicChannel do
   # brodcast and receive messages from session members
   # History for specific topic
 
-  intercept ["new_message"]
-
   def join("topics:" <> topic_id, payload, socket) do
     if authorized?(socket) do
       case TopicsService.history(topic_id, "message") do
@@ -53,6 +51,16 @@ defmodule KlziiChat.TopicChannel do
 
   def handle_in("message_star", %{"id" => id}, socket) do
     case EventsService.star(id) do
+      {:ok, event} ->
+        broadcast! socket, "message_star", event
+        {:reply, :ok, socket}
+      {:error, reason} ->
+        {:error, %{reason: reason}}
+    end
+  end
+
+  def handle_in("update_message", %{"id" => id, "body" => body}, socket) do
+    case EventsService.update_message(id, body) do
       {:ok, event} ->
         broadcast! socket, "message_star", event
         {:reply, :ok, socket}

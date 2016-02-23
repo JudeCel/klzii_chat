@@ -9,7 +9,8 @@ defmodule KlziiChat.EventView do
       event: event.event,
       tag: event.tag,
       time: event.createdAt,
-      star: event.star
+      star: event.star,
+      replies: render_many(event.replies, KlziiChat.EventView, "events.json")
     }
   end
 
@@ -20,7 +21,8 @@ defmodule KlziiChat.EventView do
       event: event.event,
       tag: event.tag,
       time: event.createdAt,
-      star: event.star
+      star: event.star,
+      replies: render_many(event.replies, KlziiChat.EventView, "events.json")
     }
   end
 end

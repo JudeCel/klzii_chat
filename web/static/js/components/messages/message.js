@@ -1,7 +1,7 @@
 import React, {PropTypes}       from 'react';
 import moment                   from 'moment'
 
-const Message = ({ message, messageStar, deleteMessage }) => {
+const Message = ({ message, messageStar, deleteMessage, replayMessage, editMessage }) => {
   let activeStarClass = (message.star ? "active" : "");
   let formattedTime =  moment(new Date(message.time)).format("ddd h:mm D/YY");
   let avatarColor = message.session_member.colour.toString(16);
@@ -32,12 +32,35 @@ const Message = ({ message, messageStar, deleteMessage }) => {
       </div>
       <div className="message-action-list">
         <div
+          onClick={ editMessage }
+          id={ message.id }
+          className="action glyphicon glyphicon-edit"
+          />
+        <div
+          onClick={ replayMessage }
+          id={ message.id }
+          className="action glyphicon glyphicon-comment"
+        />
+        <div
           onClick={ deleteMessage }
           id={ message.id }
-          className="remove glyphicon glyphicon-remove"
+          className="action glyphicon glyphicon-remove"
         />
       </div>
       <hr/>
+      <div className= "replies col-md-10 pull-right">
+        { message.replies.map( (replay) => {
+          return (<Message
+            message={ replay }
+            deleteMessage={ deleteMessage }
+            messageStar={ messageStar }
+            editMessage={ editMessage }
+            replayMessage={ replayMessage }
+            key={ replay.id }
+          />)
+        })
+        }
+      </div>
     </div>
   );
 }

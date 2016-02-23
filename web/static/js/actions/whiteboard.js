@@ -33,9 +33,6 @@ const Actions = {
       });
 
       channel.on("update_object", (resp) =>{
-        console.log("+++++++++++");
-        console.log(resp);
-        console.log("+++++++++++");
         window.buildWhiteboard.processWhiteboard([resp]);
       });
     }
