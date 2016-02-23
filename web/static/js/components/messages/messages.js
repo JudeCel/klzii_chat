@@ -1,4 +1,4 @@
-import React, {PropTypes}   from 'react';
+import React                from 'react';
 import Message              from './message.js'
 import topicActions         from '../../actions/topic';
 
@@ -16,7 +16,7 @@ const Messages =  React.createClass({
           <Message
             message={ message }
             deleteMessage={ this.deleteMessage }
-            messageStar= { this.messageStar }
+            messageStar= {this.messageStar}
             key={ message.id }
           />
         )}

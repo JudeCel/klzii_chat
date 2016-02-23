@@ -57,7 +57,6 @@ const mapStateToProps = (state) => {
     topicReady: state.topic.ready,
     topicChannal: state.topic.channel,
     topicMessages: state.topic.messages,
-    sessionChannal: state.chat.channel,
     socket: state.chat.socket,
     currentUser: state.members.currentUser,
     members: state.members.all

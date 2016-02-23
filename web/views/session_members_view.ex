@@ -15,7 +15,8 @@ defmodule KlziiChat.SessionMembersView do
   def render("session_member.json", %{ session_members: session_member}) do
     %{
       id: session_member.id,
-      username: session_member.username
+      username: session_member.username,
+      colour: session_member.colour
     }
   end
 

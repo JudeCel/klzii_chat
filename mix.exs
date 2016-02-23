@@ -31,7 +31,7 @@ defmodule KlziiChat.Mixfile do
   # Type `mix help deps` for examples and options.
   defp deps do
     [{:phoenix, "~> 1.1.4"},
-     {:phoenix_ecto, "~> 3.0.0-beta"},
+     {:phoenix_ecto, "~> 3.0.0-beta.1"},
      {:postgrex,  "~> 0.11.1"},
      {:phoenix_html, "~> 2.5"},
      {:phoenix_live_reload, "~> 1.0", only: :dev},

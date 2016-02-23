@@ -6,17 +6,26 @@
   min-height: 500px
   max-height: 75%
   .message-container
+    .message-header
+      color: white
     width: 100%
     height: 10%
-    .message-action-list
-      float: right
+    margin-bottom: 5px
+    .avatar-container
+      height: 100%
       .star.active
         color: yellow
       .star
-        margin-right: 10px
+        width: 40px
+        height: 40px
         color: grey
         cursor: pointer
         cursor: hand
+        img
+          width: 100%
+          height: 30px
+    .message-action-list
+      float: right
       .remove
         color: grey
         cursor: pointer
