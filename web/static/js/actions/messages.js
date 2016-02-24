@@ -32,7 +32,8 @@ function selectMesageAction(inputState) {
         action: "update_message",
         payload: {
           id: inputState.id,
-          body: inputState.value}
+          body: inputState.value
+        }
       }
 
     case 'reply':

@@ -54,7 +54,6 @@ const Message = ({ isReply = true, message, messageStar, deleteMessage, replyMes
           className="action glyphicon glyphicon-remove"
         />
       </div>
-      <hr/>
       <div className= "replies col-md-10 pull-right">
         { message.replies.map( (reply) => {
           return (<Message
