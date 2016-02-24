@@ -11,7 +11,7 @@ export default function reducer(state = initialState, action = {}) {
       return { ...state, all: action.messages };
 
     case Constants.NEW_MESSAGE:
-      return { ...state, all: updateMessage(state.all, action.message) };
+      return { ...state, all: newMessage(state.all, action.message) };
 
     case Constants.DELETE_MESSAGE:
       return { ...state, all: deleteMessage(state.all, action.message)};
@@ -27,23 +27,66 @@ export default function reducer(state = initialState, action = {}) {
 }
 
 function deleteMessage(messages, message) {
-  let new_array = [];
-  messages.map((e) => {
-    if (!(e.id == message.id)) {
-      new_array.push(e);
+  let newArray = [];
+  messages.map((m) => {
+    if ((m.id == message.replyId)) {
+      let newM = { ...m, m };
+      let newReplies = [];
+      m.replies.map((r) =>{
+        if (!(r.id == message.id)) {
+          newReplies.push(r);
+        }
+      });
+      newM.replies = newReplies;
+      newArray.push(newM);
+    }else {
+      if (!(m.id == message.id)) {
+        newArray.push(m);
+      }
     }
   });
-  return new_array
+  return newArray;
 }
 
 function updateMessage(messages, message) {
-  let new_array = [];
-  messages.map((e) => {
-    if ((e.id == message.id)) {
-      new_array.push({...message, e});
+  let newArray = [];
+  messages.map((m) => {
+    if (m.id == message.replyId) {
+      let newM = { ...m, m };
+      let newReplies = [];
+      m.replies.map((r) =>{
+        if (r.id == message.id) {
+          newReplies.push(message);
+        }else {
+          newReplies.push(r);
+        }
+      });
+      newM.replies = newReplies;
+      newArray.push(newM);
     }else {
-      new_array.push(e);
+      if (m.id == message.id) {
+        newArray.push({...message, m});
+      }else {
+        newArray.push(m);
+      }
     }
   });
-  return new_array
+  return newArray
+}
+function newMessage(messages, message) {
+  let newArray = [];
+  if (message.replyId) {
+    messages.map((m) =>{
+      if (m.id == message.replyId) {
+        let newM =  Object.assign({}, m);
+        newM.replies.push(message);
+        newArray.push(newM);
+      }else {
+        newArray.push(m);
+      }
+    });
+  }else {
+    newArray = [...messages, message];
+  }
+  return newArray;
 }

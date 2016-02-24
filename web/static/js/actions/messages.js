@@ -35,11 +35,11 @@ function selectMesageAction(inputState) {
           body: inputState.value}
       }
 
-    case 'replay':
+    case 'reply':
       return {
         action: "new_message",
         payload: {
-          id: inputState.id,
+          replyId: inputState.replyId,
           body: inputState.value
         }
       }
@@ -81,9 +81,9 @@ const Actions = {
       });
     };
   },
-  deleteMessage: (channel, id) => {
+  deleteMessage: (channel, payload) => {
     return dispatch => {
-      channel.push('delete_message', {id: id})
+      channel.push('delete_message', payload)
       .receive('error', (data) => {
         dispatch({
           type: Constants.NEW_MESSAGE_ERROR,

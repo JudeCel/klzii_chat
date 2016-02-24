@@ -1,13 +1,23 @@
 import React, {PropTypes}       from 'react';
 import moment                   from 'moment'
 
-const Message = ({ message, messageStar, deleteMessage, replayMessage, editMessage }) => {
+const Message = ({ isReply = true, message, messageStar, deleteMessage, replyMessage, editMessage }) => {
   let activeStarClass = (message.star ? "active" : "");
   let formattedTime =  moment(new Date(message.time)).format("ddd h:mm D/YY");
   let avatarColor = message.session_member.colour.toString(16);
   let messageHeaderStyle = {
     backgroundColor: `#${avatarColor}`
   }
+
+  let replyAction = (() => {
+    if(isReply) {
+    return (<div
+      onClick={ replyMessage }
+      data-replyid={ message.id }
+      className="action glyphicon glyphicon-comment"
+      />)
+    }
+  })();
 
   return (
     <div className="message-container">
@@ -33,30 +43,28 @@ const Message = ({ message, messageStar, deleteMessage, replayMessage, editMessa
       <div className="message-action-list">
         <div
           onClick={ editMessage }
-          id={ message.id }
+          data-id={ message.id }
+          data-body={ message.event.body }
           className="action glyphicon glyphicon-edit"
           />
-        <div
-          onClick={ replayMessage }
-          id={ message.id }
-          className="action glyphicon glyphicon-comment"
-        />
+        {replyAction}
         <div
           onClick={ deleteMessage }
-          id={ message.id }
+          data-id={ message.id }
           className="action glyphicon glyphicon-remove"
         />
       </div>
       <hr/>
       <div className= "replies col-md-10 pull-right">
-        { message.replies.map( (replay) => {
+        { message.replies.map( (reply) => {
           return (<Message
-            message={ replay }
+            message={ reply }
             deleteMessage={ deleteMessage }
             messageStar={ messageStar }
             editMessage={ editMessage }
-            replayMessage={ replayMessage }
-            key={ replay.id }
+            replyMessage={ replyMessage }
+            isReply= { false }
+            key={ reply.id }
           />)
         })
         }

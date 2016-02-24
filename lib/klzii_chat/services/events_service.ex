@@ -4,9 +4,8 @@ defmodule KlziiChat.Services.EventsService do
   import Ecto.Query
 
   def create_message(session_member_id, params) do
-    IO.inspect(params)
-    replyId = if params["id"] do
-      String.to_integer(params["id"])
+    replyId = if params["replyId"] do
+      String.to_integer(params["replyId"])
     else
       nil
     end
@@ -23,11 +22,11 @@ defmodule KlziiChat.Services.EventsService do
 
   def deleteById(id) do
     result = Repo.get_by!(Event, id: id)
-    case result do
-      {_count, _model}   -> # Deleted with success
-        {:ok}
+    case Repo.delete!(result) do
       {:error, error} -> # Something went wrong
         {:error, error}
+      model   -> # Deleted with success
+      {:ok, %{ id: model.id, replyId: model.replyId } }
     end
   end
 
@@ -42,13 +41,7 @@ defmodule KlziiChat.Services.EventsService do
   end
 
   def build_message_response(event) do
-    if is_nil(event.replyId) do
-      event = Repo.get_by!(Event, id: event.id)
-    else
-      event = Repo.get_by!(Event, id: event.replyId)
-    end
-
-    event = Repo.preload(event, [:session_member, replies: [:replies, :session_member] ])
+    event = Repo.preload(event,  [:session_member, replies: [:replies, :session_member] ])
     Phoenix.View.render(EventView, "event.json", %{ event: event })
 
   end

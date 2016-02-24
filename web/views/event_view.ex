@@ -8,6 +8,7 @@ defmodule KlziiChat.EventView do
       session_member: render_one(event.session_member, SessionMembersView, "session_member.json"),
       event: event.event,
       tag: event.tag,
+      replyId: event.replyId,
       time: event.createdAt,
       star: event.star,
       replies: render_many(event.replies, KlziiChat.EventView, "events.json")
@@ -20,6 +21,7 @@ defmodule KlziiChat.EventView do
       session_member: render_one(event.session_member, SessionMembersView, "session_member.json"),
       event: event.event,
       tag: event.tag,
+      replyId: event.replyId,
       time: event.createdAt,
       star: event.star,
       replies: render_many(event.replies, KlziiChat.EventView, "events.json")

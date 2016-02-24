@@ -4,19 +4,27 @@ import Constants            from '../../constants';
 import MessagesActions      from '../../actions/messages';
 
 const Messages =  React.createClass({
+  getDataAttrs(e){
+    let id = e.target.getAttribute('data-id')
+    let body = e.target.getAttribute('data-body')
+    let replyId = e.target.getAttribute('data-replyid')
+    return { id, body, replyId }
+  },
   deleteMessage(e){
-    this.props.dispatch(MessagesActions.deleteMessage(this.props.channal, e.target.id));
+    let { id, replyId} = this.getDataAttrs(e);
+    this.props.dispatch(MessagesActions.deleteMessage(this.props.channal, {id: id, replyId: replyId }));
   },
   messageStar(e){
-    this.props.dispatch(MessagesActions.messageStar(this.props.channal, e.target.id));
+    let { id } = this.getDataAttrs(e);
+    this.props.dispatch(MessagesActions.messageStar(this.props.channal, attrs.id));
   },
-  replayMessage(e){
-    this.props.dispatch({type: Constants.SET_INPUT_REPLAY, id: e.target.id});
+  replyMessage(e){
+    let { replyId } = this.getDataAttrs(e);
+    this.props.dispatch({type: Constants.SET_INPUT_REPLY, replyId: replyId});
   },
-  editMessage(message){
-    return (e)=>{
-      this.props.dispatch({type: Constants.SET_INPUT_EDIT, id: message.id, value: message.event.body });
-    }
+  editMessage(e){
+    let { id, body } = this.getDataAttrs(e);
+    this.props.dispatch({type: Constants.SET_INPUT_EDIT, id: id, value: body });
   },
   render() {
     return (
@@ -27,7 +35,7 @@ const Messages =  React.createClass({
             deleteMessage={ this.deleteMessage }
             messageStar={ this.messageStar }
             editMessage={ this.editMessage }
-            replayMessage={ this.replayMessage }
+            replyMessage={ this.replyMessage }
             key={ message.id }
           />
         )}
