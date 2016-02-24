@@ -255,6 +255,7 @@ function yy(y, browser) {
 // };
 
 //-----------------------------------------------------------------------------
+window.namespace = namespace
 function namespace(namespaceString) {
     var parts = namespaceString.split('.'),
         parent = window,
@@ -270,6 +271,7 @@ function namespace(namespaceString) {
 };
 
 //-----------------------------------------------------------------------------
+window.isEmpty = isEmpty
 function isEmpty(value) {
     if (typeof value == "undefined") return true;					//	undefined object?
     if (value === null) return true;								//	null object?
@@ -442,6 +444,7 @@ function getRandomColour() {
     return result;
 };
 
+window.colourToHex = colourToHex
 function colourToHex(colour) {
     //	colour being passed could be a string
     colour = parseInt(colour);

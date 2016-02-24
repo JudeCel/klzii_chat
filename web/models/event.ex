@@ -5,16 +5,17 @@ defmodule KlziiChat.Event do
     belongs_to :topic, KlziiChat.Account, [foreign_key: :topicId]
     belongs_to :session_member, KlziiChat.SessionMember, [foreign_key: :sessionMemberId]
     belongs_to :reply, KlziiChat.Event, [foreign_key: :replyId]
-    has_many :replis, KlziiChat.Event, [foreign_key: :replyId]
+    has_many :replies, KlziiChat.Event, [foreign_key: :replyId]
     field :event, :map
     field :uid, :string
     field :cmd, :string
     field :tag, :string, default: "message"
+    field :star, :boolean, default: false
     timestamps [inserted_at: :createdAt, updated_at: :updatedAt]
   end
 
-  @required_fields ~w(topic tag uid topicId cmd event timestamp sessionMemberId)
-  @optional_fields ~w()
+  @required_fields ~w(topicId uid sessionMemberId replyId event)
+  @optional_fields ~w(star tag cmd)
 
   @doc """
   Creates a changeset based on the `model` and `params`.

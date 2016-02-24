@@ -8,9 +8,10 @@ defmodule KlziiChat.Services.TopicsService do
     events = Repo.all(
       from e in assoc(topic, :events),
         where: [tag: ^tag],
+        where: is_nil(e.replyId),
         order_by: [desc: e.createdAt],
         limit: 200,
-      preload: [:session_member]
+      preload: [:session_member, replies: [:replies, :session_member] ]
     )
     {:ok, Phoenix.View.render_many(events, EventView, "events.json")}
   end

@@ -45,7 +45,7 @@ var config = module.exports = {
         query: {
           cacheDirectory: true,
           plugins: ['transform-decorators-legacy'],
-          presets: ['react', 'es2015', 'stage-2', 'stage-0'],
+          presets: ['react', 'es2016-node5','stage-0'],
         },
       },
       {
@@ -61,7 +61,6 @@ var config = module.exports = {
   plugins: [
     new ExtractTextPlugin('css/app.css'),
     new webpack.optimize.OccurenceOrderPlugin(),
-    // new webpack.HotModuleReplacementPlugin(),
     new webpack.NoErrorsPlugin()
   ],
 };

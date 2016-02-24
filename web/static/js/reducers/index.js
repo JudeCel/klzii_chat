@@ -1,12 +1,16 @@
 import { combineReducers }  from 'redux';
-import chat              from './chat';
+import chat                 from './chat';
 import members              from './members';
-import topic              from './topic';
-import whiteboard              from './whiteboard';
+import topic                from './topic';
+import whiteboard           from './whiteboard';
+import currentInput         from './currentInput';
+import messages             from './messages';
 
 export default combineReducers({
   chat: chat,
   members: members,
   topic: topic,
-  whiteboard: whiteboard
+  whiteboard: whiteboard,
+  currentInput: currentInput,
+  messages: messages
 });
