@@ -13,14 +13,21 @@ export default function reducer(state = initialState, action = {}) {
       return { ...state, value: action.value };
 
     case Constants.SET_INPUT_DEFAULT_STATE:
-      return { ...state, action: 'new', id: null, value: '' };
+      return initialState;
 
     case Constants.SET_INPUT_EDIT:
-      return { ...state, action: 'edit', id: action.id, value: action.value};
+      if (state.action == 'edit' ) {
+        return initialState;
+      }else{
+        return { ...state, action: 'edit', id: action.id, value: action.value};
+      }
 
     case Constants.SET_INPUT_REPLY:
-      return { ...state, action: 'reply', replyId: action.replyId, value: ''};
-
+      if (state.action == 'reply' ) {
+        return initialState;
+      }else{
+        return { ...state, action: 'reply', replyId: action.replyId, value: ''};
+      }
     default:
       return state;
   }

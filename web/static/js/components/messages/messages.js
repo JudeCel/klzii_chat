@@ -5,14 +5,15 @@ import MessagesActions      from '../../actions/messages';
 
 const Messages =  React.createClass({
   getDataAttrs(e){
-    let id = e.target.getAttribute('data-id')
-    let body = e.target.getAttribute('data-body')
-    let replyId = e.target.getAttribute('data-replyid')
-    return { id, body, replyId }
+    let id = e.target.getAttribute('data-id');
+    let body = e.target.getAttribute('data-body');
+    let replyId = e.target.getAttribute('data-replyid');
+    return { id, body, replyId };
   },
   deleteMessage(e){
     let { id, replyId} = this.getDataAttrs(e);
     this.props.dispatch(MessagesActions.deleteMessage(this.props.channal, {id: id, replyId: replyId }));
+    this.props.dispatch({type: Constants.SET_INPUT_DEFAULT_STATE });
   },
   messageStar(e){
     let { id } = this.getDataAttrs(e);
