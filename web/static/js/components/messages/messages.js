@@ -16,7 +16,7 @@ const Messages =  React.createClass({
   },
   messageStar(e){
     let { id } = this.getDataAttrs(e);
-    this.props.dispatch(MessagesActions.messageStar(this.props.channal, attrs.id));
+    this.props.dispatch(MessagesActions.messageStar(this.props.channal, id));
   },
   replyMessage(e){
     let { replyId } = this.getDataAttrs(e);

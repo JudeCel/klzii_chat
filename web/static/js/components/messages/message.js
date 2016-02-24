@@ -24,7 +24,7 @@ const Message = ({ isReply = true, message, messageStar, deleteMessage, replyMes
       <div className="avatar-container col-md-2">
         <div className={"star " + activeStarClass + " glyphicon glyphicon-star " }
           onClick={ messageStar }
-          id={ message.id }
+          data-id={ message.id }
           />
       </div>
       <div className="message">
