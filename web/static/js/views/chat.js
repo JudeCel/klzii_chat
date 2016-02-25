@@ -4,10 +4,11 @@ import sessionActions       from '../actions/session';
 import topicActions         from '../actions/topic';
 import CurrentInputActions  from '../actions/currentInput';
 import MessagesActions      from '../actions/messages';
-import CurrentMember        from '../components/members/current.js'
 import Messages             from '../components/messages/messages.js'
 import Input                from '../components/messages/input.js'
 import Whiteboard           from '../components/whiteboard'
+import Member               from '../components/members/member.js'
+import Participants         from '../components/members/participants.js'
 
 const ChatView = React.createClass({
   componentWillMount() {
@@ -31,14 +32,21 @@ const ChatView = React.createClass({
     return (
       <div id="chat-app-container" className="col-md-12">
         <div className="info-section"></div>
-        <CurrentMember member={this.props.currentUser}/>
-        <div className="members"></div>
+        <div className="row facilitator-section col-md-2">
+          <Member member={ this.props.facilitator }/>
+        </div>
+
+        <div className="row participants-section col-md-6">
+          <Participants participants={ this.props.participants }/>
+        </div>
+
         <Whiteboard
           currentUser={ this.props.currentUser }
           whiteboard={ this.props.whiteboard }
           dispatch={ this.props.dispatch }
           channal={ this.props.topicChannal }
         />
+
         <div className='col-md-3 jumbotron chat-messages pull-right'>
           <Messages
             channal={ this.props.topicChannal }
@@ -67,7 +75,8 @@ const mapStateToProps = (state) => {
     topicChannal: state.topic.channel,
     socket: state.chat.socket,
     currentUser: state.members.currentUser,
-    members: state.members.all
+    facilitator: state.members.facilitator,
+    participants: state.members.participants
   }
 };
 export default connect(mapStateToProps)(ChatView);

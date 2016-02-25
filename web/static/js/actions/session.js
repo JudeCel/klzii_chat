@@ -1,5 +1,5 @@
-import Constants                          from '../constants';
-import { Socket }                         from 'phoenix';
+import Constants  from '../constants';
+import { Socket } from 'phoenix';
 
 export function joinChannal(dispatch) {
   const socket = new Socket('/socket', {
@@ -15,47 +15,62 @@ export function joinChannal(dispatch) {
 
   dispatch({
     type: Constants.SET_SESSION_CHANNEL,
-    socket: socket,
-    channel: channel
+    socket,
+    channel
   });
   dispatch(Actions.subscribeToSeesionEvents(channel))
 
 
   if (channel.state != 'joined') {
     channel.join()
-    .receive('ok', (resp) => {
+    .receive('ok', (session) => {
       dispatch({
         type: Constants.SET_SESSION,
-        session: resp
+        session
       });
     })
-    .receive('error', (resp) =>{
+    .receive('error', (error) =>{
       return dispatch({
           type: Constants.SOCKET_CONNECTED,
-          error: resp
+          error
         });
     });
   }
 };
 
-function currentMember(dispatch, data) {
+function currentMember(dispatch, user) {
   return dispatch({
-      type: Constants.SET_CURRENT_USER,
-      user: data
-    });
+    type: Constants.SET_CURRENT_USER,
+    user
+  });
+}
+
+function members(dispatch, members) {
+  console.log(members);
+  return dispatch({
+    type: Constants.SET_MEMBERS,
+    participant: members.participant,
+    observer: members.observer,
+    facilitator: members.facilitator
+  });
 }
 
 const Actions = {
   connectToChannel: () => {
     return dispatch => {
-      return joinChannal(dispatch);
+      joinChannal(dispatch);
     };
   },
   subscribeToSeesionEvents: (channel) =>{
     return dispatch => {
       dispatch({ type: Constants.SET_SESSION_EVENTS});
+
       channel.on("self_info", (resp) =>{
-        return currentMember(dispatch, resp);
+        currentMember(dispatch, resp);
+      });
+
+      channel.on("members", (resp) =>{
+        members(dispatch, resp);
       });
     }
   }

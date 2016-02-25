@@ -2,7 +2,9 @@ import Constants from '../constants';
 
 const initialState = {
   currentUser: {},
-  all: []
+  facilitator: {},
+  participants: [],
+  observers: []
 };
 
 export default function reducer(state = initialState, action = {}) {
@@ -11,7 +13,11 @@ export default function reducer(state = initialState, action = {}) {
       return { ...state, currentUser: action.user };
 
     case Constants.SET_MEMBERS:
-      return { ...state, all: action.members};
+      return { ...state,
+        facilitator: action.facilitator,
+        observers: action.observer,
+        participants: action.participant
+      };
 
     default:
       return state;

@@ -1,6 +1,7 @@
 defmodule KlziiChat.SessionChannel do
   use KlziiChat.Web, :channel
   alias KlziiChat.Services.SessionService
+  alias KlziiChat.Services.SessionMembersService
 
   # This Channel is only for session context
   # Session Member information
@@ -12,7 +13,7 @@ defmodule KlziiChat.SessionChannel do
       send(self, :after_join)
       case SessionService.find(session_id) do
         {:ok, session} ->
-          {:ok, session, socket}
+          {:ok, session, assign(socket, :session_id, session_id)}
         {:error, reason} ->
           {:error, %{reason: reason}}
       end
@@ -23,6 +24,13 @@ defmodule KlziiChat.SessionChannel do
 
   def handle_info(:after_join, socket) do
     push socket, "self_info", socket.assigns.session_member
+
+    case SessionMembersService.by_session(socket.assigns.session_id) do
+      {:ok, members} ->
+        push socket, "members", members
+      {:error, reason} ->
+        {:error, %{reason: reason}}
+    end
     {:noreply, socket}
   end
 
