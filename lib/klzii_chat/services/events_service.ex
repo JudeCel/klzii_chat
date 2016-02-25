@@ -3,7 +3,7 @@ defmodule KlziiChat.Services.EventsService do
   import Ecto
   import Ecto.Query
 
-  def create_message(session_member_id, params) do
+  def create_message(session_member_id, topic_id, params) do
     replyId = if params["replyId"] do
       String.to_integer(params["replyId"])
     else
@@ -16,7 +16,7 @@ defmodule KlziiChat.Services.EventsService do
       replyId: replyId,
       sessionId: session_member.sessionId,
       event: params,
-      topicId: 1
+      topicId: replyId
     ) |> create
   end
 
@@ -25,8 +25,8 @@ defmodule KlziiChat.Services.EventsService do
     case Repo.delete!(result) do
       {:error, error} -> # Something went wrong
         {:error, error}
-      model   -> # Deleted with success
-      {:ok, %{ id: model.id, replyId: model.replyId } }
+      event   -> # Deleted with success
+        {:ok, %{ id: event.id, replyId: event.replyId } }
     end
   end
 
@@ -105,7 +105,7 @@ defmodule KlziiChat.Services.EventsService do
       sessionId: session_member.sessionId,
       event: params,
       uid: params["id"],
-      topicId: 1
+      topicId: topic_id
     )
     create(changeset)
   end

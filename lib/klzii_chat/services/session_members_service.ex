@@ -8,7 +8,7 @@ defmodule KlziiChat.Services.SessionMembersService do
       nil ->
         nil
       session_member ->
-        Phoenix.View.render(SessionMembersView, "session_member.json", session_member: session_member)
+        Phoenix.View.render(SessionMembersView, "member.json", member: session_member)
     end
   end
 
@@ -27,18 +27,6 @@ defmodule KlziiChat.Services.SessionMembersService do
   end
 
   def group_by_role(members) do
-    accumulator = %{"facilitator" => %{}, "observer" =>  [], "participant" => []}
-
-    Enum.reduce(members, accumulator, fn (member, acc) ->
-      member_map = Phoenix.View.render(SessionMembersView, "session_member.json", %{ session_member: member})
-      case Map.get(acc, member.role) do
-        value when is_map(value) ->
-          Map.put(acc, member.role, member_map)
-        value when is_list(value) ->
-          role_list = Map.get(acc, member.role)
-          new_list = role_list ++ [member_map]
-          Map.put(acc, member.role, new_list)
-      end
-    end)
+    Phoenix.View.render(SessionMembersView, "group_by_role.json", %{ members: members})
   end
 end

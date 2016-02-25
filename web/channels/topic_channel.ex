@@ -10,7 +10,7 @@ defmodule KlziiChat.TopicChannel do
     if authorized?(socket) do
       case TopicsService.history(topic_id, "message") do
         {:ok, history} ->
-          {:ok, history, assign(socket, :topic_id, topic_id)}
+          {:ok, history, assign(socket, :topic_id, String.to_integer(topic_id))}
         {:error, reason} ->
           {:error, %{reason: reason}}
       end
@@ -29,7 +29,8 @@ defmodule KlziiChat.TopicChannel do
   end
 
   def handle_in("new_message", payload, socket) do
-    case EventsService.create_message(socket.assigns.session_member.id, payload) do
+    topic_id = socket.assigns.topic_id
+    case EventsService.create_message(socket.assigns.session_member.id, topic_id, payload) do
       {:ok, event} ->
         broadcast! socket, "new_message", event
         {:reply, :ok, socket}

@@ -9,7 +9,7 @@ defmodule KlziiChat.Services.TopicsService do
       from e in assoc(topic, :events),
         where: [tag: ^tag],
         where: is_nil(e.replyId),
-        order_by: [desc: e.createdAt],
+        order_by: [asc: e.createdAt],
         limit: 200,
       preload: [:session_member, :votes, replies: [:replies, :session_member, :votes] ]
     )
