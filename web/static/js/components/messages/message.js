@@ -1,7 +1,14 @@
 import React, {PropTypes}       from 'react';
 import moment                   from 'moment'
 
-const Message = ({ isReply = true, message, messageStar, deleteMessage, replyMessage, editMessage }) => {
+const Message = ({
+    isReply = true,
+    message, messageStar,
+    deleteMessage,
+    replyMessage,
+    editMessage,
+    thumbsUp
+  }) => {
   let activeStarClass = (message.star ? "active" : "");
   let formattedTime =  moment(new Date(message.time)).format("ddd h:mm D/YY");
   let avatarColor = message.session_member.colour.toString(16);
@@ -42,6 +49,12 @@ const Message = ({ isReply = true, message, messageStar, deleteMessage, replyMes
       </div>
       <div className="message-action-list">
         <div
+          onClick={ thumbsUp }
+          data-id={ message.id }
+          className="action glyphicon glyphicon-thumbs-up">
+          { message.votes_count }
+        </div>
+        <div
           onClick={ editMessage }
           data-id={ message.id }
           data-body={ message.event.body }
@@ -62,6 +75,7 @@ const Message = ({ isReply = true, message, messageStar, deleteMessage, replyMes
             messageStar={ messageStar }
             editMessage={ editMessage }
             replyMessage={ replyMessage }
+            thumbsUp={ thumbsUp }
             isReply= { false }
             key={ reply.id }
           />)

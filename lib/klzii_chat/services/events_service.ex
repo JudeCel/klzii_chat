@@ -1,5 +1,5 @@
 defmodule KlziiChat.Services.EventsService do
-  alias KlziiChat.{Repo, Event, EventView, SessionMember}
+  alias KlziiChat.{Repo, Event, EventView, SessionMember, Vote}
   import Ecto
   import Ecto.Query
 
@@ -41,7 +41,7 @@ defmodule KlziiChat.Services.EventsService do
   end
 
   def build_message_response(event) do
-    event = Repo.preload(event,  [:session_member, replies: [:replies, :session_member] ])
+    event = Repo.preload(event, [:session_member, :votes, replies: [:replies, :session_member, :votes] ])
     Phoenix.View.render(EventView, "event.json", %{ event: event })
 
   end
@@ -65,6 +65,28 @@ defmodule KlziiChat.Services.EventsService do
     event = Repo.get_by!(Event, id: id)
     Ecto.Changeset.change(event, star: !event.star)
     |> update
+  end
+
+  def thumbs_up(session_member_id, id) do
+    event = Repo.get_by!(Event, id: id)
+
+    case Repo.get_by(Vote, eventId: id) do
+      nil ->
+        changeset = Vote.changeset(%Vote{}, %{sessionMemberId: session_member_id, eventId: id})
+        case Repo.insert(changeset) do
+          {:ok, _vote} ->
+            {:ok, build_message_response(event)}
+          {:error, changeset} ->
+            {:error, changeset}
+        end
+      vote ->
+        case Repo.delete!(vote) do
+          vote ->
+            {:ok, build_message_response(event)}
+          {:error, changeset} ->
+            {:error, changeset}
+        end
+    end
   end
 
   def update_object(session_member_id, topic_id, params) do

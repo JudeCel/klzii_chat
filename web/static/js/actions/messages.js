@@ -11,10 +11,10 @@ function delete_mesage(dispatch, data) {
     message: data
   });
 }
-function update_mesage(dispatch, data) {
+function update_mesage(dispatch, message) {
   return dispatch({
     type: Constants.UPDATE_MESSAGE,
-    message: data
+    message
   });
 }
 
@@ -64,6 +64,10 @@ const Actions = {
       channel.on("message_star", (resp) =>{
         return update_mesage(dispatch, resp);
       });
+
+      channel.on("thumbs_up", (resp) =>{
+        return update_mesage(dispatch, resp);
+      });
     }
   },
   sendMessage: (channel, inputState) => {
@@ -93,9 +97,20 @@ const Actions = {
       });
     };
   },
-  messageStar: (channel, id) => {
+  messageStar: (channel, payload) => {
     return dispatch => {
-      channel.push('message_star', {id: id})
+      channel.push('message_star', payload)
+      .receive('error', (data) => {
+        dispatch({
+          type: Constants.NEW_MESSAGE_ERROR,
+          error: data.error
+        });
+      });
+    };
+  },
+  thumbsUp: (channel, payload) => {
+    return dispatch => {
+      channel.push('thumbs_up', payload)
       .receive('error', (data) => {
         dispatch({
           type: Constants.NEW_MESSAGE_ERROR,

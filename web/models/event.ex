@@ -6,6 +6,7 @@ defmodule KlziiChat.Event do
     belongs_to :session_member, KlziiChat.SessionMember, [foreign_key: :sessionMemberId]
     belongs_to :reply, KlziiChat.Event, [foreign_key: :replyId]
     has_many :replies, KlziiChat.Event, [foreign_key: :replyId]
+    has_many :votes, KlziiChat.Vote, [foreign_key: :eventId]
     field :event, :map
     field :uid, :string
     field :cmd, :string

@@ -11,7 +11,7 @@ defmodule KlziiChat.Services.TopicsService do
         where: is_nil(e.replyId),
         order_by: [desc: e.createdAt],
         limit: 200,
-      preload: [:session_member, replies: [:replies, :session_member] ]
+      preload: [:session_member, :votes, replies: [:replies, :session_member, :votes] ]
     )
     {:ok, Phoenix.View.render_many(events, EventView, "events.json")}
   end

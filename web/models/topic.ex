@@ -15,7 +15,7 @@ defmodule KlziiChat.Topic do
 
   end
 
-  @required_fields ~w( TopicId accountId type name active description )
+  @required_fields ~w(accountId type name active description )
   @optional_fields ~w()
 
   @doc """

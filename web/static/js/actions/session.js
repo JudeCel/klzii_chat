@@ -46,7 +46,6 @@ function currentMember(dispatch, user) {
 }
 
 function members(dispatch, members) {
-  console.log(members);
   return dispatch({
     type: Constants.SET_MEMBERS,
     participant: members.participant,

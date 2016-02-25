@@ -58,6 +58,16 @@ defmodule KlziiChat.TopicChannel do
         {:error, %{reason: reason}}
     end
   end
+  def handle_in("thumbs_up", %{"id" => id}, socket) do
+    session_member_id = socket.assigns.session_member.id
+    case EventsService.thumbs_up(session_member_id, id) do
+      {:ok, event} ->
+        broadcast! socket, "message_star", event
+        {:reply, :ok, socket}
+      {:error, reason} ->
+        {:error, %{reason: reason}}
+    end
+  end
 
   def handle_in("update_message", %{"id" => id, "body" => body}, socket) do
     case EventsService.update_message(id, body) do

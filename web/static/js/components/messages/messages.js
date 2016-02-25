@@ -15,6 +15,11 @@ const Messages =  React.createClass({
     this.props.dispatch(MessagesActions.deleteMessage(this.props.channal, {id: id, replyId: replyId }));
     this.props.dispatch({type: Constants.SET_INPUT_DEFAULT_STATE });
   },
+  thumbsUp(e){
+    let { id } = this.getDataAttrs(e);
+    this.props.dispatch(MessagesActions.thumbsUp(this.props.channal, {id: id }));
+    this.props.dispatch({type: Constants.SET_INPUT_DEFAULT_STATE });
+  },
   messageStar(e){
     let { id } = this.getDataAttrs(e);
     this.props.dispatch(MessagesActions.messageStar(this.props.channal, id));
@@ -37,6 +42,7 @@ const Messages =  React.createClass({
             messageStar={ this.messageStar }
             editMessage={ this.editMessage }
             replyMessage={ this.replyMessage }
+            thumbsUp={ this.thumbsUp }
             key={ message.id }
           />
         )}

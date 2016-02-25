@@ -11,7 +11,8 @@ defmodule KlziiChat.EventView do
       replyId: event.replyId,
       time: event.createdAt,
       star: event.star,
-      replies: render_many(event.replies, KlziiChat.EventView, "events.json")
+      replies: render_many(event.replies, KlziiChat.EventView, "events.json"),
+      votes_count: Enum.count(event.votes)
     }
   end
 
@@ -24,7 +25,8 @@ defmodule KlziiChat.EventView do
       replyId: event.replyId,
       time: event.createdAt,
       star: event.star,
-      replies: render_many(event.replies, KlziiChat.EventView, "events.json")
+      replies: render_many(event.replies, KlziiChat.EventView, "events.json"),
+      votes_count: Enum.count(event.votes)
     }
   end
 end
