@@ -15,6 +15,8 @@ const Message = ({
   let messageHeaderStyle = {
     backgroundColor: `#${avatarColor}`
   }
+  let has_voted = { color: ( message.has_voted ? "green" : "") }
+
 
   let replyAction = (() => {
     if(isReply) {
@@ -51,7 +53,7 @@ const Message = ({
         <div
           onClick={ thumbsUp }
           data-id={ message.id }
-          className="action glyphicon glyphicon-thumbs-up">
+          className="action glyphicon glyphicon-thumbs-up" style={ has_voted } >
           { message.votes_count }
         </div>
         <div

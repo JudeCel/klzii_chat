@@ -8,7 +8,8 @@ defmodule KlziiChat.TopicChannel do
 
   def join("topics:" <> topic_id, payload, socket) do
     if authorized?(socket) do
-      case EventsService.history(topic_id, "message") do
+      session_member = socket.assigns.session_member
+      case EventsService.history(topic_id, "message", session_member.id) do
         {:ok, history} ->
           {:ok, history, assign(socket, :topic_id, String.to_integer(topic_id))}
         {:error, reason} ->
@@ -17,6 +18,11 @@ defmodule KlziiChat.TopicChannel do
     else
       {:error, %{reason: "unauthorized"}}
     end
+  end
+
+  def handle_out(event, payload, socket) do
+    push socket, event, payload
+    {:noreply, socket}
   end
 
   def handle_in("whiteboardHistory", payload, socket) do
@@ -39,7 +45,6 @@ defmodule KlziiChat.TopicChannel do
     end
   end
 
-
   def handle_in("delete_message", %{ "id" => id }, socket) do
     case EventsService.deleteById(id) do
       {:ok, resp} ->
@@ -51,7 +56,8 @@ defmodule KlziiChat.TopicChannel do
   end
 
   def handle_in("message_star", %{"id" => id}, socket) do
-    case EventsService.star(id) do
+    session_member_id = socket.assigns.session_member.id
+    case EventsService.star(id, session_member_id) do
       {:ok, event} ->
         broadcast! socket, "message_star", event
         {:reply, :ok, socket}
@@ -59,9 +65,10 @@ defmodule KlziiChat.TopicChannel do
         {:error, %{reason: reason}}
     end
   end
+
   def handle_in("thumbs_up", %{"id" => id}, socket) do
     session_member_id = socket.assigns.session_member.id
-    case EventsService.thumbs_up(session_member_id, id) do
+    case EventsService.thumbs_up(id, session_member_id) do
       {:ok, event} ->
         broadcast! socket, "message_star", event
         {:reply, :ok, socket}
@@ -71,7 +78,8 @@ defmodule KlziiChat.TopicChannel do
   end
 
   def handle_in("update_message", %{"id" => id, "body" => body}, socket) do
-    case EventsService.update_message(id, body) do
+    session_member_id = socket.assigns.session_member.id
+    case EventsService.update_message(id, body, session_member_id) do
       {:ok, event} ->
         broadcast! socket, "message_star", event
         {:reply, :ok, socket}
@@ -126,13 +134,6 @@ defmodule KlziiChat.TopicChannel do
     broadcast! socket, "delete_all", %{}
     {:reply, :ok, socket}
   end
-
-  def handle_out(event, payload, socket) do
-    push socket, event, payload
-    {:noreply, socket}
-  end
-
-
 
   # Add authorization logic here as required.
   # TODO: Need verification by topic and session context.

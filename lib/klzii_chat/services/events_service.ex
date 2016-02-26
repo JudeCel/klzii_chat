@@ -3,7 +3,7 @@ defmodule KlziiChat.Services.EventsService do
   import Ecto
   import Ecto.Query
 
-  def history(topic_id, tag) do
+  def history(topic_id, tag, session_member_id) do
     topic = Repo.get!(Topic, topic_id)
     events = Repo.all(
       from e in assoc(topic, :events),
@@ -13,7 +13,10 @@ defmodule KlziiChat.Services.EventsService do
         limit: 200,
       preload: [:session_member, :votes, replies: [:replies, :session_member, :votes] ]
     )
-    {:ok, Phoenix.View.render_many(events, EventView, "event.json")}
+    resp = Enum.map(events, fn event ->
+      EventView.render("event.json", %{event: event, member_id: session_member_id})
+    end)
+    {:ok, resp}
   end
 
   def create_message(session_member_id, topic_id, params) do
@@ -30,7 +33,7 @@ defmodule KlziiChat.Services.EventsService do
       sessionId: session_member.sessionId,
       event: params,
       topicId: replyId
-    ) |> create
+    ) |> create(session_member_id)
   end
 
   def deleteById(id) do
@@ -44,43 +47,44 @@ defmodule KlziiChat.Services.EventsService do
   end
 
 
-  def update(changeset) do
-    case Repo.update changeset do
-      {:ok, event} ->
-        {:ok, build_message_response(event)}
-      {:error, changeset} ->
-        {:error, changeset}
-    end
-  end
 
-  def build_message_response(event) do
+  def build_message_response(event, session_member_id) do
     event = Repo.preload(event, [:session_member, :votes, replies: [:replies, :session_member, :votes] ])
-    Phoenix.View.render(EventView, "event.json", %{ event: event })
+    EventView.render("event.json", %{event: event, member_id: session_member_id})
 
   end
 
-  def create(changeset) do
+  def create(changeset, session_member_id) do
     case Repo.insert(changeset) do
       {:ok, event} ->
-        {:ok, build_message_response(event)}
+        {:ok, build_message_response(event, session_member_id)}
       {:error, changeset} ->
         {:error, changeset}
     end
   end
 
-  def update_message(id, body) do
+  def update_message(id, body, session_member_id) do
     event = Repo.get_by!(Event, id: id)
-    Ecto.Changeset.change(event, event: %{body: body})
-    |> update
+    Ecto.Changeset.change(event, event: %{ body: body })
+      |> update_msg(session_member_id)
   end
 
-  def star(id) do
+  def update_msg(changeset, session_member_id) do
+    case Repo.update(changeset) do
+      {:ok, event} ->
+        {:ok, build_message_response(event, session_member_id)}
+      {:error, changeset} ->
+        {:error, changeset}
+    end
+  end
+
+  def star(id, session_member_id) do
     event = Repo.get_by!(Event, id: id)
     Ecto.Changeset.change(event, star: !event.star)
-    |> update
+      |> update_msg(session_member_id)
   end
 
-  def thumbs_up(session_member_id, id) do
+  def thumbs_up(id, session_member_id) do
     event = Repo.get_by!(Event, id: id)
 
     case Repo.get_by(Vote, eventId: id) do
@@ -88,14 +92,14 @@ defmodule KlziiChat.Services.EventsService do
         changeset = Vote.changeset(%Vote{}, %{sessionMemberId: session_member_id, eventId: id})
         case Repo.insert(changeset) do
           {:ok, _vote} ->
-            {:ok, build_message_response(event)}
+            {:ok, build_message_response(event, session_member_id)}
           {:error, changeset} ->
             {:error, changeset}
         end
       vote ->
         case Repo.delete!(vote) do
           vote ->
-            {:ok, build_message_response(event)}
+            {:ok, build_message_response(event, session_member_id)}
           {:error, changeset} ->
             {:error, changeset}
         end

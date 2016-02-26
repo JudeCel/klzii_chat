@@ -13,7 +13,7 @@ defmodule KlziiChat.EventView do
     }
   end
 
-  def render("event.json", %{event: event}) do
+  def render("event.json", %{event: event, member_id: member_id}) do
     %{
       id: event.id,
       session_member: SessionMembersView.render("member.json", %{member: event.session_member}),
@@ -22,8 +22,11 @@ defmodule KlziiChat.EventView do
       replyId: event.replyId,
       time: event.createdAt,
       star: event.star,
-      replies: render_many(event.replies, KlziiChat.EventView, "event.json"),
-      votes_count: Enum.count(event.votes)
+      replies: Enum.map(event.replies, fn r ->
+        render("event.json", %{event: r, member_id: member_id})
+      end),
+      votes_count: Enum.count(event.votes),
+      has_voted: Enum.any?(event.votes, fn v -> v.sessionMemberId == member_id  end)
     }
   end
 end
