@@ -1,6 +1,8 @@
 import React, {PropTypes}       from 'react';
 import moment                   from 'moment'
 
+
+// TODO: Need rewrite to React component!
 const Message = ({
     isReply = true,
     message, messageStar,
