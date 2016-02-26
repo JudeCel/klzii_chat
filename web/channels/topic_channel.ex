@@ -1,6 +1,6 @@
 defmodule KlziiChat.TopicChannel do
   use KlziiChat.Web, :channel
-  alias KlziiChat.Services.{TopicsService, EventsService}
+  alias KlziiChat.Services.{TopicsService, EventsService, WhiteboardService}
 
   # This Channel is only for Topic context
   # brodcast and receive messages from session members
@@ -8,7 +8,7 @@ defmodule KlziiChat.TopicChannel do
 
   def join("topics:" <> topic_id, payload, socket) do
     if authorized?(socket) do
-      case TopicsService.history(topic_id, "message") do
+      case EventsService.history(topic_id, "message") do
         {:ok, history} ->
           {:ok, history, assign(socket, :topic_id, String.to_integer(topic_id))}
         {:error, reason} ->
@@ -20,7 +20,7 @@ defmodule KlziiChat.TopicChannel do
   end
 
   def handle_in("whiteboardHistory", payload, socket) do
-    case TopicsService.history(socket.assigns.topic_id, "object") do
+    case WhiteboardService.history(socket.assigns.topic_id, "object") do
       {:ok, history} ->
         {:reply, {:ok, %{history: history}}, socket}
       {:error, reason} ->
@@ -83,7 +83,7 @@ defmodule KlziiChat.TopicChannel do
   def handle_in("draw", payload, socket) do
     session_member_id = socket.assigns.session_member.id
     topic_id = socket.assigns.topic_id
-    case EventsService.create_object(session_member_id, topic_id,  payload) do
+    case WhiteboardService.create_object(session_member_id, topic_id,  payload) do
       {:ok, event} ->
         broadcast! socket, "draw", event
         {:reply, :ok, socket}
@@ -96,7 +96,7 @@ defmodule KlziiChat.TopicChannel do
   def handle_in("update_object", %{"object" => object}, socket) do
     session_member_id = socket.assigns.session_member.id
     topic_id = socket.assigns.topic_id
-    case EventsService.update_object(session_member_id, topic_id,  object) do
+    case WhiteboardService.update_object(session_member_id, topic_id,  object) do
       {:ok, event} ->
         broadcast! socket, "update_object", event
         {:reply, :ok, socket}
@@ -109,7 +109,7 @@ defmodule KlziiChat.TopicChannel do
   def handle_in("delete_object", %{"uid" => uid}, socket) do
     session_member_id = socket.assigns.session_member.id
     topic_id = socket.assigns.topic_id
-    case EventsService.deleteByUids([uid]) do
+    case WhiteboardService.deleteByUids([uid]) do
       {:ok} ->
         broadcast! socket, "delete_object", %{uid: uid}
         {:reply, :ok, socket}
@@ -122,7 +122,7 @@ defmodule KlziiChat.TopicChannel do
   def handle_in("deleteAll", payload, socket) do
     session_member_id = socket.assigns.session_member.id
     topic_id = socket.assigns.topic_id
-    EventsService.deleteAll(session_member_id, topic_id,  payload)
+    WhiteboardService.deleteAll(session_member_id, topic_id,  payload)
     broadcast! socket, "delete_all", %{}
     {:reply, :ok, socket}
   end
