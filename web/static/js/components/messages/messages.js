@@ -43,6 +43,7 @@ const Messages =  React.createClass({
             editMessage={ this.editMessage }
             replyMessage={ this.replyMessage }
             thumbsUp={ this.thumbsUp }
+            isReply={ true }
             key={ message.id }
           />
         )}

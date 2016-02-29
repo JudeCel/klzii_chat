@@ -61,11 +61,7 @@ const Actions = {
         return delete_mesage(dispatch, resp);
       });
 
-      channel.on("message_star", (resp) =>{
-        return update_mesage(dispatch, resp);
-      });
-
-      channel.on("thumbs_up", (resp) =>{
+      channel.on("update_message", (resp) =>{
         return update_mesage(dispatch, resp);
       });
     }
