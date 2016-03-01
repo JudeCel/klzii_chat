@@ -1,5 +1,5 @@
 defmodule KlziiChat.Services.SessionMembersServiceTest do
-  use KlziiChat.ModelCase
+  use ExUnit.Case, async: true
   alias  KlziiChat.Services.SessionMembersService
 
   test "group_by_role" do

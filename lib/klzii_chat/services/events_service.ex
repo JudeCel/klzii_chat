@@ -46,7 +46,7 @@ defmodule KlziiChat.Services.EventsService do
     end
   end
 
-  @spec deleteById(Map.t, Integer.t) :: {:ok, %{ id: Integer.t, replyId: Integer.t } } :: {:error, String.t}
+  @spec deleteById(Map.t, Integer.t) :: {:ok, %{ id: Integer.t, replyId: Integer.t } } | {:error, String.t}
   def deleteById(session_member, id) do
     result = Repo.get_by!(Event, id: id)
     if Permissions.can_delete(session_member, result) do
@@ -76,7 +76,7 @@ defmodule KlziiChat.Services.EventsService do
     end
   end
 
-  @spec update_message(Integer.t, String.t, Map.t) :: %Event{} :: {:error, String.t}
+  @spec update_message(Integer.t, String.t, Map.t) :: %Event{} | {:error, String.t}
   def update_message(id, body, session_member) do
     event = Repo.get_by!(Event, id: id)
     if Permissions.can_edit(session_member, event) do
@@ -97,7 +97,7 @@ defmodule KlziiChat.Services.EventsService do
     end
   end
 
-  @spec star(Integer.t, Map.t) :: %Event{} :: {:error, String.t}
+  @spec star(Integer.t, Map.t) :: %Event{} | {:error, String.t}
   def star(id, session_member) do
     if Permissions.can_star(session_member) do
       event = Repo.get_by!(Event, id: id)
@@ -108,7 +108,7 @@ defmodule KlziiChat.Services.EventsService do
     end
   end
 
-  @spec thumbs_up(Integer.t, Map.t) :: Map.t :: {:error, String.t}
+  @spec thumbs_up(Integer.t, Map.t) :: Map.t | {:error, String.t}
   def thumbs_up(id, session_member) do
     if Permissions.can_vote(session_member) do
       event = Repo.get_by!(Event, id: id)
