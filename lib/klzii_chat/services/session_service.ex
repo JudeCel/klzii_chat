@@ -4,7 +4,7 @@ defmodule KlziiChat.Services.SessionService do
   import Ecto.Query, only: [from: 1, from: 2]
 
   def find(session_id) do
-    case Repo.get_by(Session, id: session_id) do
+    case Repo.get_by!(Session, id: session_id) do
       nil ->
         nil
       session ->

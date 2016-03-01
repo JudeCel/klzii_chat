@@ -8,8 +8,8 @@ defmodule KlziiChat.SessionChannel do
   # Global messages for session
 
   def join("sessions:" <> session_id, payload, socket) do
+    {session_id, _} = Integer.parse(session_id)
     if authorized?(socket) do
-      assign(socket, :session_id, session_id)
       send(self, :after_join)
       case SessionService.find(session_id) do
         {:ok, session} ->

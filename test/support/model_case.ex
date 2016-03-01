@@ -26,7 +26,11 @@ defmodule KlziiChat.ModelCase do
   end
 
   setup tags do
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(KlziiChat.Repo)
+    unless tags[:async] do
+      Ecto.Adapters.SQL.restart_test_transaction(ChatDemo.Repo, [])
+    end
+
+   :ok
   end
 
   @doc """

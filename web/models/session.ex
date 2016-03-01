@@ -4,6 +4,7 @@ defmodule KlziiChat.Session do
   schema "Sessions" do
     field :name, :string
     field :brand_project_id,  :integer
+    field :accountId, :integer
     field :start_time, Ecto.DateTime
     field :end_time, Ecto.DateTime
     field :incentive_details, :string

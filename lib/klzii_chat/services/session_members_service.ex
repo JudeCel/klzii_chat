@@ -16,14 +16,8 @@ defmodule KlziiChat.Services.SessionMembersService do
     query =
       from sm in SessionMember,
         where: sm.sessionId == ^session_id
-
-    case Repo.all(query) do
-      [] ->
-        nil
-      members ->
-        group_by_role(members)
-        {:ok, group_by_role(members)}
-    end
+    result = Repo.all(query)
+    {:ok, group_by_role(result)}
   end
 
   def group_by_role(members) do
