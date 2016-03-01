@@ -2,6 +2,7 @@ defmodule KlziiChat.EventView do
   use KlziiChat.Web, :view
   alias KlziiChat.SessionMembersView
   alias KlziiChat.Services.Permissions
+  alias KlziiChat.Decorators.EventDecorator
 
   @spec render(String.t, Map.t) :: Map.t
   def render("whiteboard_event.json", %{event: event}) do
@@ -23,32 +24,21 @@ defmodule KlziiChat.EventView do
       event: event.event,
       tag: event.tag,
       replyId: event.replyId,
-      sessionMemberId: event.sessionMemberId,
       time: event.createdAt,
       star: event.star,
       replies: Enum.map(event.replies, fn r ->
         render("event.json", %{event: r, member: member})
       end),
-      votes_count: votes_count(event.votes),
-      votes_ids: votes_ids(event.votes),
-      has_voted: false,
+      votes_count: EventDecorator.votes_count(event.votes),
+      has_voted: EventDecorator.has_voted(event.votes, member),
       permissions: %{
-        can_edit: false,
-        can_delete: false,
-        can_star: false,
-        can_vote: false,
-        can_reply: false
+        can_edit: Permissions.can_edit(member, event),
+        can_delete: Permissions.can_delete(member, event),
+        can_star: Permissions.can_star(member),
+        can_vote: Permissions.can_vote(member),
+        can_reply: Permissions.can_reply(member),
+        can_new_message: Permissions.can_new_message(member)
       }
     }
-  end
-
-  @spec votes_count(List.t) :: Integer.t
-  defp votes_count(votes) do
-    Enum.count(votes)
-  end
-
-  @spec votes_ids(List.t) :: List.t
-  defp votes_ids(votes) do
-    Enum.map(votes, &(&1.sessionMemberId))
   end
 end

@@ -11,7 +11,7 @@ defmodule KlziiChat.Services.WhiteboardService do
         where: is_nil(e.replyId),
         order_by: [asc: e.createdAt],
         limit: 200,
-      preload: [:session_member, :votes, replies: [:replies, :session_member, :votes] ]
+      preload: [:session_member]
     )
     {:ok, Phoenix.View.render_many(events, EventView, "whiteboard_event.json")}
   end

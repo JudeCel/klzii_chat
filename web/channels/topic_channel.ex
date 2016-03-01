@@ -1,6 +1,7 @@
 defmodule KlziiChat.TopicChannel do
   use KlziiChat.Web, :channel
-  alias KlziiChat.Services.{TopicsService, EventsService, WhiteboardService}
+  alias KlziiChat.Services.{EventsService, WhiteboardService, Permissions}
+  alias KlziiChat.EventView
 
   # This Channel is only for Topic context
   # brodcast and receive messages from session members
@@ -33,9 +34,10 @@ defmodule KlziiChat.TopicChannel do
 
   def handle_in("new_message", payload, socket) do
     topic_id = socket.assigns.topic_id
-    case EventsService.create_message(socket.assigns.session_member, topic_id, payload) do
+    session_member = socket.assigns.session_member
+    case EventsService.create_message(session_member, topic_id, payload) do
       {:ok, event} ->
-        broadcast! socket, "new_message", event
+        broadcast! socket, "new_message",  EventView.render("event.json", %{event: event, member: session_member})
         {:reply, :ok, socket}
       {:error, reason} ->
         {:error, %{reason: reason}}
@@ -43,7 +45,7 @@ defmodule KlziiChat.TopicChannel do
   end
 
   def handle_in("delete_message", %{ "id" => id }, socket) do
-    case EventsService.deleteById(id) do
+    case EventsService.deleteById(socket.assigns.session_member, id) do
       {:ok, resp} ->
         broadcast! socket, "delete_message", resp
         {:reply, :ok, socket}
@@ -53,9 +55,10 @@ defmodule KlziiChat.TopicChannel do
   end
 
   def handle_in("message_star", %{"id" => id}, socket) do
-    case EventsService.star(id, socket.assigns.session_member) do
+    case EventsService.star(id) do
       {:ok, event} ->
-        broadcast! socket, "update_message", event
+        session_member = socket.assigns.session_member
+        broadcast! socket, "update_message", EventView.render("event.json", %{event: event, member: session_member})
         {:reply, :ok, socket}
       {:error, reason} ->
         {:error, %{reason: reason}}
@@ -63,9 +66,10 @@ defmodule KlziiChat.TopicChannel do
   end
 
   def handle_in("thumbs_up", %{"id" => id}, socket) do
-    case EventsService.thumbs_up(id, socket.assigns.session_member) do
+    session_member = socket.assigns.session_member
+    case EventsService.thumbs_up(id, session_member) do
       {:ok, event} ->
-        broadcast! socket, "update_message", event
+        broadcast! socket, "update_message", EventView.render("event.json", %{event: event, member: session_member})
         {:reply, :ok, socket}
       {:error, reason} ->
         {:error, %{reason: reason}}
@@ -73,9 +77,10 @@ defmodule KlziiChat.TopicChannel do
   end
 
   def handle_in("update_message", %{"id" => id, "body" => body}, socket) do
-    case EventsService.update_message(id, body, socket.assigns.session_member) do
+    session_member = socket.assigns.session_member
+    case EventsService.update_message(id, body, session_member) do
       {:ok, event} ->
-        broadcast! socket, "update_message", event
+        broadcast! socket, "update_message", EventView.render("event.json", %{event: event, member: session_member})
         {:reply, :ok, socket}
       {:error, reason} ->
         {:error, %{reason: reason}}
@@ -131,10 +136,9 @@ defmodule KlziiChat.TopicChannel do
 
   def handle_out(event, payload, socket) do
     session_member = socket.assigns.session_member
-    push socket, event, EventsService.set_individual_context(payload, session_member)
+    push socket, event, EventView.render("event.json", %{event: payload, member: session_member})
     {:noreply, socket}
   end
-
 
   # Add authorization logic here as required.
   # TODO: Need verification by topic and session context.

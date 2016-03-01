@@ -4,33 +4,6 @@ defmodule KlziiChat.Services.EventsService do
   import Ecto
   import Ecto.Query
 
-  @spec set_permissions(Map.t, Map.t) :: Map.t
-  def set_permissions(event, session_member) do
-    permissions = %{
-      can_edit: Permissions.can_edit(event, session_member),
-      can_delete: Permissions.can_delete(event, session_member),
-      can_star: Permissions.can_star(session_member),
-      can_vote: Permissions.can_vote(session_member),
-      can_reply: Permissions.can_reply(session_member)
-    }
-    Map.merge(event, %{permissions: permissions})
-  end
-
-  @spec has_voted(Map.t, Integer.t) :: Map.t
-  def has_voted(event, session_member_id) do
-    Map.merge(event,
-      %{has_voted:  Enum.any?(event.votes_ids, fn id ->
-        id == session_member_id
-      end)
-    })
-  end
-
-  @spec set_individual_context(Map.t, Map.t) :: Map.t
-  def set_individual_context(event, session_member) do
-    set_permissions(event, session_member)
-      |> has_voted(session_member.id)
-  end
-
   @spec history(Integer.t, String.t, Map.t) :: {:ok, List.t }
   def history(topic_id, tag, session_member) do
     topic = Repo.get!(Topic, topic_id)
@@ -44,102 +17,120 @@ defmodule KlziiChat.Services.EventsService do
     )
     resp = Enum.map(events, fn event ->
       EventView.render("event.json", %{event: event, member: session_member})
-        |> set_individual_context(session_member)
     end)
     {:ok, resp}
   end
 
   @spec create_message(Map.t, Integer.t, Map.t) :: {:ok, Map.t }
   def create_message(session_member, topic_id, params) do
-    replyId =
-      case params["replyId"] do
-        nil ->
-          nil
-        id ->
-          String.to_integer(id)
-      end
+    if Permissions.can_new_message(session_member) do
+      replyId =
+        case params["replyId"] do
+          nil ->
+            nil
+          id ->
+            String.to_integer(id)
+        end
 
-    session_member = Repo.get!(SessionMember, session_member.id)
-    build_assoc(
-      session_member, :events,
-      tag: "message",
-      replyId: replyId,
-      sessionId: session_member.sessionId,
-      event: params,
-      topicId: topic_id
-    ) |> create(session_member)
-  end
-
-  @spec deleteById(Integer.t) :: {:ok, %{ id: Integer.t, replyId: Integer.t } }
-  def deleteById(id) do
-    result = Repo.get_by!(Event, id: id)
-    case Repo.delete!(result) do
-      {:error, error} -> # Something went wrong
-        {:error, error}
-      event   -> # Deleted with success
-        {:ok, %{ id: event.id, replyId: event.replyId } }
+      session_member = Repo.get!(SessionMember, session_member.id)
+      build_assoc(
+        session_member, :events,
+        tag: "message",
+        replyId: replyId,
+        sessionId: session_member.sessionId,
+        event: params,
+        topicId: topic_id
+      ) |> create
+    else
+      {:error, "Action not allowed!"}
     end
   end
 
-  @spec build_message_response(%Event{}, Map.t) :: Map.t
-  def build_message_response(event, session_member) do
-    event = Repo.preload(event, [:session_member, :votes, replies: [:replies, :session_member, :votes] ])
-    EventView.render("event.json", %{event: event, member: session_member})
+  @spec deleteById(Map.t, Integer.t) :: {:ok, %{ id: Integer.t, replyId: Integer.t } } :: {:error, String.t}
+  def deleteById(session_member, id) do
+    result = Repo.get_by!(Event, id: id)
+    if Permissions.can_delete(session_member, result) do
+      case Repo.delete!(result) do
+        {:error, error} -> # Something went wrong
+          {:error, error}
+        event   -> # Deleted with success
+          {:ok, %{ id: event.id, replyId: event.replyId } }
+      end
+    else
+      {:error, "Action not allowed!"}
+    end
   end
 
-  @spec create(%Event{}, Map.t) :: Map.t
-  def create(changeset, session_member) do
+  @spec preload_dependencies(%Event{}) :: %Event{}
+  def preload_dependencies(event) do
+    Repo.preload(event, [:session_member, :votes, replies: [:replies, :session_member, :votes] ])
+  end
+
+  @spec create(%Event{}) :: %Event{}
+  def create(changeset) do
     case Repo.insert(changeset) do
       {:ok, event} ->
-        {:ok, build_message_response(event, session_member)}
+        {:ok, preload_dependencies(event)}
       {:error, changeset} ->
         {:error, changeset}
     end
   end
 
-  @spec update_message(Integer.t, String.t, Map.t) :: Map.t
+  @spec update_message(Integer.t, String.t, Map.t) :: %Event{} :: {:error, String.t}
   def update_message(id, body, session_member) do
     event = Repo.get_by!(Event, id: id)
-    Ecto.Changeset.change(event, event: %{ body: body })
-      |> update_msg(session_member)
+    if Permissions.can_edit(session_member, event) do
+      Ecto.Changeset.change(event, event: %{ body: body })
+        |> update_msg
+    else
+      {:error, "Action not allowed!"}
+    end
   end
 
-  @spec update_msg(%Event{}, Map.t) :: Map.t
-  def update_msg(changeset, session_member) do
+  @spec update_msg(%Event{}) :: %Event{}
+  def update_msg(changeset) do
     case Repo.update(changeset) do
       {:ok, event} ->
-        {:ok, build_message_response(event, session_member)}
+        {:ok, preload_dependencies(event)}
       {:error, changeset} ->
         {:error, changeset}
     end
   end
 
-  @spec star(Integer.t, Map.t) :: Map.t
+  @spec star(Integer.t, Map.t) :: %Event{} :: {:error, String.t}
   def star(id, session_member) do
-    event = Repo.get_by!(Event, id: id)
-    Ecto.Changeset.change(event, star: !event.star)
-      |> update_msg(session_member)
+    if Permissions.can_star(session_member) do
+      event = Repo.get_by!(Event, id: id)
+      Ecto.Changeset.change(event, star: !event.star)
+        |> update_msg
+    else
+      {:error, "Action not allowed!"}
+    end
   end
 
-  @spec thumbs_up(Integer.t, Map.t) :: Map.t
+  @spec thumbs_up(Integer.t, Map.t) :: Map.t :: {:error, String.t}
   def thumbs_up(id, session_member) do
-    event = Repo.get_by!(Event, id: id)
-    case Repo.get_by(Vote, eventId: id, sessionMemberId: session_member.id) do
-      nil ->
-        changeset = Vote.changeset(%Vote{}, %{sessionMemberId: session_member.id, eventId: id})
-        case Repo.insert(changeset) do
-          {:ok, _vote} ->
-            {:ok, build_message_response(event, session_member)}
-          {:error, changeset} ->
-            {:error, changeset}
-        end
-      vote ->
-        case Repo.delete!(vote) do
-          vote ->
-            {:ok, build_message_response(event, session_member)}
-          {:error, changeset} ->
-            {:error, changeset}
-        end
+    if Permissions.can_vote(session_member) do
+      event = Repo.get_by!(Event, id: id)
+      case Repo.get_by(Vote, eventId: id, sessionMemberId: session_member.id) do
+        nil ->
+          changeset = Vote.changeset(%Vote{}, %{sessionMemberId: session_member.id, eventId: id})
+          case Repo.insert(changeset) do
+            {:ok, _vote} ->
+              {:ok, preload_dependencies(event)}
+            {:error, changeset} ->
+              {:error, changeset}
+          end
+        vote ->
+          case Repo.delete!(vote) do
+            {:error, changeset} ->
+              {:error, changeset}
+            _ ->
+              {:ok, preload_dependencies(event)}
+          end
+      end
+    else
+      {:error, "Action not allowed!"}
     end
   end
 end
