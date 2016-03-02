@@ -30,7 +30,7 @@ defmodule KlziiChat.EventView do
         render("event.json", %{event: r, member: member})
       end),
       votes_count: EventDecorator.votes_count(event.votes),
-      has_voted: EventDecorator.has_voted(event.votes, member),
+      has_voted: EventDecorator.has_voted(event.votes, member.id),
       permissions: %{
         can_edit: Permissions.can_edit(member, event),
         can_delete: Permissions.can_delete(member, event),

@@ -95,7 +95,9 @@ const Actions = {
   },
   messageStar: (channel, payload) => {
     return dispatch => {
-      channel.push('message_star', payload)
+      channel.push('message_star', payload).receive('ok', (resp) =>{
+        update_mesage(dispatch, resp);
+      })
       .receive('error', (data) => {
         dispatch({
           type: Constants.NEW_MESSAGE_ERROR,

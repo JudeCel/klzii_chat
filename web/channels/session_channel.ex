@@ -26,7 +26,7 @@ defmodule KlziiChat.SessionChannel do
   def handle_info(:after_join, socket) do
     case SessionMembersService.update_online_status(socket.assigns.session_member.id, true)  do
       {:ok, session_memeber} ->
-        socket = Phoenix.Socket.assign(socket, :session_member, session_memeber)
+        socket = assign(socket, :session_member, session_memeber)
       _->
         nil
     end
@@ -45,7 +45,7 @@ defmodule KlziiChat.SessionChannel do
   def terminate({reason, action}, socket) do
     case SessionMembersService.update_online_status(socket.assigns.session_member.id, false)  do
       {:ok, session_memeber} ->
-        socket = Phoenix.Socket.assign(socket, :session_member, session_memeber)
+        socket = assign(socket, :session_member, session_memeber)
       _ ->
         nil
     end
