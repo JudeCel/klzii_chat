@@ -34,6 +34,7 @@ const Input =  React.createClass({
 const mapStateToProps = (state) => {
   return {
     action: state.currentInput.action,
+    currentInput: state.currentInput,
     value: state.currentInput.value,
     topicChannal: state.topic.channel,
   }
