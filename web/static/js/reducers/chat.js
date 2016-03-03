@@ -2,7 +2,6 @@ import Constants from '../constants';
 const initialState = {
   session: {},
   socket: null,
-  currentTopic: null,
   channel: null,
   error: null,
   ready: false

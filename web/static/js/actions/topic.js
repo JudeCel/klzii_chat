@@ -5,9 +5,9 @@ export function joinChannal(dispatch, socket, topicId) {
   const channel = socket.channel("topics:" + topicId);
   dispatch({
     type: Constants.SET_TOPIC_CHANNEL,
-    channel
-    });
-
+    channel,
+    currentId: topicId
+  });
   if (channel.state != 'joined') {
     channel.join()
     .receive('ok', (resp) => {
@@ -26,11 +26,37 @@ export function joinChannal(dispatch, socket, topicId) {
   }
 };
 
+function selectActive(topics) {
+  let currentTopicId = null;
+  topics.map((t) =>{
+    if (t.active) {
+      currentTopicId = t.id;
+    }
+  })
+  return (currentTopicId || topics[0].id)
+}
+
+function leave_chanal(dispatch, channal) {
+  channal.leave();
+  dispatch({ type: Constants.LEAVE_TOPIC });
+}
+
 const Actions = {
-  connectToTopicChannel: (socket, topicId) => {
+  selectCurrent: (socket, topics) =>{
     return dispatch => {
-      return joinChannal(dispatch, socket, topicId);
-    };
+      dispatch({
+        type: Constants.SET_TOPICS,
+        all: topics
+      });
+      let topic = selectActive(topics);
+      joinChannal(dispatch, socket, topic);
+    }
+  },
+  changeTopic: (currentChannal, topicId) =>{
+    return dispatch => {
+      leave_chanal(dispatch, currentChannal);
+      joinChannal(dispatch, currentChannal.socket, topicId);
+    }
   }
 }
 

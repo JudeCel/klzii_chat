@@ -52,9 +52,6 @@ defmodule KlziiChat.SessionChannel do
     broadcast socket, "member_left", socket.assigns.session_member
     :ok
   end
-  # # This is invoked every time a notification is being broadcast
-  # # to the client. The default implementation is just to push it
-  # # downstream but one could filter or change the event.
 
   def handle_out(event, payload, socket) do
     if socket.assigns.session_member.id != payload.id  do

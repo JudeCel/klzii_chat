@@ -2,6 +2,8 @@ import React                from 'react';
 import Message              from './message.js'
 import Constants            from '../../constants';
 import MessagesActions      from '../../actions/messages';
+import { connect }          from 'react-redux';
+
 
 const Messages =  React.createClass({
   getDataAttrs(e){
@@ -34,7 +36,7 @@ const Messages =  React.createClass({
   },
   render() {
     return (
-      <div>
+      <div className='col-md-3 jumbotron chat-messages pull-right'>
         {this.props.messages.map( (message) =>
           <Message
             message={ message }
@@ -51,4 +53,11 @@ const Messages =  React.createClass({
     );
   }
 })
-export default Messages;
+
+const mapStateToProps = (state) => {
+  return {
+    messages: state.messages.all,
+    channal: state.topic.channel
+  }
+};
+export default connect(mapStateToProps)(Messages);

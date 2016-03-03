@@ -14,7 +14,7 @@ const Message =  React.createClass({
     return { backgroundColor: `#${this.avatarColor(message)}`}
   },
   render(){
-    const {replyMessage, messageStar, message, deleteMessage, editMessage, thumbsUp } = this.props;
+    const { replyMessage, messageStar, message, deleteMessage, editMessage, thumbsUp } = this.props;
     const { can_edit, can_delete, can_star, can_vote, can_reply } = message.permissions;
     return (
       <div className="message-container">
