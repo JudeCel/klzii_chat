@@ -39,10 +39,17 @@ export function joinChannal(dispatch) {
 };
 
 function currentMember(dispatch, user) {
-  return dispatch({
+  dispatch({
     type: Constants.SET_CURRENT_USER,
     user
   });
+}
+
+function updateMember(dispatch, member) {
+  dispatch({
+    type: Constants.UPDATE_MEMBER,
+    member
+  })
 }
 
 function members(dispatch, members) {
@@ -70,6 +77,14 @@ const Actions = {
 
       channel.on("members", (resp) =>{
         members(dispatch, resp);
+      });
+
+      channel.on("member_left", (resp) =>{
+        updateMember(dispatch, resp);
+      });
+
+      channel.on("member_entered", (resp) =>{
+        updateMember(dispatch, resp);
       });
     }
   }
