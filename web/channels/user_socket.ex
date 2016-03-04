@@ -22,11 +22,13 @@ defmodule KlziiChat.UserSocket do
   # performing token verification on connect.
   def connect(%{"token" => token}, socket) do
     case find_by_token(token) do
+      nil ->
+        :error
       session_member ->
         {:ok, assign(socket, :session_member, session_member)}
     end
   end
-
+  def connect(_params, _socket), do: :error
   # Socket id's are topics that allow you to identify all sockets for a given user:
   #
   #     def id(socket), do: "users_socket:#{socket.assigns.user_id}"

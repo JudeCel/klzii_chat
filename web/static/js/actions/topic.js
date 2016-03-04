@@ -3,25 +3,28 @@ import MessagesActions  from './messages';
 
 export function joinChannal(dispatch, socket, topicId) {
   const channel = socket.channel("topics:" + topicId);
-  dispatch({
-    type: Constants.SET_TOPIC_CHANNEL,
-    channel,
-    currentId: topicId
-  });
+
   if (channel.state != 'joined') {
+
     channel.join()
     .receive('ok', (resp) => {
+      dispatch({
+        type: Constants.SET_TOPIC_CHANNEL,
+        channel,
+        currentId: topicId
+      });
       dispatch(MessagesActions.subscribeMessageEvents(channel))
       dispatch({
-          type: Constants.SET_MESSAGES,
-          messages: resp
-        });
+        type: Constants.SET_MESSAGES,
+        messages: resp
+      });
     })
     .receive('error', (resp) =>{
+      console.log(error);
       return dispatch({
-          type: Constants.SOCKET_CONNECTED,
-          error: resp
-        });
+        type: Constants.SOCKET_CONNECTION_ERROR,
+        error: "Channale ERROR!!!"
+      });
     });
   }
 };

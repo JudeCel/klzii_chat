@@ -19,32 +19,34 @@ const ChatView = React.createClass({
     }
   },
   render() {
-    return (
-      <div id="chat-app-container" className="col-md-12">
-
-        <div className="info-section"></div>
-
-        <Facilitator/>
-        <TopicSelect/>
-        <Participants/>
-
-        <Whiteboard
-          currentUser={ this.props.currentUser }
-          whiteboard={ this.props.whiteboard }
-          dispatch={ this.props.dispatch }
-          channal={ this.props.topicChannal }
-        />
-
-        <Messages/>
-        <Input/>
-      </div>
-    )
+    const {error, currentUser, whiteboard, dispatch, topicChannal } = this.props
+    if (error) {
+      return (<div>{error}</div>)
+    }else {
+      return (
+        <div id="chat-app-container" className="col-md-12">
+          <div className="info-section"></div>
+          <Facilitator/>
+          <TopicSelect/>
+          <Participants/>
+          <Whiteboard
+            currentUser={ currentUser }
+            whiteboard={ whiteboard }
+            dispatch={ dispatch }
+            channal={ topicChannal }
+            />
+          <Messages/>
+          <Input/>
+        </div>
+      )
+    }
   }
 });
 
 const mapStateToProps = (state) => {
   return {
     sessionReady: state.chat.ready,
+    error: state.chat.error,
     topics: state.chat.session.topics,
     whiteboard: state.whiteboard,
     topicChannal: state.topic.channel,

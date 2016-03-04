@@ -9,33 +9,45 @@ export function joinChannal(dispatch) {
     // logger: (kind, msg, data) => { console.log(`${kind}: ${msg}`, data); },
   });
 
-  socket.connect();
-
   const channel = socket.channel(`sessions:${1}`);
-
-  dispatch({
-    type: Constants.SET_SESSION_CHANNEL,
-    socket,
-    channel
-  });
-  dispatch(Actions.subscribeToSeesionEvents(channel))
-
-
   if (channel.state != 'joined') {
+
     channel.join()
     .receive('ok', (session) => {
+      dispatch({
+        type: Constants.SET_SESSION_CHANNEL,
+        socket,
+        channel
+      });
+
+      dispatch(Actions.subscribeToSeesionEvents(channel));
       dispatch({
         type: Constants.SET_SESSION,
         session
       });
     })
     .receive('error', (error) =>{
+      console.log(error);
       return dispatch({
-          type: Constants.SOCKET_CONNECTED,
-          error
-        });
+        type: Constants.SOCKET_CONNECTED,
+        error
+      });
     });
   }
+
+  let whenConnectionCrash = (event) =>{
+    return dispatch({
+      type: Constants.SOCKET_CONNECTION_ERROR,
+      error: "Socket connection error"
+    });
+  }
+
+  socket.onError( (event) => {
+    whenConnectionCrash(event);
+  });
+
+  socket.connect();
+
 };
 
 function currentMember(dispatch, user) {
