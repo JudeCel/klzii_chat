@@ -5,22 +5,21 @@ export function joinChannal(dispatch, socket, topicId) {
   const channel = socket.channel("topics:" + topicId);
 
   if (channel.state != 'joined') {
-
+    dispatch({
+      type: Constants.SET_TOPIC_CHANNEL,
+      channel,
+      currentId: topicId
+    });
+    dispatch(MessagesActions.subscribeMessageEvents(channel))
+    
     channel.join()
     .receive('ok', (resp) => {
-      dispatch({
-        type: Constants.SET_TOPIC_CHANNEL,
-        channel,
-        currentId: topicId
-      });
-      dispatch(MessagesActions.subscribeMessageEvents(channel))
       dispatch({
         type: Constants.SET_MESSAGES,
         messages: resp
       });
     })
     .receive('error', (resp) =>{
-      console.log(error);
       return dispatch({
         type: Constants.SOCKET_CONNECTION_ERROR,
         error: "Channale ERROR!!!"

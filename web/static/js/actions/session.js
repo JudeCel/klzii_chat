@@ -11,16 +11,16 @@ export function joinChannal(dispatch) {
 
   const channel = socket.channel(`sessions:${1}`);
   if (channel.state != 'joined') {
+    dispatch({
+      type: Constants.SET_SESSION_CHANNEL,
+      socket,
+      channel
+    });
+    dispatch(Actions.subscribeToSeesionEvents(channel));
 
     channel.join()
     .receive('ok', (session) => {
-      dispatch({
-        type: Constants.SET_SESSION_CHANNEL,
-        socket,
-        channel
-      });
 
-      dispatch(Actions.subscribeToSeesionEvents(channel));
       dispatch({
         type: Constants.SET_SESSION,
         session
@@ -36,6 +36,7 @@ export function joinChannal(dispatch) {
   }
 
   let whenConnectionCrash = (event) =>{
+    console.log(event);
     return dispatch({
       type: Constants.SOCKET_CONNECTION_ERROR,
       error: "Socket connection error"
