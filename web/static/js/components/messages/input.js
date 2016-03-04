@@ -13,27 +13,32 @@ const Input =  React.createClass({
     }
   },
   render(){
-    const { value, action } = this.props;
-    return (
-      <div className="form-group col-md-12">
-        <div className="input-group">
-          <div className="input-group-addon">{ action }</div>
-          <input
-            onKeyPress={ this.sendMessage }
-            value={ value }
-            type="text"
-            onChange={ this.handleChange }
-            className="form-control"
-            placeholder="Message"
-          />
+    const { value, action, permissions } = this.props;
+    if (permissions && permissions.can_new_message) {
+      return (
+        <div className="form-group col-md-12">
+          <div className="input-group">
+            <div className="input-group-addon">{ action }</div>
+            <input
+              onKeyPress={ this.sendMessage }
+              value={ value }
+              type="text"
+              onChange={ this.handleChange }
+              className="form-control"
+              placeholder="Message"
+              />
+          </div>
         </div>
-      </div>
-    );
+      );
+    }else {
+      return (<div></div>)
+    }
   }
 })
 const mapStateToProps = (state) => {
   return {
     action: state.currentInput.action,
+    permissions: state.members.currentUser.permissions,
     currentInput: state.currentInput,
     value: state.currentInput.value,
     topicChannal: state.topic.channel,
