@@ -29,12 +29,7 @@ const ChatView = React.createClass({
           <Facilitator/>
           <TopicSelect/>
           <Participants/>
-          <Whiteboard
-            currentUser={ currentUser }
-            whiteboard={ whiteboard }
-            dispatch={ dispatch }
-            channal={ topicChannal }
-            />
+          <Whiteboard/>
           <Messages/>
           <Input/>
         </div>
