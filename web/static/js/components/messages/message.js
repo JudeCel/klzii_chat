@@ -17,7 +17,7 @@ const Message =  React.createClass({
     const { replyMessage, messageStar, message, deleteMessage, editMessage, thumbsUp } = this.props;
     const { can_edit, can_delete, can_star, can_vote, can_reply } = message.permissions;
     return (
-      <div className="message-container">
+      <div className="row message-container">
         <div className="avatar-container col-md-2">
           <Star
             onClick={ messageStar }
