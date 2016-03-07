@@ -31,6 +31,8 @@ defmodule KlziiChat.Mixfile do
   # Type `mix help deps` for examples and options.
   defp deps do
     [{:phoenix, "~> 1.1.4"},
+     {:arc, "~> 0.5.1"},
+     {:arc_ecto, "~> 0.3.2"},
      {:phoenix_ecto, "~> 2.0"},
      {:postgrex,  "~> 0.11.1"},
      {:phoenix_html, "~> 2.5"},

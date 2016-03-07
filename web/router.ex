@@ -17,6 +17,7 @@ defmodule KlziiChat.Router do
     pipe_through :browser # Use the default browser stack
 
     get "/", ChatController, :index
+    post "/upload", ChatController, :upload
   end
 
   # Other scopes may use custom stacks.

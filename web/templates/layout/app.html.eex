@@ -24,6 +24,7 @@
 
     <script type="text/javascript">
         localStorage.setItem('sessionMemberToken', "<%= @token %>");
+        localStorage.setItem('csrf_token', "<%= get_csrf_token %>");
     </script>
     <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
   </body>
