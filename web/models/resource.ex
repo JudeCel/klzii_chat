@@ -13,7 +13,7 @@ defmodule KlziiChat.Resource do
     timestamps [inserted_at: :createdAt, updated_at: :updatedAt]
   end
 
-  @required_fields ~w(resourceType)
+  @required_fields ~w(resourceType topicId userId)
   @optional_fields ~w(JSON HTML)
 
   @required_file_fields ~w()

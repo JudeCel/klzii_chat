@@ -37,7 +37,7 @@ config :phoenix, :stacktrace_depth, 20
 # Configure your database
 config :klzii_chat, KlziiChat.Repo,
   adapter: Ecto.Adapters.Postgres,
-  username: "janjiss",
+  username: "postgres",
   database: "kliiko_development",
   hostname: "localhost",
   pool_size: 10
