@@ -49,6 +49,7 @@
     "redux": "^3.0.5",
     "redux-logger": "^2.3.2",
     "redux-thunk": "^1.0.2",
+    "superagent": "^1.8.0-beta.2",
     "webpack-raphael": "^2.1.4"
   }
 }
