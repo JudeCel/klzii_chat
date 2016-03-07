@@ -2,7 +2,6 @@ import Constants from '../constants';
 const initialState = {
   session: {},
   socket: null,
-  currentTopic: null,
   channel: null,
   error: null,
   ready: false
@@ -17,7 +16,7 @@ export default function reducer(state = initialState, action = {}) {
       return {  ...state, socket: action.socket, channel: action.channel };
 
     case Constants.SET_SESSION:
-      return {  ...state, session: action.session, ready: true };
+      return {  ...state, session: action.session, ready: true, error: null };
 
     case Constants.SOCKET_CONNECTION_ERROR:
       return { ...state, error: action.error };

@@ -5,8 +5,7 @@ defmodule KlziiChat.Account do
     field :name, :string
     has_many :account_users, KlziiChat.AccountUser, [foreign_key: :AccountId]
     has_many :users, through: [:account_users, :user]
-
-    # timestamps
+    timestamps [inserted_at: :createdAt, updated_at: :updatedAt]
   end
 
   @required_fields ~w(name)
@@ -20,6 +19,7 @@ defmodule KlziiChat.Account do
   """
   def changeset(model, params \\ :empty) do
     model
-    |> cast(params, @required_fields, @optional_fields)
+      |> cast(params, @required_fields, @optional_fields)
+      |> unique_constraint(:name, name: :unique_name)
   end
 end

@@ -11,10 +11,10 @@ function delete_mesage(dispatch, data) {
     message: data
   });
 }
-function update_mesage(dispatch, data) {
+function update_mesage(dispatch, message) {
   return dispatch({
     type: Constants.UPDATE_MESSAGE,
-    message: data
+    message
   });
 }
 
@@ -61,7 +61,7 @@ const Actions = {
         return delete_mesage(dispatch, resp);
       });
 
-      channel.on("message_star", (resp) =>{
+      channel.on("update_message", (resp) =>{
         return update_mesage(dispatch, resp);
       });
     }
@@ -93,9 +93,22 @@ const Actions = {
       });
     };
   },
-  messageStar: (channel, id) => {
+  messageStar: (channel, payload) => {
     return dispatch => {
-      channel.push('message_star', {id: id})
+      channel.push('message_star', payload).receive('ok', (resp) =>{
+        update_mesage(dispatch, resp);
+      })
+      .receive('error', (data) => {
+        dispatch({
+          type: Constants.NEW_MESSAGE_ERROR,
+          error: data.error
+        });
+      });
+    };
+  },
+  thumbsUp: (channel, payload) => {
+    return dispatch => {
+      channel.push('thumbs_up', payload)
       .receive('error', (data) => {
         dispatch({
           type: Constants.NEW_MESSAGE_ERROR,

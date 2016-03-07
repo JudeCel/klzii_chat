@@ -6,7 +6,8 @@ defmodule KlziiChat.SessionMember do
     belongs_to :account_user, KlziiChat.AccountUser, [foreign_key: :accountUserId]
     belongs_to :session, KlziiChat.Session, [foreign_key: :sessionId]
     has_many :events, KlziiChat.Event, [foreign_key: :sessionMemberId]
-    field :colour, :integer
+    has_many :votes, KlziiChat.Vote, [foreign_key: :sessionMemberId]
+    field :colour, :integer, default: 6710886
     field :online, :boolean, default: false
     field :avatar_info, :string, default: "0:3:0:0:0:0"
     field :token, :string

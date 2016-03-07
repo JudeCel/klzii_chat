@@ -1,20 +1,47 @@
-import React, {PropTypes}       from 'react';
+import React, {PropTypes} from 'react';
+import { connect }        from 'react-redux';
+import Actions            from '../../actions/currentInput';
+import MessagesActions    from '../../actions/messages';
 
-const Input = ({ onKeyPress, handleChange, action, value }) => {
-  return (
-    <div className="form-group col-md-12">
-      <div className="input-group">
-        <div className="input-group-addon">{action}</div>
-        <input
-          onKeyPress={ onKeyPress }
-          value={ value }
-          type="text"
-          onChange={ handleChange }
-          className="form-control"
-          placeholder="Message"
-        />
-      </div>
-    </div>
-  );
-}
-export default Input;
+const Input =  React.createClass({
+  handleChange(e){
+    this.props.dispatch(Actions.changeValue(e.target.value));
+  },
+  sendMessage(e){
+    if (e.charCode == 13) {
+      this.props.dispatch(MessagesActions.sendMessage(this.props.topicChannal, this.props.currentInput));
+    }
+  },
+  render(){
+    const { value, action, permissions } = this.props;
+    if (permissions && permissions.can_new_message) {
+      return (
+        <div className="form-group col-md-12">
+          <div className="input-group">
+            <div className="input-group-addon">{ action }</div>
+            <input
+              onKeyPress={ this.sendMessage }
+              value={ value }
+              type="text"
+              onChange={ this.handleChange }
+              className="form-control"
+              placeholder="Message"
+              />
+          </div>
+        </div>
+      );
+    }else {
+      return (<div></div>)
+    }
+  }
+})
+const mapStateToProps = (state) => {
+  return {
+    action: state.currentInput.action,
+    permissions: state.members.currentUser.permissions,
+    currentInput: state.currentInput,
+    value: state.currentInput.value,
+    topicChannal: state.topic.channel,
+  }
+};
+export default connect(mapStateToProps)(Input);

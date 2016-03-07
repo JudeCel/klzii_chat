@@ -1,6 +1,7 @@
 import React                from 'react';
 import whiteboardActions    from '../../actions/whiteboard';
-import Raphael              from 'webpack-raphael' ;
+import Raphael              from 'webpack-raphael';
+import { connect }          from 'react-redux';
 window.Raphael = Raphael;
 require('../../whiteboard');
 require('../../whiteboard/scale.raphael');
@@ -245,4 +246,12 @@ const Whiteboard =  React.createClass({
     );
   }
 })
-export default Whiteboard;
+
+const mapStateToProps = (state) => {
+  return {
+    whiteboard: state.whiteboard,
+    channal: state.topic.channel,
+    currentUser: state.members.currentUser,
+  }
+};
+export default connect(mapStateToProps)(Whiteboard);
