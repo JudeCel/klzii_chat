@@ -8,11 +8,11 @@ const Edit = ({data, can, onClick}) => {
         onClick={ onClick }
         data-id={ id }
         data-body={ body }
-        className="action glyphicon glyphicon-edit"
+        className="action glyphicon glyphicon-edit col-md-1"
         />
     )
   }else{
-    return(<div></div>)
+    return(false)
   }
 }
 export default Edit;

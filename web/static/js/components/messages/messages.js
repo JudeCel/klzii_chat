@@ -36,7 +36,10 @@ const Messages =  React.createClass({
   },
   render() {
     return (
-      <div className='col-md-3 jumbotron chat-messages pull-right'>
+      <div className='col-md-4 chat'>
+        <div className="panel panel-primary">
+          <div className="panel-heading">Chat</div>
+          <div className="panel-body">
         {this.props.messages.map( (message) =>
           <Message
             message={ message }
@@ -49,6 +52,8 @@ const Messages =  React.createClass({
             key={ message.id }
           />
         )}
+          </div>
+        </div>
       </div>
     );
   }

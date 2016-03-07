@@ -2,6 +2,7 @@
 
 var path = require('path');
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
+var CopyWebpackPlugin = require('copy-webpack-plugin');
 var webpack = require('webpack');
 
 // helpers for writing path names
@@ -61,7 +62,8 @@ var config = module.exports = {
   plugins: [
     new ExtractTextPlugin('css/app.css'),
     new webpack.optimize.OccurenceOrderPlugin(),
-    new webpack.NoErrorsPlugin()
+    new webpack.NoErrorsPlugin(),
+    new CopyWebpackPlugin([{ from: 'web/static/assets/images', to: "images" }])
   ],
 };
 
