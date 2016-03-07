@@ -1,6 +1,7 @@
 import React, { PropTypes }       from 'react';
 import moment                     from 'moment'
-import MessageActions                 from './actions'
+import MessageActions             from './actions'
+
 const { Edit, Delete, Star, ThumbsUp, Reply } = MessageActions
 
 const Message =  React.createClass({
@@ -13,12 +14,18 @@ const Message =  React.createClass({
   messageHeaderStyle(message){
     return { backgroundColor: `#${this.avatarColor(message)}`}
   },
+  filter(e){
+    console.log(e);
+  },
   render(){
     const { replyMessage, messageStar, message, deleteMessage, editMessage, thumbsUp } = this.props;
     const { can_edit, can_delete, can_star, can_vote, can_reply } = message.permissions;
     return (
       <div className="row message-container">
         <div className="avatar-container col-md-2">
+          <div className="avatar glyphicon glyphicon-user">
+
+          </div>
           <Star
             onClick={ messageStar }
             data={ { id: message.id, star: message.star} }
