@@ -1,8 +1,10 @@
 import Constants from '../constants';
 
 const initialState = {
-  currentUser: {},
-  facilitator: {},
+  currentUser: { },
+  facilitator: {
+    avatar_info: "0:0:0:0:0"
+  },
   participants: [],
   observers: []
 };

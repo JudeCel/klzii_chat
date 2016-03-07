@@ -7,12 +7,12 @@ const Delete = ({data, can, onClick}) => {
       <div
         onClick={ onClick }
         data-id={ id }
-        className="action glyphicon glyphicon-thumbs-up" style={{ color: ( has_voted ? "green" : "") }} >
+        className="action glyphicon glyphicon-thumbs-up col-md-1" style={{ color: ( has_voted ? "green" : "") }} >
         { votes_count }
       </div>
     )
   }else{
-    return(<div></div>)
+    return(false)
   }
 }
 export default Delete;

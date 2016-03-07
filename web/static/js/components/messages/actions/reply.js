@@ -7,11 +7,11 @@ const Reply = ({data, can, onClick}) => {
       <div
         onClick={ onClick }
         data-replyid={ id }
-        className="action glyphicon glyphicon-comment"
+        className="action glyphicon glyphicon-comment col-md-1"
         />
     )
   }else{
-    return(<div></div>)
+    return(false)
   }
 }
 export default Reply;

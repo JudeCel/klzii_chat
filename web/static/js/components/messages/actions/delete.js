@@ -7,11 +7,11 @@ const Delete = ({data, can, onClick}) => {
       <div
         onClick={ onClick }
         data-id={ id }
-        className="action glyphicon glyphicon-remove"
+        className="action glyphicon glyphicon-remove col-md-1"
       />
     )
   }else{
-    return(<div></div>)
+    return(false)
   }
 }
 export default Delete;

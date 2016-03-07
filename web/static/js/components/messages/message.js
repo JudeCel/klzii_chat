@@ -1,6 +1,7 @@
 import React, { PropTypes }       from 'react';
 import moment                     from 'moment'
 import MessageActions             from './actions'
+import Avatar from '../members/avatar.js'
 
 const { Edit, Delete, Star, ThumbsUp, Reply } = MessageActions
 
@@ -15,34 +16,24 @@ const Message =  React.createClass({
     return { backgroundColor: `#${this.avatarColor(message)}`}
   },
   render(){
+    console.log(this.props)
     const { replyMessage, messageStar, message, deleteMessage, editMessage, thumbsUp } = this.props;
     const { can_edit, can_delete, can_star, can_vote, can_reply } = message.permissions;
     return (
-      <div className="row message-container">
-        <div className="avatar-container col-md-2">
-          <div className="avatar glyphicon glyphicon-user">
 
-          </div>
-          <Star
-            onClick={ messageStar }
-            data={ { id: message.id, star: message.star} }
-            can={ can_star}
-            />
-        </div>
-        <div className="message">
-          <div className="message-header col-md-10" style={ this.messageHeaderStyle(message)}>
-            <div className="user">
-              {message.session_member.username}
-            </div>
-            <div className="timestamp">
-              { this.formattedTime(message) }
-            </div>
-          </div>
-          <div className="message-body ">
+      <div className="row message-container">
+        <div className="col-md-12">
+         <div className="media-left">
+           <Avatar avatar_info={message.session_member.avatar_info}/>
+         </div>
+         <div className="media-body">
               {message.event.body}
-          </div>
-        </div>
-        <div className="message-action-list">
+         </div>
+         <small class="text-muted">
+           {message.session_member.username} | { this.formattedTime(message) }
+         </small>
+       </div>
+         <div className="message-action-list col-md-12">
           <ThumbsUp
             data={ {
               id: message.id,
@@ -67,8 +58,16 @@ const Message =  React.createClass({
             data={ {id: message.id} }
             can={ can_delete }
           />
+        <Star
+          onClick={ messageStar }
+          data={ { id: message.id, star: message.star} }
+          can={ can_star}
+          />
         </div>
-        <div className= "replies col-md-10 pull-right">
+        <div className="col-md-12">
+          <hr/>
+        </div>
+        <div className= "col-md-12 pull-right row">
           { message.replies.map( (reply) => {
             return (<Message
               message={ reply }
