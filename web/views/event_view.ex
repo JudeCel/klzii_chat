@@ -36,7 +36,7 @@ defmodule KlziiChat.EventView do
         can_delete: Permissions.can_delete(member, event),
         can_star: Permissions.can_star(member),
         can_vote: Permissions.can_vote(member),
-        can_reply: Permissions.can_reply(member),
+        can_reply: (!event.replyId && Permissions.can_reply(member)),
         can_new_message: Permissions.can_new_message(member)
       }
     }
