@@ -1,7 +1,6 @@
 import React, {PropTypes}   from 'react';
 import Member               from './member.js'
 
-
 const Avatar =  React.createClass({
   padToTwo(number) {
     if (number<=99) { number = ("0"+number).slice(-2); }
@@ -9,7 +8,6 @@ const Avatar =  React.createClass({
   },
   render() {
     const [base_number, face_number, body_number, hair_number, desk_number] = this.props.avatar_info.split(":")
-    console.log(this.props.afatar_info)
     return (
       <div className="combined-avatar">
         <img src={`/images/avatar/base_${this.padToTwo(base_number)}.svg`} />

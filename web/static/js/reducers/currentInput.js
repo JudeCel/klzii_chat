@@ -4,7 +4,8 @@ const initialState = {
   value: '',
   action: 'new', // 'new', 'edit', 'reply'
   id: null,
-  replyId: null
+  replyId: null,
+  inputPrefix: "Message:"
 };
 
 export default function reducer(state = initialState, action = {}) {
@@ -19,14 +20,14 @@ export default function reducer(state = initialState, action = {}) {
       if (state.action == 'edit' ) {
         return initialState;
       }else{
-        return { ...state, action: 'edit', id: action.id, value: action.value};
+        return { ...state, action: 'edit', inputPrefix: "Edit:", id: action.id, value: action.value};
       }
 
     case Constants.SET_INPUT_REPLY:
       if (state.action == 'reply' ) {
         return initialState;
       }else{
-        return { ...state, action: 'reply', replyId: action.replyId, value: ''};
+        return { ...state, action: 'reply', inputPrefix: "Reply:", replyId: action.replyId, value: ''};
       }
     default:
       return state;

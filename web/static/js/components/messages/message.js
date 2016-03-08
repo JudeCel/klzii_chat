@@ -16,7 +16,6 @@ const Message =  React.createClass({
     return { backgroundColor: `#${this.avatarColor(message)}`}
   },
   render(){
-    console.log(this.props)
     const { replyMessage, messageStar, message, deleteMessage, editMessage, thumbsUp } = this.props;
     const { can_edit, can_delete, can_star, can_vote, can_reply } = message.permissions;
     return (
@@ -29,7 +28,7 @@ const Message =  React.createClass({
          <div className="media-body">
               {message.event.body}
          </div>
-         <small class="text-muted">
+         <small className="text-muted">
            {message.session_member.username} | { this.formattedTime(message) }
          </small>
        </div>
