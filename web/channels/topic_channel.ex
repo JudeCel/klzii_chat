@@ -1,6 +1,6 @@
 defmodule KlziiChat.TopicChannel do
   use KlziiChat.Web, :channel
-  alias KlziiChat.Services.{EventsService, WhiteboardService}
+  alias KlziiChat.Services.{EventsService, WhiteboardService, ResourceService}
   alias KlziiChat.EventView
 
   # This Channel is only for Topic context
@@ -20,6 +20,15 @@ defmodule KlziiChat.TopicChannel do
       end
     else
       {:error, %{reason: "unauthorized"}}
+    end
+  end
+
+  def handle_in("resources", %{"type" => type}, socket) do
+    case ResourceService.get(socket.assigns.topic_id, type) do
+      {:ok, resources} ->
+        {:reply, {:ok, %{type => resources}}, socket}
+      {:error, reason} ->
+        {:error, %{reason: reason}}
     end
   end
 

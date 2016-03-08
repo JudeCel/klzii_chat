@@ -7,16 +7,16 @@ import { Modal }           from "react-bootstrap"
 const VideoUpload =  React.createClass({
   onDrop: function(files){
     const { dispatch, currentUserId, currentTopicId } = this.props
-    dispatch(Actions.video(files, currentUserId, currentTopicId))
+    dispatch(Actions.upload("video",files, currentUserId, currentTopicId))
   },
   onOpenClick: function () {
     this.refs.dropzone.open();
   },
   render() {
-    const {show, onHide} = this.props
+    const {show, onHide, videos} = this.props
+    
     return (
       <div>
-
         <Modal  show={show} onHide={onHide}>
           <Modal.Header closeButton>
             <Modal.Title>Videos</Modal.Title>
@@ -30,7 +30,7 @@ const VideoUpload =  React.createClass({
             <button type="button" onClick={this.onOpenClick}>
                 Open
             </button>
-
+              { videos.map((video) => <img key={video.id} src={ video.URL} /> ) } }
           </Modal.Body>
         </Modal>
     </div>

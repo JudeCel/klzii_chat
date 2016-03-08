@@ -11,7 +11,8 @@ const Resources =  React.createClass({
     };
   },
   openModalVideo(){
-     this.setState({ openModalVideo: true });
+    this.setState({ openModalVideo: true });
+
   },
   closeModalVIdeo(){
      this.setState({ openModalVideo: false });

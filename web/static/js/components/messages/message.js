@@ -29,7 +29,7 @@ const Message =  React.createClass({
          <div className="media-body">
               {message.event.body}
          </div>
-         <small class="text-muted">
+         <small className="text-muted">
            {message.session_member.username} | { this.formattedTime(message) }
          </small>
        </div>

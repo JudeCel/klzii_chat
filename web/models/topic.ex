@@ -4,9 +4,11 @@ defmodule KlziiChat.Topic do
   schema "topics" do
     has_many :session_topics, KlziiChat.SessionTopic, [foreign_key: :TopicId]
     has_many :events, KlziiChat.Event, [foreign_key: :topicId]
-    has_many :sessions, through: [:session_topics, :session]
+    has_many :resources, KlziiChat.Resource, [foreign_key: :topicId]
+    has_many :sessions, through: [:session_topics, :sessionId]
 
     belongs_to :account, KlziiChat.Account, [foreign_key: :accountId]
+
     field :type, :string, default: "chat"
     field :name, :string
     field :active, :boolean, default: false
