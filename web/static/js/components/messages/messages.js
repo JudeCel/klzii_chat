@@ -1,4 +1,5 @@
 import React                from 'react';
+import ReactDOM             from 'react-dom';
 import Message              from './message.js'
 import Constants            from '../../constants';
 import MessagesActions      from '../../actions/messages';
@@ -6,6 +7,11 @@ import { connect }          from 'react-redux';
 
 
 const Messages =  React.createClass({
+  initialState(){
+    return {
+      previousPosition: 0
+    }
+  },
   getDataAttrs(e){
     let id = e.target.getAttribute('data-id');
     let value = e.target.getAttribute('data-body');
@@ -34,12 +40,26 @@ const Messages =  React.createClass({
     let { id, value } = this.getDataAttrs(e);
     this.props.dispatch({type: Constants.SET_INPUT_EDIT, id, value });
   },
+  componentWillUpdate: function() {
+    let chatMessages = ReactDOM.findDOMNode(this).querySelector('.chat-messages');
+    this.shouldScrollBottom = chatMessages.scrollTop + chatMessages.offsetHeight === chatMessages.scrollHeight;
+  },
+  componentDidUpdate() {
+    this.scrollToBottomOfChat();
+  },
+  scrollToBottomOfChat() {
+    let chatMessages = ReactDOM.findDOMNode(this).querySelector('.chat-messages');
+    
+    if (this.shouldScrollBottom) {
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+  },
   render() {
     return (
-      <div className='col-md-4 chat'>
+      <div className='col-md-4 chat-box'>
         <div className="panel panel-primary">
           <div className="panel-heading">Chat</div>
-          <div className="panel-body">
+          <div className="panel-body chat-messages">
         {this.props.messages.map( (message) =>
           <Message
             message={ message }
