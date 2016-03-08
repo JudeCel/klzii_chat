@@ -2,6 +2,7 @@ import React, {PropTypes}  from 'react';
 import Dropzone            from 'react-dropzone';
 import { connect }         from 'react-redux';
 import Actions             from '../../actions/resource';
+import { Modal }           from "react-bootstrap"
 
 const VideoUpload =  React.createClass({
   onDrop: function(files){
@@ -12,14 +13,26 @@ const VideoUpload =  React.createClass({
     this.refs.dropzone.open();
   },
   render() {
+    const {show, onHide} = this.props
     return (
       <div>
-        <Dropzone ref="dropzone" onDrop={this.onDrop} >
-          <div>Try dropping some files here, or click to select files to upload.</div>
-        </Dropzone>
-        <button type="button" onClick={this.onOpenClick}>
-            Open Dropzone
-        </button>
+
+        <Modal  show={show} onHide={onHide}>
+          <Modal.Header closeButton>
+            <Modal.Title>Videos</Modal.Title>
+          </Modal.Header>
+
+          <Modal.Body>
+            <Dropzone ref="dropzone" onDrop={this.onDrop} >
+              <div>Try dropping some files here, or click to select files to upload.</div>
+            </Dropzone>
+
+            <button type="button" onClick={this.onOpenClick}>
+                Open
+            </button>
+
+          </Modal.Body>
+        </Modal>
     </div>
     );
   }
@@ -30,7 +43,7 @@ const mapStateToProps = (state) => {
     channal: state.topic.channel,
     currentUserId: state.members.currentUser.id,
     videos: state.resources.videos,
-    currentTopicId: state.topic.current.id,
+    currentTopicId: state.topic.current.id
   }
 };
 export default connect(mapStateToProps)(VideoUpload);

@@ -8,7 +8,7 @@ import Whiteboard           from '../components/whiteboard'
 import Facilitator         from '../components/members/facilitator.js'
 import Participants         from '../components/members/participants.js'
 import TopicSelect          from '../components/topics/select.js'
-import VideoUpload          from '../components/resources/videoUpload.js'
+import Resources          from '../components/resources/resources.js'
 
 const ChatView = React.createClass({
   componentWillMount() {
@@ -28,7 +28,7 @@ const ChatView = React.createClass({
         <div id="chat-app-container" className="col-md-12">
           <div className="row info-section">
             <TopicSelect/>
-            <VideoUpload/>
+            <Resources/>
           </div>
           <Facilitator/>
           <Participants/>
