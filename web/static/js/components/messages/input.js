@@ -8,7 +8,7 @@ const Input =  React.createClass({
     this.props.dispatch(Actions.changeValue(e.target.value));
   },
   sendMessage(e){
-    if (e.charCode == 13) {
+    if ((e.charCode == 13 && e.target.value.length > 0)) {
       this.props.dispatch(MessagesActions.sendMessage(this.props.topicChannal, this.props.currentInput));
     }
   },
