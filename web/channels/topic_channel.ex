@@ -44,12 +44,17 @@ defmodule KlziiChat.TopicChannel do
   def handle_in("new_message", payload, socket) do
     topic_id = socket.assigns.topic_id
     session_member = socket.assigns.session_member
-    case EventsService.create_message(session_member, topic_id, payload) do
-      {:ok, event} ->
-        broadcast! socket, "new_message",  event
-        {:reply, :ok, socket}
-      {:error, reason} ->
-        {:error, %{reason: reason}}
+
+    if String.length(payload["body"]) > 0  do
+      case EventsService.create_message(session_member, topic_id, payload) do
+        {:ok, event} ->
+          broadcast! socket, "new_message",  event
+          {:reply, :ok, socket}
+        {:error, reason} ->
+          {:error, %{reason: reason}}
+      end
+    else
+      {:error, %{reason: "Message too short"}}
     end
   end
 
