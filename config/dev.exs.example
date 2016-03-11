@@ -43,7 +43,7 @@ config :klzii_chat, KlziiChat.Repo,
   pool_size: 10
 
 config :ex_aws,
-  access_key_id: "AKIAJ3CJKY7M26VKIKJQ",
-  secret_access_key: "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"
+  access_key_id: "AKIAJV2UHLF355DYBP6A",
+  secret_access_key: "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"
 config :arc,
   bucket: "klzii-dev"

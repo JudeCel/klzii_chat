@@ -7,12 +7,11 @@ defmodule KlziiChat.ChatController do
   end
 
   def upload(conn, %{"type" => type, "scope" => scope, "file" => file, "topicId" => topic_id, "userId"=> user_id}) do
-    resource = %{image:  file, type: type, scope: scope, type: type, userId: user_id }
+    resource = %{type: type, scope: scope, type: type, userId: user_id } |> Map.put(String.to_atom(type), file)
     changeset = Resource.changeset(%Resource{}, resource)
 
     case Repo.insert(changeset) do
       {:ok, resource} ->
-        # IO.inspect resource
         json(conn, %{status: :ok})
       {:error, reason} ->
         IO.inspect reason
