@@ -41,3 +41,9 @@ config :klzii_chat, KlziiChat.Repo,
   database: "kliiko_development",
   hostname: "localhost",
   pool_size: 10
+
+config :ex_aws,
+  access_key_id: "AKIAJ3CJKY7M26VKIKJQ",
+  secret_access_key: "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"
+config :arc,
+  bucket: "klzii-dev"

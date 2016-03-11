@@ -12,14 +12,19 @@ const Actions = {
       });
     }
   },
-  upload:(type, files, userId, topicId) =>{
+  upload:(files, type, userid, topicId) =>{
     return (dispatch) => {
+
       let csrf_token = localStorage.getItem("csrf_token");
-      let req = request.post(`/upload/${type}/${userId}/${topicId}`);
+      let req = request.post('/upload');
       req.set('X-CSRF-Token', csrf_token);
 
-      files.forEach((file)=> {
+      files.map((file)=> {
         req.attach("file", file);
+        req.field("userId", userid);
+        req.field("topicId", topicId);
+        req.field("type", type);
+        req.field("scope", "collage");
       });
 
       req.end((e, r) =>{

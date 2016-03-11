@@ -6,14 +6,17 @@ defmodule KlziiChat.ChatController do
     render conn, "index.html" , token: token
   end
 
-  def upload(conn, %{"resourceType" => resourceType, "file" => file, "topic_id" => topic_id, "user_id"=> user_id}) do
-    resource = %{URL: file, resourceType: resourceType, topicId: topic_id, userId: user_id }
-    changeset = Resource.changeset(%Resource{},  resource)
+  def upload(conn, %{"type" => type, "scope" => scope, "file" => file, "topicId" => topic_id, "userId"=> user_id}) do
+    resource = %{image:  file, type: type, scope: scope, type: type, userId: user_id }
+    changeset = Resource.changeset(%Resource{}, resource)
+
     case Repo.insert(changeset) do
-      {:ok, _resource} ->
+      {:ok, resource} ->
+        # IO.inspect resource
         json(conn, %{status: :ok})
       {:error, reason} ->
-        json(conn, %{status: :error, reason: reason})
+        IO.inspect reason
+        json(conn, %{status: :error, reason: "reason"})
     end
   end
 end

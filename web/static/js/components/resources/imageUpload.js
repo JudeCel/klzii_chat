@@ -7,6 +7,7 @@ import { Modal }           from "react-bootstrap"
 const ImageUpload =  React.createClass({
   onDrop: function(files){
     const { dispatch, currentUserId, currentTopicId } = this.props
+    dispatch(Actions.upload(files, "image", currentUserId, currentTopicId))
   },
   onOpenClick: function () {
     this.refs.dropzone.open();
@@ -21,7 +22,7 @@ const ImageUpload =  React.createClass({
           </Modal.Header>
 
           <Modal.Body>
-            <Dropzone ref="dropzone" onDrop={this.onDrop} >
+            <Dropzone multiple={false} ref="dropzone" onDrop={this.onDrop} >
               <div>Try dropping some files here, or click to select files to upload.</div>
             </Dropzone>
 
@@ -40,6 +41,7 @@ const mapStateToProps = (state) => {
     channal: state.topic.channel,
     currentUserId: state.members.currentUser.id,
     images: state.resources.images,
+    modalWindow: state.resources.modalWindow,
     currentTopicId: state.topic.current.id
   }
 };
