@@ -5,7 +5,7 @@ defmodule KlziiChat.Uploaders.Image do
   use Arc.Ecto.Definition
 
   # To add a thumbnail version:
-  @versions [:original]
+  @versions [:original, :thumb]
   @acl :public_read
 
   # Whitelist file extensions:
@@ -15,16 +15,31 @@ defmodule KlziiChat.Uploaders.Image do
 
   # Define a thumbnail transformation:
   def transform(:thumb, _) do
-    {:convert, "-strip -thumbnail 250x250^ -gravity center -extent 250x250 -format png", :png}
+    {:convert, "-strip -thumbnail 250x250^ -gravity center -extent 250x250"}
   end
 
+  def __storage do
+    case Mix.env do
+      :prod ->
+        Arc.Storage.S3
+      _ ->
+        Arc.Storage.Local
+    end
+  end
   # Override the persisted filenames:
   def filename(version, {file, scope}) do
     "#{scope.id}_#{version}_#{file.file_name}"
   end
 
   def storage_dir(_, {file, scope}) do
-    "images/#{scope.id}/"
+    IO.inspect(file)
+    IO.inspect(scope)
+    case Mix.env do
+      :prod ->
+        "images/#{scope.id}/"
+      _ ->
+        "priv/static/uploads/images/#{scope.id}/"
+    end
   end
 
   # To make the destination file the same as the version:

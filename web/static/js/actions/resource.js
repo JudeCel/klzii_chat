@@ -12,7 +12,7 @@ const Actions = {
       });
     }
   },
-  upload:(files, type, userid, topicId) =>{
+  upload:(files, type, memberId, topicId) =>{
     return (dispatch) => {
 
       let csrf_token = localStorage.getItem("csrf_token");
@@ -21,7 +21,7 @@ const Actions = {
 
       files.map((file)=> {
         req.attach("file", file);
-        req.field("userId", userid);
+        req.field("memberId", memberId);
         req.field("topicId", topicId);
         req.field("type", type);
         req.field("scope", "collage");

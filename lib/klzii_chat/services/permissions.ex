@@ -2,7 +2,7 @@ defmodule KlziiChat.Services.Permissions do
 
   @spec can_delete(Map.t, Map.t) :: Boolean.t
   def can_delete(member, event) do
-    has_owner(member, event) || has_role(member.role, ["facilitator", "participant"])
+    has_owner(member, event) || has_role(member.role, ["facilitator"])
   end
 
   @spec can_new_message(Map.t) :: Boolean.t

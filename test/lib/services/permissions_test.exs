@@ -3,13 +3,19 @@ defmodule KlziiChat.Services.PermsionsTest do
   alias  KlziiChat.Services.Permissions
 
   test "owner can delete" do
+    member = %{id: 1, role: "participant"}
+    event = %{id: 1, sessionMemberId: 1}
+    Permissions.can_delete(member, event) |> assert
+  end
+
+  test "facilitator can delete" do
     member = %{id: 1, role: "facilitator"}
     event = %{id: 1, sessionMemberId: 1}
     Permissions.can_delete(member, event) |> assert
   end
 
   test "other can't delete" do
-    member = %{id: 2, role: "facilitator"}
+    member = %{id: 2, role: "participant"}
     event = %{id: 1, sessionMemberId: 1}
     Permissions.can_delete(member, event) |> refute
   end
@@ -23,7 +29,7 @@ defmodule KlziiChat.Services.PermsionsTest do
   test "other can't edit" do
     member = %{id: 2, role: "facilitator"}
     event = %{id: 1, sessionMemberId: 1}
-    Permissions.can_delete(member, event) |> refute
+    Permissions.can_edit(member, event) |> refute
   end
 
   test "can new message" do

@@ -3,11 +3,11 @@ defmodule KlziiChat.Services.ResourceService do
   import Ecto
   import Ecto.Query
 
-  def get(topic_id, type) do
+  def get(topic_id, type, scope) do
     topic = Repo.get!(Topic, topic_id)
     resources = Repo.all(
       from e in assoc(topic, :resources),
-        where: [resourceType: ^type]
+        where: [type: ^type, scope: ^scope]
     )
     resp = Enum.map(resources, fn resource ->
       ResourceView.render("resource.json", %{resource: resource})

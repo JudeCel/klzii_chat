@@ -24,7 +24,7 @@ defmodule KlziiChat.TopicChannel do
   end
 
   def handle_in("resources", %{"type" => type}, socket) do
-    case ResourceService.get(socket.assigns.topic_id, type) do
+    case ResourceService.get(socket.assigns.topic_id, type, "collage") do
       {:ok, resources} ->
         {:reply, {:ok, %{type => resources}}, socket}
       {:error, reason} ->
