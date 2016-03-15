@@ -1,7 +1,6 @@
 import Constants from '../constants';
 import request   from 'superagent';
 
-
 const Actions = {
   subscribeEvents: (channel) =>{
     return dispatch => {
@@ -32,21 +31,28 @@ const Actions = {
       });
     }
   },
-  get:(channel, type) => {
+  getResource:(channel, type) => {
     return dispatch => {
-      dispatch({ type: Constants.GET_RESOURCE});
+      dispatch({ type: Constants.GET_RESOURCE });
       channel.push("resources", {type: type}).receive('ok', (resp) =>{
-        switch (type) {
+        switch (resp.type) {
           case "video":
-
+            dispatch({type: Constants.SET_VIDEO_RESOURCES, resources: resp.resources });
+            break;
+          case "image":
+            dispatch({type: Constants.SET_IMAGE_RESOURCES, resources: resp.resources });
+            break;
+          case "audio":
+            dispatch({type: Constants.SET_AUDIO_RESOURCES, resources: resp.resources });
+            break;
+          case "file":
+            dispatch({type: Constants.SET_FILE_RESOURCES, resources: resp.resources });
             break;
           default:
-
         }
       })
     }
   }
 }
-
 
 export default Actions;

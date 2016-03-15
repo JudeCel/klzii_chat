@@ -29,7 +29,11 @@ const ImageUpload =  React.createClass({
             <button type="button" onClick={this.onOpenClick}>
                 Open
             </button>
-              { images.map((images) => <img key={video.id} src={ video.URL} /> ) }
+              <div>
+                { images.map((image) =>
+                  <img key={image.id} src={ image.thumb}/>
+                )}
+              </div>
           </Modal.Body>
         </Modal>
     </div>

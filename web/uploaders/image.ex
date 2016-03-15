@@ -28,17 +28,15 @@ defmodule KlziiChat.Uploaders.Image do
   end
   # Override the persisted filenames:
   def filename(version, {file, scope}) do
-    "#{scope.id}_#{version}_#{file.file_name}"
+    "#{version}_#{file.file_name}"
   end
 
   def storage_dir(_, {file, scope}) do
-    IO.inspect(file)
-    IO.inspect(scope)
     case Mix.env do
       :prod ->
         "images/#{scope.id}/"
       _ ->
-        "priv/static/uploads/images/#{scope.id}/"
+        "priv/static/uploads/images/"
     end
   end
 
