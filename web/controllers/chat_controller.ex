@@ -1,6 +1,6 @@
 defmodule KlziiChat.ChatController do
   use KlziiChat.Web, :controller
-  alias KlziiChat.{Resource, Repo}
+  alias KlziiChat.{Resource, Repo, ResourceView}
 
   def index(conn, %{"token" => token}) do
     render conn, "index.html" , token: token
@@ -13,7 +13,7 @@ defmodule KlziiChat.ChatController do
 
     case Repo.insert(changeset) do
       {:ok, resource} ->
-        json(conn, %{status: :ok})
+        json(conn, %{type: resource.type, resources: [ ResourceView.render("resource.json", %{resource: resource}) ] })
       {:error, reason} ->
         json(conn, %{status: :error, reason: "reason"})
     end

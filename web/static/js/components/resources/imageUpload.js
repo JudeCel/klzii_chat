@@ -13,27 +13,33 @@ const ImageUpload =  React.createClass({
     this.refs.dropzone.open();
   },
   render() {
-    const {show, onHide, images} = this.props
+    const {show, onHide, images, onDelete} = this.props
     return (
       <div>
         <Modal  show={show} onHide={onHide}>
-          <Modal.Header closeButton>
+          <Modal.Header closeButton >
             <Modal.Title>Images</Modal.Title>
+              <div className="add glyphicon glyphicon-plus" onClick={this.onOpenClick}/>
           </Modal.Header>
 
           <Modal.Body>
-            <Dropzone multiple={false} ref="dropzone" onDrop={this.onDrop} >
-              <div>Try dropping some files here, or click to select files to upload.</div>
+            <Dropzone className="col-md-5" multiple={false} ref="dropzone" onDrop={this.onDrop} >
+              <div>Try dropping some files here</div>
             </Dropzone>
+            <div >
+              { images.map((image) =>
+                <div onClick={ onDelete }
+                  data-id={ image.id }
+                  key={image.id}
+                  className="glyphicon glyphicon-remove-circle">
 
-            <button type="button" onClick={this.onOpenClick}>
-                Open
-            </button>
-              <div>
-                { images.map((image) =>
-                  <img key={image.id} src={ image.thumb}/>
-                )}
-              </div>
+                  <img key={ image.id }
+                      className="col-md-7"
+                      src={ image.thumb }
+                       />
+                </div>
+              )}
+            </div>
           </Modal.Body>
         </Modal>
     </div>

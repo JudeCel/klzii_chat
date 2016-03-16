@@ -31,11 +31,19 @@ defmodule KlziiChat.TopicChannel do
         {:error, %{reason: reason}}
     end
   end
+  def handle_in("deleteResources", %{"id" => id}, socket) do
+    case ResourceService.deleteById(socket.assigns.session_member, id) do
+      {:ok, resource} ->
+        {:reply, {:ok, %{ id: resource.id, type: resource.type }}, socket}
+      {:error, reason} ->
+        {:error, %{reason: reason}}
+    end
+  end
 
   def handle_in("whiteboardHistory", _payload, socket) do
     case WhiteboardService.history(socket.assigns.topic_id, "object") do
       {:ok, history} ->
-        {:reply, {:ok, %{history: history}}, socket}
+        {:reply, {:ok, %{history: history} }, socket}
       {:error, reason} ->
         {:error, %{reason: reason}}
     end

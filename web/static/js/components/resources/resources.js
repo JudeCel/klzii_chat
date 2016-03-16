@@ -11,12 +11,17 @@ const Resources =  React.createClass({
     let modal = e.target.getAttribute('data-modal');
     const {dispatch, channal} = this.props
     dispatch({type: Constants.OPEN_RESOURCE_MODAL, modal });
-    dispatch(Actions.getResource(channal, modal))
+    dispatch(Actions.get(channal, modal))
   },
   closeModalWindow(e){
     let modal = e.target.getAttribute('data-modal')
     this.props.dispatch({type: Constants.CLOASE_RESOURCE_MODAL });
     this.props.dispatch({type: Constants.CLEAN_RESOURCE, modal });
+  },
+  onDelete(e){
+    const {dispatch, channal} = this.props
+    let id = e.target.getAttribute('data-id');
+    dispatch(Actions.delete(channal, id))
   },
   render() {
     const {permissions, modalWindow } = this.props
@@ -27,13 +32,19 @@ const Resources =  React.createClass({
             onClick={this.changeModalWindow}
             data-modal="image"
             className="resource glyphicon glyphicon-picture">
-            <ImageUpload show={modalWindow =="image"} onHide={this.closeModalWindow} />
+            <ImageUpload
+              show={modalWindow =="image"}
+              onHide={this.closeModalWindow}
+              onDelete={this.onDelete} />
           </div>
           <div
             onClick={this.changeModalWindow}
             data-modal="video"
             className="resource glyphicon glyphicon-film">
-            <VideoUpload show={modalWindow == "video"} onHide={this.closeModalWindow} />
+            <VideoUpload
+              show={modalWindow == "video"}
+              onHide={this.closeModalWindow}
+              onDelete={this.onDelete} />
           </div>
         </div>
       );
