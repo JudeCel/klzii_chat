@@ -1,24 +1,24 @@
 import React, {PropTypes}  from 'react';
 import Dropzone            from 'react-dropzone';
 import { connect }         from 'react-redux';
-import Actions             from '../../actions/resource';
+import Actions             from '../../../actions/resource';
 import { Modal }           from "react-bootstrap"
 
-const ImageUpload =  React.createClass({
+const Video =  React.createClass({
   onDrop: function(files){
     const { dispatch, currentUserId, currentTopicId } = this.props
-    dispatch(Actions.upload(files, "image", currentUserId, currentTopicId))
+    dispatch(Actions.upload(files, "video", currentUserId, currentTopicId))
   },
   onOpenClick: function () {
     this.refs.dropzone.open();
   },
   render() {
-    const {show, onHide, images, onDelete} = this.props
+    const {show, onHide, videos, onDelete} = this.props
     return (
       <div>
         <Modal  show={show} onHide={onHide}>
           <Modal.Header closeButton >
-            <Modal.Title>Images</Modal.Title>
+            <Modal.Title>Videos</Modal.Title>
               <div className="add glyphicon glyphicon-plus" onClick={this.onOpenClick}/>
           </Modal.Header>
 
@@ -27,16 +27,19 @@ const ImageUpload =  React.createClass({
               <div>Try dropping some files here</div>
             </Dropzone>
             <div >
-              { images.map((image) =>
+              { videos.map((video) =>
                 <div onClick={ onDelete }
-                  data-id={ image.id }
-                  key={image.id}
+                  data-id={ video.id }
+                  key={video.id}
                   className="glyphicon glyphicon-remove-circle">
 
-                  <img key={ image.id }
+                  <video key={ video.id } controls>
+                    <source key={ video.id }
                       className="col-md-7"
-                      src={ image.thumb }
-                       />
+                      src={ video.url }
+                      type="audio/mp4"
+                      />
+                  </video>
                 </div>
               )}
             </div>
@@ -50,9 +53,9 @@ const mapStateToProps = (state) => {
   return {
     channal: state.topic.channel,
     currentUserId: state.members.currentUser.id,
-    images: state.resources.images,
+    videos: state.resources.videos,
     modalWindow: state.resources.modalWindow,
     currentTopicId: state.topic.current.id
   }
 };
-export default connect(mapStateToProps)(ImageUpload);
+export default connect(mapStateToProps)(Video);

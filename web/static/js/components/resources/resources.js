@@ -1,10 +1,11 @@
-import React, {PropTypes}  from 'react';
-import { connect }         from 'react-redux';
-import { Modal }           from "react-bootstrap";
-import Constants            from '../../constants';
-import Actions             from '../../actions/resource';
-import ImageUpload         from "./imageUpload";
-import VideoUpload         from "./videoUpload";
+import React, {PropTypes}                     from 'react';
+import { connect }                            from 'react-redux';
+import { Modal }                              from "react-bootstrap";
+import Constants                              from '../../constants';
+import Actions                                from '../../actions/resource';
+import  Modales                               from "./modales";
+
+const { ImageModal, AudioModal, VideoModal } = Modales;
 
 const Resources =  React.createClass({
   changeModalWindow(e){
@@ -32,7 +33,7 @@ const Resources =  React.createClass({
             onClick={this.changeModalWindow}
             data-modal="image"
             className="resource glyphicon glyphicon-picture">
-            <ImageUpload
+            <ImageModal
               show={modalWindow =="image"}
               onHide={this.closeModalWindow}
               onDelete={this.onDelete} />
@@ -41,8 +42,17 @@ const Resources =  React.createClass({
             onClick={this.changeModalWindow}
             data-modal="video"
             className="resource glyphicon glyphicon-film">
-            <VideoUpload
+            <VideoModal
               show={modalWindow == "video"}
+              onHide={this.closeModalWindow}
+              onDelete={this.onDelete} />
+          </div>
+          <div
+            onClick={this.changeModalWindow}
+            data-modal="audio"
+            className="resource glyphicon glyphicon-volume-up">
+            <AudioModal
+              show={modalWindow == "audio"}
               onHide={this.closeModalWindow}
               onDelete={this.onDelete} />
           </div>

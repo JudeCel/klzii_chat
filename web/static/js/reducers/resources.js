@@ -3,7 +3,8 @@ import Constants from '../constants';
 const initialState = {
   videos: [],
   images: [],
-  audio: [],
+  audios: [],
+  files: [],
   fetch: false,
   modalWindow: "" // "image", "video" "audio"
 };
@@ -21,9 +22,9 @@ export default function reducer(state = initialState, action = {}) {
     case Constants.SET_IMAGE_RESOURCES:
       return { ...state, fetch: false, images: [...state.images, ...action.resources]};
     case Constants.SET_AUDIO_RESOURCES:
-      return { ...state, fetch: false, audio: [...state.audio, ...action.resources]};
+      return { ...state, fetch: false, audios: [...state.audios, ...action.resources]};
     case Constants.SET_FILE_RESOURCES:
-      return { ...state, fetch: false, file: [...state.file, ...action.resources]};
+      return { ...state, fetch: false, files: [...state.files, ...action.resources]};
     case Constants.OPEN_RESOURCE_MODAL:
       return { ...state, modalWindow: action.modal };
     case Constants.CLOASE_RESOURCE_MODAL:
@@ -35,22 +36,26 @@ export default function reducer(state = initialState, action = {}) {
 
 function deleteResource(state, type, id) {
   let newArray = [];
-  state[nameSwitch(type)].map((r) => {
+  state[pluralizeTypeName(type)].map((r) => {
     if (r.id != id) {
       newArray.push(r);
     }
   });
   let newState = { ...state };
-  newState[nameSwitch(type)] = newArray;
+  newState[pluralizeTypeName(type)] = newArray;
   return newState
 }
 
-function nameSwitch(name) {
+function pluralizeTypeName(name) {
   switch (name) {
     case 'image':
       return 'images'
-    case 'videos':
+    case 'video':
       return 'videos'
+    case 'audio':
+      return 'audios'
+    case 'file':
+      return 'files'
     default:
       return name
   }
