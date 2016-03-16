@@ -1,6 +1,6 @@
 defmodule KlziiChat.Services.EventsService do
   alias KlziiChat.{Repo, Event, EventView, SessionMember, Vote, Topic}
-  alias KlziiChat.Services.Permissions
+  alias KlziiChat.Services.Permissions.Events, as: EventPermissions
   import Ecto
   import Ecto.Query
 
@@ -23,7 +23,7 @@ defmodule KlziiChat.Services.EventsService do
 
   @spec create_message(Map.t, Integer.t, Map.t) :: {:ok, Map.t }
   def create_message(session_member, topic_id, params) do
-    if Permissions.can_new_message(session_member) do
+    if EventPermissions.can_new_message(session_member) do
       replyId =
         case params["replyId"] do
           nil ->
@@ -49,7 +49,7 @@ defmodule KlziiChat.Services.EventsService do
   @spec deleteById(Map.t, Integer.t) :: {:ok, %{ id: Integer.t, replyId: Integer.t } } | {:error, String.t}
   def deleteById(session_member, id) do
     result = Repo.get_by!(Event, id: id)
-    if Permissions.can_delete(session_member, result) do
+    if EventPermissions.can_delete(session_member, result) do
       case Repo.delete!(result) do
         {:error, error} -> # Something went wrong
           {:error, error}
@@ -79,7 +79,7 @@ defmodule KlziiChat.Services.EventsService do
   @spec update_message(Integer.t, String.t, Map.t) :: %Event{} | {:error, String.t}
   def update_message(id, body, session_member) do
     event = Repo.get_by!(Event, id: id)
-    if Permissions.can_edit(session_member, event) do
+    if EventPermissions.can_edit(session_member, event) do
       Ecto.Changeset.change(event, event: %{ body: body })
         |> update_msg
     else
@@ -99,7 +99,7 @@ defmodule KlziiChat.Services.EventsService do
 
   @spec star(Integer.t, Map.t) :: %Event{} | {:error, String.t}
   def star(id, session_member) do
-    if Permissions.can_star(session_member) do
+    if EventPermissions.can_star(session_member) do
       event = Repo.get_by!(Event, id: id)
       Ecto.Changeset.change(event, star: !event.star)
         |> update_msg
@@ -110,7 +110,7 @@ defmodule KlziiChat.Services.EventsService do
 
   @spec thumbs_up(Integer.t, Map.t) :: Map.t | {:error, String.t}
   def thumbs_up(id, session_member) do
-    if Permissions.can_vote(session_member) do
+    if EventPermissions.can_vote(session_member) do
       event = Repo.get_by!(Event, id: id)
       case Repo.get_by(Vote, eventId: id, sessionMemberId: session_member.id) do
         nil ->

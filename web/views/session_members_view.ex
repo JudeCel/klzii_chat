@@ -1,6 +1,6 @@
 defmodule KlziiChat.SessionMembersView do
   use KlziiChat.Web, :view
-  alias KlziiChat.Services.Permissions
+  alias KlziiChat.Services.Permissions.Events, as: EventPermissions
 
   def render("member.json", %{ member: member}) do
     %{id: member.id,
@@ -10,7 +10,7 @@ defmodule KlziiChat.SessionMembersView do
       avatar_info: member.avatar_info,
       role: member.role,
       permissions: %{
-        can_new_message: Permissions.can_new_message(member)
+        can_new_message: EventPermissions.can_new_message(member)
       }
     }
   end

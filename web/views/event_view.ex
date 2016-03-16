@@ -1,7 +1,7 @@
 defmodule KlziiChat.EventView do
   use KlziiChat.Web, :view
   alias KlziiChat.SessionMembersView
-  alias KlziiChat.Services.Permissions
+  alias KlziiChat.Services.Permissions.Events, as: EventPermissions
   alias KlziiChat.Decorators.EventDecorator
 
   @spec render(String.t, Map.t) :: Map.t
@@ -32,12 +32,12 @@ defmodule KlziiChat.EventView do
       votes_count: EventDecorator.votes_count(event.votes),
       has_voted: EventDecorator.has_voted(event.votes, member.id),
       permissions: %{
-        can_edit: Permissions.can_edit(member, event),
-        can_delete: Permissions.can_delete(member, event),
-        can_star: Permissions.can_star(member),
-        can_vote: Permissions.can_vote(member),
-        can_reply: (!event.replyId && Permissions.can_reply(member)),
-        can_new_message: Permissions.can_new_message(member)
+        can_edit: EventPermissions.can_edit(member, event),
+        can_delete: EventPermissions.can_delete(member, event),
+        can_star: EventPermissions.can_star(member),
+        can_vote: EventPermissions.can_vote(member),
+        can_reply: (!event.replyId && EventPermissions.can_reply(member)),
+        can_new_message: EventPermissions.can_new_message(member)
       }
     }
   end
