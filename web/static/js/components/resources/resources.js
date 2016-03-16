@@ -19,22 +19,27 @@ const Resources =  React.createClass({
     this.props.dispatch({type: Constants.CLEAN_RESOURCE, modal });
   },
   render() {
-    return (
-      <div className="resources col-md-12">
-        <div
-          onClick={this.changeModalWindow}
-          data-modal="image"
-          className="resource glyphicon glyphicon-picture">
-            <ImageUpload show={this.props.modalWindow =="image"} onHide={this.closeModalWindow} />
+    const {permissions, modalWindow } = this.props
+    if (permissions && permissions.resources.can_upload) {
+      return (
+        <div className="resources col-md-12">
+          <div
+            onClick={this.changeModalWindow}
+            data-modal="image"
+            className="resource glyphicon glyphicon-picture">
+            <ImageUpload show={modalWindow =="image"} onHide={this.closeModalWindow} />
+          </div>
+          <div
+            onClick={this.changeModalWindow}
+            data-modal="video"
+            className="resource glyphicon glyphicon-film">
+            <VideoUpload show={modalWindow == "video"} onHide={this.closeModalWindow} />
+          </div>
         </div>
-        <div
-          onClick={this.changeModalWindow}
-          data-modal="video"
-          className="resource glyphicon glyphicon-film">
-            <VideoUpload show={this.props.modalWindow == "video"} onHide={this.closeModalWindow} />
-        </div>
-      </div>
-    );
+      );
+    }else{
+      return(false)
+    }
   }
 })
 export default Resources;
@@ -42,7 +47,8 @@ export default Resources;
 const mapStateToProps = (state) => {
   return {
     modalWindow: state.resources.modalWindow,
-    channal: state.topic.channel
+    channal: state.topic.channel,
+    permissions:  state.members.currentUser.permissions
   }
 };
 export default connect(mapStateToProps)(Resources);

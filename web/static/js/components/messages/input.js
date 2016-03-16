@@ -14,7 +14,7 @@ const Input =  React.createClass({
   },
   render(){
     const { value, action, permissions, inputPrefix} = this.props;
-    if (permissions && permissions.can_new_message) {
+    if (permissions && permissions.events.can_new_message) {
       return (
         <div className="form-group col-md-12">
           <div className="input-group">
