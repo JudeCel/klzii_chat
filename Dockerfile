@@ -9,6 +9,8 @@ WORKDIR /var/www/klzii_chat
 
 COPY . /var/www/klzii_chat
 
+RUN sudo apt-get install erlang-dev
+
 RUN mix local.hex --force
 RUN mix local.rebar --force
 RUN mix deps.get --only prod
