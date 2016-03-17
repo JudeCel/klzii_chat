@@ -11,6 +11,6 @@ config :klzii_chat, KlziiChat.Repo,
   adapter: Ecto.Adapters.Postgres,
   username: System.get_env("DB_USERNAME"),
   database: System.get_env("DB_DATABASE"),
-  database: System.get_env("DB_HOST"),
+  hostname: System.get_env("DB_HOST"),
   password: System.get_env("DB_PASSWORD"),
   pool_size: 10
