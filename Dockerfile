@@ -15,10 +15,10 @@ RUN sudo apt-get --assume-yes install esl-erlang
 RUN mix local.hex --force
 RUN mix local.rebar --force
 RUN mix deps.get --only prod
+RUN mix compile.protocols
 
 RUN npm install webpack --global
 RUN npm install --production
-RUN mix compile.protocols
 
 RUN mix phoenix.digest
 RUN webpack -p
