@@ -17,11 +17,11 @@ RUN mix local.rebar --force
 RUN mix deps.get --only prod
 RUN mix compile.protocols
 
-RUN npm install webpack --global
 RUN npm install --production
+RUN npm install webpack --global
 
-RUN mix phoenix.digest
 RUN webpack -p
+RUN mix phoenix.digest
 
 RUN cd /var/www/klzii_chat
 
