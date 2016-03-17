@@ -1,7 +1,7 @@
 import React, { PropTypes }       from 'react';
 import moment                     from 'moment'
 import MessageActions             from './actions'
-import Avatar from '../members/avatar.js'
+import Avatar                     from '../members/avatar.js'
 
 const { Edit, Delete, Star, ThumbsUp, Reply } = MessageActions
 
