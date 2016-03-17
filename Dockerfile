@@ -9,8 +9,9 @@ WORKDIR /var/www/klzii_chat
 
 COPY . /var/www/klzii_chat
 
-RUN sudo apt-get install erlang-dev
-RUN sudo apt-get install esl-erlang
+RUN sudo apt-get --assume-yes install erlang-dev
+RUN sudo apt-get --assume-yes install esl-erlang
+
 
 RUN mix local.hex --force
 RUN mix local.rebar --force
