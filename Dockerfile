@@ -15,13 +15,13 @@ RUN sudo apt-get --assume-yes install esl-erlang
 RUN mix local.hex --force
 RUN mix local.rebar --force
 RUN mix deps.get --only prod
-RUN mix compile.protocols
 
 RUN npm install --production
 RUN npm install webpack --global
 
 RUN webpack -p
 RUN mix phoenix.digest
+RUN mix compile.protocols
 
 RUN cd /var/www/klzii_chat
 
@@ -29,4 +29,4 @@ ENV PORT=3000
 
 EXPOSE 3000
 
-CMD elixir -pa /var/www/klzii_chat/_build/prod/consolidated -S mix phoenix.server
+CMD elixir -pa /var/www/klzii_chat/_build/prod/consolidated -s mix phoenix.server
