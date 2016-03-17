@@ -29,4 +29,4 @@ ENV PORT=3000
 
 EXPOSE 3000
 
-CMD elixir -pa /var/www/klzii_chat/_build/prod/consolidated -s mix phoenix.server
+CMD elixir -pa /var/www/klzii_chat/_build/prod/consolidated -S mix phoenix.server
