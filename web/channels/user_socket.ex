@@ -6,7 +6,7 @@ defmodule KlziiChat.UserSocket do
   channel "topics:*", KlziiChat.TopicChannel
 
   ## Transports
-  transport :websocket, Phoenix.Transports.WebSocket, check_origin: false
+  transport :websocket, Phoenix.Transports.WebSocket
   # transport :longpoll, Phoenix.Transports.LongPoll
 
   # Socket params are passed from the client and can
