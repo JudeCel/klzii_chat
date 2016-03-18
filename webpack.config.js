@@ -46,7 +46,7 @@ var config = module.exports = {
         query: {
           cacheDirectory: true,
           plugins: ['transform-decorators-legacy'],
-          presets: ['react', 'es2016-node5','stage-0'],
+          presets: ["es2015", "stage-0", "react"]
         },
       },
       {
@@ -63,14 +63,10 @@ var config = module.exports = {
     new ExtractTextPlugin('css/app.css'),
     new webpack.optimize.OccurenceOrderPlugin(),
     new webpack.NoErrorsPlugin(),
-    new CopyWebpackPlugin([{ from: 'web/static/assets/images', to: "images" }])
+    new CopyWebpackPlugin([{ from: 'web/static/assets/images', to: "images" }]),
+    new webpack.optimize.DedupePlugin(),
+    new webpack.optimize.UglifyJsPlugin({ minimize: true })
   ],
 };
 
 // if running webpack in production mode, minify files with uglifyjs
-if (process.env.NODE_ENV === 'production') {
-  config.plugins.push(
-    new webpack.optimize.DedupePlugin(),
-    new webpack.optimize.UglifyJsPlugin({ minimize: true })
-  );
-}
