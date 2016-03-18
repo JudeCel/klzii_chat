@@ -1,3 +1,4 @@
+use Mix.Config
 # In this file, we keep production configuration that
 # you likely want to automate and keep it away from
 # your version control system.
@@ -15,11 +16,11 @@ config :klzii_chat, KlziiChat.Repo,
 
 config :ex_aws,
   access_key_id: System.get_env("AWS_ACCESS_KEY_ID"),
-  secret_access_key: System.get_env("AWS_SECRET_ACCESS_KEY"),
-  region: System.get_env("AWS_REGION")
+  secret_access_key: System.get_env("AWS_secret_access_key"),
+  region: System.get_env("AWS_region")
 
 config :arc,
-  bucket: System.get_env("ARC_BUCKET")
+  bucket: System.get_env("ARC_REGION")
 
 config :guardian, Guardian,
   secret_key: System.get_env("GUARDIAN_SECRET_KEY")
