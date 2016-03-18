@@ -29,9 +29,8 @@ const Actions = {
       });
     }
   },
-  upload:(files, type, memberId, topicId) =>{
+  upload:(files, type, memberId, topicId, name) =>{
     return (dispatch) => {
-
       let csrf_token = localStorage.getItem("csrf_token");
       let req = request.post('/upload');
       req.set('X-CSRF-Token', csrf_token);
@@ -42,6 +41,7 @@ const Actions = {
         req.field("topicId", topicId);
         req.field("type", type);
         req.field("scope", "collage");
+        req.field("name", name);
       });
       req.end((error, result) =>{
         if (result) {

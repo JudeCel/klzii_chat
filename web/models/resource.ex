@@ -13,10 +13,12 @@ defmodule KlziiChat.Resource do
     field :link, :string
     field :type, :string
     field :scope, :string
+    field :name, :string
+    field :accountId, :integer
     timestamps [inserted_at: :createdAt, updated_at: :updatedAt]
   end
 
-  @required_fields ~w(topicId scope type sessionMemberId)
+  @required_fields ~w(topicId scope type sessionMemberId accountId name)
   @optional_fields ~w(link)
 
   @required_file_fields ~w()
