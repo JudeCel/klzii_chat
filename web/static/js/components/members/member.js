@@ -15,7 +15,7 @@ const Member = ({member}) => {
       Role: { role }
       <br />
       <div className=" glyphicon glyphicon-globe" style={onlineStatus(online)} />
-      <Avatar avatar_info={avatar_info} />
+      <Avatar avatar_info={avatar_info} id={id} />
     </div>
   )
 }

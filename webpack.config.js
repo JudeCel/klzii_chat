@@ -53,6 +53,10 @@ var config = module.exports = {
         test: /\.sass$/,
         loader: ExtractTextPlugin.extract('style', 'css!sass?indentedSyntax&includePaths[]=' + __dirname +  '/node_modules'),
       },
+      {
+        test: require.resolve('snapsvg'),
+        loader: 'imports-loader?this=>window,fix=>module.exports=0'
+      }
     ],
   },
 
