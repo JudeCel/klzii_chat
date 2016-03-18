@@ -9,7 +9,6 @@ WORKDIR /var/www/klzii_chat
 
 COPY . /var/www/klzii_chat
 
-RUN sudo apt-get --assume-yes install erlang-dev
 RUN sudo apt-get --assume-yes install esl-erlang
 
 RUN mix local.hex --force
@@ -17,9 +16,8 @@ RUN mix local.rebar --force
 RUN mix deps.get --only prod
 
 RUN npm install --production
-RUN npm install webpack --global
 
-RUN webpack -p
+RUN set NODE_ENV=production && node node_modules/.bin/webpack -p
 RUN mix phoenix.digest
 RUN mix compile.protocols
 
