@@ -11,12 +11,14 @@ defmodule KlziiChat.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
+    plug Guardian.Plug.VerifyHeader
+    plug Guardian.Plug.LoadResource
   end
 
   scope "/", KlziiChat do
     pipe_through :browser # Use the default browser stack
-
     get "/", ChatController, :index
+    
   end
   scope "/upload", KlziiChat do
     pipe_through :api # Use the default browser stack

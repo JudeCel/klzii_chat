@@ -41,6 +41,7 @@ defmodule KlziiChat.Mixfile do
      {:phoenix_html, "~> 2.5"},
      {:phoenix_live_reload, "~> 1.0", only: :dev},
      {:gettext, "~> 0.9"},
+     {:guardian, "~> 0.10.1"},
      {:cowboy, "~> 1.0"}]
   end
 
