@@ -6,8 +6,8 @@ defmodule KlziiChat.ChatController do
     render conn, "index.html" , token: token
   end
 
-  def upload(conn, %{"type" => type, "scope" => scope, "file" => file, "topicId" => topicId, "memberId"=> sessionMemberId}) do
-    resource = %{topicId: topicId, type: type, scope: scope, type: type, sessionMemberId: sessionMemberId }
+  def upload(conn, %{"type" => type, "scope" => scope, "file" => file, "topicId" => topicId, "memberId"=> sessionMemberId, "name"=> name}) do
+    resource = %{topicId: topicId, type: type, scope: scope, type: type, sessionMemberId: sessionMemberId, name: name, accountId: 1 }
       |> Map.put(String.to_atom(type), file)
     changeset = Resource.changeset(%Resource{}, resource)
 

@@ -7,10 +7,17 @@ import { Modal }           from "react-bootstrap"
 const Video =  React.createClass({
   onDrop: function(files){
     const { dispatch, currentUserId, currentTopicId } = this.props
-    dispatch(Actions.upload(files, "video", currentUserId, currentTopicId))
+    dispatch(Actions.upload(files, "video", currentUserId, currentTopicId, this.state.name))
+    this.setState({name: ""});
   },
   onOpenClick: function () {
     this.refs.dropzone.open();
+  },
+  getInitialState: function() {
+    return {name: ""};
+  },
+  onChange: function(e) {
+    this.setState({name: e.target.value});
   },
   render() {
     const {show, onHide, videos, onDelete} = this.props
@@ -23,6 +30,12 @@ const Video =  React.createClass({
           </Modal.Header>
 
           <Modal.Body>
+            <input
+              type="text"
+              onChange={ this.onChange }
+              className="form-control"
+              placeholder="Name"
+              />
             <Dropzone className="col-md-5" multiple={false} ref="dropzone" onDrop={this.onDrop} >
               <div>Try dropping some files here</div>
             </Dropzone>
@@ -33,6 +46,7 @@ const Video =  React.createClass({
                   key={video.id}
                   className="glyphicon glyphicon-remove-circle">
 
+                  <div key={ video.name + video.id }>{ video.name }</div>
                   <video key={ video.id } controls>
                     <source key={ video.id }
                       className="col-md-7"

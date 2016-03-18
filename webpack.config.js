@@ -46,7 +46,7 @@ var config = module.exports = {
         query: {
           cacheDirectory: true,
           plugins: ['transform-decorators-legacy'],
-          presets: ['react', 'es2016-node5','stage-0'],
+          presets: ["react", "es2015", "stage-0"]
         },
       },
       {
@@ -63,18 +63,18 @@ var config = module.exports = {
   // what plugins we'll be using - in this case, just our ExtractTextPlugin.
   // we'll also tell the plugin where the final CSS file should be generated
   // (relative to config.output.path)
+
   plugins: [
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': '"production"'
+    }),
     new ExtractTextPlugin('css/app.css'),
     new webpack.optimize.OccurenceOrderPlugin(),
     new webpack.NoErrorsPlugin(),
-    new CopyWebpackPlugin([{ from: 'web/static/assets/images', to: "images" }])
+    new CopyWebpackPlugin([{ from: 'web/static/assets/images', to: "images" }]),
+    new webpack.optimize.DedupePlugin(),
+    new webpack.optimize.UglifyJsPlugin({ minimize: true })
   ],
 };
 
 // if running webpack in production mode, minify files with uglifyjs
-if (process.env.NODE_ENV === 'production') {
-  config.plugins.push(
-    new webpack.optimize.DedupePlugin(),
-    new webpack.optimize.UglifyJsPlugin({ minimize: true })
-  );
-}

@@ -23,6 +23,12 @@ config :logger, :console,
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env}.exs"
 
+config :guardian, Guardian,
+  issuer: "KlziiChat",
+  ttl: { 3, :days },
+  verify_issuer: true,
+  serializer: KlziiChat.GuardianSerializer
+
 # Configure phoenix generators
 config :phoenix, :generators,
   migration: true,
