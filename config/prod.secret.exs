@@ -16,8 +16,8 @@ config :klzii_chat, KlziiChat.Repo,
 config :ex_aws,
   access_key_id: System.get_env("AWS_ACCESS_KEY_ID"),
   secret_access_key: System.get_env("AWS_secret_access_key"),
-  region: System.get_env("AWS_region"),
-  
+  region: System.get_env("AWS_region")
+
 config :arc,
   bucket: System.get_env("ARC_REGION")
 
