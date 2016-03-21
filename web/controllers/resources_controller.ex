@@ -2,18 +2,26 @@ defmodule KlziiChat.ResourcesController do
   use KlziiChat.Web, :controller
   alias KlziiChat.{Resource, Repo, ResourceView, AccountUser, GuardianSerializer}
   alias KlziiChat.Services.{ ResourceService }
+  import Ecto
+  import Ecto.Query
 
-  def index(conn, %{"jwt" => jwt, "type" => type}) do
-    case getUser(jwt) do
+
+  def index(conn, params) do
+    case getUser(params["jwt"]) do
       {:ok, result} ->
-        resources = Repo.all(
-          from e in assoc(result.account_user.account, :resources)
-        )
-        resp = Enum.map(resources, fn resource ->
+        query =  from(r in assoc(result.account_user.account, :resources))
+
+        if params["type"] != "all"  do
+          query = where(query, type: ^params["type"] )
+        end
+
+      resources =
+        Repo.all(query)
+        |> Enum.map(fn resource ->
           ResourceView.render("resource.json", %{resource: resource})
         end)
 
-        json(conn, %{status: :error, reason: resp})
+        json(conn, %{resources: resources})
       {:error, reason} ->
         json(conn, %{status: :error, reason: reason})
     end

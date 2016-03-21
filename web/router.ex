@@ -21,10 +21,10 @@ defmodule KlziiChat.Router do
 
   end
   scope "/resources", KlziiChat do
-    pipe_through :api 
+    pipe_through :api
 
-    post "/", ResourcesController, :index
     post "/upload", ResourcesController, :upload
+    get "/:type/:jwt", ResourcesController, :index
   end
 
   # Other scopes may use custom stacks.
