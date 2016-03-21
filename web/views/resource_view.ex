@@ -29,6 +29,12 @@ defmodule KlziiChat.ResourceView do
         Video.url({resource.video, resource})
     end
 
-    Path.relative_to(url, "priv/static")
+    case Mix.env do
+      :dev ->
+         KlziiChat.Endpoint.url <> "/"<> Path.relative_to(url, "priv/static")
+      _ ->
+        url
+    end
+
   end
 end

@@ -34,9 +34,9 @@ defmodule KlziiChat.Uploaders.Image do
   def storage_dir(_, {file, scope}) do
     case Mix.env do
       :prod ->
-        "images/#{scope.id}/"
+        "uploads/images/#{scope.accountId}/"
       _ ->
-        "priv/static/uploads/images/"
+        "priv/static/uploads/images/#{scope.accountId}"
     end
   end
 
