@@ -6,8 +6,8 @@ import { Modal }           from "react-bootstrap"
 
 const Image =  React.createClass({
   onDrop: function(files){
-    const { dispatch, currentUserId, currentTopicId } = this.props
-    dispatch(Actions.upload(files, "image", currentUserId, currentTopicId, this.state.name))
+    const { dispatch, currentUserJwt, currentTopicId } = this.props
+    dispatch(Actions.upload(files, "image", currentUserJwt, this.state.name))
     this.setState({name: ""});
   },
   onOpenClick: function () {
@@ -63,7 +63,7 @@ const Image =  React.createClass({
 const mapStateToProps = (state) => {
   return {
     channal: state.topic.channel,
-    currentUserId: state.members.currentUser.id,
+    currentUserJwt: state.members.currentUser.jwt,
     images: state.resources.images,
     modalWindow: state.resources.modalWindow,
     currentTopicId: state.topic.current.id

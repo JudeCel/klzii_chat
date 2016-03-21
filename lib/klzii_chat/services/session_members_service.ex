@@ -9,7 +9,7 @@ defmodule KlziiChat.Services.SessionMembersService do
       nil ->
         nil
       session_member ->
-        Phoenix.View.render(SessionMembersView, "member.json", member: session_member)
+        Phoenix.View.render(SessionMembersView, "current_member.json", member: session_member)
     end
   end
 

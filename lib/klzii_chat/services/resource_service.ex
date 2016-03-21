@@ -1,14 +1,15 @@
 defmodule KlziiChat.Services.ResourceService do
-  alias KlziiChat.{Repo, Topic, Resource, ResourceView}
+  alias KlziiChat.{Repo, AccountUser, Resource, ResourceView}
   alias KlziiChat.Services.Permissions.Resources, as: ResourcePermissions
 
   import Ecto
   import Ecto.Query
 
-  def get(topic_id, type, scope) do
-    topic = Repo.get!(Topic, topic_id)
+  def get(account_user_id, type, scope) do
+    account_user = Repo.get!(AccountUser, account_user_id)
+      |> Repo.preload([:account])
     resources = Repo.all(
-      from e in assoc(topic, :resources),
+      from e in assoc(account_user.account, :resources),
         where: [type: ^type, scope: ^scope]
     )
     resp = Enum.map(resources, fn resource ->
