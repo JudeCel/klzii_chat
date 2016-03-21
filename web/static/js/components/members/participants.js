@@ -7,12 +7,23 @@ const Participants =  React.createClass({
   render() {
     const { participants } = this.props;
 
+    //helper for testing
+    for(let i of Array(7).keys()) {
+      if(participants[0]) {
+        let last = participants.length-1;
+        let object = Object.assign({}, participants[last]);
+        object.id++;
+        participants.push(object);
+      }
+    }
+
     return (
-      <div className="row participants-section col-md-6">
-        {participants.map( (participant) =>
+      <div className="row participants-section col-md-6 col-md-pull-2">
+        {participants.map( (participant, index) =>
           <Member
             key={ participant.id }
             member={ participant }
+            isEven={ index % 2 == 0 }
           />
         )}
       </div>
