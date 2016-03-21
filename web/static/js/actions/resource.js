@@ -32,7 +32,7 @@ const Actions = {
   upload:(files, type, jwt, name) =>{
     return (dispatch) => {
       let csrf_token = localStorage.getItem("csrf_token");
-      let req = request.post('/upload');
+      let req = request.post('/resources/upload');
       req.set('X-CSRF-Token', csrf_token);
 
       files.map((file)=> {
