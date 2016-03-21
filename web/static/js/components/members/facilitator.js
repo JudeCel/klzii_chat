@@ -2,8 +2,7 @@ import React, {PropTypes}   from 'react';
 import Member               from './member.js'
 import { connect }          from 'react-redux';
 
-
-const Facilitator =  React.createClass({
+const Facilitator = React.createClass({
   render() {
     const { facilitator } = this.props;
     return (

@@ -2,7 +2,7 @@ import React, {PropTypes}   from 'react';
 import Snap                 from 'snapsvg';
 import Member               from './member.js'
 
-const Avatar =  React.createClass({
+const Avatar = React.createClass({
   padToTwo(number) {
     if (number<=99) { number = ("0"+number).slice(-2); }
     return number;

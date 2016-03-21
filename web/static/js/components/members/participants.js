@@ -3,7 +3,7 @@ import Member               from './member.js'
 import { connect }          from 'react-redux';
 
 
-const Participants =  React.createClass({
+const Participants = React.createClass({
   render() {
     const { participants } = this.props;
 
