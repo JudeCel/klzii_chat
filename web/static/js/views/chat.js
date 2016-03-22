@@ -2,39 +2,56 @@ import React, { PropTypes } from 'react';
 import { connect }          from 'react-redux';
 import sessionActions       from '../actions/session';
 import topicActions         from '../actions/topic';
-import Messages             from '../components/messages/messages.js'
-import Input                from '../components/messages/input.js'
-import Whiteboard           from '../components/whiteboard'
-import Facilitator         from '../components/members/facilitator.js'
-import Participants         from '../components/members/participants.js'
-import TopicSelect          from '../components/topics/select.js'
-import Resources          from '../components/resources/resources.js'
+import Messages             from '../components/messages/messages.js';
+import Input                from '../components/messages/input.js';
+import Whiteboard           from '../components/whiteboard';
+import Facilitator          from '../components/members/facilitator.js';
+import Participants         from '../components/members/participants.js';
+import TopicSelect          from '../components/topics/select.js';
+import Resources            from '../components/resources/resources.js';
+import HeaderLinks          from '../components/header/links.js';
 
 const ChatView = React.createClass({
+  styles() {
+    const { colours } = this.props;
+    return {
+      header: { border: '2px solid red' },
+      room: {
+        backgroundColor: colours.mainBackground,
+        border: '2px solid ' + colours.mainBorder
+      }
+    };
+  },
   componentWillMount() {
     this.props.dispatch(sessionActions.connectToChannel());
   },
   componentWillReceiveProps(nextProps){
-    if (nextProps.sessionReady && !nextProps.topicReady) {
+    if(nextProps.sessionReady && !nextProps.topicReady) {
       this.props.dispatch(topicActions.selectCurrent(nextProps.socket, nextProps.topics));
     }
   },
   render() {
-    const {error, currentUser, whiteboard, dispatch, topicChannal } = this.props
-    if (error) {
+    const { error } = this.props;
+
+    if(error) {
       return (<div>{error}</div>)
-    }else {
+    }
+    else {
       return (
-        <div id="chat-app-container" className="col-md-12">
-          <div className="row info-section">
+        <div id='chat-app-container'>
+          <div className='row header-section' style={ this.styles().header }>
             <TopicSelect/>
             <Resources/>
+            <HeaderLinks/>
           </div>
-          <Facilitator/>
-          <Participants/>
-          <Whiteboard/>
-          <Messages/>
-          <Input/>
+
+          <div className='col-md-12 room-section' style={ this.styles().room }>
+            <Facilitator/>
+            <Participants/>
+            <Whiteboard/>
+            <Messages/>
+            <Input/>
+          </div>
         </div>
       )
     }
@@ -43,14 +60,13 @@ const ChatView = React.createClass({
 
 const mapStateToProps = (state) => {
   return {
+    colours: state.chat.session.colours,
     sessionReady: state.chat.ready,
     error: state.chat.error,
     topics: state.chat.session.topics,
-    whiteboard: state.whiteboard,
-    topicChannal: state.topic.channel,
     topicReady: state.topic.ready,
-    socket: state.chat.socket,
-    currentUser: state.members.currentUser,
-  }
+    socket: state.chat.socket
+  };
 };
+
 export default connect(mapStateToProps)(ChatView);

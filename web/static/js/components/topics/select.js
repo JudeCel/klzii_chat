@@ -1,38 +1,45 @@
 import React, {PropTypes} from 'react';
 import { connect }        from 'react-redux';
-import Actions      from '../../actions/topic';
+import Actions            from '../../actions/topic';
 
-const Select =  React.createClass({
-  changeTopic(e){
+const Select = React.createClass({
+  changeTopic(e) {
+    const { dispatch, channel } = this.props;
+
     let id = e.target.selectedOptions[0].value;
-    this.props.dispatch(Actions.changeTopic(this.props.channal, id));
+    dispatch(Actions.changeTopic(channel, id));
   },
   render() {
-    const { current } = this.props
+    const { current, topics, session } = this.props;
+
     return (
-      <div>
-        <select onChange={ this.changeTopic } defaultValue={current.id} >
+      <div className='col-md-3 topic-select-section'>
+        <div>
+          { session.name }
+        </div>
+        <select onChange={ this.changeTopic } defaultValue={ current.id }>
           {
-            this.props.topics.map((t) =>{
-              return(
-                <option
-                  key={ t.id }
-                  value={ t.id }>
-                  { t.name }
+            topics.map((topic) => {
+              return (
+                <option key={ topic.id } value={ topic.id }>
+                  { topic.name }
                 </option>
               )
             })
           }
         </select>
       </div>
-    );
+    )
   }
-})
+});
+
 const mapStateToProps = (state) => {
   return {
-    channal: state.topic.channel,
+    session: state.chat.session,
+    channel: state.topic.channel,
     current: state.topic.current,
     topics: state.topic.all,
-  }
+  };
 };
+
 export default connect(mapStateToProps)(Select);

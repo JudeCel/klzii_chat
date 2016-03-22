@@ -1,38 +1,3 @@
-.modal-content
-  .modal-header
-    .modal-title
-      text-align: center
-    .close
-      float: left
-    .add
-      float: right
-.modal-body
-  display: inline-table
-.alert:empty
-  display: none
-.chat-messages
-  .combined-avatar
-    width: 64px
-    height: 64px
-.combined-avatar
-  width: 10em
-  height:
-  position: relative
-  img
-    position: absolute
-    width: inherit
-    height: inherit
-#chat-app-container
-  .resources
-    .resource
-      padding-right: 20px
-      font-size: 20px
-.participants-section
-  margin-top: 15%
-  .avatar-even
-    margin-top: 5%
-  .avatar-odd
-    margin-top: 25%
 .star.active
   color: yellow
 .chat-box
@@ -41,3 +6,26 @@
   overflow-y: scroll
   overflow-x: hidden
   height: 600px
+
+.cursor-pointer
+  cursor: pointer
+
+.header-section
+  .links
+    @extend .cursor-pointer
+    font-size: 1.5em
+    color: white
+    margin: 5% 2px
+    padding: 2%
+    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black
+  .resources-section
+    .links
+      background-color: red
+
+.room-section
+  .participants-section
+    margin-top: 15%
+    .avatar-even
+      margin-top: 5%
+    .avatar-odd
+      margin-top: 25%
