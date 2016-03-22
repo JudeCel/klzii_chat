@@ -28,6 +28,7 @@ const Avatar = React.createClass({
       return Math.floor(Math.random() * 4);
     }
 
+    const { colour } = this.props;
     const { id, username, avatar_info, online } = this.props.member;
     const [base_number, face_number, body_number, hair_number, desk_number] = [0, randomNumber(), randomNumber(), randomNumber(), randomNumber()];
     // avatar_info.split(':');
@@ -38,7 +39,7 @@ const Avatar = React.createClass({
         Snap.load(`/images/avatar/body_${this.padToTwo(body_number)}.svg`, (body) => {
           Snap.load(`/images/avatar/hair_${this.padToTwo(hair_number)}.svg`, (hair) => {
             Snap.load(`/images/avatar/desk_${this.padToTwo(desk_number)}.svg`, (desk) => {
-              avatar.rect(100, 132, 100, 20, 1, 1).attr({fill: '#000'});
+              avatar.rect(100, 132, 100, 20, 1, 1).attr({fill: colour});
               avatar.text("40%", 145, username).attr({fill: '#fff', "font-size": "75%"});
               avatar.rect(105, 137, 90, 3, 5, 5).attr({fill: '#ccc', opacity: 0.2});
               base = avatar.append(base);
