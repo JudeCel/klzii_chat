@@ -1,33 +1,41 @@
 import React, {PropTypes} from 'react';
 import { connect }        from 'react-redux';
+import { Dropdown, Button, SplitButton, MenuItem }    from 'react-bootstrap'
 import Actions            from '../../actions/topic';
 
 const Select = React.createClass({
-  changeTopic(e) {
+  changeTopic(event) {
     const { dispatch, channel } = this.props;
 
-    let id = e.target.selectedOptions[0].value;
+    let id = event.target.id;
     dispatch(Actions.changeTopic(channel, id));
   },
   render() {
     const { current, topics, session } = this.props;
 
     return (
-      <div className='col-md-3 topic-select-section'>
-        <div>
-          { session.name }
+      <div className='col-md-2 topic-select-section'>
+        <div className='topic-select-box'>
+          <div>
+            { session.name }
+          </div>
+
+          <Dropdown id='topic-selector' bsSize='large'>
+            <Button className='no-border-radius'>
+              { current.name }
+            </Button>
+            <Dropdown.Toggle className='no-border-radius' />
+            <Dropdown.Menu className='no-border-radius'>
+              {
+                topics.map((topic) => {
+                  return (
+                    <MenuItem id={ topic.id } key={ 'topic-' + topic.id } active={ current.id == topic.id }>{ topic.name }</MenuItem>
+                  )
+                })
+              }
+            </Dropdown.Menu>
+          </Dropdown>
         </div>
-        <select onChange={ this.changeTopic } defaultValue={ current.id }>
-          {
-            topics.map((topic) => {
-              return (
-                <option key={ topic.id } value={ topic.id }>
-                  { topic.name }
-                </option>
-              )
-            })
-          }
-        </select>
       </div>
     )
   }

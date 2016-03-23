@@ -34,20 +34,16 @@ const Resources = React.createClass({
     if(permissions && permissions.resources.can_upload) {
       return (
         <div className='resources-section col-md-4'>
-          <span className='links glyphicon glyphicon-film' onClick={ this.changeModalWindow } data-modal='video'>
-            <VideoModal show={ modalWindow == 'video' } onHide={ this.closeModalWindow } onDelete={ this.onDelete } />
-          </span>
+          <span className='icon-buttons icon-video-1' onClick={ this.changeModalWindow } data-modal='video'></span>
+          <span className='icon-buttons icon-volume-up' onClick={ this.changeModalWindow } data-modal='audio'></span>
+          <span className='icon-buttons icon-picture' onClick={ this.changeModalWindow } data-modal='image'></span>
 
-          <span className='links glyphicon glyphicon-volume-up' onClick={ this.changeModalWindow } data-modal='audio'>
-            <AudioModal show={ modalWindow == 'audio' } onHide={ this.closeModalWindow } onDelete={ this.onDelete } />
-          </span>
+          <span className='icon-buttons icon-camera'></span>
+          <span className='icon-buttons icon-ok-squared'></span>
 
-          <span className='links glyphicon glyphicon-picture' onClick={ this.changeModalWindow } data-modal='image'>
-            <ImageModal show={ modalWindow =='image' } onHide={ this.closeModalWindow } onDelete={ this.onDelete } />
-          </span>
-
-          <span className='links glyphicon glyphicon-camera'></span>
-          <span className='links glyphicon glyphicon-ok'></span>
+          <VideoModal show={ modalWindow == 'video' } onHide={ this.closeModalWindow } onDelete={ this.onDelete } />
+          <AudioModal show={ modalWindow == 'audio' } onHide={ this.closeModalWindow } onDelete={ this.onDelete } />
+          <ImageModal show={ modalWindow == 'image' } onHide={ this.closeModalWindow } onDelete={ this.onDelete } />
         </div>
       )
     }

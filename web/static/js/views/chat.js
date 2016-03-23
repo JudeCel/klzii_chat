@@ -39,11 +39,11 @@ const ChatView = React.createClass({
     else {
       return (
         <div id='chat-app-container'>
-          <div className='row header-section' style={ this.styles().header }>
+          <nav className='row header-section'>
             <TopicSelect/>
             <Resources/>
             <HeaderLinks/>
-          </div>
+          </nav>
 
           <div className='col-md-12 room-section' style={ this.styles().room }>
             <Facilitator/>

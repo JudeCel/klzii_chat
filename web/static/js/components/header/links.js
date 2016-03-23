@@ -9,13 +9,17 @@ const Links = React.createClass({
     };
 
     return (
-      <div className='col-md-4 links-section'>
-        <span className='links glyphicon glyphicon-comment' style={ style }></span>
-        <span className='links glyphicon glyphicon-comment' style={ style }></span>
-        <span className='links glyphicon glyphicon-comment' style={ style }></span>
-        <span className='links glyphicon glyphicon-question-sign' style={ style }></span>
-        <span className='links glyphicon glyphicon-off' style={ style }></span>
-        <img width='40%' src='/images/logo.png' />
+      <div>
+        <div className='col-md-4 links-section'>
+          <span className='icon-buttons icon-trash' style={ style }></span>
+          <span className='icon-buttons icon-book-1' style={ style }></span>
+          <span className='icon-buttons icon-message' style={ style }></span>
+          <span className='icon-buttons icon-help' style={ style }></span>
+          <span className='icon-buttons icon-reply' style={ style }></span>
+        </div>
+        <div className='col-md-2'>
+          <img width='100%' src='/images/logo.png' />
+        </div>
       </div>
     )
   }

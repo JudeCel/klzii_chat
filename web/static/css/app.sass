@@ -1,3 +1,7 @@
+// Fonts
+@import 'klzii_chatroom-ie7.css'
+@import 'klzii_chatroom.css'
+
 .star.active
   color: yellow
 .chat-box
@@ -7,20 +11,51 @@
   overflow-x: hidden
   height: 600px
 
+body
+  font-family: 'Source Sans Pro', Arial, sans-serif
+  margin: auto
+
+.dropshadow
+  $x: 0px
+  $y: 4px
+  $blur: 5px
+  $alpha: 0.2
+  -webkit-box-shadow: $x $y $blur rgba(0, 0, 0, $alpha)
+  -moz-box-shadow: $x $y $blur rgba(0, 0, 0, $alpha)
+  box-shadow: $x $y $blur rgba(0, 0, 0, $alpha)
+
 .cursor-pointer
   cursor: pointer
 
+.no-border-radius
+  border-radius: 0 !important
+
 .header-section
-  .links
+  background: white
+  overflow: auto
+  margin-bottom: 20px
+  @extend .dropshadow
+  vertical-align: middle
+  text-align: right
+  .icon-buttons
     @extend .cursor-pointer
     font-size: 1.5em
     color: white
-    margin: 5% 2px
+    margin: 0 2px
     padding: 2%
-    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black
+    text-shadow: 1px 2px 0 rgba(39,96,109, 1)
+  .topic-select-section
+    text-align: left
+    .topic-select-box
+      margin-left: 20px
+      margin-top: 20px
+  .links-section
+    margin-top: 46px
   .resources-section
-    .links
-      background-color: red
+    margin-top: 46px
+    .icon-buttons
+      background-color: #e51D39
+      text-shadow: 1px 2px 0 rgba(155,14,38, 1)
 
 .room-section
   .participants-section
