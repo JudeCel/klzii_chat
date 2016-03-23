@@ -6,8 +6,8 @@ import { Modal }           from "react-bootstrap"
 
 const Audio =  React.createClass({
   onDrop: function(files){
-    const { dispatch, currentUserId, currentTopicId } = this.props
-    dispatch(Actions.upload(files, "audio", currentUserId, currentTopicId, this.state.name))
+    const { dispatch, currentUserJwt, currentTopicId } = this.props
+    dispatch(Actions.upload(files, "audio", currentUserJwt, this.state.name))
     this.setState({name: ""});
   },
   onOpenClick: function () {
@@ -66,7 +66,7 @@ const Audio =  React.createClass({
 const mapStateToProps = (state) => {
   return {
     channal: state.topic.channel,
-    currentUserId: state.members.currentUser.id,
+    currentUserJwt: state.members.currentUser.jwt,
     audios: state.resources.audios,
     modalWindow: state.resources.modalWindow,
     currentTopicId: state.topic.current.id

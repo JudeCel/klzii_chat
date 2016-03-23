@@ -29,16 +29,15 @@ const Actions = {
       });
     }
   },
-  upload:(files, type, memberId, topicId, name) =>{
+  upload:(files, type, jwt, name) =>{
     return (dispatch) => {
       let csrf_token = localStorage.getItem("csrf_token");
-      let req = request.post('/upload');
+      let req = request.post('/resources/upload');
       req.set('X-CSRF-Token', csrf_token);
 
       files.map((file)=> {
         req.attach("file", file);
-        req.field("memberId", memberId);
-        req.field("topicId", topicId);
+        req.field("jwt", jwt);
         req.field("type", type);
         req.field("scope", "collage");
         req.field("name", name);

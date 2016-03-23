@@ -32,7 +32,7 @@ defmodule KlziiChat.SessionChannel do
     end
 
     broadcast socket, "member_entered", socket.assigns.session_member
-    push socket, "self_info", socket.assigns.session_member
+    push(socket, "self_info", Map.put(socket.assigns.session_member, :jwt, buildJWT(socket.assigns.session_member)))
     case SessionMembersService.by_session(socket.assigns.session_id) do
       {:ok, members} ->
         push socket, "members", members
@@ -63,5 +63,11 @@ defmodule KlziiChat.SessionChannel do
   # Add authorization logic here as required.
   defp authorized?(socket) do
     is_map(socket.assigns.session_member)
+  end
+
+  @spec buildJWT(Map.t) :: Map.t
+  defp buildJWT(member) do
+    { :ok, jwt, encoded_claims } =  Guardian.encode_and_sign(%KlziiChat.SessionMember{id: member.id})
+    jwt
   end
 end
