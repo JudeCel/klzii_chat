@@ -56,6 +56,10 @@ var config = module.exports = {
       {
         test: require.resolve('snapsvg'),
         loader: 'imports-loader?this=>window,fix=>module.exports=0'
+      },
+      {
+        test: /\.(ttf|eot|svg|woff(2)?)(\?[a-z0-9]+)?$/,
+        loader: 'url-loader?limit=8192'
       }
     ],
   },
