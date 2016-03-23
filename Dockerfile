@@ -1,7 +1,5 @@
 FROM marcelocg/phoenix
 
-ENV DEBIAN_FRONTEND=noninteractive
-
 ENV MIX_ENV=prod
 ENV NODE_ENV=production
 
