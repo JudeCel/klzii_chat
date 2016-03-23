@@ -10,7 +10,7 @@ defmodule KlziiChat.Services.SessionService do
       session ->
       preload_session =
         session
-          |> Repo.preload([:topics])
+          |> Repo.preload([:topics, :brand_project_preference])
       {:ok, Phoenix.View.render(SessionView, "session.json", %{session: preload_session})}
     end
   end

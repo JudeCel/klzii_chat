@@ -7,6 +7,7 @@ defmodule KlziiChat.SessionView do
       name: session.name,
       start_time: session.start_time,
       end_time: session.end_time,
+      colours: session.brand_project_preference.colours,
       topics: Enum.map(session.topics, fn t ->
         TopicView.render("topic.json", %{topic: t })
       end)

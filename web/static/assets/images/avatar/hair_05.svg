@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Generator: Adobe Illustrator 19.2.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 viewBox="0 0 151.5 140.3" style="enable-background:new 0 0 151.5 140.3;" xml:space="preserve">
+<svg version="1.1" id="Hair_Layer6" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+   viewBox="0 0 151.5 140.3" style="enable-background:new 0 0 151.5 140.3;" xml:space="preserve">
 <style type="text/css">
-	.st0{opacity:0.2;}
-	.st1{fill:#F0E935;}
-	.st2{fill:url(#SVGID_1_);}
-	.st3{fill:url(#SVGID_2_);}
-	.st4{opacity:0.8;}
-	.st5{opacity:0.1;}
-	.st6{opacity:0.3;}
-	.st7{opacity:0.6;}
-	.st8{fill:url(#SVGID_3_);}
-	.st9{fill:url(#SVGID_4_);}
+  .hair_5_0{opacity:0.2;}
+  .hair_5_1{fill:#F0E935;}
+  .hair_5_2{fill:url(#AVATAR_HAIR_5_1_);}
+  .hair_5_3{fill:url(#AVATAR_HAIR_5_2_);}
+  .hair_5_4{opacity:0.8;}
+  .hair_5_5{opacity:0.1;}
+  .hair_5_6{opacity:0.3;}
+  .hair_5_7{opacity:0.6;}
+  .hair_5_8{fill:url(#AVATAR_HAIR_5_3_);}
+  .hair_5_9{fill:url(#AVATAR_HAIR_5_4_);}
 </style>
 <g id="Hair">
-	<g id="Hair5">
-		<g class="st0">
-			
-				<image style="overflow:visible;enable-background:new    ;" width="172" height="107" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKwAAABrCAYAAADq3GnUAAAACXBIWXMAAAsSAAALEgHS3X78AAAA
+  <g id="Hair5">
+    <g class="hair_5_0">
+
+        <image style="overflow:visible;enable-background:new    ;" width="172" height="107" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKwAAABrCAYAAADq3GnUAAAACXBIWXMAAAsSAAALEgHS3X78AAAA
 GXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAABvtJREFUeNrsnOlvE0cYh8dHnISr
 UK4S0tASekALFRWHhFT1Q/tvt1LLhwr1QGqlXlyi4QwECNiJb3dG/EaZrnyzdmab55FerSEJ3owf
 //ad2THGAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMIMcQDDU+
@@ -53,31 +53,31 @@ Cv+5uTrCDu5fX5KwUx97dyPmN7Vjs5rsRkMxwgHb1OpFFVm3JWVda/BAws4pNOoI2ztZH2ig/Afu
 YHsmYXUFh9/LEUVwxLQOG4rrbhq4rXBr9LDbFiBts7VGS0vQp39qqNl3aVvDnW1/XaIitv8oLa/U
 j+5SBJClNxIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGSFfwUY
 APp0VluAFFq5AAAAAElFTkSuQmCC" transform="matrix(1 0 0 1 -7.125 -20.8638)">
-			</image>
-		</g>
-		<path class="st1" d="M68.7,11.1c0,0-50.2,2.5-39.7,35.5c0,0,3-16.2,10.5-16.2l-5.7,5.4c0,0,37.8-9.3,38.5-14.9c0,0,0.9,4.1-4.4,6
-			c0,0,17.4,4.4,32.3-4.6c0,0,7.6-8.1,26.8,21.9c0,0-0.5-11.9-12.4-25.9c0,0-3.6-4-0.9-6.9c0,0-4.3-1.7-5.1,2.2c0,0-1.5-2.8,0.8-6
-			c0,0-7.8-1.3-7.6,4.8c0,0-29.2-1.8-33.3-5.1l-0.1-0.1C68.4,7.4,66.6,9.7,68.7,11.1z"/>
-		
-			<linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="77.4189" y1="2127.6245" x2="77.2523" y2="2176.6245" gradientTransform="matrix(1 0 0 1 0 -2128)">
-			<stop  offset="5.376345e-003" style="stop-color:#FFFFFF;stop-opacity:0"/>
-			<stop  offset="1" style="stop-color:#000000;stop-opacity:0.4"/>
-		</linearGradient>
-		<path class="st2" d="M68.7,11.1c0,0-50.2,2.5-39.7,35.5c0,0,3-16.2,10.5-16.2l-5.7,5.4c0,0,37.8-9.3,38.5-14.9c0,0,0.9,4.1-4.4,6
-			c0,0,17.4,4.4,32.3-4.6c0,0,7.6-8.1,26.8,21.9c0,0-0.5-11.9-12.4-25.9c0,0-3.6-4-0.9-6.9c0,0-4.3-1.7-5.1,2.2c0,0-1.5-2.8,0.8-6
-			c0,0-7.8-1.3-7.6,4.8c0,0-29.2-1.8-33.3-5.1l-0.1-0.1C68.4,7.4,66.6,9.7,68.7,11.1z"/>
-		
-			<linearGradient id="SVGID_2_" gradientUnits="userSpaceOnUse" x1="108.1456" y1="2146.8782" x2="31.4789" y2="2186.2117" gradientTransform="matrix(1 0 0 1 0 -2128)">
-			<stop  offset="5.376345e-003" style="stop-color:#FFFFFF;stop-opacity:0"/>
-			<stop  offset="1" style="stop-color:#000000;stop-opacity:0.4"/>
-		</linearGradient>
-		<path class="st3" d="M68.7,11.1c0,0-50.2,2.5-39.7,35.5c0,0,3-16.2,10.5-16.2l-5.7,5.4c0,0,37.8-9.3,38.5-14.9c0,0,0.9,4.1-4.4,6
-			c0,0,17.4,4.4,32.3-4.6c0,0,7.6-8.1,26.8,21.9c0,0-0.5-11.9-12.4-25.9c0,0-3.6-4-0.9-6.9c0,0-4.3-1.7-5.1,2.2c0,0-1.5-2.8,0.8-6
-			c0,0-7.8-1.3-7.6,4.8c0,0-29.2-1.8-33.3-5.1l-0.1-0.1C68.4,7.4,66.6,9.7,68.7,11.1z"/>
-		<g id="Head_Reflection_6_" class="st4">
-			<g class="st5">
-				
-					<image style="overflow:visible;enable-background:new    ;" width="112" height="80" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHAAAABQCAYAAADBTPF9AAAACXBIWXMAAAsSAAALEgHS3X78AAAA
+      </image>
+    </g>
+    <path class="hair_5_1" d="M68.7,11.1c0,0-50.2,2.5-39.7,35.5c0,0,3-16.2,10.5-16.2l-5.7,5.4c0,0,37.8-9.3,38.5-14.9c0,0,0.9,4.1-4.4,6
+      c0,0,17.4,4.4,32.3-4.6c0,0,7.6-8.1,26.8,21.9c0,0-0.5-11.9-12.4-25.9c0,0-3.6-4-0.9-6.9c0,0-4.3-1.7-5.1,2.2c0,0-1.5-2.8,0.8-6
+      c0,0-7.8-1.3-7.6,4.8c0,0-29.2-1.8-33.3-5.1l-0.1-0.1C68.4,7.4,66.6,9.7,68.7,11.1z"/>
+
+      <linearGradient id="AVATAR_HAIR_5_1_" gradientUnits="userSpaceOnUse" x1="77.4189" y1="2127.6245" x2="77.2523" y2="2176.6245" gradientTransform="matrix(1 0 0 1 0 -2128)">
+      <stop  offset="5.376345e-003" style="stop-color:#FFFFFF;stop-opacity:0"/>
+      <stop  offset="1" style="stop-color:#000000;stop-opacity:0.4"/>
+    </linearGradient>
+    <path class="hair_5_2" d="M68.7,11.1c0,0-50.2,2.5-39.7,35.5c0,0,3-16.2,10.5-16.2l-5.7,5.4c0,0,37.8-9.3,38.5-14.9c0,0,0.9,4.1-4.4,6
+      c0,0,17.4,4.4,32.3-4.6c0,0,7.6-8.1,26.8,21.9c0,0-0.5-11.9-12.4-25.9c0,0-3.6-4-0.9-6.9c0,0-4.3-1.7-5.1,2.2c0,0-1.5-2.8,0.8-6
+      c0,0-7.8-1.3-7.6,4.8c0,0-29.2-1.8-33.3-5.1l-0.1-0.1C68.4,7.4,66.6,9.7,68.7,11.1z"/>
+
+      <linearGradient id="AVATAR_HAIR_5_2_" gradientUnits="userSpaceOnUse" x1="108.1456" y1="2146.8782" x2="31.4789" y2="2186.2117" gradientTransform="matrix(1 0 0 1 0 -2128)">
+      <stop  offset="5.376345e-003" style="stop-color:#FFFFFF;stop-opacity:0"/>
+      <stop  offset="1" style="stop-color:#000000;stop-opacity:0.4"/>
+    </linearGradient>
+    <path class="hair_5_3" d="M68.7,11.1c0,0-50.2,2.5-39.7,35.5c0,0,3-16.2,10.5-16.2l-5.7,5.4c0,0,37.8-9.3,38.5-14.9c0,0,0.9,4.1-4.4,6
+      c0,0,17.4,4.4,32.3-4.6c0,0,7.6-8.1,26.8,21.9c0,0-0.5-11.9-12.4-25.9c0,0-3.6-4-0.9-6.9c0,0-4.3-1.7-5.1,2.2c0,0-1.5-2.8,0.8-6
+      c0,0-7.8-1.3-7.6,4.8c0,0-29.2-1.8-33.3-5.1l-0.1-0.1C68.4,7.4,66.6,9.7,68.7,11.1z"/>
+    <g id="Head_Reflection_6_" class="hair_5_4">
+      <g class="hair_5_5">
+
+          <image style="overflow:visible;enable-background:new    ;" width="112" height="80" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHAAAABQCAYAAADBTPF9AAAACXBIWXMAAAsSAAALEgHS3X78AAAA
 GXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAvZJREFUeNrsmetO20AQRr2+JCSQ
 QtRfff+nq1TUFgi5OXbXaFb6GC0plSp1Sc+RPi3YwRgfj3fWVBUAAAAAAAAAAAAAAAAAAAAAAAAA
 AAAAAAAAAPyHhBJPahzHcOb8xpcdIYzoK0igSKvtvNIYnLxc3jzspcsOBcmb0sS0ls7GJHKSMMSc
@@ -93,11 +93,11 @@ mqCNzItb6X6Hf/34LEqgF2lvaQZZIgT3nlTFtiK4EUGzTHMT5Ebwkn0DdHLNzb0JTU8KlhHvkFmd
 EVpV+ZffjYvuCyI+J7nKdLEHeYHwbN8XUYGh+uBk/vUUzqTKSMxJ9u9VT/JqLi3si1gHfniBfyDW
 /93nJFcZia+WD6W8iblYgX9Bck4k/0gGAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAS+CXAANr0
 fMa3vOT8AAAAAElFTkSuQmCC" transform="matrix(1 0 0 1 40.875 -23.8638)">
-				</image>
-			</g>
-			<g class="st6">
-				
-					<image style="overflow:visible;enable-background:new    ;" width="106" height="79" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGoAAABPCAYAAAADQFASAAAACXBIWXMAAAsSAAALEgHS3X78AAAA
+        </image>
+      </g>
+      <g class="hair_5_6">
+
+          <image style="overflow:visible;enable-background:new    ;" width="106" height="79" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGoAAABPCAYAAAADQFASAAAACXBIWXMAAAsSAAALEgHS3X78AAAA
 GXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAqFJREFUeNrsmYtunDAQRW0W2Gzf
 /f+/jLLZF4+YahzdjLzbSlWLkz1HuoIAIoTD2AMJAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP4f
 sdYLm+f5zbXFGGdE1SUmSl53u2Uo7PvQUmNFkhrJxsmaLZOshxsi55Lc9ywwViSptfQpna03do2L
@@ -111,11 +111,11 @@ RpnHOld1uZPMVXO05a3O8n7nKBv3c2VNcvNOrmFoXVOR1zsnoS1UUOeykSFSH46DDbcHkzZckXa3
 XZ8Xloem4crQ5b8LakOhw1XjPk+pTB3OJmkyjtL5XWro+Kr5KPubT0z+3akUP5c0hfmpJLPU1JRe
 jMe136OqFvWH8kKheSjt8zJL/0qZ3Pvcr/UkaaKi/o3A0t93S2YofOSt6nvfhxH1lzLnwnwJAAAA
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAd8uLAAMAqvljoj/w/OsAAAAASUVORK5CYII=" transform="matrix(1 0 0 1 44.875 -23.8638)">
-				</image>
-			</g>
-			<g class="st7">
-				
-					<image style="overflow:visible;enable-background:new    ;" width="94" height="77" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAF4AAABNCAYAAAAvkNNbAAAACXBIWXMAAAsSAAALEgHS3X78AAAA
+        </image>
+      </g>
+      <g class="hair_5_7">
+
+          <image style="overflow:visible;enable-background:new    ;" width="94" height="77" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAF4AAABNCAYAAAAvkNNbAAAACXBIWXMAAAsSAAALEgHS3X78AAAA
 GXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAkpJREFUeNrsmoFOxCAMhuk2ff/n
 9dxQE5bU2sKp0aL7voTA5baE+1tKKVcKAAAAAAAAAAAAAAAAAAAAAAAAXBuZaTK11i/NR0Qqwn9f
 8M/Oqf5Fg8gkgke9nme9Q/hoPJ0RZBLRvTaaX/1iP4URZCLRl6C389RC2rH32fsuXfwt2eha4LWN
@@ -128,11 +128,11 @@ UwY4AgOUf53HO3Fei1WcmO9tjCPhayen350yw3VCjRK/OLl1NaJ7Qts+OiB5ZQPr8Sniz3QR0isR
 98YSHKrsytHjd8bOqNWkX/0Ft1C9i5F7Lk1qUFLwVle5pPBODUeC0kJkoOh33FO3TysLT/Uvg04h
 7TPjSPwPfeZFyHTCD4xwz7xldGC67J3rDxpkmE0VAAAAAAAAAAAAAAAAAAAAAAAAgCl4EWAAx51w
 Cz2SANkAAAAASUVORK5CYII=" transform="matrix(1 0 0 1 50.875 -22.8638)">
-				</image>
-			</g>
-			<g>
-				
-					<image style="overflow:visible;enable-background:new    ;" width="81" height="75" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFEAAABLCAYAAAAIwmvLAAAACXBIWXMAAAsSAAALEgHS3X78AAAA
+        </image>
+      </g>
+      <g>
+
+          <image style="overflow:visible;enable-background:new    ;" width="81" height="75" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFEAAABLCAYAAAAIwmvLAAAACXBIWXMAAAsSAAALEgHS3X78AAAA
 GXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAXtJREFUeNrsmetqwzAMRiOne/8H
 XmuNDAKqUBzDYFbROWAc6B9z8OWTum0AAAAAAAAAAAAAAAAAAAAAn45kW5CqDtckIorEOXHRujSr
 UEkkTybXpF7qapmSQKCdZSDTylMvc6VISSAwGs2tzwrrTqSuFrlSopd2zi3YlVZgD75/RxmJbhda
@@ -141,12 +141,12 @@ xP1C4iHu24lcuhsfiUL/1TH3r7P9vWcoGLJIHIndLvJkGrJJVPcSn9LCXFhS4nFXBXWyurjSjUA1
 EvtF0K5XO19EnD14pW3w9hnxGUSdGq/z4IWOZNrAre6F7kFO7KvKv0xlXzQkuC+jqqVWxXLTgBjV
 zr4B0YOGxFZG4mQnR25e79pdnECkz3+jLOh7iTX7iRMytxuJdq7b2Z6QOZU7S+bEv0rN+G8fAAAA
 AAAAAAAAAAAAAAAAwOfzI8AAaaDlGO/jGaIAAAAASUVORK5CYII=" transform="matrix(1 0 0 1 57.875 -21.8638)">
-				</image>
-			</g>
-		</g>
-		<g class="st0">
-			
-				<image style="overflow:visible;enable-background:new    ;" width="172" height="107" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKwAAABrCAYAAADq3GnUAAAACXBIWXMAAAsSAAALEgHS3X78AAAA
+        </image>
+      </g>
+    </g>
+    <g class="hair_5_0">
+
+        <image style="overflow:visible;enable-background:new    ;" width="172" height="107" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKwAAABrCAYAAADq3GnUAAAACXBIWXMAAAsSAAALEgHS3X78AAAA
 GXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAABvtJREFUeNrsnOlvE0cYh8dHnISr
 UK4S0tASekALFRWHhFT1Q/tvt1LLhwr1QGqlXlyi4QwECNiJb3dG/EaZrnyzdmab55FerSEJ3owf
 //ad2THGAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMIMcQDDU+
@@ -180,31 +180,31 @@ Cv+5uTrCDu5fX5KwUx97dyPmN7Vjs5rsRkMxwgHb1OpFFVm3JWVda/BAws4pNOoI2ztZH2ig/Afu
 YHsmYXUFh9/LEUVwxLQOG4rrbhq4rXBr9LDbFiBts7VGS0vQp39qqNl3aVvDnW1/XaIitv8oLa/U
 j+5SBJClNxIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGSFfwUY
 APp0VluAFFq5AAAAAElFTkSuQmCC" transform="matrix(1 0 0 1 -7.125 -20.8638)">
-			</image>
-		</g>
-		<path class="st1" d="M68.7,11.1c0,0-50.2,2.5-39.7,35.5c0,0,3-16.2,10.5-16.2l-5.7,5.4c0,0,37.8-9.3,38.5-14.9c0,0,0.9,4.1-4.4,6
-			c0,0,17.4,4.4,32.3-4.6c0,0,7.6-8.1,26.8,21.9c0,0-0.5-11.9-12.4-25.9c0,0-3.6-4-0.9-6.9c0,0-4.3-1.7-5.1,2.2c0,0-1.5-2.8,0.8-6
-			c0,0-7.8-1.3-7.6,4.8c0,0-29.2-1.8-33.3-5.1l-0.1-0.1C68.4,7.4,66.6,9.7,68.7,11.1z"/>
-		
-			<linearGradient id="SVGID_3_" gradientUnits="userSpaceOnUse" x1="77.4189" y1="2127.6245" x2="77.2523" y2="2176.6245" gradientTransform="matrix(1 0 0 1 0 -2128)">
-			<stop  offset="5.376345e-003" style="stop-color:#FFFFFF;stop-opacity:0"/>
-			<stop  offset="1" style="stop-color:#000000;stop-opacity:0.4"/>
-		</linearGradient>
-		<path class="st8" d="M68.7,11.1c0,0-50.2,2.5-39.7,35.5c0,0,3-16.2,10.5-16.2l-5.7,5.4c0,0,37.8-9.3,38.5-14.9c0,0,0.9,4.1-4.4,6
-			c0,0,17.4,4.4,32.3-4.6c0,0,7.6-8.1,26.8,21.9c0,0-0.5-11.9-12.4-25.9c0,0-3.6-4-0.9-6.9c0,0-4.3-1.7-5.1,2.2c0,0-1.5-2.8,0.8-6
-			c0,0-7.8-1.3-7.6,4.8c0,0-29.2-1.8-33.3-5.1l-0.1-0.1C68.4,7.4,66.6,9.7,68.7,11.1z"/>
-		
-			<linearGradient id="SVGID_4_" gradientUnits="userSpaceOnUse" x1="108.1456" y1="2146.8782" x2="31.4789" y2="2186.2117" gradientTransform="matrix(1 0 0 1 0 -2128)">
-			<stop  offset="5.376345e-003" style="stop-color:#FFFFFF;stop-opacity:0"/>
-			<stop  offset="1" style="stop-color:#000000;stop-opacity:0.4"/>
-		</linearGradient>
-		<path class="st9" d="M68.7,11.1c0,0-50.2,2.5-39.7,35.5c0,0,3-16.2,10.5-16.2l-5.7,5.4c0,0,37.8-9.3,38.5-14.9c0,0,0.9,4.1-4.4,6
-			c0,0,17.4,4.4,32.3-4.6c0,0,7.6-8.1,26.8,21.9c0,0-0.5-11.9-12.4-25.9c0,0-3.6-4-0.9-6.9c0,0-4.3-1.7-5.1,2.2c0,0-1.5-2.8,0.8-6
-			c0,0-7.8-1.3-7.6,4.8c0,0-29.2-1.8-33.3-5.1l-0.1-0.1C68.4,7.4,66.6,9.7,68.7,11.1z"/>
-		<g id="Head_Reflection_30_" class="st4">
-			<g class="st5">
-				
-					<image style="overflow:visible;enable-background:new    ;" width="112" height="80" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHAAAABQCAYAAADBTPF9AAAACXBIWXMAAAsSAAALEgHS3X78AAAA
+      </image>
+    </g>
+    <path class="hair_5_1" d="M68.7,11.1c0,0-50.2,2.5-39.7,35.5c0,0,3-16.2,10.5-16.2l-5.7,5.4c0,0,37.8-9.3,38.5-14.9c0,0,0.9,4.1-4.4,6
+      c0,0,17.4,4.4,32.3-4.6c0,0,7.6-8.1,26.8,21.9c0,0-0.5-11.9-12.4-25.9c0,0-3.6-4-0.9-6.9c0,0-4.3-1.7-5.1,2.2c0,0-1.5-2.8,0.8-6
+      c0,0-7.8-1.3-7.6,4.8c0,0-29.2-1.8-33.3-5.1l-0.1-0.1C68.4,7.4,66.6,9.7,68.7,11.1z"/>
+
+      <linearGradient id="AVATAR_HAIR_5_3_" gradientUnits="userSpaceOnUse" x1="77.4189" y1="2127.6245" x2="77.2523" y2="2176.6245" gradientTransform="matrix(1 0 0 1 0 -2128)">
+      <stop  offset="5.376345e-003" style="stop-color:#FFFFFF;stop-opacity:0"/>
+      <stop  offset="1" style="stop-color:#000000;stop-opacity:0.4"/>
+    </linearGradient>
+    <path class="hair_5_8" d="M68.7,11.1c0,0-50.2,2.5-39.7,35.5c0,0,3-16.2,10.5-16.2l-5.7,5.4c0,0,37.8-9.3,38.5-14.9c0,0,0.9,4.1-4.4,6
+      c0,0,17.4,4.4,32.3-4.6c0,0,7.6-8.1,26.8,21.9c0,0-0.5-11.9-12.4-25.9c0,0-3.6-4-0.9-6.9c0,0-4.3-1.7-5.1,2.2c0,0-1.5-2.8,0.8-6
+      c0,0-7.8-1.3-7.6,4.8c0,0-29.2-1.8-33.3-5.1l-0.1-0.1C68.4,7.4,66.6,9.7,68.7,11.1z"/>
+
+      <linearGradient id="AVATAR_HAIR_5_4_" gradientUnits="userSpaceOnUse" x1="108.1456" y1="2146.8782" x2="31.4789" y2="2186.2117" gradientTransform="matrix(1 0 0 1 0 -2128)">
+      <stop  offset="5.376345e-003" style="stop-color:#FFFFFF;stop-opacity:0"/>
+      <stop  offset="1" style="stop-color:#000000;stop-opacity:0.4"/>
+    </linearGradient>
+    <path class="hair_5_9" d="M68.7,11.1c0,0-50.2,2.5-39.7,35.5c0,0,3-16.2,10.5-16.2l-5.7,5.4c0,0,37.8-9.3,38.5-14.9c0,0,0.9,4.1-4.4,6
+      c0,0,17.4,4.4,32.3-4.6c0,0,7.6-8.1,26.8,21.9c0,0-0.5-11.9-12.4-25.9c0,0-3.6-4-0.9-6.9c0,0-4.3-1.7-5.1,2.2c0,0-1.5-2.8,0.8-6
+      c0,0-7.8-1.3-7.6,4.8c0,0-29.2-1.8-33.3-5.1l-0.1-0.1C68.4,7.4,66.6,9.7,68.7,11.1z"/>
+    <g id="Head_Reflection_30_" class="hair_5_4">
+      <g class="hair_5_5">
+
+          <image style="overflow:visible;enable-background:new    ;" width="112" height="80" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHAAAABQCAYAAADBTPF9AAAACXBIWXMAAAsSAAALEgHS3X78AAAA
 GXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAvZJREFUeNrsmetO20AQRr2+JCSQ
 QtRfff+nq1TUFgi5OXbXaFb6GC0plSp1Sc+RPi3YwRgfj3fWVBUAAAAAAAAAAAAAAAAAAAAAAAAA
 AAAAAAAAAPyHhBJPahzHcOb8xpcdIYzoK0igSKvtvNIYnLxc3jzspcsOBcmb0sS0ls7GJHKSMMSc
@@ -220,11 +220,11 @@ mqCNzItb6X6Hf/34LEqgF2lvaQZZIgT3nlTFtiK4EUGzTHMT5Ebwkn0DdHLNzb0JTU8KlhHvkFmd
 EVpV+ZffjYvuCyI+J7nKdLEHeYHwbN8XUYGh+uBk/vUUzqTKSMxJ9u9VT/JqLi3si1gHfniBfyDW
 /93nJFcZia+WD6W8iblYgX9Bck4k/0gGAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAS+CXAANr0
 fMa3vOT8AAAAAElFTkSuQmCC" transform="matrix(1 0 0 1 40.875 -23.8638)">
-				</image>
-			</g>
-			<g class="st6">
-				
-					<image style="overflow:visible;enable-background:new    ;" width="106" height="79" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGoAAABPCAYAAAADQFASAAAACXBIWXMAAAsSAAALEgHS3X78AAAA
+        </image>
+      </g>
+      <g class="hair_5_6">
+
+          <image style="overflow:visible;enable-background:new    ;" width="106" height="79" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGoAAABPCAYAAAADQFASAAAACXBIWXMAAAsSAAALEgHS3X78AAAA
 GXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAqFJREFUeNrsmYtunDAQRW0W2Gzf
 /f+/jLLZF4+YahzdjLzbSlWLkz1HuoIAIoTD2AMJAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP4f
 sdYLm+f5zbXFGGdE1SUmSl53u2Uo7PvQUmNFkhrJxsmaLZOshxsi55Lc9ywwViSptfQpna03do2L
@@ -238,11 +238,11 @@ RpnHOld1uZPMVXO05a3O8n7nKBv3c2VNcvNOrmFoXVOR1zsnoS1UUOeykSFSH46DDbcHkzZckXa3
 XZ8Xloem4crQ5b8LakOhw1XjPk+pTB3OJmkyjtL5XWro+Kr5KPubT0z+3akUP5c0hfmpJLPU1JRe
 jMe136OqFvWH8kKheSjt8zJL/0qZ3Pvcr/UkaaKi/o3A0t93S2YofOSt6nvfhxH1lzLnwnwJAAAA
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAd8uLAAMAqvljoj/w/OsAAAAASUVORK5CYII=" transform="matrix(1 0 0 1 44.875 -23.8638)">
-				</image>
-			</g>
-			<g class="st7">
-				
-					<image style="overflow:visible;enable-background:new    ;" width="94" height="77" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAF4AAABNCAYAAAAvkNNbAAAACXBIWXMAAAsSAAALEgHS3X78AAAA
+        </image>
+      </g>
+      <g class="hair_5_7">
+
+          <image style="overflow:visible;enable-background:new    ;" width="94" height="77" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAF4AAABNCAYAAAAvkNNbAAAACXBIWXMAAAsSAAALEgHS3X78AAAA
 GXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAkpJREFUeNrsmoFOxCAMhuk2ff/n
 9dxQE5bU2sKp0aL7voTA5baE+1tKKVcKAAAAAAAAAAAAAAAAAAAAAAAAXBuZaTK11i/NR0Qqwn9f
 8M/Oqf5Fg8gkgke9nme9Q/hoPJ0RZBLRvTaaX/1iP4URZCLRl6C389RC2rH32fsuXfwt2eha4LWN
@@ -255,11 +255,11 @@ UwY4AgOUf53HO3Fei1WcmO9tjCPhayen350yw3VCjRK/OLl1NaJ7Qts+OiB5ZQPr8Sniz3QR0isR
 98YSHKrsytHjd8bOqNWkX/0Ft1C9i5F7Lk1qUFLwVle5pPBODUeC0kJkoOh33FO3TysLT/Uvg04h
 7TPjSPwPfeZFyHTCD4xwz7xldGC67J3rDxpkmE0VAAAAAAAAAAAAAAAAAAAAAAAAgCl4EWAAx51w
 Cz2SANkAAAAASUVORK5CYII=" transform="matrix(1 0 0 1 50.875 -22.8638)">
-				</image>
-			</g>
-			<g>
-				
-					<image style="overflow:visible;enable-background:new    ;" width="81" height="75" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFEAAABLCAYAAAAIwmvLAAAACXBIWXMAAAsSAAALEgHS3X78AAAA
+        </image>
+      </g>
+      <g>
+
+          <image style="overflow:visible;enable-background:new    ;" width="81" height="75" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFEAAABLCAYAAAAIwmvLAAAACXBIWXMAAAsSAAALEgHS3X78AAAA
 GXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAW5JREFUeNrs2dGKwyAQRuGMSd//
 gdtklhYCs8OvCXuxWjwfiL2Ug22iXRYAAAAAAAAAAAAAAIBvZ6MtyN2bazIzJ+K9cGpdPmpQGyie
 3VyT56i9Y9oAAeNsjZgxnueYPUPaAAHVKGl9MdiRQnrvkD0j5mjnXMSujAEP8fkzpomYdmGMt6bZ
@@ -268,9 +268,9 @@ xHe4ZwrZdTeOEnFLEbdGxDNgHDsRdcRNRIzhnkTUETexE60Scc6dKB4srZBFRIwPlhhw2ohWeb3J
 T2cT74gv8aozx9O58ZVWMeMLt6fdeIj3xKPX8W+kY58a+dhXO7XMdWK5uIBonZ3zBcQhLiSWaSLe
 vMmpXcw6tzg65CLuEmtrc3G3ON994o2Yy0XEOM97s30j5vXi+Y/lb1FH/LcPAAAAAAAAAAAAAADg
 +/0IMADQggcnab9TmwAAAABJRU5ErkJggg==" transform="matrix(1 0 0 1 57.875 -21.8638)">
-				</image>
-			</g>
-		</g>
-	</g>
+        </image>
+      </g>
+    </g>
+  </g>
 </g>
 </svg>
