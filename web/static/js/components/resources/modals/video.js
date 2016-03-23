@@ -2,67 +2,58 @@ import React, {PropTypes}  from 'react';
 import Dropzone            from 'react-dropzone';
 import { connect }         from 'react-redux';
 import Actions             from '../../../actions/resource';
-import { Modal }           from "react-bootstrap"
+import { Modal }           from 'react-bootstrap'
 
-const Video =  React.createClass({
-  onDrop: function(files){
-    const { dispatch, currentUserJwt, currentTopicId } = this.props
-    dispatch(Actions.upload(files, "video", currentUserJwt, this.state.name))
-    this.setState({name: ""});
-  },
-  onOpenClick: function () {
-    this.refs.dropzone.open();
+const Video = React.createClass({
+  onDrop: function(files) {
+    const { dispatch, currentUserJwt, currentTopicId } = this.props;
+    dispatch(Actions.upload(files, 'video', currentUserJwt, this.state.name));
+    this.setState({ name: '' });
   },
   getInitialState: function() {
-    return {name: ""};
+    return { name: '' };
   },
   onChange: function(e) {
-    this.setState({name: e.target.value});
+    this.setState({ name: e.target.value });
   },
   render() {
-    const {show, onHide, videos, onDelete} = this.props
+    const { show, onHide, videos, onDelete } = this.props
     return (
       <div>
-        <Modal  show={show} onHide={onHide}>
-          <Modal.Header closeButton >
+        <Modal show={ show } onHide={ onHide }>
+          <Modal.Header closeButton>
             <Modal.Title>Videos</Modal.Title>
-              <div className="add glyphicon glyphicon-plus" onClick={this.onOpenClick}/>
           </Modal.Header>
 
           <Modal.Body>
-            <input
-              type="text"
-              onChange={ this.onChange }
-              className="form-control"
-              placeholder="Name"
-              />
-            <Dropzone className="col-md-5" multiple={false} ref="dropzone" onDrop={this.onDrop} >
-              <div>Try dropping some files here</div>
-            </Dropzone>
-            <div >
-              { videos.map((video) =>
-                <div onClick={ onDelete }
-                  data-id={ video.id }
-                  key={video.id}
-                  className="glyphicon glyphicon-remove-circle">
+            <input type='text' onChange={ this.onChange } className='form-control' placeholder='Name' />
 
-                  <div key={ video.name + video.id }>{ video.name }</div>
-                  <video key={ video.id } controls>
-                    <source key={ video.id }
-                      className="col-md-7"
-                      src={ video.url }
-                      type="audio/mp4"
-                      />
-                  </video>
-                </div>
-              )}
+            <div>
+              {
+                videos.map((video) =>
+                  <div onClick={ onDelete } data-id={ video.id } key={ video.id } className='glyphicon glyphicon-remove-circle'>
+                    <div key={ video.name + video.id }>{ video.name }</div>
+
+                    <video key={ video.id } controls>
+                      <source key={ video.id } className='col-md-7' src={ video.url } type='audio/mp4' />
+                    </video>
+                  </div>
+                )
+              }
             </div>
           </Modal.Body>
+
+          <Modal.Footer>
+            <Dropzone className='col-md-12' multiple={ false } ref='dropzone' onDrop={ this.onDrop }>
+              <div>Try dropping some files here</div>
+            </Dropzone>
+          </Modal.Footer>
         </Modal>
-    </div>
-    );
+      </div>
+    )
   }
-})
+});
+
 const mapStateToProps = (state) => {
   return {
     channal: state.topic.channel,
@@ -72,4 +63,5 @@ const mapStateToProps = (state) => {
     currentTopicId: state.topic.current.id
   }
 };
+
 export default connect(mapStateToProps)(Video);
