@@ -1,7 +1,7 @@
 import Constants from '../constants';
 
 const initialState = {
-  current: {},
+  current: { id: 0, name: 'Topic' },
   channel: null,
   all: [],
   ready: false,

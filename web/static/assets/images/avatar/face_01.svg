@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Generator: Adobe Illustrator 19.2.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 viewBox="0 0 151.5 140.3" style="enable-background:new 0 0 151.5 140.3;" xml:space="preserve">
+<svg version="1.1" id="Face_Layer2" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+   viewBox="0 0 151.5 140.3" style="enable-background:new 0 0 151.5 140.3;" xml:space="preserve">
 <style type="text/css">
-	.st0{opacity:0.5;}
-	.st1{fill:#58595B;}
-	.st2{opacity:0.6;}
-	.st3{opacity:0.71;}
-	.st4{opacity:0.86;}
-	.st5{fill:url(#SVGID_1_);}
-	.st6{fill:url(#SVGID_2_);}
+  .face_1_0{opacity:0.5;}
+  .face_1_1{fill:#58595B;}
+  .face_1_2{opacity:0.6;}
+  .face_1_3{opacity:0.71;}
+  .face_1_4{opacity:0.86;}
+  .face_1_5{fill:url(#AVATAR_FACE_1_1_);}
+  .face_1_6{fill:url(#AVATAR_FACE_1_2_);}
 </style>
 <g id="Emotions">
-	<g id="Angry_Face">
-		<g>
-			
-				<image style="overflow:visible;enable-background:new    ;" width="88" height="82" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFgAAABSCAYAAADQDhNSAAAACXBIWXMAAAsSAAALEgHS3X78AAAA
+  <g id="Angry_Face">
+    <g>
+
+        <image style="overflow:visible;enable-background:new    ;" width="88" height="82" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFgAAABSCAYAAADQDhNSAAAACXBIWXMAAAsSAAALEgHS3X78AAAA
 GXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAiJJREFUeNrs2N1LFHEUxnFnHTdT
 QVJQJCWFCiKUMMXr+s+96CKIjEi6iygzX/Al31232Z4Dz8IYZAZdnIXvBx6G3f3tMp79eebM9vUB
 AAAAAAAAAAAAAAAAAAAAAG6l6JUT7XQ61861KIoOBf5/hW0opdL00y2lHS9HMhe7SF7cKOyAMqKM
@@ -28,12 +28,12 @@ eKp8UrajH+szzjK1ijJRcQtf0CbcFmLnLimT3pVHnhq6rS3O/Y538bLbxqnyTZ+VplVk2sENTwtz
 51k3poaq1k5OXMTKO3vcaxjT/qDlXvtK+eBibdZuIuo9tYppQcevLuixL4YbmXZvqhsNj2il+2u/
 L1KXN90Ge2aO9fc8I5/6YneRZVRLdSdX+8Ws6P6r/+1CVftiGm4X7ay/S/S033/OBAAAAAAAAAAA
 AAAAAAAAAAD0mF8CDABOKq6xAxQ8lgAAAABJRU5ErkJggg==" transform="matrix(1 0 0 1 31.875 30.1362)">
-			</image>
-		</g>
-		<g>
-			<g class="st0">
-				
-					<image style="overflow:visible;enable-background:new    ;" width="81" height="81" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFEAAABRCAYAAACqj0o2AAAACXBIWXMAAAsSAAALEgHS3X78AAAA
+      </image>
+    </g>
+    <g>
+      <g class="face_1_0">
+
+          <image style="overflow:visible;enable-background:new    ;" width="81" height="81" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFEAAABRCAYAAACqj0o2AAAACXBIWXMAAAsSAAALEgHS3X78AAAA
 GXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAZpJREFUeNrs2DtLw2AchfG+vVDv
 FcG7IjgoOouLfv9NOyo4V1BR7FC1pm08kROJpYLjf3h+cKBNUwiH95KkVgMAAAAAAAAAAAAAAAAA
 AEA4KeqF5XmeKteYf39IKafE/5dXV5pKW2koY2WojJRJtDJTsAKL8lrKkrKmbCoLypvyoDwrAyVT
@@ -43,46 +43,46 @@ v13lXLlUDjytGy5s2RvMvTNQ+SHWx3qgZaUYiR1lT9n257aPz3mNLKb5ibLl30KoBxqJqbIjtzwC
 dGFFsdf+vefza5RYLnjaYSXzSOv68It36/ZUwV2fl0W5T4z2xNLwDfe6C+xURmI51YsC31XgOMp1
 R3x2Lh/9yl06VdbMYbRHvrBvcabe4FQ3n7BvcgAAAAAAAAAAAAAAAAAAABDMlwADALCPdYXhbKcZ
 AAAAAElFTkSuQmCC" transform="matrix(1 0 0 1 -4.125 14.1362)">
-				</image>
-			</g>
-			<g>
-				<g>
-					<circle class="st1" cx="36.3" cy="54.8" r="3.1"/>
-				</g>
-				<g class="st2">
-					<circle cx="36.3" cy="54.8" r="3.1"/>
-				</g>
-			</g>
-			<g class="st0">
-				
-					<image style="overflow:visible;enable-background:new    ;" width="76" height="75" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEwAAABLCAYAAADakmGTAAAACXBIWXMAAAsSAAALEgHS3X78AAAA
+        </image>
+      </g>
+      <g>
+        <g>
+          <circle class="face_1_1" cx="36.3" cy="54.8" r="3.1"/>
+        </g>
+        <g class="face_1_2">
+          <circle cx="36.3" cy="54.8" r="3.1"/>
+        </g>
+      </g>
+      <g class="face_1_0">
+
+          <image style="overflow:visible;enable-background:new    ;" width="76" height="75" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEwAAABLCAYAAADakmGTAAAACXBIWXMAAAsSAAALEgHS3X78AAAA
 GXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAOFJREFUeNrs1rFKA0EUhtHdNVFT
 xEYsBAXBt/D5fYe8gDaKiNiYRB3/lQkkmN4Rz4GPDVstlztDug4AAAAAAAAAAADo+pY+ppTSb31X
 +f7R98XA9g9ryGOSjtNB+khv6T1D+zSwn5s1TafpIp2k13SXntKqlU2bNLTth+k83aSr9JBuN1tW
 N+7XDY1dD+NRnKfLdF23bV7fdzZs1yo9pkXdts2QxqM6jMe2hWPZ2qU/S2f1aB6l53SfXjKstUt/
 /9CmdVhDvbeWad3Kpd/UwP7KfzEAAAAAAAAAAAD4974EGAAZrjNyAv1CcAAAAABJRU5ErkJggg==" transform="matrix(1 0 0 1 -0.125 16.1362)">
-				</image>
-			</g>
-			<g>
-				
-					<image style="overflow:visible;enable-background:new    ;" width="74" height="74" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEoAAABKCAYAAAAc0MJxAAAACXBIWXMAAAsSAAALEgHS3X78AAAA
+        </image>
+      </g>
+      <g>
+
+          <image style="overflow:visible;enable-background:new    ;" width="74" height="74" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEoAAABKCAYAAAAc0MJxAAAACXBIWXMAAAsSAAALEgHS3X78AAAA
 GXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAFtJREFUeNrs07EJwDAMBEDLdXbw
 jtk4O6RXEvAIKb64AyHUPRIaAwAAAAAAAAAAAOA3lRSmu4+3rT1eVXWnZJthh/uWdO5aScGmp/J6
 AAAAAAAAAAAAAKkeAQYABBMLKSCcpfMAAAAASUVORK5CYII=" transform="matrix(1 0 0 1 0.875 16.1362)">
-				</image>
-			</g>
-			<g class="st0">
-				
-					<image style="overflow:visible;enable-background:new    ;" width="74" height="74" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEoAAABKCAYAAAAc0MJxAAAACXBIWXMAAAsSAAALEgHS3X78AAAA
+        </image>
+      </g>
+      <g class="face_1_0">
+
+          <image style="overflow:visible;enable-background:new    ;" width="74" height="74" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEoAAABKCAYAAAAc0MJxAAAACXBIWXMAAAsSAAALEgHS3X78AAAA
 GXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAADRJREFUeNrs0DEBAAAMAiD7l9Zn
 ARYAIpAAAAAAAAAAAAAAAD89JgAAAAAAAAAAAACYAAMA2tUH+cO5zEcAAAAASUVORK5CYII=" transform="matrix(1 0 0 1 0.875 16.1362)">
-				</image>
-			</g>
-		</g>
-		<g>
-			<g class="st0">
-				
-					<image style="overflow:visible;enable-background:new    ;" width="81" height="81" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFEAAABRCAYAAACqj0o2AAAACXBIWXMAAAsSAAALEgHS3X78AAAA
+        </image>
+      </g>
+    </g>
+    <g>
+      <g class="face_1_0">
+
+          <image style="overflow:visible;enable-background:new    ;" width="81" height="81" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFEAAABRCAYAAACqj0o2AAAACXBIWXMAAAsSAAALEgHS3X78AAAA
 GXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAZpJREFUeNrs2DtLw2AchfG+vVDv
 FcG7IjgoOouLfv9NOyo4V1BR7FC1pm08kROJpYLjf3h+cKBNUwiH95KkVgMAAAAAAAAAAAAAAAAA
 AEA4KeqF5XmeKteYf39IKafE/5dXV5pKW2koY2WojJRJtDJTsAKL8lrKkrKmbCoLypvyoDwrAyVT
@@ -92,46 +92,46 @@ v13lXLlUDjytGy5s2RvMvTNQ+SHWx3qgZaUYiR1lT9n257aPz3mNLKb5ibLl30KoBxqJqbIjtzwC
 dGFFsdf+vefza5RYLnjaYSXzSOv68It36/ZUwV2fl0W5T4z2xNLwDfe6C+xURmI51YsC31XgOMp1
 R3x2Lh/9yl06VdbMYbRHvrBvcabe4FQ3n7BvcgAAAAAAAAAAAAAAAAAAABDMlwADALCPdYXhbKcZ
 AAAAAElFTkSuQmCC" transform="matrix(1 0 0 1 74.875 14.1362)">
-				</image>
-			</g>
-			<g>
-				<g>
-					<circle class="st1" cx="115.2" cy="54.8" r="3.1"/>
-				</g>
-				<g class="st2">
-					<circle cx="115.2" cy="54.8" r="3.1"/>
-				</g>
-			</g>
-			<g class="st0">
-				
-					<image style="overflow:visible;enable-background:new    ;" width="76" height="75" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEwAAABLCAYAAADakmGTAAAACXBIWXMAAAsSAAALEgHS3X78AAAA
+        </image>
+      </g>
+      <g>
+        <g>
+          <circle class="face_1_1" cx="115.2" cy="54.8" r="3.1"/>
+        </g>
+        <g class="face_1_2">
+          <circle cx="115.2" cy="54.8" r="3.1"/>
+        </g>
+      </g>
+      <g class="face_1_0">
+
+          <image style="overflow:visible;enable-background:new    ;" width="76" height="75" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEwAAABLCAYAAADakmGTAAAACXBIWXMAAAsSAAALEgHS3X78AAAA
 GXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAOFJREFUeNrs1rtKA1EUhtGZScQ0
 imCrlvoavruPomIhFl4KjZfjP3ICAbV2g2vBxwTSDDv7TGYYAAAAAAAAAAAAgGGsdDOttXHrvtrX
 h3FsBvbzsKZclmmVFuk9Pae3DO3DwL5v1k46TMdpLz2ly3SX1lU2bVlo21d9WOf9epMuNlvWN+7P
 TYU2fT6G++konaXTrW1bVPlVq2xY6xv0kK7Sbnrs381HdZqPbYVjWfEZdpIO+gBv03W6z7BePfR/
 /5fcbP48pJf5WuWhX/k9bKj6LgYAAAAAAAAAAAD/3qcAAwAtxzapuPKcYQAAAABJRU5ErkJggg==" transform="matrix(1 0 0 1 78.875 16.1362)">
-				</image>
-			</g>
-			<g>
-				
-					<image style="overflow:visible;enable-background:new    ;" width="75" height="74" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEsAAABKCAYAAADzEqlPAAAACXBIWXMAAAsSAAALEgHS3X78AAAA
+        </image>
+      </g>
+      <g>
+
+          <image style="overflow:visible;enable-background:new    ;" width="75" height="74" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEsAAABKCAYAAADzEqlPAAAACXBIWXMAAAsSAAALEgHS3X78AAAA
 GXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAG5JREFUeNrs06ENgDAQBVAOjWMA
 lkCzBJswJ0swAA5fTtTiS/Ne8tPWXX5zwwAAAAAAAAAAAADQpWhpmFLKlMdSn1dEPC3NNzb2eXNm
 zxyZrZanrA935qz3tZZnDf+6igAAAAAAAAAAAAAdegUYAA9XECZ1u3IdAAAAAElFTkSuQmCC" transform="matrix(1 0 0 1 78.875 16.1362)">
-				</image>
-			</g>
-			<g class="st0">
-				
-					<image style="overflow:visible;enable-background:new    ;" width="74" height="74" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEoAAABKCAYAAAAc0MJxAAAACXBIWXMAAAsSAAALEgHS3X78AAAA
+        </image>
+      </g>
+      <g class="face_1_0">
+
+          <image style="overflow:visible;enable-background:new    ;" width="74" height="74" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEoAAABKCAYAAAAc0MJxAAAACXBIWXMAAAsSAAALEgHS3X78AAAA
 GXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAADRJREFUeNrs0DEBAAAMAiD7l9Zn
 ARYAIpAAAAAAAAAAAAAAAD89JgAAAAAAAAAAAACYAAMA2tUH+cO5zEcAAAAASUVORK5CYII=" transform="matrix(1 0 0 1 79.875 16.1362)">
-				</image>
-			</g>
-		</g>
-		<g>
-			<g class="st0">
-				
-					<image style="overflow:visible;enable-background:new    ;" width="84" height="84" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFQAAABUCAYAAAAcaxDBAAAACXBIWXMAAAsSAAALEgHS3X78AAAA
+        </image>
+      </g>
+    </g>
+    <g>
+      <g class="face_1_0">
+
+          <image style="overflow:visible;enable-background:new    ;" width="84" height="84" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFQAAABUCAYAAAAcaxDBAAAACXBIWXMAAAsSAAALEgHS3X78AAAA
 GXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAgJJREFUeNrs2MsrRHEYxvGZMe5K
 KbfQRBYWNpQ1fzq2YoPIgtxCLrmMcRnmeF69U2cjlPL+pu9TTzNnWJw+/c7vckoF8qcpQQAooIAS
 QAEFlAAKKKAEUEABBZQACiigBFBAASWAAgooARRQQAElgAIKKAEU0JZKOaWbzbKs6F+bn9nnRbGY
@@ -143,21 +143,21 @@ D9VdX81rKWBGArUR2uaPvGFe+uN+5CehRiGRRFnlM9+c25l83+9r18/q9Whbo1T2oc++8Lz5tc2h
 jymNzjCgNgLt5Ya/8Kj6z6+Gm9LoDDVC7fho7zULuddwqWGGO3qmCBh529QSARRQQAElgAIKKAEU
 UEAJoIACCigBFFBACaCAAkoABRRQAiiggAJKAAUUUALoP+dDgAEAGQWRojo28UUAAAAASUVORK5C
 YII=" transform="matrix(1 0 0 1 70.875 8.1362)">
-				</image>
-			</g>
-			<g>
-				<g>
-					<path class="st1" d="M118.4,44.2c0,0-10.7,2.4-10.8,11.9C107.6,56,109.4,50.4,118.4,44.2z"/>
-				</g>
-				<g class="st3">
-					<path d="M118.4,44.2c0,0-10.7,2.4-10.8,11.9C107.6,56,109.4,50.4,118.4,44.2z"/>
-				</g>
-			</g>
-		</g>
-		<g>
-			<g class="st0">
-				
-					<image style="overflow:visible;enable-background:new    ;" width="84" height="84" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFQAAABUCAYAAAAcaxDBAAAACXBIWXMAAAsSAAALEgHS3X78AAAA
+        </image>
+      </g>
+      <g>
+        <g>
+          <path class="face_1_1" d="M118.4,44.2c0,0-10.7,2.4-10.8,11.9C107.6,56,109.4,50.4,118.4,44.2z"/>
+        </g>
+        <g class="face_1_3">
+          <path d="M118.4,44.2c0,0-10.7,2.4-10.8,11.9C107.6,56,109.4,50.4,118.4,44.2z"/>
+        </g>
+      </g>
+    </g>
+    <g>
+      <g class="face_1_0">
+
+          <image style="overflow:visible;enable-background:new    ;" width="84" height="84" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFQAAABUCAYAAAAcaxDBAAAACXBIWXMAAAsSAAALEgHS3X78AAAA
 GXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAexJREFUeNrs2F1LG1EUheEkxii1
 WBorXhR6I/ULC0Lp//8BlSJeKNhSQS3WFqqmYmxiMq7drsAQEGtu3APvAwuNzMWw3OecmdRqAAAA
 AAAAAAAAAAAAAAAAAO5Vz3QzRVHUx+6r+PuhXi8odLIyp5UZ/wy3yh//HFah2EyFRokvlNfKoku9
@@ -168,33 +168,33 @@ h1SU5Gk9Lj2RxP2uKsveX4/icUrXpXlGTVno2BbQjf3S9xoH00ulrawoe94W+qUpflKN9G8e/07y
 mNRTZd9PAV2XGqf/bKYXlGatGoZ+yP+qbPsl4JnyylN7kWXZN6rQpovqe3nvKjs+kNreAlpM6GSn
 f7e09Ft+dEqzf6b6cuQR7/wtT+aS/zz68qSfYclXqlCX2vDKGi3zmNLbLG9MlSu0NKnjeywAAAAA
 AAAAAAAAAAAAAACA7O4EGABCzLCVcTd/AAAAAABJRU5ErkJggg==" transform="matrix(1 0 0 1 -3.125 8.1362)">
-				</image>
-			</g>
-			<g>
-				<g>
-					<path class="st1" d="M33.2,44.2c0,0,10.7,2.4,10.8,11.9C44,56,42.1,50.4,33.2,44.2z"/>
-				</g>
-				<g class="st3">
-					<path d="M33.2,44.2c0,0,10.7,2.4,10.8,11.9C44,56,42.1,50.4,33.2,44.2z"/>
-				</g>
-			</g>
-		</g>
-		<g>
-			<g>
-				<g>
-					<path class="st1" d="M70,73.5c0,0,5.8-13,11.8,0.2v0.1c-6-6.7-11.8-0.1-11.8-0.1V73.5z"/>
-				</g>
-			</g>
-			<g class="st4">
-				<g>
-					<path d="M70,73.5c0,0,5.8-13,11.8,0.2v0.1c-6-6.7-11.8-0.1-11.8-0.1V73.5z"/>
-				</g>
-			</g>
-		</g>
-		<g>
-			<g>
-				
-					<image style="overflow:visible;opacity:0.3;enable-background:new    ;" width="38" height="36" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACYAAAAkCAYAAADl9UilAAAACXBIWXMAAAsSAAALEgHS3X78AAAA
+        </image>
+      </g>
+      <g>
+        <g>
+          <path class="face_1_1" d="M33.2,44.2c0,0,10.7,2.4,10.8,11.9C44,56,42.1,50.4,33.2,44.2z"/>
+        </g>
+        <g class="face_1_3">
+          <path d="M33.2,44.2c0,0,10.7,2.4,10.8,11.9C44,56,42.1,50.4,33.2,44.2z"/>
+        </g>
+      </g>
+    </g>
+    <g>
+      <g>
+        <g>
+          <path class="face_1_1" d="M70,73.5c0,0,5.8-13,11.8,0.2v0.1c-6-6.7-11.8-0.1-11.8-0.1V73.5z"/>
+        </g>
+      </g>
+      <g class="face_1_4">
+        <g>
+          <path d="M70,73.5c0,0,5.8-13,11.8,0.2v0.1c-6-6.7-11.8-0.1-11.8-0.1V73.5z"/>
+        </g>
+      </g>
+    </g>
+    <g>
+      <g>
+
+          <image style="overflow:visible;opacity:0.3;enable-background:new    ;" width="38" height="36" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACYAAAAkCAYAAADl9UilAAAACXBIWXMAAAsSAAALEgHS3X78AAAA
 GXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA+ZJREFUeNrEmNtPE0EUh3d2tlug
 tkhbuaMSTCTeEnn1Sf9zY+KDJvAC0cTAAwIaCIGKgG334u+QM+QwWbazsIUmJ2dmYWa+ObeZXeVd
 /SmhU26n3j38lGj7kAAyAtGQGNKF9CHJXYNpARhC2pClIAgWkyRp8t/6DHkvYKTrAFqG/pCm6Tul
@@ -214,25 +214,25 @@ TG2aSm8XcFeLdTHJb+zwGyZ9hknNpVCJIhlatc0EOB0zaxi3ivHUPo3jmDZIgX5gYspe0NViVF8O
 CQy7pqp/hIVq5nKI5w26r3EFr4iPMRTMa9jIR8Cscb9nuTYZ9BnKJcboVrGAo6klrFMF1BSddXys
 VC8GKEXZuwu9ylA7bMHE5dtbkSCW388CUZzNWTcJ4IbwQgSgjnDZeZFXuqJ1KCvIr4ux1MVlZYEV
 AfZu87n0vwADAKhkx4uDcQkNAAAAAElFTkSuQmCC" transform="matrix(1 0 0 1 78.875 59.1362)">
-				</image>
-				<g>
-					
-						<linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="82.8453" y1="2184.7383" x2="102.9568" y2="2208.3843" gradientTransform="matrix(1 0 0 1 0 -2128)">
-						<stop  offset="0" style="stop-color:#F2F2F2;stop-opacity:0"/>
-						<stop  offset="7.861429e-002" style="stop-color:#F6F6F6;stop-opacity:7.861429e-002"/>
-						<stop  offset="0.3224" style="stop-color:#FDFDFD;stop-opacity:0.3224"/>
-						<stop  offset="1" style="stop-color:#FFFFFF"/>
-					</linearGradient>
-					<path class="st5" d="M113.4,76.2c0.4-1.7-0.3-3.4-1.8-4.3c-1.2-0.7-2.6-0.7-3.8,0c-1.2-1.2-3-1.7-4.7-1.4
-						c-0.1,0-0.3,0.1-0.4,0.1L85.1,59.4l-1.6,2.1L94,76.7l0.2,0.2c-0.9,0.3-1.6,0.9-2.1,1.7c-0.8,1.3-0.7,2.9,0,4.1
-						c-0.4,0.6-0.6,1.4-0.6,2.2c0.1,1,0.6,1.9,1.4,2.5s1.8,0.8,2.8,0.6c0.6-0.1,1.3-0.4,1.7-0.9c0.3,0.3,0.7,0.6,1.1,0.8
-						c1.1,0.6,2.5,0.8,3.7,0.5s2.3-1.2,3-2.3c0.1-0.2,0.2-0.4,0.3-0.6c1.1,0.4,2.2,0.4,3.3-0.1c0.1,0,0.1-0.1,0.2-0.1
-						c1.2-0.6,1.9-1.8,2.1-3.1c1.2,0,2.5-0.6,3.1-1.7C115,79.1,114.7,77.2,113.4,76.2z"/>
-				</g>
-			</g>
-			<g>
-				
-					<image style="overflow:visible;opacity:0.3;enable-background:new    ;" width="38" height="36" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACYAAAAkCAYAAADl9UilAAAACXBIWXMAAAsSAAALEgHS3X78AAAA
+        </image>
+        <g>
+
+            <linearGradient id="AVATAR_FACE_1_1_" gradientUnits="userSpaceOnUse" x1="82.8453" y1="2184.7383" x2="102.9568" y2="2208.3843" gradientTransform="matrix(1 0 0 1 0 -2128)">
+            <stop  offset="0" style="stop-color:#F2F2F2;stop-opacity:0"/>
+            <stop  offset="7.861429e-002" style="stop-color:#F6F6F6;stop-opacity:7.861429e-002"/>
+            <stop  offset="0.3224" style="stop-color:#FDFDFD;stop-opacity:0.3224"/>
+            <stop  offset="1" style="stop-color:#FFFFFF"/>
+          </linearGradient>
+          <path class="face_1_5" d="M113.4,76.2c0.4-1.7-0.3-3.4-1.8-4.3c-1.2-0.7-2.6-0.7-3.8,0c-1.2-1.2-3-1.7-4.7-1.4
+            c-0.1,0-0.3,0.1-0.4,0.1L85.1,59.4l-1.6,2.1L94,76.7l0.2,0.2c-0.9,0.3-1.6,0.9-2.1,1.7c-0.8,1.3-0.7,2.9,0,4.1
+            c-0.4,0.6-0.6,1.4-0.6,2.2c0.1,1,0.6,1.9,1.4,2.5s1.8,0.8,2.8,0.6c0.6-0.1,1.3-0.4,1.7-0.9c0.3,0.3,0.7,0.6,1.1,0.8
+            c1.1,0.6,2.5,0.8,3.7,0.5s2.3-1.2,3-2.3c0.1-0.2,0.2-0.4,0.3-0.6c1.1,0.4,2.2,0.4,3.3-0.1c0.1,0,0.1-0.1,0.2-0.1
+            c1.2-0.6,1.9-1.8,2.1-3.1c1.2,0,2.5-0.6,3.1-1.7C115,79.1,114.7,77.2,113.4,76.2z"/>
+        </g>
+      </g>
+      <g>
+
+          <image style="overflow:visible;opacity:0.3;enable-background:new    ;" width="38" height="36" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACYAAAAkCAYAAADl9UilAAAACXBIWXMAAAsSAAALEgHS3X78AAAA
 GXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAABCVJREFUeNrEmF1vE0cUhvfLdsAJ
 STAkpBGlIQFaKFwheln1n/emF+WCqKlKKyqoFKJEIQqEpKmps/bynPQdNFrWeDY47kpHM7vePfvs
 e2bOnHEc/X9H7LWF+kX5x0kfCdbAWliK9bF/sRNsEOnipFWyd17ErmFrWZZ9NRgM5qVWT5BFOmGg
@@ -253,23 +253,23 @@ FcDmVfi1vG39sNJm6LKEn15Ixi+H8qPECFQOXB8oc3ZAu8v5W6k1LK34f44U3sdaxt/g+XX8ftgJ
 1BPEgrdHPNG6+ApVDrX8DDg/xp7xcb9zfT90WcpGVAYOwO2I/gayB5ypaS9Zpp06nQ3/Jeddzp8D
 satwnY4vntkH6qWUDMqNdWdXqhBaBbKs+t99XA7AocqaQynoPjBXVZGfF1j5Tzc/k7uisGr2FXVT
 xlmT5rB8VpwlZ1Ud7wUYAIfxM/lhQ21JAAAAAElFTkSuQmCC" transform="matrix(1 0 0 1 34.875 59.1362)">
-				</image>
-				<g>
-					
-						<linearGradient id="SVGID_2_" gradientUnits="userSpaceOnUse" x1="67.3997" y1="2181.6257" x2="49.8029" y2="2207.1982" gradientTransform="matrix(1 0 0 1 0 -2128)">
-						<stop  offset="0" style="stop-color:#F2F2F2;stop-opacity:0"/>
-						<stop  offset="7.861429e-002" style="stop-color:#F6F6F6;stop-opacity:7.861429e-002"/>
-						<stop  offset="0.3224" style="stop-color:#FDFDFD;stop-opacity:0.3224"/>
-						<stop  offset="1" style="stop-color:#FFFFFF"/>
-					</linearGradient>
-					<path class="st6" d="M38.4,76.2c-0.4-1.7,0.3-3.4,1.8-4.3c1.2-0.7,2.6-0.7,3.8,0c1.2-1.2,3-1.7,4.7-1.4c0.1,0,0.3,0.1,0.4,0.1
-						l17.5-11.1l1.6,2.1L57.9,76.7l-0.2,0.2c0.9,0.3,1.6,0.9,2.1,1.7c0.8,1.3,0.7,2.9,0,4.1c0.4,0.6,0.6,1.4,0.6,2.2
-						c-0.1,1-0.6,1.9-1.4,2.5c-0.8,0.6-1.8,0.8-2.8,0.6c-0.6-0.1-1.3-0.4-1.7-0.9c-0.3,0.3-0.7,0.6-1.1,0.8
-						c-1.1,0.6-2.5,0.8-3.7,0.5s-2.3-1.2-3-2.3c-0.1-0.2-0.2-0.4-0.3-0.6c-1.1,0.4-2.2,0.4-3.3-0.1c-0.1,0-0.1-0.1-0.2-0.1
-						c-1.2-0.6-1.9-1.8-2.1-3.1c-1.2,0-2.5-0.6-3.1-1.7C36.9,79.1,37.2,77.2,38.4,76.2z"/>
-				</g>
-			</g>
-		</g>
-	</g>
+        </image>
+        <g>
+
+            <linearGradient id="AVATAR_FACE_1_2_" gradientUnits="userSpaceOnUse" x1="67.3997" y1="2181.6257" x2="49.8029" y2="2207.1982" gradientTransform="matrix(1 0 0 1 0 -2128)">
+            <stop  offset="0" style="stop-color:#F2F2F2;stop-opacity:0"/>
+            <stop  offset="7.861429e-002" style="stop-color:#F6F6F6;stop-opacity:7.861429e-002"/>
+            <stop  offset="0.3224" style="stop-color:#FDFDFD;stop-opacity:0.3224"/>
+            <stop  offset="1" style="stop-color:#FFFFFF"/>
+          </linearGradient>
+          <path class="face_1_6" d="M38.4,76.2c-0.4-1.7,0.3-3.4,1.8-4.3c1.2-0.7,2.6-0.7,3.8,0c1.2-1.2,3-1.7,4.7-1.4c0.1,0,0.3,0.1,0.4,0.1
+            l17.5-11.1l1.6,2.1L57.9,76.7l-0.2,0.2c0.9,0.3,1.6,0.9,2.1,1.7c0.8,1.3,0.7,2.9,0,4.1c0.4,0.6,0.6,1.4,0.6,2.2
+            c-0.1,1-0.6,1.9-1.4,2.5c-0.8,0.6-1.8,0.8-2.8,0.6c-0.6-0.1-1.3-0.4-1.7-0.9c-0.3,0.3-0.7,0.6-1.1,0.8
+            c-1.1,0.6-2.5,0.8-3.7,0.5s-2.3-1.2-3-2.3c-0.1-0.2-0.2-0.4-0.3-0.6c-1.1,0.4-2.2,0.4-3.3-0.1c-0.1,0-0.1-0.1-0.2-0.1
+            c-1.2-0.6-1.9-1.8-2.1-3.1c-1.2,0-2.5-0.6-3.1-1.7C36.9,79.1,37.2,77.2,38.4,76.2z"/>
+        </g>
+      </g>
+    </g>
+  </g>
 </g>
 </svg>

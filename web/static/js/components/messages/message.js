@@ -22,9 +22,6 @@ const Message =  React.createClass({
 
       <div className="row message-container">
         <div className="col-md-12">
-         <div className="media-left">
-           <Avatar avatar_info={message.session_member.avatar_info}/>
-         </div>
          <div className="media-body">
               {message.event.body}
          </div>

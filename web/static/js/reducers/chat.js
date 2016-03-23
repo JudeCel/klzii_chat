@@ -1,6 +1,6 @@
 import Constants from '../constants';
 const initialState = {
-  session: {},
+  session: { colours: {} },
   socket: null,
   channel: null,
   error: null,
