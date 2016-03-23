@@ -24,16 +24,16 @@ defmodule KlziiChat.Uploaders.Audio do
 
   # Override the persisted filenames:
   def filename(version, {file, scope}) do
-    str = "#{scope.id}_#{version}_#{file.file_name}"
+    str = "#{version}_#{file.file_name}"
     Regex.replace(~r/( |-)/, str, "")
   end
 
   def storage_dir(_, {file, scope}) do
     case Mix.env do
       :prod ->
-        "audio/#{scope.id}/"
+        "uploads/audio/#{scope.accountId}/"
       _ ->
-        "priv/static/uploads/audio/#{scope.id}/"
+        "priv/static/uploads/audio/#{scope.accountId}/"
     end
   end
 

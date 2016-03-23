@@ -49,7 +49,7 @@ const Messages =  React.createClass({
   },
   scrollToBottomOfChat() {
     let chatMessages = ReactDOM.findDOMNode(this).querySelector('.chat-messages');
-    
+
     if (this.shouldScrollBottom) {
       chatMessages.scrollTop = chatMessages.scrollHeight;
     }

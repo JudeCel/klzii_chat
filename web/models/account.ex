@@ -5,6 +5,7 @@ defmodule KlziiChat.Account do
     field :name, :string
     has_many :account_users, KlziiChat.AccountUser, [foreign_key: :AccountId]
     has_many :users, through: [:account_users, :user]
+    has_many :resources, KlziiChat.Resource, [foreign_key: :accountId]
     timestamps [inserted_at: :createdAt, updated_at: :updatedAt]
   end
 

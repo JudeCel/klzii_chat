@@ -4,8 +4,8 @@ defmodule KlziiChat.Resource do
   alias KlziiChat.Uploaders.{Image, Video, File, Audio}
 
   schema "Resources" do
-    belongs_to :session_member, KlziiChat.SessionMember, [foreign_key: :sessionMemberId]
-    belongs_to :topic, KlziiChat.Topic, [foreign_key: :topicId]
+    belongs_to :account_user, KlziiChat.AccountUser, [foreign_key: :accountUserId]
+    belongs_to :account, KlziiChat.Account, [foreign_key: :accountId]
     field :image, Image.Type
     field :audio, Audio.Type
     field :file, File.Type
@@ -13,10 +13,11 @@ defmodule KlziiChat.Resource do
     field :link, :string
     field :type, :string
     field :scope, :string
+    field :name, :string
     timestamps [inserted_at: :createdAt, updated_at: :updatedAt]
   end
 
-  @required_fields ~w(topicId scope type sessionMemberId)
+  @required_fields ~w(scope type accountUserId accountId name)
   @optional_fields ~w(link)
 
   @required_file_fields ~w()

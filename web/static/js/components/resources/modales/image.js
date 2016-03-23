@@ -6,11 +6,18 @@ import { Modal }           from "react-bootstrap"
 
 const Image =  React.createClass({
   onDrop: function(files){
-    const { dispatch, currentUserId, currentTopicId } = this.props
-    dispatch(Actions.upload(files, "image", currentUserId, currentTopicId))
+    const { dispatch, currentUserJwt, currentTopicId } = this.props
+    dispatch(Actions.upload(files, "image", currentUserJwt, this.state.name))
+    this.setState({name: ""});
   },
   onOpenClick: function () {
     this.refs.dropzone.open();
+  },
+  getInitialState: function() {
+    return {name: ""};
+  },
+  onChange: function(e) {
+    this.setState({name: e.target.value});
   },
   render() {
     const {show, onHide, images, onDelete} = this.props
@@ -23,6 +30,12 @@ const Image =  React.createClass({
           </Modal.Header>
 
           <Modal.Body>
+            <input
+              type="text"
+              onChange={ this.onChange }
+              className="form-control"
+              placeholder="Name"
+              />
             <Dropzone className="col-md-5" multiple={false} ref="dropzone" onDrop={this.onDrop} >
               <div>Try dropping some files here</div>
             </Dropzone>
@@ -33,6 +46,7 @@ const Image =  React.createClass({
                   key={image.id}
                   className="glyphicon glyphicon-remove-circle">
 
+                  <div key={ image.name + image.id }>{ image.name }</div>
                   <img key={ image.id }
                     className="col-md-7"
                     src={ image.url }
@@ -49,7 +63,7 @@ const Image =  React.createClass({
 const mapStateToProps = (state) => {
   return {
     channal: state.topic.channel,
-    currentUserId: state.members.currentUser.id,
+    currentUserJwt: state.members.currentUser.jwt,
     images: state.resources.images,
     modalWindow: state.resources.modalWindow,
     currentTopicId: state.topic.current.id
