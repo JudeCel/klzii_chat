@@ -76,7 +76,7 @@ const Messages =  React.createClass({
   },
   render() {
     return (
-      <div className='col-md-4 chat-section'>
+      <div className='col-md-offset-1 col-md-3 chat-section'>
         {
           this.props.messages.map((message) =>
             <Message

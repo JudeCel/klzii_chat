@@ -48,7 +48,7 @@ const Resources = React.createClass({
       )
     }
     else {
-      return(false)
+      return(<div className='resources-section col-md-4'></div>)
     }
   }
 });

@@ -85,12 +85,12 @@ const Message = React.createClass({
         </div>
 
         <div className='media-body'>
-          <div className='media-heading col-md-12'>
+          <div className='media-heading heading-section col-md-12'>
             <span className='pull-left'>
               { message.session_member.username }
             </span>
             <span className='pull-right'>
-              { this.formattedTime(message) }
+              <small>{ this.formattedTime(message) }</small>
             </span>
           </div>
 

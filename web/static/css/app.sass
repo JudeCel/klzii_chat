@@ -1,9 +1,12 @@
+$message-facilitator: #FBE7E9
+$message-participant: #F2F2F4
+$icon-thumbs: green
+$icon-star: #f0e935
+$header-red: #e51D39
+
 // Fonts
 @import 'klzii_chatroom-ie7.css'
 @import 'klzii_chatroom.css'
-
-.star.active
-  color: yellow
 
 body
   font-family: 'Source Sans Pro', Arial, sans-serif
@@ -56,7 +59,7 @@ body
       vertical-align: middle
       margin-left: 15px
       font-size: 30px
-      color: #e51D39
+      color: $header-red
       small
         font-size: 10px
   .links-section
@@ -64,7 +67,7 @@ body
   .resources-section
     margin-top: 46px
     .icon-buttons
-      background-color: #e51D39
+      background-color: $header-red
       text-shadow: 1px 2px 0 rgba(155,14,38, 1)
 
 .room-section
@@ -76,26 +79,33 @@ body
       border: none
       font-size: 26px
   .chat-section
+    padding-top: 20px
+    padding-bottom: 20px
     margin-top: 20px
     margin-bottom: 20px
     height: 650px
     .message-section
-      margin-top: 20px
-      margin-bottom: 20px
+      margin: 0
       .push-image-down
         padding-top: 25px
       .push-image-up
         padding-bottom: 31px
+      .heading-section
+        span small
+          color: grey
+      .body-section
+        p
+          margin: 5px -5px
       .body-section.facilitator
-        background-color: green
+        background-color: $message-facilitator
       .body-section.participant
-        background-color: red
+        background-color: $message-participant
       .action-section
         font-size: 20px
         .icon-thumbs-up.active
-          color: green
+          color: $icon-thumbs
         .icon-star
-          color: #f0e935
+          color: $icon-star
         i
           @extend .cursor-pointer
           &:hover
