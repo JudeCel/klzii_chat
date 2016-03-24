@@ -46,17 +46,31 @@ const Messages =  React.createClass({
     this.props.dispatch({ type: Constants.SET_INPUT_EDIT, id, value });
   },
   componentWillUpdate() {
-    const OFFSET = 4;
     let chatMessages = ReactDOM.findDOMNode(this);
-    this.shouldScrollBottom = chatMessages.scrollTop + chatMessages.offsetHeight === chatMessages.scrollHeight + OFFSET;
+    let chatBoxHeight = chatMessages.scrollTop + chatMessages.offsetHeight;
+    this.shouldScrollBottom = (chatBoxHeight === chatMessages.scrollHeight);
   },
   componentDidUpdate() {
+    let chatMessages = ReactDOM.findDOMNode(this);
+    let scrollClass = ' add-overflow-y';
+    let hasScroll = chatMessages.className.includes(scrollClass);
+
+    if(chatMessages.scrollHeight > chatMessages.offsetHeight) {
+      if(!hasScroll) {
+        chatMessages.className += scrollClass;
+      }
+    }
+    else {
+      if(hasScroll) {
+        chatMessages.className = chatMessages.className.replace(scrollClass, '');
+      }
+    }
+
     this.scrollToBottomOfChat();
   },
   scrollToBottomOfChat() {
-    let chatMessages = ReactDOM.findDOMNode(this);
-
     if(this.shouldScrollBottom) {
+      let chatMessages = ReactDOM.findDOMNode(this);
       chatMessages.scrollTop = chatMessages.scrollHeight;
     }
   },

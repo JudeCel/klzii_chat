@@ -1,20 +1,19 @@
-import React, { PropTypes, Component }       from 'react';
+import React, { PropTypes, Component } from 'react';
 
 class Reply extends Component {
-  render(){
+  render() {
     const { id } = this.props.data;
     const { can, onClick } = this.props;
-    if (can) {
+
+    if(can) {
       return(
-        <div
-          onClick={ onClick }
-          data-replyid={ id }
-          className="action glyphicon glyphicon-comment col-md-1"
-          />
+        <i className='icon-reply-empty' onClick={ onClick } data-replyid={ id } />
       )
-    }else{
+    }
+    else {
       return(false)
     }
   }
 }
+
 export default Reply;

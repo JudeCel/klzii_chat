@@ -58,16 +58,21 @@ const Message = React.createClass({
       return 'media-left media-bottom push-image-up';
     }
   },
-  isRepliedMessage() {
-    return this.props.message.replyId ? true : false;
-  },
-  actionListClass() {
-    if(this.isRepliedMessage()) {
-      return 'row col-md-12';
+  bodyClassname() {
+    let className = 'body-section col-md-12';
+    const { message } = this.props;
+
+    if(message.session_member.role == 'facilitator') {
+      className += ' facilitator';
     }
     else {
-      return 'col-md-12';
+      className += ' participant';
     }
+
+    return className;
+  },
+  isRepliedMessage() {
+    return this.props.message.replyId ? true : false;
   },
   render() {
     const { replyMessage, messageStar, message, deleteMessage, editMessage, thumbsUp } = this.props;
@@ -80,7 +85,7 @@ const Message = React.createClass({
         </div>
 
         <div className='media-body'>
-          <div className='media-heading col-md-12' style={ { backgroundColor: 'red' } }>
+          <div className='media-heading col-md-12'>
             <span className='pull-left'>
               { message.session_member.username }
             </span>
@@ -89,42 +94,48 @@ const Message = React.createClass({
             </span>
           </div>
 
-          <div className='col-md-12' style={ { backgroundColor: "purple" } }>
-            { message.event.body }
+          <div className={ this.bodyClassname() }>
+            <p className='text-break-all'>
+              { message.event.body }
+            </p>
           </div>
 
-          <div className={ this.actionListClass() }>
-            <span className='pull-right'>
-              <ThumbsUp data={ this.thumbsUpDate() } can={ can_vote } onClick={ thumbsUp } />
-              <Edit data={ this.editData() } can={ can_edit } onClick={ editMessage } />
-              <Reply data={ this.replyData() } can={ can_reply } onClick={ replyMessage } />
-              <Delete data={ this.deleteData() } can={ can_delete } onClick={ deleteMessage } />
-              <Star data={ this.starData() } can={ can_star} onClick={ messageStar } />
-            </span>
+          <div className='action-section col-md-12 text-right'>
+            <Star data={ this.starData() } can={ can_star} onClick={ messageStar } />
+            <Reply data={ this.replyData() } can={ can_reply } onClick={ replyMessage } />
+            <ThumbsUp data={ this.thumbsUpDate() } can={ can_vote } onClick={ thumbsUp } />
+            <Edit data={ this.editData() } can={ can_edit } onClick={ editMessage } />
+            <Delete data={ this.deleteData() } can={ can_delete } onClick={ deleteMessage } />
           </div>
 
-          {/* wrong - row and col*/}
-          <div className='row col-md-12 pull-right'>
-            {
-              message.replies.map((reply) => {
+          {
+            (() => {
+              if(!this.isRepliedMessage()) {
                 return (
-                  <Message
-                    message={ reply }
-                    deleteMessage={ deleteMessage }
-                    messageStar={ messageStar }
-                    editMessage={ editMessage }
-                    replyMessage={ replyMessage }
-                    thumbsUp={ thumbsUp }
-                    isReply= { false }
-                    key={ reply.id }
-                  />
+                  <div className='col-md-12 remove-side-margin pull-right'>
+                    {
+                      message.replies.map((reply) => {
+                        return (
+                          <Message
+                            message={ reply }
+                            deleteMessage={ deleteMessage }
+                            messageStar={ messageStar }
+                            editMessage={ editMessage }
+                            replyMessage={ replyMessage }
+                            thumbsUp={ thumbsUp }
+                            isReply= { false }
+                            key={ reply.id }
+                          />
+                        )
+                      })
+                    }
+                  </div>
                 )
-              })
-            }
-          </div>
+              }
+            })()
+          }
         </div>
       </div>
-
     )
   }
 });

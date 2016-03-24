@@ -17,11 +17,22 @@ body
   -moz-box-shadow: $x $y $blur rgba(0, 0, 0, $alpha)
   box-shadow: $x $y $blur rgba(0, 0, 0, $alpha)
 
+.text-break-all
+  -ms-word-break: break-all
+  word-break: break-all
+
 .cursor-pointer
   cursor: pointer
 
 .no-border-radius
   border-radius: 0 !important
+
+.remove-side-margin
+  margin-right: -15px
+  margin-left: -15px
+
+.add-overflow-y
+  overflow-y: scroll
 
 .header-section
   background: white
@@ -41,6 +52,13 @@ body
     .topic-select-box
       margin-left: 20px
       margin-top: 20px
+    .viewers-section
+      vertical-align: middle
+      margin-left: 15px
+      font-size: 30px
+      color: #e51D39
+      small
+        font-size: 10px
   .links-section
     margin-top: 46px
   .resources-section
@@ -60,16 +78,30 @@ body
   .chat-section
     margin-top: 20px
     margin-bottom: 20px
-    border: 2px solid red
     height: 650px
-    overflow-y: scroll
     .message-section
       margin-top: 20px
       margin-bottom: 20px
       .push-image-down
         padding-top: 25px
       .push-image-up
-        padding-bottom: 20px
+        padding-bottom: 31px
+      .body-section.facilitator
+        background-color: green
+      .body-section.participant
+        background-color: red
+      .action-section
+        font-size: 20px
+        .icon-thumbs-up.active
+          color: green
+        .icon-star
+          color: #f0e935
+        i
+          @extend .cursor-pointer
+          &:hover
+            opacity: 0.8
+          small
+            font-size: 15px
   .participants-section
     margin-top: 15%
     .avatar-even
