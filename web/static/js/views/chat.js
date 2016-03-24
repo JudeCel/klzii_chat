@@ -46,11 +46,25 @@ const ChatView = React.createClass({
           </nav>
 
           <div className='col-md-12 room-section' style={ this.styles().room }>
-            <Facilitator/>
-            <Participants/>
-            <Whiteboard/>
-            <Messages/>
-            <Input/>
+            <div className='row'>
+              <div className='col-md-9'>
+                <div className='row'>
+                  <Facilitator/>
+                  <Whiteboard/>
+                </div>
+                <div className='row'>
+                  <Participants/>
+                </div>
+              </div>
+
+              <div className='col-md-3'>
+                <Messages/>
+              </div>
+
+              <div className='col-md-12'>
+                <Input/>
+              </div>
+            </div>
           </div>
         </div>
       )

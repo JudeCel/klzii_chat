@@ -20,7 +20,7 @@ const Input = React.createClass({
 
     if(permissions && permissions.events.can_new_message) {
       return (
-        <div className='col-md-12 input-section'>
+        <div className='input-section'>
           <div className='form-group'>
             <div className='input-group input-group-lg'>
               <div className='input-group-addon no-border-radius'>{ inputPrefix }</div>
