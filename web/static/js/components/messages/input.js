@@ -1,4 +1,5 @@
 import React, {PropTypes} from 'react';
+import ReactDOM           from 'react-dom';
 import { connect }        from 'react-redux';
 import Actions            from '../../actions/currentInput';
 import MessagesActions    from '../../actions/messages';
@@ -13,6 +14,12 @@ const Input = React.createClass({
 
     if((e.charCode == 13 && e.target.value.length > 0)) {
       dispatch(MessagesActions.sendMessage(topicChannel, currentInput));
+    }
+  },
+  componentDidUpdate() {
+    let input = ReactDOM.findDOMNode(this).querySelector('#chat-input');
+    if(input) {
+      input.focus();
     }
   },
   render() {
@@ -31,6 +38,7 @@ const Input = React.createClass({
                 onChange={ this.handleChange }
                 className='form-control'
                 placeholder='Message'
+                id='chat-input'
                 />
               <div className='input-group-addon no-border-radius'><span className='fa fa-paper-plane'></span></div>
               <div className='input-group-addon no-border-radius'>POST</div>
