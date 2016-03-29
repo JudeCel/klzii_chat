@@ -20,7 +20,7 @@ const Select = React.createClass({
             { session.name }
           </div>
 
-          <Dropdown id='topic-selector' bsSize='large'>
+          <Dropdown id='topic-selector' bsSize='medium'>
             <Button className='no-border-radius'>
               { current.name }
             </Button>

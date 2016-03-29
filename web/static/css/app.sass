@@ -15,7 +15,6 @@ body
 
 .lineup-icons
   ul.icons
-    margin: 20px 0
     display: inline-block
     li
       display: inline-block
@@ -25,12 +24,14 @@ body
       opacity: 0.5
       border: 3px solid $font
       font-size: 30px
-      margin-right: 10px
+      margin-right: 5px
       @extend .cursor-pointer
       &.active
         border: 3px solid $green
         color: $green
         opacity: 1
+    li:last-child
+      margin: 0
   &.header
     ul.icons
       li
@@ -78,24 +79,25 @@ body
     .topic-select-box
       margin-left: 20px
   .links-section
+    margin: 1% 0
     @extend .lineup-icons
     @extend .lineup-icons.header
   .resources-section
+    margin: 1% 0
     @extend .lineup-icons
     @extend .lineup-icons.header
-    ul.icons
-      li
-        background-color: $header-red
+    ul.icons li
+      background-color: $header-red
     .viewers-section
       font-size: 30px
       color: $header-red
       small
-        font-size: 10px
+        font-size: 50%
 
 .room-outerbox
   padding: 0 15px
 .room-section
-  padding-top: 20px
+  padding-top: 1%
   .console-section
     @extend .lineup-icons
   .input-section
@@ -111,7 +113,7 @@ body
     padding-bottom: 20px
     margin-top: 20px
     margin-bottom: 20px
-    height: 650px
+    max-height: 550px
     .message-section
       margin: 0
       margin-right: 5px
@@ -145,9 +147,9 @@ body
   .participants-section
     margin-left: 20px
     .avatar-even
-      margin-top: 5%
+      margin-top: -5%
     .avatar-odd
-      margin-top: 25%
+      margin-top: 10%
   .facilitator-section
     margin-left: 20px
     .say-section
@@ -177,10 +179,19 @@ body
           p
             margin: 1em
 
-@media (min-width: 1200px)
+@media (max-width: 1200px)
+  .header-section
+    .resources-section, .links-section
+      ul.icons li
+        font-size: 20px
+@media (min-width: 1500px)
   .room-outerbox
-    width: 65%
+    width: 80%
     margin: 0 auto 20px auto
   .header-innerbox
-    width: 65%
+    width: 80%
     margin: 0 auto
+
+@media (min-width: 2000px)
+  .room-outerbox, .header-innerbox
+    width: 1600px
