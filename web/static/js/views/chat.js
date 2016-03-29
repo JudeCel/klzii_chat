@@ -50,7 +50,7 @@ const ChatView = React.createClass({
           <div className='row room-outerbox'>
             <div className='col-md-12 room-section' style={ this.styles().room }>
               <div className='row'>
-                <div className='col-md-9 col-lg-8'>
+                <div className='col-md-8'>
                   <div className='row'>
                     <Facilitator/>
                     {/*<Whiteboard/>*/}
@@ -63,7 +63,7 @@ const ChatView = React.createClass({
                   </div>
                 </div>
 
-                <div className='col-md-3 col-lg-4'>
+                <div className='col-md-4'>
                   <Messages/>
                 </div>
 
