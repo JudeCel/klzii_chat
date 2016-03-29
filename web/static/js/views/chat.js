@@ -9,7 +9,6 @@ import Facilitator          from '../components/members/facilitator.js';
 import Participants         from '../components/members/participants.js';
 import TopicSelect          from '../components/topics/select.js';
 import Resources            from '../components/resources/resources.js';
-import Console              from '../components/resources/console.js';
 import HeaderLinks          from '../components/header/links.js';
 
 const ChatView = React.createClass({
@@ -54,9 +53,6 @@ const ChatView = React.createClass({
                   <div className='row'>
                     <Facilitator/>
                     {/*<Whiteboard/>*/}
-                  </div>
-                  <div className='row'>
-                    <Console/>
                   </div>
                   <div className='row'>
                     <Participants/>

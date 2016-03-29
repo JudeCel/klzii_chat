@@ -15,16 +15,25 @@ body
 
 .lineup-icons
   ul.icons
-    display: inline-block
+    text-align: justify
+    line-height: 0
+    margin: 0
+    padding: 0
+    &:after
+      content: ''
+      display: inline-block
+      width: 100%
     li
       display: inline-block
-      padding: 5px
+      line-height: 100%
+      padding: 15px 10px
+      margin-right: 5px
+
       color: $font
-      font-weight: bolder
       opacity: 0.5
       border: 3px solid $font
       font-size: 30px
-      margin-right: 5px
+      text-align: center
       @extend .cursor-pointer
       &.active
         border: 3px solid $green
@@ -57,6 +66,9 @@ body
 .cursor-pointer
   cursor: pointer
 
+.div-inline-block
+  display: inline-block
+
 .no-border-radius
   border-radius: 0 !important
 
@@ -76,23 +88,28 @@ body
   text-align: right
   .topic-select-section
     text-align: left
+    .viewers-section
+      vertical-align: middle
+      font-size: 30px
+      color: $header-red
+      small
+        font-size: 50%
     .topic-select-box
       margin-left: 20px
   .links-section
     margin: 1% 0
     @extend .lineup-icons
     @extend .lineup-icons.header
+    ul.icons
+      text-align: center
   .resources-section
     margin: 1% 0
     @extend .lineup-icons
     @extend .lineup-icons.header
-    ul.icons li
-      background-color: $header-red
-    .viewers-section
-      font-size: 30px
-      color: $header-red
-      small
-        font-size: 50%
+    ul.icons
+      text-align: center
+      li
+        background-color: $header-red
 
 .room-outerbox
   padding: 0 15px
@@ -100,6 +117,11 @@ body
   padding-top: 1%
   .console-section
     @extend .lineup-icons
+    ul.icons
+      padding: 0
+      width: 100%
+      li
+        width: 19%
   .input-section
     textarea
       resize: none
@@ -179,15 +201,10 @@ body
           p
             margin: 1em
 
-@media (max-width: 1200px)
-  .header-section
-    .resources-section, .links-section
-      ul.icons li
-        font-size: 20px
 @media (min-width: 1500px)
   .room-outerbox
     width: 80%
-    margin: 0 auto 20px auto
+    margin: 0 auto 30px auto
   .header-innerbox
     width: 80%
     margin: 0 auto

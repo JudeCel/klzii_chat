@@ -34,9 +34,6 @@ const Resources = React.createClass({
     if(permissions && permissions.resources.can_upload) {
       return (
         <div className='resources-section col-md-4'>
-          <i className='viewers-section icon-eye'>
-            <small>3</small>
-          </i>
           <ul className='icons'>
             <li>
               <i className='icon-video-1' onClick={ this.changeModalWindow } data-modal='video' />
