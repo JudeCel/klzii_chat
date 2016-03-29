@@ -10,8 +10,8 @@ const Input = React.createClass({
     const { dispatch } = this.props;
     dispatch(Actions.changeValue(e.target.value));
   },
-  onKeyPress(e) {
-    if((e.charCode == 10 || e.charCode == 13) && (e.ctrlKey || e.metaKey)) {
+  onKeyDown(e) {
+    if((e.keyCode == 10 || e.keyCode == 13) && (e.ctrlKey || e.metaKey)) {
       this.sendMessage();
     }
   },
@@ -22,7 +22,7 @@ const Input = React.createClass({
   defaultProps() {
     const { value } = this.props;
     return {
-      onKeyPress: this.onKeyPress,
+      onKeyDown: this.onKeyDown,
       value: value,
       type: 'text',
       onChange: this.handleChange,
