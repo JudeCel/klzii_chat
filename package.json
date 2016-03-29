@@ -34,6 +34,7 @@
     "phoenix_html": "file:deps/phoenix_html",
     "raphael": "^2.1.4",
     "react": "^0.14.7",
+    "react-autosize-textarea": "^0.2.6",
     "react-bootstrap": "^0.28.3",
     "react-dom": "^0.14.7",
     "react-dropzone": "^3.3.2",

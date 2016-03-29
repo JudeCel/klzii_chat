@@ -35,10 +35,6 @@ const Select = React.createClass({
               }
             </Dropdown.Menu>
           </Dropdown>
-
-          <i className='viewers-section icon-eye'>
-            <small>3</small>
-          </i>
         </div>
       </div>
     )

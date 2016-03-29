@@ -3,18 +3,33 @@ import ReactDOM           from 'react-dom';
 import { connect }        from 'react-redux';
 import Actions            from '../../actions/currentInput';
 import MessagesActions    from '../../actions/messages';
+import TextareaAutosize   from 'react-autosize-textarea';
 
 const Input = React.createClass({
   handleChange(e) {
     const { dispatch } = this.props;
     dispatch(Actions.changeValue(e.target.value));
   },
-  sendMessage(e) {
-    const { topicChannel, currentInput, dispatch } = this.props;
-
-    if((e.charCode == 13 && e.target.value.length > 0)) {
-      dispatch(MessagesActions.sendMessage(topicChannel, currentInput));
+  onKeyPress(e) {
+    if((e.charCode == 10 || e.charCode == 13) && (e.ctrlKey || e.metaKey)) {
+      this.sendMessage();
     }
+  },
+  sendMessage() {
+    const { topicChannel, currentInput, dispatch } = this.props;
+    dispatch(MessagesActions.sendMessage(topicChannel, currentInput));
+  },
+  defaultProps() {
+    const { value } = this.props;
+    return {
+      onKeyPress: this.onKeyPress,
+      value: value,
+      type: 'text',
+      onChange: this.handleChange,
+      className: 'form-control',
+      placeholder: 'Message',
+      id: 'chat-input',
+    };
   },
   componentDidUpdate() {
     let input = ReactDOM.findDOMNode(this).querySelector('#chat-input');
@@ -23,7 +38,7 @@ const Input = React.createClass({
     }
   },
   render() {
-    const { value, action, permissions, inputPrefix } = this.props;
+    const { action, permissions, inputPrefix } = this.props;
 
     if(permissions && permissions.events.can_new_message) {
       return (
@@ -31,18 +46,8 @@ const Input = React.createClass({
           <div className='form-group'>
             <div className='input-group input-group-lg'>
               <div className='input-group-addon no-border-radius'>{ inputPrefix }</div>
-              <input
-                onKeyPress={ this.sendMessage }
-                value={ value }
-                type='text'
-                onChange={ this.handleChange }
-                className='form-control'
-                placeholder='Message'
-                id='chat-input'
-                />
-              <div className='input-group-addon no-border-radius'><span className='fa fa-paper-plane'></span></div>
-              <div className='input-group-addon no-border-radius'>POST</div>
-              <div className='input-group-addon addon-invisible no-border-radius'><span className='fa fa-smile-o'></span></div>
+              <TextareaAutosize { ...this.defaultProps() } />
+              <div className='input-group-addon no-border-radius cursor-pointer' onClick={ this.sendMessage }>POST</div>
             </div>
           </div>
         </div>

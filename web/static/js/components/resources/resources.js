@@ -34,12 +34,26 @@ const Resources = React.createClass({
     if(permissions && permissions.resources.can_upload) {
       return (
         <div className='resources-section col-md-4'>
-          <span className='icon-buttons icon-video-1' onClick={ this.changeModalWindow } data-modal='video'></span>
-          <span className='icon-buttons icon-volume-up' onClick={ this.changeModalWindow } data-modal='audio'></span>
-          <span className='icon-buttons icon-picture' onClick={ this.changeModalWindow } data-modal='image'></span>
-
-          <span className='icon-buttons icon-camera'></span>
-          <span className='icon-buttons icon-ok-squared'></span>
+          <i className='viewers-section icon-eye'>
+            <small>3</small>
+          </i>
+          <ul className='icons'>
+            <li>
+              <i className='icon-video-1' onClick={ this.changeModalWindow } data-modal='video' />
+            </li>
+            <li>
+              <i className='icon-volume-up' onClick={ this.changeModalWindow } data-modal='audio' />
+            </li>
+            <li>
+              <i className='icon-picture' onClick={ this.changeModalWindow } data-modal='image' />
+            </li>
+            <li>
+              <i className='icon-camera' />
+            </li>
+            <li>
+              <i className='icon-ok-squared' />
+            </li>
+          </ul>
 
           <VideoModal show={ modalWindow == 'video' } onHide={ this.closeModalWindow } onDelete={ this.onDelete } />
           <AudioModal show={ modalWindow == 'audio' } onHide={ this.closeModalWindow } onDelete={ this.onDelete } />

@@ -3,6 +3,8 @@ $message-participant: #F2F2F4
 $icon-thumbs: green
 $icon-star: #f0e935
 $header-red: #e51D39
+$font: #59595b
+$green: #4cb649
 
 // Fonts
 @import 'klzii_chatroom-ie7.css'
@@ -10,6 +12,33 @@ $header-red: #e51D39
 
 body
   font-family: 'Source Sans Pro', Arial, sans-serif
+
+.lineup-icons
+  ul.icons
+    margin: 20px 0
+    display: inline-block
+    li
+      display: inline-block
+      padding: 5px
+      color: $font
+      font-weight: bolder
+      opacity: 0.5
+      border: 3px solid $font
+      font-size: 30px
+      margin-right: 10px
+      @extend .cursor-pointer
+      &.active
+        border: 3px solid $green
+        color: $green
+        opacity: 1
+  &.header
+    ul.icons
+      li
+        opacity: 1
+        border: none
+        font-size: 25px
+        color: white
+        text-shadow: 1px 2px 0 #666
 
 .dropshadow
   $x: 0px
@@ -39,40 +68,39 @@ body
 
 .header-section
   background: white
+  padding: 10px 0
   margin-bottom: 20px
   @extend .dropshadow
   vertical-align: middle
   text-align: right
-  .icon-buttons
-    @extend .cursor-pointer
-    font-size: 1.5em
-    color: white
-    margin: 0 2px
-    padding: 2%
-    text-shadow: 1px 2px 0 rgba(39,96,109, 1)
   .topic-select-section
     text-align: left
     .topic-select-box
       margin-left: 20px
-      margin-top: 20px
+  .links-section
+    @extend .lineup-icons
+    @extend .lineup-icons.header
+  .resources-section
+    @extend .lineup-icons
+    @extend .lineup-icons.header
+    ul.icons
+      li
+        background-color: $header-red
     .viewers-section
-      vertical-align: middle
-      margin-left: 15px
       font-size: 30px
       color: $header-red
       small
         font-size: 10px
-  .links-section
-    margin-top: 46px
-  .resources-section
-    margin-top: 46px
-    .icon-buttons
-      background-color: $header-red
-      text-shadow: 1px 2px 0 rgba(155,14,38, 1)
 
+.room-outerbox
+  padding: 0 15px
 .room-section
   padding-top: 20px
+  .console-section
+    @extend .lineup-icons
   .input-section
+    textarea
+      resize: none
     .form-control
       height: 55px
     .addon-invisible
@@ -86,6 +114,7 @@ body
     height: 650px
     .message-section
       margin: 0
+      margin-right: 5px
       .push-image-down
         padding-top: 25px
       .push-image-up
@@ -147,3 +176,11 @@ body
           width: 250px
           p
             margin: 1em
+
+@media (min-width: 1200px)
+  .room-outerbox
+    width: 65%
+    margin: 0 auto 20px auto
+  .header-innerbox
+    width: 65%
+    margin: 0 auto

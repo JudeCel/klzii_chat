@@ -11,13 +11,25 @@ const Links = React.createClass({
     return (
       <div>
         <div className='col-md-4 links-section'>
-          <span className='icon-buttons icon-trash' style={ style }></span>
-          <span className='icon-buttons icon-book-1' style={ style }></span>
-          <span className='icon-buttons icon-message' style={ style }></span>
-          <span className='icon-buttons icon-help' style={ style }></span>
-          <span className='icon-buttons icon-reply' style={ style }></span>
+          <ul className='icons'>
+            <li style={ style }>
+              <i className='icon-trash' />
+            </li>
+            <li style={ style }>
+              <i className='icon-book-1' />
+            </li>
+            <li style={ style }>
+              <i className='icon-message' />
+            </li>
+            <li style={ style }>
+              <i className='icon-help' />
+            </li>
+            <li style={ style }>
+              <i className='icon-reply' />
+            </li>
+          </ul>
         </div>
-        <div className='col-md-2'>
+        <div className='col-md-2 logo-section'>
           <img width='100%' src='/images/logo.png' />
         </div>
       </div>
