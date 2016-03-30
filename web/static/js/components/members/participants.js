@@ -1,9 +1,11 @@
 import React, {PropTypes}   from 'react';
-import Member               from './member.js'
+import Member               from './member.js';
 import { connect }          from 'react-redux';
 
-
 const Participants = React.createClass({
+  evenClasses(even) {
+    return even ? 'avatar-even' : 'avatar-odd';
+  },
   render() {
     const { participants, colours } = this.props;
 
@@ -18,19 +20,20 @@ const Participants = React.createClass({
     }
 
     return (
-      <div className="row participants-section col-md-6 col-md-pull-2">
-        {participants.map( (participant, index) =>
-          <Member
-            key={ participant.id }
-            member={ participant }
-            isEven={ index % 2 == 0 }
-            colour={ colours.participants[index+1] }
-          />
-        )}
+      <div className='participants-section remove-side-margin'>
+        {
+          participants.map((participant, index) =>
+            <div className='col-md-3' key={ participant.id }>
+              <div className={ this.evenClasses(index % 2 == 0) }>
+                <Member member={ participant } colour={ colours.participants[index+1] } />
+              </div>
+            </div>
+          )
+        }
       </div>
-    );
+    )
   }
-})
+});
 
 const mapStateToProps = (state) => {
   return {
@@ -38,4 +41,5 @@ const mapStateToProps = (state) => {
     colours: state.chat.session.colours
   }
 };
+
 export default connect(mapStateToProps)(Participants);

@@ -7,14 +7,6 @@ const Avatar = React.createClass({
     if (number<=99) { number = ("0"+number).slice(-2); }
     return number;
   },
-  evenClasses(even) {
-    if(even) {
-      return 'avatar-even';
-    }
-    else {
-      return 'avatar-odd';
-    }
-  },
   pickFace(face_number, online) {
     if(online) {
       return this.padToTwo(face_number);
@@ -39,9 +31,9 @@ const Avatar = React.createClass({
         Snap.load(`/images/avatar/body_${this.padToTwo(body_number)}.svg`, (body) => {
           Snap.load(`/images/avatar/hair_${this.padToTwo(hair_number)}.svg`, (hair) => {
             Snap.load(`/images/avatar/desk_${this.padToTwo(desk_number)}.svg`, (desk) => {
-              avatar.rect(100, 132, 100, 20, 1, 1).attr({fill: colour});
-              avatar.text("40%", 145, username).attr({fill: '#fff', "font-size": "75%"});
-              avatar.rect(105, 137, 90, 3, 5, 5).attr({fill: '#ccc', opacity: 0.2});
+              avatar.rect(25, 128, 100, 20, 1, 1).attr({fill: colour});
+              avatar.text(50, 141, username).attr({fill: '#fff', "font-size": "75%"});
+              avatar.rect(30, 133, 90, 3, 5, 5).attr({fill: '#ccc', opacity: 0.2});
               base = avatar.append(base);
               face = avatar.append(face);
               body = avatar.append(body);
@@ -55,11 +47,9 @@ const Avatar = React.createClass({
   },
   render() {
     return (
-      <div className={ this.evenClasses(this.props.isEven) }>
-        <svg id={`avatar-${this.props.member.id}`}>
+      <svg id={`avatar-${this.props.member.id}`} width='150px'>
 
-        </svg>
-      </div>
+      </svg>
     )
   }
 })

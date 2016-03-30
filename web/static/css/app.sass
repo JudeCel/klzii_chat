@@ -1,19 +1,54 @@
+$message-facilitator: #FBE7E9
+$message-participant: #F2F2F4
+$icon-thumbs: green
+$icon-star: #f0e935
+$header-red: #e51D39
+$font: #59595b
+$green: #4cb649
+
 // Fonts
 @import 'klzii_chatroom-ie7.css'
 @import 'klzii_chatroom.css'
 
-.star.active
-  color: yellow
-.chat-box
-  height: 100%
-.chat-messages
-  overflow-y: scroll
-  overflow-x: hidden
-  height: 600px
-
 body
   font-family: 'Source Sans Pro', Arial, sans-serif
-  margin: auto
+
+.lineup-icons
+  ul.icons
+    text-align: justify
+    line-height: 0
+    margin: 0
+    padding: 0
+    &:after
+      content: ''
+      display: inline-block
+      width: 100%
+    li
+      display: inline-block
+      line-height: 100%
+      padding: 15px 10px
+      margin-right: 5px
+
+      color: $font
+      opacity: 0.5
+      border: 3px solid $font
+      font-size: 30px
+      text-align: center
+      @extend .cursor-pointer
+      &.active
+        border: 3px solid $green
+        color: $green
+        opacity: 1
+    li:last-child
+      margin: 0
+  &.header
+    ul.icons
+      li
+        opacity: 1
+        border: none
+        font-size: 25px
+        color: white
+        text-shadow: 1px 2px 0 #666
 
 .dropshadow
   $x: 0px
@@ -24,42 +59,156 @@ body
   -moz-box-shadow: $x $y $blur rgba(0, 0, 0, $alpha)
   box-shadow: $x $y $blur rgba(0, 0, 0, $alpha)
 
+.text-break-all
+  -ms-word-break: break-all
+  word-break: break-all
+
 .cursor-pointer
   cursor: pointer
+
+.div-inline-block
+  display: inline-block
 
 .no-border-radius
   border-radius: 0 !important
 
+.remove-side-margin
+  margin-right: -15px
+  margin-left: -15px
+
+.add-overflow-y
+  overflow-y: scroll
+
 .header-section
   background: white
+  padding: 10px 0
   margin-bottom: 20px
   @extend .dropshadow
   vertical-align: middle
   text-align: right
-  .icon-buttons
-    @extend .cursor-pointer
-    font-size: 1.5em
-    color: white
-    margin: 0 2px
-    padding: 2%
-    text-shadow: 1px 2px 0 rgba(39,96,109, 1)
   .topic-select-section
     text-align: left
+    .viewers-section
+      vertical-align: middle
+      font-size: 30px
+      color: $header-red
+      small
+        font-size: 50%
     .topic-select-box
       margin-left: 20px
-      margin-top: 20px
   .links-section
-    margin-top: 46px
+    margin: 1% 0
+    @extend .lineup-icons
+    @extend .lineup-icons.header
+    ul.icons
+      text-align: center
   .resources-section
-    margin-top: 46px
-    .icon-buttons
-      background-color: #e51D39
-      text-shadow: 1px 2px 0 rgba(155,14,38, 1)
+    margin: 1% 0
+    @extend .lineup-icons
+    @extend .lineup-icons.header
+    ul.icons
+      text-align: center
+      li
+        background-color: $header-red
 
+.room-outerbox
+  padding: 0 15px
 .room-section
+  padding-top: 1%
+  .console-section
+    @extend .lineup-icons
+    ul.icons
+      padding: 0
+      width: 100%
+      li
+        width: 19%
+  .input-section
+    textarea
+      resize: none
+    .form-control
+      height: 55px
+    .addon-invisible
+      background-color: white
+      border: none
+      font-size: 26px
+  .chat-section
+    padding-bottom: 20px
+    margin-top: 20px
+    margin-bottom: 20px
+    max-height: 550px
+    .message-section
+      margin: 0
+      margin-right: 5px
+      .push-image-down
+        padding-top: 25px
+      .push-image-up
+        padding-bottom: 31px
+      .heading-section
+        span small
+          color: grey
+      .body-section
+        border: 1px solid #ccc
+        p
+          margin: 5px -5px
+      .body-section.facilitator
+        background-color: $message-facilitator
+      .body-section.participant
+        background-color: $message-participant
+      .action-section
+        font-size: 20px
+        .icon-thumbs-up.active
+          color: $icon-thumbs
+        .icon-star
+          color: $icon-star
+        i
+          @extend .cursor-pointer
+          &:hover
+            opacity: 0.8
+          small
+            font-size: 15px
   .participants-section
-    margin-top: 15%
+    margin-left: 20px
     .avatar-even
-      margin-top: 5%
+      margin-top: -5%
     .avatar-odd
-      margin-top: 25%
+      margin-top: 10%
+  .facilitator-section
+    margin-left: 20px
+    .say-section
+      vertical-align: top
+      display: inline-block
+      .outerbox
+        .triangle
+          vertical-align: top
+          position: relative
+          top: 2em
+          display: inline-block
+          width: 0
+          height: 0
+          border-style: solid
+          border-width: 15px 15px 15px 0
+          border-color: transparent $message-facilitator transparent transparent
+          line-height: 0px
+          _border-color: #000000 $message-facilitator #000000 #000000
+          _filter: progid:DXImageTransform.Microsoft.Chroma(color='#000000')
+        .innerbox
+          display: inline-block
+          background-color: $message-facilitator
+          margin-top: 1em
+          min-height: 4em
+          max-height: 10em
+          width: 250px
+          p
+            margin: 1em
+
+@media (min-width: 1500px)
+  .room-outerbox
+    width: 80%
+    margin: 0 auto 30px auto
+  .header-innerbox
+    width: 80%
+    margin: 0 auto
+
+@media (min-width: 2000px)
+  .room-outerbox, .header-innerbox
+    width: 1600px

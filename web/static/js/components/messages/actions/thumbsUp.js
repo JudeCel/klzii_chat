@@ -1,20 +1,24 @@
-import React, { PropTypes, Component }       from 'react';
-
+import React, { PropTypes, Component } from 'react';
 
 class Delete extends Component {
-  render(){
-    const { id, votes_count, has_voted } = this.props.data;
+  setClass() {
+    let className = 'icon-thumbs-up';
+    if(this.props.data.has_voted) { className += ' active'; }
+
+    return className;
+  }
+  render() {
+    const { id, votes_count } = this.props.data;
     const { can, onClick } = this.props;
-    if (can) {
+
+    if(can) {
       return(
-        <div
-          onClick={ onClick }
-          data-id={ id }
-          className="action glyphicon glyphicon-thumbs-up col-md-1" style={{ color: ( has_voted ? "green" : "") }} >
-          { votes_count }
-        </div>
+        <i className={ this.setClass() } onClick={ onClick } data-id={ id } >
+          <small>{ votes_count }</small>
+        </i>
       )
-    }else{
+    }
+    else{
       return(false)
     }
   }

@@ -99,7 +99,7 @@ view.Whiteboard.prototype.draw = function() {
 	var isBig = (this.json.canvas.width > 500);
 
 	var divWhiteboard = document.getElementById("whiteboard");
-	divWhiteboard.style.zIndex = this.json.zIndex;
+	divWhiteboard.style.zIndex = 0;
 
 	var divCanvas = document.getElementById("canvas");
 	divCanvas.style.left = "" + this.json.canvas.x + "px";

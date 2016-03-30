@@ -15,7 +15,6 @@ const ChatView = React.createClass({
   styles() {
     const { colours } = this.props;
     return {
-      header: { border: '2px solid red' },
       room: {
         backgroundColor: colours.mainBackground,
         border: '2px solid ' + colours.mainBorder
@@ -40,17 +39,35 @@ const ChatView = React.createClass({
       return (
         <div id='chat-app-container'>
           <nav className='row header-section'>
-            <TopicSelect/>
-            <Resources/>
-            <HeaderLinks/>
+            <div className='header-innerbox'>
+              <TopicSelect/>
+              <Resources/>
+              <HeaderLinks/>
+            </div>
           </nav>
 
-          <div className='col-md-12 room-section' style={ this.styles().room }>
-            <Facilitator/>
-            <Participants/>
-            <Whiteboard/>
-            <Messages/>
-            <Input/>
+          <div className='row room-outerbox'>
+            <div className='col-md-12 room-section' style={ this.styles().room }>
+              <div className='row'>
+                <div className='col-md-8'>
+                  <div className='row'>
+                    <Facilitator/>
+                    {/*<Whiteboard/>*/}
+                  </div>
+                  <div className='row'>
+                    <Participants/>
+                  </div>
+                </div>
+
+                <div className='col-md-4'>
+                  <Messages/>
+                </div>
+
+                <div className='col-md-12'>
+                  <Input/>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       )

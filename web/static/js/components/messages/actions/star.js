@@ -1,18 +1,22 @@
-import React, { PropTypes, Component }       from 'react';
-
+import React, { PropTypes, Component } from 'react';
 
 class Star extends Component {
-  render(){
-    const { id, star } = this.props.data;
+  setClass() {
+    let className = 'icon-star';
+    if(!this.props.data.star) { className += '-empty'; }
+
+    return className;
+  }
+  render() {
+    const { id } = this.props.data;
     const { can, onClick } = this.props;
-    if (can) {
+
+    if(can) {
       return(
-        <div className={"star " + (star ? "active" : "") + " glyphicon glyphicon-star col-md-1" }
-          onClick={ onClick }
-          data-id={ id }
-          />
+        <i className={ this.setClass() } onClick={ onClick } data-id={ id } />
       )
-    }else{
+    }
+    else {
       return(false)
     }
   }
