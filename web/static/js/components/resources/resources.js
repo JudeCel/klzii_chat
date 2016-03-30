@@ -5,31 +5,43 @@ import Constants                              from '../../constants';
 import Actions                                from '../../actions/resource';
 import Modals                                 from './modals';
 
-const { ImageModal, AudioModal, VideoModal } = Modals;
+const { ImageModal, AudioModal, VideoModal, SurveyModal } = Modals;
 
 const Resources = React.createClass({
+  compareState(modal) {
+    return this.props.modalWindow == modal;
+  },
   changeModalWindow(e) {
     const { dispatch, channel } = this.props;
 
     let modal = e.target.getAttribute('data-modal');
     dispatch({ type: Constants.OPEN_RESOURCE_MODAL, modal });
-    dispatch(Actions.get(channel, modal));
+    if(modal != 'survey') {
+      dispatch(Actions.get(channel, modal));
+    }
   },
   closeModalWindow(e) {
     const { dispatch } = this.props;
 
-    let modal = e.target.getAttribute('data-modal');
     dispatch({ type: Constants.CLOASE_RESOURCE_MODAL });
-    dispatch({ type: Constants.CLEAN_RESOURCE, modal });
+    dispatch({ type: Constants.CLEAN_RESOURCE });
+  },
+  onEnter(e) {
+    const { colours } = this.props;
+
+    let modalFrame = e.querySelector('.modal-content');
+    modalFrame.style.borderColor = colours.mainBorder;
   },
   onDelete(e) {
     const { dispatch, channel } = this.props;
 
     let id = e.target.getAttribute('data-id');
-    dispatch(Actions.delete(channel, id));
+    if(modal != 'survey') {
+      dispatch(Actions.delete(channel, id));
+    }
   },
   render() {
-    const { permissions, modalWindow, colours } = this.props;
+    const { permissions, modalWindow } = this.props;
 
     if(permissions && permissions.resources.can_upload) {
       return (
@@ -48,13 +60,14 @@ const Resources = React.createClass({
               <i className='icon-camera' />
             </li>
             <li>
-              <i className='icon-ok-squared' />
+              <i className='icon-ok-squared' onClick={ this.changeModalWindow } data-modal='survey' />
             </li>
           </ul>
 
-          <VideoModal show={ modalWindow == 'video' } onHide={ this.closeModalWindow } onDelete={ this.onDelete } />
-          <AudioModal show={ modalWindow == 'audio' } onHide={ this.closeModalWindow } onDelete={ this.onDelete } />
-          <ImageModal show={ modalWindow == 'image' } onHide={ this.closeModalWindow } onDelete={ this.onDelete } />
+          <VideoModal show={ this.compareState('video') } onHide={ this.closeModalWindow } onDelete={ this.onDelete } onEnter={ this.onEnter } />
+          <AudioModal show={ this.compareState('audio') } onHide={ this.closeModalWindow } onDelete={ this.onDelete } onEnter={ this.onEnter } />
+          <ImageModal show={ this.compareState('image') } onHide={ this.closeModalWindow } onDelete={ this.onDelete } onEnter={ this.onEnter } />
+          <SurveyModal show={ this.compareState('survey') } onHide={ this.closeModalWindow } onEnter={ this.onEnter } />
         </div>
       )
     }
@@ -66,8 +79,8 @@ const Resources = React.createClass({
 
 const mapStateToProps = (state) => {
   return {
-    modalWindow: state.resources.modalWindow,
     colours: state.chat.session.colours,
+    modalWindow: state.resources.modalWindow,
     channel: state.topic.channel,
     permissions:  state.members.currentUser.permissions
   }

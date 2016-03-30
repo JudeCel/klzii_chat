@@ -17,10 +17,10 @@ const Image = React.createClass({
     this.setState({ name: e.target.value });
   },
   render() {
-    const { show, onHide, images, onDelete } = this.props
+    const { show, onHide, images, onDelete, onEnter } = this.props
     return (
       <div>
-        <Modal show={ show } onHide={ onHide }>
+        <Modal dialogClassName='modal-section' show={ show } onHide={ onHide } onEnter={ onEnter }>
           <Modal.Header closeButton>
             <Modal.Title>Images</Modal.Title>
           </Modal.Header>

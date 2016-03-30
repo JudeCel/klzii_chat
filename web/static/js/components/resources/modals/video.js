@@ -17,10 +17,10 @@ const Video = React.createClass({
     this.setState({ name: e.target.value });
   },
   render() {
-    const { show, onHide, videos, onDelete } = this.props
+    const { show, onHide, videos, onDelete, onEnter } = this.props
     return (
       <div>
-        <Modal show={ show } onHide={ onHide }>
+        <Modal dialogClassName='modal-section' show={ show } onHide={ onHide } onEnter={ onEnter }>
           <Modal.Header closeButton>
             <Modal.Title>Videos</Modal.Title>
           </Modal.Header>
