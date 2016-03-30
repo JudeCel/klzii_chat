@@ -17,7 +17,9 @@ const Input = React.createClass({
   },
   sendMessage() {
     const { topicChannel, currentInput, dispatch } = this.props;
-    dispatch(MessagesActions.sendMessage(topicChannel, currentInput));
+    if(currentInput.value.length > 0) {
+      dispatch(MessagesActions.sendMessage(topicChannel, currentInput));
+    }
   },
   defaultProps() {
     const { value } = this.props;
