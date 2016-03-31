@@ -1,3 +1,4 @@
 /node_modules
 /priv
 cid.txt
+stop_container_by_sid.sh
