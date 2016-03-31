@@ -1,0 +1,34 @@
+input
+  &[type=radio].with-font ~ label, &[type=checkbox].with-font ~ label
+    cursor: pointer
+  &[type=radio].with-font, &[type=checkbox].with-font
+    border: 0
+    clip: rect(0 0 0 0)
+    height: 1px
+    margin: -1px
+    overflow: hidden
+    padding: 0
+    position: absolute
+    width: 1px
+  &[type=radio].with-font ~ label:before, &[type=checkbox].with-font ~ label:before
+    cursor: pointer
+    font-family: FontAwesome
+    display: inline-block
+    content: "\f1db"
+    letter-spacing: 10px
+    font-size: 1.2em
+    width: 1.4em
+  &[type=radio].with-font:checked ~ label:before
+    content: "\f00c"
+    font-size: 1.2em
+    letter-spacing: 5px
+  &[type=checkbox].with-font
+    &:checked
+      ~ label:before
+        content: "\f00c"
+        font-size: 1.2em
+        letter-spacing: 5px
+      ~ label:before
+        content: "\f046"
+    ~ label:before
+      content: "\f096"

@@ -5,7 +5,7 @@ import SurveyNew           from './new';
 const SurveyIndex = React.createClass({
   render() {
     if(this.props.creating) {
-      return (<SurveyNew />)
+      return (<SurveyNew afterChange={ this.props.afterChange } />)
     }
     else {
       return (<SurveyList />)

@@ -9,75 +9,12 @@ $green: #4cb649
 // Fonts
 @import 'klzii_chatroom-ie7.css'
 @import 'klzii_chatroom.css'
+@import 'inputs.sass'
+@import 'modals.sass'
+@import 'helpers.sass'
 
 body
   font-family: 'Source Sans Pro', Arial, sans-serif
-
-.lineup-icons
-  ul.icons
-    text-align: justify
-    line-height: 0
-    margin: 0
-    padding: 0
-    &:after
-      content: ''
-      display: inline-block
-      width: 100%
-    li
-      display: inline-block
-      line-height: 100%
-      padding: 15px 10px
-      margin-right: 5px
-
-      color: $font
-      opacity: 0.5
-      border: 3px solid $font
-      font-size: 30px
-      text-align: center
-      @extend .cursor-pointer
-      &.active
-        border: 3px solid $green
-        color: $green
-        opacity: 1
-    li:last-child
-      margin: 0
-  &.header
-    ul.icons
-      li
-        opacity: 1
-        border: none
-        font-size: 25px
-        color: white
-        text-shadow: 1px 2px 0 #666
-
-.dropshadow
-  $x: 0px
-  $y: 4px
-  $blur: 5px
-  $alpha: 0.2
-  -webkit-box-shadow: $x $y $blur rgba(0, 0, 0, $alpha)
-  -moz-box-shadow: $x $y $blur rgba(0, 0, 0, $alpha)
-  box-shadow: $x $y $blur rgba(0, 0, 0, $alpha)
-
-.text-break-all
-  -ms-word-break: break-all
-  word-break: break-all
-
-.cursor-pointer
-  cursor: pointer
-
-.div-inline-block
-  display: inline-block
-
-.no-border-radius
-  border-radius: 0 !important
-
-.remove-side-margin
-  margin-right: -15px
-  margin-left: -15px
-
-.add-overflow-y
-  overflow-y: scroll
 
 .header-section
   position: relative
@@ -202,34 +139,6 @@ body
           width: 250px
           p
             margin: 1em
-
-.modal-section
-  .fa
-    @extend .cursor-pointer
-    padding: 10px
-    font-size: 20px
-    &.fa-long-arrow-left
-      color: $green
-      border: 2px solid $green
-    &.fa-check, &.fa-plus
-      color: $header-red
-      border: 2px solid $header-red
-  padding-top: 150px
-  .modal-backdrop
-    z-index: 1000
-  .modal-content
-    @extend .no-border-radius
-    border: 2px solid
-    .modal-header
-      border: none
-      .modal-title
-        text-align: center
-        vertical-align: middle
-  .survey-section
-    ul li
-      @extend .no-border-radius
-      border-left: none
-      border-right: none
 
 @media (min-width: 1500px)
   .room-outerbox

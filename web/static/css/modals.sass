@@ -1,0 +1,30 @@
+.modal-section
+  padding-top: 150px
+  .fa
+    @extend .cursor-pointer
+    padding: 10px
+    font-size: 20px
+    &.fa-long-arrow-left
+      color: $green
+      border: 2px solid $green
+    &.fa-check, &.fa-plus
+      color: $header-red
+      border: 2px solid $header-red
+  .modal-backdrop
+    z-index: 1000
+  .modal-content
+    @extend .no-border-radius
+    border: 2px solid
+    .modal-header
+      border: none
+      .modal-title
+        text-align: center
+        vertical-align: middle
+  .modal-body
+    .survey-section
+      ul li
+        @extend .no-border-radius
+        border-left: none
+        border-right: none
+        &:first-child
+          border-top: none

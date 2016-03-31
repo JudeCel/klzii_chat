@@ -4,7 +4,10 @@ import SurveyIndex         from './survey/index.js';
 
 const Survey = React.createClass({
   getInitialState() {
-    return { creating: false };
+    return { creating: false, survey: {} };
+  },
+  afterChange(data) {
+    this.setState(data);
   },
   onBack(e) {
     if(this.state.creating) {
@@ -19,11 +22,18 @@ const Survey = React.createClass({
     this.props.onEnter(e);
   },
   onNew() {
-    this.setState({ creating: true });
+    const { creating, survey } = this.state;
+    if(creating) {
+      //call save
+      console.log(survey);
+    }
+    else {
+      this.setState({ creating: true });
+    }
   },
   newButtonClass(creating) {
-    const className = 'pull-right fa fa-plus';
-    return creating ? className + ' hidden' : className;
+    const className = 'pull-right fa ';
+    return creating ? className + 'fa-check' : className + 'fa-plus';
   },
   render() {
     const { creating } = this.state;
@@ -47,7 +57,7 @@ const Survey = React.createClass({
 
         <Modal.Body>
           <div className='row survey-section'>
-            <SurveyIndex creating={ creating } />
+            <SurveyIndex creating={ creating } afterChange={ this.afterChange } />
           </div>
         </Modal.Body>
       </Modal>
