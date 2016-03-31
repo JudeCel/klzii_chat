@@ -9,12 +9,11 @@ const SurveyManage = React.createClass({
     const data = { [e.target.id]: e.target.value };
     this.setState(data);
   },
-  componentDidMount() {
-    const { title, question, type } = this.props.survey;
-    this.setState({ title, question, type });
+  getInitialState() {
+    return { survey: {} };
   },
   render() {
-    const { survey } = this.props;
+    const { survey } = this.state;
 
     return (
       <div className='col-md-12'>

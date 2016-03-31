@@ -1,25 +1,25 @@
 import React, {PropTypes}  from 'react';
+import { connect }         from 'react-redux';
 
 const SurveyList = React.createClass({
   findSurvey(e) {
     const { surveys } = this.props;
     return surveys[e.target.dataset.survey];
   },
+  correctClass(survey) {
+    return survey.active ? 'fa fa-check-square' : 'fa fa-square-o';
+  },
   onActivate(e) {
     let survey = this.findSurvey(e);
     survey.active = !survey.active;
     this.forceUpdate();
   },
-  editSurvey(e) {
-    const { onEdit } = this.props;
+  onDelete(e) {
     let survey = this.findSurvey(e);
-    onEdit(survey);
-  },
-  correctClass(survey) {
-    return survey.active ? 'fa fa-check-square' : 'fa fa-square-o';
+    console.log("delete ", survey);
   },
   render() {
-    const { onDelete, surveys } = this.props;
+    const { surveys } = this.props;
 
     return (
       <ul className='list-group'>
@@ -34,8 +34,7 @@ const SurveyList = React.createClass({
 
                 <div className='col-md-6 text-right'>
                   <span className={ this.correctClass(survey) } onClick={ this.onActivate } data-survey={ index }></span>
-                  <span className='fa fa-times' onClick={ onDelete } data-survey={ index }></span>
-                  <span className='fa fa-wrench' onClick={ this.editSurvey } data-survey={ index }></span>
+                  <span className='fa fa-times' onClick={ this.onDelete } data-survey={ index }></span>
                 </div>
               </div>
             </li>
@@ -46,4 +45,13 @@ const SurveyList = React.createClass({
   }
 });
 
-export default SurveyList;
+const mapStateToProps = (state) => {
+  return {
+    surveys: state.resources.surveys || [
+      { title: 'Survey', question: 'Do you like?', type: 'first', active: true },
+      { title: 'Survey', question: 'Do you like?', type: 'first', active: false }
+    ]
+  }
+};
+
+export default connect(mapStateToProps)(SurveyList);

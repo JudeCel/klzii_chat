@@ -1,16 +1,14 @@
 import React, {PropTypes}  from 'react';
 import SurveyList          from './list';
-import SurveyManage        from './manage';
+import SurveyNew           from './new';
 
 const SurveyIndex = React.createClass({
   render() {
-    if(this.props.manage) {
-      const { survey } = this.props;
-      return (<SurveyManage survey={ survey } />)
+    if(this.props.creating) {
+      return (<SurveyNew />)
     }
     else {
-      const { onDelete, onEdit, surveys } = this.props;
-      return (<SurveyList surveys={ surveys } onDelete={ onDelete } onEdit={ onEdit } />)
+      return (<SurveyList />)
     }
   }
 });
