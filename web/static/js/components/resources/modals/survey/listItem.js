@@ -1,18 +1,22 @@
 import React, {PropTypes}  from 'react';
 
 const SurveyListItem = React.createClass({
+  getValuesFromObject(object) {
+    let { id, active, question, title, type } = object;
+    return { id, active, question, title, type };
+  },
   getInitialState() {
     let survey = this.props.survey || {};
-    const { id, active, question, title, type } = survey;
-    return { id, active, question, title, type }
+    return this.getValuesFromObject(survey);
   },
-  onChange(e) {
-    const { survey } = this.state;
+  onChange() {
     this.setState({ active: true });
   },
-  onDelete(e) {
-    const { survey } = this.state;
-    console.log("delete ", survey);
+  onDelete() {
+    console.log("delete ", this.state);
+  },
+  onResult() {
+    this.props.onView(this.getValuesFromObject(this.state));
   },
   render() {
     const { justInput } = this.props;
@@ -35,19 +39,19 @@ const SurveyListItem = React.createClass({
         <li className='list-group-item'>
           <div className='row'>
             <div className='col-md-6'>
-              { title }
+              <span onClick={ this.onResult }>{ title }</span>
               <br />
               { question }
             </div>
 
-          <div className='col-md-6 text-right'>
-            <input id={ 'question' + id } name='active' type='radio' className='with-font' onChange={ this.onChange } defaultChecked={ active } />
-            <label htmlFor={ 'question' + id }></label>
-            <span className='fa fa-times' onClick={ this.onDelete }></span>
+            <div className='col-md-6 text-right'>
+              <input id={ 'question' + id } name='active' type='radio' className='with-font' onChange={ this.onChange } defaultChecked={ active } />
+              <label htmlFor={ 'question' + id }></label>
+              <span className='fa fa-times' onClick={ this.onDelete }></span>
+            </div>
           </div>
-        </div>
-      </li>
-    )
+        </li>
+      )
     }
   }
 });

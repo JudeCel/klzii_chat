@@ -1,30 +1,36 @@
 .modal-section
-  padding-top: 150px
-  .fa
-    @extend .cursor-pointer
-    padding: 10px
-    font-size: 20px
-    &.fa-long-arrow-left
-      color: $green
-      border: 2px solid $green
-    &.fa-check, &.fa-plus
-      color: $header-red
-      border: 2px solid $header-red
+  margin-top: 180px
   .modal-backdrop
     z-index: 1000
   .modal-content
     @extend .no-border-radius
     border: 2px solid
     .modal-header
+      .fa
+        @extend .cursor-pointer
+        padding: 10px
+        font-size: 20px
+        &.icon-reply
+          color: $green
+          border: 2px solid $green
+        &.fa-check, &.fa-plus
+          color: $header-red
+          border: 2px solid $header-red
       border: none
       .modal-title
         text-align: center
         vertical-align: middle
   .modal-body
-    .survey-section
+    .survey-answer-section
       ul li
-        @extend .no-border-radius
+        border: 0
+    .survey-create-section
+      @extend .no-border-radius
+      ul li
         border-left: none
         border-right: none
         &:first-child
           border-top: none
+        .fa
+          @extend .cursor-pointer
+          font-size: $input-size

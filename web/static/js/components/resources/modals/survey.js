@@ -4,13 +4,13 @@ import SurveyIndex         from './survey/index.js';
 
 const Survey = React.createClass({
   getInitialState() {
-    return { creating: false, survey: {} };
+    return { rendering: 'index', survey: {} };
   },
   afterChange(data) {
     this.setState(data);
   },
   onBack(e) {
-    if(this.state.creating) {
+    if(this.state.rendering != 'index') {
       this.setState(this.getInitialState());
     }
     else {
@@ -22,28 +22,43 @@ const Survey = React.createClass({
     this.props.onEnter(e);
   },
   onNew() {
-    const { creating, survey } = this.state;
-    if(creating) {
+    const { rendering, survey } = this.state;
+    if(rendering == 'new') {
       //call save
       console.log(survey);
     }
     else {
-      this.setState({ creating: true });
+      this.setState({ rendering: 'new' });
     }
   },
-  newButtonClass(creating) {
+  onView(survey) {
+    const { rendering } = this.state;
+    if(rendering != 'view') {
+      this.setState({ rendering: 'view' });
+    }
+  },
+  newButtonClass(rendering) {
     const className = 'pull-right fa ';
-    return creating ? className + 'fa-check' : className + 'fa-plus';
+
+    if(rendering == 'index') {
+      return className + 'fa-plus';
+    }
+    else if(rendering == 'new') {
+      return className + 'fa-check';
+    }
+    else {
+      return className + 'hidden';
+    }
   },
   render() {
-    const { creating } = this.state;
+    const { rendering } = this.state;
     const { show, onHide } = this.props;
 
     return (
       <Modal dialogClassName='modal-section' show={ show } onHide={ onHide } onEnter={ this.onOpen }>
         <Modal.Header>
           <div className='col-md-2'>
-            <span className='pull-left fa fa-long-arrow-left' onClick={ this.onBack }></span>
+            <span className='pull-left fa icon-reply' onClick={ this.onBack }></span>
           </div>
 
           <div className='col-md-8 modal-title'>
@@ -51,13 +66,13 @@ const Survey = React.createClass({
           </div>
 
           <div className='col-md-2'>
-            <span className={ this.newButtonClass(creating) } onClick={ this.onNew }></span>
+            <span className={ this.newButtonClass(rendering) } onClick={ this.onNew }></span>
           </div>
         </Modal.Header>
 
         <Modal.Body>
-          <div className='row survey-section'>
-            <SurveyIndex creating={ creating } afterChange={ this.afterChange } />
+          <div className='row survey-create-section'>
+            <SurveyIndex rendering={ rendering } afterChange={ this.afterChange } onView={ this.onView } />
           </div>
         </Modal.Body>
       </Modal>

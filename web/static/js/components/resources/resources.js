@@ -1,9 +1,8 @@
-import React, {PropTypes}                     from 'react';
-import { connect }                            from 'react-redux';
-import { Modal }                              from 'react-bootstrap';
-import Constants                              from '../../constants';
-import Actions                                from '../../actions/resource';
-import Modals                                 from './modals';
+import React, {PropTypes} from 'react';
+import { connect }        from 'react-redux';
+import Constants          from '../../constants';
+import Actions            from '../../actions/resource';
+import Modals             from './modals';
 
 const { ImageModal, AudioModal, VideoModal, SurveyModal } = Modals;
 
@@ -41,26 +40,26 @@ const Resources = React.createClass({
     }
   },
   render() {
-    const { permissions, modalWindow } = this.props;
+    const { permissions } = this.props;
 
     if(permissions && permissions.resources.can_upload) {
       return (
         <div className='resources-section col-md-4'>
           <ul className='icons'>
-            <li>
-              <i className='icon-video-1' onClick={ this.changeModalWindow } data-modal='video' />
+            <li onClick={ this.changeModalWindow } data-modal='video'>
+              <i className='icon-video-1' data-modal='video' />
             </li>
-            <li>
-              <i className='icon-volume-up' onClick={ this.changeModalWindow } data-modal='audio' />
+            <li onClick={ this.changeModalWindow } data-modal='audio'>
+              <i className='icon-volume-up' data-modal='audio' />
             </li>
-            <li>
-              <i className='icon-picture' onClick={ this.changeModalWindow } data-modal='image' />
+            <li onClick={ this.changeModalWindow } data-modal='image'>
+              <i className='icon-picture' data-modal='image' />
             </li>
             <li>
               <i className='icon-camera' />
             </li>
-            <li>
-              <i className='icon-ok-squared' onClick={ this.changeModalWindow } data-modal='survey' />
+            <li onClick={ this.changeModalWindow } data-modal='survey'>
+              <i className='icon-ok-squared' data-modal='survey' />
             </li>
           </ul>
 
@@ -82,7 +81,7 @@ const mapStateToProps = (state) => {
     colours: state.chat.session.colours,
     modalWindow: state.resources.modalWindow,
     channel: state.topic.channel,
-    permissions:  state.members.currentUser.permissions
+    permissions: state.members.currentUser.permissions
   }
 };
 

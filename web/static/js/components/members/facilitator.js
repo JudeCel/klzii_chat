@@ -1,7 +1,7 @@
 import React, {PropTypes}   from 'react';
 import Member               from './member.js'
 import { connect }          from 'react-redux';
-import Console              from '../resources/console.js';
+import Console              from '../console/index';
 
 const Facilitator = React.createClass({
   render() {

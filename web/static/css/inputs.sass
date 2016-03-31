@@ -16,17 +16,17 @@ input
     display: inline-block
     content: "\f1db"
     letter-spacing: 10px
-    font-size: 1.2em
+    font-size: $input-size
     width: 1.4em
   &[type=radio].with-font:checked ~ label:before
     content: "\f00c"
-    font-size: 1.2em
+    font-size: $input-size
     letter-spacing: 5px
   &[type=checkbox].with-font
     &:checked
       ~ label:before
         content: "\f00c"
-        font-size: 1.2em
+        font-size: $input-size
         letter-spacing: 5px
       ~ label:before
         content: "\f046"
