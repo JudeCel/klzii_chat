@@ -5,8 +5,8 @@ defmodule KlziiChat.Session do
     field :name, :string
     field :brand_project_id,  :integer
     field :accountId, :integer
-    field :start_time, Ecto.DateTime
-    field :end_time, Ecto.DateTime
+    field :startTime, Ecto.DateTime
+    field :endTime, Ecto.DateTime
     field :incentive_details, :string
     field :active, :boolean
     field :colours_used, :string
