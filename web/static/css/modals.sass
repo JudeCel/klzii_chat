@@ -24,7 +24,7 @@
     .survey-answer-section
       ul li
         border: 0
-    .survey-create-section
+    .survey-create-section, .uploads-section
       @extend .no-border-radius
       ul li
         border-left: none
@@ -34,3 +34,5 @@
         .fa
           @extend .cursor-pointer
           font-size: $input-size
+        img, video, audio
+          width: 100%
