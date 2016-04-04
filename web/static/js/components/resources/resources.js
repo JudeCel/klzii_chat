@@ -7,14 +7,17 @@ import Modals             from './modals';
 const { UploadsModal, SurveyModal } = Modals;
 
 const Resources = React.createClass({
+  getInitialState() {
+    return { resourceData: {} };
+  },
   compareState(modals) {
     return modals.includes(this.props.modalWindow);
   },
   changeModalWindow(e) {
     const { dispatch, channel, modalWindow } = this.props;
-    // if(modalWindow.length) {
-    //   this.closeModalWindow(e);
-    // }
+    if(modalWindow.length) {
+      this.closeModalWindow(e);
+    }
 
     let modal = e.target.getAttribute('data-modal');
     dispatch({ type: Constants.OPEN_RESOURCE_MODAL, modal });
@@ -43,18 +46,31 @@ const Resources = React.createClass({
     }
   },
   onCreate(child) {
-    const { files, name } = this.state.upload;
+    const { name, url, files, resourceId } = this.state.resourceData;
     const { dispatch, modalWindow, currentUserJwt } = this.props;
 
-    dispatch(Actions.upload(files, modalWindow, currentUserJwt, name));
-    this.setState({ upload: {} });
-    child.setState({ rendering: 'index' });
+    if(url) {
+      //youtube
+      console.log(name, url);
+    }
+    else if(files) {
+      // upload
+      console.log(name, files);
+      dispatch(Actions.upload(files, modalWindow, currentUserJwt, name));
+    }
+    else {
+      // resource id
+      console.log(name, resourceId);
+    }
+
+    this.setState({ resourceData: {} });
+    child.onBack();
   },
   afterChange(data) {
     this.setState(data);
   },
   render() {
-    const { permissions, modalWindow } = this.props;
+    const { permissions, modalWindow, colours } = this.props;
 
     if(permissions && permissions.resources.can_upload) {
       return (
@@ -85,6 +101,7 @@ const Resources = React.createClass({
             onEnter={ this.onEnter }
             afterChange={ this.afterChange }
             onCreate={ this.onCreate }
+            mainBorder={ colours.mainBorder }
           />
           <SurveyModal show={ this.compareState(['survey']) } onHide={ this.closeModalWindow } onEnter={ this.onEnter } />
         </div>

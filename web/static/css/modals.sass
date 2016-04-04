@@ -18,6 +18,7 @@
           border: 2px solid $header-red
       border: none
       .modal-title
+        text-transform: capitalize
         text-align: center
         vertical-align: middle
   .modal-body
@@ -36,3 +37,14 @@
           font-size: $input-size
         img, video, audio
           width: 100%
+  ul.tab-section
+    padding: 0 20px
+    a, .active > a, .active > a:hover
+      color: black
+      @extend .no-border-radius
+      background: white
+      border: 2px solid
+    li
+      @extend .no-border-radius
+      @extend .cursor-pointer
+      padding: 0 10px

@@ -4,13 +4,13 @@ import UploadList         from './list';
 
 const UploadsIndex = React.createClass({
   render() {
-    const { resourceType, rendering, onDelete, afterChange } = this.props;
+    const { resourceType, rendering, tabActive, onDelete, afterChange } = this.props;
 
     if(rendering == 'new') {
-      return (<UploadNew resourceType={ resourceType } afterChange={ afterChange } />)
+      return (<UploadNew { ...{ resourceType, afterChange, tabActive } }/>)
     }
     else {
-      return (<UploadList resourceType={ resourceType } onDelete={ onDelete } />)
+      return (<UploadList { ...{ resourceType, onDelete } }/>)
     }
   }
 });
