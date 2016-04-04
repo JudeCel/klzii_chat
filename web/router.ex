@@ -18,14 +18,18 @@ defmodule KlziiChat.Router do
   scope "/", KlziiChat do
     pipe_through :browser # Use the default browser stack
     get "/", ChatController, :index
-
   end
+  scope "/", KlziiChat do
+    get "/ping", PingController, :index
+  end
+
   scope "/resources", KlziiChat do
     pipe_through :api
 
     post "/upload", ResourcesController, :upload
     get "/:type/:jwt", ResourcesController, :index
   end
+
 
   # Other scopes may use custom stacks.
   # scope "/api", KlziiChat do
