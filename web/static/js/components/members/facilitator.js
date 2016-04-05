@@ -5,11 +5,12 @@ import Console              from '../console/index';
 
 const Facilitator = React.createClass({
   render() {
-    const { facilitator, colours } = this.props;
+    const { facilitator, colours, openAvatarModal } = this.props;
+
     return (
       <div className='facilitator-section'>
         <div className='div-inline-block'>
-          <div className='div-inline-block'>
+          <div className='div-inline-block cursor-pointer' onClick={ openAvatarModal }>
             <Member key={ facilitator.id } member={ facilitator } colour={ colours.facilitator } />
           </div>
 
@@ -24,7 +25,7 @@ const Facilitator = React.createClass({
             </div>
           </div>
 
-          <Console/>
+          <Console />
         </div>
       </div>
     )

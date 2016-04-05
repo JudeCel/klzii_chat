@@ -7,11 +7,15 @@ import Input                from '../components/messages/input.js';
 import Whiteboard           from '../components/whiteboard';
 import Facilitator          from '../components/members/facilitator.js';
 import Participants         from '../components/members/participants.js';
+import ChangeAvatarModal    from '../components/members/changeAvatarModal.js';
 import TopicSelect          from '../components/topics/select.js';
 import Resources            from '../components/resources/resources.js';
 import HeaderLinks          from '../components/header/links.js';
 
 const ChatView = React.createClass({
+  getInitialState() {
+    return {};
+  },
   styles() {
     const { colours } = this.props;
     return {
@@ -28,6 +32,18 @@ const ChatView = React.createClass({
     if(nextProps.sessionReady && !nextProps.topicReady) {
       this.props.dispatch(topicActions.selectCurrent(nextProps.socket, nextProps.topics));
     }
+  },
+  openAvatarModal() {
+    this.setState({ openAvatarModal: true });
+  },
+  closeAvatarModal() {
+    this.setState({ openAvatarModal: false });
+  },
+  avatarModalExports() {
+    return {
+      openAvatarModal: this.openAvatarModal,
+      closeAvatarModal: this.closeAvatarModal,
+    };
   },
   render() {
     const { error } = this.props;
@@ -48,14 +64,15 @@ const ChatView = React.createClass({
 
           <div className='row room-outerbox'>
             <div className='col-md-12 room-section' style={ this.styles().room }>
+              <ChangeAvatarModal show={ this.state.openAvatarModal } onHide={ this.closeAvatarModal } />
               <div className='row'>
                 <div className='col-md-8'>
                   <div className='row'>
-                    <Facilitator/>
+                    <Facilitator { ...this.avatarModalExports() }/>
                     {/*<Whiteboard/>*/}
                   </div>
                   <div className='row'>
-                    <Participants/>
+                    <Participants { ...this.avatarModalExports() }/>
                   </div>
                 </div>
 

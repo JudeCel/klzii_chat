@@ -2,11 +2,13 @@ import React, {PropTypes} from 'react';
 import { connect }        from 'react-redux';
 import Constants          from '../../constants';
 import Actions            from '../../actions/resource';
+import onEnterModalMixin  from '../../mixins/onEnterModal';
 import Modals             from './modals';
 
 const { UploadsModal, SurveyModal } = Modals;
 
 const Resources = React.createClass({
+  mixins: [onEnterModalMixin],
   getInitialState() {
     return { resourceData: {} };
   },
@@ -30,12 +32,6 @@ const Resources = React.createClass({
 
     dispatch({ type: Constants.CLOASE_RESOURCE_MODAL });
     dispatch({ type: Constants.CLEAN_RESOURCE });
-  },
-  onEnter(e) {
-    const { colours } = this.props;
-
-    let modalFrame = e.querySelector('.modal-content');
-    modalFrame.style.borderColor = colours.mainBorder;
   },
   onDelete(e) {
     const { dispatch, channel } = this.props;

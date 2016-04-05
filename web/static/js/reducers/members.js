@@ -3,7 +3,7 @@ import Constants from '../constants';
 const initialState = {
   currentUser: { },
   facilitator: {
-    avatar_info: "0:0:0:0:0"
+    avatarData: { base: 0, face: 3, body: 0, hair: 0, desk: 0 }
   },
   participants: [],
   observers: []

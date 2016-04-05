@@ -9,7 +9,7 @@ defmodule KlziiChat.SessionMembersView do
       username: member.username,
       colour: member.colour,
       online: member.online,
-      avatar_info: member.avatar_info,
+      avatarData: member.avatarData,
       role: member.role,
       permissions: %{
         events: %{

@@ -9,14 +9,14 @@ defmodule KlziiChat.SessionMember do
     has_many :votes, KlziiChat.Vote, [foreign_key: :sessionMemberId]
     field :colour, :integer, default: 6710886
     field :online, :boolean, default: false
-    field :avatar_info, :string, default: "0:3:0:0:0:0"
+    field :avatarData, :map, default: %{ base: 0, face: 3, body: 0, hair: 0, desk: 0 }
     field :token, :string
     field :role, :string
     timestamps [inserted_at: :createdAt, updated_at: :updatedAt]
 
   end
 
-  @required_fields ~w(token username colour online avatar_info, role)
+  @required_fields ~w(token username colour online avatarData role)
   @optional_fields ~w()
 
   @doc """
