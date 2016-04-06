@@ -23,6 +23,7 @@ defmodule KlziiChat.UserSocket do
   def connect(%{"token" => token}, socket) do
     case find_by_token(token) do
       nil ->
+        IO.inspect("Token not found")
         :error
       session_member ->
         {:ok, assign(socket, :session_member, session_member)}
