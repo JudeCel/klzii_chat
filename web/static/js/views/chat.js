@@ -38,12 +38,12 @@ const ChatView = React.createClass({
     this.setState({ openAvatarModal: false });
   },
   render() {
-    const { error } = this.props;
+    const { error, sessionReady, topicReady } = this.props;
 
     if(error) {
       return (<div>{error}</div>)
     }
-    else {
+    else if(sessionReady && topicReady) {
       return (
         <div id='chat-app-container'>
           <nav className='row header-section'>
@@ -81,6 +81,10 @@ const ChatView = React.createClass({
           </div>
         </div>
       )
+    }
+    else {
+      // Still loading
+      return (false)
     }
   }
 });
