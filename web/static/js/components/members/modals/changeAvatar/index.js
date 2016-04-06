@@ -1,8 +1,8 @@
 import React, {PropTypes} from 'react';
 import { connect }        from 'react-redux';
 import { Modal }          from 'react-bootstrap';
-import onEnterModalMixin  from '../../mixins/onEnterModal';
-import Avatar             from './avatar';
+import onEnterModalMixin  from '../../../../mixins/onEnterModal';
+import Avatar             from '../../avatar';
 import AvatarPreview      from './preview';
 
 const ChangeAvatarModal = React.createClass({
@@ -19,7 +19,7 @@ const ChangeAvatarModal = React.createClass({
     this.props.onHide(e);
   },
   onSave(e) {
-
+    this.props.onHide(e);
   },
   onOpen(e) {
     const { id, username, avatarData } = this.props.currentUser;

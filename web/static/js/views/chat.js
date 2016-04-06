@@ -7,7 +7,7 @@ import Input                from '../components/messages/input.js';
 import Whiteboard           from '../components/whiteboard';
 import Facilitator          from '../components/members/facilitator.js';
 import Participants         from '../components/members/participants.js';
-import ChangeAvatarModal    from '../components/members/changeAvatarModal.js';
+import ChangeAvatarModal    from '../components/members/modals/changeAvatar/index.js';
 import TopicSelect          from '../components/topics/select.js';
 import Resources            from '../components/resources/resources.js';
 import HeaderLinks          from '../components/header/links.js';
