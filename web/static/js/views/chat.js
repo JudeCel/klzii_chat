@@ -19,10 +19,8 @@ const ChatView = React.createClass({
   styles() {
     const { colours } = this.props;
     return {
-      room: {
-        backgroundColor: colours.mainBackground,
-        border: '2px solid ' + colours.mainBorder
-      }
+      backgroundColor: colours.mainBackground,
+      borderColor: colours.mainBorder
     };
   },
   componentWillMount() {
@@ -38,12 +36,6 @@ const ChatView = React.createClass({
   },
   closeAvatarModal() {
     this.setState({ openAvatarModal: false });
-  },
-  avatarModalExports() {
-    return {
-      openAvatarModal: this.openAvatarModal,
-      closeAvatarModal: this.closeAvatarModal,
-    };
   },
   render() {
     const { error } = this.props;
@@ -63,16 +55,17 @@ const ChatView = React.createClass({
           </nav>
 
           <div className='row room-outerbox'>
-            <div className='col-md-12 room-section' style={ this.styles().room }>
+            <div className='col-md-12 room-section' style={ this.styles() }>
               <ChangeAvatarModal show={ this.state.openAvatarModal } onHide={ this.closeAvatarModal } />
+
               <div className='row'>
                 <div className='col-md-8'>
                   <div className='row'>
-                    <Facilitator { ...this.avatarModalExports() }/>
+                    <Facilitator openAvatarModal={ this.openAvatarModal } />
                     {/*<Whiteboard/>*/}
                   </div>
                   <div className='row'>
-                    <Participants { ...this.avatarModalExports() }/>
+                    <Participants openAvatarModal={ this.openAvatarModal } />
                   </div>
                 </div>
 

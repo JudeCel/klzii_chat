@@ -12,7 +12,7 @@ const ChangeAvatarModal = React.createClass({
   },
   componentWillReceiveProps() {
     const { id, username, avatarData } = this.props.currentUser;
-    this.setState({ id, username, avatarData });
+    this.setState({ id, username, avatarData: { ...avatarData } });
   },
   onClose(e) {
     this.setState(this.getInitialState());
@@ -23,7 +23,7 @@ const ChangeAvatarModal = React.createClass({
   },
   onOpen(e) {
     const { id, username, avatarData } = this.props.currentUser;
-    this.setState({ id, username, avatarData });
+    this.setState({ id, username, avatarData: { ...avatarData } });
     this.onEnter(e);
   },
   onNameChange(e) {
@@ -41,26 +41,33 @@ const ChangeAvatarModal = React.createClass({
   chooseAvatar(e) {
     const id = e.currentTarget.dataset.id;
     let { tabActive, avatarData } = this.state;
-    avatarData[this.state.tabActive] = id;
+    avatarData[tabActive] = id;
     this.setState({ avatarData: avatarData });
   },
-  previewImages(type) {
-    return {
+  tempArray(type) {
+    const count = {
       hair: 8,
       head: 8,
       body: 6,
-      desk: 6
+      desk: 6,
+      face: 6
     }[type];
+
+    return Array(count).fill();
+  },
+  visableTabClass(type) {
+    const className = 'row';
+    return type == this.state.tabActive ? className : className + ' hidden';
   },
   render() {
     const { show, colours } = this.props;
     const { id, username, avatarData, tabActive } = this.state;
-    const previews = Array(this.previewImages(tabActive)).fill();
     const tabs = [
       { type: 'hair' },
       { type: 'head' },
       { type: 'body' },
-      { type: 'desk' }
+      { type: 'desk' },
+      { type: 'face' }
     ];
 
     if(show) {
@@ -89,9 +96,15 @@ const ChangeAvatarModal = React.createClass({
 
                 <div className='elements-section div-inline-block' style={ { borderColor: colours.mainBorder } }>
                   {
-                    previews.map((_, index) =>
-                      <div key={ tabActive+index } className='col-md-3 cursor-pointer' onClick={ this.chooseAvatar } data-id={ index }>
-                        <AvatarPreview index={ index } type={ tabActive } />
+                    tabs.map((tab) =>
+                      <div key={ tab.type } className={ this.visableTabClass(tab.type) }>
+                        {
+                          this.tempArray(tab.type).map((_, index) =>
+                            <div key={ tab.type+index } className='col-md-3 cursor-pointer' onClick={ this.chooseAvatar } data-id={ index }>
+                              <AvatarPreview index={ index } type={ tab.type } />
+                            </div>
+                          )
+                        }
                       </div>
                     )
                   }

@@ -6,28 +6,26 @@ const AvatarPreview = React.createClass({
     if (number<=99) { number = ("0"+number).slice(-2); }
     return number;
   },
-  componentDidMount() {
+  elementsToload() {
     const { index, type } = this.props;
-
-    let avatar = Snap(`#preview-avatar-${index}`);
-    Snap.load(`/images/avatar/base_00.svg`, (base) => {
-      Snap.load(`/images/avatar/${type}_${this.padToTwo(index)}.svg`, (element) => {
-        avatar.append(base);
-        avatar.append(element);
-      });
-    });
+    return [
+      '/images/avatar/base_00.svg',
+      `/images/avatar/${type}_${this.padToTwo(index)}.svg`
+    ];
   },
   render() {
-    const { index, click } = this.props;
+    const elements = this.elementsToload();
 
     return (
-      <span>
-        <svg id={ `preview-avatar-${index}` } height='73px' width='65%' onClick={ click } data-id={ index }>
-
-        </svg>
-      </span>
+      <div className='preview-images'>
+        {
+          elements.map((element, index) =>
+            <img key={ index } src={ element }></img>
+          )
+        }
+      </div>
     )
   }
-})
+});
 
 export default AvatarPreview;

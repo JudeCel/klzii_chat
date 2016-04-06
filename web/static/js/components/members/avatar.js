@@ -1,6 +1,6 @@
-import React, {PropTypes}   from 'react';
-import Snap                 from 'snapsvg';
-import Member               from './member.js'
+import React, {PropTypes} from 'react';
+import Snap               from 'snapsvg';
+import Member             from './member.js'
 
 const Avatar = React.createClass({
   padToTwo(number) {
@@ -27,9 +27,9 @@ const Avatar = React.createClass({
 
     const { colour } = this.props;
     const { id, username, avatarData, online, edit } = this.props.member;
-    const { base, face, body, hair, desk } = edit && avatarData
+    const { base, face, body, hair, desk, head } = edit && avatarData
       ? avatarData
-      : { base: 0, face: randomNumber(), body: randomNumber(), hair: randomNumber(), desk: randomNumber() };
+      : { base: 0, face: randomNumber(), body: randomNumber(), hair: randomNumber(), desk: randomNumber(), head: randomNumber() };
 
     let avatar = Snap('#' + this.pickId());
     Snap.load(`/images/avatar/base_${this.padToTwo(base)}.svg`, (baseSnap) => {
@@ -37,38 +37,46 @@ const Avatar = React.createClass({
         Snap.load(`/images/avatar/body_${this.padToTwo(body)}.svg`, (bodySnap) => {
           Snap.load(`/images/avatar/hair_${this.padToTwo(hair)}.svg`, (hairSnap) => {
             Snap.load(`/images/avatar/desk_${this.padToTwo(desk)}.svg`, (deskSnap) => {
-              avatar.rect(25, 128, 100, 20, 1, 1).attr({fill: colour});
-              avatar.text(50, 141, username).attr({fill: '#fff', "font-size": "75%"});
-              avatar.rect(30, 133, 90, 3, 5, 5).attr({fill: '#ccc', opacity: 0.2});
+              Snap.load(`/images/avatar/head_${this.padToTwo(head)}.svg`, (headSnap) => {
+                if(this.shouldClearPrevious) {
+                  avatar.clear();
+                  this.shouldClearPrevious = false;
+                }
 
-              avatar.append(baseSnap);
-              avatar.append(faceSnap);
-              avatar.append(bodySnap);
-              avatar.append(hairSnap);
-              avatar.append(deskSnap);
-              console.log(avatarData);
-              this.previousAvatarData = avatarData;
+                avatar.rect(25, 128, 100, 20, 1, 1).attr({fill: colour});
+                avatar.text(50, 141, username).attr({fill: '#fff', "font-size": "75%"});
+                avatar.rect(30, 133, 90, 3, 5, 5).attr({fill: '#ccc', opacity: 0.2});
+
+                avatar.append(baseSnap);
+                avatar.append(faceSnap);
+                avatar.append(bodySnap);
+                avatar.append(hairSnap);
+                avatar.append(deskSnap);
+                avatar.append(headSnap);
+                this.previousAvatarData = Object.assign({}, avatarData);
+              });
             });
           });
         });
       });
     });
   },
-  componentWillReceiveProps(props) {
+  shouldComponentUpdate(nextProps) {
+    let equal = JSON.stringify(this.previousAvatarData) !== JSON.stringify(nextProps.member.avatarData);
+    return equal && this.previousAvatarData ? true : false;
+  },
+  componentDidUpdate() {
     let avatar = Snap('#' + this.pickId());
-    console.log(this.previousAvatarData, props.member.avatarData);
-    if(avatar && this.props.member.avatarData != this.previousAvatarData) {
-      avatar.clear();
+    if(avatar) {
+      this.shouldClearPrevious = true;
       this.componentDidMount();
     }
   },
   render() {
     return (
-      <svg id={ this.pickId() } className='avatar' width='150px'>
-
-      </svg>
+      <svg id={ this.pickId() } width='150px' />
     )
   }
-})
+});
 
 export default Avatar;
