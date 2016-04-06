@@ -5,7 +5,9 @@ const UploadTypeVideo = React.createClass({
     const { url, youtube } = this.props;
 
     if(youtube) {
-
+      return (
+        <iframe type='text/html' src={ "http://www.youtube.com/embed/" + url } frameBorder='0' />
+      )
     }
     else {
       return (
