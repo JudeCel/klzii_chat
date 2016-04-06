@@ -1,32 +1,69 @@
-import React, {PropTypes}                     from 'react';
-import { connect }                            from 'react-redux';
-import { Modal }                              from 'react-bootstrap';
-import Constants                              from '../../constants';
-import Actions                                from '../../actions/resource';
-import Modals                                 from './modals';
+import React, {PropTypes} from 'react';
+import { connect }        from 'react-redux';
+import Constants          from '../../constants';
+import Actions            from '../../actions/resource';
+import onEnterModalMixin  from '../../mixins/onEnterModal';
+import Modals             from './modals';
 
-const { ImageModal, AudioModal, VideoModal } = Modals;
+const { UploadsModal, SurveyModal } = Modals;
 
 const Resources = React.createClass({
+  mixins: [onEnterModalMixin],
+  getInitialState() {
+    return { resourceData: {} };
+  },
+  compareState(modals) {
+    return modals.includes(this.props.modalWindow);
+  },
   changeModalWindow(e) {
-    const { dispatch, channel } = this.props;
+    const { dispatch, channel, modalWindow } = this.props;
+    if(modalWindow.length) {
+      this.closeModalWindow(e);
+    }
 
     let modal = e.target.getAttribute('data-modal');
     dispatch({ type: Constants.OPEN_RESOURCE_MODAL, modal });
-    dispatch(Actions.get(channel, modal));
+    if(modal != 'survey') {
+      dispatch(Actions.get(channel, modal));
+    }
   },
   closeModalWindow(e) {
     const { dispatch } = this.props;
 
-    let modal = e.target.getAttribute('data-modal');
     dispatch({ type: Constants.CLOASE_RESOURCE_MODAL });
-    dispatch({ type: Constants.CLEAN_RESOURCE, modal });
+    dispatch({ type: Constants.CLEAN_RESOURCE });
   },
   onDelete(e) {
     const { dispatch, channel } = this.props;
 
     let id = e.target.getAttribute('data-id');
-    dispatch(Actions.delete(channel, id));
+    if(this.props.modalWindow != 'survey') {
+      dispatch(Actions.delete(channel, id));
+    }
+  },
+  onCreate(child) {
+    const { name, url, files, resourceId } = this.state.resourceData;
+    const { dispatch, modalWindow, currentUserJwt } = this.props;
+
+    if(url) {
+      //youtube
+      console.log(name, url);
+    }
+    else if(files) {
+      // upload
+      console.log(name, files);
+      dispatch(Actions.upload(files, modalWindow, currentUserJwt, name));
+    }
+    else {
+      // resource id
+      console.log(name, resourceId);
+    }
+
+    this.setState({ resourceData: {} });
+    child.onBack();
+  },
+  afterChange(data) {
+    this.setState(data);
   },
   render() {
     const { permissions, modalWindow, colours } = this.props;
@@ -35,26 +72,34 @@ const Resources = React.createClass({
       return (
         <div className='resources-section col-md-4'>
           <ul className='icons'>
-            <li>
-              <i className='icon-video-1' onClick={ this.changeModalWindow } data-modal='video' />
+            <li onClick={ this.changeModalWindow } data-modal='video'>
+              <i className='icon-video-1' data-modal='video' />
             </li>
-            <li>
-              <i className='icon-volume-up' onClick={ this.changeModalWindow } data-modal='audio' />
+            <li onClick={ this.changeModalWindow } data-modal='audio'>
+              <i className='icon-volume-up' data-modal='audio' />
             </li>
-            <li>
-              <i className='icon-picture' onClick={ this.changeModalWindow } data-modal='image' />
+            <li onClick={ this.changeModalWindow } data-modal='image'>
+              <i className='icon-picture' data-modal='image' />
             </li>
             <li>
               <i className='icon-camera' />
             </li>
-            <li>
-              <i className='icon-ok-squared' />
+            <li onClick={ this.changeModalWindow } data-modal='survey'>
+              <i className='icon-ok-squared' data-modal='survey' />
             </li>
           </ul>
 
-          <VideoModal show={ modalWindow == 'video' } onHide={ this.closeModalWindow } onDelete={ this.onDelete } />
-          <AudioModal show={ modalWindow == 'audio' } onHide={ this.closeModalWindow } onDelete={ this.onDelete } />
-          <ImageModal show={ modalWindow == 'image' } onHide={ this.closeModalWindow } onDelete={ this.onDelete } />
+          <UploadsModal
+            resourceType={ modalWindow }
+            show={ this.compareState(['video', 'audio', 'image']) }
+            onHide={ this.closeModalWindow }
+            onDelete={ this.onDelete }
+            onEnter={ this.onEnter }
+            afterChange={ this.afterChange }
+            onCreate={ this.onCreate }
+            mainBorder={ colours.mainBorder }
+          />
+          <SurveyModal show={ this.compareState(['survey']) } onHide={ this.closeModalWindow } onEnter={ this.onEnter } />
         </div>
       )
     }
@@ -66,10 +111,11 @@ const Resources = React.createClass({
 
 const mapStateToProps = (state) => {
   return {
-    modalWindow: state.resources.modalWindow,
     colours: state.chat.session.colours,
+    currentUserJwt: state.members.currentUser.jwt,
+    modalWindow: state.resources.modalWindow,
     channel: state.topic.channel,
-    permissions:  state.members.currentUser.permissions
+    permissions: state.members.currentUser.permissions
   }
 };
 
