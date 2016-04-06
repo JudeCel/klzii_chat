@@ -19,7 +19,7 @@ defmodule KlziiChat.Session do
     # timestamps
   end
 
-  @required_fields ~w(name start_time end_time active )
+  @required_fields ~w(name startTime endTime active )
   @optional_fields ~w()
 
   @doc """
