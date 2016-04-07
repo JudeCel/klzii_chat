@@ -81,12 +81,12 @@ const Message = React.createClass({
     return (
       <div className='message-section media'>
         <div className={ this.mediaImagePosition() }>
-          <span className='media-object glyphicon glyphicon-th' aria-hidden='true'></span>
+          <span className='media-object glyphicon glyphicon-th' aria-hidden='true' style={{ color: message.session_member.colour }}></span>
         </div>
 
         <div className='media-body'>
           <div className='media-heading heading-section col-md-12'>
-            <span className='pull-left'>
+            <span className='pull-left' style={{ color: message.session_member.colour }}>
               { message.session_member.username }
             </span>
             <span className='pull-right'>
