@@ -3,10 +3,10 @@ import Avatar             from './avatar.js';
 
 const Member = React.createClass({
   render() {
-    const { member, colour } = this.props;
+    const { member } = this.props;
 
     return (
-      <Avatar member={ member } colour={ colour } />
+      <Avatar member={ member } />
     )
   }
 });

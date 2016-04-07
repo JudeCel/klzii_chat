@@ -7,7 +7,7 @@ defmodule KlziiChat.SessionMember do
     belongs_to :session, KlziiChat.Session, [foreign_key: :sessionId]
     has_many :events, KlziiChat.Event, [foreign_key: :sessionMemberId]
     has_many :votes, KlziiChat.Vote, [foreign_key: :sessionMemberId]
-    field :colour, :integer, default: 6710886
+    field :colour, :string
     field :online, :boolean, default: false
     field :avatarData, :map, default: %{ base: 0, face: 3, body: 0, hair: 0, desk: 0, head: 0 }
     field :token, :string
