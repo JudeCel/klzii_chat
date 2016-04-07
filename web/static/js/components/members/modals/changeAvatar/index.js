@@ -11,8 +11,11 @@ const ChangeAvatarModal = React.createClass({
     return { tabActive: 'hair' };
   },
   componentWillReceiveProps() {
-    const { id, username, avatarData } = this.props.currentUser;
-    this.setState({ id, username, avatarData: { ...avatarData } });
+    this.setStateBasedOnCurrentUser();
+  },
+  setStateBasedOnCurrentUser() {
+    const { id, username, avatarData, colour } = this.props.currentUser;
+    this.setState({ id, username, colour, avatarData: { ...avatarData } });
   },
   onClose(e) {
     this.setState(this.getInitialState());
@@ -22,8 +25,7 @@ const ChangeAvatarModal = React.createClass({
     this.props.onHide(e);
   },
   onOpen(e) {
-    const { id, username, avatarData } = this.props.currentUser;
-    this.setState({ id, username, avatarData: { ...avatarData } });
+    this.setStateBasedOnCurrentUser();
     this.onEnter(e);
   },
   onNameChange(e) {
@@ -49,8 +51,7 @@ const ChangeAvatarModal = React.createClass({
       hair: 8,
       head: 8,
       body: 6,
-      desk: 6,
-      face: 6
+      desk: 6
     }[type];
 
     return Array(count).fill();
@@ -61,13 +62,12 @@ const ChangeAvatarModal = React.createClass({
   },
   render() {
     const { show, colours } = this.props;
-    const { id, username, avatarData, tabActive } = this.state;
+    const { id, username, avatarData, colour, tabActive } = this.state;
     const tabs = [
       { type: 'hair' },
       { type: 'head' },
       { type: 'body' },
-      { type: 'desk' },
-      { type: 'face' }
+      { type: 'desk' }
     ];
 
     if(show) {
@@ -91,7 +91,7 @@ const ChangeAvatarModal = React.createClass({
             <div className='customize-avatar-section'>
               <div className='row biizu-section div-inline-block'>
                 <div className='preview-section div-inline-block' style={ { borderColor: colours.mainBorder } }>
-                  <Avatar member={ { id, username, avatarData, online: true, edit: true } } colour={ colours.facilitator } specificId='change-avatar' />
+                  <Avatar member={ { id, username, colour, avatarData, online: true, edit: true } } specificId='change-avatar' />
                 </div>
 
                 <div className='elements-section div-inline-block' style={ { borderColor: colours.mainBorder } }>

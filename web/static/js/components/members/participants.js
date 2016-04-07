@@ -8,7 +8,7 @@ const Participants = React.createClass({
     return className + (even ? 'avatar-even' : 'avatar-odd');
   },
   render() {
-    const { participants, colours, openAvatarModal } = this.props;
+    const { participants, openAvatarModal } = this.props;
 
     //helper for testing
     for(let i of Array(7).keys()) {
@@ -26,7 +26,7 @@ const Participants = React.createClass({
           participants.map((participant, index) =>
             <div className='col-md-3' key={ participant.id }>
               <div className={ this.evenClasses(index % 2 == 0) } onClick={ openAvatarModal }>
-                <Member member={ participant } colour={ colours.participants[index+1] } />
+                <Member member={ participant } />
               </div>
             </div>
           )
@@ -38,8 +38,7 @@ const Participants = React.createClass({
 
 const mapStateToProps = (state) => {
   return {
-    participants: state.members.participants,
-    colours: state.chat.session.colours
+    participants: state.members.participants
   }
 };
 

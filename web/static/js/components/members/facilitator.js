@@ -5,13 +5,13 @@ import Console            from '../console/index';
 
 const Facilitator = React.createClass({
   render() {
-    const { facilitator, colours, openAvatarModal } = this.props;
+    const { facilitator, openAvatarModal } = this.props;
 
     return (
       <div className='facilitator-section'>
         <div className='div-inline-block'>
           <div className='div-inline-block cursor-pointer' onClick={ openAvatarModal }>
-            <Member key={ facilitator.id } member={ facilitator } colour={ colours.facilitator } />
+            <Member key={ facilitator.id } member={ facilitator } />
           </div>
 
           <div className='say-section'>
@@ -34,8 +34,7 @@ const Facilitator = React.createClass({
 
 const mapStateToProps = (state) => {
   return {
-    facilitator: state.members.facilitator,
-    colours: state.chat.session.colours
+    facilitator: state.members.facilitator
   }
 };
 

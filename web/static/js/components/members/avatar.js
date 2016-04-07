@@ -25,8 +25,7 @@ const Avatar = React.createClass({
       return Math.floor(Math.random() * 4);
     }
 
-    const { colour } = this.props;
-    const { id, username, avatarData, online, edit } = this.props.member;
+    const { id, username, avatarData, colour, online, edit } = this.props.member;
     const { base, face, body, hair, desk, head } = edit && avatarData
       ? avatarData
       : { base: 0, face: randomNumber(), body: randomNumber(), hair: randomNumber(), desk: randomNumber(), head: randomNumber() };
