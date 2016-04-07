@@ -48,7 +48,7 @@ build.Whiteboard = function() {
 build.Whiteboard.prototype.processWhiteboard = function(data) {
 	var sendGetPersonalImages = window.sendGetPersonalImages;	//	we want to keep this as it might be
 	var personalImageContent = window.personalImageContent;		//	destroyed in here by accident...
-
+	console.log("______processWhiteboard", data);
 	//	make sure we have valid data
 	if (!isEmpty(data)) {
 		// data = data
@@ -67,6 +67,7 @@ build.Whiteboard.prototype.processWhiteboard = function(data) {
 				break;
 				case 'object': {
 					if (!isEmpty(window.whiteboard.updateCanvas)) {
+						console.log("____updateCanvas", event);
 						window.whiteboard.updateCanvas(event.name, event, true);
 					}
 				}

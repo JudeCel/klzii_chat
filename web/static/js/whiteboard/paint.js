@@ -8,6 +8,7 @@ var view = namespace('sf.ifs.View');
 */
 
 view.Paint = function(json) {
+	console.log("Paint_____", json);
 	//initialization
 	this.json = json;
 	this.json.scale = 1;

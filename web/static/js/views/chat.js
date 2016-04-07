@@ -62,10 +62,10 @@ const ChatView = React.createClass({
                 <div className='col-md-8'>
                   <div className='row'>
                     <Facilitator openAvatarModal={ this.openAvatarModal } />
-                    {/*<Whiteboard/>*/}
+                    <Whiteboard/>
                   </div>
                   <div className='row'>
-                    <Participants openAvatarModal={ this.openAvatarModal } />
+                    {/*<Participants openAvatarModal={ this.openAvatarModal } />*/}
                   </div>
                 </div>
 

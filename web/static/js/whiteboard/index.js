@@ -63,7 +63,7 @@ view.Whiteboard = function(json) {
 
 view.Whiteboard.prototype.initialise = function(json) {
 	this.json = json;
-
+	console.log("________Whiteboard.prototype.initialise_________", json);
 	//	lets make sure we update our target
 	this.target.x = this.json.canvas.x;
 	this.target.y = this.json.canvas.y;

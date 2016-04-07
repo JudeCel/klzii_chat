@@ -13,7 +13,7 @@ var generateUID = function (separator) {
 window.onStart = function (x, y, event) {
 	if (this.expanded) {
 		var me = this.data("this");
-
+		console.log("__");
 		//	lets make sure this is cleared out
 		me.path = "";
 
@@ -22,6 +22,7 @@ window.onStart = function (x, y, event) {
 
 		this.orgX = (x - (canvas_container.offsetLeft + canvas.offsetLeft));
 		this.orgY = (y - (canvas_container.offsetTop + canvas.offsetTop));
+
 
 		switch (this.attribute["pencilShape"]) {
 		case "scribble":
@@ -34,12 +35,14 @@ window.onStart = function (x, y, event) {
 		case "circle-fill":
 		case "rectangle":
 		case "rectangle-fill":
+
 		}
 	}
 };
 
 // - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 window.onMove = function (dx, dy, x, y, event) {
+	console.log("___onMove", x, y);
 	var currentStrokeWidth = 4;
 
 	if (this.expanded) { //	probably not needed as if the paper isn't expanded, it will be behind other divs anyway...
@@ -426,6 +429,7 @@ window.onEnd = function (event, json) {
 
 //----------------------------------------------------------------------------
 window.onMouseDown = function (event, x, y) {
+	console.log("_______", x, y);
 	var me = this.data("this");
 	var canvas_container = document.getElementById("canvas_container");
 	var canvas = document.getElementById("canvas");
