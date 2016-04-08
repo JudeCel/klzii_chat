@@ -110,8 +110,6 @@ const Whiteboard =  React.createClass({
       window.whiteboard = document.getElementById('whiteboard');
       window.whiteboardn = new sf.ifs.View.WhiteboardN("whiteboard");
       window.whiteboardn.addRect(true);
-      console.log("___________!@#$", window.whiteboardn);
-
       window.paperWhiteboard = Raphael("whiteboard");
       window.paperCanvas = ScaleRaphael("canvas", 950, 460);
       window.paperExpand = Raphael("expand");
