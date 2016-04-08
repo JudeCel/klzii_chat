@@ -259,12 +259,15 @@ const WhiteboardCanvas = React.createClass({
     let s = Snap(getName());
     this.componentDidMount();
   },
-  handleClick: function(event){
+  handleMouseDown: function(event){
     console.log("mouse ");
+  },
+  handleMouseMove(e) {
+    console.log("move", e);
   },
   render() {
     return (
-        <div   width='950px' height="460px" onClick={ this.handleClick }><svg id={ this.getName() } width='950px' height="460px"/></div>
+        <div   width='950px' height="460px" onMouseDown={ this.handleMouseDown } onMouseMove={ this.handleMouseMove }><svg id={ this.getName() } width='950px' height="460px"/></div>
     )
   }
 });
