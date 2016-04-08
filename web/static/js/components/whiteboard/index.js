@@ -2,12 +2,12 @@ import React                from 'react';
 import whiteboardActions    from '../../actions/whiteboard';
 import Raphael              from 'webpack-raphael';
 import { connect }          from 'react-redux';
+import WhiteboardCanvas     from './WhiteboardCanvas';
 
 window.Raphael = Raphael;
 require('../../whiteboard');
 require('../../whiteboard/scale.raphael');
 require('../../whiteboard/raphael.free_transform');
-require('../../whiteboard/whiteboardTest/whiteboard');
 
 import OnParticipants  from '../../whiteboard/onParticipants' ;
 
@@ -107,10 +107,11 @@ const Whiteboard =  React.createClass({
       nextProps.dispatch(whiteboardActions.getWhiteboardHistory(nextProps.channal));
     }
     if (nextProps.whiteboard.readyToBuild && !nextProps.whiteboard.isBuild ) {
-      window.whiteboard = document.getElementById('whiteboard');
-      window.whiteboardn = new sf.ifs.View.WhiteboardN("whiteboard");
-      window.whiteboardn.addRect(true);
+
+
       window.paperWhiteboard = Raphael("whiteboard");
+      window.whiteboard = document.getElementById('whiteboard');
+
       window.paperCanvas = ScaleRaphael("canvas", 950, 460);
       window.paperExpand = Raphael("expand");
       window.paperShrink = Raphael("shrink");
@@ -124,7 +125,7 @@ const Whiteboard =  React.createClass({
       window.role = this.props.currentUser.role;
       buildWhiteboard = new sf.ifs.Build.Whiteboard();
     	window.clearWhiteboard();
-    //  window.buildWhiteboard = new sf.ifs.View.WhiteboardN();
+      window.buildWhiteboard = new sf.ifs.Build.Whiteboard();
     //  NewWhiteboard
       OnParticipants()
       nextProps.dispatch(whiteboardActions.setWhiteboardBuilt());
@@ -205,7 +206,6 @@ const Whiteboard =  React.createClass({
           margin: "0"
         }}>
        </div>
-
         <div id="whiteboard"
           style={{zIndex: 1000,
             position: 'absolute',
@@ -215,6 +215,7 @@ const Whiteboard =  React.createClass({
             height: '646px',
             margin: 0
           }}>
+
           <div id="canvas"
             style={{
               position: 'absolute',
@@ -224,6 +225,8 @@ const Whiteboard =  React.createClass({
               height: "153px",
               margin: 0
             }}/>
+
+            <WhiteboardCanvas/>
         </div>
         <div id="expand"
           onClick={this.onExpandClick}
