@@ -65,7 +65,7 @@ const ChatView = React.createClass({
                     <Whiteboard/>
                   </div>
                   <div className='row'>
-                    {/*<Participants openAvatarModal={ this.openAvatarModal } />*/}
+                    {<Participants openAvatarModal={ this.openAvatarModal } />}
                   </div>
                 </div>
 

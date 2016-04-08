@@ -77,7 +77,7 @@ var config = module.exports = {
     new webpack.NoErrorsPlugin(),
     new CopyWebpackPlugin([{ from: 'web/static/assets/images', to: "images" }]),
     new webpack.optimize.DedupePlugin(),
-    new webpack.optimize.UglifyJsPlugin({ minimize: true })
+    //new webpack.optimize.UglifyJsPlugin({ minimize: true })
   ],
 };
 

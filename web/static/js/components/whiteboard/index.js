@@ -9,7 +9,7 @@ require('../../whiteboard/scale.raphael');
 require('../../whiteboard/raphael.free_transform');
 require('../../whiteboard/whiteboardTest/whiteboard');
 
-import OnParticipants        from '../../whiteboard/onParticipants' ;
+import OnParticipants  from '../../whiteboard/onParticipants' ;
 
 const Whiteboard =  React.createClass({
   componentWillMount() {
@@ -108,12 +108,10 @@ const Whiteboard =  React.createClass({
     }
     if (nextProps.whiteboard.readyToBuild && !nextProps.whiteboard.isBuild ) {
       window.whiteboard = document.getElementById('whiteboard');
-      try {
-        //var v = new NewWhiteboard("whiteboard");
-        console.log("___123456___", WhiteboardN);
-      } catch(err) {
-        console.log("___NewWhiteboardError__", err);
-      }
+      window.whiteboardn = new sf.ifs.View.WhiteboardN("whiteboard");
+      window.whiteboardn.addRect(true);
+      console.log("___________!@#$", window.whiteboardn);
+
       window.paperWhiteboard = Raphael("whiteboard");
       window.paperCanvas = ScaleRaphael("canvas", 950, 460);
       window.paperExpand = Raphael("expand");
@@ -126,11 +124,10 @@ const Whiteboard =  React.createClass({
       window.userID = this.props.currentUser.id;
       window.currentUser.colour = this.props.currentUser.colour;
       window.role = this.props.currentUser.role;
-    /*  buildWhiteboard = new sf.ifs.Build.Whiteboard();
-    	window.clearWhiteboard(); */
-      window.buildWhiteboard = new sf.ifs.Build.Whiteboard();
+      buildWhiteboard = new sf.ifs.Build.Whiteboard();
+    	window.clearWhiteboard();
+    //  window.buildWhiteboard = new sf.ifs.View.WhiteboardN();
     //  NewWhiteboard
-      console.log("))+++++++buildWhiteboard");
       OnParticipants()
       nextProps.dispatch(whiteboardActions.setWhiteboardBuilt());
     }

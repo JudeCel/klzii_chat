@@ -31,34 +31,47 @@ const Avatar = React.createClass({
       : { base: 0, face: randomNumber(), body: randomNumber(), hair: randomNumber(), desk: randomNumber(), head: randomNumber() };
 
     let avatar = Snap('#' + this.pickId());
-    Snap.load(`/images/avatar/base_${this.padToTwo(base)}.svg`, (baseSnap) => {
-      Snap.load(`/images/avatar/face_${this.pickFace(face, online)}.svg`, (faceSnap) => {
-        Snap.load(`/images/avatar/body_${this.padToTwo(body)}.svg`, (bodySnap) => {
-          Snap.load(`/images/avatar/hair_${this.padToTwo(hair)}.svg`, (hairSnap) => {
-            Snap.load(`/images/avatar/desk_${this.padToTwo(desk)}.svg`, (deskSnap) => {
-              Snap.load(`/images/avatar/head_${this.padToTwo(head)}.svg`, (headSnap) => {
-                if(this.shouldClearPrevious) {
-                  avatar.clear();
-                  this.shouldClearPrevious = false;
-                }
-
-                avatar.rect(25, 128, 100, 20, 1, 1).attr({fill: colour});
-                avatar.text(50, 141, username).attr({fill: '#fff', "font-size": "75%"});
-                avatar.rect(30, 133, 90, 3, 5, 5).attr({fill: '#ccc', opacity: 0.2});
-
-                avatar.append(baseSnap);
-                avatar.append(faceSnap);
-                avatar.append(bodySnap);
-                avatar.append(hairSnap);
-                avatar.append(deskSnap);
-                avatar.append(headSnap);
-                this.previousAvatarData = Object.assign({}, avatarData);
-              });
-            });
-          });
-        });
-      });
-    });
+    if(this.shouldClearPrevious) {
+      avatar.clear();
+      this.shouldClearPrevious = false;
+    }
+    avatar.image(`/images/avatar/base_${this.padToTwo(base)}.svg`, 0, 0, 152, 140);
+    avatar.image(`/images/avatar/face_${this.padToTwo(face)}.svg`, 0, 0, 152, 140);
+    avatar.image(`/images/avatar/body_${this.padToTwo(body)}.svg`, 0, 0, 152, 140);
+    avatar.image(`/images/avatar/hair_${this.padToTwo(hair)}.svg`, 0, 0, 152, 140);
+    avatar.image(`/images/avatar/desk_${this.padToTwo(desk)}.svg`, 0, 0, 152, 140);
+    avatar.image(`/images/avatar/head_${this.padToTwo(head)}.svg`, 0, 0, 152, 140);
+    avatar.rect(25, 125, 100, 20, 1, 1).attr({fill: colour});
+    avatar.text(76, 138, username).attr({fill: '#fff', "font-size": "75%", "text-anchor": "middle"});
+    avatar.rect(30, 130, 90, 3, 5, 5).attr({fill: '#ccc', opacity: 0.2});
+    // Snap.load(`/images/avatar/base_${this.padToTwo(base)}.svg`, (baseSnap) => {
+    //   Snap.load(`/images/avatar/face_${this.pickFace(face, online)}.svg`, (faceSnap) => {
+    //     Snap.load(`/images/avatar/body_${this.padToTwo(body)}.svg`, (bodySnap) => {
+    //       Snap.load(`/images/avatar/hair_${this.padToTwo(hair)}.svg`, (hairSnap) => {
+    //         Snap.load(`/images/avatar/desk_${this.padToTwo(desk)}.svg`, (deskSnap) => {
+    //           Snap.load(`/images/avatar/head_${this.padToTwo(head)}.svg`, (headSnap) => {
+    //             if(this.shouldClearPrevious) {
+    //               avatar.clear();
+    //               this.shouldClearPrevious = false;
+    //             }
+    //
+    //             avatar.rect(25, 128, 100, 20, 1, 1).attr({fill: colour});
+    //             avatar.text(50, 141, username).attr({fill: '#fff', "font-size": "75%"});
+    //             avatar.rect(30, 133, 90, 3, 5, 5).attr({fill: '#ccc', opacity: 0.2});
+    //
+    //             avatar.append(baseSnap);
+    //             avatar.append(faceSnap);
+    //             avatar.append(bodySnap);
+    //             avatar.append(hairSnap);
+    //             avatar.append(deskSnap);
+    //             avatar.append(headSnap);
+    //             this.previousAvatarData = Object.assign({}, avatarData);
+    //           });
+    //         });
+    //       });
+    //     });
+    //   });
+    // });
   },
   shouldComponentUpdate(nextProps) {
     let equal = JSON.stringify(this.previousAvatarData) !== JSON.stringify(nextProps.member.avatarData);

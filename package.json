@@ -50,7 +50,7 @@
     "redux-logger": "^2.3.2",
     "redux-thunk": "^1.0.2",
     "sass-loader": "^3.1.2",
-    "snapsvg": "^0.4.0",
+    "snapsvg": "git+https://github.com/adobe-webplatform/Snap.svg.git",
     "style-loader": "^0.13.0",
     "superagent": "^1.8.0-beta.2",
     "url-loader": "^0.5.7",
