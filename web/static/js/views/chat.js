@@ -7,18 +7,20 @@ import Input                from '../components/messages/input.js';
 import Whiteboard           from '../components/whiteboard';
 import Facilitator          from '../components/members/facilitator.js';
 import Participants         from '../components/members/participants.js';
+import ChangeAvatarModal    from '../components/members/modals/changeAvatar/index.js';
 import TopicSelect          from '../components/topics/select.js';
 import Resources            from '../components/resources/resources.js';
 import HeaderLinks          from '../components/header/links.js';
 
 const ChatView = React.createClass({
+  getInitialState() {
+    return {};
+  },
   styles() {
     const { colours } = this.props;
     return {
-      room: {
-        backgroundColor: colours.mainBackground,
-        border: '2px solid ' + colours.mainBorder
-      }
+      backgroundColor: colours.mainBackground,
+      borderColor: colours.mainBorder
     };
   },
   componentWillMount() {
@@ -29,13 +31,19 @@ const ChatView = React.createClass({
       this.props.dispatch(topicActions.selectCurrent(nextProps.socket, nextProps.topics));
     }
   },
+  openAvatarModal() {
+    this.setState({ openAvatarModal: true });
+  },
+  closeAvatarModal() {
+    this.setState({ openAvatarModal: false });
+  },
   render() {
-    const { error } = this.props;
+    const { error, sessionReady, topicReady } = this.props;
 
     if(error) {
       return (<div>{error}</div>)
     }
-    else {
+    else if(sessionReady && topicReady) {
       return (
         <div id='chat-app-container'>
           <nav className='row header-section'>
@@ -47,15 +55,17 @@ const ChatView = React.createClass({
           </nav>
 
           <div className='row room-outerbox'>
-            <div className='col-md-12 room-section' style={ this.styles().room }>
+            <div className='col-md-12 room-section' style={ this.styles() }>
+              <ChangeAvatarModal show={ this.state.openAvatarModal } onHide={ this.closeAvatarModal } />
+
               <div className='row'>
                 <div className='col-md-8'>
                   <div className='row'>
-                    <Facilitator/>
+                    <Facilitator openAvatarModal={ this.openAvatarModal } />
                     {/*<Whiteboard/>*/}
                   </div>
                   <div className='row'>
-                    <Participants/>
+                    <Participants openAvatarModal={ this.openAvatarModal } />
                   </div>
                 </div>
 
@@ -71,6 +81,10 @@ const ChatView = React.createClass({
           </div>
         </div>
       )
+    }
+    else {
+      // Still loading
+      return (false)
     }
   }
 });

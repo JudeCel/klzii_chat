@@ -1,0 +1,93 @@
+.modal-section.change-avatar-modal
+  width: 920px
+  .customize-avatar-section
+    padding: 0 20px
+    @extend .lineup-icons
+    ul.icons
+      vertical-align: middle
+      display: inline-block
+      li
+        padding: 5px 0
+        &.active
+          color: $blue
+          border-color: $blue
+    .selection-section
+      width: 100%
+      margin: 0 auto
+      .form-group
+        padding-top: 7px
+        .control-label
+            margin-right: 10px
+    .biizu-section
+      width: 100%
+      margin: 0 auto 20px auto
+      .preview-section, .elements-section
+        border: 2px solid
+        padding: 1%
+      .preview-section
+        width: 20%
+        margin-right: 5%
+      .elements-section
+        vertical-align: top
+        width: 75%
+        .preview-images
+          position: relative
+          img
+            max-width: 65%
+            position: absolute
+          img:last-child
+            position: relative
+        span
+          padding-left: 22px
+.modal-section
+  margin-top: 180px
+  .modal-backdrop
+    z-index: 1000
+  .modal-content
+    @extend .no-border-radius
+    border: 2px solid
+    .modal-header
+      .fa
+        @extend .cursor-pointer
+        padding: 10px
+        font-size: 20px
+        &.icon-reply
+          color: $green
+          border: 2px solid $green
+        &.fa-check, &.fa-plus
+          color: $header-red
+          border: 2px solid $header-red
+      border: none
+      .modal-title
+        text-transform: capitalize
+        text-align: center
+        vertical-align: middle
+  .modal-body
+    .uploads-console-section
+      text-align: center
+    .survey-answer-section
+      ul li
+        border: 0
+    .survey-create-section, .uploads-section
+      @extend .no-border-radius
+      ul li
+        border-left: none
+        border-right: none
+        &:first-child
+          border-top: none
+        .fa
+          @extend .cursor-pointer
+          font-size: $input-size
+        img, video, audio
+          width: 100%
+  ul.tab-section
+    padding: 0 20px
+    a, .active > a, .active > a:hover
+      color: black
+      @extend .no-border-radius
+      background: white
+      border: 2px solid
+    li
+      @extend .no-border-radius
+      @extend .cursor-pointer
+      padding: 0 10px

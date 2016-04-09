@@ -1,16 +1,17 @@
-import React, {PropTypes}   from 'react';
-import Member               from './member.js'
-import { connect }          from 'react-redux';
-import Console              from '../resources/console.js';
+import React, {PropTypes} from 'react';
+import Member             from './member.js'
+import { connect }        from 'react-redux';
+import Console            from '../console/index';
 
 const Facilitator = React.createClass({
   render() {
-    const { facilitator, colours } = this.props;
+    const { facilitator, openAvatarModal } = this.props;
+
     return (
       <div className='facilitator-section'>
         <div className='div-inline-block'>
-          <div className='div-inline-block'>
-            <Member key={ facilitator.id } member={ facilitator } colour={ colours.facilitator } />
+          <div className='div-inline-block cursor-pointer' onClick={ openAvatarModal }>
+            <Member key={ facilitator.id } member={ facilitator } />
           </div>
 
           <div className='say-section'>
@@ -24,7 +25,7 @@ const Facilitator = React.createClass({
             </div>
           </div>
 
-          <Console/>
+          <Console />
         </div>
       </div>
     )
@@ -33,8 +34,7 @@ const Facilitator = React.createClass({
 
 const mapStateToProps = (state) => {
   return {
-    facilitator: state.members.facilitator,
-    colours: state.chat.session.colours
+    facilitator: state.members.facilitator
   }
 };
 

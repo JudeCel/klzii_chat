@@ -1,13 +1,14 @@
-import React, {PropTypes}   from 'react';
-import Member               from './member.js';
-import { connect }          from 'react-redux';
+import React, {PropTypes} from 'react';
+import Member             from './member.js';
+import { connect }        from 'react-redux';
 
 const Participants = React.createClass({
   evenClasses(even) {
-    return even ? 'avatar-even' : 'avatar-odd';
+    const className = 'cursor-pointer ';
+    return className + (even ? 'avatar-even' : 'avatar-odd');
   },
   render() {
-    const { participants, colours } = this.props;
+    const { participants, openAvatarModal } = this.props;
 
     //helper for testing
     for(let i of Array(7).keys()) {
@@ -24,8 +25,8 @@ const Participants = React.createClass({
         {
           participants.map((participant, index) =>
             <div className='col-md-3' key={ participant.id }>
-              <div className={ this.evenClasses(index % 2 == 0) }>
-                <Member member={ participant } colour={ colours.participants[index+1] } />
+              <div className={ this.evenClasses(index % 2 == 0) } onClick={ openAvatarModal }>
+                <Member member={ participant } />
               </div>
             </div>
           )
@@ -37,8 +38,7 @@ const Participants = React.createClass({
 
 const mapStateToProps = (state) => {
   return {
-    participants: state.members.participants,
-    colours: state.chat.session.colours
+    participants: state.members.participants
   }
 };
 
