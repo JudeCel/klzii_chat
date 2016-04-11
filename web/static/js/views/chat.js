@@ -12,6 +12,9 @@ import TopicSelect          from '../components/topics/select.js';
 import Resources            from '../components/resources/resources.js';
 import HeaderLinks          from '../components/header/links.js';
 
+//import Whiteboard           from '../components/whiteboard';
+import WhiteboardCanvas     from '../components/whiteboard/whiteboardCanvas';
+
 const ChatView = React.createClass({
   getInitialState() {
     return {};
@@ -62,7 +65,14 @@ const ChatView = React.createClass({
                 <div className='col-md-8'>
                   <div className='row'>
                     <Facilitator openAvatarModal={ this.openAvatarModal } />
-                    <Whiteboard/>
+                    {/*<Whiteboard/>*/}
+                    <WhiteboardCanvas  style={{
+                      position: 'absolute',
+                      zIndex: 1000,
+                      width: '500px',
+                      height: '200px',
+                      margin: 0
+                    }}/>
                   </div>
                   <div className='row'>
                     {<Participants openAvatarModal={ this.openAvatarModal } />}

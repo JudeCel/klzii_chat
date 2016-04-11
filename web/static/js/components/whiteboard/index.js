@@ -14,6 +14,7 @@ import OnParticipants  from '../../whiteboard/onParticipants' ;
 const Whiteboard =  React.createClass({
   componentWillMount() {
     window.clearWhiteboard = function () {
+      return;
       if (isEmpty(window.paperCanvas)) return;
 
       var localStack = new Array();
@@ -96,6 +97,12 @@ const Whiteboard =  React.createClass({
       width: 950,
       height: 460
     };
+/*
+    window.whiteboardLarge = {
+      width: 0,
+      height: 0
+    };*/
+
     window.whiteboardSetup = "drawing";
     window.whiteboardMode =  window.WHITEBOARD_MODE_NONE;
     window.buildWhiteboard = null;
@@ -109,11 +116,11 @@ const Whiteboard =  React.createClass({
     if (nextProps.whiteboard.readyToBuild && !nextProps.whiteboard.isBuild ) {
 
 
-      window.paperWhiteboard = Raphael("whiteboard");
+      window.paperWhiteboard = Raphael("whiteboard", 0, 0);
       window.whiteboard = document.getElementById('whiteboard');
 
-      window.paperCanvas = ScaleRaphael("canvas", 950, 460);
-      window.paperExpand = Raphael("expand");
+      window.paperCanvas = ScaleRaphael("canvas", 0, 0);
+      window.paperExpand = Raphael("expand", 0, 0);
       window.paperShrink = Raphael("shrink");
       window.paperTextbox = Raphael("textbox");
       window.paperTextboxHTML = Raphael("textbox-html");
@@ -211,23 +218,30 @@ const Whiteboard =  React.createClass({
             position: 'absolute',
             left: '0px',
             top: '0px',
-            width: '1000px',
-            height: '646px',
+            width: '0px',
+            height: '0px',
             margin: 0
           }}>
 
           <div id="canvas"
             style={{
               position: 'absolute',
-              left: "350px",
-              top: "103px",
-              width: "316px",
-              height: "153px",
+              left: "0",
+              top: "0",
+              width: "0",
+              height: "0",
               margin: 0
             }}/>
 
-            <WhiteboardCanvas/>
+            <WhiteboardCanvas style={{
+              position: 'absolute',
+              zIndex: 1000,
+              width: '100px',
+              height: '100px',
+              margin: 0
+            }}> </WhiteboardCanvas>
         </div>
+
         <div id="expand"
           onClick={this.onExpandClick}
           style={{zIndex: 1,

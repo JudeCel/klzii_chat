@@ -64,6 +64,7 @@
 			//}
 
 			handlesGroup.add(translateDragger);
+			if (!this.group) this.group = this.paper.g(this);
 			this.group.add(handlesGroup);
 
 			freetransEl.data( "handlesGroup", handlesGroup );
