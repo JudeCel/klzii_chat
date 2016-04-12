@@ -307,10 +307,86 @@ const WhiteboardCanvas = React.createClass({
       left: 0,
       top: 0
     }
+    // return (
+    //   <div style={divStyle}>
+    //     <div onClick={ this.expand }> expand</div>
+    //     <svg id={ this.getName() } width='100%' height="100%" style={scaleSVGStyle} onMouseDown={ this.handleMouseDown } onMouseUp={ this.handleMouseUp } onMouseMove={ this.handleMouseMove }/>
+    //   </div>
+    // )
+
     return (
       <div style={divStyle}>
         <div onClick={ this.expand }> expand</div>
-        <svg id={ this.getName() } width='100%' height="100%" style={scaleSVGStyle} onMouseDown={ this.handleMouseDown } onMouseUp={ this.handleMouseUp } onMouseMove={ this.handleMouseMove }/>
+        <div id="title-whiteboard"
+          style={{
+            background: "black",
+            zIndex: 1,
+            position: "absolute",
+            left: "368px",
+            top: "82px",
+            width: "85px",
+            height: "30px",
+            argin: 0
+          }}>
+          title
+        </div>
+        <div onClick={ this.expand } id="expand"
+          style={{
+            zIndex: 1,
+            background: "green",
+            position: "absolute",
+            left: "624px",
+            top: "79px",
+            width: "36px",
+            height: "36px",
+            margin: 0
+            }}>
+        </div>
+       <div id="shrink"
+         style={{
+          background: "yellow",
+          zIndex: 3,
+          position: "absolute",
+          left: "900px",
+          top: "62px",
+          width: "51px",
+          height: "51px",
+          margin: "0"
+        }}>
+       </div>
+
+          <svg id={ this.getName() }
+            width='100%' height="100%"
+            style={scaleSVGStyle}
+            onMouseDown={ this.handleMouseDown }
+            onMouseUp={ this.handleMouseUp }
+            onMouseMove={ this.handleMouseMove }/>
+
+        <div id="expand"
+          onClick={this.expand}
+          style={{zIndex: 1,
+            background: "gray",
+            position: "absolute",
+            left: "624px",
+            top: "79px",
+            width: "36px",
+            height: "36px",
+            margin: 0
+          }}>
+        </div>
+        <div id="shrink"
+          onClick={this.expand}
+          style={{
+            zIndex: 3,
+            background: "purple",
+            position: "absolute",
+            left: "900px",
+            top: "62px",
+            width: "51px",
+            height: "51px",
+            margin: 0
+          }}>
+        </div>
       </div>
     )
   }
