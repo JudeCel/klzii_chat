@@ -1,5 +1,6 @@
 import React, {PropTypes} from 'react';
 import Snap               from 'snapsvg';
+var ResizableBox = require('react-resizable').ResizableBox;
 
 require("./drawControlls");
 
@@ -14,8 +15,8 @@ const WhiteboardCanvas = React.createClass({
     return Math.sqrt( Math.pow( dx, 2)  + Math.pow( dy, 2)  );
   },
   componentDidMount() {
+    //this.minimized = false;
     this.snap = Snap("#" + this.getName());
-    //this.snap = Snap("#" + "canvas");
     this.activeShape = null;
     this.lastShape = null;
     var self = this;
@@ -132,14 +133,16 @@ const WhiteboardCanvas = React.createClass({
     return false;
   },
   componentDidUpdate() {
-    let s = Snap(getName());
+    let s = Snap(this.getName());
     this.componentDidMount();
   },
   eventCoords(e) {
     var bounds = e.target.getBoundingClientRect();
-    return({x: e.clientX - bounds.left, y: e.clientY - bounds.top});
+    return({x: Number(e.clientX) - Number(bounds.left), y: Number(e.clientY) - Number(bounds.top)});
   },
   handleMouseDown: function(e){
+    if (!this.isValidButton(e)) return;
+    if (this.minimized) return;
     this.addCircle(true);
     this.coords = this.eventCoords(e);
     this.strokeColour = this.activeStrokeColour;
@@ -147,6 +150,8 @@ const WhiteboardCanvas = React.createClass({
     this.fillNone = 'none';
   },
   handleMouseUp: function(e){
+    if (!this.isValidButton(e)) return;
+    if (this.minimized) return;
     if (this.activeShape && !this.activeShape.created) {
       this.activeShape.created = true;
       this.prepareNewElement(this.activeShape);
@@ -157,6 +162,9 @@ const WhiteboardCanvas = React.createClass({
     this.activeShape = null;
   },
   handleMouseMove(e) {
+    if (!this.isValidButton(e)) return;
+    if (this.minimized) return;
+
     if (!this.coords) return;
 
 
@@ -246,9 +254,64 @@ const WhiteboardCanvas = React.createClass({
       this.activeShape.ftHighlightBB();
     }
   },
+  isValidButton(e) {
+    return (e && e.button == 0);
+  },
+  expand() {
+    this.minimized = !this.isMinimized();
+    //console.log("______", this.minimized);
+    this.setState({minimized: this.minimized});
+  },
+  getWidth() {
+    if (this.minimized) {
+      return 316;
+    } else {
+      return 950;
+    }
+  },
+  getHeight() {
+    if (this.minimized) {
+      return 153;
+    } else {
+      return 460;
+    }
+  },
+  getMinimizedScale() {
+    return 153/316;
+  },
+  isMinimized() {
+    return this.minimized;
+  },
+  shouldComponentUpdate: function () {
+    return true;
+  },
+  update: function () {
+    this.setState({});
+  },
+
   render() {
+    var divStyle = {
+      WebkitTransition: 'all', // note the capital 'W' here
+      msTransition: 'all', // 'ms' is the only lowercase vendor prefix
+      width: this.getWidth()+'px',
+      height: this.getHeight()+'px',
+      'WebkitTransition': 'width 0.5s ease-in-out, height 0.5s ease-in-out',
+      'MozTransition': 'width 0.5s ease-in-out, height 0.5s ease-in-out',
+      'OTransition': 'width 0.5s ease-in-out, height 0.5s ease-in-out',
+      transition: 'width 0.5s ease-in-out, height 0.5s ease-in-out'
+    };
+    var scale = this.minimized?this.getMinimizedScale():1.0;
+    var scaleSVGStyle = {
+      transform: 'scale('+scale+')',
+      transition: 'transform 0.5s ease-in-out',
+      left: 0,
+      top: 0
+    }
     return (
-      <svg id={ this.getName() } width='950px' height="460px" onMouseDown={ this.handleMouseDown } onMouseUp={ this.handleMouseUp } onMouseMove={ this.handleMouseMove }/>
+      <div style={divStyle}>
+        <div onClick={ this.expand }> expand</div>
+        <svg id={ this.getName() } width='100%' height="100%" style={scaleSVGStyle} onMouseDown={ this.handleMouseDown } onMouseUp={ this.handleMouseUp } onMouseMove={ this.handleMouseMove }/>
+      </div>
     )
   }
 });

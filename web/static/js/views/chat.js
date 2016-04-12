@@ -4,7 +4,7 @@ import sessionActions       from '../actions/session';
 import topicActions         from '../actions/topic';
 import Messages             from '../components/messages/messages.js';
 import Input                from '../components/messages/input.js';
-import Whiteboard           from '../components/whiteboard';
+//import Whiteboard           from '../components/whiteboard';
 import Facilitator          from '../components/members/facilitator.js';
 import Participants         from '../components/members/participants.js';
 import ChangeAvatarModal    from '../components/members/modals/changeAvatar/index.js';
@@ -12,7 +12,6 @@ import TopicSelect          from '../components/topics/select.js';
 import Resources            from '../components/resources/resources.js';
 import HeaderLinks          from '../components/header/links.js';
 
-//import Whiteboard           from '../components/whiteboard';
 import WhiteboardCanvas     from '../components/whiteboard/whiteboardCanvas';
 
 const ChatView = React.createClass({
@@ -60,19 +59,12 @@ const ChatView = React.createClass({
           <div className='row room-outerbox'>
             <div className='col-md-12 room-section' style={ this.styles() }>
               <ChangeAvatarModal show={ this.state.openAvatarModal } onHide={ this.closeAvatarModal } />
-
               <div className='row'>
                 <div className='col-md-8'>
                   <div className='row'>
                     <Facilitator openAvatarModal={ this.openAvatarModal } />
                     {/*<Whiteboard/>*/}
-                    <WhiteboardCanvas  style={{
-                      position: 'absolute',
-                      zIndex: 1000,
-                      width: '500px',
-                      height: '200px',
-                      margin: 0
-                    }}/>
+                    <WhiteboardCanvas member={ this.props } />
                   </div>
                   <div className='row'>
                     {<Participants openAvatarModal={ this.openAvatarModal } />}
@@ -82,7 +74,6 @@ const ChatView = React.createClass({
                 <div className='col-md-4'>
                   <Messages/>
                 </div>
-
                 <div className='col-md-12'>
                   <Input/>
                 </div>
