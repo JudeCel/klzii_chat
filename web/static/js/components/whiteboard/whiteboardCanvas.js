@@ -1,10 +1,17 @@
 import React, {PropTypes} from 'react';
 import Snap               from 'snapsvg';
-var ResizableBox = require('react-resizable').ResizableBox;
+//var ResizableBox = require('react-resizable').ResizableBox;
+//import Designer, {Text, Rectangle} from 'react-designer';
 
 require("./drawControlls");
 
 const WhiteboardCanvas = React.createClass({
+  /*getInitialState:function() {
+    return {[
+      {type: "text", x: 10, y: 20, text: "Hello!", fill: "red"},
+      {type: "rect", x: 50, y: 70, fill: "red"}
+    ]};
+  },*/
   unselectLastShape() {
     if (this.lastShape) {
       this.lastShape.ftUnselect();
