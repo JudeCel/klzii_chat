@@ -76,8 +76,8 @@ const ChatView = React.createClass({
                   <Messages/>
                 </div>
 
-                <Whiteboard/>
-                {/*<WhiteboardCanvas member={ this.props } />*/}
+                {/*<Whiteboard/>*/}
+                <WhiteboardCanvas member={ this.props } />
                 <div className='col-md-12'>
                   <Input/>
                 </div>

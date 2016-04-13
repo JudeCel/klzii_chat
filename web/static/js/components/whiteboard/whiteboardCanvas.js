@@ -386,8 +386,11 @@ const WhiteboardCanvas = React.createClass({
         </div>
 
         <div className="row" style={panelStyleBottom}>
-          <div onClick={ this.expand } id="expand" className="col-sm-3 pull-right">
+          <div className="col-sm-6 pull-right">
             <img className="pull-right" src={this.getExpandButtonImage()}/>
+
+            <div className=".btn-info pull-right">circle</div>
+            <div className=".btn-info pull-right">rectangle</div>
           </div>
         </div>
 
