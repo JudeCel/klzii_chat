@@ -3,15 +3,16 @@ import { Modal }          from 'react-bootstrap'
 import { connect }        from 'react-redux';
 import onEnterModalMixin  from '../../../../mixins/onEnterModal';
 import Board              from './board';
-import ReactDOM           from 'react-dom';
 
 const BoardModal = React.createClass({
   mixins: [onEnterModalMixin],
   getInitialState() {
-    return { content: this.props.boardContent }
+    return { content: '' };
+  },
+  shouldComponentUpdate(nextProps, nextState) {
+    return this.state.content === nextState.content;
   },
   onOpen(e) {
-    this.setState(this.getInitialState());
     this.onEnter(e);
 
     let preview = document.getElementsByClassName('medium-editor-anchor-preview')[0];
@@ -20,8 +21,14 @@ const BoardModal = React.createClass({
     e.appendChild(toolbar);
   },
   onClose(e) {
-    this.setState(this.getInitialState());
     this.props.onHide(e);
+  },
+  onSave(e) {
+    console.log(this.state.content);
+    this.onClose(e);
+  },
+  setContent(content) {
+    this.setState({ content: content });
   },
   render() {
     const { show, onHide, boardContent } = this.props;
@@ -39,13 +46,13 @@ const BoardModal = React.createClass({
             </div>
 
             <div className='col-md-2'>
-              {/*<span className={ this.newButtonClass(rendering) } onClick={ this.onNew }></span>*/}
+              <span className='pull-right fa fa-check' onClick={ this.onSave }></span>
             </div>
           </Modal.Header>
 
           <Modal.Body>
             <div className='row facilitator-board-section'>
-              <Board />
+              <Board { ... { boardContent, setContent: this.setContent } } />
             </div>
           </Modal.Body>
         </Modal>
