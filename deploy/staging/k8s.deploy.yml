@@ -1,0 +1,52 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: chat
+  labels:
+    name: chat
+    env: staging
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 80
+      targetPort: 3000
+      protocol: TCP
+  selector:
+    name: chat
+    env: staging
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    name: chat
+    env: staging
+  name: chat
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: chat
+        env: staging
+        version: "0.9.2"
+    spec:
+      containers:
+      - env:
+        - name: SECRET_KEY_BASE
+          value: 265728C3CEE6D163E3A210D2C7952CF50EF3E1765E3FB69DC13E70C93E6D0EF8
+        - name: DB_USERNAME
+          value: klzii
+        - name: DB_PASSWORD
+          value: VQqttpXdE42u6PUKWusy
+        - name: DB_HOST
+          value: klzii-staging.cyujokxcbe0c.us-west-2.rds.amazonaws.com
+        - name: DB_DATABASE
+          value: klzii_staging
+        - name: SERVER_HOST
+          value: chat.staging.klzii.com
+        image: 944561038201.dkr.ecr.us-west-2.amazonaws.com/klzii_chat:latest
+        name: chat
+        ports:
+        - containerPort: 3000
+          protocol: TCP
