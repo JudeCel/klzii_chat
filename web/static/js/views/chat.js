@@ -4,7 +4,7 @@ import sessionActions       from '../actions/session';
 import topicActions         from '../actions/topic';
 import Messages             from '../components/messages/messages.js';
 import Input                from '../components/messages/input.js';
-//import Whiteboard           from '../components/whiteboard';
+import Whiteboard           from '../components/whiteboard';
 import Facilitator          from '../components/members/facilitator.js';
 import Participants         from '../components/members/participants.js';
 import ChangeAvatarModal    from '../components/members/modals/changeAvatar/index.js';
@@ -13,6 +13,7 @@ import Resources            from '../components/resources/resources.js';
 import HeaderLinks          from '../components/header/links.js';
 
 import WhiteboardCanvas     from '../components/whiteboard/whiteboardCanvas';
+import Designer, {Rect, Circle, Path, Text} from 'react-designer';
 
 const ChatView = React.createClass({
   getInitialState() {
@@ -64,16 +65,19 @@ const ChatView = React.createClass({
                   <div className='row'>
                     <Facilitator openAvatarModal={ this.openAvatarModal } />
                     {/*<Whiteboard/>*/}
-                    <WhiteboardCanvas member={ this.props } />
+                    {/*<WhiteboardCanvas member={ this.props } />*/}
                   </div>
                   <div className='row'>
-                    {<Participants openAvatarModal={ this.openAvatarModal } />}
+                    {/*{<Participants openAvatarModal={ this.openAvatarModal } />}*/}
                   </div>
                 </div>
 
                 <div className='col-md-4'>
                   <Messages/>
                 </div>
+
+                <Whiteboard/>
+                {/*<WhiteboardCanvas member={ this.props } />*/}
                 <div className='col-md-12'>
                   <Input/>
                 </div>

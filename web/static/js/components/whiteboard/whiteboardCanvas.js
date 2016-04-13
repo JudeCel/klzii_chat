@@ -1,17 +1,27 @@
 import React, {PropTypes} from 'react';
 import Snap               from 'snapsvg';
 //var ResizableBox = require('react-resizable').ResizableBox;
-//import Designer, {Text, Rectangle} from 'react-designer';
+import Designer, {Rect, Circle, Path, Text} from 'react-designer';
 
 require("./drawControlls");
 
 const WhiteboardCanvas = React.createClass({
-  /*getInitialState:function() {
-    return {[
-      {type: "text", x: 10, y: 20, text: "Hello!", fill: "red"},
-      {type: "rect", x: 50, y: 70, fill: "red"}
-    ]};
-  },*/
+
+  getInitialState:function() {
+    this.minimized = true;
+    this.MIN_WIDTH = 316;
+    this.MIN_HEIGHT = 153;
+    this.MAX_WIDTH = 950;
+    this.MAX_HEIGHT = 460;
+    this.WHITEBOARD_BORDER_COLOUR = '#a4918b';
+    this.WHITEBOARD_BACKGROUND_COLOUR = '#e1d8d8';
+    return {
+      objects: [
+      //  {type: "text", x: 10, y: 20, text: "Hello!", fill: "red"},
+        {type: "rect", x: 50, y: 70, width: 30, height: 40, fill: "red"}
+      ]
+    };
+  },
   unselectLastShape() {
     if (this.lastShape) {
       this.lastShape.ftUnselect();
@@ -22,7 +32,7 @@ const WhiteboardCanvas = React.createClass({
     return Math.sqrt( Math.pow( dx, 2)  + Math.pow( dy, 2)  );
   },
   componentDidMount() {
-    //this.minimized = false;
+
     this.snap = Snap("#" + this.getName());
     this.activeShape = null;
     this.lastShape = null;
@@ -271,20 +281,27 @@ const WhiteboardCanvas = React.createClass({
   },
   getWidth() {
     if (this.minimized) {
-      return 316;
+      return this.MIN_WIDTH;
     } else {
-      return 950;
+      return this.MAX_WIDTH;
     }
   },
   getHeight() {
     if (this.minimized) {
-      return 153;
+      return this.MIN_HEIGHT;
     } else {
-      return 460;
+      return this.MAX_HEIGHT;
+    }
+  },
+  getExpandButtonImage() {
+    if (this.minimized) {
+      return "/images/icon_whiteboard_expand.png";
+    } else {
+      return "/images/icon_whiteboard_shrink.png";
     }
   },
   getMinimizedScale() {
-    return 153/316;
+    return this.MIN_HEIGHT/this.MAX_HEIGHT;
   },
   isMinimized() {
     return this.minimized;
@@ -297,103 +314,83 @@ const WhiteboardCanvas = React.createClass({
   },
 
   render() {
+
+    var cornerRadius = "5";
     var divStyle = {
-      WebkitTransition: 'all', // note the capital 'W' here
-      msTransition: 'all', // 'ms' is the only lowercase vendor prefix
+      borderRadius: cornerRadius,
+      position: "absolute",
+      top: '10px',
+      right: '10px',
+      WebkitTransition: 'all',
+      msTransition: 'all',
       width: this.getWidth()+'px',
       height: this.getHeight()+'px',
       'WebkitTransition': 'width 0.5s ease-in-out, height 0.5s ease-in-out',
       'MozTransition': 'width 0.5s ease-in-out, height 0.5s ease-in-out',
       'OTransition': 'width 0.5s ease-in-out, height 0.5s ease-in-out',
-      transition: 'width 0.5s ease-in-out, height 0.5s ease-in-out'
+      transition: 'width 0.5s ease-in-out, height 0.5s ease-in-out',
+      background: this.WHITEBOARD_BACKGROUND_COLOUR,
+      borderColor: this.WHITEBOARD_BORDER_COLOUR,
+      borderWidth: 1
     };
     var scale = this.minimized?this.getMinimizedScale():1.0;
     var scaleSVGStyle = {
+      'transformOrigin': '0 0',
       transform: 'scale('+scale+')',
       transition: 'transform 0.5s ease-in-out',
-      left: 0,
-      top: 0
+      padding: 10,
+      borderRadius: cornerRadius,
+      borderWidth: 1,
+      background: 'white',
+      width: this.MAX_WIDTH - 20 + 'px',
+      height: this.MAX_HEIGHT - 20 + 'px'
     }
-    // return (
-    //   <div style={divStyle}>
-    //     <div onClick={ this.expand }> expand</div>
-    //     <svg id={ this.getName() } width='100%' height="100%" style={scaleSVGStyle} onMouseDown={ this.handleMouseDown } onMouseUp={ this.handleMouseUp } onMouseMove={ this.handleMouseMove }/>
-    //   </div>
-    // )
+
+    var panelStyle = {
+      position: 'absolute',
+      top: 0,
+      width: '100%'
+    }
+
+    var panelStyleBottom = {
+      position: 'absolute',
+      bottom: 0,
+      width: '100%'
+    }
 
     return (
-      <div style={divStyle}>
-        <div onClick={ this.expand }> expand</div>
-        <div id="title-whiteboard"
-          style={{
-            background: "black",
-            zIndex: 1,
-            position: "absolute",
-            left: "368px",
-            top: "82px",
-            width: "85px",
-            height: "30px",
-            argin: 0
-          }}>
-          title
-        </div>
-        <div onClick={ this.expand } id="expand"
-          style={{
-            zIndex: 1,
-            background: "green",
-            position: "absolute",
-            left: "624px",
-            top: "79px",
-            width: "36px",
-            height: "36px",
-            margin: 0
-            }}>
-        </div>
-       <div id="shrink"
-         style={{
-          background: "yellow",
-          zIndex: 3,
-          position: "absolute",
-          left: "900px",
-          top: "62px",
-          width: "51px",
-          height: "51px",
-          margin: "0"
-        }}>
-       </div>
+      <div style={divStyle} className="container">
+        <svg id={ this.getName() }
+          style={scaleSVGStyle}
+          onMouseDown={ this.handleMouseDown }
+          onMouseUp={ this.handleMouseUp }
+          onMouseMove={ this.handleMouseMove }
+          className="center-block"
+        />
+        {/*<Designer width={500} height={500}
+        objectTypes={{
+          'text': Text,
+          'rect': Rectangle,
+          //'circ': Path
+        }}
+        onUpdate={(objects) => this.setState({objects})}
+        objects={this.state.objects} />*/}
 
-          <svg id={ this.getName() }
-            width='100%' height="100%"
-            style={scaleSVGStyle}
-            onMouseDown={ this.handleMouseDown }
-            onMouseUp={ this.handleMouseUp }
-            onMouseMove={ this.handleMouseMove }/>
+        <div className="row" style={panelStyle}>
+          <div id="title-whiteboard" className="col-sm-3">
+            <img src={"/images/title_whiteboard.png"}/>
+          </div>
+          <div onClick={ this.expand } id="expand" className="col-sm-3 pull-right">
+            <img className="pull-right" src={this.getExpandButtonImage()}/>
+          </div>
+        </div>
 
-        <div id="expand"
-          onClick={this.expand}
-          style={{zIndex: 1,
-            background: "gray",
-            position: "absolute",
-            left: "624px",
-            top: "79px",
-            width: "36px",
-            height: "36px",
-            margin: 0
-          }}>
+        <div className="row" style={panelStyleBottom}>
+          <div onClick={ this.expand } id="expand" className="col-sm-3 pull-right">
+            <img className="pull-right" src={this.getExpandButtonImage()}/>
+          </div>
         </div>
-        <div id="shrink"
-          onClick={this.expand}
-          style={{
-            zIndex: 3,
-            background: "purple",
-            position: "absolute",
-            left: "900px",
-            top: "62px",
-            width: "51px",
-            height: "51px",
-            margin: 0
-          }}>
-        </div>
+
       </div>
     )
   }

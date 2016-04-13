@@ -232,14 +232,14 @@ const Whiteboard =  React.createClass({
               height: "0",
               margin: 0
             }}/>
-
+{/*
             <WhiteboardCanvas style={{
               position: 'absolute',
               zIndex: 1000,
               width: '100px',
               height: '100px',
               margin: 0
-            }}> </WhiteboardCanvas>
+            }}> </WhiteboardCanvas>*/}
         </div>
 
         <div id="expand"

@@ -32,6 +32,10 @@ var config = module.exports = {
     modulesDirectories: ['node_modules'],
   },
 
+  resolveLoader: {
+    root: path.join(__dirname, 'node_modules')
+  },
+
   // more information on how our modules are structured, and
   //
   // in this case, we'll define our loaders for JavaScript and CSS.

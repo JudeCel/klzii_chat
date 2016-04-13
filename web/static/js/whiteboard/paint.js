@@ -48,6 +48,7 @@ view.Paint = function(json) {
 		stroke: "white"
 	});
 
+	console.log("_____" + window.URL_PATH + window.CHAT_ROOM_PATH + "resources/cursors/cursor_pencil.png");
 	//	set up our corkboard for later...
 	this.corkboard = this.json.paper.image("images/corkboard960x460.jpg", 0, 0, corkboardWidth, corkboardHeight).transform("s" + this.json.scale + "," + this.json.scale + ", 0, 0").attr({opacity: 0}).transform("s" + this.json.scale + "," + this.json.scale + ", 0, 0");
 	this.corkboard.data("dont_remove", true);
@@ -214,8 +215,9 @@ view.Paint.prototype.resetCursor = function() {
 view.Paint.prototype.setCursor = function(newShape) {
 	this.resetCursor();
 	this.paint.attr({cursor: "default"});//For the browser(Firefox) who cannot load customised cursor, preset to default cursor
-
+	console.log("_____",  window.URL_PATH + window.CHAT_ROOM_PATH + "resources/cursors/cursor_pencil.png)" );
 	switch (newShape) {
+
 	case "scribble":
 		this.paint.attr({
 			cursor: "url(" + window.URL_PATH + window.CHAT_ROOM_PATH + "resources/cursors/cursor_pencil.png)"
