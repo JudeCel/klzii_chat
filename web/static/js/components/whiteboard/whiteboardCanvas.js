@@ -1,12 +1,10 @@
 import React, {PropTypes} from 'react';
 import Snap               from 'snapsvg';
-//var ResizableBox = require('react-resizable').ResizableBox;
-import Designer, {Rect, Circle, Path, Text} from 'react-designer';
-
+import { OverlayTrigger, Button, Popover, ButtonToolbar}    from 'react-bootstrap'
+import { Modal }          from 'react-bootstrap'
 require("./drawControlls");
 
 const WhiteboardCanvas = React.createClass({
-
   getInitialState:function() {
     this.minimized = true;
     this.MIN_WIDTH = 316;
@@ -15,29 +13,6 @@ const WhiteboardCanvas = React.createClass({
     this.MAX_HEIGHT = 460;
     this.WHITEBOARD_BORDER_COLOUR = '#a4918b';
     this.WHITEBOARD_BACKGROUND_COLOUR = '#e1d8d8';
-    return {
-      objects: [
-      //  {type: "text", x: 10, y: 20, text: "Hello!", fill: "red"},
-        {type: "rect", x: 50, y: 70, width: 30, height: 40, fill: "red"}
-      ]
-    };
-  },
-  unselectLastShape() {
-    if (this.lastShape) {
-      this.lastShape.ftUnselect();
-      this.lastShape = null;
-    }
-  },
-  moveDistance(dx, dy) {
-    return Math.sqrt( Math.pow( dx, 2)  + Math.pow( dy, 2)  );
-  },
-  componentDidMount() {
-
-    this.snap = Snap("#" + this.getName());
-    this.activeShape = null;
-    this.lastShape = null;
-    var self = this;
-
     this.ModeEnum = {
       none: 0,
       rectangle: 1,
@@ -52,72 +27,100 @@ const WhiteboardCanvas = React.createClass({
     };
 
     this.mode = this.ModeEnum.none;
+    return {content: ''};
+  },
+  unselectLastShape() {
+    if (this.lastShape) {
+      this.lastShape.ftUnselect();
+      this.lastShape = null;
+    }
+  },
+  moveDistance(dx, dy) {
+    return Math.sqrt( Math.pow( dx, 2)  + Math.pow( dy, 2)  );
+  },
+  componentDidMount() {
+    this.snap = Snap("#" + this.getName());
+    this.activeShape = null;
+    this.lastShape = null;
+    var self = this;
     var activeFillColour, activeStrokeWidth, activeStrokeColour;
 
-    this.addRect = function(fill) {
-      this.mode = this.ModeEnum.rectangle;
-      this.activeStrokeColour = 'red';
-      if (fill) {
-        this.activeFillColour = 'red';
-      } else {
-        this.activeFillColour = "none";
-      }
-    };
-
-    this.addCircle = function(fill) {
-      this.mode = this.ModeEnum.circle;
-      this.activeStrokeColour = 'red';
-      if (fill) {
-        this.activeFillColour = 'red';
-      } else {
-        this.activeFillColour = "none";
-      }
-    };
-
-    this.addText = function(text) {
-      this.mode = this.ModeEnum.text;
-      var r = this.snap.text(10, 50, text);
-      this.setStyle(r);
-      this.prepareNewElement(r);
-    };
-
-    this.addLine = function(arrow) {
-      if (arrow) {
-        this.mode = this.ModeEnum.arrow;
-      } else {
-        this.mode = this.ModeEnum.line;
-      }
+  },
+  addRect(fill) {
+    this.mode = this.ModeEnum.rectangle;
+    this.activeStrokeColour = 'red';
+    if (fill) {
+      this.activeFillColour = 'red';
+    } else {
+      this.activeFillColour = "none";
     }
-
-    this.addImage = function(url, coords) {
-      this.mode = this.ModeEnum.image;
-      var r = this.snap.image(url ,coords.x, coords.y, coords.width, coords.height).transform('r0.1');
-      this.setStyle(r);
-      this.prepareNewElement(r);
+  },
+  addRectEmpty() {
+    this.addRect();
+  },
+  addRectFilled() {
+    this.addRect(true);
+  },
+  addCircle(fill) {
+    this.mode = this.ModeEnum.circle;
+    this.activeStrokeColour = 'red';
+    if (fill) {
+      this.activeFillColour = 'red';
+    } else {
+      this.activeFillColour = "none";
     }
-
-    this.addScribble = function(full) {
-      if (full) {
-        this.mode = this.ModeEnum.scribbleFill;
-        this.activeFillColour = 'red';
-      } else {
-        this.activeFillColour = "none";
-        this.mode = this.ModeEnum.scribble;
-      }
-      this.activeStrokeColour = 'red';
+  },
+  addCircleFilled () {
+    this.addCircle(true);
+  },
+  addCircleEmpty () {
+    this.addCircle();
+  },
+  addText(text) {
+    var r = this.snap.text(this.MAX_WIDTH/2, this.MAX_HEIGHT/2, text);
+    this.setStyle(r);
+    this.prepareNewElement(r);
+    this.mode = this.ModeEnum.none;
+  },
+  addLine(arrow) {
+    this.activeStrokeColour = 'red';
+    this.mode = this.ModeEnum.line;
+  },
+  addArrow() {
+    this.activeStrokeColour = 'red';
+    this.mode = this.ModeEnum.arrow;
+  },
+  addImage(url, coords) {
+    this.mode = this.ModeEnum.image;
+    var r = this.snap.image(url ,coords.x, coords.y, coords.width, coords.height).transform('r0.1');
+    this.setStyle(r);
+    this.prepareNewElement(r);
+  },
+  addScribbleEmpty(){
+    this.addScribble();
+  },
+  inputText(){
+    this.mode = this.ModeEnum.text;
+    this.setState({});
+  },
+  addScribbleFilled(){
+    this.addScribble(true);
+  },
+  addScribble(full) {
+    if (full) {
+      this.mode = this.ModeEnum.scribbleFill;
+      this.activeFillColour = 'red';
+    } else {
+      this.activeFillColour = "none";
+      this.mode = this.ModeEnum.scribble;
     }
-
-    this.prepareNewElement = function(el) {
-      el.ftSetSelectedCallback(this.shapeSelected);
-      //this.addInputControl(el);
-    }
-
-
-
-    this.addInputControl = function(el) {
-      el.ftCreateHandles();
-    }
-
+    this.activeStrokeColour = 'red';
+  },
+  prepareNewElement(el) {
+    el.ftSetSelectedCallback(this.shapeSelected);
+  },
+  addInputControl(el) {
+    el.ftCreateHandles();
   },
   setStyle(el, colour, strokeWidth, strokeColour) {
     el.attr({'fill': colour, stroke: strokeColour, strokeWidth: strokeWidth});
@@ -154,17 +157,21 @@ const WhiteboardCanvas = React.createClass({
     this.componentDidMount();
   },
   eventCoords(e) {
-    var bounds = e.target.getBoundingClientRect();
-    return({x: Number(e.clientX) - Number(bounds.left), y: Number(e.clientY) - Number(bounds.top)});
+    return({x: Number(e.clientX), y: Number(e.clientY)});
   },
   handleMouseDown: function(e){
     if (!this.isValidButton(e)) return;
     if (this.minimized) return;
-    this.addCircle(true);
     this.coords = this.eventCoords(e);
+    var bounds = e.target.getBoundingClientRect();
+    this.canvasCoords = {x: Number(bounds.left), y: Number(bounds.top)};
+    this.coords = {x: this.coords.x - this.canvasCoords.x, y: this.coords.y - this.canvasCoords.y};
+
+
     this.strokeColour = this.activeStrokeColour;
     this.fillColour = this.activeFillColour;
     this.fillNone = 'none';
+
   },
   handleMouseUp: function(e){
     if (!this.isValidButton(e)) return;
@@ -186,6 +193,8 @@ const WhiteboardCanvas = React.createClass({
 
 
     var coordsMove = this.eventCoords(e);
+    coordsMove = {x: coordsMove.x - this.canvasCoords.x, y: coordsMove.y - this.canvasCoords.y};
+
     var dx = coordsMove.x - this.coords.x;
     var dy = coordsMove.y - this.coords.y;
 
@@ -218,7 +227,7 @@ const WhiteboardCanvas = React.createClass({
       }
 
       if (this.mode == this.ModeEnum.arrow) {
-        var arrow = this.snap.polygon([0,10, 4,10, 2,0, 0,10]).attr({fill: this.fillColour}).transform('r270');
+        var arrow = this.snap.polygon([0,10, 4,10, 2,0, 0,10]).attr({fill: this.strokeColour}).transform('r270');
         var marker = arrow.marker(0,0, 10,10, 0,5);
         this.activeShape = this.snap.line(this.coords.x, this.coords.y, this.coords.x + 1, this.coords.y + 1).attr({markerStart: marker}).transform('r0.1');
         this.setStyle(this.activeShape, this.fillColour, 4, this.strokeColour);
@@ -276,7 +285,6 @@ const WhiteboardCanvas = React.createClass({
   },
   expand() {
     this.minimized = !this.isMinimized();
-    //console.log("______", this.minimized);
     this.setState({minimized: this.minimized});
   },
   getWidth() {
@@ -312,10 +320,25 @@ const WhiteboardCanvas = React.createClass({
   update: function () {
     this.setState({});
   },
-
+  onOpen(e) {
+  },
+  onClose(e) {
+    this.mode = this.ModeEnum.none;
+    this.setState({});
+  },
+  onAcceptText(e) {
+    this.addText("TEST");
+    this.mode = this.ModeEnum.none;
+    this.setState({});
+  },
+  onSave(e) {
+    console.log(this.state.content);
+    this.onClose(e);
+  },
   render() {
 
     var cornerRadius = "5";
+    var speed = "0.3s";
     var divStyle = {
       borderRadius: cornerRadius,
       position: "absolute",
@@ -325,19 +348,20 @@ const WhiteboardCanvas = React.createClass({
       msTransition: 'all',
       width: this.getWidth()+'px',
       height: this.getHeight()+'px',
-      'WebkitTransition': 'width 0.5s ease-in-out, height 0.5s ease-in-out',
-      'MozTransition': 'width 0.5s ease-in-out, height 0.5s ease-in-out',
-      'OTransition': 'width 0.5s ease-in-out, height 0.5s ease-in-out',
-      transition: 'width 0.5s ease-in-out, height 0.5s ease-in-out',
+      'WebkitTransition': 'width ' + speed +' ease-in-out, height ' + speed + ' ease-in-out',
+      'MozTransition': 'width ' + speed +' ease-in-out, height ' + speed + ' ease-in-out',
+      'OTransition': 'width ' + speed +' ease-in-out, height ' + speed + ' ease-in-out',
+      transition: 'width ' + speed +' ease-in-out, height ' + speed + ' ease-in-out',
       background: this.WHITEBOARD_BACKGROUND_COLOUR,
       borderColor: this.WHITEBOARD_BORDER_COLOUR,
-      borderWidth: 1
+      borderWidth: 1,
+      zIndex: 1000
     };
     var scale = this.minimized?this.getMinimizedScale():1.0;
     var scaleSVGStyle = {
       'transformOrigin': '0 0',
       transform: 'scale('+scale+')',
-      transition: 'transform 0.5s ease-in-out',
+      transition: 'transform ' + speed + ' ease-in-out',
       padding: 10,
       borderRadius: cornerRadius,
       borderWidth: 1,
@@ -355,8 +379,11 @@ const WhiteboardCanvas = React.createClass({
     var panelStyleBottom = {
       position: 'absolute',
       bottom: 0,
-      width: '100%'
+      width: '100%',
+      display: this.isMinimized()?'none':'block'
     }
+
+    const { show, onHide, boardContent } = this.props;
 
     return (
       <div style={divStyle} className="container">
@@ -367,14 +394,6 @@ const WhiteboardCanvas = React.createClass({
           onMouseMove={ this.handleMouseMove }
           className="center-block"
         />
-        {/*<Designer width={500} height={500}
-        objectTypes={{
-          'text': Text,
-          'rect': Rectangle,
-          //'circ': Path
-        }}
-        onUpdate={(objects) => this.setState({objects})}
-        objects={this.state.objects} />*/}
 
         <div className="row" style={panelStyle}>
           <div id="title-whiteboard" className="col-sm-3">
@@ -385,15 +404,62 @@ const WhiteboardCanvas = React.createClass({
           </div>
         </div>
 
-        <div className="row" style={panelStyleBottom}>
-          <div className="col-sm-6 pull-right">
-            <img className="pull-right" src={this.getExpandButtonImage()}/>
+        <ButtonToolbar className="row col-sm-12 pull-right" style={panelStyleBottom}>
+              <OverlayTrigger trigger="focus" placement="top" overlay={
+                  <Popover id="circleShapes">
+                    <Button className="btn btn-primary btn-sm pull-right" onClick={this.addCircleEmpty}>Circle</Button>
+                    <Button className="btn btn-primary btn-sm pull-right" onClick={this.addCircleFilled}>Circle Filled</Button>
+                  </Popover>
+                }>
+                <Button bsStyle="default">Circle</Button>
+              </OverlayTrigger>
 
-            <div className=".btn-info pull-right">circle</div>
-            <div className=".btn-info pull-right">rectangle</div>
-          </div>
-        </div>
+              <OverlayTrigger trigger="focus" placement="top" overlay={
+                  <Popover id="rectShapes">
+                    <Button className="btn btn-primary btn-sm pull-right" onClick={this.addRectEmpty}>Rect</Button>
+                    <Button className="btn btn-primary btn-sm pull-right" onClick={this.addRectFilled}>Rect Filled</Button>
+                  </Popover>
+                }>
+                <Button bsStyle="default">Rectangle</Button>
+              </OverlayTrigger>
 
+              <OverlayTrigger trigger="focus" placement="top" overlay={
+                  <Popover id="scribleShapes">
+                    <Button className="btn btn-primary btn-sm pull-right" onClick={this.addScribbleEmpty}>Scribble</Button>
+                    <Button className="btn btn-primary btn-sm pull-right" onClick={this.addScribbleFilled}>Scribble Filled</Button>
+                  </Popover>
+                }>
+                <Button bsStyle="default">Scribble</Button>
+              </OverlayTrigger>
+
+              <Button bsStyle="default" className="btn btn-sm pull-left" onClick={this.addLine}>Line</Button>
+              <Button bsStyle="default" className="btn btn-sm pull-left" onClick={this.addArrow}>Arrow</Button>
+              <Button bsStyle="default" className="btn btn-sm pull-left" onClick={this.inputText}>Text</Button>
+
+              <Button bsStyle="warning" className="btn btn-primary btn-sm pull-left" onClick={this.deleteActive}>Delete Active</Button>
+        </ButtonToolbar>
+
+        <Modal dialogClassName='modal-section facilitator-board-modal' show={ this.mode == this.ModeEnum.text } onHide={ onHide } onEnter={ this.onOpen }>
+          <Modal.Header>
+            <div className='col-md-2'>
+              <span className='pull-left fa icon-reply' onClick={ this.onClose }></span>
+            </div>
+
+            <div className='col-md-8 modal-title'>
+              <h4>Enter Text</h4>
+            </div>
+
+            <div className='col-md-2' onClick={ this.onAcceptText }>
+              <span className='pull-right fa fa-check'></span>
+            </div>
+          </Modal.Header>
+
+          <Modal.Body>
+            <div className='row facilitator-board-section'>
+              TEST
+            </div>
+          </Modal.Body>
+        </Modal>
       </div>
     )
   }
