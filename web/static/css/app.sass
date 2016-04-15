@@ -15,16 +15,19 @@ $input-size: 1.5em
 @import 'inputs.sass'
 @import 'modals.sass'
 @import 'whiteboard.sass'
+@import '../../../node_modules/medium-editor/dist/css/medium-editor.css'
+@import '../../../node_modules/medium-editor/dist/css/themes/beagle.css'
+
 
 body
   font-family: 'Source Sans Pro', Arial, sans-serif
 
 .header-section
-  position: relative
+  width: 100%
+  position: absolute
   z-index: 1060
   background: white
   padding: 10px 0
-  margin-bottom: 20px
   @extend .dropshadow
   vertical-align: middle
   text-align: right
@@ -55,6 +58,7 @@ body
 
 .room-outerbox
   padding: 0 15px
+  padding-top: 130px
 .room-section
   border: 2px solid
   padding-top: 1%

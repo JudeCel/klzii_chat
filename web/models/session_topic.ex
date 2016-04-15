@@ -4,11 +4,11 @@ defmodule KlziiChat.SessionTopic do
   schema "SessionTopics" do
     belongs_to :session, KlziiChat.Session, [foreign_key: :SessionId]
     belongs_to :topic, KlziiChat.Topic, [foreign_key: :TopicId]
+    field :active, :boolean, default: false
     timestamps [inserted_at: :createdAt, updated_at: :updatedAt]
-
   end
 
-  @required_fields ~w(SessionId TopicId)
+  @required_fields ~w(SessionId TopicId active)
   @optional_fields ~w()
 
   @doc """
