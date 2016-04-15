@@ -6,6 +6,10 @@ defmodule KlziiChat.ResourcesController do
   import Ecto.Query
 
 
+  def ping(conn, _) do
+    json(conn, %{status: :ok})
+  end
+
   def index(conn, params) do
     case getUser(params["jwt"]) do
       {:ok, result} ->
