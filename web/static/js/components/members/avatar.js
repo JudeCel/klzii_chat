@@ -44,6 +44,7 @@ const Avatar = React.createClass({
     avatar.rect(25, 125, 100, 20, 1, 1).attr({fill: colour});
     avatar.text(76, 138, username).attr({fill: '#fff', "font-size": "75%", "text-anchor": "middle"});
     avatar.rect(30, 130, 90, 3, 5, 5).attr({fill: '#ccc', opacity: 0.2});
+    this.previousAvatarData = Object.assign({}, avatarData);
     // Snap.load(`/images/avatar/base_${this.padToTwo(base)}.svg`, (baseSnap) => {
     //   Snap.load(`/images/avatar/face_${this.pickFace(face, online)}.svg`, (faceSnap) => {
     //     Snap.load(`/images/avatar/body_${this.padToTwo(body)}.svg`, (bodySnap) => {
