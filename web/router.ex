@@ -28,9 +28,9 @@ defmodule KlziiChat.Router do
 
   scope "api/resources", KlziiChat do
     pipe_through :api
-    get "/ping", ResourcesController, :ping
-    post "/upload", ResourcesController, :upload
-    get "/:type", ResourcesController, :index
+    options "/ping", ResourcesController, :ping
+    options "/upload", ResourcesController, :upload
+    options "/:type", ResourcesController, :index
   end
 
 
