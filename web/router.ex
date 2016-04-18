@@ -31,6 +31,10 @@ defmodule KlziiChat.Router do
     options "/ping", ResourcesController, :ping
     options "/upload", ResourcesController, :upload
     options "/:type", ResourcesController, :index
+
+    get "/ping", ResourcesController, :ping
+    post "/upload", ResourcesController, :upload
+    get "/:type", ResourcesController, :index
   end
 
 
