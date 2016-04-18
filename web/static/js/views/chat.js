@@ -13,7 +13,6 @@ import Resources            from '../components/resources/resources.js';
 import HeaderLinks          from '../components/header/links.js';
 
 import WhiteboardCanvas     from '../components/whiteboard/whiteboardCanvas';
-import Designer, {Rect, Circle, Path, Text} from 'react-designer';
 
 const ChatView = React.createClass({
   getInitialState() {
@@ -66,9 +65,10 @@ const ChatView = React.createClass({
                     <Facilitator openAvatarModal={ this.openAvatarModal } />
                     {/*<Whiteboard/>*/}
                     {/*<WhiteboardCanvas member={ this.props } />*/}
+                    <WhiteboardCanvas member={ this.props } />
                   </div>
                   <div className='row'>
-                    {/*{<Participants openAvatarModal={ this.openAvatarModal } />}*/}
+                    {<Participants openAvatarModal={ this.openAvatarModal } />}
                   </div>
                 </div>
 
@@ -77,7 +77,7 @@ const ChatView = React.createClass({
                 </div>
 
                 {/*<Whiteboard/>*/}
-                <WhiteboardCanvas member={ this.props } />
+                {/*<WhiteboardCanvas />*/}
                 <div className='col-md-12'>
                   <Input/>
                 </div>

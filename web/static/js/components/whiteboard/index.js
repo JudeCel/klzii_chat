@@ -157,7 +157,8 @@ const Whiteboard =  React.createClass({
           top: "0px",
           width: "1000px",
           height: "656px",
-          margin: 0
+          margin: 0,
+          zIndex: 1000
          }}>
           <div id="textbox-html"
              style={{
@@ -244,7 +245,7 @@ const Whiteboard =  React.createClass({
 
         <div id="expand"
           onClick={this.onExpandClick}
-          style={{zIndex: 1,
+          style={{zIndex: 1000,
             position: "absolute",
             left: "624px",
             top: "79px",

@@ -17,10 +17,15 @@
 			this.onSelected = c;
 		}
 
+		Element.prototype.ftSetTransformedCallback = function(c) {
+			this.onTransformed = c;
+		}
+
 		Element.prototype.ftRemove = function(c) {
 			this.ftRemoveHandles();
 			this.unclick();
 			this.onSelected = null;
+			this.onTransformed = null;
 			if (this.group) this.group.remove();
 			this.remove();
 			this.removeData();
@@ -234,6 +239,9 @@
 	}
 
 	function elementDragEnd( mainEl, dx, dy, x, y ) {
+		if (mainEl.onTransformed) {
+			mainEl.onTransformed(mainEl);
+		}
 	};
 
 	function dragHandleRotateStart( mainElement ) {
@@ -243,6 +251,9 @@
 	};
 
 	function dragHandleRotateEnd( mainElement ) {
+		if (mainElement.onTransformed) {
+			mainElement.onTransformed(mainElement);
+		}
 	};
 
 	function dragHandleRotateMove( mainEl, dx, dy, x, y, event ) {

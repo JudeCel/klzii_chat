@@ -8,7 +8,6 @@ var view = namespace('sf.ifs.View');
 */
 
 view.Paint = function(json) {
-	console.log("Paint_____", json);
 	//initialization
 	this.json = json;
 	this.json.scale = 1;
@@ -215,7 +214,6 @@ view.Paint.prototype.resetCursor = function() {
 view.Paint.prototype.setCursor = function(newShape) {
 	this.resetCursor();
 	this.paint.attr({cursor: "default"});//For the browser(Firefox) who cannot load customised cursor, preset to default cursor
-	console.log("_____",  window.URL_PATH + window.CHAT_ROOM_PATH + "resources/cursors/cursor_pencil.png)" );
 	switch (newShape) {
 
 	case "scribble":

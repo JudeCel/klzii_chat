@@ -210,7 +210,6 @@ window.onMove = function (dx, dy, x, y, event) {
 window.onEnd = function (event, json) {
 	var element = null;
 	var message = null;
-
 	//	so far, json is only used for text and text-box
 	if (isEmpty(json)) json = null;
 

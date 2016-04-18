@@ -17,23 +17,39 @@ const Actions = {
       dispatch({type: Constants.SET_WHITEBOARD_BUILT})
     };
   },
-  subscribeWhiteboardEvents: (channel) =>{
+  subscribeWhiteboardEvents: (channel, whiteboard) =>{
     return dispatch => {
       dispatch({ type: Constants.SET_WHITEBOARD_EVENTS});
       channel.on("draw", (resp) =>{
-        window.buildWhiteboard.processWhiteboard([resp]);
+        if (window.buildWhiteboard) {
+          window.buildWhiteboard.processWhiteboard([resp]);
+        }
+
+        if (whiteboard) {
+          whiteboard.processWhiteboard([resp]);
+        }
+
       });
 
       channel.on("delete_object", (resp) =>{
+        console.log("Events 2");
         window.whiteboard.paint.deleteObject(resp.uid);
       });
 
       channel.on("delete_all", (resp) =>{
+        console.log("Events 3");
         window.clearWhiteboard();
       });
 
       channel.on("update_object", (resp) =>{
-        window.buildWhiteboard.processWhiteboard([resp]);
+        console.log("Events 4");
+        if (window.buildWhiteboard) {
+          window.buildWhiteboard.processWhiteboard([resp]);
+        }
+
+        if (whiteboard) {
+          whiteboard.processWhiteboard([resp]);
+        }
       });
     }
   },
@@ -56,7 +72,9 @@ const Actions = {
           type: Constants.SET_WHITEBOARD_HISTORY,
           objects: data.history
         });
-        window.buildWhiteboard.processWhiteboard(data.history);
+        if (window.buildWhiteboard){
+          window.buildWhiteboard.processWhiteboard(data.history);
+        }
       })
       .receive('error', (data) => {
         dispatch({
