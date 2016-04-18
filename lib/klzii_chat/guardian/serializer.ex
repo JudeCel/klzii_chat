@@ -11,8 +11,15 @@ defmodule KlziiChat.Guardian.Serializer do
     member =
       Repo.get(SessionMember, String.to_integer(id))
         |> Repo.preload([account_user: [:account] ])
+     { :ok, member.account_user }
+  end
+
+  def from_token("AccountUser:" <> id) do
+    member =
+      Repo.get(AccountUser, String.to_integer(id))
+        |> Repo.preload([:account])
      { :ok, member }
   end
-  def from_token("AccountUser:" <> id), do: { :ok, Repo.get(AccountUser, String.to_integer(id)) }
+
   def from_token(_), do: { :error, "Unknown resource type" }
 end

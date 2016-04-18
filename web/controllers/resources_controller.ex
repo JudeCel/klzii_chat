@@ -14,7 +14,7 @@ defmodule KlziiChat.ResourcesController do
 
 
   def index(conn, params, user, claims) do
-    query =  from(r in assoc(user.account_user.account, :resources))
+    query =  from(r in assoc(user.account, :resources))
 
     if params["type"] != "all"  do
       query = where(query, type: ^params["type"] )
@@ -33,8 +33,8 @@ defmodule KlziiChat.ResourcesController do
     params = %{
       type: type,
       scope: scope,
-      accountId: user.account_user.account.id,
-      accountUserId: user.account_user.id,
+      accountId: user.account.id,
+      accountUserId: user.id,
       type: type,
       name: name
     } |> Map.put(String.to_atom(type), file)
