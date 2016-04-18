@@ -11,7 +11,7 @@ defmodule KlziiChat.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
-    plug Corsica, origins: [~r{^https?://*\.focus\.com}]
+    plug Corsica, origins: [~r{^https?://(.*\.?)focus\.com}]
     plug Guardian.Plug.VerifyHeader
     plug Guardian.Plug.LoadResource
   end
