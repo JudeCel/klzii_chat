@@ -28,7 +28,7 @@ defmodule KlziiChat.Router do
     pipe_through :api
     get "/ping", ResourcesController, :ping
     post "/upload", ResourcesController, :upload
-    get "/:type/:jwt", ResourcesController, :index
+    get "/:type", ResourcesController, :index
   end
 
 
