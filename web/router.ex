@@ -12,7 +12,7 @@ defmodule KlziiChat.Router do
   pipeline :api do
     plug :accepts, ["json"]
     plug Corsica, origins: [~r{^https?://(.*\.?)focus\.com}],
-      allow_headers: ~w(accept cache-control pragma)
+      allow_headers: ~w(accept cache-control pragma authorization)
     plug Guardian.Plug.VerifyHeader
     plug Guardian.Plug.LoadResource
   end
