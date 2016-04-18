@@ -27,7 +27,7 @@ config :guardian, Guardian,
   issuer: "KlziiChat",
   ttl: { 3, :days },
   verify_issuer: true,
-  serializer: KlziiChat.GuardianSerializer,
+  serializer: KlziiChat.Guardian.Serializer,
   secret_key: "B08B27270CA410609F006AD7A25C50142850256103F55ECF3BFBF0279186108C"
 # Configure phoenix generators
 config :phoenix, :generators,

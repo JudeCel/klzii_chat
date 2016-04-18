@@ -1,4 +1,4 @@
-defmodule KlziiChat.GuardianSerializer do
+defmodule KlziiChat.Guardian.Serializer do
   @behaviour Guardian.Serializer
 
   alias KlziiChat.{Repo, SessionMember, AccountUser}

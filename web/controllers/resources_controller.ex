@@ -1,22 +1,12 @@
-defmodule KlziiChat.JWTAuthErrorHandler do
-  import Plug.Conn
-
-  def unauthenticated(conn, opts) do
-    conn
-    |> put_resp_content_type("application/json")
-    |> send_resp(401, Poison.encode!(%{error: "unauthorized"}))
-  end
-end
-
 defmodule KlziiChat.ResourcesController do
   use KlziiChat.Web, :controller
-  alias KlziiChat.{Resource, Repo, ResourceView, AccountUser, GuardianSerializer}
+  alias KlziiChat.{Resource, Repo, ResourceView, AccountUser}
   alias KlziiChat.Services.{ ResourceService }
   import Ecto
   import Ecto.Query
   use Guardian.Phoenix.Controller
 
-  plug Guardian.Plug.EnsureAuthenticated, handler: KlziiChat.JWTAuthErrorHandler
+  plug Guardian.Plug.EnsureAuthenticated, handler: KlziiChat.AuthErrorHandler
 
   def ping(conn, _, user, claims) do
     json(conn, %{status: :ok})
