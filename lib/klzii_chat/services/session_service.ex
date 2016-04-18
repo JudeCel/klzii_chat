@@ -6,7 +6,7 @@ defmodule KlziiChat.Services.SessionService do
   def find(session_id) do
     case Repo.get_by!(Session, id: session_id) do
       nil ->
-        nil
+          {:error, "Session not found"}
       session ->
       preload_session =
         session
