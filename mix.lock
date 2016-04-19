@@ -16,6 +16,8 @@
   "guardian": {:hex, :guardian, "0.10.1"},
   "hackney": {:hex, :hackney, "1.6.0"},
   "httpoison": {:hex, :httpoison, "0.8.3"},
+  "httpotion": {:hex, :httpotion, "2.2.2"},
+  "ibrowse": {:hex, :ibrowse, "4.2.2"},
   "idna": {:hex, :idna, "1.2.0"},
   "jose": {:hex, :jose, "1.7.3"},
   "metrics": {:hex, :metrics, "1.0.1"},

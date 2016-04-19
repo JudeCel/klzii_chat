@@ -29,10 +29,12 @@ defmodule KlziiChat.Router do
   scope "api/resources", KlziiChat do
     pipe_through :api
     options "/ping", ResourcesController, :ping
+    options "/zip", ResourcesController, :zip
     options "/upload", ResourcesController, :upload
     options "/:type", ResourcesController, :index
 
     get "/ping", ResourcesController, :ping
+    post "/zip", ResourcesController, :zip
     post "/upload", ResourcesController, :upload
     get "/:type", ResourcesController, :index
   end

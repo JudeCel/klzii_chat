@@ -12,6 +12,14 @@ defmodule KlziiChat.ResourcesController do
     json(conn, %{status: :ok})
   end
 
+  def zip(conn, %{"ids" => ids}, user, claims) do
+    from( r in assoc(user.account, :resources), where: r.id in ^ids)
+    |> Repo.all
+    |> Enum.map(fn resource ->
+      ResourceView.render("resource.json", %{resource: resource})
+    end)
+
+  end
 
   def index(conn, params, user, claims) do
     query =  from(r in assoc(user.account, :resources))
