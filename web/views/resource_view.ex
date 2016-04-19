@@ -20,21 +20,35 @@ defmodule KlziiChat.ResourceView do
   end
 
   defp getUrl(resource) do
-    url = case resource.type do
+    case resource.type do
       "image" ->
-        Image.url({resource.image, resource}, :thumb)
+        %{
+          full: Image.url({resource.image, resource}, :thumb) |> add_domain,
+          thumb: Image.url({resource.image, resource}) |> add_domain
+        }
       "audio" ->
-        Audio.url({resource.audio, resource})
+        %{
+          full: Audio.url({resource.audio, resource}) |> add_domain
+        }
       "video" ->
-        Video.url({resource.video, resource})
+        %{
+          full: Video.url({resource.video, resource}) |> add_domain
+        }
+      _ ->
+        %{
+          full: File.url({resource.file, resource}) |> add_domain
+        }
     end
 
+
+  end
+
+  defp add_domain(url) do
     case Mix.env do
       :dev ->
          KlziiChat.Endpoint.url <> "/"<> Path.relative_to(url, "priv/static")
       _ ->
         url
     end
-
   end
 end
