@@ -6,7 +6,8 @@ defmodule KlziiChat.ResourcesController do
   import Ecto.Query
   use Guardian.Phoenix.Controller
 
-  plug Guardian.Plug.EnsureAuthenticated, handler: KlziiChat.AuthErrorHandler
+  plug Guardian.Plug.EnsureAuthenticated, handler: KlziiChat.Guardian.AuthErrorHandler
+  plug :if_current_user
 
   def ping(conn, _, user, claims) do
     json(conn, %{status: :ok})
@@ -55,4 +56,12 @@ defmodule KlziiChat.ResourcesController do
         json(conn, %{status: :error, reason: reason})
     end
   end
+
+  defp if_current_user(conn, opts) do
+    if Guardian.Plug.current_resource(conn) do
+      conn
+    else
+      KlziiChat.Guardian.AuthErrorHandler.unauthenticated(conn, opts)
+    end
+ end
 end
