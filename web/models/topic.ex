@@ -1,7 +1,7 @@
 defmodule KlziiChat.Topic do
   use KlziiChat.Web, :model
 
-  schema "topics" do
+  schema "Topics" do
     has_many :session_topics, KlziiChat.SessionTopic, [foreign_key: :TopicId]
     has_many :events, KlziiChat.Event, [foreign_key: :topicId]
     has_many :resources, KlziiChat.Resource, [foreign_key: :topicId]
@@ -11,7 +11,6 @@ defmodule KlziiChat.Topic do
 
     field :type, :string, default: "chat"
     field :name, :string
-    field :active, :boolean, default: false
     field :description, :string
     timestamps [inserted_at: :createdAt, updated_at: :updatedAt]
 

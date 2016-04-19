@@ -11,6 +11,8 @@ defmodule KlziiChat.Router do
 
   pipeline :api do
     plug :accepts, ["json"]
+    plug Corsica, origins: [~r{^https?://(.*\.?)focus\.com}],
+      allow_headers: ~w(accept cache-control pragma authorization content-type)
     plug Guardian.Plug.VerifyHeader
     plug Guardian.Plug.LoadResource
   end
@@ -19,15 +21,20 @@ defmodule KlziiChat.Router do
     pipe_through :browser # Use the default browser stack
     get "/", ChatController, :index
   end
+
   scope "/", KlziiChat do
     get "/ping", PingController, :index
   end
 
-  scope "/resources", KlziiChat do
+  scope "api/resources", KlziiChat do
     pipe_through :api
+    options "/ping", ResourcesController, :ping
+    options "/upload", ResourcesController, :upload
+    options "/:type", ResourcesController, :index
 
+    get "/ping", ResourcesController, :ping
     post "/upload", ResourcesController, :upload
-    get "/:type/:jwt", ResourcesController, :index
+    get "/:type", ResourcesController, :index
   end
 
 

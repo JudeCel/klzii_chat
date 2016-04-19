@@ -2,15 +2,25 @@ defmodule KlziiChat.SessionChannelTest do
   use KlziiChat.ChannelCase
   alias KlziiChat.SessionChannel
   alias KlziiChat.UserSocket
-  alias KlziiChat.{Repo, Session, Account, SessionMember}
+  alias KlziiChat.{Repo, Session, Account, SessionMember, BrandProjectPreference}
 
   setup do
     account = Account.changeset(%Account{}, %{name: "cool account"}) |> Repo.insert!
+    brand_project_preference = BrandProjectPreference.changeset(
+      %BrandProjectPreference{},
+        %{
+          name: "cool BrandProjectPreference",
+          colours: %{},
+          accountId:  account.id
+        }
+    )|> Repo.insert!
+
     session = %Session{
       name: "cool session",
-      start_time: Ecto.DateTime.cast!("2016-01-17T14:00:00.030Z"),
-      end_time: Ecto.DateTime.cast!("2020-04-17T14:00:00.030Z"),
+      startTime: Ecto.DateTime.cast!("2016-01-17T14:00:00.030Z"),
+      endTime: Ecto.DateTime.cast!("2020-04-17T14:00:00.030Z"),
       accountId: account.id,
+      brandProjectPreferenceId: brand_project_preference.id,
       active: true
     } |> Repo.insert!
 
@@ -19,6 +29,7 @@ defmodule KlziiChat.SessionChannelTest do
       username: "cool member",
       sessionId: session.id,
       role: "facilitator",
+      colour: "00000",
       accountUserId: 1
     } |> Repo.insert!
 
@@ -26,6 +37,7 @@ defmodule KlziiChat.SessionChannelTest do
       token: "==oasu8asnx",
       username: "cool member",
       sessionId: session.id,
+      colour: "00000",
       role: "participant",
       accountUserId: 1
     } |> Repo.insert!
@@ -51,7 +63,7 @@ defmodule KlziiChat.SessionChannelTest do
       "observer" => [],
       "participant" => [member2]
     }
-    
+
     Repo.get_by!(SessionMember, id: session_member.id).online |> assert
   end
 

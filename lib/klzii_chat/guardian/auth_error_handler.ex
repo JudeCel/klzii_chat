@@ -1,0 +1,9 @@
+defmodule KlziiChat.AuthErrorHandler do
+  import Plug.Conn
+
+  def unauthenticated(conn, opts) do
+    conn
+    |> put_resp_content_type("application/json")
+    |> send_resp(401, Poison.encode!(%{error: "unauthorized"}))
+  end
+end

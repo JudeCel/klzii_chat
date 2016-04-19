@@ -32,12 +32,11 @@ const Actions = {
   upload:(files, type, jwt, name) =>{
     return (dispatch) => {
       let csrf_token = localStorage.getItem("csrf_token");
-      let req = request.post('/resources/upload');
+      let req = request.post('/api/resources/upload');
       req.set('X-CSRF-Token', csrf_token);
-
+      req.set('Authorization', jwt);
       files.map((file)=> {
         req.attach("file", file);
-        req.field("jwt", jwt);
         req.field("type", type);
         req.field("scope", "collage");
         req.field("name", name);

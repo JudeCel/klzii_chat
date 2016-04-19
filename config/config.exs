@@ -21,15 +21,15 @@ config :logger, :console,
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
-import_config "#{Mix.env}.exs"
 
 config :guardian, Guardian,
   issuer: "KlziiChat",
   ttl: { 3, :days },
   verify_issuer: true,
-  serializer: KlziiChat.GuardianSerializer,
-  secret_key: "B08B27270CA410609F006AD7A25C50142850256103F55ECF3BFBF0279186108C"
+  serializer: KlziiChat.Guardian.Serializer
 # Configure phoenix generators
 config :phoenix, :generators,
   migration: true,
   binary_id: false
+
+import_config "#{Mix.env}.exs"
