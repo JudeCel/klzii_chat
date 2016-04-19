@@ -521,8 +521,13 @@ const WhiteboardCanvas = React.createClass({
 
     var panelStyleBottom = {
       position: 'absolute',
-      bottom: 0,
-      width: '100%',
+      bottom: 10,
+      left: 0,
+      right: 0,
+      display:'inline-block',
+      'marginLeft': 'auto',
+      'marginRight': 'auto',
+  //    width: '100%',
       display: this.isMinimized()?'none':'block'
     }
 
@@ -546,49 +551,50 @@ const WhiteboardCanvas = React.createClass({
           </div>
         </div>
 
-        <ButtonToolbar className="row col-sm-12 pull-right" style={panelStyleBottom}>
+        <ButtonToolbar className="row col-sm-4" style={panelStyleBottom}>
               <OverlayTrigger trigger="focus" placement="top" overlay={
                   <Popover id="circleShapes">
-                    <Button className="btn btn-primary btn-sm pull-right" onClick={this.addCircleEmpty}>Circle</Button>
-                    <Button className="btn btn-primary btn-sm pull-right" onClick={this.addCircleFilled}>Circle Filled</Button>
-                  </Popover>
-                }>
-                <Button bsStyle="default">Circle</Button>
-              </OverlayTrigger>
+                    <i className="btn-sm fa fa-circle-o" aria-hidden="true" onClick={this.addCircleEmpty}></i>
+                    <i className="btn-sm fa fa-circle" aria-hidden="true" onClick={this.addCircleFilled}></i>
 
-              <OverlayTrigger trigger="focus" placement="top" overlay={
-                  <Popover id="rectShapes">
-                    <Button className="btn btn-primary btn-sm pull-right" onClick={this.addRectEmpty}>Rect</Button>
-                    <Button className="btn btn-primary btn-sm pull-right" onClick={this.addRectFilled}>Rect Filled</Button>
+                    <i className="btn-sm fa fa-square-o" aria-hidden="true" onClick={this.addRectEmpty}></i>
+                    <i className="btn-sm fa fa-square" aria-hidden="true" onClick={this.addRectFilled}></i>
                   </Popover>
                 }>
-                <Button bsStyle="default">Rectangle</Button>
+                <Button className="default" bsStyle="default"><i className="fa fa-star" aria-hidden="true"></i></Button>
               </OverlayTrigger>
 
               <OverlayTrigger trigger="focus" placement="top" overlay={
                   <Popover id="scribleShapes">
-                    <Button className="btn btn-primary btn-sm pull-right" onClick={this.addScribbleEmpty}>Scribble</Button>
-                    <Button className="btn btn-primary btn-sm pull-right" onClick={this.addScribbleFilled}>Scribble Filled</Button>
+                    <i className="btn-sm fa fa-scribd" aria-hidden="true" onClick={this.addScribbleEmpty}></i>
+                    <i className="btn-sm fa fa-bookmark" aria-hidden="true" onClick={this.addScribbleFilled}></i>
+
+                    <i className="btn-sm" aria-hidden="true" onClick={this.addLine}>/</i>
+                    <i className="btn-sm fa fa-long-arrow-right" aria-hidden="true" onClick={this.addArrow}></i>
+                    <i className="btn-sm" aria-hidden="true" onClick={this.inputText}>ABC</i>
+
                   </Popover>
                 }>
-                <Button bsStyle="default">Scribble</Button>
+                <Button bsStyle="default"><i className="fa fa-pencil" aria-hidden="true"></i></Button>
               </OverlayTrigger>
 
-              <OverlayTrigger trigger="focus" placement="top" overlay={
+              {/*<OverlayTrigger trigger="focus" placement="top" overlay={
                   <Popover id="lineWidthShapes">
                     <Button className="btn btn-primary btn-sm pull-right" onClick={this.addScribbleEmpty}>2</Button>
                     <Button className="btn btn-primary btn-sm pull-right" onClick={this.addScribbleFilled}>3</Button>
                   </Popover>
                 }>
                 <Button bsStyle="default">Line Width</Button>
+              </OverlayTrigger>*/}
+
+              <OverlayTrigger trigger="focus" placement="top" overlay={
+                  <Popover id="eraserShapes">
+                    <i className="btn-sm fa fa-eraser" aria-hidden="true" onClick={this.deleteActive}>*</i>
+                    <i className="btn-sm fa fa-eraser" aria-hidden="true" onClick={this.deleteAll}></i>
+                  </Popover>
+                }>
+                <Button bsStyle="default"><i className="fa fa-eraser" aria-hidden="true"></i></Button>
               </OverlayTrigger>
-
-              <Button bsStyle="default" className="btn btn-sm pull-left" onClick={this.addLine}>Line</Button>
-              <Button bsStyle="default" className="btn btn-sm pull-left" onClick={this.addArrow}>Arrow</Button>
-              <Button bsStyle="default" className="btn btn-sm pull-left" onClick={this.inputText}>Text</Button>
-
-              <Button bsStyle="warning" className="btn btn-primary btn-sm pull-left" onClick={this.deleteActive}>Delete Active</Button>
-              <Button bsStyle="warning" className="btn btn-primary btn-sm pull-left" onClick={this.deleteAll}>Delete All</Button>
         </ButtonToolbar>
 
         <Modal dialogClassName='modal-section facilitator-board-modal' show={ this.mode == this.ModeEnum.text } onHide={ onHide } onEnter={ this.onOpen }>
