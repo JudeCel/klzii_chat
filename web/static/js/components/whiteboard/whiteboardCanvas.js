@@ -74,7 +74,7 @@ const WhiteboardCanvas = React.createClass({
         var obj;
         console.log("~~~~==============", item.event);
         obj = self.shapes[item.event.id];
-        if (!obj) {
+        if (item.event.eventType != "remove" && !obj) {
           switch (item.event.element.type) {
             case "ellipse":
               obj = self.snap.ellipse(0, 0, 0, 0).transform('r0.1');
@@ -100,11 +100,16 @@ const WhiteboardCanvas = React.createClass({
           }
         }
 
-        if (obj) {
-          obj.attr(item.event.element.attr);
-          obj.created = true;
-          self.shapes[item.event.id] = obj;
+        if (obj){
+          if (item.event.eventType == "remove") {
+            obj.ftRemove();
+          } else {
+            obj.attr(item.event.element.attr);
+            obj.created = true;
+            self.shapes[item.event.id] = obj;
+          }
         }
+
     });
 
   },
@@ -236,6 +241,7 @@ const WhiteboardCanvas = React.createClass({
   deleteActive() {
     if (this.activeShape) {
       this.activeShape.ftRemove();
+      this.sendObjectData('remove');
       this.activeShape = null;
     }
   },
