@@ -72,7 +72,7 @@ const WhiteboardCanvas = React.createClass({
     var self = this;
     data.map(function(item) {
         var obj;
-        console.log("~~~~==============", item.event.id);
+        console.log("~~~~==============", item.event);
         obj = self.shapes[item.event.id];
         if (!obj) {
           switch (item.event.element.type) {
@@ -88,12 +88,16 @@ const WhiteboardCanvas = React.createClass({
             case "line":
               obj = self.snap.line(0, 0, 0, 0).transform('r0.1');
               break;
+            case "text":
+              obj = self.snap.text(0, 0, item.event.element.attr.textVal).transform('r0.1');
+              break;
             default:
               break;
           };
-
-          self.prepareNewElement(obj);
-          self.addInputControl(obj);
+          if (obj) {
+            self.prepareNewElement(obj);
+            self.addInputControl(obj);
+          }
         }
 
         if (obj) {
@@ -156,10 +160,19 @@ const WhiteboardCanvas = React.createClass({
     this.addCircle();
   },
   addText(text) {
-    this.activeShape = this.snap.text(this.MAX_WIDTH/2, this.MAX_HEIGHT/2, text);
-    this.activeShape.attr({strokeWidth: 4});
+    this.activeShape = this.snap.text(this.MAX_WIDTH/2, this.MAX_HEIGHT/2, text).transform('r0.1');
+    //this.activeShape.attr({strokeWidth: 1});
     this.activeShape.ftInitShape();
     this.mode = this.ModeEnum.none;
+  //  this.setStyle(this.activeShape);
+    this.fillColour = 'red';
+    this.activeFillColour = 'red';
+    this.setStyle(this.activeShape, this.fillColour, 1, this.strokeColour);
+    this.activeShape.textValue = text;
+    this.activeShape.attr({"font-size": "40px", textVal: text});
+
+    //this.handleObjectCreated();
+    return this.activeShape;
   },
   addLine(arrow) {
     this.activeStrokeColour = 'red';
@@ -253,7 +266,7 @@ const WhiteboardCanvas = React.createClass({
 		//	"stroke":		self.attribute["stroke"],
 		//	"stroke-width":	actualStrokeWidth
 		};
-    console.log("____", this.activeShape);
+    //console.log("____", this.activeShape);
 		//	lets set up most of message
 		var	message = {
 		//	id:				uid,
@@ -275,6 +288,7 @@ const WhiteboardCanvas = React.createClass({
     window.sendMessage(messageJSON);
   },
   handleObjectCreated(){
+    console.log("text test");
     if (this.activeShape && !this.activeShape.created) {
       this.activeShape.created = true;
       this.prepareNewElement(this.activeShape);
@@ -448,11 +462,12 @@ const WhiteboardCanvas = React.createClass({
     this.setState({});
   },
   onAcceptText(e) {
+    this.setState({});
     this.activeShape = this.addText(this.state.addTextValue);
     this.mode = this.ModeEnum.none;
 
     this.handleObjectCreated();
-    this.setState({});
+
   },
   onSave(e) {
     this.onClose(e);
