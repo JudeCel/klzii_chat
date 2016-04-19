@@ -17,6 +17,7 @@ defmodule KlziiChat.ResourceView do
     Map.get(resource, String.to_atom(resource.type))
     |> Map.get(:file_name)
     |> Path.extname
+    |> String.replace(".", "")
   end
 
   defp getUrl(resource) do
