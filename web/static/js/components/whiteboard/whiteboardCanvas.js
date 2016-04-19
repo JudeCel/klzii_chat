@@ -78,7 +78,12 @@ const WhiteboardCanvas = React.createClass({
             obj = self.snap.polyline([]).transform('r0.1');
             break;
           case "line":
-            obj = self.snap.line(0, 0, 0, 0).transform('r0.1');
+            if (item.event.element.attr.style.indexOf("marker") != -1 ) {
+              obj = self.snap.line(0, 0, 0, 0).attr({markerStart: self.getArrowShape(item.event.element.attr.stroke)}).transform('r0.1');
+              self.setStyle(obj, item.event.element.attr.stroke, 4, item.event.element.attr.stroke);
+            } else {
+              obj = self.snap.line(0, 0, 0, 0).transform('r0.1');
+            }
             break;
           case "text":
             obj = self.snap.text(0, 0, item.event.element.attr.textVal).transform('r0.1');
@@ -311,6 +316,10 @@ const WhiteboardCanvas = React.createClass({
     if (this.minimized) return;
     this.handleObjectCreated();
   },
+  getArrowShape(colour) {
+    var arrow = this.snap.polygon([0,10, 4,10, 2,0, 0,10]).attr({fill: colour}).transform('r270');
+    return arrow.marker(0,0, 10,10, 0,5);
+  },
   handleMouseMove(e) {
     if (!this.isValidButton(e)) return;
     if (this.minimized) return;
@@ -351,9 +360,7 @@ const WhiteboardCanvas = React.createClass({
       }
 
       if (this.mode == this.ModeEnum.arrow) {
-        var arrow = this.snap.polygon([0,10, 4,10, 2,0, 0,10]).attr({fill: this.strokeColour}).transform('r270');
-        var marker = arrow.marker(0,0, 10,10, 0,5);
-        this.activeShape = this.snap.line(this.coords.x, this.coords.y, this.coords.x + 1, this.coords.y + 1).attr({markerStart: marker}).transform('r0.1');
+        this.activeShape = this.snap.line(this.coords.x, this.coords.y, this.coords.x + 1, this.coords.y + 1).attr({markerStart: this.getArrowShape(this.strokeColour)}).transform('r0.1');
         this.setStyle(this.activeShape, this.fillColour, 4, this.strokeColour);
       }
 
@@ -527,7 +534,6 @@ const WhiteboardCanvas = React.createClass({
       display:'inline-block',
       'marginLeft': 'auto',
       'marginRight': 'auto',
-  //    width: '100%',
       display: this.isMinimized()?'none':'block'
     }
 
@@ -578,14 +584,14 @@ const WhiteboardCanvas = React.createClass({
                 <Button bsStyle="default"><i className="fa fa-pencil" aria-hidden="true"></i></Button>
               </OverlayTrigger>
 
-              {/*<OverlayTrigger trigger="focus" placement="top" overlay={
+              <OverlayTrigger trigger="focus" placement="top" overlay={
                   <Popover id="lineWidthShapes">
                     <Button className="btn btn-primary btn-sm pull-right" onClick={this.addScribbleEmpty}>2</Button>
                     <Button className="btn btn-primary btn-sm pull-right" onClick={this.addScribbleFilled}>3</Button>
                   </Popover>
                 }>
-                <Button bsStyle="default">Line Width</Button>
-              </OverlayTrigger>*/}
+                <Button bsStyle="default"><i className="fa fa-cog" aria-hidden="true"></i></Button>
+              </OverlayTrigger>
 
               <OverlayTrigger trigger="focus" placement="top" overlay={
                   <Popover id="eraserShapes">
