@@ -2,51 +2,14 @@ defmodule KlziiChat.SessionChannelTest do
   use KlziiChat.ChannelCase
   alias KlziiChat.SessionChannel
   alias KlziiChat.UserSocket
-  alias KlziiChat.{Repo, Session, Account, SessionMember, BrandProjectPreference}
+  alias KlziiChat.{Repo, SessionMember}
+  use KlziiChat.SessionMemberCase
 
-  setup do
-    account = Account.changeset(%Account{}, %{name: "cool account"}) |> Repo.insert!
-    brand_project_preference = BrandProjectPreference.changeset(
-      %BrandProjectPreference{},
-        %{
-          name: "cool BrandProjectPreference",
-          colours: %{},
-          accountId:  account.id
-        }
-    )|> Repo.insert!
-
-    session = %Session{
-      name: "cool session",
-      startTime: Ecto.DateTime.cast!("2016-01-17T14:00:00.030Z"),
-      endTime: Ecto.DateTime.cast!("2020-04-17T14:00:00.030Z"),
-      accountId: account.id,
-      brandProjectPreferenceId: brand_project_preference.id,
-      active: true
-    } |> Repo.insert!
-
-    member = %SessionMember{
-      token: "oasu8asnx",
-      username: "cool member",
-      sessionId: session.id,
-      role: "facilitator",
-      colour: "00000",
-      accountUserId: 1
-    } |> Repo.insert!
-
-    member2 = %SessionMember{
-      token: "==oasu8asnx",
-      username: "cool member",
-      sessionId: session.id,
-      colour: "00000",
-      role: "participant",
-      accountUserId: 1
-    } |> Repo.insert!
-
+  setup %{session: session, session: session, member: member, member2: member2} do
+    channal_name =  "sessions:" <> Integer.to_string(session.id)
     {:ok, socket} = connect(UserSocket, %{"token" => member.token})
     {:ok, socket2} = connect(UserSocket, %{"token" => member2.token})
-
-    channal_name =  "sessions:" <> Integer.to_string(session.id)
-    {:ok, channal_name: channal_name, socket: socket, session: session, member: member, member2: member2, socket2: socket2}
+    {:ok, socket: socket, socket2: socket2, channal_name: channal_name}
   end
 
   test "after join events", %{socket: socket, session: session, channal_name: channal_name} do
