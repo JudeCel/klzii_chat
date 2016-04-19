@@ -7,14 +7,14 @@ defmodule KlziiChat.Guardian.Serializer do
   def for_token(account_user = %AccountUser{}), do: { :ok, "AccountUser:#{account_user.id}" }
   def for_token(_), do: { :error, "Unknown resource type" }
 
-  def from_token("SessionMember:" <> id) do
+  def from_token("SessionMember:" <> id) when is_integer(id) do
     member =
       Repo.get(SessionMember, String.to_integer(id))
         |> Repo.preload([account_user: [:account] ])
      { :ok, member.account_user }
   end
 
-  def from_token("AccountUser:" <> id) do
+  def from_token("AccountUser:" <> id) when is_integer(id) do
     member =
       Repo.get(AccountUser, String.to_integer(id))
         |> Repo.preload([:account])
