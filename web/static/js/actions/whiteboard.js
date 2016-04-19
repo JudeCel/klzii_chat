@@ -32,7 +32,6 @@ const Actions = {
       });
 
       channel.on("delete_object", (resp) =>{
-        console.log("Events 2");
         if (window.whiteboard) {
           window.whiteboard.paint.deleteObject(resp.uid);
         }
@@ -43,7 +42,6 @@ const Actions = {
       });
 
       channel.on("delete_all", (resp) =>{
-        console.log("Events 3");
         if (window.clearWhiteboard) {
           window.clearWhiteboard();
         }
@@ -54,7 +52,6 @@ const Actions = {
       });
 
       channel.on("update_object", (resp) =>{
-        console.log("Events 4");
         if (window.buildWhiteboard) {
           window.buildWhiteboard.processWhiteboard([resp]);
         }

@@ -43,32 +43,24 @@ const WhiteboardCanvas = React.createClass({
         case 'rotate':
           this.props.dispatch(whiteboardActions.updateObject(this.props.channal, json.message));
           break;
-
         case 'delete':
           this.props.dispatch(whiteboardActions.deleteAll(this.props.channal));
           break;
 
         default:
-
-      }
-    //	make sure we have enough information
-      if (isEmpty(json)) return;
-      if (isEmpty(json.type)) return;
-
-      if (json.message) {
-        // socket.emit(json.type);					//	don't need to pass any arguments
-      } else {
       }
     }.bind(this);
   },
   componentWillReceiveProps(nextProps) {
-
     if (nextProps.channal && this.state.needEvents) {
       nextProps.dispatch(whiteboardActions.subscribeWhiteboardEvents(nextProps.channal, this));
       nextProps.dispatch(whiteboardActions.getWhiteboardHistory(nextProps.channal, this));
       this.state.channel = nextProps.channal;
       this.state.needEvents = false;
     }
+  },
+  isFacilitator() {
+    return this.props.currentUser.role == "facilitator";
   },
   processWhiteboard(data) {
     var self = this;
@@ -94,7 +86,7 @@ const WhiteboardCanvas = React.createClass({
           default:
             break;
         };
-        if (obj) {
+        if (obj && self.isFacilitator()) {
           self.prepareNewElement(obj);
           self.addInputControl(obj);
         }
@@ -141,17 +133,21 @@ const WhiteboardCanvas = React.createClass({
     this.activeShape = null;
     this.lastShape = null;
     var self = this;
-    var activeFillColour, activeStrokeWidth, activeStrokeColour;
     this.initMessaging();
+    this.activeColour = this.isFacilitator()?'red':this.props.currentUser.colour;
+    this.activeStrokeColour = this.activeColour;
   },
-  addRect(fill) {
-    this.mode = this.ModeEnum.rectangle;
-    this.activeStrokeColour = 'red';
+  setActiveFillColour(fill) {
+    this.activeStrokeColour = this.activeColour;
     if (fill) {
-      this.activeFillColour = 'red';
+      this.activeFillColour = this.activeColour;
     } else {
       this.activeFillColour = "none";
     }
+  },
+  addRect(fill) {
+    this.mode = this.ModeEnum.rectangle;
+    this.setActiveFillColour(fill);
   },
   addRectEmpty() {
     this.addRect();
@@ -161,12 +157,7 @@ const WhiteboardCanvas = React.createClass({
   },
   addCircle(fill) {
     this.mode = this.ModeEnum.circle;
-    this.activeStrokeColour = 'red';
-    if (fill) {
-      this.activeFillColour = 'red';
-    } else {
-      this.activeFillColour = "none";
-    }
+    this.setActiveFillColour(fill);
   },
   addCircleFilled () {
     this.addCircle(true);
@@ -176,25 +167,22 @@ const WhiteboardCanvas = React.createClass({
   },
   addText(text) {
     this.activeShape = this.snap.text(this.MAX_WIDTH/2, this.MAX_HEIGHT/2, text).transform('r0.1');
-    //this.activeShape.attr({strokeWidth: 1});
     this.activeShape.ftInitShape();
     this.mode = this.ModeEnum.none;
-  //  this.setStyle(this.activeShape);
-    this.fillColour = 'red';
-    this.activeFillColour = 'red';
+    this.fillColour = this.activeColour;
+    this.activeFillColour = this.activeColour;
     this.setStyle(this.activeShape, this.fillColour, 1, this.strokeColour);
     this.activeShape.textValue = text;
     this.activeShape.attr({"font-size": "40px", textVal: text});
 
-    //this.handleObjectCreated();
     return this.activeShape;
   },
   addLine(arrow) {
-    this.activeStrokeColour = 'red';
+    this.activeStrokeColour = this.activeColour;
     this.mode = this.ModeEnum.line;
   },
   addArrow() {
-    this.activeStrokeColour = 'red';
+    this.activeStrokeColour = this.activeColour;
     this.mode = this.ModeEnum.arrow;
   },
   addImage(url, coords) {
@@ -216,11 +204,10 @@ const WhiteboardCanvas = React.createClass({
   addScribble(full) {
     if (full) {
       this.mode = this.ModeEnum.scribbleFill;
-      this.activeFillColour = 'red';
     } else {
-      this.activeFillColour = "none";
       this.mode = this.ModeEnum.scribble;
     }
+    this.setActiveFillColour(full);
     this.activeStrokeColour = 'red';
   },
   prepareNewElement(el) {
@@ -281,28 +268,11 @@ const WhiteboardCanvas = React.createClass({
   sendObjectData(action, mainAction) {
     var currentStrokeWidth = 3;
     var actualStrokeWidth = 5;
-    var	currentAttr = {
-			"title":		/*me.userName*/"tst" + "\'s drawing",
-		//	"stroke":		self.attribute["stroke"],
-		//	"stroke-width":	currentStrokeWidth
-		};
-
-		var	actualAttr = {
-			"title":		/*me.userName*/ "tst" + "\'s drawing",
-		//	"stroke":		self.attribute["stroke"],
-		//	"stroke-width":	actualStrokeWidth
-		};
 
 		var	message = {
-		//	id:				uid,
       id: this.activeShape?this.activeShape.id:"_",
-		//	name:			/*me.userName*/"tst",
-			//type:			'scribble',
       action: mainAction||"draw",
-			eventType:			action,
-			//path:			me.path,
-			attr:			actualAttr,
-			strokeWidth:	actualStrokeWidth
+			eventType: action
 		};
 
     message.element = this.activeShape;
@@ -320,7 +290,6 @@ const WhiteboardCanvas = React.createClass({
       var temp = this.activeShape;
       this.sendObjectData('draw');
       this.shapes[this.activeShape.id] = this.activeShape;
-      //this.deleteActive();
     }
     this.coords = null;
     this.activeShape = null;
@@ -333,11 +302,9 @@ const WhiteboardCanvas = React.createClass({
     this.canvasCoords = {x: Number(bounds.left), y: Number(bounds.top)};
     this.coords = {x: this.coords.x - this.canvasCoords.x, y: this.coords.y - this.canvasCoords.y};
 
-
     this.strokeColour = this.activeStrokeColour;
     this.fillColour = this.activeFillColour;
     this.fillNone = 'none';
-
   },
   handleMouseUp: function(e){
     if (!this.isValidButton(e)) return;
@@ -347,9 +314,7 @@ const WhiteboardCanvas = React.createClass({
   handleMouseMove(e) {
     if (!this.isValidButton(e)) return;
     if (this.minimized) return;
-
     if (!this.coords) return;
-
 
     var coordsMove = this.eventCoords(e);
     coordsMove = {x: coordsMove.x - this.canvasCoords.x, y: coordsMove.y - this.canvasCoords.y};
@@ -551,13 +516,7 @@ const WhiteboardCanvas = React.createClass({
     var panelStyle = {
       position: 'absolute',
       top: 0,
-      width: '100%'/*,
-      WebkitTouchCallout: 'none',
-      WebkitUserSelect: 'none',
-      KhtmlUserSelect: 'none',
-      MozUserSelect: 'none',
-      MsUserSelect: 'none',
-      UserSelect: 'none'*/
+      width: '100%'
     }
 
     var panelStyleBottom = {
@@ -665,5 +624,3 @@ const mapStateToProps = (state) => {
   }
 };
 export default connect(mapStateToProps)(WhiteboardCanvas);
-
-//export default WhiteboardCanvas;
