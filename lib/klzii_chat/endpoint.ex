@@ -7,6 +7,7 @@ defmodule KlziiChat.Endpoint do
   #
   # You should set gzip to true if you are running phoenix.digest
   # when deploying your static files in production.
+  plug KlziiChat.Corsica.Router
   plug Plug.Static,
     at: "/", from: :klzii_chat, gzip: false,
     only: ~w(uploads css fonts images js images/avatar favicon.ico robots.txt)
@@ -36,6 +37,5 @@ defmodule KlziiChat.Endpoint do
     store: :cookie,
     key: "_klzii_chat_key",
     signing_salt: "Rkjb13qZ"
-
   plug KlziiChat.Router
 end
