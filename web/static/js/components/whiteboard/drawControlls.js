@@ -178,7 +178,8 @@
 			} else {
 				yScale = " 1";
 			}
-			var tstring = "t" + this.data("tx") + "," + this.data("ty") + this.ftGetInitialTransformMatrix().toTransformString() + 's' + this.data("scale") + yScale;
+			//var tstring = "t" + this.data("tx") + "," + this.data("ty") + this.ftGetInitialTransformMatrix().toTransformString() + 's' + this.data("scale") + yScale;
+			var tstring = "t" + this.data("tx") + "," + this.data("ty") + this.ftGetInitialTransformMatrix().toTransformString() + "r" + this.data("angle") + 's' + this.data("scale") + yScale;
 			this.attr({ transform: tstring });
 			this.data("bbT") && this.ftHighlightBB();
 			this.group.attr({ transform: "r" + this.data("angle") });
@@ -272,10 +273,10 @@
 		mainEl.data("angle", angle);
 		var distance = calcDistance( mainBB.cx, mainBB.cy, handle.attr('cx'), handle.attr('cy') );
 
-		handle.attr({
+		/*handle.attr({
 			cx: mainBB.cx + distance,
 			cy: mainBB.cy
-		});
+		});*/
 
 		mainEl.ftDrawJoinLine( handle );
 

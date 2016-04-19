@@ -59,10 +59,18 @@ defmodule KlziiChat.Services.WhiteboardService do
     create(changeset)
   end
 
-  def deleteAll(session_member_id, topicId, params) do
-    Enum.map(params["objects"], &(&1["id"])) |> deleteByUids
-  end
+  def deleteAll(session_member_id, topicId) do
+    topic = Repo.get!(Topic, topicId)
+    query = from e in assoc(topic, :events), where: [tag: ^"object"]
 
+    case Repo.delete_all(query) do
+      {_count, _model}        -> # Deleted with success
+        {:ok}
+      {:error, changeset} -> # Something went wrong
+        {:error, changeset}
+    end
+  end
+#might not need this fuynction
   def deleteByUids(ids) do
     query = from(e in Event, where: e.uid in ^ids)
 

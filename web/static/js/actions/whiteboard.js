@@ -33,12 +33,24 @@ const Actions = {
 
       channel.on("delete_object", (resp) =>{
         console.log("Events 2");
-        window.whiteboard.paint.deleteObject(resp.uid);
+        if (window.whiteboard) {
+          window.whiteboard.paint.deleteObject(resp.uid);
+        }
+
+        if (whiteboard) {
+          whiteboard.deleteObject(resp.uid);
+        }
       });
 
       channel.on("delete_all", (resp) =>{
         console.log("Events 3");
-        window.clearWhiteboard();
+        if (window.clearWhiteboard) {
+          window.clearWhiteboard();
+        }
+
+        if (whiteboard) {
+          whiteboard.deleteAllObjects(resp);
+        }
       });
 
       channel.on("update_object", (resp) =>{
@@ -64,7 +76,7 @@ const Actions = {
       });
     };
   },
-  getWhiteboardHistory: (channel) => {
+  getWhiteboardHistory: (channel, whiteboard) => {
     return dispatch => {
       channel.push('whiteboardHistory')
       .receive('ok', (data)=>{
@@ -74,6 +86,10 @@ const Actions = {
         });
         if (window.buildWhiteboard){
           window.buildWhiteboard.processWhiteboard(data.history);
+        }
+
+        if (whiteboard) {
+          whiteboard.processWhiteboard(data.history);
         }
       })
       .receive('error', (data) => {
@@ -88,9 +104,23 @@ const Actions = {
     return dispatch => {
       channel.push('delete_object', {uid: uid})
       .receive('ok', (data)=>{
-        console.log(data);
       })
       .receive('error', (data) => {
+        dispatch({
+          type: Constants.SEND_OBJECT_ERROR,
+          error: data.error
+        });
+      });
+    };
+  },
+  deleteAll: (channel) => {
+    return dispatch => {
+      channel.push('deleteAll', {})
+      .receive('ok', (data)=>{
+        console.log("data_", data);
+      })
+      .receive('error', (data) => {
+        console.log("data_error", data);
         dispatch({
           type: Constants.SEND_OBJECT_ERROR,
           error: data.error

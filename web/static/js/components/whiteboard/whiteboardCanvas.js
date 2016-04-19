@@ -30,10 +30,10 @@ const WhiteboardCanvas = React.createClass({
     };
     this.shapes = [];
     this.mode = this.ModeEnum.none;
-    return {content: '', addTextDisabled: true, addTextValue: '', needEvents: true};
+    return {content: '', addTextDisabled: true, addTextValue: '', needEvents: true, channel: null};
   },
   initMessaging() {
-    window.sendMessage = function (json) {
+    this.sendMessage = function (json) {
       switch (json.type) {
         case 'sendobject':
           this.props.member.dispatch(whiteboardActions.sendobject(this.props.channal, json.message));
@@ -45,8 +45,9 @@ const WhiteboardCanvas = React.createClass({
           break;
 
         case 'delete':
-          this.props.dispatch(whiteboardActions.deleteObject(this.props.channal, json.id));
+          this.props.dispatch(whiteboardActions.deleteAll(this.props.channal));
           break;
+
         default:
 
       }
@@ -65,53 +66,62 @@ const WhiteboardCanvas = React.createClass({
     if (nextProps.channal && this.state.needEvents) {
       nextProps.dispatch(whiteboardActions.subscribeWhiteboardEvents(nextProps.channal, this));
       nextProps.dispatch(whiteboardActions.getWhiteboardHistory(nextProps.channal, this));
+      this.state.channel = nextProps.channal;
       this.state.needEvents = false;
     }
   },
   processWhiteboard(data) {
     var self = this;
     data.map(function(item) {
-        var obj;
-        console.log("~~~~==============", item.event);
-        obj = self.shapes[item.event.id];
-        if (item.event.eventType != "remove" && !obj) {
-          switch (item.event.element.type) {
-            case "ellipse":
-              obj = self.snap.ellipse(0, 0, 0, 0).transform('r0.1');
-              break;
-            case "rect":
-              obj = self.snap.rect(0, 0, 0, 0).transform('r0.1');
-              break;
-            case "polyline":
-              obj = self.snap.polyline([]).transform('r0.1');
-              break;
-            case "line":
-              obj = self.snap.line(0, 0, 0, 0).transform('r0.1');
-              break;
-            case "text":
-              obj = self.snap.text(0, 0, item.event.element.attr.textVal).transform('r0.1');
-              break;
-            default:
-              break;
-          };
-          if (obj) {
-            self.prepareNewElement(obj);
-            self.addInputControl(obj);
-          }
+      var obj = self.shapes[item.event.id];
+      if (item.event.eventType != "remove" && !obj) {
+        switch (item.event.element.type) {
+          case "ellipse":
+            obj = self.snap.ellipse(0, 0, 0, 0).transform('r0.1');
+            break;
+          case "rect":
+            obj = self.snap.rect(0, 0, 0, 0).transform('r0.1');
+            break;
+          case "polyline":
+            obj = self.snap.polyline([]).transform('r0.1');
+            break;
+          case "line":
+            obj = self.snap.line(0, 0, 0, 0).transform('r0.1');
+            break;
+          case "text":
+            obj = self.snap.text(0, 0, item.event.element.attr.textVal).transform('r0.1');
+            break;
+          default:
+            break;
+        };
+        if (obj) {
+          self.prepareNewElement(obj);
+          self.addInputControl(obj);
         }
+      }
 
-        if (obj){
-          if (item.event.eventType == "remove") {
-            obj.ftRemove();
-          } else {
-            obj.attr(item.event.element.attr);
-            obj.created = true;
-            self.shapes[item.event.id] = obj;
-          }
+      if (obj){
+        if (item.event.eventType == "remove") {
+          obj.ftRemove();
+        } else {
+          obj.attr(item.event.element.attr);
+          obj.created = true;
+          obj.id = item.event.id;
+          self.shapes[item.event.id] = obj;
         }
-
+      }
     });
-
+  },
+  deleteObject(uid) {
+    var obj = this.shapes[uid];
+    if (obj) {
+      obj.ftRemove();
+      this.shapes[uid] = null;
+    }
+  },
+  deleteAllObjects(obj) {
+    this.snap.clear();
+    this.shapes = [];
   },
   shapeTransformed(shape) {
     this.activeShape = shape;
@@ -241,9 +251,19 @@ const WhiteboardCanvas = React.createClass({
   deleteActive() {
     if (this.activeShape) {
       this.activeShape.ftRemove();
-      this.sendObjectData('remove');
+      this.props.member.dispatch(whiteboardActions.deleteObject(this.state.channel, this.activeShape.id));
       this.activeShape = null;
     }
+  },
+  deleteAll() {
+  	var message = {
+  		action: "deleteAll"
+  	};
+  	var messageJSON = {
+  		type: 'sendobject',
+  		message: message
+  	};
+    this.sendMessage(messageJSON);
   },
   getName() {
     return 'Whiteboard_';
@@ -258,7 +278,7 @@ const WhiteboardCanvas = React.createClass({
   eventCoords(e) {
     return({x: Number(e.clientX), y: Number(e.clientY)});
   },
-  sendObjectData(action) {
+  sendObjectData(action, mainAction) {
     var currentStrokeWidth = 3;
     var actualStrokeWidth = 5;
     var	currentAttr = {
@@ -272,14 +292,13 @@ const WhiteboardCanvas = React.createClass({
 		//	"stroke":		self.attribute["stroke"],
 		//	"stroke-width":	actualStrokeWidth
 		};
-    //console.log("____", this.activeShape);
-		//	lets set up most of message
+
 		var	message = {
 		//	id:				uid,
-      id: this.activeShape.id,
+      id: this.activeShape?this.activeShape.id:"_",
 		//	name:			/*me.userName*/"tst",
 			//type:			'scribble',
-      action: "draw",
+      action: mainAction||"draw",
 			eventType:			action,
 			//path:			me.path,
 			attr:			actualAttr,
@@ -291,10 +310,9 @@ const WhiteboardCanvas = React.createClass({
       type: 'sendobject',
       message: message
     }
-    window.sendMessage(messageJSON);
+    this.sendMessage(messageJSON);
   },
-  handleObjectCreated(){
-    console.log("text test");
+  handleObjectCreated() {
     if (this.activeShape && !this.activeShape.created) {
       this.activeShape.created = true;
       this.prepareNewElement(this.activeShape);
@@ -611,6 +629,7 @@ const WhiteboardCanvas = React.createClass({
               <Button bsStyle="default" className="btn btn-sm pull-left" onClick={this.inputText}>Text</Button>
 
               <Button bsStyle="warning" className="btn btn-primary btn-sm pull-left" onClick={this.deleteActive}>Delete Active</Button>
+              <Button bsStyle="warning" className="btn btn-primary btn-sm pull-left" onClick={this.deleteAll}>Delete All</Button>
         </ButtonToolbar>
 
         <Modal dialogClassName='modal-section facilitator-board-modal' show={ this.mode == this.ModeEnum.text } onHide={ onHide } onEnter={ this.onOpen }>
