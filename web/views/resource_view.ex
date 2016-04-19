@@ -1,6 +1,7 @@
 defmodule KlziiChat.ResourceView do
   use KlziiChat.Web, :view
   alias KlziiChat.Uploaders.{Image, Audio, Video}
+  alias KlziiChat.Files.{ UrlHelpers }
 
   @spec render(String.t, Map.t) :: Map.t
   def render("resource.json", %{resource: resource}) do
@@ -24,32 +25,21 @@ defmodule KlziiChat.ResourceView do
     case resource.type do
       "image" ->
         %{
-          full: Image.url({resource.image, resource}, :thumb) |> add_domain,
-          thumb: Image.url({resource.image, resource}) |> add_domain
+          full: Image.url({resource.image, resource}, :thumb) |> UrlHelpers.add_domain,
+          thumb: Image.url({resource.image, resource}) |> UrlHelpers.add_domain
         }
       "audio" ->
         %{
-          full: Audio.url({resource.audio, resource}) |> add_domain
+          full: Audio.url({resource.audio, resource}) |> UrlHelpers.add_domain
         }
       "video" ->
         %{
-          full: Video.url({resource.video, resource}) |> add_domain
+          full: Video.url({resource.video, resource}) |> UrlHelpers.add_domain
         }
       _ ->
         %{
-          full: File.url({resource.file, resource}) |> add_domain
+          full: File.url({resource.file, resource}) |> UrlHelpers.add_domain
         }
-    end
-
-
-  end
-
-  defp add_domain(url) do
-    case Mix.env do
-      :dev ->
-         KlziiChat.Endpoint.url <> "/"<> Path.relative_to(url, "priv/static")
-      _ ->
-        url
     end
   end
 end
