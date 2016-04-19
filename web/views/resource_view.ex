@@ -25,8 +25,8 @@ defmodule KlziiChat.ResourceView do
     case resource.type do
       "image" ->
         %{
-          full: Image.url({resource.image, resource}, :thumb) |> UrlHelpers.add_domain,
-          thumb: Image.url({resource.image, resource}) |> UrlHelpers.add_domain
+          thumb: Image.url({resource.image, resource}, :thumb) |> UrlHelpers.add_domain,
+          full: Image.url({resource.image, resource}) |> UrlHelpers.add_domain
         }
       "audio" ->
         %{
