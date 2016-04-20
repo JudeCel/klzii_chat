@@ -3,13 +3,12 @@ FROM marcelocg/phoenix
 ENV MIX_ENV=prod
 ENV NODE_ENV=production
 
-RUN sudo apt-get install erlang-parsetools
-RUN sudo apt-get install erlang-dev
-
-RUN mkdir -p /var/www/klzii_chat
 WORKDIR /var/www/klzii_chat
 
 COPY . /var/www/klzii_chat
+
+RUN sudo apt-get install erlang-parsetools erlang-dev && mkdir -p /var/www/klzii_chat
+
 
 RUN mix local.hex --force && mix local.rebar --force && mix deps.get --only prod
 
