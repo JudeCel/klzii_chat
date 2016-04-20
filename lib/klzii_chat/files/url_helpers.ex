@@ -8,4 +8,10 @@ defmodule KlziiChat.Files.UrlHelpers do
         KlziiChat.Endpoint.url <> "/"<> Path.relative_to(url, "priv/static")
     end
   end
+
+  def youtube_id(url) do
+    ~r{^.*(?:youtu\.be/|\w+/|v=)(?<id>[^#&?]*)}
+    |> Regex.named_captures(url)
+    |> get_in(["id"])
+  end
 end

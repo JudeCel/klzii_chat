@@ -35,6 +35,15 @@ defmodule KlziiChat.ResourcesControllerTest do
     assert json_response(conn, 200)["resources"] |> is_list
   end
 
+  test "upload youtube link", %{conn: conn} do
+    file = "http://youtu.be/0zM3nApSvMg"
+    conn = post conn, resources_path(conn, :upload, name: "youtubeLink", type: "link", scope: "youtube", file: file)
+    assert json_response(conn, 200)["resource"] |> Map.get("name") == "youtubeLink"
+    assert json_response(conn, 200)["resource"] |> Map.get("scope") == "youtube"
+    assert json_response(conn, 200)["resource"] |> Map.get("type") == "link"
+    assert json_response(conn, 200)["resource"] |> Map.get("url") |> Map.get("full") == "0zM3nApSvMg"
+  end
+
   test "init zip action", %{conn: conn} do
     conn = post conn, resources_path(conn, :zip, %{"ids" => [1,2,3], "name"=> "newZpi"})
     assert json_response(conn, 200)["resource"]["name"] == "newZpi"
