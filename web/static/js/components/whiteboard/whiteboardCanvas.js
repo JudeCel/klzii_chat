@@ -30,6 +30,10 @@ const WhiteboardCanvas = React.createClass({
     };
     this.shapes = [];
     this.mode = this.ModeEnum.none;
+
+    this.strokeWidthArray = [2, 4, 6];
+    this.strokeWidth = this.strokeWidthArray[0];
+
     return {content: '', addTextDisabled: true, addTextValue: '', needEvents: true, channel: null};
   },
   initMessaging() {
@@ -130,19 +134,12 @@ const WhiteboardCanvas = React.createClass({
     this.activeShape = shape;
     this.sendObjectData('move');
   },
-  unselectLastShape() {
-    if (this.lastShape) {
-      this.lastShape.ftUnselect();
-      this.lastShape = null;
-    }
-  },
   moveDistance(dx, dy) {
     return Math.sqrt( Math.pow( dx, 2)  + Math.pow( dy, 2)  );
   },
   componentDidMount() {
     this.snap = Snap("#" + this.getName());
     this.activeShape = null;
-    this.lastShape = null;
     var self = this;
     this.initMessaging();
     this.activeColour = this.isFacilitator()?'red':this.props.currentUser.colour;
@@ -182,7 +179,7 @@ const WhiteboardCanvas = React.createClass({
     this.mode = this.ModeEnum.none;
     this.fillColour = this.activeColour;
     this.activeFillColour = this.activeColour;
-    this.setStyle(this.activeShape, this.fillColour, 1, this.strokeColour);
+    this.setStyle(this.activeShape, this.fillColour, this.strokeWidth, this.strokeColour);
     this.activeShape.textValue = text;
     this.activeShape.attr({"font-size": "40px", textVal: text});
 
@@ -232,18 +229,17 @@ const WhiteboardCanvas = React.createClass({
     el.attr({'fill': colour, stroke: strokeColour, strokeWidth: strokeWidth});
   },
   shapeSelected(el, selected) {
-    if (selected) {
-      if (this.activeShape && this.activeShape != el) {
-        this.activeShape.ftUnselect();
-        this.activeShape = null;
-      }
+    if (selected){
+      var self = this;
+      Object.keys(this.shapes).forEach(function(key, index) {
+        if (self.shapes[key].id != el.id) {
+          self.shapes[key].ftUnselect();
+        }
+      });
 
       if (el) {
-        this.lastShape = el;
         this.activeShape = el;
       }
-    } else {
-      this.activeShape = null;
     }
   },
   deleteActive() {
@@ -277,9 +273,6 @@ const WhiteboardCanvas = React.createClass({
     return({x: Number(e.clientX), y: Number(e.clientY)});
   },
   sendObjectData(action, mainAction) {
-    var currentStrokeWidth = 3;
-    var actualStrokeWidth = 5;
-
 		var	message = {
       id: this.activeShape?this.activeShape.id:"_",
       action: mainAction||"draw",
@@ -339,36 +332,34 @@ const WhiteboardCanvas = React.createClass({
     var dy = coordsMove.y - this.coords.y;
 
     if(!this.activeShape && this.moveDistance(dx, dy) > 5) {
-      this.unselectLastShape();
-
       if (this.mode == this.ModeEnum.scribble) {
         this.activeShape = this.snap.polyline([]).transform('r0.1');
-        this.setStyle(this.activeShape, this.fillNone, 4, this.strokeColour);
+        this.setStyle(this.activeShape, this.fillNone, this.strokeWidth, this.strokeColour);
       }
 
       if (this.mode == this.ModeEnum.scribbleFill) {
         this.activeShape = this.snap.polyline([]).transform('r0.1');
-        this.setStyle(this.activeShape, this.fillColour, 4, this.strokeColour);
+        this.setStyle(this.activeShape, this.fillColour, this.strokeWidth, this.strokeColour);
       }
 
       if (this.mode == this.ModeEnum.rectangle) {
         this.activeShape = this.snap.rect(this.coords.x, this.coords.y, 10, 10).transform('r0.1');
-        this.setStyle(this.activeShape, this.fillColour, 4, this.strokeColour);
+        this.setStyle(this.activeShape, this.fillColour, this.strokeWidth, this.strokeColour);
       }
 
       if (this.mode == this.ModeEnum.circle) {
         this.activeShape = this.snap.ellipse(this.coords.x-2, this.coords.y-2, 4, 4).transform('r0.1');
-        this.setStyle(this.activeShape, this.fillColour, 4, this.strokeColour);
+        this.setStyle(this.activeShape, this.fillColour, this.strokeWidth, this.strokeColour);
       }
 
       if (this.mode == this.ModeEnum.line) {
         this.activeShape = this.snap.line(this.coords.x, this.coords.y, this.coords.x + 1, this.coords.y + 1).transform('r0.1');
-        this.setStyle(this.activeShape, this.fillColour, 4, this.strokeColour);
+        this.setStyle(this.activeShape, this.fillColour, this.strokeWidth, this.strokeColour);
       }
 
       if (this.mode == this.ModeEnum.arrow) {
         this.activeShape = this.snap.line(this.coords.x, this.coords.y, this.coords.x + 1, this.coords.y + 1).attr({markerStart: this.getArrowShape(this.strokeColour)}).transform('r0.1');
-        this.setStyle(this.activeShape, this.fillColour, 4, this.strokeColour);
+        this.setStyle(this.activeShape, this.fillColour, this.strokeWidth, this.strokeColour);
       }
 
       if (this.activeShape) {
@@ -488,8 +479,14 @@ const WhiteboardCanvas = React.createClass({
   handleTextChange() {
     this.setState( this.validationState() );
   },
+  handleStrokeWidthChange(e) {
+    this.strokeWidth = e.target.value;
+    if (this.activeShape) {
+      this.activeShape.attr({strokeWidth: this.strokeWidth});
+    }
+  },
   render() {
-
+    var self = this;
     var cornerRadius = "5";
     var speed = "0.3s";
     var scale = this.minimized?this.getMinimizedScale():1.0;
@@ -507,6 +504,7 @@ const WhiteboardCanvas = React.createClass({
       'MozTransition': scaleParam,
       'OTransition': scaleParam,
       transition: scaleParam,
+      border: "solid",
       background: this.WHITEBOARD_BACKGROUND_COLOUR,
       borderColor: this.WHITEBOARD_BORDER_COLOUR,
       borderWidth: 1,
@@ -519,8 +517,9 @@ const WhiteboardCanvas = React.createClass({
       transform: 'scale('+scale+')',
       transition: 'transform ' + speed + ' ease-in-out',
       borderRadius: cornerRadius,
-      borderWidth: 3,
+      borderWidth: 1,
       background: 'white',
+      border: "solid",
       borderColor: this.WHITEBOARD_CANVAS_BORDER_COLOUR,
       width: this.MAX_WIDTH - 20/scale + 'px',
       height: this.MAX_HEIGHT - 20/scale + 'px',
@@ -593,8 +592,11 @@ const WhiteboardCanvas = React.createClass({
 
               <OverlayTrigger trigger="focus" placement="top" overlay={
                   <Popover id="lineWidthShapes">
-                    <Button className="btn btn-primary btn-sm pull-right" onClick={this.addScribbleEmpty}>2</Button>
-                    <Button className="btn btn-primary btn-sm pull-right" onClick={this.addScribbleFilled}>3</Button>
+                    {this.strokeWidthArray.map(function(result) {
+                      return <div className="radio" key={"radio" + result} >
+                        <label><input type="radio" ref="strokeWidth" name="optradio" value={result} onClick={self.handleStrokeWidthChange}/>{result}/</label>
+                      </div>
+                    })}
                   </Popover>
                 }>
                 <Button bsStyle="default"><i className="fa fa-cog" aria-hidden="true"></i></Button>
