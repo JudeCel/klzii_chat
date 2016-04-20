@@ -62,6 +62,10 @@ const WhiteboardCanvas = React.createClass({
   isFacilitator() {
     return this.props.currentUser.role == "facilitator";
   },
+  canEditShape(item) {
+    return (this.isFacilitator() || item.event.userName == this.props.currentUser.username);
+  },
+  //process incoming messages about shapes from remote users
   processWhiteboard(data) {
     var self = this;
     data.map(function(item) {
@@ -81,6 +85,7 @@ const WhiteboardCanvas = React.createClass({
             if (item.event.element.attr.style.indexOf("marker") != -1 ) {
               obj = self.snap.line(0, 0, 0, 0).attr({markerStart: self.getArrowShape(item.event.element.attr.stroke)}).transform('r0.1');
               self.setStyle(obj, item.event.element.attr.stroke, 4, item.event.element.attr.stroke);
+              delete item.event.element.attr['style'];
             } else {
               obj = self.snap.line(0, 0, 0, 0).transform('r0.1');
             }
@@ -91,7 +96,8 @@ const WhiteboardCanvas = React.createClass({
           default:
             break;
         };
-        if (obj && self.isFacilitator()) {
+
+        if (obj && self.canEditShape(item)) {
           self.prepareNewElement(obj);
           self.addInputControl(obj);
         }
@@ -277,7 +283,8 @@ const WhiteboardCanvas = React.createClass({
 		var	message = {
       id: this.activeShape?this.activeShape.id:"_",
       action: mainAction||"draw",
-			eventType: action
+			eventType: action,
+      userName: this.props.currentUser.username
 		};
 
     message.element = this.activeShape;
