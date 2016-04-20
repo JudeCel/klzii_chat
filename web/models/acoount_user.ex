@@ -4,10 +4,15 @@ defmodule KlziiChat.AccountUser do
   schema "AccountUsers" do
     belongs_to :user, KlziiChat.User, [foreign_key: :UserId]
     belongs_to :account, KlziiChat.Account, [foreign_key: :AccountId]
-    # timestamps
+    field :firstName, :string
+    field :lastName, :string
+    field :gender, :string
+    field :role, :string
+    field :email, :string
+    timestamps [inserted_at: :createdAt, updated_at: :updatedAt]
   end
 
-  @required_fields ~w(UserId AccountId)
+  @required_fields ~w(UserId AccountId firstName lastName gender role email)
   @optional_fields ~w()
 
   @doc """
