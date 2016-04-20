@@ -10,7 +10,8 @@ defmodule KlziiChat.ResourceView do
       type: resource.type,
       url: getUrl(resource),
       name: resource.name,
-      extension: extension(resource)
+      extension: extension(resource),
+      scope: resource.scope
     }
   end
 
