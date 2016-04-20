@@ -86,13 +86,7 @@ const WhiteboardCanvas = React.createClass({
             obj = self.snap.polyline([]).transform('r0.1');
             break;
           case "line":
-            if (item.event.element.attr.style.indexOf("marker") != -1 ) {
-              obj = self.snap.line(0, 0, 0, 0).attr({markerStart: self.getArrowShape(item.event.element.attr.stroke)}).transform('r0.1');
-              self.setStyle(obj, item.event.element.attr.stroke, 4, item.event.element.attr.stroke);
-              delete item.event.element.attr['style'];
-            } else {
-              obj = self.snap.line(0, 0, 0, 0).transform('r0.1');
-            }
+            obj = self.snap.line(0, 0, 0, 0).transform('r0.1');
             break;
           case "text":
             obj = self.snap.text(0, 0, item.event.element.attr.textVal).transform('r0.1');
@@ -115,6 +109,11 @@ const WhiteboardCanvas = React.createClass({
           obj.created = true;
           obj.id = item.event.id;
           self.shapes[item.event.id] = obj;
+
+          //check if arrow
+          if (item.event.element.attr.style.indexOf("marker") != -1) {
+            obj.attr({markerStart: self.getArrowShape(item.event.element.attr.stroke)});
+          }
         }
       }
     });
