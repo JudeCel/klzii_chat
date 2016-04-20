@@ -23,7 +23,7 @@ defmodule KlziiChat.ResourceView do
 
   def extension(resource) do
     field = Map.get(resource, String.to_atom(resource.type))
-    if field do
+    if is_map(field) do
       Map.get(field, :file_name)
       |> Path.extname
       |> String.replace(".", "")
