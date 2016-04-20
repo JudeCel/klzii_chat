@@ -43,7 +43,7 @@ defmodule KlziiChat.ResourcesController do
         resp = Enum.map(resources, fn resource ->
           ResourceView.render("delete.json", %{resource: resource})
         end)
-        json(conn, %{ids: resp })
+        json(conn, %{ids: resp, message: "Success deleteed!"})
       {:error, reason} ->
         json(conn, %{status: :error, reason: reason})
     end
@@ -71,7 +71,10 @@ defmodule KlziiChat.ResourcesController do
 
     case Repo.insert(changeset) do
       {:ok, resource} ->
-        json(conn, %{type: resource.type, resources: [ ResourceView.render("resource.json", %{resource: resource}) ] })
+        json(conn, %{
+          type: resource.type,
+          resources: [ ResourceView.render("resource.json", %{resource: resource})],
+          message: "Success uploaded!" })
       {:error, reason} ->
         json(conn, %{status: :error, reason: reason})
     end
