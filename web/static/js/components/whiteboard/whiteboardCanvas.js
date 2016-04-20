@@ -231,7 +231,7 @@ const WhiteboardCanvas = React.createClass({
     if (selected){
       var self = this;
       Object.keys(this.shapes).forEach(function(key, index) {
-        if (self.shapes[key].id != el.id) {
+        if (self.shapes[key] && self.shapes[key].id != el.id) {
           self.shapes[key].ftUnselect();
         }
       });
