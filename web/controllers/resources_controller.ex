@@ -41,9 +41,18 @@ defmodule KlziiChat.ResourcesController do
     case ResourceService.deleteByIds(user.id, ids ) do
       {:ok, resources} ->
         resp = Enum.map(resources, fn resource ->
-          ResourceView.render("resource.json", %{resource: resource})
+          ResourceView.render("delete.json", %{resource: resource})
         end)
-        json(conn, %{resources: resp })
+        json(conn, %{ids: resp })
+      {:error, reason} ->
+        json(conn, %{status: :error, reason: reason})
+    end
+  end
+
+  def show(conn, %{"id" => id}, user, claims) do
+    case ResourceService.find(user.id, id ) do
+      {:ok, resource} ->
+        json(conn, %{resource: ResourceView.render("resource.json", %{resource: resource}) })
       {:error, reason} ->
         json(conn, %{status: :error, reason: reason})
     end
