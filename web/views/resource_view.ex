@@ -1,6 +1,6 @@
 defmodule KlziiChat.ResourceView do
   use KlziiChat.Web, :view
-  alias KlziiChat.Uploaders.{Image, Audio, Video}
+  alias KlziiChat.Uploaders.{Image, Audio, Video, File}
   alias KlziiChat.Files.{ UrlHelpers }
 
   @spec render(String.t, Map.t) :: Map.t
@@ -34,25 +34,25 @@ defmodule KlziiChat.ResourceView do
     case resource.type do
       "image" ->
         %{
-          thumb: url_buider(resource, Image,  Map.get(resource, :image), :thumb ),
-          full: url_buider(resource, Image,  Map.get(resource, :image))
+          thumb: url_builder(resource, Image,  Map.get(resource, :image), :thumb ),
+          full: url_builder(resource, Image,  Map.get(resource, :image))
         }
       "audio" ->
         %{
-          full: url_buider(resource, Audio,  Map.get(resource, :audio))
+          full: url_builder(resource, Audio,  Map.get(resource, :audio))
         }
       "video" ->
         %{
-          full: url_buider(resource, Video,  Map.get(resource, :video))
+          full: url_builder(resource, Video,  Map.get(resource, :video))
         }
       _ ->
         %{
-          full: url_buider(resource, File,  Map.get(resource, :file, nil) )
+          full: url_builder(resource, File,  Map.get(resource, :file, nil) )
         }
     end
   end
 
-  defp url_buider(resource, model, field, version \\ :orginal) do
+  defp url_builder(resource, model, field, version \\ :orginal) do
     if field do
       model.url({field, resource}, version) |> UrlHelpers.add_domain
     else
