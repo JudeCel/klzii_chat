@@ -1,9 +1,9 @@
 defmodule KlziiChat.ResourcesControllerTest do
   use KlziiChat.{ConnCase, SessionMemberCase}
-  alias KlziiChat.{Resource, Repo}
+  alias KlziiChat.{Repo}
 
   setup %{conn: conn, account_user: account_user} do
-    { :ok, jwt, encoded_claims } =  Guardian.encode_and_sign(account_user)
+    { :ok, jwt, _encoded_claims } =  Guardian.encode_and_sign(account_user)
     conn = put_req_header(conn, "authorization", jwt)
 
     resource = Ecto.build_assoc(
