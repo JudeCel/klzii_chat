@@ -25,14 +25,25 @@ defmodule KlziiChat.ResourcesController do
       |> Enum.map(fn resource ->
         ResourceView.render("resource.json", %{resource: resource})
       end)
-
-      json(conn, %{resources: resources})
+    json(conn, %{resources: resources})
   end
 
   def zip(conn, %{"ids" => ids, "name" => name}, user, claims) do
     case ResourceService.create_new_zip(user, name, ids ) do
       {:ok, resource} ->
         json(conn, %{resource: ResourceView.render("resource.json", %{resource: resource}) })
+      {:error, reason} ->
+        json(conn, %{status: :error, reason: reason})
+    end
+  end
+
+  def delete(conn, %{"ids" => ids}, user, claims) do
+    case ResourceService.deleteByIds(user.id, ids ) do
+      {:ok, resources} ->
+        resp = Enum.map(resources, fn resource ->
+          ResourceView.render("resource.json", %{resource: resource})
+        end)
+        json(conn, %{resources: resp })
       {:error, reason} ->
         json(conn, %{status: :error, reason: reason})
     end

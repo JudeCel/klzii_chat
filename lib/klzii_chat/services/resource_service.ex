@@ -19,15 +19,19 @@ defmodule KlziiChat.Services.ResourceService do
     {:ok, resp}
   end
 
-  @spec deleteById(Map.t, Integer.t) :: {:ok, %{ id: Integer.t, replyId: Integer.t } } | {:error, String.t}
-  def deleteById(session_member, id) do
-    result = Repo.get_by!(Resource, id: id)
-    if ResourcePermissions.can_delete(session_member, result) do
+  @spec deleteByIds(Integer.t, List.t) :: {:ok, %Resource{} } | {:error, String.t}
+  def deleteByIds(account_user_id, ids) do
+    account_user = Repo.get!(AccountUser, account_user_id) |> Repo.preload([:account])
+    result = Repo.all(
+      from e in assoc(account_user.account, :resources),
+      where: e.id in ^ids
+    )
+    if ResourcePermissions.can_delete(account_user, result) do
       case Repo.delete!(result) do
-        {:error, error} -> # Something went wrong
+        {:error, error} ->
           {:error, error}
-        resource   -> # Deleted with success
-          {:ok, resource  }
+        resources ->
+          {:ok, resources}
       end
     else
       {:error, "Action not allowed!"}
