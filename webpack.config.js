@@ -10,6 +10,29 @@ var webpack = require('webpack');
 function join(dest) { return path.resolve(__dirname, dest); }
 
 function web(dest) { return join('web/static/' + dest); }
+function plugins() {
+  var productionList = [
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': '"production"'
+    }),
+    new webpack.optimize.UglifyJsPlugin({ minimize: true })
+  ]
+
+  var defaultList = [
+    new ExtractTextPlugin('css/app.css'),
+    new webpack.optimize.OccurenceOrderPlugin(),
+    new webpack.NoErrorsPlugin(),
+    new CopyWebpackPlugin([{ from: 'web/static/assets/images', to: "images" }]),
+    new webpack.optimize.DedupePlugin()
+  ]
+  
+  switch (process.env.NODE_ENV) {
+    case "production":
+      return defaultList.concat(productionList)
+    default:
+      return defaultList
+  }
+}
 
 var config = module.exports = {
   // our app's entry points - for this example we'll use a single each for
@@ -68,17 +91,7 @@ var config = module.exports = {
   // we'll also tell the plugin where the final CSS file should be generated
   // (relative to config.output.path)
 
-  plugins: [
-    new webpack.DefinePlugin({
-      'process.env.NODE_ENV': '"production"'
-    }),
-    new ExtractTextPlugin('css/app.css'),
-    new webpack.optimize.OccurenceOrderPlugin(),
-    new webpack.NoErrorsPlugin(),
-    new CopyWebpackPlugin([{ from: 'web/static/assets/images', to: "images" }]),
-    new webpack.optimize.DedupePlugin(),
-    new webpack.optimize.UglifyJsPlugin({ minimize: true })
-  ],
+  plugins: plugins(),
 };
 
 // if running webpack in production mode, minify files with uglifyjs

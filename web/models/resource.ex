@@ -14,10 +14,11 @@ defmodule KlziiChat.Resource do
     field :type, :string
     field :scope, :string
     field :name, :string
+    field :status, :string, default: "completed"
     timestamps [inserted_at: :createdAt, updated_at: :updatedAt]
   end
 
-  @required_fields ~w(scope type accountUserId accountId name)
+  @required_fields ~w(status scope type accountUserId accountId name)
   @optional_fields ~w(link)
 
   @required_file_fields ~w()

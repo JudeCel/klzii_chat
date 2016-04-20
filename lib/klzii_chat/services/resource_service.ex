@@ -33,4 +33,23 @@ defmodule KlziiChat.Services.ResourceService do
       {:error, "Action not allowed!"}
     end
   end
+
+  def create_new_zip(user, name, _ids) do
+    params = %{
+      scope: "zip",
+      accountId: user.account.id,
+      accountUserId: user.id,
+      type: "zip",
+      name: name,
+      status: "progress"
+    }
+    changeset = Resource.changeset(%Resource{}, params)
+
+    case Repo.insert(changeset) do
+      {:ok, resource} ->
+        %{type: resource.type, resources: [ ResourceView.render("resource.json", %{resource: resource}) ] }
+      {:error, reason} ->
+        %{status: :error, reason: reason}
+    end
+  end
 end

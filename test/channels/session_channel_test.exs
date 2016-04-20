@@ -2,39 +2,14 @@ defmodule KlziiChat.SessionChannelTest do
   use KlziiChat.ChannelCase
   alias KlziiChat.SessionChannel
   alias KlziiChat.UserSocket
-  alias KlziiChat.{Repo, Session, Account, SessionMember}
+  alias KlziiChat.{Repo, SessionMember}
+  use KlziiChat.SessionMemberCase
 
-  setup do
-    account = Account.changeset(%Account{}, %{name: "cool account"}) |> Repo.insert!
-    session = %Session{
-      name: "cool session",
-      start_time: Ecto.DateTime.cast!("2016-01-17T14:00:00.030Z"),
-      end_time: Ecto.DateTime.cast!("2020-04-17T14:00:00.030Z"),
-      accountId: account.id,
-      active: true
-    } |> Repo.insert!
-
-    member = %SessionMember{
-      token: "oasu8asnx",
-      username: "cool member",
-      sessionId: session.id,
-      role: "facilitator",
-      accountUserId: 1
-    } |> Repo.insert!
-
-    member2 = %SessionMember{
-      token: "==oasu8asnx",
-      username: "cool member",
-      sessionId: session.id,
-      role: "participant",
-      accountUserId: 1
-    } |> Repo.insert!
-
+  setup %{session: session, session: session, member: member, member2: member2} do
+    channal_name =  "sessions:" <> Integer.to_string(session.id)
     {:ok, socket} = connect(UserSocket, %{"token" => member.token})
     {:ok, socket2} = connect(UserSocket, %{"token" => member2.token})
-
-    channal_name =  "sessions:" <> Integer.to_string(session.id)
-    {:ok, channal_name: channal_name, socket: socket, session: session, member: member, member2: member2, socket2: socket2}
+    {:ok, socket: socket, socket2: socket2, channal_name: channal_name}
   end
 
   test "after join events", %{socket: socket, session: session, channal_name: channal_name} do
@@ -51,7 +26,7 @@ defmodule KlziiChat.SessionChannelTest do
       "observer" => [],
       "participant" => [member2]
     }
-    
+
     Repo.get_by!(SessionMember, id: session_member.id).online |> assert
   end
 

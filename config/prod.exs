@@ -16,6 +16,7 @@ config :klzii_chat, KlziiChat.Endpoint,
   url: [host: System.get_env("SERVER_HOST") || "localhost", port: 80],
   cache_static_manifest: "priv/static/manifest.json"
 
+IO.inspect("Hello world")
 # Do not print debug messages in production
 config :logger, level: :info
 

@@ -2,10 +2,21 @@ import React, {PropTypes} from 'react';
 import Member             from './member.js'
 import { connect }        from 'react-redux';
 import Console            from '../console/index';
+import BoardModal         from './modals/facilitatorBoard';
 
 const Facilitator = React.createClass({
+  getInitialState() {
+    return { boardModalOpen: false };
+  },
+  closeBoardModal() {
+    this.setState({ boardModalOpen: false });
+  },
+  openBoardModal() {
+    this.setState({ boardModalOpen: true });
+  },
   render() {
-    const { facilitator, openAvatarModal } = this.props;
+    const { boardModalOpen } = this.state;
+    const { facilitator, openAvatarModal, boardContent } = this.props;
 
     return (
       <div className='facilitator-section'>
@@ -17,14 +28,15 @@ const Facilitator = React.createClass({
           <div className='say-section'>
             <div className='outerbox'>
               <div className='triangle'></div>
-              <div className='innerbox'>
+              <div className='innerbox' onClick={ this.openBoardModal }>
                 <p className='text-break-all'>
-                  Say something nice if you wish!
+                  { boardContent }
                 </p>
               </div>
             </div>
           </div>
 
+          <BoardModal show={ boardModalOpen } onHide={ this.closeBoardModal } boardContent={ boardContent } />
           <Console />
         </div>
       </div>
@@ -34,7 +46,8 @@ const Facilitator = React.createClass({
 
 const mapStateToProps = (state) => {
   return {
-    facilitator: state.members.facilitator
+    facilitator: state.members.facilitator,
+    boardContent: state.members.facilitator.boardContent || 'Say something nice if you wish!'
   }
 };
 

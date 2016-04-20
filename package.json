@@ -38,6 +38,7 @@
     "react-autosize-textarea": "^0.2.6",
     "react-bootstrap": "^0.28.3",
     "react-dom": "^0.14.7",
+    "react-medium-editor": "^1.6.3",
     "react-rating": "^0.2.2",
     "react-redux": "^4.4.1",
     "react-router": "^1.0.3",
