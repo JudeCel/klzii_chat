@@ -18,4 +18,14 @@ defmodule KlziiChat.ResourcesControllerTest do
     conn = get conn, resources_path(conn, :ping)
     assert json_response(conn, 200)["status"] == "ok"
   end
+
+  test "return root key resources", %{conn: conn} do
+    conn = get conn, resources_path(conn, :index, "all")
+    assert json_response(conn, 200)["resources"] == []
+  end
+
+  test "init zip action", %{conn: conn} do
+    conn = post conn, resources_path(conn, :zip, %{"ids" => [1,2,3], "name"=> "newZpi"})
+    assert json_response(conn, 200)["resource"]["name"] == "newZpi"
+  end
 end

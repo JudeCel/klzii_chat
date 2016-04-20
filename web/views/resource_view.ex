@@ -15,10 +15,12 @@ defmodule KlziiChat.ResourceView do
   end
 
   def extension(resource) do
-    Map.get(resource, String.to_atom(resource.type))
-    |> Map.get(:file_name)
-    |> Path.extname
-    |> String.replace(".", "")
+    field = Map.get(resource, String.to_atom(resource.type))
+    if field do
+      Map.get(field, :file_name)
+      |> Path.extname
+      |> String.replace(".", "")
+    end
   end
 
   defp getUrl(resource) do
@@ -38,8 +40,16 @@ defmodule KlziiChat.ResourceView do
         }
       _ ->
         %{
-          full: File.url({resource.file, resource}) |> UrlHelpers.add_domain
+          full: url_buider(resource, File, resource.file)
         }
+    end
+  end
+
+  defp url_buider(resource, model, field) do
+    if field do
+      model.url({field, resource}) |> UrlHelpers.add_domain
+    else
+      ""
     end
   end
 end

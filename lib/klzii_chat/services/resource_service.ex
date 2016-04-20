@@ -1,5 +1,5 @@
 defmodule KlziiChat.Services.ResourceService do
-  alias KlziiChat.{Repo, AccountUser, Resource, ResourceView}
+  alias KlziiChat.{Repo, AccountUser, Resource, ResourceView, User}
   alias KlziiChat.Services.Permissions.Resources, as: ResourcePermissions
 
   import Ecto
@@ -34,6 +34,7 @@ defmodule KlziiChat.Services.ResourceService do
     end
   end
 
+  @spec create_new_zip(%User{}, String.t, List.t) :: {:ok, %Resource{} } | %{status: :error, reason: String.t}
   def create_new_zip(user, name, _ids) do
     params = %{
       scope: "zip",
@@ -47,9 +48,9 @@ defmodule KlziiChat.Services.ResourceService do
 
     case Repo.insert(changeset) do
       {:ok, resource} ->
-        %{type: resource.type, resources: [ ResourceView.render("resource.json", %{resource: resource}) ] }
+        {:ok, resource }
       {:error, reason} ->
-        %{status: :error, reason: reason}
+        {:error, reason}
     end
   end
 end

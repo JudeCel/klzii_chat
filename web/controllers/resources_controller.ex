@@ -13,12 +13,6 @@ defmodule KlziiChat.ResourcesController do
     json(conn, %{status: :ok})
   end
 
-  def zip(conn, %{"ids" => ids, "name" => name}, user, claims) do
-
-    resp = ResourceService.create_new_zip(user, name, ids )
-    json(conn, %{resource: resp})
-  end
-
   def index(conn, params, user, claims) do
     query =  from(r in assoc(user.account, :resources))
 
@@ -33,6 +27,15 @@ defmodule KlziiChat.ResourcesController do
       end)
 
       json(conn, %{resources: resources})
+  end
+
+  def zip(conn, %{"ids" => ids, "name" => name}, user, claims) do
+    case ResourceService.create_new_zip(user, name, ids ) do
+      {:ok, resource} ->
+        json(conn, %{resource: ResourceView.render("resource.json", %{resource: resource}) })
+      {:error, reason} ->
+        json(conn, %{status: :error, reason: reason})
+    end
   end
 
   def upload(conn, %{"type" => type, "scope" => scope, "file" => file, "name"=> name}, user, claims) do
