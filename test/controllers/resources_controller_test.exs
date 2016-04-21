@@ -1,6 +1,7 @@
 defmodule KlziiChat.ResourcesControllerTest do
   use KlziiChat.{ConnCase, SessionMemberCase}
   alias KlziiChat.{Repo}
+  @image "test/fixtures/images/hamster.jpg"
 
   setup %{conn: conn, account_user: account_user} do
     { :ok, jwt, _encoded_claims } =  Guardian.encode_and_sign(account_user)
@@ -42,6 +43,12 @@ defmodule KlziiChat.ResourcesControllerTest do
     assert json_response(conn, 200)["resource"] |> Map.get("scope") == "youtube"
     assert json_response(conn, 200)["resource"] |> Map.get("type") == "link"
     assert json_response(conn, 200)["resource"] |> Map.get("url") |> Map.get("full") == "0zM3nApSvMg"
+  end
+
+  test "upload image", %{conn: conn} do
+    file = %Plug.Upload{ content_type: "image/jpg", path: @image, filename: "hamster.jpg"}
+    conn = post(conn, "api/resources/upload", %{ name: "hamster", type: "image", scope: "collage", file: file })
+    assert json_response(conn, 200)["resource"]["name"] == "hamster"
   end
 
   test "init zip action", %{conn: conn} do

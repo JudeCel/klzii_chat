@@ -10,7 +10,7 @@ defmodule KlziiChat.Uploaders.File do
 
   # Whitelist file extensions:
   def validate({file, _}) do
-    ~w(.pdf .csv .xls ) |> Enum.member?(Path.extname(file.file_name))
+    ~w(.pdf .csv .xls .zip ) |> Enum.member?(Path.extname(file.file_name))
   end
 
   # Define a thumbnail transformation:
