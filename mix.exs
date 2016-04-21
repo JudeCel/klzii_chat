@@ -42,7 +42,7 @@ defmodule KlziiChat.Mixfile do
      {:phoenix_live_reload, "~> 1.0", only: :dev},
      {:gettext, "~> 0.9"},
      {:guardian, "~> 0.10.1"},
-     {:cowboy, "~> 1.0"},
+     {:cowboy, "~> 1.0.4"},
      {:corsica, "~> 0.4"}
  ]
   end
