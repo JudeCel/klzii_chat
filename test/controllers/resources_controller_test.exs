@@ -7,16 +7,25 @@ defmodule KlziiChat.ResourcesControllerTest do
     { :ok, jwt, _encoded_claims } =  Guardian.encode_and_sign(account_user)
     conn = put_req_header(conn, "authorization", jwt)
 
-    resource = Ecto.build_assoc(
+    zip_resource = Ecto.build_assoc(
       account_user.account, :resources,
       accountUserId: account_user.id,
       name: "cool",
       type: "file",
       scope: "zip"
     ) |> Repo.insert!
+
+    image_resource = Ecto.build_assoc(
+      account_user.account, :resources,
+      accountUserId: account_user.id,
+      name: "cool iamge",
+      type: "image",
+      scope: "collage"
+    ) |> Repo.insert!
     {:ok,
       conn: put_req_header(conn, "accept", "application/json"),
-      resource: resource
+      zip_resource: zip_resource,
+      image_resource: image_resource
     }
   end
 
@@ -51,18 +60,19 @@ defmodule KlziiChat.ResourcesControllerTest do
     assert json_response(conn, 200)["resource"]["name"] == "hamster"
   end
 
-  test "init zip action", %{conn: conn} do
-    conn = post conn, resources_path(conn, :zip, %{"ids" => [1,2,3], "name"=> "newZpi"})
+  test "init zip action", %{conn: conn, zip_resource: zip_resource, image_resource: image_resource} do
+    conn = post conn, resources_path(conn, :zip, %{"ids" => [zip_resource.id,image_resource.id], "name"=> "newZpi"})
+    IO.inspect(json_response(conn, 200))
     assert json_response(conn, 200)["resource"]["name"] == "newZpi"
   end
 
-  test "show", %{conn: conn, resource: resource} do
-    conn = get conn, resources_path(conn, :show, resource.id)
-    assert json_response(conn, 200)["resource"]["name"] == resource.name
+  test "show", %{conn: conn, zip_resource: zip_resource} do
+    conn = get conn, resources_path(conn, :show, zip_resource.id)
+    assert json_response(conn, 200)["resource"]["name"] == zip_resource.name
   end
 
-  test "delete", %{conn: conn, resource: resource} do
-    conn = delete conn, resources_path(conn, :delete, ids: [resource.id])
+  test "delete", %{conn: conn, zip_resource: zip_resource} do
+    conn = delete conn, resources_path(conn, :delete, ids: [zip_resource.id])
     assert json_response(conn, 200)["ids"] |> is_list
   end
 end

@@ -51,22 +51,32 @@ defmodule KlziiChat.Services.ResourceService do
   end
 
   @spec create_new_zip(%User{}, String.t, List.t) :: {:ok, %Resource{} } | %{status: :error, reason: String.t}
-  def create_new_zip(user, name, _ids) do
-    params = %{
-      scope: "zip",
-      accountId: user.account.id,
-      accountUserId: user.id,
-      type: "file",
-      name: name,
-      status: "progress"
-    }
-    changeset = Resource.changeset(%Resource{}, params)
+  def create_new_zip(account_user_id, name, ids) do
+    account_user = Repo.get!(AccountUser, account_user_id) |> Repo.preload([:account])
+    query =
+      from e in assoc(account_user.account, :resources),
+      where: e.id in ^ids,
+      where: e.type in ~w(image audio file video)
+    result = Repo.all(query)
 
-    case Repo.insert(changeset) do
-      {:ok, resource} ->
-        {:ok, resource }
-      {:error, reason} ->
-        {:error, reason}
+    if ResourcePermissions.can_zip(account_user, result) do
+      changeset = Ecto.build_assoc(
+        account_user.account, :resources,
+        accountUserId: account_user.id,
+        scope: "zip",
+        type: "file",
+        name: name,
+        status: "progress"
+      )
+
+      case Repo.insert(changeset) do
+        {:ok, resource} ->
+          {:ok, resource }
+        {:error, reason} ->
+          {:error, reason}
+      end
+    else
+      {:error, "Action not allowed!"}
     end
   end
 end

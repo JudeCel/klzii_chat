@@ -7,14 +7,14 @@ defmodule KlziiChat.ResourcesController do
   use Guardian.Phoenix.Controller
 
   plug Guardian.Plug.EnsureAuthenticated, handler: KlziiChat.Guardian.AuthErrorHandler
-  plug :if_current_user
+  plug :if_current_account_user
 
-  def ping(conn, _, user, claims) do
+  def ping(conn, _, account_user, claims) do
     json(conn, %{status: :ok})
   end
 
-  def index(conn, params, user, claims) do
-    query =  from(r in assoc(user.account, :resources))
+  def index(conn, params, account_user, claims) do
+    query =  from(r in assoc(account_user.account, :resources))
 
     if params["type"] != "all"  do
       query = where(query, type: ^params["type"] )
@@ -28,8 +28,8 @@ defmodule KlziiChat.ResourcesController do
     json(conn, %{resources: resources})
   end
 
-  def zip(conn, %{"ids" => ids, "name" => name}, user, claims) do
-    case ResourceService.create_new_zip(user, name, ids ) do
+  def zip(conn, %{"ids" => ids, "name" => name}, account_user, claims) do
+    case ResourceService.create_new_zip(account_user.id, name, ids ) do
       {:ok, resource} ->
         json(conn, %{resource: ResourceView.render("resource.json", %{resource: resource}) })
       {:error, reason} ->
@@ -37,8 +37,8 @@ defmodule KlziiChat.ResourcesController do
     end
   end
 
-  def delete(conn, %{"ids" => ids}, user, claims) do
-    case ResourceService.deleteByIds(user.id, ids ) do
+  def delete(conn, %{"ids" => ids}, account_user, claims) do
+    case ResourceService.deleteByIds(account_user.id, ids ) do
       {:ok, resources} ->
         resp = Enum.map(resources, fn resource ->
           ResourceView.render("delete.json", %{resource: resource})
@@ -49,8 +49,8 @@ defmodule KlziiChat.ResourcesController do
     end
   end
 
-  def show(conn, %{"id" => id}, user, claims) do
-    case ResourceService.find(user.id, id ) do
+  def show(conn, %{"id" => id}, account_user, claims) do
+    case ResourceService.find(account_user.id, id ) do
       {:ok, resource} ->
         json(conn, %{resource: ResourceView.render("resource.json", %{resource: resource}) })
       {:error, reason} ->
@@ -58,12 +58,12 @@ defmodule KlziiChat.ResourcesController do
     end
   end
 
-  def upload(conn, %{"type" => type, "scope" => scope, "file" => file, "name"=> name}, user, claims) do
+  def upload(conn, %{"type" => type, "scope" => scope, "file" => file, "name"=> name}, account_user, claims) do
     params = %{
       type: type,
       scope: scope,
-      accountId: user.account.id,
-      accountUserId: user.id,
+      accountId: account_user.account.id,
+      accountUserId: account_user.id,
       type: type,
       name: name
     } |> Map.put(String.to_atom(type), file)
@@ -80,7 +80,7 @@ defmodule KlziiChat.ResourcesController do
     end
   end
 
-  defp if_current_user(conn, opts) do
+  defp if_current_account_user(conn, opts) do
     if Guardian.Plug.current_resource(conn) do
       conn
     else

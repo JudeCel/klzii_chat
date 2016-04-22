@@ -12,10 +12,16 @@ defmodule KlziiChat.Files.Tasks do
   def run(zip_record, ids) do
     current_dir = File.cwd!
     id = to_string(zip_record.id)
-    # {:ok} = download(id, list)
+    {:ok, list} = buidld_resource_list(ids)
+
+    {:ok} = download(id, list)
     {:ok, path} = zip(id, zip_record.name)
     File.cd(current_dir)
     {:ok}
+  end
+
+  def buidld_resource_list(ids) do
+    {:ok, []}
   end
 
   @spec download(String.t, List.t) :: {:ok }
@@ -24,10 +30,15 @@ defmodule KlziiChat.Files.Tasks do
   end
   def download(resurce_id, list) do
     {:ok, current_dir} = to_string(resurce_id) |> build_tmp_dir
-    Enum.map(list, fn {name, url} ->
-      resp = HTTPotion.get(url)
-      File.write(current_dir <> name, resp.body)
-    end)
+    case Mix.env do
+      :test ->
+          {:ok}
+      _ ->
+        Enum.map(list, fn {name, url} ->
+          resp = HTTPotion.get(url)
+          File.write(current_dir <> name, resp.body)
+        end)
+    end
     {:ok}
   end
 

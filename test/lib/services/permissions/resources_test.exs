@@ -16,6 +16,18 @@ defmodule KlziiChat.Services.Permissions.ResourcePermissionsTest do
     Resources.can_delete(member, events) |> assert
   end
 
+  test "can zip when accountManager" do
+    member = %{id: 1, role: "accountManager"}
+    events = [%{id: 1, accountUser: 1}]
+    Resources.can_zip(member, events) |> assert
+  end
+
+  test "can zip when admin " do
+    member = %{id: 1, role: "admin"}
+    events = [%{id: 1, accountUser: 1}]
+    Resources.can_zip(member, events) |> assert
+  end
+
   test "can't participant delete when not  owner " do
     member = %{id: 1, role: "participant"}
     events = [%{id: 1, sessionMemberId: 2}]
@@ -24,6 +36,12 @@ defmodule KlziiChat.Services.Permissions.ResourcePermissionsTest do
 
   test "can facilitator delete when he not owner" do
     member = %{id: 1, role: "facilitator"}
+    events = [%{id: 1, sessionMemberId: 2}]
+    Resources.can_delete(member, events) |> assert
+  end
+
+  test "can facilitator delete when he admin" do
+    member = %{id: 1, role: "admin"}
     events = [%{id: 1, sessionMemberId: 2}]
     Resources.can_delete(member, events) |> assert
   end
