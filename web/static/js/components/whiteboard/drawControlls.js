@@ -1,8 +1,8 @@
 
 (function() {
 	var lineAttributes = { stroke: 'red', strokeWidth: 2, strokeDasharray: "5,5" };
-
-	Snap.plugin( function( Snap, Element, Paper, global ) {
+	var startDragTarget, startDragElement, startBBox, startScreenCTM;
+	Snap.plugin( function( Snap, Element, Paper, global  ) {
 
 		var ftOption = {
 			handleFill: "silver",
@@ -13,101 +13,38 @@
 			handleLineWidth: 2,
 		};
 
-		Element.prototype.ftSetSelectedCallback = function(c) {
-			this.onSelected = c;
-		}
-
-		Element.prototype.ftSetTransformedCallback = function(c) {
-			this.onTransformed = c;
-		}
-
-		Element.prototype.ftRemove = function(c) {
-			this.ftRemoveHandles();
-			this.unclick();
-			this.onSelected = null;
-			this.onTransformed = null;
-			if (this.group) this.group.remove();
-			this.remove();
-			this.removeData();
-		}
-
-		Element.prototype.ftInitShape = function() {
-			this.ftInit();
-			if (!this.group) this.group = this.paper.g(this);
-		}
-
 		Element.prototype.ftCreateHandles = function() {
 			this.ftInit();
 			var freetransEl = this;
 			var bb = freetransEl.getBBox();
+			var rotateDragger = this.paper.circle(bb.cx + bb.width/2 + ftOption.handleLength, bb.cy, ftOption.handleRadius ).attr({ fill: ftOption.handleFill });
 			var translateDragger = this.paper.circle(bb.cx, bb.cy, ftOption.handleRadius ).attr({ fill: ftOption.handleFill });
-			//if (!this.group) this.group = this.paper.g(this);
 
-			var handlesGroup = this.paper.g();
-
-			//if (this.type != "polyline") {
-				var rotateDragger = this.paper.circle(bb.cx + bb.width/2 + ftOption.handleLength, bb.cy, ftOption.handleRadius ).attr({ fill: ftOption.handleFill });
-				var yScaler = this.ftCreateYScale(bb, this);
-				var joinLine = freetransEl.ftDrawJoinLine( rotateDragger );
-
-				freetransEl.data( "joinLine", joinLine);
-				freetransEl.data( "scaleFactor", calcDistance( bb.cx, bb.cy, rotateDragger.attr('cx'), rotateDragger.attr('cy') ) );
-				freetransEl.data( "scaleFactorY", calcDistance( bb.cx, bb.cy, yScaler.attr('cx'), yScaler.attr('cy') ) );
-
-				rotateDragger.drag(
-					dragHandleRotateMove.bind( rotateDragger, freetransEl ),
-					dragHandleRotateStart.bind( rotateDragger, freetransEl  ),
-					dragHandleRotateEnd.bind( rotateDragger, freetransEl  )
-				);
-
-				yScaler.drag(
-					dragHandleYRotateMove.bind( yScaler, freetransEl ),
-					dragHandleRotateStart.bind( yScaler, freetransEl  ),
-					dragHandleRotateEnd.bind( yScaler, freetransEl  )
-				);
-				handlesGroup.add(joinLine, rotateDragger, yScaler);
-			//}
-
-			handlesGroup.add(translateDragger);
-			if (!this.group) this.group = this.paper.g(this);
-			this.group.add(handlesGroup);
+			var joinLine = freetransEl.ftDrawJoinLine( rotateDragger );
+			var handlesGroup = this.paper.g( joinLine, rotateDragger, translateDragger );
 
 			freetransEl.data( "handlesGroup", handlesGroup );
+			freetransEl.data( "joinLine", joinLine);
 
+			freetransEl.data( "scaleFactor", calcDistance( bb.cx, bb.cy, rotateDragger.attr('cx'), rotateDragger.attr('cy') ) );
+		//	console.log("_____trans", freetransEl.data( "scaleFactor"));
 			translateDragger.drag( 	elementDragMove.bind(  translateDragger, freetransEl ),
 						elementDragStart.bind( translateDragger, freetransEl ),
 						elementDragEnd.bind( translateDragger, freetransEl ) );
 
-			freetransEl.unclick();
-			freetransEl.data("click", freetransEl.click( function() {
-				this.ftRemoveHandles();
-			} ) );
+			freetransEl.undblclick();
+			freetransEl.data("dblclick", freetransEl.dblclick( function() {  this.ftRemoveHandles() } ) );
 
+			rotateDragger.drag(
+				dragHandleRotateMove.bind( rotateDragger, freetransEl ),
+				dragHandleRotateStart.bind( rotateDragger, freetransEl  ),
+				dragHandleRotateEnd.bind( rotateDragger, freetransEl  )
+			);
 			freetransEl.ftStoreInitialTransformMatrix();
-			freetransEl.ftHighlightBB();
 
-			this.ftInformSelected(this, true);
+			freetransEl.ftHighlightBB();
 			return this;
 		};
-
-		Element.prototype.ftUnselect = function() {
-			this.ftRemoveHandles();
-			if (this.onSelected) {
-				this.onSelected(this, false);
-			}
-		}
-
-		Element.prototype.ftInformSelected = function(selected) {
-			if (this.onSelected) {
-				this.onSelected(this, selected);
-			}
-		}
-
-		Element.prototype.ftCreateYScale = function(bb, mainObject) {
-			var freetransEl = this;
-      var yScaler = this.paper.circle(bb.x + bb.width/2, bb.y, ftOption.handleRadius).attr({ fill: ftOption.handleFill });
-			return yScaler;
-		}
 
 		Element.prototype.ftInit = function() {
 			this.data("angle", 0);
@@ -119,7 +56,7 @@
 
 		Element.prototype.ftCleanUp = function() {
 			var myClosureEl = this;
-			var myData = ["angle", "scale", "scaleFactor","scaleFactorY", "tx", "ty", "otx", "oty", "bb", "bbT", "initialTransformMatrix", "handlesGroup", "joinLine"];
+			var myData = ["angle", "scale", "scaleFactor", "tx", "ty", "otx", "oty", "bb", "bbT", "initialTransformMatrix", "handlesGroup", "joinLine"];
 			myData.forEach( function( el ) { myClosureEl.removeData([el]) });
 			return this;
 		};
@@ -140,11 +77,12 @@
 		};
 
 		Element.prototype.ftRemoveHandles = function() {
-			this.unclick();
-			if (this.data( "handlesGroup")) this.data( "handlesGroup").remove();
+			this.undblclick();
+			console.log("___", this.data());
+			this.data( "handlesGroup").remove();
 			this.data( "bbT" ) && this.data("bbT").remove();
 			this.data( "bb" ) && this.data("bb").remove();
-			this.click( function() { this.ftCreateHandles() } ) ;
+			this.dblclick( function() { this.ftCreateHandles() } ) ;
 			this.ftCleanUp();
 			return this;
 		};
@@ -158,7 +96,12 @@
 			var objtps = this.ftTransformedPoint( thisBB.cx, thisBB.cy);
 
 			if( this.data("joinLine") ) {
-				this.data("joinLine").attr({ x1: objtps.x, y1: objtps.y, x2: rotateHandle.attr('cx'), y2: rotateHandle.attr('cy') });
+				var x2 = 0, y2 = 0;
+				if (rotateHandle) {
+					x2 = rotateHandle.attr('cx');
+					y2 = rotateHandle.attr('cy');
+				}
+				this.data("joinLine").attr({ x1: objtps.x, y1: objtps.y, x2: x2, y2: y2 });
 			} else {
 				return this.paper.line( thisBB.cx, thisBB.cy, handle.attr('cx'), handle.attr('cy') ).attr( lineAttributes );
 			};
@@ -172,17 +115,9 @@
 		};
 
 		Element.prototype.ftUpdateTransform = function() {
-			var yScale = "";
-			if (this.data("scaley")) {
-				yScale = " " + this.data("scaley");
-			} else {
-				yScale = " 1";
-			}
-			//var tstring = "t" + this.data("tx") + "," + this.data("ty") + this.ftGetInitialTransformMatrix().toTransformString() + 's' + this.data("scale") + yScale;
-			var tstring = "t" + this.data("tx") + "," + this.data("ty") + this.ftGetInitialTransformMatrix().toTransformString() + "r" + this.data("angle") + 's' + this.data("scale") + yScale;
+			var tstring = "t" + this.data("tx") + "," + this.data("ty") + this.ftGetInitialTransformMatrix().toTransformString() + "r" + this.data("angle") + 'S' + this.data("scale" );
 			this.attr({ transform: tstring });
 			this.data("bbT") && this.ftHighlightBB();
-			this.group.attr({ transform: "r" + this.data("angle") });
 			return this;
 		};
 
@@ -192,26 +127,158 @@
 			this.data("bbT", this.paper.rect( rectObjFromBB( this.getBBox(1) ) )
 							.attr({ fill: "none", stroke: ftOption.handleFill, strokeDasharray: ftOption.handleStrokeDash })
 							.transform( this.transform().global.toString() ) );
+			this.data("bb", this.paper.rect( rectObjFromBB( this.getBBox() ) )
+							.attr({ fill: "none", stroke: ftOption.handleFill, strokeDasharray: ftOption.handleStrokeDash }) );
 			return this;
 		};
 
-		Element.prototype.ftUpdatePosition = function(x, y) {
-			this.attr({x: x, y: y, cx: x, cy: y});
-			reinitHandles(this);
+		///scale section------------------
+/*
+		// Initialise our slider with its basic transform and drag funcs
+
+		Element.prototype.initSlider = function( params ) {
+										var emptyFunc = function() {};
+										this.data('origTransform', this.transform().local );
+										this.data('onDragEndFunc', params.onDragEndFunc || emptyFunc );
+										this.data('onDragFunc', params.onDragFunc || emptyFunc );
+										this.data('onDragStartFunc', params.onDragStartFunc || emptyFunc );
+						}
+
+		// initialise the params, and set up our max and min. Check if its a slider or knob to see how we deal
+
+		Element.prototype.sliderAnyAngle = function( params ) {
+						this.initSlider( params );
+						this.data("maxPosX", params.max); this.data("minPosX", params.min);
+						this.data("centerOffsetX", params.centerOffsetX); this.data("centerOffsetY", params.centerOffsetY)
+						this.data("posX", params.min);
+						if( params.type == 'knob' ) {
+										this.drag( moveDragKnob, startDrag, endDrag );
+						} else {
+										this.drag( moveDragSlider, startDrag, endDrag );
+						}
 		}
 
-		Element.prototype.ftUpdateRotation = function(angle) {
-			this.group.attr({ transform: "r" + angle });
-			reinitHandles(this);
+		Element.prototype.setCapMaxPosition = function( posX ) {
+			this.data("maxPosX", posX);
+			if (posX < this.data("posX")) {
+				this.setCapPosition(posX);
+			}
 		}
+		Element.prototype.setCapPosition = function( posX ) {
+			this.data("posX", posX);
+			this.attr({ transform: this.data("origTransform") + (posX ? "T" : "t") + [posX,0] });
+		}
+		// load in the slider svg file, and transform the group element according to our params earlier.
+		// Also choose which id is the cap
+
+		Paper.prototype.slider = function( params , callback) {
+						var myPaper = this,  myGroup;
+						var loaded = Snap.load( params.filename, function( frag ) {
+						//  console.log(frag);
+														myGroup = myPaper.group().add( frag );
+														myGroup.transform("t" + params.x + "," + params.y);
+														var myCap = myGroup.select( params.capSelector );
+														myCap.myGroup = myGroup;
+														myCap.data("sliderId", params.sliderId);
+														myCap.sliderAnyAngle( params );
+														sliderSetAttributes( myGroup, params.attr );
+														sliderSetAttributes( myCap, params.capattr );
+														myGroup.myCap = myCap;
+														callback(myGroup);
+										} );
+						return myGroup;
+		}
+
+	 // Extra func, to pass through extra attributes passed when creating the slider
+
+		function sliderSetAttributes ( myGroup, attr, data ) {
+						var myObj = {};
+						if( typeof attr != 'undefined' ) {
+										for( var prop in attr ) {
+														myObj[ prop ] = attr[prop];
+														myGroup.attr( myObj );
+														myObj = {};
+										};
+						};
+		};
+
+		// Our main slider startDrag, store our initial matrix settings.
+
+		var startDrag = function( x, y, ev ) {
+						startDragTarget = ev.target;
+						if( ! ( this.data("startBBox") ) ) {
+										this.data("startBBox", this.getBBox());
+										this.data("startScreenCTM",startDragTarget.getScreenCTM());
+						}
+						this.data('origPosX', this.data("posX") ); this.data('origPosY', this.data("posY") );
+						this.data("onDragStartFunc")();
+		}
+
+
+		// move the cap, our dx/dy will need to be transformed to element matrx. Test for min/max
+		// set a value 'fracX' which is a fraction of amount moved 0-1 we can use later.
+
+		function updateMovement( el, dx, dy ) {
+						// Below relies on parent being the file svg element, 9
+						var angle = el.myGroup.matrix.split().rotate;
+						var rotation = rotateVector(dx, dy, angle);
+						dx = rotation[0];
+						dy = rotation[1];
+						var snapInvMatrix = el.parent().transform().localMatrix.invert();
+						snapInvMatrix.e = snapInvMatrix.f = 0;
+						var tdx = snapInvMatrix.x( dx,dy ), tdy = snapInvMatrix.y( dx,dy );
+
+						el.data("posX", +el.data("origPosX") + tdx) ;// el.data("posY", +el.data("origPosY") + tdy);
+						var posX = +el.data("posX");
+						var maxPosX = +el.data("maxPosX");
+						var minPosX = +el.data("minPosX");
+
+						//if( posX > maxPosX ) { el.data("posX", maxPosX ); };
+						if( posX < minPosX ) { el.data("posX", minPosX ); };
+						el.data("fracX", 1/ ( (maxPosX - minPosX) / el.data("posX") ) );
+		}
+
+
+		function rotateVector(x, y, angle) {
+				var cx = 0, cy = 0;
+				x = Number(x);
+				y = Number(y);
+				var radians = (Math.PI / 180.0) * angle;
+				var cos = Math.cos(radians),
+						sin = Math.sin(radians),
+						nx = (cos * (x - cx)) + (sin * (y - cy)) + cx,
+						ny = (cos * (y - cy)) - (sin * (x - cx)) + cy;
+				return [nx, ny];
+		}
+
+		// Call the matrix checks above, and set any transformation
+		function moveDragSlider( dx,dy ) {
+						var posX;
+						updateMovement( this, dx, dy );
+						posX = this.data("posX");
+						this.attr({ transform: this.data("origTransform") + (posX ? "T" : "t") + [posX,0] });
+						this.data("onDragFunc")(this);
+		};
+
+		// drag our knob. Currently there is no min/max working, need to add a case for testing rotating anticlockwise beyond 0
+
+		function moveDragKnob( dx,dy,x,y, ev ) {
+						var pnt = startDragTarget.ownerSVGElement.createSVGPoint();
+						pnt.x = ev.clientX; pnt.y = ev.clientY;
+						var vPnt = pnt.matrixTransform(this.data("startScreenCTM").inverse());
+						var transformRequestObj = startDragTarget.ownerSVGElement.createSVGTransform();
+
+						var deg = Math.atan2(vPnt.x - this.data("startBBox").cx, vPnt.y - this.data("startBBox").cy) * 180 / Math.PI ;
+						deg = deg + 180;
+						this.transform('r' + -deg + "," + ( this.data("startBBox").cx - this.data("centerOffsetX") ) + "," + parseInt(this.data("startBBox").cy - -this.data("centerOffsetY") )  );
+						this.data("fracX", deg/360);
+						this.data("onDragFunc")(this);
+		}
+
+		function endDrag() {
+						this.data('onDragEndFunc')();
+		};*/
 	});
-
-
-	function reinitHandles(el) {
-		el.ftRemoveHandles();
-		el.ftCreateHandles();
-		el.ftHighlightBB();
-	}
 
 	function rectObjFromBB ( bb ) {
 		return { x: bb.x, y: bb.y, width: bb.width, height: bb.height }
@@ -221,7 +288,6 @@
 		this.parent().selectAll('circle').forEach( function( el, i ) {
 				el.ftStoreStartCenter();
 		} );
-		mainEl.ftInformSelected(mainEl, true);
 		mainEl.data("otx", mainEl.data("tx") || 0);
 		mainEl.data("oty", mainEl.data("ty") || 0);
 	};
@@ -240,65 +306,43 @@
 	}
 
 	function elementDragEnd( mainEl, dx, dy, x, y ) {
-		if (mainEl.onTransformed) {
-			mainEl.onTransformed(mainEl);
-		}
 	};
 
 	function dragHandleRotateStart( mainElement ) {
 		this.ftStoreStartCenter();
-		this.data('startAngle', mainElement.group.matrix?mainElement.group.matrix.split().rotate:0);
-		mainElement.ftInformSelected(mainElement, true);
 	};
 
 	function dragHandleRotateEnd( mainElement ) {
-		if (mainElement.onTransformed) {
-			mainElement.onTransformed(mainElement);
-		}
 	};
 
+	function normalizeScaleVector(x, y, s) {
+		var norm = Math.sqrt(x * x + y * y);
+	  if (norm != 0) { // as3 return 0,0 for a point of zero length
+	    x = s * x / norm;
+	    y = s * y / norm;
+	  }
+		console.log(norm);
+		return [x, y];
+	}
 	function dragHandleRotateMove( mainEl, dx, dy, x, y, event ) {
 		var handle = this;
 		var mainBB = mainEl.getBBox();
+		console.log(dx, dy, mainEl.data("scaleFactor"));
+		// var normalised = normalizeScaleVector(dx, dy, mainEl.data("scaleFactor"));
+		// dx = normalised[0];
+		// dy = normalised[1];
 
-		var x = this.data("tx") + dx;
-		var y = this.data("ty") + dy;
+		var cx = Number(handle.data('ocx')) + dx;
+		var cy = Number(handle.data('ocy')) + dy;
 
-		var angle = Snap.angle( mainBB.cx, mainBB.cy, x, y ) - 180;
+		mainEl.data("angle", Snap.angle( mainBB.cx, mainBB.cy, cx, cy) - 180);
 
-		handle.attr({ cx: +handle.data('ocx') + dx, cy: +handle.data('ocy') + dy });
-		var angle = Snap.angle( mainBB.cx, mainBB.cy, handle.attr('cx'), handle.attr('cy') ) - 180 + this.data('startAngle');
+//		var distance = calcDistance( mainBB.cx, mainBB.cy, cx, cy );
 
+		handle.attr({ cx: cx, cy: cy });
 
-		mainEl.data("angle", angle);
-		var distance = calcDistance( mainBB.cx, mainBB.cy, handle.attr('cx'), handle.attr('cy') );
-
-		/*handle.attr({
-			cx: mainBB.cx + distance,
-			cy: mainBB.cy
-		});*/
-
+		mainEl.ftUpdateTransform();
 		mainEl.ftDrawJoinLine( handle );
-
-		mainEl.data("scale", distance / mainEl.data("scaleFactor"), 1 );
-		mainEl.ftUpdateTransform();
-	};
-
-	function dragHandleYRotateMove( mainEl, dx, dy, x, y, event ) {
-		var handle = this;
-		var mainBB = mainEl.getBBox();
-
-		handle.attr({ cx: +handle.data('ocx') + dx, cy: +handle.data('ocy') + dy });
-		var distance = calcDistance( mainBB.cx, mainBB.cy, handle.attr('cx'), handle.attr('cy') );
-
-		handle.attr({
-			cx: mainBB.cx,
-			cy: mainBB.cy - distance
-		});
-
-		mainEl.data("angle", this.data('startAngle'));
-		mainEl.data("scaley", distance / mainEl.data("scaleFactorY"), 1 );
-		mainEl.ftUpdateTransform();
 	};
 
 	function calcDistance(x1,y1,x2,y2) {

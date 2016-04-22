@@ -94,10 +94,11 @@ const WhiteboardCanvas = React.createClass({
           default:
             break;
         };
-
-        if (obj && self.canEditShape(item)) {
+        if (obj && !obj.created && self.canEditShape(item)) {
           self.prepareNewElement(obj);
-          self.addInputControl(obj);
+          //self.addInputControl(obj);
+          obj.ftCreateHandles();
+          obj.created = true;
         }
       }
 
@@ -114,6 +115,7 @@ const WhiteboardCanvas = React.createClass({
           if (item.event.element.attr.style.indexOf("marker") != -1) {
             obj.attr({markerStart: self.getArrowShape(item.event.element.attr.stroke)});
           }
+
         }
       }
     });
@@ -141,8 +143,54 @@ const WhiteboardCanvas = React.createClass({
     this.activeShape = null;
     var self = this;
     this.initMessaging();
+    console.log("~~~~~~~~", this.props.currentUser);
     this.activeColour = this.isFacilitator()?'red':this.props.currentUser.colour;
     this.activeStrokeColour = this.activeColour;
+    this.createScaleControl();
+  },
+  createScaleControl() {
+    var self = this;
+
+    var myDragEndFunc = function( el ) {
+  }
+
+  var myDragStartFunc = function() {
+  }
+
+
+  // what we want to do when the slider changes. They could have separate funcs as the call back or just pick the right element
+  var myDragFunc = function( el ) {
+
+    console.log(el.data("sliderId"), ":", el.data("fracX"));
+    if( el.data("sliderId") == "slider1" ) {
+
+    }
+  }
+  return;
+
+    self.snap.slider({ sliderId: "x", capSelector: "#cap", filename: "/images/svgControls/sl.svg",
+      x: "5", y:"20", min: "0", max: "300", centerOffsetX: "4", centerOffsetY: "4",
+      onDragEndFunc: myDragEndFunc, onDragStartFunc: myDragStartFunc, onDragFunc: myDragFunc,
+      attr: { transform: 't0.9' } } , function(elX) {
+          // Create vertical control
+          self.snap.slider({ sliderId: "y", capSelector: "#cap", filename: "/images/svgControls/sl.svg",
+            x: "10", y:"20", min: "0", max: "300", centerOffsetX: "4", centerOffsetY: "4",
+            onDragEndFunc: myDragEndFunc, onDragStartFunc: myDragStartFunc, onDragFunc: myDragFunc,
+            attr: { transform: 'r90' } } , function(elY) {
+              self.scaleXControl = elX;
+              self.scaleYControl = elY;
+
+              elX.attr({transform: 't110,110r135'});
+              elY.attr({transform: 't110,110r45'});
+
+              elX.myCap.setCapPosition(150);
+              elY.myCap.setCapPosition(15);
+
+              setTimeout(function() {
+                elX.myCap.setCapMaxPosition(100);
+              }, 2000);
+            });
+      });
   },
   setActiveFillColour(fill) {
     this.activeStrokeColour = this.activeColour;
@@ -174,7 +222,7 @@ const WhiteboardCanvas = React.createClass({
   },
   addText(text) {
     this.activeShape = this.snap.text(this.MAX_WIDTH/2, this.MAX_HEIGHT/2, text).transform('r0.1');
-    this.activeShape.ftInitShape();
+    //this.activeShape.ftInitShape();
     this.mode = this.ModeEnum.none;
     this.fillColour = this.activeColour;
     this.activeFillColour = this.activeColour;
@@ -218,8 +266,10 @@ const WhiteboardCanvas = React.createClass({
     this.activeStrokeColour = 'red';
   },
   prepareNewElement(el) {
-    el.ftSetSelectedCallback(this.shapeSelected);
-    el.ftSetTransformedCallback(this.shapeTransformed);
+    // el.ftSetSelectedCallback(this.shapeSelected);
+    // el.ftSetTransformedCallback(this.shapeTransformed);
+  //  console.log(el);
+    el.ftCreateHandles();
   },
   addInputControl(el) {
     el.ftCreateHandles();
@@ -262,11 +312,12 @@ const WhiteboardCanvas = React.createClass({
     return 'Whiteboard_';
   },
   shouldComponentUpdate(nextProps) {
+    console.log("__", nextProps);
     return false;
   },
   componentDidUpdate() {
-    let s = Snap(this.getName());
-    this.componentDidMount();
+  //  let s = Snap(this.getName());
+    //this.componentDidMount();
   },
   eventCoords(e) {
     return({x: Number(e.clientX), y: Number(e.clientY)});
@@ -289,7 +340,7 @@ const WhiteboardCanvas = React.createClass({
   handleObjectCreated() {
     if (this.activeShape && !this.activeShape.created) {
       this.activeShape.created = true;
-      this.prepareNewElement(this.activeShape);
+      //this.prepareNewElement(this.activeShape);
       this.addInputControl(this.activeShape);
       var temp = this.activeShape;
       this.sendObjectData('draw');
@@ -297,6 +348,7 @@ const WhiteboardCanvas = React.createClass({
     }
     this.coords = null;
     this.activeShape = null;
+    console.log("created");
   },
   handleMouseDown: function(e){
     if (!this.isValidButton(e)) return;
@@ -361,9 +413,9 @@ const WhiteboardCanvas = React.createClass({
         this.setStyle(this.activeShape, this.fillColour, this.strokeWidth, this.strokeColour);
       }
 
-      if (this.activeShape) {
-        this.activeShape.ftInitShape();
-      }
+      // if (this.activeShape) {
+      //   this.activeShape.ftInitShape();
+      // }
     }
 
     if (this.activeShape && !this.activeShape.created) {
