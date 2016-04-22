@@ -32,8 +32,8 @@
 						elementDragStart.bind( translateDragger, freetransEl ),
 						elementDragEnd.bind( translateDragger, freetransEl ) );
 
-			freetransEl.undblclick();
-			freetransEl.data("dblclick", freetransEl.dblclick( function() {  this.ftRemoveHandles() } ) );
+			freetransEl.unclick();
+			freetransEl.data("click", freetransEl.click( function() {  this.ftRemoveHandles() } ) );
 
 			rotateDragger.drag(
 				dragHandleRotateMove.bind( rotateDragger, freetransEl ),
@@ -43,8 +43,22 @@
 			freetransEl.ftStoreInitialTransformMatrix();
 
 			freetransEl.ftHighlightBB();
+			this.ftInformSelected(this, true);
 			return this;
 		};
+
+		Element.prototype.ftInformSelected = function(selected) {
+			if (this.onSelected) {
+				this.onSelected(this, selected);
+			}
+		}
+
+		Element.prototype.ftUnselect = function() {
+			this.ftRemoveHandles();
+			if (this.onSelected) {
+				this.onSelected(this, false);
+			}
+		}
 
 		Element.prototype.ftInit = function() {
 			this.data("angle", 0);
@@ -53,6 +67,14 @@
 			this.data("ty", 0);
 			return this;
 		};
+
+		Element.prototype.ftSetSelectedCallback = function(c) {
+			this.onSelected = c;
+		}
+
+		Element.prototype.ftSetTransformedCallback = function(c) {
+			this.onTransformed = c;
+		}
 
 		Element.prototype.ftCleanUp = function() {
 			var myClosureEl = this;
@@ -77,12 +99,11 @@
 		};
 
 		Element.prototype.ftRemoveHandles = function() {
-			this.undblclick();
-			console.log("___", this.data());
-			this.data( "handlesGroup").remove();
+			this.unclick();
+			if (this.data( "handlesGroup"))	this.data( "handlesGroup").remove();
 			this.data( "bbT" ) && this.data("bbT").remove();
 			this.data( "bb" ) && this.data("bb").remove();
-			this.dblclick( function() { this.ftCreateHandles() } ) ;
+			this.click( function() { this.ftCreateHandles() } ) ;
 			this.ftCleanUp();
 			return this;
 		};
@@ -306,6 +327,9 @@
 	}
 
 	function elementDragEnd( mainEl, dx, dy, x, y ) {
+		if (mainEl.onTransformed) {
+			mainEl.onTransformed(mainEl);
+		}
 	};
 
 	function dragHandleRotateStart( mainElement ) {
