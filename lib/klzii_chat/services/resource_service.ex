@@ -58,6 +58,7 @@ defmodule KlziiChat.Services.ResourceService do
       where: e.type in ~w(image audio file video)
     result = Repo.all(query)
 
+
     if ResourcePermissions.can_zip(account_user, result) do
       changeset = Ecto.build_assoc(
         account_user.account, :resources,
@@ -66,11 +67,13 @@ defmodule KlziiChat.Services.ResourceService do
         type: "file",
         name: name,
         status: "progress",
+        expiryDate: Timex.DateTime.now |> Timex.shift(days: 1),
         properties: %{zip_ids: ids}
       )
 
       case Repo.insert(changeset) do
         {:ok, resource} ->
+          KlziiChat.Files.Tasks.run(resource, ids)
           {:ok, resource }
         {:error, reason} ->
           {:error, reason}

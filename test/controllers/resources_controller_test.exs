@@ -61,6 +61,9 @@ defmodule KlziiChat.ResourcesControllerTest do
   end
 
   test "init zip action", %{conn: conn, zip_resource: zip_resource, image_resource: image_resource} do
+    file = %Plug.Upload{ content_type: "image/jpg", path: @image, filename: "hamster.jpg"}
+    post(conn, "api/resources/upload", %{ name: "hamster", type: "image", scope: "collage", file: file })
+
     conn = post conn, resources_path(conn, :zip, %{"ids" => [zip_resource.id,image_resource.id], "name"=> "newZpi"})
     assert json_response(conn, 200)["resource"]["name"] == "newZpi"
   end

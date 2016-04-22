@@ -17,7 +17,7 @@ defmodule KlziiChat.Resource do
     field :name, :string
     field :status, :string, default: "completed"
     field :properties, :map, default: %{}
-    field :expiryDate, Ecto.Date
+    field :expiryDate, Timex.Ecto.DateTime
     timestamps [inserted_at: :createdAt, updated_at: :updatedAt]
   end
 

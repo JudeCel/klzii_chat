@@ -1,5 +1,7 @@
 defmodule KlziiChat.Files.Tasks do
-  alias KlziiChat.{Repo, Resource}
+  alias KlziiChat.{Repo, Resource, ResourceView}
+  import Ecto
+  import Ecto.Query
 
   def zip_extension, do: ".zip"
 
@@ -8,7 +10,6 @@ defmodule KlziiChat.Files.Tasks do
   end
 
   @spec run(%Resource{}, List.t) :: {:ok}
-
   def run(zip_record, ids) do
     current_dir = File.cwd!
     id = to_string(zip_record.id)
@@ -17,11 +18,25 @@ defmodule KlziiChat.Files.Tasks do
     {:ok} = download(id, list)
     {:ok, path} = zip(id, zip_record.name)
     File.cd(current_dir)
+    
+    resource =
+      Repo.get!(Resource, zip_record.id)
+      |> Resource.changeset(%{"file" => path})
+      |> Repo.update!
     {:ok}
   end
 
   def buidld_resource_list(ids) do
-    {:ok, []}
+    result =
+      from( r in Resource,
+        where: r.id in ^ids,
+        where: r.type in ~w(image audio file video)
+      )|> Repo.all
+      |> Enum.map(fn resource ->
+        resp = ResourceView.render("resource.json", %{resource: resource})
+        {resp.name, resp.url.full}
+      end)
+    {:ok, result}
   end
 
   @spec download(String.t, List.t) :: {:ok }
