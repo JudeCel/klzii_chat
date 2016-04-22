@@ -24,7 +24,7 @@ defmodule KlziiChat.Uploaders.Audio do
 
   # Override the persisted filenames:
   def filename(version, {file, scope}) do
-    str = "#{version}_#{file.file_name}"
+    str = "#{version}_#{scope.name}"
     Regex.replace(~r/( |-)/, str, "")
   end
 

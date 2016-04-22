@@ -28,7 +28,8 @@ defmodule KlziiChat.Uploaders.Image do
   end
   # Override the persisted filenames:
   def filename(version, {file, scope}) do
-    "#{version}_#{file.file_name}"
+    str = "#{version}_#{scope.name}"
+    Regex.replace(~r/( |-)/, str, "")
   end
 
   def storage_dir(_, {file, scope}) do
