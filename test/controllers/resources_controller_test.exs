@@ -41,7 +41,7 @@ defmodule KlziiChat.ResourcesControllerTest do
   end
 
   test "return root key resources", %{conn: conn} do
-    conn = get conn, resources_path(conn, :index, "all")
+    conn = get conn, resources_path(conn, :index)
     assert json_response(conn, 200)["resources"] |> is_list
   end
 

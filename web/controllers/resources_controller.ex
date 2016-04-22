@@ -2,8 +2,7 @@ defmodule KlziiChat.ResourcesController do
   use KlziiChat.Web, :controller
   alias KlziiChat.{Resource, Repo, ResourceView, AccountUser}
   alias KlziiChat.Services.{ ResourceService }
-  import Ecto
-  import Ecto.Query
+  alias KlziiChat.Queries.Resources, as: QueriesResources
   use Guardian.Phoenix.Controller
 
   plug Guardian.Plug.EnsureAuthenticated, handler: KlziiChat.Guardian.AuthErrorHandler
@@ -14,12 +13,9 @@ defmodule KlziiChat.ResourcesController do
   end
 
   def index(conn, params, account_user, claims) do
-    query =  from(r in assoc(account_user.account, :resources))
-
-    if params["type"] != "all"  do
-      query = where(query, type: ^params["type"] )
-    end
-
+    query =
+      Ecto.Query.from(r in assoc(account_user.account, :resources))
+      |> QueriesResources.find_by_params(params)
     resources =
       Repo.all(query)
       |> Enum.map(fn resource ->
