@@ -36,7 +36,7 @@ defmodule KlziiChat.ResourceView do
       "image" ->
         %{
           thumb: url_builder(resource, Image,  Map.get(resource, :image), :thumb ),
-          full: url_builder(resource, Image,  Map.get(resource, :image))
+          full: url_builder(resource, Image,  Map.get(resource, :image), :original)
         }
       "link" ->
         %{
@@ -44,15 +44,15 @@ defmodule KlziiChat.ResourceView do
         }
       "audio" ->
         %{
-          full: url_builder(resource, Audio,  Map.get(resource, :audio))
+          full: url_builder(resource, Audio,  Map.get(resource, :audio), :original)
         }
       "video" ->
         %{
-          full: url_builder(resource, Video,  Map.get(resource, :video))
+          full: url_builder(resource, Video,  Map.get(resource, :video), :original)
         }
       _ ->
         %{
-          full: url_builder(resource, File,  Map.get(resource, :file, nil) )
+          full: url_builder(resource, File,  Map.get(resource, :file, nil), :original )
         }
     end
   end
