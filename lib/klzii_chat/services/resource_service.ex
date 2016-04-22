@@ -26,8 +26,7 @@ defmodule KlziiChat.Services.ResourceService do
       from r in assoc(account_user.account, :resources),
         where: r.id in ^[id]
     )
-    ResourceView.render("resource.json", %{resource: resource})
-    {:ok, ResourceView.render("resource.json", %{resource: resource})}
+    {:ok, resource}
   end
 
   @spec deleteByIds(Integer.t, List.t) :: {:ok, %Resource{} } | {:error, String.t}
