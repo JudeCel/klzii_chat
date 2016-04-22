@@ -16,11 +16,13 @@ defmodule KlziiChat.Resource do
     field :scope, :string
     field :name, :string
     field :status, :string, default: "completed"
+    field :properties, :map, default: %{}
+    field :expiryDate, Ecto.Date
     timestamps [inserted_at: :createdAt, updated_at: :updatedAt]
   end
 
   @required_fields ~w(status scope type accountUserId accountId name)
-  @optional_fields ~w(link)
+  @optional_fields ~w(link properties)
 
   @required_file_fields ~w()
   @optional_file_fields ~w(file image audio video)

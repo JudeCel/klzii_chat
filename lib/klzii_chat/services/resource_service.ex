@@ -65,7 +65,8 @@ defmodule KlziiChat.Services.ResourceService do
         scope: "zip",
         type: "file",
         name: name,
-        status: "progress"
+        status: "progress",
+        properties: %{zip_ids: ids}
       )
 
       case Repo.insert(changeset) do

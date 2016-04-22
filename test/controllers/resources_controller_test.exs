@@ -62,7 +62,6 @@ defmodule KlziiChat.ResourcesControllerTest do
 
   test "init zip action", %{conn: conn, zip_resource: zip_resource, image_resource: image_resource} do
     conn = post conn, resources_path(conn, :zip, %{"ids" => [zip_resource.id,image_resource.id], "name"=> "newZpi"})
-    IO.inspect(json_response(conn, 200))
     assert json_response(conn, 200)["resource"]["name"] == "newZpi"
   end
 
