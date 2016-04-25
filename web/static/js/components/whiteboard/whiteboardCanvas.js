@@ -150,7 +150,6 @@ const WhiteboardCanvas = React.createClass({
       width = box.width/2;
       height = box.height/2;
     }
-    console.log(width, height);
 
     this.scaleXControl.myCap.setCapPosition(0);
     this.scaleYControl.myCap.setCapPosition(0);
@@ -189,16 +188,10 @@ const WhiteboardCanvas = React.createClass({
   },
   createScaleControl() {
     var self = this;
-    //var originalTransform;
     var myDragEndFunc = function( el ) {
     }
 
     var myDragStartFunc = function() {
-      //originalTransform = self.activeShape.matrix.split();
-      /*
-      dx
-      dy
-      */
     }
 
 
@@ -209,23 +202,12 @@ const WhiteboardCanvas = React.createClass({
       var tstring= tstring = "t" + self.activeShape.data("tx") + "," + self.activeShape.data("ty") + self.activeShape.ftGetInitialTransformMatrix().toTransformString() + "r" + self.activeShape.data("angle");
 
       if( el.data("sliderId") == "x" ) {
-        // console.log("x=", el.data("sliderId"), ":", el.data("fracX"));
-        // console.log("++++++", self.activeShape.attr());
-        //self.activeShape.matrix = self.activeShape.matrix.scale(self.activeShape.data("fracX"));
-        tstring += 's' + el.data("fracX");
+        tstring += 's' + el.data("fracX")+",1";
       } else if( el.data("sliderId") == "y" ) {
-        // console.log("++++++", self.activeShape.attr());
-        // console.log("y=", el.data("sliderId"), ":", el.data("fracX"));
-        //self.activeShape.matrix = self.activeShape.matrix.scale(1, self.activeShape.data("fracX"));
-
          tstring += 's1,' + el.data("fracX");
-        // self.attr({
-        //         transform: self.activeShape.data('origTransform') + (self.activeShape.data('origTransform') ? "S" : "s") + scale
-        // });
       }
       self.activeShape.attr({transform: tstring});
     }
-    //return;
 
     self.snap.slider({ sliderId: "x", capSelector: "#cap", filename: "/images/svgControls/sl.svg",
       x: "0", y:"0", min: "0", max: "300", centerOffsetX: "0", centerOffsetY: "0",
