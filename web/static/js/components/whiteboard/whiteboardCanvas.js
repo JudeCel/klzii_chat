@@ -97,8 +97,6 @@ const WhiteboardCanvas = React.createClass({
         };
         if (obj && !obj.created && self.canEditShape(item)) {
           self.prepareNewElement(obj);
-          //self.addInputControl(obj);
-          //obj.ftCreateHandles();
           obj.created = true;
         }
       }
@@ -116,7 +114,6 @@ const WhiteboardCanvas = React.createClass({
           if (item.event.element.attr.style.indexOf("marker") != -1) {
             obj.attr({markerStart: self.getArrowShape(item.event.element.attr.stroke)});
           }
-
         }
       }
     });
@@ -132,9 +129,51 @@ const WhiteboardCanvas = React.createClass({
     this.snap.clear();
     this.shapes = [];
   },
-  shapeTransformed(shape) {
+  updateTransformControls(shape) {
+    var angle = shape.matrix.split().rotate;
+    var transformStr = "";
+    var attrs = shape.attr();
+    var width = 0;
+    var height = 0;
+    var box = shape.getBBox();
+    transformStr = "t"+box.cx+","+box.cy+"r";
+
+    var originalTransform = shape.matrix.split();
+    //console.log(originalTransform);
+    if (shape.type == "rect") {
+      width = attrs.width/2*originalTransform.scalex;
+      height = attrs.height/2*originalTransform.scaley;
+    } else if (shape.type == "ellipse") {
+      width = attrs.rx*originalTransform.scalex;
+      height = attrs.ry*originalTransform.scaley;
+    } else {
+      width = box.width/2;
+      height = box.height/2;
+    }
+    console.log(width, height);
+
+    this.scaleXControl.myCap.setCapPosition(0);
+    this.scaleYControl.myCap.setCapPosition(0);
+    this.scaleXControl.attr({transform: transformStr+angle});
+    this.scaleYControl.attr({transform: transformStr+(angle+90)});
+    this.scaleXControl.myCap.setCapPosition(width);
+    this.scaleYControl.myCap.setCapPosition(height);
+
+    this.scaleXControl.myCap.setCapMaxPosition(width);
+    this.scaleYControl.myCap.setCapMaxPosition(height);
+
+
+    this.scaleXControl.insertAfter(shape);
+    this.scaleYControl.insertAfter(shape);
+  },
+  shapeFinishedTransform(shape) {
+    this.updateTransformControls(shape);
     this.activeShape = shape;
     this.sendObjectData('move');
+  },
+  shapeTransformed(shape) {
+    this.updateTransformControls(shape);
+    this.activeShape = shape;
   },
   moveDistance(dx, dy) {
     return Math.sqrt( Math.pow( dx, 2)  + Math.pow( dy, 2)  );
@@ -150,45 +189,55 @@ const WhiteboardCanvas = React.createClass({
   },
   createScaleControl() {
     var self = this;
-
+    //var originalTransform;
     var myDragEndFunc = function( el ) {
-  }
-
-  var myDragStartFunc = function() {
-  }
-
-
-  // what we want to do when the slider changes. They could have separate funcs as the call back or just pick the right element
-  var myDragFunc = function( el ) {
-
-    console.log(el.data("sliderId"), ":", el.data("fracX"));
-    if( el.data("sliderId") == "slider1" ) {
-
     }
-  }
-  return;
+
+    var myDragStartFunc = function() {
+      //originalTransform = self.activeShape.matrix.split();
+      /*
+      dx
+      dy
+      */
+    }
+
+
+    // what we want to do when the slider changes. They could have separate funcs as the call back or just pick the right element
+    var myDragFunc = function( el ) {
+      if (!self.activeShape) return;
+      var elTransform = self.activeShape.matrix;
+      var tstring= tstring = "t" + self.activeShape.data("tx") + "," + self.activeShape.data("ty") + self.activeShape.ftGetInitialTransformMatrix().toTransformString() + "r" + self.activeShape.data("angle");
+
+      if( el.data("sliderId") == "x" ) {
+        // console.log("x=", el.data("sliderId"), ":", el.data("fracX"));
+        // console.log("++++++", self.activeShape.attr());
+        //self.activeShape.matrix = self.activeShape.matrix.scale(self.activeShape.data("fracX"));
+        tstring += 's' + el.data("fracX");
+      } else if( el.data("sliderId") == "y" ) {
+        // console.log("++++++", self.activeShape.attr());
+        // console.log("y=", el.data("sliderId"), ":", el.data("fracX"));
+        //self.activeShape.matrix = self.activeShape.matrix.scale(1, self.activeShape.data("fracX"));
+
+         tstring += 's1,' + el.data("fracX");
+        // self.attr({
+        //         transform: self.activeShape.data('origTransform') + (self.activeShape.data('origTransform') ? "S" : "s") + scale
+        // });
+      }
+      self.activeShape.attr({transform: tstring});
+    }
+    //return;
 
     self.snap.slider({ sliderId: "x", capSelector: "#cap", filename: "/images/svgControls/sl.svg",
-      x: "5", y:"20", min: "0", max: "300", centerOffsetX: "4", centerOffsetY: "4",
+      x: "0", y:"0", min: "0", max: "300", centerOffsetX: "0", centerOffsetY: "0",
       onDragEndFunc: myDragEndFunc, onDragStartFunc: myDragStartFunc, onDragFunc: myDragFunc,
       attr: { transform: 't0.9' } } , function(elX) {
           // Create vertical control
-          self.snap.slider({ sliderId: "y", capSelector: "#cap", filename: "/images/svgControls/sl.svg",
-            x: "10", y:"20", min: "0", max: "300", centerOffsetX: "4", centerOffsetY: "4",
+          self.snap.slider({ sliderId:"y", capSelector: "#cap", filename: "/images/svgControls/sl.svg",
+            x: "0", y:"0", min: "0", max: "300", centerOffsetX: "0", centerOffsetY: "0",
             onDragEndFunc: myDragEndFunc, onDragStartFunc: myDragStartFunc, onDragFunc: myDragFunc,
             attr: { transform: 'r90' } } , function(elY) {
               self.scaleXControl = elX;
               self.scaleYControl = elY;
-
-              elX.attr({transform: 't110,110r135'});
-              elY.attr({transform: 't110,110r45'});
-
-              elX.myCap.setCapPosition(150);
-              elY.myCap.setCapPosition(15);
-
-              setTimeout(function() {
-                elX.myCap.setCapMaxPosition(100);
-              }, 2000);
             });
       });
   },
@@ -222,7 +271,6 @@ const WhiteboardCanvas = React.createClass({
   },
   addText(text) {
     this.activeShape = this.snap.text(this.MAX_WIDTH/2, this.MAX_HEIGHT/2, text).transform('r0.1');
-    //this.activeShape.ftInitShape();
     this.mode = this.ModeEnum.none;
     this.fillColour = this.activeColour;
     this.activeFillColour = this.activeColour;
@@ -269,7 +317,7 @@ const WhiteboardCanvas = React.createClass({
     el.ftCreateHandles();
     el.ftSetSelectedCallback(this.shapeSelected);
     el.ftSetTransformedCallback(this.shapeTransformed);
-  //  console.log(el);
+    el.ftSetFinishedTransformCallback(this.shapeFinishedTransform);
   },
   addInputControl(el) {
     el.ftCreateHandles();
@@ -288,6 +336,7 @@ const WhiteboardCanvas = React.createClass({
 
       if (el) {
         this.activeShape = el;
+        this.shapeFinishedTransform(el);
       }
     }
   },

@@ -26,7 +26,7 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.98994949"
-     inkscape:cx="183.73249"
+     inkscape:cx="36.250218"
      inkscape:cy="758.2426"
      inkscape:document-units="px"
      inkscape:current-layer="g3733"
@@ -56,11 +56,11 @@
     <g
        id="g3733">
       <circle
-         r="20"
-         cy="31.097984"
-         cx="25.662497"
+         r="8.0618334"
+         cy="10.894934"
+         cx="10.510209"
          id="cap"
-         style="fill:#770000;stroke:#000000;stroke-width:4" />
+         style="fill:#770000;stroke:#000000;stroke-width:1.61236668" />
     </g>
   </g>
 </svg>

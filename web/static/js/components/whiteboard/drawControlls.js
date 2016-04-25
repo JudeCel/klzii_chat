@@ -5,7 +5,7 @@
 	Snap.plugin( function( Snap, Element, Paper, global  ) {
 
 		var ftOption = {
-			handleFill: "silver",
+			handleFill: "#c0c0c090",
 			handleStrokeDash: "5,5",
 			handleStrokeWidth: "2",
 			handleLength: "75",
@@ -17,11 +17,12 @@
 			this.unclick();
 			this.onSelected = null;
 			this.onTransformed = null;
+			this.onFinishTransform = null;
 			if (this.group) this.group.remove();
 			this.remove();
 			this.removeData();
 		}
-	  
+
 		Element.prototype.ftCreateHandles = function() {
 			this.ftInit();
 			var freetransEl = this;
@@ -82,6 +83,10 @@
 
 		Element.prototype.ftSetTransformedCallback = function(c) {
 			this.onTransformed = c;
+		}
+
+		Element.prototype.ftSetFinishedTransformCallback = function(c) {
+			this.onFinishTransform = c;
 		}
 
 		Element.prototype.ftCleanUp = function() {
@@ -162,7 +167,7 @@
 		};
 
 		///scale section------------------
-/*
+
 		// Initialise our slider with its basic transform and drag funcs
 
 		Element.prototype.initSlider = function( params ) {
@@ -203,7 +208,6 @@
 		Paper.prototype.slider = function( params , callback) {
 						var myPaper = this,  myGroup;
 						var loaded = Snap.load( params.filename, function( frag ) {
-						//  console.log(frag);
 														myGroup = myPaper.group().add( frag );
 														myGroup.transform("t" + params.x + "," + params.y);
 														var myCap = myGroup.select( params.capSelector );
@@ -306,7 +310,7 @@
 
 		function endDrag() {
 						this.data('onDragEndFunc')();
-		};*/
+		};
 	});
 
 	function rectObjFromBB ( bb ) {
@@ -333,13 +337,18 @@
 		mainEl.data("ty", mainEl.data("oty") + +dy);
 		mainEl.ftUpdateTransform();
 		mainEl.ftDrawJoinLine( dragHandle );
+		informTransformed(mainEl);
 	}
 
 	function elementDragEnd( mainEl, dx, dy, x, y ) {
-		if (mainEl.onTransformed) {
-			mainEl.onTransformed(mainEl);
-		}
+		informFinishedTransform(mainEl);
 	};
+
+	function informFinishedTransform(mainEl) {
+		if (mainEl.onFinishTransform) {
+			mainEl.onFinishTransform(mainEl);
+		}
+	}
 
 	function dragHandleRotateStart( mainElement ) {
 		this.ftInformSelected(mainElement, true);
@@ -347,6 +356,7 @@
 	};
 
 	function dragHandleRotateEnd( mainElement ) {
+		informFinishedTransform(mainElement);
 	};
 
 	function normalizeScaleVector(x, y, s) {
@@ -355,13 +365,13 @@
 	    x = s * x / norm;
 	    y = s * y / norm;
 	  }
-		console.log(norm);
+	//	console.log(norm);
 		return [x, y];
 	}
 	function dragHandleRotateMove( mainEl, dx, dy, x, y, event ) {
 		var handle = this;
 		var mainBB = mainEl.getBBox();
-		console.log(dx, dy, mainEl.data("scaleFactor"));
+	//	console.log(dx, dy, mainEl.data("scaleFactor"));
 		// var normalised = normalizeScaleVector(dx, dy, mainEl.data("scaleFactor"));
 		// dx = normalised[0];
 		// dy = normalised[1];
@@ -377,7 +387,15 @@
 
 		mainEl.ftUpdateTransform();
 		mainEl.ftDrawJoinLine( handle );
+
+		informTransformed(mainEl);
 	};
+
+	function informTransformed(mainEl) {
+		if (mainEl.onTransformed) {
+			mainEl.onTransformed(mainEl);
+		}
+	}
 
 	function calcDistance(x1,y1,x2,y2) {
 		return Math.sqrt( Math.pow( (x1 - x2), 2)  + Math.pow( (y1 - y2), 2)  );
