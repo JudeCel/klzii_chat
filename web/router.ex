@@ -32,15 +32,15 @@ defmodule KlziiChat.Router do
     options "/zip", ResourcesController, :zip
     options "/upload", ResourcesController, :upload
     options "/delete", ResourcesController, :delete
-    options "/show/:id", ResourcesController, :show
+    options "/:id", ResourcesController, :show
 
     # Generic routes for API be call from original domain
     get "/", ResourcesController, :index
     get "/ping", ResourcesController, :ping
     post "/zip", ResourcesController, :zip
     post "/upload", ResourcesController, :upload
-    get "/show/:id", ResourcesController, :show
     delete "/delete", ResourcesController, :delete
+    get "/:id", ResourcesController, :show
   end
 
   scope "api/surveys", KlziiChat do
