@@ -28,9 +28,8 @@ defmodule KlziiChat.Files.TasksTest do
   end
 
   test "download ids can't be empty" do
-     assert_raise RuntimeError, ~r/^Ids list can't be empty!$/, fn ->
-        FileZipTask.download("name",[])
-    end
+    {:error, message} = FileZipTask.download("name",[])
+    assert(message == "Ids list can't be empty!")
   end
 
   test "when init_dir then change current dir location" do

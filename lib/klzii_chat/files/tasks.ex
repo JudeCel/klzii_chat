@@ -9,24 +9,44 @@ defmodule KlziiChat.Files.Tasks do
      System.tmp_dir <> "/klzii_chat_zips/" <>  to_string(Mix.env) <>  "/"
   end
 
-  @spec run(%Resource{}, List.t) :: {:ok}
+  @spec run(%Resource{}, List.t) :: {:ok, %Resource{} | {:error, String.t}}
   def run(zip_record, ids) do
     current_dir = File.cwd!
     id = to_string(zip_record.id)
-    {:ok, list} = buidld_resource_list(ids)
 
-    {:ok} = download(id, list)
-    {:ok, path} = zip(id, zip_record.name)
-    File.cd(current_dir)
-    
-    resource =
-      Repo.get!(Resource, zip_record.id)
-      |> Resource.changeset(%{"file" => path})
-      |> Repo.update!
-    {:ok}
+    with {:ok, list} <- build_resource_list(ids),
+      {:ok } <- download(id, list),
+      {:ok, path} <- zip(id, zip_record.name),
+      :ok <- File.cd(current_dir),
+      {:ok, resource } <- update_success_zip(zip_record.id, path),
+      do: {:ok, resource}
+    else
+      {:error, reason} ->
+        update_failed_zip(zip_record.id, reason)
+        {:error, reason}
+      {key, val} ->
+        {key, val}
+
   end
 
-  def buidld_resource_list(ids) do
+
+  @spec update_success_zip(List.t, String.t ) :: %Resource{}
+  def update_success_zip(id, file_path) do
+    Repo.get!(Resource, id)
+      |> Resource.changeset(%{"file" => file_path, "status" => "completed"})
+      |> Repo.update
+  end
+  @spec update_failed_zip(List.t, String.t) :: %Resource{}
+  def update_failed_zip(id, reason) do
+    resource = Repo.get!(Resource, id)
+    properties = resource.properties |> Map.put(:error, reason)
+
+    Resource.changeset(resource, %{"status" => "failed", "properties" => properties})
+    |> Repo.update
+  end
+
+  @spec build_resource_list(List.t) :: {:ok, List.t }
+  def build_resource_list(ids) do
     result =
       from( r in Resource,
         where: r.id in ^ids,
@@ -41,20 +61,24 @@ defmodule KlziiChat.Files.Tasks do
 
   @spec download(String.t, List.t) :: {:ok }
   def download(_,[]) do
-    raise("Ids list can't be empty!")
+    {:error, "Ids list can't be empty!"}
   end
   def download(resurce_id, list) do
     {:ok, current_dir} = to_string(resurce_id) |> build_tmp_dir
-    case Mix.env do
-      :test ->
-          {:ok}
-      _ ->
+    if(Mix.env == :test) do
+      {:ok}
+    else
+      try do
         Enum.map(list, fn {name, url} ->
           resp = HTTPotion.get(url)
           File.write(current_dir <> name, resp.body)
         end)
+        {:ok}
+      rescue
+        error ->
+          {:error, error}
+      end
     end
-    {:ok}
   end
 
   @spec zip(String.t, String.t) :: {:ok, String.t }
