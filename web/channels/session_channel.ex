@@ -42,6 +42,17 @@ defmodule KlziiChat.SessionChannel do
     {:noreply, socket}
   end
 
+  # def handle_in("update_member", %{"data" => data}, socket) do
+  #   case SessionMembersService.update_member(socket.assigns.session_member, data) do
+  #     {:ok, sessionMember} ->
+  #       broadcast socket, "update_member", sessionMember
+  #     {:error, reason} ->
+  #       {:error, %{reason: reason}}
+  #   end
+  #   {:noreply, socket}
+  # end
+
+  # Need implemented presences logic for multiple nodes, and topics scope.
   def terminate({reason, action}, socket) do
     case SessionMembersService.update_online_status(socket.assigns.session_member.id, false)  do
       {:ok, session_memeber} ->

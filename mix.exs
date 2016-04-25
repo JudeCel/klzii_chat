@@ -18,7 +18,7 @@ defmodule KlziiChat.Mixfile do
   # Type `mix help compile.app` for more information.
   def application do
     [mod: {KlziiChat, []},
-     applications: [:phoenix, :phoenix_html, :cowboy, :logger, :gettext,
+     applications: [:phoenix, :phoenix_html, :cowboy, :logger, :gettext, :quantum,
                     :phoenix_ecto, :postgrex, :ex_aws, :arc, :httpotion, :timex_ecto]]
   end
 
@@ -45,7 +45,8 @@ defmodule KlziiChat.Mixfile do
      {:cowboy, "~> 1.0.4"},
      {:corsica, "~> 0.4"},
      {:timex, "~> 2.1"},
-     {:timex_ecto, "~> 1.0"}
+     {:timex_ecto, "~> 1.0"},
+     {:quantum, "~> 1.7"}
  ]
   end
 

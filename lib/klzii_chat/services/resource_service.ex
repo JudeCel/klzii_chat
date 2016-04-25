@@ -49,6 +49,14 @@ defmodule KlziiChat.Services.ResourceService do
     end
   end
 
+  def daily_cleanup do
+    from(e in Resource,
+      where: e.expiryDate < ^Timex.DateTime.now,
+      where: e.type == "file",
+      where: e.scope == "zip")
+    |> Repo.delete_all
+  end
+
   @spec create_new_zip(%User{}, String.t, List.t) :: {:ok, %Resource{} } | %{status: :error, reason: String.t}
   def create_new_zip(account_user_id, name, ids) do
     account_user = Repo.get!(AccountUser, account_user_id) |> Repo.preload([:account])
