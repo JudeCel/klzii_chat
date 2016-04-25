@@ -10,7 +10,7 @@ defmodule KlziiChat.Uploaders.File do
 
   # Whitelist file extensions:
   def validate({file, _}) do
-    ~w(.pdf .csv .xls ) |> Enum.member?(Path.extname(file.file_name))
+    ~w(.pdf .csv .xls .zip ) |> Enum.member?(Path.extname(file.file_name))
   end
 
   # Define a thumbnail transformation:
@@ -29,7 +29,7 @@ defmodule KlziiChat.Uploaders.File do
 
   # Override the persisted filenames:
   def filename(version, {file, scope}) do
-    str = "#{version}_#{file.file_name}"
+    str = "#{version}_#{scope.name}"
     Regex.replace(~r/( |-)/, str, "")
   end
 

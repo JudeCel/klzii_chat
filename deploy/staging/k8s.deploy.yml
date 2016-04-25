@@ -63,7 +63,7 @@ type: Opaque
 kind: Service
 apiVersion: v1
 metadata:
-  name: nginx-ssl-proxy
+  name: proxy-chat-staging
   labels:
     name: nginx
     role: ssl-proxy
@@ -82,12 +82,14 @@ spec:
   selector:
     name: nginx
     role: ssl-proxy
+    app: chat
+    env: staging
   type: LoadBalancer
 ---
 kind: ReplicationController
 apiVersion: v1
 metadata:
-  name: nginx-ssl-proxy
+  name: proxy-chat-staging
   labels:
     name: nginx
     role: ssl-proxy

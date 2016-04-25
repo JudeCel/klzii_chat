@@ -13,7 +13,7 @@ defmodule KlziiChat.SessionMemberCase do
       role: "accountManager",
       email: user.email
 
-    ) |> Repo.insert!
+    ) |> Repo.insert! |>  Repo.preload(:account)
 
     brand_project_preference = BrandProjectPreference.changeset(
       %BrandProjectPreference{},

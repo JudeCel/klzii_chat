@@ -32,9 +32,9 @@ defmodule KlziiChat.TopicChannel do
     end
   end
   def handle_in("deleteResources", %{"id" => id}, socket) do
-    case ResourceService.deleteById(socket.assigns.session_member, id) do
-      {:ok, resource} ->
-        {:reply, {:ok, %{ id: resource.id, type: resource.type }}, socket}
+    case ResourceService.deleteByIds(socket.assigns.session_member.account_user_id, [id]) do
+      {:ok, resources} ->
+        {:reply, {:ok, %{ id: List.first(resources).id, type: List.first(resources).type }}, socket}
       {:error, reason} ->
         {:error, %{reason: reason}}
     end

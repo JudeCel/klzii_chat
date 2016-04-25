@@ -1,0 +1,27 @@
+defmodule KlziiChat.Queries.Resources do
+  import Ecto.Query, only: [from: 2]
+
+  def find_by_params(base_query, params) do
+    build_type(base_query, params) |> build_scope(params)
+  end
+
+  def build_type(query, %{"type" => type}) when is_list(type) do
+    from r in query, where: r.type in ^type
+  end
+  def build_type(query, %{"type" => type})  do
+     from r in query, where: r.type == ^type
+  end
+  def build_type(query,_)  do
+    query
+  end
+
+  def build_scope(query, %{"scope" => scope}) when is_list(scope) do
+    from r in query, where: r.scope in ^scope
+  end
+  def build_scope(query, %{"scope" => scope})  do
+    from r in query, where: r.scope == ^scope
+  end
+  def build_scope(query, _)  do
+    query
+  end
+end
