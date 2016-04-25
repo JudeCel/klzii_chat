@@ -6,7 +6,7 @@ defmodule KlziiChat.SurveyQuestionView do
   def render("show.json", %{survey_question: survey_question}) do
     %{
       id: survey_question.id,
-      resurce: render_one(survey_question.resource, ResourceView, "resource.json")
+      resource: render_one(survey_question.resource, ResourceView, "resource.json")
     }
   end
 end
