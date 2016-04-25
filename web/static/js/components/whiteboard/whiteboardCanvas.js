@@ -199,7 +199,7 @@ const WhiteboardCanvas = React.createClass({
     var myDragFunc = function( el ) {
       if (!self.activeShape) return;
       var elTransform = self.activeShape.matrix;
-      var tstring= tstring = "t" + self.activeShape.data("tx") + "," + self.activeShape.data("ty") + self.activeShape.ftGetInitialTransformMatrix().toTransformString() + "r" + self.activeShape.data("angle");
+      var tstring= tstring = "t" + self.activeShape.data("tx") + "," + self.activeShape.data("ty") + self.activeShape.transform().localMatrix.toTransformString() + "r" + self.activeShape.data("angle");
 
       if( el.data("sliderId") == "x" ) {
         tstring += 's' + el.data("fracX")+",1";
