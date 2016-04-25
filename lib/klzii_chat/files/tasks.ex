@@ -54,7 +54,7 @@ defmodule KlziiChat.Files.Tasks do
       )|> Repo.all
       |> Enum.map(fn resource ->
         resp = ResourceView.render("resource.json", %{resource: resource})
-        {resp.name, resp.url.full}
+        {resp.name <> "." <> resp.extension, resp.url.full}
       end)
     {:ok, result}
   end
