@@ -64,6 +64,7 @@ const WhiteboardCanvas = React.createClass({
     }
   },
   isFacilitator() {
+    return true;
     return this.props.currentUser.role == "facilitator";
   },
   canEditShape(item) {
@@ -143,7 +144,6 @@ const WhiteboardCanvas = React.createClass({
     this.activeShape = null;
     var self = this;
     this.initMessaging();
-    console.log("~~~~~~~~", this.props.currentUser);
     this.activeColour = this.isFacilitator()?'red':this.props.currentUser.colour;
     this.activeStrokeColour = this.activeColour;
     this.createScaleControl();
@@ -312,10 +312,10 @@ const WhiteboardCanvas = React.createClass({
     return 'Whiteboard_';
   },
   shouldComponentUpdate(nextProps) {
-    return false;
+    return true;
   },
   componentDidUpdate() {
-  //  let s = Snap(this.getName());
+  // let s = Snap(this.getName());
     //this.componentDidMount();
   },
   eventCoords(e) {
@@ -348,7 +348,6 @@ const WhiteboardCanvas = React.createClass({
     }
     this.coords = null;
     this.activeShape = null;
-    console.log("created");
   },
   handleMouseDown: function(e){
     if (!this.isValidButton(e)) return;

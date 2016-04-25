@@ -12,7 +12,16 @@
 			handleRadius: "7",
 			handleLineWidth: 2,
 		};
-
+		Element.prototype.ftRemove = function(c) {
+			this.ftRemoveHandles();
+			this.unclick();
+			this.onSelected = null;
+			this.onTransformed = null;
+			if (this.group) this.group.remove();
+			this.remove();
+			this.removeData();
+		}
+	  
 		Element.prototype.ftCreateHandles = function() {
 			this.ftInit();
 			var freetransEl = this;
@@ -27,7 +36,6 @@
 			freetransEl.data( "joinLine", joinLine);
 
 			freetransEl.data( "scaleFactor", calcDistance( bb.cx, bb.cy, rotateDragger.attr('cx'), rotateDragger.attr('cy') ) );
-		//	console.log("_____trans", freetransEl.data( "scaleFactor"));
 			translateDragger.drag( 	elementDragMove.bind(  translateDragger, freetransEl ),
 						elementDragStart.bind( translateDragger, freetransEl ),
 						elementDragEnd.bind( translateDragger, freetransEl ) );
@@ -47,9 +55,9 @@
 			return this;
 		};
 
-		Element.prototype.ftInformSelected = function(selected) {
-			if (this.onSelected) {
-				this.onSelected(this, selected);
+		Element.prototype.ftInformSelected = function(shape, selected) {
+			if (shape.onSelected) {
+				shape.onSelected(shape, selected);
 			}
 		}
 
@@ -306,6 +314,7 @@
 	}
 
 	function elementDragStart( mainEl, x, y, ev ) {
+		this.ftInformSelected(mainEl, true);
 		this.parent().selectAll('circle').forEach( function( el, i ) {
 				el.ftStoreStartCenter();
 		} );
@@ -333,6 +342,7 @@
 	};
 
 	function dragHandleRotateStart( mainElement ) {
+		this.ftInformSelected(mainElement, true);
 		this.ftStoreStartCenter();
 	};
 
