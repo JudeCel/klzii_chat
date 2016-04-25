@@ -54,7 +54,8 @@ defmodule KlziiChat.Files.Tasks do
       )|> Repo.all
       |> Enum.map(fn resource ->
         resp = ResourceView.render("resource.json", %{resource: resource})
-        {resp.name <> "." <> resp.extension, resp.url.full}
+        name = resp.name <> "." <> (resp.extension || "") 
+        {name, resp.url.full}
       end)
     {:ok, result}
   end
@@ -90,7 +91,7 @@ defmodule KlziiChat.Files.Tasks do
 
   @spec build_zip(String.t, String.t) :: {:ok, String.t }
   def build_zip(zip_name, resurce_id) do
-     {:ok, file_name} = :zip.create(zip_name <> zip_extension, files_in_dir)
+     {:ok, file_name} = :zip.create(zip_name <> zip_extension, files_in_dir(zip_name))
   end
 
   @spec init_dir(String.t) :: {:ok, String.t }
@@ -100,9 +101,11 @@ defmodule KlziiChat.Files.Tasks do
     {:ok, path }
   end
 
-  @spec files_in_dir() :: [String.t, ...]
-  def files_in_dir do
+  @spec files_in_dir(String.t) :: [String.t, ...]
+  def files_in_dir(zip_name) do
+    full_file_name = zip_name <>".zip"
     File.ls!
+      |> Enum.filter(fn file -> !String.contains?(file, full_file_name)  end)
       |> Enum.map(&String.to_char_list/1)
   end
 

@@ -39,8 +39,7 @@ defmodule KlziiChat.Files.TasksTest do
   end
 
   test "files_in_dir return list" do
-    FileZipTask.files_in_dir
-    |> List.first
+    FileZipTask.files_in_dir("some_zip_name")
     |> is_list
     |> assert
   end
