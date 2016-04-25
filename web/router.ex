@@ -43,6 +43,14 @@ defmodule KlziiChat.Router do
     delete "/delete", ResourcesController, :delete
   end
 
+  scope "api/surveys", KlziiChat do
+    pipe_through :api
+    # CORS Routes
+    options "/:id", SurveysController, :show
+    # Generic routes for API be call from original domain
+    get "/:id", SurveysController, :show
+  end
+
 
   # Other scopes may use custom stacks.
   # scope "/api", KlziiChat do
