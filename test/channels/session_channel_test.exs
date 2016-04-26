@@ -76,4 +76,21 @@ defmodule KlziiChat.SessionChannelTest do
 
     Repo.get_by!(SessionMember, id: session_member.id).online |> refute
   end
+
+  test "when update session member broadcast others", %{socket: socket, socket2: socket2, channal_name: channal_name } do
+    {:ok, _, socket} =
+      join(socket, SessionChannel, channal_name)
+
+    {:ok, _, socket2} =
+      join(socket2, SessionChannel, channal_name)
+
+    _session_member = socket.assigns.session_member
+    _session_member2 = socket2.assigns.session_member
+
+    push socket, "update_member", %{avatarData: %{ base: 2, face: 3, body: 1, desk: 2, head: 0 }}
+    push socket, "update_member", %{avatarData: %{ base: 1, desk: 2}, username: "new cool name"}
+
+    assert_push "update_member", session_member
+    assert_push "update_member", session_member2
+  end
 end

@@ -31,19 +31,11 @@ defmodule KlziiChat.TopicChannel do
         {:error, %{reason: reason}}
     end
   end
+  
   def handle_in("deleteResources", %{"id" => id}, socket) do
     case ResourceService.deleteByIds(socket.assigns.session_member.account_user_id, [id]) do
       {:ok, resources} ->
         {:reply, {:ok, %{ id: List.first(resources).id, type: List.first(resources).type }}, socket}
-      {:error, reason} ->
-        {:error, %{reason: reason}}
-    end
-  end
-
-  def handle_in("whiteboardHistory", _payload, socket) do
-    case WhiteboardService.history(socket.assigns.topic_id, "object") do
-      {:ok, history} ->
-        {:reply, {:ok, %{history: history} }, socket}
       {:error, reason} ->
         {:error, %{reason: reason}}
     end
@@ -101,6 +93,15 @@ defmodule KlziiChat.TopicChannel do
       {:ok, event} ->
         broadcast! socket, "update_message", event
         {:reply, :ok, socket}
+      {:error, reason} ->
+        {:error, %{reason: reason}}
+    end
+  end
+
+  def handle_in("whiteboardHistory", _payload, socket) do
+    case WhiteboardService.history(socket.assigns.topic_id, "object") do
+      {:ok, history} ->
+        {:reply, {:ok, %{history: history} }, socket}
       {:error, reason} ->
         {:error, %{reason: reason}}
     end

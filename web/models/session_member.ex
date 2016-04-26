@@ -16,7 +16,7 @@ defmodule KlziiChat.SessionMember do
 
   end
 
-  @required_fields ~w(token username colour online avatarData role)
+  @required_fields ~w(username colour online avatarData)
   @optional_fields ~w()
 
   @doc """
