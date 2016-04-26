@@ -51,6 +51,14 @@ defmodule KlziiChat.Router do
     get "/:id", SurveysController, :show
   end
 
+  scope "api/banners", KlziiChat do
+    pipe_through :api
+    # CORS Routes
+    options "/", BannersController, :index
+    # Generic routes for API be call from original domain
+    get "/", BannersController, :index
+  end
+
 
   # Other scopes may use custom stacks.
   # scope "/api", KlziiChat do
