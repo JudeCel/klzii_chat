@@ -186,27 +186,73 @@ const WhiteboardCanvas = React.createClass({
     this.activeStrokeColour = this.activeColour;
     this.createScaleControl();
   },
+  updateElementParameters(shape, params) {
+    switch (shape.type) {
+      case "ellipse":
+        if (params.width) {
+          shape.attr({rx: params.width});
+        } else if (params.height) {
+          shape.attr({ry: params.height});
+        }
+        break;
+      case "rect":
+        var angle = shape.matrix.split().rotate;
+        var splitArgs = shape.matrix.split();
+        var tstring= shape.attr().transform;
+        var width = shape.attr().width;
+        var height = shape.attr().height;
+        var attributes = {};
+        if (params.width) {
+          attributes.width = params.width*2;
+          attributes.x = Number(shape.attr().x) - (attributes.width - width)/2;
+        } else if (params.height) {
+          attributes.height = params.height*2;
+          attributes.y = Number(shape.attr().y) - (attributes.height - height)/2;
+        }
+
+        attributes.transform = tstring;
+        //console.log(tstring);
+        //var tstring= tstring = "t" + shape.data("tx") + "," + shape.data("ty") + shape.transform().localMatrix.toTransformString() + "r" + 0;//shape.data("angle");
+        shape.attr(attributes);
+        break;
+    };
+  },
   createScaleControl() {
     var self = this;
+    var transformObj;
     var myDragEndFunc = function( el ) {
     }
 
     var myDragStartFunc = function() {
+      //transformObj = self.activeShape.transform().localMatrix;
+      //self.activeShape.ftStoreInitialTransformMatrix();
     }
-
 
     // what we want to do when the slider changes. They could have separate funcs as the call back or just pick the right element
     var myDragFunc = function( el ) {
       if (!self.activeShape) return;
       var elTransform = self.activeShape.matrix;
-      var tstring= tstring = "t" + self.activeShape.data("tx") + "," + self.activeShape.data("ty") + self.activeShape.transform().localMatrix.toTransformString() + "r" + self.activeShape.data("angle");
+      //var tstring= tstring = "t" + self.activeShape.data("tx") + "," + self.activeShape.data("ty") + self.activeShape.transform().localMatrix.toTransformString() + "r" + self.activeShape.data("angle");
+      //var tstring= tstring = "t" + self.activeShape.data("tx") + "," + self.activeShape.data("ty") + self.activeShape.ftGetInitialTransformMatrix().toTransformString() + "r" + self.activeShape.data("angle");
 
       if( el.data("sliderId") == "x" ) {
-        tstring += 's' + el.data("fracX")+",1";
+        self.updateElementParameters(self.activeShape, {width: el.data("posX")});
+        //tstring += 's' + el.data("fracX")+",1";
+/*        switch (self.activeShape.type) {
+          case "ellipse":
+            self.activeShape.attr({rx: el.data("posX")});
+            break;
+          case "rect":
+            self.activeShape.attr({width: el.data("posX")});
+            //obj = self.snap.rect(0, 0, 0, 0).transform('r0.1');
+            break;
+        };
+*/
       } else if( el.data("sliderId") == "y" ) {
-         tstring += 's1,' + el.data("fracX");
+         //tstring += 's1,' + el.data("fracX");
+         self.updateElementParameters(self.activeShape, {height: el.data("posX")});
       }
-      self.activeShape.attr({transform: tstring});
+    //  self.activeShape.attr({transform: tstring});
     }
 
     self.snap.slider({ sliderId: "x", capSelector: "#cap", filename: "/images/svgControls/sl.svg",

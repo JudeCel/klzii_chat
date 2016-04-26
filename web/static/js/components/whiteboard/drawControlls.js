@@ -356,6 +356,7 @@
 
 	function dragHandleRotateEnd( mainElement ) {
 		informFinishedTransform(mainElement);
+	//	mainElement.ftStoreInitialTransformMatrix();
 	};
 
 	function normalizeScaleVector(x, y, s) {
