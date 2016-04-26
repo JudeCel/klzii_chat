@@ -1,29 +1,28 @@
-defmodule KlziiChat.Services.EventsService do
-  alias KlziiChat.{Repo, Event, EventView, SessionMember, Vote, Topic}
-  alias KlziiChat.Services.Permissions.Events, as: EventPermissions
+defmodule KlziiChat.Services.MessageService do
+  alias KlziiChat.{Repo, Message, MessageView, SessionMember, Vote, Topic}
+  alias KlziiChat.Services.Permissions.Messages, as: MessagePermissions
   import Ecto
   import Ecto.Query
 
-  @spec history(Integer.t, String.t, Map.t) :: {:ok, List.t }
-  def history(topic_id, tag, session_member) do
+  @spec history(Integer.t, Map.t) :: {:ok, List.t }
+  def history(topic_id, session_member) do
     topic = Repo.get!(Topic, topic_id)
-    events = Repo.all(
-      from e in assoc(topic, :events),
-        where: [tag: ^tag],
+    messages = Repo.all(
+      from e in assoc(topic, :messages),
         where: is_nil(e.replyId),
         order_by: [asc: e.createdAt],
         limit: 200,
       preload: [:session_member, :votes, replies: [:replies, :session_member, :votes] ]
     )
-    resp = Enum.map(events, fn event ->
-      EventView.render("event.json", %{event: event, member: session_member})
+    resp = Enum.map(messages, fn message ->
+      MessageView.render("show.json", %{message: message, member: session_member})
     end)
     {:ok, resp}
   end
 
   @spec create_message(Map.t, Integer.t, Map.t) :: {:ok, Map.t }
   def create_message(session_member, topic_id, params) do
-    if EventPermissions.can_new_message(session_member) do
+    if MessagePermissions.can_new_message(session_member) do
       replyId =
         case params["replyId"] do
           nil ->
@@ -34,11 +33,10 @@ defmodule KlziiChat.Services.EventsService do
 
       session_member = Repo.get!(SessionMember, session_member.id)
       build_assoc(
-        session_member, :events,
-        tag: "message",
+        session_member, :messages,
         replyId: replyId,
         sessionId: session_member.sessionId,
-        event: params,
+        body: params["body"],
         topicId: topic_id
       ) |> create
     else
@@ -48,8 +46,8 @@ defmodule KlziiChat.Services.EventsService do
 
   @spec deleteById(Map.t, Integer.t) :: {:ok, %{ id: Integer.t, replyId: Integer.t } } | {:error, String.t}
   def deleteById(session_member, id) do
-    result = Repo.get_by!(Event, id: id)
-    if EventPermissions.can_delete(session_member, result) do
+    result = Repo.get_by!(Message, id: id)
+    if MessagePermissions.can_delete(session_member, result) do
       case Repo.delete!(result) do
         {:error, error} -> # Something went wrong
           {:error, error}
@@ -61,12 +59,12 @@ defmodule KlziiChat.Services.EventsService do
     end
   end
 
-  @spec preload_dependencies(%Event{}) :: %Event{}
+  @spec preload_dependencies(%Message{}) :: %Message{}
   def preload_dependencies(event) do
     Repo.preload(event, [:session_member, :votes, replies: [:replies, :session_member, :votes] ])
   end
 
-  @spec create(%Event{}) :: %Event{}
+  @spec create(%Message{}) :: %Message{}
   def create(changeset) do
     case Repo.insert(changeset) do
       {:ok, event} ->
@@ -76,18 +74,18 @@ defmodule KlziiChat.Services.EventsService do
     end
   end
 
-  @spec update_message(Integer.t, String.t, Map.t) :: %Event{} | {:error, String.t}
+  @spec update_message(Integer.t, String.t, Map.t) :: %Message{} | {:error, String.t}
   def update_message(id, body, session_member) do
-    event = Repo.get_by!(Event, id: id)
-    if EventPermissions.can_edit(session_member, event) do
-      Ecto.Changeset.change(event, event: %{ body: body })
+    event = Repo.get_by!(Message, id: id)
+    if MessagePermissions.can_edit(session_member, event) do
+      Ecto.Changeset.change(event, body: body )
         |> update_msg
     else
       {:error, "Action not allowed!"}
     end
   end
 
-  @spec update_msg(%Event{}) :: %Event{}
+  @spec update_msg(%Message{}) :: %Message{}
   def update_msg(changeset) do
     case Repo.update(changeset) do
       {:ok, event} ->
@@ -97,10 +95,10 @@ defmodule KlziiChat.Services.EventsService do
     end
   end
 
-  @spec star(Integer.t, Map.t) :: %Event{} | {:error, String.t}
+  @spec star(Integer.t, Map.t) :: %Message{} | {:error, String.t}
   def star(id, session_member) do
-    if EventPermissions.can_star(session_member) do
-      event = Repo.get_by!(Event, id: id)
+    if MessagePermissions.can_star(session_member) do
+      event = Repo.get_by!(Message, id: id)
       Ecto.Changeset.change(event, star: !event.star)
         |> update_msg
     else
@@ -110,11 +108,11 @@ defmodule KlziiChat.Services.EventsService do
 
   @spec thumbs_up(Integer.t, Map.t) :: Map.t | {:error, String.t}
   def thumbs_up(id, session_member) do
-    if EventPermissions.can_vote(session_member) do
-      event = Repo.get_by!(Event, id: id)
-      case Repo.get_by(Vote, eventId: id, sessionMemberId: session_member.id) do
+    if MessagePermissions.can_vote(session_member) do
+      event = Repo.get_by!(Message, id: id)
+      case Repo.get_by(Vote, messageId: id, sessionMemberId: session_member.id) do
         nil ->
-          changeset = Vote.changeset(%Vote{}, %{sessionMemberId: session_member.id, eventId: id})
+          changeset = Vote.changeset(%Vote{}, %{sessionMemberId: session_member.id, messageId: id})
           case Repo.insert(changeset) do
             {:ok, _vote} ->
               {:ok, preload_dependencies(event)}

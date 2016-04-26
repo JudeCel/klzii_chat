@@ -5,7 +5,7 @@ defmodule KlziiChat.SessionMember do
     field :username, :string
     belongs_to :account_user, KlziiChat.AccountUser, [foreign_key: :accountUserId]
     belongs_to :session, KlziiChat.Session, [foreign_key: :sessionId]
-    has_many :events, KlziiChat.Event, [foreign_key: :sessionMemberId]
+    has_many :messages, KlziiChat.Message, [foreign_key: :sessionMemberId]
     has_many :votes, KlziiChat.Vote, [foreign_key: :sessionMemberId]
     field :colour, :string
     field :online, :boolean, default: false

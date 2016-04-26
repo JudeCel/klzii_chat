@@ -1,6 +1,6 @@
 import Constants                          from '../constants';
 
-function update_mesage(dispatch, data) {
+function update_message(dispatch, data) {
   return dispatch({
     type: Constants.UPDATE_TOPIC_MESSAGE,
     message: data

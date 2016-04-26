@@ -1,4 +1,4 @@
-defmodule KlziiChat.Services.Permissions.Events do
+defmodule KlziiChat.Services.Permissions.Messages do
   import KlziiChat.Services.Permissions.Validations
 
   @spec can_delete(Map.t, Map.t) :: Boolean.t

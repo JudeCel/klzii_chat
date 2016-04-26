@@ -1,4 +1,4 @@
-defmodule KlziiChat.Decorators.EventDecorator do
+defmodule KlziiChat.Decorators.MessageDecorator do
 
   @spec votes_count(List.t) :: Integer.t
   def votes_count(votes) do

@@ -3,11 +3,11 @@ defmodule KlziiChat.Vote do
 
   schema "Votes" do
     belongs_to :session_member, KlziiChat.SessionMember, [foreign_key: :sessionMemberId]
-    belongs_to :event, KlziiChat.Event, [foreign_key: :eventId]
+    belongs_to :message, KlziiChat.Event, [foreign_key: :messageId]
     timestamps [inserted_at: :createdAt, updated_at: :updatedAt]
   end
 
-  @required_fields ~w(eventId sessionMemberId)
+  @required_fields ~w(messageId sessionMemberId)
   @optional_fields ~w()
 
   @doc """
