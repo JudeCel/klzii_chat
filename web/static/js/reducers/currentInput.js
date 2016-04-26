@@ -5,6 +5,7 @@ const initialState = {
   action: 'new', // 'new', 'edit', 'reply'
   id: null,
   replyId: null,
+  emotion: 1,
   inputPrefix: "Message:"
 };
 
@@ -23,6 +24,9 @@ export default function reducer(state = initialState, action = {}) {
         return { ...state, action: 'edit', inputPrefix: "Edit:", id: action.id, value: action.value};
       }
 
+    case Constants.SET_INPUT_EMOTION:
+        return { ...state, emotion: action.emotion};
+        
     case Constants.SET_INPUT_REPLY:
       if (state.action == 'reply' ) {
         return initialState;

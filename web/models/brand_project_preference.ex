@@ -9,7 +9,7 @@ defmodule KlziiChat.BrandProjectPreference do
     timestamps [inserted_at: :createdAt, updated_at: :updatedAt]
   end
 
-  @required_fields ~w(name colours)
+  @required_fields ~w(name colours accountId)
   @optional_fields ~w()
 
   @doc """

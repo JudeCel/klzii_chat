@@ -1,19 +1,15 @@
 defmodule KlziiChat.Services.WhiteboardService do
-  alias KlziiChat.{Repo, Event, EventView, SessionMember, Vote, Topic}
+  alias KlziiChat.{Repo, Shape, ShapeView, SessionMember, Topic}
   import Ecto
   import Ecto.Query, only: [from: 1, from: 2]
 
   def history(topic_id, tag) do
     topic = Repo.get!(Topic, topic_id)
-    events = Repo.all(
-      from e in assoc(topic, :events),
-        where: [tag: ^tag],
-        where: is_nil(e.replyId),
-        order_by: [asc: e.createdAt],
-        limit: 200,
+    shapes = Repo.all(
+      from e in assoc(topic, :shapes),
       preload: [:session_member]
     )
-    {:ok, Phoenix.View.render_many(events, EventView, "whiteboard_event.json")}
+    {:ok, Phoenix.View.render_many(shapes, ShapeView, "show.json")}
   end
 
   def update(changeset) do
@@ -26,7 +22,7 @@ defmodule KlziiChat.Services.WhiteboardService do
   end
 
   def build_object_response(event) do
-    Phoenix.View.render(EventView, "whiteboard_event.json", %{ event: event })
+    Phoenix.View.render(event, ShapeView, "show.json")
   end
 
   def create(changeset) do
@@ -39,18 +35,16 @@ defmodule KlziiChat.Services.WhiteboardService do
   end
 
   def update_object(session_member_id, topic_id, params) do
-    Repo.get_by!(Event, uid: params["id"])
+    Repo.get_by!(Shape, uid: params["id"])
     |> Ecto.Changeset.change(event: params)
     |> update
   end
 
 
-  # TODO need to move in whiteboard service!
   def create_object(session_member_id, topic_id, params) do
     session_member = Repo.get!(SessionMember, session_member_id)
     changeset = build_assoc(
-      session_member, :events,
-      tag: "object",
+      session_member, :shapes,
       sessionId: session_member.sessionId,
       event: params,
       uid: params["id"],
@@ -72,7 +66,7 @@ defmodule KlziiChat.Services.WhiteboardService do
   end
 #might not need this fuynction
   def deleteByUids(ids) do
-    query = from(e in Event, where: e.uid in ^ids)
+    query = from(e in Shape, where: e.uid in ^ids)
 
     case Repo.delete_all(query) do
       {_count, _model}        -> # Deleted with success

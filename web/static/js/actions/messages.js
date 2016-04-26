@@ -5,26 +5,27 @@ function new_message(dispatch, data) {
     message: data
   });
 }
-function delete_mesage(dispatch, data) {
+function delete_message(dispatch, data) {
   return dispatch({
     type: Constants.DELETE_MESSAGE,
     message: data
   });
 }
-function update_mesage(dispatch, message) {
+function update_message(dispatch, message) {
   return dispatch({
     type: Constants.UPDATE_MESSAGE,
     message
   });
 }
 
-function selectMesageAction(inputState) {
+function selectMessageAction(inputState) {
   switch (inputState.action) {
     case 'new':
       return {
         action: "new_message",
         payload: {
-          body: inputState.value
+          body: inputState.value,
+          emotion: inputState.emotion
         }
       }
     case 'edit':
@@ -32,7 +33,8 @@ function selectMesageAction(inputState) {
         action: "update_message",
         payload: {
           id: inputState.id,
-          body: inputState.value
+          body: inputState.value,
+          emotion: inputState.emotion
         }
       }
 
@@ -41,7 +43,8 @@ function selectMesageAction(inputState) {
         action: "new_message",
         payload: {
           replyId: inputState.replyId,
-          body: inputState.value
+          body: inputState.value,
+          emotion: inputState.emotion
         }
       }
     default:
@@ -58,16 +61,16 @@ const Actions = {
       });
 
       channel.on("delete_message", (resp) =>{
-        return delete_mesage(dispatch, resp);
+        return delete_message(dispatch, resp);
       });
 
       channel.on("update_message", (resp) =>{
-        return update_mesage(dispatch, resp);
+        return update_message(dispatch, resp);
       });
     }
   },
   sendMessage: (channel, inputState) => {
-    let messageAction = selectMesageAction(inputState)
+    let messageAction = selectMessageAction(inputState)
     return dispatch => {
       channel.push(messageAction.action, messageAction.payload).receive('ok', (_resp) =>{
         dispatch({
@@ -96,7 +99,7 @@ const Actions = {
   messageStar: (channel, payload) => {
     return dispatch => {
       channel.push('message_star', payload).receive('ok', (resp) =>{
-        update_mesage(dispatch, resp);
+        update_message(dispatch, resp);
       })
       .receive('error', (data) => {
         dispatch({

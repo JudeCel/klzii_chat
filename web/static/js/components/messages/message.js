@@ -23,7 +23,7 @@ const Message = React.createClass({
 
     return {
       id: message.id,
-      body: message.event.body
+      body: message.body
     };
   },
   replyData() {
@@ -81,7 +81,9 @@ const Message = React.createClass({
     return (
       <div className='message-section media'>
         <div className={ this.mediaImagePosition() }>
-          <span className='media-object glyphicon glyphicon-th' aria-hidden='true' style={{ color: message.session_member.colour }}></span>
+          <span className='media-object glyphicon glyphicon-th' aria-hidden='true' style={{ color: message.session_member.colour }}>
+            {message.emotion}
+          </span>
         </div>
 
         <div className='media-body'>
@@ -96,7 +98,7 @@ const Message = React.createClass({
 
           <div className={ this.bodyClassname() }>
             <p className='text-break-all'>
-              { message.event.body }
+              { message.body }
             </p>
           </div>
 

@@ -1,5 +1,5 @@
 defmodule KlziiChat.Services.ResourceService do
-  alias KlziiChat.{Repo, AccountUser, Resource, ResourceView}
+  alias KlziiChat.{Repo, AccountUser, Resource, ResourceView, User}
   alias KlziiChat.Services.Permissions.Resources, as: ResourcePermissions
 
   import Ecto
@@ -19,15 +19,74 @@ defmodule KlziiChat.Services.ResourceService do
     {:ok, resp}
   end
 
-  @spec deleteById(Map.t, Integer.t) :: {:ok, %{ id: Integer.t, replyId: Integer.t } } | {:error, String.t}
-  def deleteById(session_member, id) do
-    result = Repo.get_by!(Resource, id: id)
-    if ResourcePermissions.can_delete(session_member, result) do
-      case Repo.delete!(result) do
-        {:error, error} -> # Something went wrong
+  def find(account_user_id, id) do
+    account_user = Repo.get!(AccountUser, account_user_id)
+      |> Repo.preload([:account])
+    resource = Repo.one(
+      from r in assoc(account_user.account, :resources),
+        where: r.id in ^[id]
+    )
+    {:ok, resource}
+  end
+
+  @spec deleteByIds(Integer.t, List.t) :: {:ok, %Resource{} } | {:error, String.t}
+  def deleteByIds(account_user_id, ids) do
+    account_user = Repo.get!(AccountUser, account_user_id) |> Repo.preload([:account])
+    query =
+      from e in assoc(account_user.account, :resources),
+      where: e.id in ^ids
+    result = Repo.all(query)
+
+    if ResourcePermissions.can_delete(account_user, result) do
+      case Repo.delete_all(query) do
+        {:error, error} ->
           {:error, error}
-        resource   -> # Deleted with success
-          {:ok, resource  }
+        {count, nil} ->
+          {:ok, result}
+      end
+    else
+      {:error, "Action not allowed!"}
+    end
+  end
+
+  def daily_cleanup do
+    from(e in Resource,
+      where: e.expiryDate < ^Timex.DateTime.now,
+      where: e.type == "file",
+      where: e.scope == "zip")
+    |> Repo.delete_all
+  end
+
+  @spec create_new_zip(%User{}, String.t, List.t) :: {:ok, %Resource{} } | %{status: :error, reason: String.t}
+  def create_new_zip(account_user_id, name, ids) do
+    account_user = Repo.get!(AccountUser, account_user_id) |> Repo.preload([:account])
+    query =
+      from e in assoc(account_user.account, :resources),
+      where: e.id in ^ids,
+      where: e.type in ~w(image audio file video)
+    result = Repo.all(query)
+
+
+    if ResourcePermissions.can_zip(account_user, result) do
+      changeset = Ecto.build_assoc(
+        account_user.account, :resources,
+        accountUserId: account_user.id,
+        scope: "zip",
+        type: "file",
+        name: name,
+        status: "progress",
+        expiryDate: Timex.DateTime.now |> Timex.shift(days: 1),
+        properties: %{zip_ids: ids}
+      )
+
+      case Repo.insert(changeset) do
+        {:ok, resource} ->
+          Task.async(fn -> KlziiChat.Files.Tasks.run(resource, ids) end)
+          |> Task.await
+
+          {:ok, resource }
+        {:error, reason} ->
+          {:error, reason}
       end
     else
       {:error, "Action not allowed!"}
