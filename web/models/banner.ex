@@ -4,6 +4,7 @@ defmodule KlziiChat.Banner do
   schema "Banners" do
     belongs_to :resource, KlziiChat.Resource, [foreign_key: :resourceId]
     field :page, :string
+    field :link, :string
     timestamps [inserted_at: :createdAt, updated_at: :updatedAt]
   end
 
