@@ -14,7 +14,7 @@ defmodule KlziiChat.ResourcesController do
 
   def index(conn, params, account_user, claims) do
     query =
-      Ecto.Query.from(r in assoc(account_user.account, :resources))
+      QueriesResources.add_role_scope(account_user)
       |> QueriesResources.find_by_params(params)
     resources =
       Repo.all(query)

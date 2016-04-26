@@ -1,7 +1,7 @@
 defmodule KlziiChat.Services.Resourecs do
   use KlziiChat.{ModelCase, SessionMemberCase}
   alias KlziiChat.Queries.Resources, as: QueriesResources
-  alias KlziiChat.{Repo, Resource}
+  alias KlziiChat.{Repo, Resource, AccountUser}
 
   setup %{account_user: account_user} do
     Ecto.build_assoc(
@@ -14,6 +14,12 @@ defmodule KlziiChat.Services.Resourecs do
 
     base_query = Ecto.Query.from(r in Resource)
     {:ok, base_query: base_query}
+  end
+
+  test "when admin can see all resources" do
+    count = QueriesResources.add_role_scope(%AccountUser{role: "admin"})
+      |> Repo.all |> Enum.count
+    assert(count == 1 )
   end
 
   test "find by params when params is empty return all resources", %{base_query: base_query} do
