@@ -196,8 +196,6 @@ const WhiteboardCanvas = React.createClass({
         }
         break;
       case "rect":
-        var angle = shape.matrix.split().rotate;
-        var splitArgs = shape.matrix.split();
         var tstring= shape.attr().transform;
         var width = shape.attr().width;
         var height = shape.attr().height;
@@ -209,11 +207,16 @@ const WhiteboardCanvas = React.createClass({
           attributes.height = params.height*2;
           attributes.y = Number(shape.attr().y) - (attributes.height - height)/2;
         }
-
         attributes.transform = tstring;
-        //console.log(tstring);
-        //var tstring= tstring = "t" + shape.data("tx") + "," + shape.data("ty") + shape.transform().localMatrix.toTransformString() + "r" + 0;//shape.data("angle");
         shape.attr(attributes);
+        break;
+
+      default:
+        var elEttributes = shape.matrix.split();
+        console.log(elEttributes);
+
+        var transform = "s"+(params.scaleX?params.scaleX:elEttributes.scalex)+","+(params.scaleY?params.scaleY:elEttributes.scaley);
+        shape.transform(transform);
         break;
     };
   },
@@ -236,7 +239,7 @@ const WhiteboardCanvas = React.createClass({
       //var tstring= tstring = "t" + self.activeShape.data("tx") + "," + self.activeShape.data("ty") + self.activeShape.ftGetInitialTransformMatrix().toTransformString() + "r" + self.activeShape.data("angle");
 
       if( el.data("sliderId") == "x" ) {
-        self.updateElementParameters(self.activeShape, {width: el.data("posX")});
+        self.updateElementParameters(self.activeShape, {width: el.data("posX"), scaleX: el.data("fracX")});
         //tstring += 's' + el.data("fracX")+",1";
 /*        switch (self.activeShape.type) {
           case "ellipse":
@@ -250,7 +253,7 @@ const WhiteboardCanvas = React.createClass({
 */
       } else if( el.data("sliderId") == "y" ) {
          //tstring += 's1,' + el.data("fracX");
-         self.updateElementParameters(self.activeShape, {height: el.data("posX")});
+         self.updateElementParameters(self.activeShape, {height: el.data("posX"), scaleY: el.data("fracX")});
       }
     //  self.activeShape.attr({transform: tstring});
     }
