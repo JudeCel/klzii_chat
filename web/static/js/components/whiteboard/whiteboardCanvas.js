@@ -178,6 +178,11 @@ const WhiteboardCanvas = React.createClass({
   moveDistance(dx, dy) {
     return Math.sqrt( Math.pow( dx, 2)  + Math.pow( dy, 2)  );
   },
+  hideScaleControls() {
+    //move off screen by x axis
+    this.scaleXControl.attr({transform: "t-100,-100"});
+    this.scaleYControl.attr({transform: "t-100,-100"});
+  },
   initUnselectCallback() {
     var self = this;
     this.snap.drag( function(x, y, mEl) {
@@ -185,6 +190,7 @@ const WhiteboardCanvas = React.createClass({
       if (mEl.target.id == self.getName()) {
         if (self.activeShape) self.activeShape.ftUnselect();
         self.activeShape = null;
+        self.hideScaleControls();
       }
     }, function(x, y, mEl) {
     } );
@@ -256,12 +262,12 @@ const WhiteboardCanvas = React.createClass({
     self.snap.slider({ sliderId: "x", capSelector: "#cap", filename: "/images/svgControls/sl.svg",
       x: "0", y:"0", min: "0", max: "300", centerOffsetX: "0", centerOffsetY: "0",
       onDragEndFunc: myDragEndFunc, onDragStartFunc: myDragStartFunc, onDragFunc: myDragFunc,
-      attr: { transform: 't0.9' } } , function(elX) {
+      attr: { transform: 't-100,-100' } } , function(elX) {
           // Create vertical control
           self.snap.slider({ sliderId:"y", capSelector: "#cap", filename: "/images/svgControls/sl.svg",
             x: "0", y:"0", min: "0", max: "300", centerOffsetX: "0", centerOffsetY: "0",
             onDragEndFunc: myDragEndFunc, onDragStartFunc: myDragStartFunc, onDragFunc: myDragFunc,
-            attr: { transform: 'r90' } } , function(elY) {
+            attr: { transform: 't-100,-100r90' } } , function(elY) {
               self.scaleXControl = elX;
               self.scaleYControl = elY;
             });
@@ -417,6 +423,7 @@ const WhiteboardCanvas = React.createClass({
       var temp = this.activeShape;
       this.sendObjectData('draw');
       this.shapes[this.activeShape.id] = this.activeShape;
+      this.updateTransformControls(this.activeShape);
     }
     this.coords = null;
   },
