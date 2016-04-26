@@ -23,7 +23,7 @@ const Message = React.createClass({
 
     return {
       id: message.id,
-      body: message.event.body
+      body: message.body
     };
   },
   replyData() {
@@ -96,7 +96,7 @@ const Message = React.createClass({
 
           <div className={ this.bodyClassname() }>
             <p className='text-break-all'>
-              { message.event.body }
+              { message.body }
             </p>
           </div>
 
