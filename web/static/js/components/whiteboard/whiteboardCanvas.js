@@ -9,7 +9,7 @@ require("./drawControlls");
 const WhiteboardCanvas = React.createClass({
   getInitialState:function() {
     this.minimized = true;
-    this.scaling = true;
+    this.scaling = false;
     this.MIN_WIDTH = 316;
     this.MIN_HEIGHT = 153;
     this.MAX_WIDTH = 950;
