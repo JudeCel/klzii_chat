@@ -8,12 +8,13 @@ defmodule KlziiChat.Message do
     has_many :replies, KlziiChat.Message, [foreign_key: :replyId, on_delete: :delete_all]
     has_many :votes, KlziiChat.Vote, [foreign_key: :messageId, on_delete: :delete_all]
     field :body, :string
+    field :emotion, :integer
     field :star, :boolean, default: false
     timestamps [inserted_at: :createdAt, updated_at: :updatedAt]
   end
 
   @required_fields ~w(topicId sessionMemberId body)
-  @optional_fields ~w(star replyId)
+  @optional_fields ~w(emotion star replyId)
 
   @doc """
   Creates a changeset based on the `model` and `params`.

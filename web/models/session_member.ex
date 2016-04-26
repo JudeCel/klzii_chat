@@ -10,6 +10,7 @@ defmodule KlziiChat.SessionMember do
     field :colour, :string
     field :online, :boolean, default: false
     field :avatarData, :map, default: %{ base: 0, face: 3, body: 0, hair: 0, desk: 0, head: 0 }
+    field :topicContext, :map, default: %{}
     field :token, :string
     field :role, :string
     timestamps [inserted_at: :createdAt, updated_at: :updatedAt]
