@@ -63,9 +63,10 @@ const WhiteboardCanvas = React.createClass({
       this.state.channel = nextProps.channal;
       this.state.needEvents = false;
     }
+    this.activeColour = this.isFacilitator()?'red':this.props.currentUser.colour;
+    this.activeStrokeColour = this.activeColour;
   },
   isFacilitator() {
-    return true;
     return this.props.currentUser.role == "facilitator";
   },
   canEditShape(item) {
@@ -183,6 +184,7 @@ const WhiteboardCanvas = React.createClass({
     }, function(x, y, mEl) {
       if (mEl.target.id == self.getName()) {
         if (self.activeShape) self.activeShape.ftUnselect();
+        self.activeShape = null;
       }
     }, function(x, y, mEl) {
     } );
@@ -193,8 +195,6 @@ const WhiteboardCanvas = React.createClass({
     this.activeShape = null;
     var self = this;
     this.initMessaging();
-    this.activeColour = this.isFacilitator()?'red':this.props.currentUser.colour;
-    this.activeStrokeColour = this.activeColour;
     this.createScaleControl();
     this.initUnselectCallback();
   },
@@ -225,7 +225,6 @@ const WhiteboardCanvas = React.createClass({
 
       default:
         var elEttributes = shape.matrix.split();
-        console.log(elEttributes);
 
         var transform = "s"+(params.scaleX?params.scaleX:elEttributes.scalex)+","+(params.scaleY?params.scaleY:elEttributes.scaley);
         shape.transform(transform);
@@ -420,7 +419,6 @@ const WhiteboardCanvas = React.createClass({
       this.shapes[this.activeShape.id] = this.activeShape;
     }
     this.coords = null;
-    this.activeShape = null;
   },
   handleMouseDown: function(e){
     if (!this.isValidButton(e)) return;
