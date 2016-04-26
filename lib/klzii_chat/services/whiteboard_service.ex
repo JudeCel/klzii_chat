@@ -3,7 +3,7 @@ defmodule KlziiChat.Services.WhiteboardService do
   import Ecto
   import Ecto.Query, only: [from: 1, from: 2]
 
-  def history(topic_id, tag) do
+  def history(topic_id) do
     topic = Repo.get!(Topic, topic_id)
     shapes = Repo.all(
       from e in assoc(topic, :shapes),
@@ -14,21 +14,21 @@ defmodule KlziiChat.Services.WhiteboardService do
 
   def update(changeset) do
     case Repo.update changeset do
-      {:ok, event} ->
-        {:ok, build_object_response(event)}
+      {:ok, shape} ->
+        {:ok, build_object_response(shape)}
       {:error, changeset} ->
         {:error, changeset}
     end
   end
 
-  def build_object_response(event) do
-    Phoenix.View.render(event, ShapeView, "show.json")
+  def build_object_response(shape) do
+    Phoenix.View.render_one(shape, ShapeView, "show.json")
   end
 
   def create(changeset) do
     case Repo.insert(changeset) do
-      {:ok, event} ->
-        {:ok, build_object_response(event)}
+      {:ok, shape} ->
+        {:ok, build_object_response(shape)}
       {:error, changeset} ->
         {:error, changeset}
     end
@@ -55,7 +55,7 @@ defmodule KlziiChat.Services.WhiteboardService do
 
   def deleteAll(session_member_id, topicId) do
     topic = Repo.get!(Topic, topicId)
-    query = from e in assoc(topic, :events), where: [tag: ^"object"]
+    query = from e in assoc(topic, :shapes)
 
     case Repo.delete_all(query) do
       {_count, _model}        -> # Deleted with success
