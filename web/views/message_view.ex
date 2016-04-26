@@ -13,6 +13,7 @@ defmodule KlziiChat.MessageView do
       replyId: message.replyId,
       time: message.createdAt,
       star: message.star,
+      emotion: message.emotion,
       replies: Enum.map(message.replies, fn r ->
         render("show.json", %{message: r, member: member})
       end),

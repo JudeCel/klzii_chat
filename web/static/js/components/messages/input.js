@@ -4,6 +4,7 @@ import { connect }        from 'react-redux';
 import Actions            from '../../actions/currentInput';
 import MessagesActions    from '../../actions/messages';
 import TextareaAutosize   from 'react-autosize-textarea';
+import { Dropdown, Button, MenuItem }    from 'react-bootstrap'
 
 const Input = React.createClass({
   handleChange(e) {
@@ -20,6 +21,10 @@ const Input = React.createClass({
     if(currentInput.value.length > 0) {
       dispatch(MessagesActions.sendMessage(topicChannel, currentInput));
     }
+  },
+  onSelectEmotion(e) {
+    const { topicChannel, currentInput, dispatch } = this.props;
+    dispatch(Actions.changeEmotion(e.target.text));
   },
   defaultProps() {
     const { value } = this.props;
@@ -40,11 +45,26 @@ const Input = React.createClass({
     }
   },
   render() {
-    const { action, permissions, inputPrefix } = this.props;
+    const { currentEmotion, action, permissions, inputPrefix } = this.props;
 
     if(permissions && permissions.events.can_new_message) {
       return (
         <div className='input-section'>
+          <Dropdown id='emotion-selector' bsSize='medium' onSelect={this.onSelectEmotion}>
+            <Button className='no-border-radius'>
+              { currentEmotion }
+            </Button>
+            <Dropdown.Toggle className='no-border-radius' />
+            <Dropdown.Menu className='no-border-radius'>
+              {
+                [1,2,3,4,5,6].map((emotion) => {
+                  return (
+                    <MenuItem id={ emotion } key={ emotion } active={ currentEmotion == emotion }>{ emotion }</MenuItem>
+                  )
+                })
+              }
+            </Dropdown.Menu>
+          </Dropdown>
           <div className='form-group'>
             <div className='input-group input-group-lg'>
               <div className='input-group-addon no-border-radius'>{ inputPrefix }</div>
@@ -64,11 +84,12 @@ const Input = React.createClass({
 const mapStateToProps = (state) => {
   return {
     action: state.currentInput.action,
+    currentEmotion: state.currentInput.emotion,
+    value: state.currentInput.value,
+    inputPrefix: state.currentInput.inputPrefix,
     permissions: state.members.currentUser.permissions,
     currentInput: state.currentInput,
-    value: state.currentInput.value,
-    topicChannel: state.topic.channel,
-    inputPrefix: state.currentInput.inputPrefix,
+    topicChannel: state.topic.channel
   }
 };
 

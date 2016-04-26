@@ -24,7 +24,8 @@ function selectMessageAction(inputState) {
       return {
         action: "new_message",
         payload: {
-          body: inputState.value
+          body: inputState.value,
+          emotion: inputState.emotion
         }
       }
     case 'edit':
@@ -32,7 +33,8 @@ function selectMessageAction(inputState) {
         action: "update_message",
         payload: {
           id: inputState.id,
-          body: inputState.value
+          body: inputState.value,
+          emotion: inputState.emotion
         }
       }
 
@@ -41,7 +43,8 @@ function selectMessageAction(inputState) {
         action: "new_message",
         payload: {
           replyId: inputState.replyId,
-          body: inputState.value
+          body: inputState.value,
+          emotion: inputState.emotion
         }
       }
     default:

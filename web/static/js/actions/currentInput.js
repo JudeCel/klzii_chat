@@ -15,6 +15,14 @@ const Actions = {
         value
       });
     }
+  },
+  changeEmotion:(emotion) =>{
+    return (dispatch) => {
+      dispatch({
+        type: Constants.SET_INPUT_EMOTION,
+        emotion
+      });
+    }
   }
 }
 

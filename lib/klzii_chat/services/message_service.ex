@@ -37,6 +37,7 @@ defmodule KlziiChat.Services.MessageService do
         replyId: replyId,
         sessionId: session_member.sessionId,
         body: params["body"],
+        emotion: String.to_integer(params["emotion"]),
         topicId: topic_id
       ) |> create
     else
