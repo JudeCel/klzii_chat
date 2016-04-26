@@ -27,13 +27,7 @@
 			this.ftInit();
 			var freetransEl = this;
 			var bb = freetransEl.getBBox();
-			console.log("===", this.matrix.split());
-			/*var angle = (this.matrix?this.matrix.split().rotate:0)-0;
-			var rotation = rotateVector(bb.width/2 + ftOption.handleLength, -bb.height/2, angle);
-			console.log("______rotation", rotation);
-			var rotateDragger = this.paper.circle(bb.cx + rotation[0], bb.cy + rotation[1], ftOption.handleRadius ).attr({ fill: ftOption.handleFill });
-			*/
-			var rotateDragger = this.paper.circle(bb.cx + bb.width/2 + ftOption.handleLength, bb.cy - bb.height/2, ftOption.handleRadius ).attr({ fill: ftOption.handleFill });
+			var rotateDragger = this.paper.circle(bb.cx + bb.width/2 + ftOption.handleLength, bb.cy, ftOption.handleRadius ).attr({ fill: ftOption.handleFill });
 			var translateDragger = this.paper.circle(bb.cx, bb.cy, ftOption.handleRadius ).attr({ fill: ftOption.handleFill });
 
 			var joinLine = freetransEl.ftDrawJoinLine( rotateDragger );
@@ -173,7 +167,6 @@
 		};
 
 		///scale section------------------
-
 		// Initialise our slider with its basic transform and drag funcs
 
 		Element.prototype.initSlider = function( params ) {
@@ -371,37 +364,21 @@
 	    x = s * x / norm;
 	    y = s * y / norm;
 	  }
-	//	console.log(norm);
 		return [x, y];
 	}
 	function dragHandleRotateMove( mainEl, dx, dy, x, y, event ) {
 		var handle = this;
 		var mainBB = mainEl.getBBox();
-	//	console.log(dx, dy, mainEl.data("scaleFactor"));
-		// var normalised = normalizeScaleVector(dx, dy, mainEl.data("scaleFactor"));
-		// dx = normalised[0];
-		// dy = normalised[1];
-
 		var cx = Number(handle.data('ocx')) + dx;
 		var cy = Number(handle.data('ocy')) + dy;
 
 		var vx = cx - mainBB.cx;
 		var vy = cy - mainBB.cy;
 
-		// var normalised = normalizeScaleVector(vx, vy, mainEl.data("scaleFactor"));
-		// //CALCULATE CORRECT SCALE HERE
-		//
-		// var cx = Number(handle.data('ocx')) - normalised[0];
-		// var cy = Number(handle.data('ocy')) - normalised[1];
-		//
-		// console.log(cx, cy);
-		// cx -= normalised[0];
-		// cy -= normalised[1];
-
+		var normalised = normalizeScaleVector(vx, vy, mainEl.data("scaleFactor"));
+		var cx = mainBB.cx + normalised[0];
+		var cy = mainBB.cy + normalised[1];
 		mainEl.data("angle", Snap.angle( mainBB.cx, mainBB.cy, cx, cy) - 180);
-
-//		var distance = calcDistance( mainBB.cx, mainBB.cy, cx, cy );
-
 		handle.attr({ cx: cx, cy: cy });
 
 		mainEl.ftUpdateTransform();
