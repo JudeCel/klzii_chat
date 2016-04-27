@@ -1,13 +1,14 @@
-defmodule KlziiChat.Vote do
+defmodule KlziiChat.Banner do
   use KlziiChat.Web, :model
 
-  schema "Votes" do
-    belongs_to :session_member, KlziiChat.SessionMember, [foreign_key: :sessionMemberId]
-    belongs_to :message, KlziiChat.Event, [foreign_key: :messageId]
+  schema "Banners" do
+    belongs_to :resource, KlziiChat.Resource, [foreign_key: :resourceId]
+    field :page, :string
+    field :link, :string
     timestamps [inserted_at: :createdAt, updated_at: :updatedAt]
   end
 
-  @required_fields ~w(messageId sessionMemberId)
+  @required_fields ~w()
   @optional_fields ~w()
 
   @doc """

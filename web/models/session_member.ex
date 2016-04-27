@@ -5,18 +5,19 @@ defmodule KlziiChat.SessionMember do
     field :username, :string
     belongs_to :account_user, KlziiChat.AccountUser, [foreign_key: :accountUserId]
     belongs_to :session, KlziiChat.Session, [foreign_key: :sessionId]
-    has_many :events, KlziiChat.Event, [foreign_key: :sessionMemberId]
+    has_many :messages, KlziiChat.Message, [foreign_key: :sessionMemberId]
     has_many :votes, KlziiChat.Vote, [foreign_key: :sessionMemberId]
     field :colour, :string
     field :online, :boolean, default: false
     field :avatarData, :map, default: %{ base: 0, face: 3, body: 0, hair: 0, desk: 0, head: 0 }
+    field :topicContext, :map, default: %{}
     field :token, :string
     field :role, :string
     timestamps [inserted_at: :createdAt, updated_at: :updatedAt]
 
   end
 
-  @required_fields ~w(token username colour online avatarData role)
+  @required_fields ~w(username colour online avatarData)
   @optional_fields ~w()
 
   @doc """

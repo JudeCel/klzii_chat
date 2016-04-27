@@ -40,6 +40,12 @@ defmodule KlziiChat.Resource do
     |> parse_link
   end
 
+  def banner_changeset(model, params \\ :empty) do
+    model
+    |> cast(params, @required_fields, @optional_fields)
+    |> cast_attachments(params, @required_file_fields, @optional_file_fields)
+  end
+
   defp parse_link(base_changeset) do
     case base_changeset do
       %Ecto.Changeset{valid?: true, changes: %{type: "link", scope: "youtube", link: link}} ->

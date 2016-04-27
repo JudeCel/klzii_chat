@@ -25,6 +25,19 @@ defmodule KlziiChat.Services.SessionMembersService do
     end
   end
 
+  @spec update(Integer.t, Map.t) :: {:ok, %SessionMember{}} | {:error, Ecto.Changeset}
+  def update(id, params) do
+    session_member =  Repo.get_by!(SessionMember, id: id)
+    Ecto.Changeset.change(session_member, params)
+    |> Repo.update
+    |> case do
+        {:ok, session_member} ->
+          {:ok, SessionMembersView.render("member.json", member: session_member)}
+        {:error, changeset} ->
+          {:error, changeset}
+      end
+  end
+
   @spec by_session(Integer.t) :: {:ok, Map.t}
   def by_session(session_id) do
     query =

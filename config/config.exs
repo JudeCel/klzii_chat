@@ -32,4 +32,9 @@ config :phoenix, :generators,
   migration: true,
   binary_id: false
 
+config :quantum, cron: [
+    # Runs every midnight:
+    "@daily":  &KlziiChat.Services.ResourceService.daily_cleanup/0
+  ], timezone: :local
+
 import_config "#{Mix.env}.exs"

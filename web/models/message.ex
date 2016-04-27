@@ -1,22 +1,20 @@
-defmodule KlziiChat.Event do
+defmodule KlziiChat.Message do
   use KlziiChat.Web, :model
 
-  schema "Events" do
+  schema "Messages" do
     belongs_to :topic, KlziiChat.Account, [foreign_key: :topicId]
     belongs_to :session_member, KlziiChat.SessionMember, [foreign_key: :sessionMemberId]
-    belongs_to :reply, KlziiChat.Event, [foreign_key: :replyId]
-    has_many :replies, KlziiChat.Event, [foreign_key: :replyId, on_delete: :delete_all]
-    has_many :votes, KlziiChat.Vote, [foreign_key: :eventId, on_delete: :delete_all]
-    field :event, :map
-    field :uid, :string
-    field :cmd, :string
-    field :tag, :string, default: "message"
+    belongs_to :reply, KlziiChat.Message, [foreign_key: :replyId]
+    has_many :replies, KlziiChat.Message, [foreign_key: :replyId, on_delete: :delete_all]
+    has_many :votes, KlziiChat.Vote, [foreign_key: :messageId, on_delete: :delete_all]
+    field :body, :string
+    field :emotion, :integer
     field :star, :boolean, default: false
     timestamps [inserted_at: :createdAt, updated_at: :updatedAt]
   end
 
-  @required_fields ~w(topicId uid sessionMemberId replyId event)
-  @optional_fields ~w(star tag cmd)
+  @required_fields ~w(topicId sessionMemberId body)
+  @optional_fields ~w(emotion star replyId)
 
   @doc """
   Creates a changeset based on the `model` and `params`.

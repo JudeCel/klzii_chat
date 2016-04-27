@@ -64,8 +64,8 @@ defmodule KlziiChat.Files.Tasks do
   def download(_,[]) do
     {:error, "Ids list can't be empty!"}
   end
-  def download(resurce_id, list) do
-    {:ok, current_dir} = to_string(resurce_id) |> build_tmp_dir
+  def download(resource_id, list) do
+    {:ok, current_dir} = to_string(resource_id) |> build_tmp_dir
     if(Mix.env == :test) do
       {:ok}
     else
@@ -83,20 +83,20 @@ defmodule KlziiChat.Files.Tasks do
   end
 
   @spec zip(String.t, String.t) :: {:ok, String.t }
-  def zip(resurce_id, zip_name) do
-    {:ok, current_dir} = init_dir(resurce_id)
-    {:ok, file_name} = build_zip(zip_name, resurce_id)
+  def zip(resource_id, zip_name) do
+    {:ok, current_dir} = init_dir(resource_id)
+    {:ok, file_name} = build_zip(zip_name, resource_id)
     {:ok, current_dir <> file_name}
   end
 
   @spec build_zip(String.t, String.t) :: {:ok, String.t }
-  def build_zip(zip_name, resurce_id) do
+  def build_zip(zip_name, resource_id) do
      {:ok, file_name} = :zip.create(zip_name <> zip_extension, files_in_dir(zip_name))
   end
 
   @spec init_dir(String.t) :: {:ok, String.t }
-  def init_dir(resurce_id) do
-    {:ok, path} = build_tmp_dir(resurce_id)
+  def init_dir(resource_id) do
+    {:ok, path} = build_tmp_dir(resource_id)
     :ok = File.cd(path)
     {:ok, path }
   end
@@ -110,8 +110,8 @@ defmodule KlziiChat.Files.Tasks do
   end
 
   @spec build_tmp_dir(String.t) :: {:ok, String.t}
-  def build_tmp_dir(resurce_id) do
-    path = base_zip_processing_dir <> resurce_id <> "/"
+  def build_tmp_dir(resource_id) do
+    path = base_zip_processing_dir <> resource_id <> "/"
     :ok = File.mkdir_p(path)
     {:ok, path}
   end

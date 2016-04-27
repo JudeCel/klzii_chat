@@ -36,7 +36,6 @@ export function joinChannal(dispatch) {
   }
 
   let whenConnectionCrash = (event) =>{
-    console.log(event);
     return dispatch({
       type: Constants.SOCKET_CONNECTION_ERROR,
       error: "Socket connection error"
@@ -97,6 +96,9 @@ const Actions = {
       });
 
       channel.on("member_entered", (resp) =>{
+        updateMember(dispatch, resp);
+      });
+      channel.on("member_update", (resp) =>{
         updateMember(dispatch, resp);
       });
     }

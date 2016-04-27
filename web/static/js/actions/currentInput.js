@@ -1,6 +1,6 @@
 import Constants                          from '../constants';
 
-function update_mesage(dispatch, data) {
+function update_message(dispatch, data) {
   return dispatch({
     type: Constants.UPDATE_TOPIC_MESSAGE,
     message: data
@@ -13,6 +13,14 @@ const Actions = {
       dispatch({
         type: Constants.CHANGE_INPUT_VALUE,
         value
+      });
+    }
+  },
+  changeEmotion:(emotion) =>{
+    return (dispatch) => {
+      dispatch({
+        type: Constants.SET_INPUT_EMOTION,
+        emotion
       });
     }
   }

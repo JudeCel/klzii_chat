@@ -1,13 +1,15 @@
-defmodule KlziiChat.Vote do
+defmodule KlziiChat.Shape do
   use KlziiChat.Web, :model
 
-  schema "Votes" do
+  schema "Shapes" do
+    belongs_to :topic, KlziiChat.Account, [foreign_key: :topicId]
     belongs_to :session_member, KlziiChat.SessionMember, [foreign_key: :sessionMemberId]
-    belongs_to :message, KlziiChat.Event, [foreign_key: :messageId]
+    field :event, :map
+    field :uid, :string
     timestamps [inserted_at: :createdAt, updated_at: :updatedAt]
   end
 
-  @required_fields ~w(messageId sessionMemberId)
+  @required_fields ~w(topicId uid sessionMemberId event)
   @optional_fields ~w()
 
   @doc """

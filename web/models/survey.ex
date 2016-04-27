@@ -1,22 +1,20 @@
-defmodule KlziiChat.Topic do
+defmodule KlziiChat.Survey do
   use KlziiChat.Web, :model
 
-  schema "Topics" do
-    has_many :session_topics, KlziiChat.SessionTopic, [foreign_key: :TopicId]
-    has_many :shapes, KlziiChat.Shape, [foreign_key: :topicId]
-    has_many :messages, KlziiChat.Message, [foreign_key: :topicId]
-    has_many :resources, KlziiChat.Resource, [foreign_key: :topicId]
-    has_many :sessions, through: [:session_topics, :sessionId]
+  schema "Surveys" do
+    belongs_to :resource, KlziiChat.Resource, [foreign_key: :resourceId]
     belongs_to :account, KlziiChat.Account, [foreign_key: :accountId]
-
-    field :type, :string, default: "chat"
+    has_many :survey_questions, KlziiChat.SurveyQuestion, [foreign_key: :surveyId]
     field :name, :string
     field :description, :string
+    field :thanks, :string
+    field :closed, :boolean
+    field :confirmedAt, Timex.Ecto.DateTime
+    field :url, :string
     timestamps [inserted_at: :createdAt, updated_at: :updatedAt]
-
   end
 
-  @required_fields ~w(accountId type name active description )
+  @required_fields ~w()
   @optional_fields ~w()
 
   @doc """

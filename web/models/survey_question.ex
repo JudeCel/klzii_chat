@@ -1,13 +1,18 @@
-defmodule KlziiChat.Vote do
+defmodule KlziiChat.SurveyQuestion do
   use KlziiChat.Web, :model
 
-  schema "Votes" do
-    belongs_to :session_member, KlziiChat.SessionMember, [foreign_key: :sessionMemberId]
-    belongs_to :message, KlziiChat.Event, [foreign_key: :messageId]
+  schema "SurveyQuestions" do
+    belongs_to :resource, KlziiChat.Resource, [foreign_key: :resourceId]
+    belongs_to :survey, KlziiChat.Survey, [foreign_key: :surveyId]
+    field :name, :string
+    field :question, :string
+    field :order, :integer
+    field :type, :string
+    field :answers, {:array, :map}
     timestamps [inserted_at: :createdAt, updated_at: :updatedAt]
   end
 
-  @required_fields ~w(messageId sessionMemberId)
+  @required_fields ~w()
   @optional_fields ~w()
 
   @doc """

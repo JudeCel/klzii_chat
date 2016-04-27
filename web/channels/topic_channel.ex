@@ -1,7 +1,7 @@
 defmodule KlziiChat.TopicChannel do
   use KlziiChat.Web, :channel
-  alias KlziiChat.Services.{EventsService, WhiteboardService, ResourceService}
-  alias KlziiChat.EventView
+  alias KlziiChat.Services.{MessageService, WhiteboardService, ResourceService}
+  alias KlziiChat.MessageView
 
   # This Channel is only for Topic context
   # brodcast and receive messages from session members
@@ -12,7 +12,7 @@ defmodule KlziiChat.TopicChannel do
   def join("topics:" <> topic_id, _payload, socket) do
     if authorized?(socket) do
       session_member = socket.assigns.session_member
-      case EventsService.history(topic_id, "message", session_member) do
+      case MessageService.history(topic_id, session_member) do
         {:ok, history} ->
           {:ok, history, assign(socket, :topic_id, String.to_integer(topic_id))}
         {:error, reason} ->
@@ -31,19 +31,11 @@ defmodule KlziiChat.TopicChannel do
         {:error, %{reason: reason}}
     end
   end
+
   def handle_in("deleteResources", %{"id" => id}, socket) do
     case ResourceService.deleteByIds(socket.assigns.session_member.account_user_id, [id]) do
       {:ok, resources} ->
         {:reply, {:ok, %{ id: List.first(resources).id, type: List.first(resources).type }}, socket}
-      {:error, reason} ->
-        {:error, %{reason: reason}}
-    end
-  end
-
-  def handle_in("whiteboardHistory", _payload, socket) do
-    case WhiteboardService.history(socket.assigns.topic_id, "object") do
-      {:ok, history} ->
-        {:reply, {:ok, %{history: history} }, socket}
       {:error, reason} ->
         {:error, %{reason: reason}}
     end
@@ -54,9 +46,9 @@ defmodule KlziiChat.TopicChannel do
     session_member = socket.assigns.session_member
 
     if String.length(payload["body"]) > 0  do
-      case EventsService.create_message(session_member, topic_id, payload) do
-        {:ok, event} ->
-          broadcast! socket, "new_message",  event
+      case MessageService.create_message(session_member, topic_id, payload) do
+        {:ok, message} ->
+          broadcast! socket, "new_message",  message
           {:reply, :ok, socket}
         {:error, reason} ->
           {:error, %{reason: reason}}
@@ -67,7 +59,7 @@ defmodule KlziiChat.TopicChannel do
   end
 
   def handle_in("delete_message", %{ "id" => id }, socket) do
-    case EventsService.deleteById(socket.assigns.session_member, id) do
+    case MessageService.deleteById(socket.assigns.session_member, id) do
       {:ok, resp} ->
         broadcast! socket, "delete_message", resp
         {:reply, :ok, socket}
@@ -78,18 +70,18 @@ defmodule KlziiChat.TopicChannel do
 
   def handle_in("message_star", %{"id" => id}, socket) do
     session_member = socket.assigns.session_member
-    case EventsService.star(id, session_member) do
-      {:ok, event} ->
-        {:reply, {:ok, EventView.render("event.json", %{event: event, member: session_member}) }, socket}
+    case MessageService.star(id, session_member) do
+      {:ok, message} ->
+        {:reply, {:ok, MessageView.render("show.json", %{message: message, member: session_member}) }, socket}
       {:error, reason} ->
         {:error, %{reason: reason}}
     end
   end
 
   def handle_in("thumbs_up", %{"id" => id}, socket) do
-    case EventsService.thumbs_up(id, socket.assigns.session_member) do
-      {:ok, event} ->
-        broadcast! socket, "update_message", event
+    case MessageService.thumbs_up(id, socket.assigns.session_member) do
+      {:ok, message} ->
+        broadcast! socket, "update_message", message
         {:reply, :ok, socket}
       {:error, reason} ->
         {:error, %{reason: reason}}
@@ -97,10 +89,19 @@ defmodule KlziiChat.TopicChannel do
   end
 
   def handle_in("update_message", %{"id" => id, "body" => body}, socket) do
-    case EventsService.update_message(id, body, socket.assigns.session_member) do
-      {:ok, event} ->
-        broadcast! socket, "update_message", event
+    case MessageService.update_message(id, body, socket.assigns.session_member) do
+      {:ok, message} ->
+        broadcast! socket, "update_message", message
         {:reply, :ok, socket}
+      {:error, reason} ->
+        {:error, %{reason: reason}}
+    end
+  end
+
+  def handle_in("whiteboardHistory", _payload, socket) do
+    case WhiteboardService.history(socket.assigns.topic_id) do
+      {:ok, history} ->
+        {:reply, {:ok, %{history: history} }, socket}
       {:error, reason} ->
         {:error, %{reason: reason}}
     end
@@ -110,8 +111,8 @@ defmodule KlziiChat.TopicChannel do
     session_member_id = socket.assigns.session_member.id
     topic_id = socket.assigns.topic_id
     case WhiteboardService.create_object(session_member_id, topic_id,  payload) do
-      {:ok, event} ->
-        broadcast! socket, "draw", event
+      {:ok, shape} ->
+        broadcast! socket, "draw", shape
         {:reply, :ok, socket}
       {:error, reason} ->
         {:error, %{reason: reason}}
@@ -123,8 +124,8 @@ defmodule KlziiChat.TopicChannel do
     session_member_id = socket.assigns.session_member.id
     topic_id = socket.assigns.topic_id
     case WhiteboardService.update_object(session_member_id, topic_id,  object) do
-      {:ok, event} ->
-        broadcast! socket, "update_object", event
+      {:ok, shape} ->
+        broadcast! socket, "update_object", shape
         {:reply, :ok, socket}
       {:error, reason} ->
         {:error, %{reason: reason}}
@@ -151,9 +152,9 @@ defmodule KlziiChat.TopicChannel do
     {:reply, :ok, socket}
   end
 
-  def handle_out(event, payload, socket) do
+  def handle_out(message, payload, socket) do
     session_member = socket.assigns.session_member
-    push socket, event, EventView.render("event.json", %{event: payload, member: session_member})
+    push socket, message, MessageView.render("show.json", %{message: payload, member: session_member})
     {:noreply, socket}
   end
 

@@ -28,7 +28,7 @@ spec:
       labels:
         name: chat
         env: staging
-        version: "0.9.4"
+        version: "0.9.8"
     spec:
       containers:
       - env:
@@ -46,6 +46,8 @@ spec:
           value: klzii_staging
         - name: SERVER_HOST
           value: chat.klzii.com
+        - name: GUARDIAN_SECRET_KEY
+          value: "SttPra/cddsnX+Vko2i8KA=="
         image: 944561038201.dkr.ecr.us-west-2.amazonaws.com/klzii_chat:latest
         name: chat
         ports:
