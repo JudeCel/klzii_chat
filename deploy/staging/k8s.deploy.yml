@@ -34,6 +34,8 @@ spec:
       - env:
         - name: SECRET_KEY_BASE
           value: 265728C3CEE6D163E3A210D2C7952CF50EF3E1765E3FB69DC13E70C93E6D0EF8
+        - name: CORS_URL
+          value: ^https?://(.*\.?)klzii\.com
         - name: DB_USERNAME
           value: klzii
         - name: DB_PASSWORD
