@@ -9,6 +9,8 @@ require("./drawControlls");
 const WhiteboardCanvas = React.createClass({
   getInitialState:function() {
     this.undoHistory = [];
+    this.undoHistoryIdx = 0;
+
     this.minimized = true;
     this.scaling = false;
     this.MIN_WIDTH = 316;
@@ -41,6 +43,13 @@ const WhiteboardCanvas = React.createClass({
   initMessaging() {
     var self = this;
     this.sendMessage = function (json) {
+      //if made a few undo steps, then remove next redo steps first
+      if (self.undoHistoryIdx > 0 && self.undoHistoryIdx < self.undoHistory.length) {
+        self.undoHistory.slice(0, self.undoHistoryIdx );
+      }
+      self.undoHistory.push(JSON.stringify(json) );
+      self.undoHistoryIdx = self.undoHistory.length;
+
       switch (json.type) {
         case 'sendobject':
           this.props.member.dispatch(whiteboardActions.sendobject(this.props.channal, json.message));
@@ -56,8 +65,6 @@ const WhiteboardCanvas = React.createClass({
 
         default:
       }
-
-      self.undoHistory.push(self.objects);
     }.bind(this);
   },
   componentWillReceiveProps(nextProps) {
@@ -74,54 +81,63 @@ const WhiteboardCanvas = React.createClass({
     return this.props.currentUser.role == "facilitator";
   },
   canEditShape(item) {
-    return (this.isFacilitator() || item.event.userName == this.props.currentUser.username);
+    return (this.isFacilitator() || item.userName == this.props.currentUser.username);
+  },
+  processShapeData(event) {
+    var self = this;
+    var obj = self.shapes[event.id];
+    if (event.eventType != "remove" && !obj) {
+      switch (event.element.type) {
+        case "ellipse":
+          obj = self.snap.ellipse(0, 0, 0, 0).transform('r0.1');
+          break;
+        case "rect":
+          obj = self.snap.rect(0, 0, 0, 0).transform('r0.1');
+          break;
+        case "polyline":
+          obj = self.snap.polyline([]).transform('r0.1');
+          break;
+        case "line":
+          obj = self.snap.line(0, 0, 0, 0).transform('r0.1');
+          break;
+        case "text":
+          obj = self.snap.text(0, 0, event.element.attr.textVal).transform('r0.1');
+          break;
+        default:
+          break;
+      };
+      if (obj && !obj.created && self.canEditShape(event)) {
+        self.prepareNewElement(obj);
+        obj.created = true;
+      }
+    }
+
+    if (obj){
+      if (event.eventType == "remove") {
+        obj.ftRemove();
+      } else {
+        var attrs = (event.element.attr instanceof Function)?event.element.attr():event.element.attr;
+        obj.attr(attrs);
+        obj.created = true;
+
+        if (!self.shapes[event.id]) {
+          obj.id = event.id;
+          self.shapes[event.id] = obj;
+        }
+
+        //check if arrow
+        if (event.element.attr.style && event.element.attr.style.indexOf("marker") != -1) {
+          obj.attr({markerStart: self.getArrowShape(event.element.attr.stroke)});
+        }
+      }
+    }
   },
   //process incoming messages about shapes from remote users
   processWhiteboard(data) {
     var self = this;
     data.map(function(item) {
-      var obj = self.shapes[item.event.id];
-      if (item.event.eventType != "remove" && !obj) {
-        switch (item.event.element.type) {
-          case "ellipse":
-            obj = self.snap.ellipse(0, 0, 0, 0).transform('r0.1');
-            break;
-          case "rect":
-            obj = self.snap.rect(0, 0, 0, 0).transform('r0.1');
-            break;
-          case "polyline":
-            obj = self.snap.polyline([]).transform('r0.1');
-            break;
-          case "line":
-            obj = self.snap.line(0, 0, 0, 0).transform('r0.1');
-            break;
-          case "text":
-            obj = self.snap.text(0, 0, item.event.element.attr.textVal).transform('r0.1');
-            break;
-          default:
-            break;
-        };
-        if (obj && !obj.created && self.canEditShape(item)) {
-          self.prepareNewElement(obj);
-          obj.created = true;
-        }
-      }
-
-      if (obj){
-        if (item.event.eventType == "remove") {
-          obj.ftRemove();
-        } else {
-          obj.attr(item.event.element.attr);
-          obj.created = true;
-          obj.id = item.event.id;
-          self.shapes[item.event.id] = obj;
-
-          //check if arrow
-          if (item.event.element.attr.style.indexOf("marker") != -1) {
-            obj.attr({markerStart: self.getArrowShape(item.event.element.attr.stroke)});
-          }
-        }
-      }
+      var event = item.event;
+      self.processShapeData(event);
     });
   },
   deleteObject(uid) {
@@ -374,7 +390,7 @@ const WhiteboardCanvas = React.createClass({
 
       if (el) {
         this.activeShape = el;
-        this.shapeFinishedTransform(el);
+        this.updateTransformControls(el);
       }
     }
   },
@@ -618,6 +634,24 @@ const WhiteboardCanvas = React.createClass({
       this.activeShape.attr({strokeWidth: this.strokeWidth});
     }
   },
+  undoStep() {
+    this.undoHistoryIdx--;
+    if (this.undoHistoryIdx < 0) {
+      this.undoHistoryIdx = 0;
+      return;
+    }
+    var currentStep = JSON.parse(this.undoHistory[this.undoHistoryIdx]);
+    this.processShapeData(currentStep.message);
+  },
+  redoStep() {
+    this.undoHistoryIdx++;
+    if (this.undoHistoryIdx > this.undoHistory.length - 1) {
+      this.undoHistoryIdx = this.undoHistory.length - 1;
+      return;
+    }
+    var currentStep = JSON.parse(this.undoHistory[this.undoHistoryIdx]);
+    this.processShapeData(currentStep.message);
+  },
   render() {
     var self = this;
     var cornerRadius = "5";
@@ -743,6 +777,9 @@ const WhiteboardCanvas = React.createClass({
                 }>
                 <Button bsStyle="default"><i className="fa fa-eraser" aria-hidden="true"></i></Button>
               </OverlayTrigger>
+
+              <Button bsStyle="default"><i className="fa fa-undo" aria-hidden="true" onClick={this.undoStep}></i></Button>
+              <Button bsStyle="default"><i className="fa fa-repeat" aria-hidden="true" onClick={this.redoStep}></i></Button>
         </ButtonToolbar>
 
         <Modal dialogClassName='modal-section facilitator-board-modal' show={ this.mode == this.ModeEnum.text } onHide={ onHide } onEnter={ this.onOpen }>

@@ -63,9 +63,6 @@ const ChatView = React.createClass({
                 <div className='col-md-8'>
                   <div className='row'>
                     <Facilitator openAvatarModal={ this.openAvatarModal } />
-                    {/*<Whiteboard/>*/}
-                    {/*<WhiteboardCanvas member={ this.props } />*/}
-                    {/*<WhiteboardCanvas member={ this.props } />*/}
                   </div>
                   <div className='row'>
                     {<Participants openAvatarModal={ this.openAvatarModal } />}
