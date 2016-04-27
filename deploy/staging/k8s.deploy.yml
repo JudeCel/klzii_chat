@@ -28,7 +28,7 @@ spec:
       labels:
         name: chat
         env: staging
-        version: "0.9.5"
+        version: "0.9.8"
     spec:
       containers:
       - env:
