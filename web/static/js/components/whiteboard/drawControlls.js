@@ -244,6 +244,7 @@
 						}
 						this.data('origPosX', this.data("posX") ); this.data('origPosY', this.data("posY") );
 						this.data("onDragStartFunc")();
+
 		}
 
 
@@ -265,7 +266,6 @@
 						var maxPosX = +el.data("maxPosX");
 						var minPosX = +el.data("minPosX");
 
-						//if( posX > maxPosX ) { el.data("posX", maxPosX ); };
 						if( posX < minPosX ) { el.data("posX", minPosX ); };
 						el.data("fracX", 1/ ( (maxPosX - minPosX) / el.data("posX") ) );
 		}
@@ -291,22 +291,6 @@
 						this.attr({ transform: this.data("origTransform") + (posX ? "T" : "t") + [posX,0] });
 						this.data("onDragFunc")(this);
 		};
-
-		// drag our knob. Currently there is no min/max working, need to add a case for testing rotating anticlockwise beyond 0
-
-		function moveDragKnob( dx,dy,x,y, ev ) {
-						var pnt = startDragTarget.ownerSVGElement.createSVGPoint();
-						pnt.x = ev.clientX; pnt.y = ev.clientY;
-						var vPnt = pnt.matrixTransform(this.data("startScreenCTM").inverse());
-						var transformRequestObj = startDragTarget.ownerSVGElement.createSVGTransform();
-
-						var deg = Math.atan2(vPnt.x - this.data("startBBox").cx, vPnt.y - this.data("startBBox").cy) * 180 / Math.PI ;
-						deg = deg + 180;
-						this.transform('r' + -deg + "," + ( this.data("startBBox").cx - this.data("centerOffsetX") ) + "," + parseInt(this.data("startBBox").cy - -this.data("centerOffsetY") )  );
-						this.data("fracX", deg/360);
-						this.data("onDragFunc")(this);
-		}
-
 		function endDrag() {
 						this.data('onDragEndFunc')();
 		};
@@ -356,12 +340,11 @@
 
 	function dragHandleRotateEnd( mainElement ) {
 		informFinishedTransform(mainElement);
-	//	mainElement.ftStoreInitialTransformMatrix();
 	};
 
 	function normalizeScaleVector(x, y, s) {
 		var norm = Math.sqrt(x * x + y * y);
-	  if (norm != 0) { // as3 return 0,0 for a point of zero length
+	  if (norm != 0) {
 	    x = s * x / norm;
 	    y = s * y / norm;
 	  }

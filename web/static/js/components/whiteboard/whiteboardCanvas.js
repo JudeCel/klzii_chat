@@ -8,6 +8,7 @@ require("./drawControlls");
 
 const WhiteboardCanvas = React.createClass({
   getInitialState:function() {
+    this.undoHistory = [];
     this.minimized = true;
     this.scaling = false;
     this.MIN_WIDTH = 316;
@@ -38,6 +39,7 @@ const WhiteboardCanvas = React.createClass({
     return {content: '', addTextDisabled: true, addTextValue: '', needEvents: true, channel: null};
   },
   initMessaging() {
+    var self = this;
     this.sendMessage = function (json) {
       switch (json.type) {
         case 'sendobject':
@@ -54,6 +56,8 @@ const WhiteboardCanvas = React.createClass({
 
         default:
       }
+
+      self.undoHistory.push(self.objects);
     }.bind(this);
   },
   componentWillReceiveProps(nextProps) {
@@ -125,6 +129,7 @@ const WhiteboardCanvas = React.createClass({
     if (obj) {
       obj.ftRemove();
       this.shapes[uid] = null;
+      this.hideScaleControls();
     }
   },
   deleteAllObjects(obj) {
@@ -231,9 +236,8 @@ const WhiteboardCanvas = React.createClass({
 
       default:
         var elEttributes = shape.matrix.split();
-
-        var transform = "s"+(params.scaleX?params.scaleX:elEttributes.scalex)+","+(params.scaleY?params.scaleY:elEttributes.scaley);
-        shape.transform(transform);
+        var transform = shape.ftGetInitialTransformMatrix().toTransformString()+"S"+(params.scaleX?params.scaleX:1)+","+(params.scaleY?params.scaleY:1)/*+"r"+elEttributes.rotate*/;
+        shape.attr({transform: transform});
         break;
     };
   },
@@ -242,10 +246,12 @@ const WhiteboardCanvas = React.createClass({
     var transformObj;
     var myDragEndFunc = function( el ) {
       self.scaling = false;
+      self.activeShape.ftStoreInitialTransformMatrix();
     }
 
-    var myDragStartFunc = function() {
+    var myDragStartFunc = function(el) {
       self.scaling = true;
+      self.activeShape.ftStoreInitialTransformMatrix();
     }
 
     // what we want to do when the slider changes. They could have separate funcs as the call back or just pick the right element
