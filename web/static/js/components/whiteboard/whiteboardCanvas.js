@@ -23,14 +23,16 @@ const WhiteboardCanvas = React.createClass({
     this.ModeEnum = {
       none: 0,
       rectangle: 1,
-      circle: 2,
-      scribble: 3,
-      scribbleFill: 4,
-      line: 5,
-      arrow: 6,
-      text: 7,
-      image: 8,
-      erase: 9
+      rectangleFill: 2,
+      circle: 3,
+      circleFill: 4,
+      scribble: 5,
+      scribbleFill: 6,
+      line: 7,
+      arrow: 8,
+      text: 9,
+      image: 10,
+      erase: 11
     };
     this.shapes = [];
     this.mode = this.ModeEnum.none;
@@ -304,28 +306,33 @@ const WhiteboardCanvas = React.createClass({
     }
   },
   addRect(fill) {
-    this.mode = this.ModeEnum.rectangle;
     this.setActiveFillColour(fill);
+    this.setState({});
   },
   addRectEmpty() {
+    this.mode = this.ModeEnum.rectangle;
     this.addRect();
   },
   addRectFilled() {
+    this.mode = this.ModeEnum.rectangleFill;
     this.addRect(true);
   },
   addCircle(fill) {
-    this.mode = this.ModeEnum.circle;
+    this.setState({});
     this.setActiveFillColour(fill);
   },
   addCircleFilled () {
+    this.mode = this.ModeEnum.circleFill;
     this.addCircle(true);
   },
   addCircleEmpty () {
+    this.mode = this.ModeEnum.circle;
     this.addCircle();
   },
   addText(text) {
     this.activeShape = this.snap.text(this.MAX_WIDTH/2, this.MAX_HEIGHT/2, text).transform('r0.1');
     this.mode = this.ModeEnum.none;
+    this.setState({});
     this.fillColour = this.activeColour;
     this.activeFillColour = this.activeColour;
     this.setStyle(this.activeShape, this.fillColour, this.strokeWidth, this.strokeColour);
@@ -337,13 +344,16 @@ const WhiteboardCanvas = React.createClass({
   addLine(arrow) {
     this.activeStrokeColour = this.activeColour;
     this.mode = this.ModeEnum.line;
+    this.setState({});
   },
   addArrow() {
     this.activeStrokeColour = this.activeColour;
     this.mode = this.ModeEnum.arrow;
+    this.setState({});
   },
   addImage(url, coords) {
     this.mode = this.ModeEnum.image;
+    this.setState({});
     var r = this.snap.image(url ,coords.x, coords.y, coords.width, coords.height).transform('r0.1');
     this.setStyle(r);
     this.prepareNewElement(r);
@@ -364,6 +374,7 @@ const WhiteboardCanvas = React.createClass({
     } else {
       this.mode = this.ModeEnum.scribble;
     }
+    this.setState({});
     this.setActiveFillColour(full);
     this.activeStrokeColour = 'red';
   },
@@ -494,12 +505,12 @@ const WhiteboardCanvas = React.createClass({
         this.setStyle(this.activeShape, this.fillColour, this.strokeWidth, this.strokeColour);
       }
 
-      if (this.mode == this.ModeEnum.rectangle) {
+      if ((this.mode == this.ModeEnum.rectangle) || (this.mode == this.ModeEnum.rectangleFill)) {
         this.activeShape = this.snap.rect(this.coords.x, this.coords.y, 10, 10).transform('r0.1');
         this.setStyle(this.activeShape, this.fillColour, this.strokeWidth, this.strokeColour);
       }
 
-      if (this.mode == this.ModeEnum.circle) {
+      if ((this.mode == this.ModeEnum.circle) || (this.mode == this.ModeEnum.circleFill)) {
         this.activeShape = this.snap.ellipse(this.coords.x-2, this.coords.y-2, 4, 4).transform('r0.1');
         this.setStyle(this.activeShape, this.fillColour, this.strokeWidth, this.strokeColour);
       }
@@ -633,6 +644,7 @@ const WhiteboardCanvas = React.createClass({
     if (this.activeShape) {
       this.activeShape.attr({strokeWidth: this.strokeWidth});
     }
+    this.setState({});
   },
   undoStep() {
     this.undoHistoryIdx--;
@@ -651,6 +663,14 @@ const WhiteboardCanvas = React.createClass({
     }
     var currentStep = JSON.parse(this.undoHistory[this.undoHistoryIdx]);
     this.processShapeData(currentStep.message);
+  },
+  toolStyle(toolType) {
+    return "btn " + ((toolType == this.mode)?"btn-warning":"btn-default");
+  },
+  isLineWidthActive(el) {
+    console.log("_____", el, this.strokeWidth);
+    return "btn " + (( this.strokeWidth == el)?"btn-warning":"btn-default");
+  //  return this.strokeWidth == el;
   },
   render() {
     var self = this;
@@ -711,7 +731,20 @@ const WhiteboardCanvas = React.createClass({
     }
 
     const { show, onHide, boardContent } = this.props;
-
+    /*
+    this.ModeEnum = {
+      none: 0,
+      rectangle: 1,
+      circle: 2,
+      scribble: 3,
+      scribbleFill: 4,
+      line: 5,
+      arrow: 6,
+      text: 7,
+      image: 8,
+      erase: 9
+    };
+    */
     return (
       <div style={divStyle} className="container">
         <svg id={ this.getName() }
@@ -733,11 +766,11 @@ const WhiteboardCanvas = React.createClass({
         <ButtonToolbar className="row col-sm-4" style={panelStyleBottom}>
               <OverlayTrigger trigger="focus" placement="top" overlay={
                   <Popover id="circleShapes">
-                    <i className="btn-sm fa fa-circle-o" aria-hidden="true" onClick={this.addCircleEmpty}></i>
-                    <i className="btn-sm fa fa-circle" aria-hidden="true" onClick={this.addCircleFilled}></i>
+                    <i className={this.toolStyle(this.ModeEnum.circle)+" fa fa-circle-o"} aria-hidden="true" onClick={this.addCircleEmpty}></i>
+                    <i className={this.toolStyle(this.ModeEnum.circleFill)+" fa fa-circle"} aria-hidden="true" onClick={this.addCircleFilled}></i>
 
-                    <i className="btn-sm fa fa-square-o" aria-hidden="true" onClick={this.addRectEmpty}></i>
-                    <i className="btn-sm fa fa-square" aria-hidden="true" onClick={this.addRectFilled}></i>
+                    <i className={this.toolStyle(this.ModeEnum.rectangle)+" fa fa-square-o"} aria-hidden="true" onClick={this.addRectEmpty}></i>
+                    <i className={this.toolStyle(this.ModeEnum.rectangleFill)+" fa fa-square"} aria-hidden="true" onClick={this.addRectFilled}></i>
                   </Popover>
                 }>
                 <Button className="default" bsStyle="default"><i className="fa fa-star" aria-hidden="true"></i></Button>
@@ -745,12 +778,12 @@ const WhiteboardCanvas = React.createClass({
 
               <OverlayTrigger trigger="focus" placement="top" overlay={
                   <Popover id="scribleShapes">
-                    <i className="btn-sm fa fa-scribd" aria-hidden="true" onClick={this.addScribbleEmpty}></i>
-                    <i className="btn-sm fa fa-bookmark" aria-hidden="true" onClick={this.addScribbleFilled}></i>
+                    <i className={this.toolStyle(this.ModeEnum.scribble)+" fa fa-scribd"} aria-hidden="true" onClick={this.addScribbleEmpty}></i>
+                    <i className={this.toolStyle(this.ModeEnum.scribbleFill)+" fa fa-bookmark"} aria-hidden="true" onClick={this.addScribbleFilled}></i>
 
-                    <i className="btn-sm" aria-hidden="true" onClick={this.addLine}>/</i>
-                    <i className="btn-sm fa fa-long-arrow-right" aria-hidden="true" onClick={this.addArrow}></i>
-                    <i className="btn-sm" aria-hidden="true" onClick={this.inputText}>ABC</i>
+                    <i className={this.toolStyle(this.ModeEnum.line)} aria-hidden="true" onClick={this.addLine}>/</i>
+                    <i className={this.toolStyle(this.ModeEnum.arrow)+" fa fa-long-arrow-right"} aria-hidden="true" onClick={this.addArrow}></i>
+                    <i className={this.toolStyle(this.ModeEnum.text)} aria-hidden="true" onClick={this.inputText}>ABC</i>
 
                   </Popover>
                 }>
@@ -761,7 +794,7 @@ const WhiteboardCanvas = React.createClass({
                   <Popover id="lineWidthShapes">
                     {this.strokeWidthArray.map(function(result) {
                       return <div className="radio" key={"radio" + result} >
-                        <label><input type="radio" ref="strokeWidth" name="optradio" value={result} onClick={self.handleStrokeWidthChange}/>{result}/</label>
+                        <label className={self.isLineWidthActive(result)}><input type="radio" ref="strokeWidth" name="optradio" value={result} onClick={self.handleStrokeWidthChange}/>{result}/</label>
                       </div>
                     })}
                   </Popover>
