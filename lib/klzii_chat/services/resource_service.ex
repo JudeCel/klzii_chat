@@ -41,7 +41,7 @@ defmodule KlziiChat.Services.ResourceService do
       |> Repo.preload([:account])
       resources =
         QueriesResources.add_role_scope(account_user)
-        |> assoc(:resources) |> where(type: ^type)
+        |> where(type: ^type)
         |> Repo.all
         |> Phoenix.View.render_many( ResourceView, "resource.json")
     {:ok, resources}
@@ -50,21 +50,20 @@ defmodule KlziiChat.Services.ResourceService do
   def find(account_user_id, id) do
     account_user = Repo.get!(AccountUser, account_user_id)
       |> Repo.preload([:account])
-    resource = Repo.one(
-      from r in assoc(account_user.account, :resources),
-        where: r.id in ^[id]
-    )
+    resource =
+      QueriesResources.add_role_scope(account_user)
+      |> where([r], r.id in ^[id])
+      |> Repo.one
     {:ok, resource}
   end
 
   @spec deleteByIds(Integer.t, List.t) :: {:ok, %Resource{} } | {:error, String.t}
   def deleteByIds(account_user_id, ids) do
     account_user = Repo.get!(AccountUser, account_user_id) |> Repo.preload([:account])
-    query =
-      from e in assoc(account_user.account, :resources),
-      where: e.id in ^ids
-    result = Repo.all(query)
 
+    query = QueriesResources.add_role_scope(account_user) |> where([r], r.id in ^ids)
+    result = Repo.all(query)
+    
     if ResourcePermissions.can_delete(account_user, result) do
       case Repo.delete_all(query) do
         {:error, error} ->
