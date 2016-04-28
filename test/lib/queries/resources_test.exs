@@ -13,16 +13,16 @@ defmodule KlziiChat.Services.Resourecs do
     ) |> Repo.insert!
 
     base_query = Ecto.Query.from(r in Resource)
-    {:ok, base_query: base_query}
+    {:ok, base_query: base_query, account_user: account_user}
   end
 
-  test "when admin can see all resources" do
-    count = QueriesResources.add_role_scope(%AccountUser{role: "admin"})
+  test "when admin can see all resources", %{account_user: account_user} do
+    count = QueriesResources.add_role_scope(account_user)
       |> Repo.all |> Enum.count
     assert(count == 1 )
   end
 
-  test "find by params when params is empty return all resources", %{base_query: base_query} do
+  test "find by params when params is empty return all resources", %{account_user: account_user, base_query: base_query} do
     count = QueriesResources.find_by_params(base_query, %{}) |> Repo.all |> Enum.count
     assert(count == 1 )
   end

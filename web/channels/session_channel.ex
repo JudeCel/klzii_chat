@@ -43,7 +43,7 @@ defmodule KlziiChat.SessionChannel do
   end
 
   def handle_in("update_member", params, socket) do
-    case SessionMembersService.update(socket.assigns.session_member.id, params) do
+    case SessionMembersService.update_member(socket.assigns.session_member.id, params) do
       {:ok, sessionMember} ->
         broadcast socket, "update_member", sessionMember
       {:error, reason} ->

@@ -11,10 +11,6 @@ defmodule KlziiChat.Queries.Resources do
     from(r in assoc(account_user.account, :resources), where: [private: false])
   end
 
-  def add_role_scope(account_user) do
-    from(r in assoc(account_user.account, :resources))
-  end
-
   def find_by_params(base_query, params) do
     build_type(base_query, params) |> build_scope(params)
   end
