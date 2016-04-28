@@ -21,10 +21,6 @@ const Avatar = React.createClass({
     return `${specificId}-${member.id}`
   },
   componentDidMount() {
-    function randomNumber() {
-      return Math.floor(Math.random() * 4);
-    }
-
     const { id, username, avatarData, colour, online, edit } = this.props.member;
     const { base, face, body, hair, desk, head } = avatarData
 
