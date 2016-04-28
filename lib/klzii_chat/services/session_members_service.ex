@@ -28,7 +28,6 @@ defmodule KlziiChat.Services.SessionMembersService do
   @spec update_member(Integer.t, Map.t) :: {:ok, %SessionMember{}} | {:error, Ecto.Changeset}
   def update_member(id, params) do
     session_member =  Repo.get_by!(SessionMember, id: id)
-    IO.inspect(params)
     SessionMember.changeset(session_member, params)
     |> Repo.update
     |> case do

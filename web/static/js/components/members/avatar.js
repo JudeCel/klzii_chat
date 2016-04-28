@@ -34,7 +34,7 @@ const Avatar = React.createClass({
       this.shouldClearPrevious = false;
     }
     avatar.image(`/images/avatar/base_${this.padToTwo(base)}.svg`, 0, 0, 152, 140);
-    avatar.image(`/images/avatar/face_${this.padToTwo(face)}.svg`, 0, 0, 152, 140);
+    avatar.image(`/images/avatar/face_${this.pickFace(face, online)}.svg`, 0, 0, 152, 140);
     avatar.image(`/images/avatar/body_${this.padToTwo(body)}.svg`, 0, 0, 152, 140);
     avatar.image(`/images/avatar/hair_${this.padToTwo(hair)}.svg`, 0, 0, 152, 140);
     avatar.image(`/images/avatar/desk_${this.padToTwo(desk)}.svg`, 0, 0, 152, 140);
