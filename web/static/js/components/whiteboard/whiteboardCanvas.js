@@ -136,6 +136,7 @@ const WhiteboardCanvas = React.createClass({
     if (obj){
       if (event.eventType == "remove" || event.eventType == "removeObject") {
         obj.ftRemove();
+        self.shapes[event.id] = null;
       } else {
         var attrs = (event.element.attr instanceof Function)?event.element.attr():event.element.attr;
         obj.attr(attrs);
@@ -696,9 +697,14 @@ const WhiteboardCanvas = React.createClass({
     this.handleHistoryObject(this.undoHistoryIdx, false);
   },
   processHistoryStep(currentStep, reverse) {
-    if (reverse && currentStep.eventType == "removeObject") {
-      currentStep.eventType = "draw";
+    if (reverse) {
+      if (currentStep.eventType == "removeObject" || currentStep.eventType == "remove") {
+        currentStep.eventType = "draw";
+      } else if (currentStep.eventType == "draw") {
+        currentStep.eventType = "remove";
+      }
     }
+
     this.processShapeData(currentStep);
   },
   toolStyle(toolType) {
