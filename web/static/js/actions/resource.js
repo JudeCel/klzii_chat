@@ -43,7 +43,7 @@ const Actions = {
       });
       req.end((error, result) =>{
         if (result) {
-          dispatchByType(dispatch, result.body)
+          dispatchByType(dispatch, {type: result.body.type, resources: [result.body.resource]})
         }
       });
     }

@@ -12,7 +12,7 @@ const UploadTypeVideo = React.createClass({
     else {
       return (
         <video controls>
-          <source src={ url } type='audio/mp4' />
+          <source src={ url.full } type='audio/mp4' />
         </video>
       )
     }
