@@ -114,10 +114,8 @@ const Actions = {
     return dispatch => {
       channel.push('deleteAll', {})
       .receive('ok', (data)=>{
-        console.log("data_", data);
       })
       .receive('error', (data) => {
-        console.log("data_error", data);
         dispatch({
           type: Constants.SEND_OBJECT_ERROR,
           error: data.error
@@ -129,7 +127,6 @@ const Actions = {
     return dispatch => {
       channel.push('update_object', {object: object})
       .receive('ok', (data)=>{
-        console.log(data);
       })
       .receive('error', (data) => {
         dispatch({

@@ -42,16 +42,19 @@ const WhiteboardCanvas = React.createClass({
 
     return {content: '', addTextDisabled: true, addTextValue: '', needEvents: true, channel: null};
   },
+  addStepToUndoHistory(json) {
+    var self = this;
+    //if made a few undo steps, then remove next redo steps first
+    if (self.undoHistoryIdx > 0 && self.undoHistoryIdx < self.undoHistory.length) {
+      self.undoHistory.slice(0, self.undoHistoryIdx );
+    }
+    self.undoHistory.push(JSON.stringify(json) );
+    self.undoHistoryIdx = self.undoHistory.length;
+  },
   initMessaging() {
     var self = this;
     this.sendMessage = function (json) {
-      //if made a few undo steps, then remove next redo steps first
-      if (self.undoHistoryIdx > 0 && self.undoHistoryIdx < self.undoHistory.length) {
-        self.undoHistory.slice(0, self.undoHistoryIdx );
-      }
-      self.undoHistory.push(JSON.stringify(json) );
-      self.undoHistoryIdx = self.undoHistory.length;
-
+      self.addStepToUndoHistory(json);
       switch (json.type) {
         case 'sendobject':
           this.props.member.dispatch(whiteboardActions.sendobject(this.props.channal, json.message));
@@ -654,6 +657,7 @@ const WhiteboardCanvas = React.createClass({
     }
     var currentStep = JSON.parse(this.undoHistory[this.undoHistoryIdx]);
     this.processShapeData(currentStep.message);
+    this.checkDeletedObject(currentStep.message);
   },
   redoStep() {
     this.undoHistoryIdx++;
@@ -663,12 +667,17 @@ const WhiteboardCanvas = React.createClass({
     }
     var currentStep = JSON.parse(this.undoHistory[this.undoHistoryIdx]);
     this.processShapeData(currentStep.message);
+    this.checkDeletedObject(currentStep.message);
+  },
+  checkDeletedObject(currentStep) {
+    if (currentStep.eventType == "draw") {
+
+    }
   },
   toolStyle(toolType) {
     return "btn " + ((toolType == this.mode)?"btn-warning":"btn-default");
   },
   isLineWidthActive(el) {
-    console.log("_____", el, this.strokeWidth);
     return "btn " + (( this.strokeWidth == el)?"btn-warning":"btn-default");
   //  return this.strokeWidth == el;
   },
