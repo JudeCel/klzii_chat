@@ -285,6 +285,8 @@ const WhiteboardCanvas = React.createClass({
     var myDragEndFunc = function( el ) {
       self.scaling = false;
       self.activeShape.ftStoreInitialTransformMatrix();
+
+      self.sendObjectData('move');
     }
 
     var myDragStartFunc = function(el) {
@@ -426,14 +428,16 @@ const WhiteboardCanvas = React.createClass({
     }
   },
   deleteActive() {
-    if (this.activeShape) {
+    if (this.activeShape && this.canEditShape(this.activeShape)) {
       this.sendObjectData('removeObject');
       this.activeShape.ftRemove();
       this.props.member.dispatch(whiteboardActions.deleteObject(this.state.channel, this.activeShape.id));
       this.activeShape = null;
+      this.hideScaleControls();
     }
   },
   deleteAll() {
+    this.hideScaleControls();
   	var message = {
   		action: "deleteAll"
   	};
@@ -666,6 +670,7 @@ const WhiteboardCanvas = React.createClass({
     this.strokeWidth = e.target.value;
     if (this.activeShape) {
       this.activeShape.attr({strokeWidth: this.strokeWidth});
+      this.sendObjectData('move');
     }
     this.setState({});
   },
@@ -712,6 +717,29 @@ const WhiteboardCanvas = React.createClass({
   },
   isLineWidthActive(el) {
     return "btn " + (( this.strokeWidth == el)?"btn-warning":"btn-default");
+  },
+  isShapeSectionActive() {
+    var enabled = false;
+    if (this.mode == this.ModeEnum.circle ||
+      this.mode == this.ModeEnum.circleFill ||
+      this.mode == this.ModeEnum.rectangle ||
+      this.mode == this.ModeEnum.rectangleFill
+    ) {
+      enabled = true;
+    }
+    return "btn " + (enabled?"btn-warning":"btn-default");
+  },
+  isIrregularShapeSectionActive() {
+    var enabled = false;
+    if (this.mode == this.ModeEnum.scribble ||
+      this.mode == this.ModeEnum.scribbleFill ||
+      this.mode == this.ModeEnum.line ||
+      this.mode == this.ModeEnum.arrow ||
+      this.mode == this.ModeEnum.text
+    ) {
+      enabled = true;
+    }
+    return "btn " + (enabled?"btn-warning":"btn-default");
   },
   render() {
     var self = this;
@@ -814,7 +842,7 @@ const WhiteboardCanvas = React.createClass({
                     <i className={this.toolStyle(this.ModeEnum.rectangleFill)+" fa fa-square"} aria-hidden="true" onClick={this.addRectFilled}></i>
                   </Popover>
                 }>
-                <Button className="default" bsStyle="default"><i className="fa fa-star" aria-hidden="true"></i></Button>
+                <Button className={this.isShapeSectionActive()}><i className="fa fa-star" aria-hidden="true"></i></Button>
               </OverlayTrigger>
 
               <OverlayTrigger trigger="focus" placement="top" overlay={
@@ -828,7 +856,7 @@ const WhiteboardCanvas = React.createClass({
 
                   </Popover>
                 }>
-                <Button bsStyle="default"><i className="fa fa-pencil" aria-hidden="true"></i></Button>
+                <Button className={this.isIrregularShapeSectionActive()}><i className="fa fa-pencil" aria-hidden="true"></i></Button>
               </OverlayTrigger>
 
               <OverlayTrigger trigger="focus" placement="top" overlay={
