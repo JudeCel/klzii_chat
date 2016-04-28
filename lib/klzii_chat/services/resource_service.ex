@@ -12,7 +12,7 @@ defmodule KlziiChat.Services.ResourceService do
     if account_user.role != "admin" && params["private"] == true do
       Map.put(params, "private", false)
     else
-      Map.put(params, "private", false)
+      Map.put(params, "private",(params["private"] || false))
     end |> save_resource(account_user)
   end
 
