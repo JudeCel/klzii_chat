@@ -28,10 +28,18 @@ spec:
       labels:
         name: chat
         env: staging
-        version: "0.9.8"
+        version: "0.9.22"
     spec:
       containers:
       - env:
+        - name: AWS_ACCESS_KEY_ID
+          value: "AKIAJV2UHLF355DYBP6A"
+        - name: AWS_SECRET_ACCESS_KEY
+          value: "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"
+        - name: AWS_REGION
+          value: "us-west-2"
+        - name: ARC_BUCKET
+          value: "klzii-staging"
         - name: SECRET_KEY_BASE
           value: 265728C3CEE6D163E3A210D2C7952CF50EF3E1765E3FB69DC13E70C93E6D0EF8
         - name: CORS_URL

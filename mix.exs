@@ -19,7 +19,7 @@ defmodule KlziiChat.Mixfile do
   def application do
     [mod: {KlziiChat, []},
      applications: [:phoenix, :phoenix_html, :cowboy, :logger, :gettext, :quantum,
-                    :phoenix_ecto, :postgrex, :ex_aws, :arc, :httpotion, :timex_ecto]]
+                    :phoenix_ecto, :postgrex, :ex_aws, :arc, :httpotion, :timex_ecto, :httpoison]]
   end
 
   # Specifies which paths to compile per environment.
@@ -46,8 +46,10 @@ defmodule KlziiChat.Mixfile do
      {:corsica, "~> 0.4"},
      {:timex, "~> 2.1"},
      {:timex_ecto, "~> 1.0"},
-     {:quantum, "~> 1.7"}
- ]
+     {:quantum, "~> 1.7"},
+     {:httpoison, "~> 0.7"},
+     {:poison, "~> 1.2"}
+    ]
   end
 
   # Aliases are shortcut or tasks specific to the current project.

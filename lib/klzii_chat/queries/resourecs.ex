@@ -7,6 +7,9 @@ defmodule KlziiChat.Queries.Resources do
   def add_role_scope(%AccountUser{role: "admin"}) do
     from(r in Resource)
   end
+  def add_role_scope(_) do
+    from(r in Resource, where: [private: false])
+  end
 
   def add_role_scope(account_user) do
     from(r in assoc(account_user.account, :resources))
