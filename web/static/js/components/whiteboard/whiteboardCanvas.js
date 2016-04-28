@@ -118,7 +118,7 @@ const WhiteboardCanvas = React.createClass({
     }
 
     if (obj){
-      if (event.eventType == "remove") {
+      if (event.eventType == "remove" || event.eventType == "removeObject") {
         obj.ftRemove();
       } else {
         var attrs = (event.element.attr instanceof Function)?event.element.attr():event.element.attr;
@@ -410,6 +410,7 @@ const WhiteboardCanvas = React.createClass({
   },
   deleteActive() {
     if (this.activeShape) {
+      this.sendObjectData('removeObject');
       this.activeShape.ftRemove();
       this.props.member.dispatch(whiteboardActions.deleteObject(this.state.channel, this.activeShape.id));
       this.activeShape = null;
@@ -656,8 +657,7 @@ const WhiteboardCanvas = React.createClass({
       return;
     }
     var currentStep = JSON.parse(this.undoHistory[this.undoHistoryIdx]);
-    this.processShapeData(currentStep.message);
-    this.checkDeletedObject(currentStep.message);
+    this.processHistoryStep(currentStep.message, true);
   },
   redoStep() {
     this.undoHistoryIdx++;
@@ -666,20 +666,19 @@ const WhiteboardCanvas = React.createClass({
       return;
     }
     var currentStep = JSON.parse(this.undoHistory[this.undoHistoryIdx]);
-    this.processShapeData(currentStep.message);
-    this.checkDeletedObject(currentStep.message);
+    this.processHistoryStep(currentStep.message, false);
   },
-  checkDeletedObject(currentStep) {
-    if (currentStep.eventType == "draw") {
-
+  processHistoryStep(currentStep, reverse) {
+    if (reverse && currentStep.eventType == "removeObject") {
+      currentStep.eventType = "draw";
     }
+    this.processShapeData(currentStep);
   },
   toolStyle(toolType) {
     return "btn " + ((toolType == this.mode)?"btn-warning":"btn-default");
   },
   isLineWidthActive(el) {
     return "btn " + (( this.strokeWidth == el)?"btn-warning":"btn-default");
-  //  return this.strokeWidth == el;
   },
   render() {
     var self = this;
