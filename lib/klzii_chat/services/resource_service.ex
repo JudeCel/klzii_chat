@@ -5,6 +5,36 @@ defmodule KlziiChat.Services.ResourceService do
   import Ecto
   import Ecto.Query
 
+
+  def upload(params, account_user_id)  do
+    account_user = Repo.get!(AccountUser, account_user_id) |> Repo.preload([:account])
+    if account_user.role != "admin" && params["private"] == true do
+      Map.put(params, "private", false)
+    else
+      Map.put(params, "private", false)
+    end |> save_resource(account_user)
+  end
+
+  def save_resource(%{"private" => private, "type" => type, "scope" => scope, "file" => file, "name"=> name}, account_user) do
+    params = %{
+      type: type,
+      scope: scope,
+      accountId: account_user.account.id,
+      accountUserId: account_user.id,
+      type: type,
+      name: name,
+      private: private
+    } |> Map.put(String.to_atom(type), file)
+    changeset = Resource.changeset(%Resource{}, params)
+
+    case Repo.insert(changeset) do
+      {:ok, resource} ->
+        {:ok, resource}
+      {:error, reason} ->
+        {:error, reason}
+    end
+  end
+
   def get(account_user_id, type) do
     account_user = Repo.get!(AccountUser, account_user_id)
       |> Repo.preload([:account])

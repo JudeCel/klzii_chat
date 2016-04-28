@@ -54,23 +54,13 @@ defmodule KlziiChat.ResourcesController do
     end
   end
 
-  def upload(conn, %{"type" => type, "scope" => scope, "file" => file, "name"=> name}, account_user, claims) do
-    params = %{
-      type: type,
-      scope: scope,
-      accountId: account_user.account.id,
-      accountUserId: account_user.id,
-      type: type,
-      name: name
-    } |> Map.put(String.to_atom(type), file)
-    changeset = Resource.changeset(%Resource{}, params)
-
-    case Repo.insert(changeset) do
+  def upload(conn, params, account_user, claims) do
+    case ResourceService.upload(params, account_user.id) do
       {:ok, resource} ->
         json(conn, %{
-          type: resource.type,
-          resource: ResourceView.render("resource.json", %{resource: resource}),
-          message: "Success uploaded!" })
+        type: resource.type,
+        resource: ResourceView.render("resource.json", %{resource: resource}),
+        message: "Success uploaded!" })
       {:error, reason} ->
         json(conn, %{status: :error, reason: reason})
     end
