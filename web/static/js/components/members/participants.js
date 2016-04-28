@@ -10,16 +10,6 @@ const Participants = React.createClass({
   render() {
     const { participants, openAvatarModal } = this.props;
 
-    //helper for testing
-    // for(let i of Array(7).keys()) {
-    //   if(participants[0]) {
-    //     let last = participants.length-1;
-    //     let object = Object.assign({}, participants[last]);
-    //     object.id += 10;
-    //     participants.push(object);
-    //   }
-    // }
-
     return (
       <div className='participants-section remove-side-margin'>
         {

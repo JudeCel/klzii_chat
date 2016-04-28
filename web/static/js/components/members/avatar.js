@@ -42,11 +42,16 @@ const Avatar = React.createClass({
     avatar.rect(25, 125, 100, 20, 1, 1).attr({fill: colour});
     avatar.text(76, 138, username).attr({fill: '#fff', "font-size": "75%", "text-anchor": "middle"});
     avatar.rect(30, 130, 90, 3, 5, 5).attr({fill: '#ccc', opacity: 0.2});
-    this.previousAvatarData = Object.assign({}, avatarData);
+    this.previousData = {avatarData, username}
   },
   shouldComponentUpdate(nextProps) {
-    let equal = JSON.stringify(this.previousAvatarData) !== JSON.stringify(nextProps.member.avatarData);
-    return equal && this.previousAvatarData ? true : false;
+    if (this.previousData) {
+      let AvatarData = JSON.stringify(this.previousData.avatarData) != JSON.stringify(nextProps.member.avatarData);
+      let username = this.previousData.username != nextProps.member.username;
+      return(!(username && AvatarData))
+    }else {
+      return true
+    }
   },
   componentDidUpdate() {
     let avatar = Snap('#' + this.pickId());
