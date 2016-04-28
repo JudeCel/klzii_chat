@@ -9,10 +9,10 @@ defmodule KlziiChat.Services.ResourceService do
 
   def upload(params, account_user_id)  do
     account_user = Repo.get!(AccountUser, account_user_id) |> Repo.preload([:account])
-    if account_user.role != "admin" && params["private"] == true do
-      Map.put(params, "private", false)
+    if account_user.role == "admin" do
+      Map.put(params, "private", (params["private"] || false))
     else
-      Map.put(params, "private",(params["private"] || false))
+      Map.put(params, "private", false)
     end |> save_resource(account_user)
   end
 
@@ -63,7 +63,7 @@ defmodule KlziiChat.Services.ResourceService do
 
     query = QueriesResources.add_role_scope(account_user) |> where([r], r.id in ^ids)
     result = Repo.all(query)
-    
+
     if ResourcePermissions.can_delete(account_user, result) do
       case Repo.delete_all(query) do
         {:error, error} ->
