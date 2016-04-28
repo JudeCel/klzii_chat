@@ -15,6 +15,7 @@ defmodule KlziiChat.Resource do
     field :type, :string
     field :scope, :string
     field :name, :string
+    field :private, :boolean, default: false
     field :status, :string, default: "completed"
     field :properties, :map, default: %{}
     field :expiryDate, Timex.Ecto.DateTime
@@ -22,7 +23,7 @@ defmodule KlziiChat.Resource do
   end
 
   @required_fields ~w(status scope type accountUserId accountId name)
-  @optional_fields ~w(link properties)
+  @optional_fields ~w(link properties private)
 
   @required_file_fields ~w()
   @optional_file_fields ~w(file image audio video)

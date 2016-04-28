@@ -1,6 +1,7 @@
 defmodule KlziiChat.Services.ResourceService do
   alias KlziiChat.{Repo, AccountUser, Resource, ResourceView, User}
   alias KlziiChat.Services.Permissions.Resources, as: ResourcePermissions
+  alias KlziiChat.Queries.Resources, as: QueriesResources
 
   import Ecto
   import Ecto.Query
@@ -38,15 +39,12 @@ defmodule KlziiChat.Services.ResourceService do
   def get(account_user_id, type) do
     account_user = Repo.get!(AccountUser, account_user_id)
       |> Repo.preload([:account])
-    resources = Repo.all(
-      from e in assoc(account_user.account, :resources),
-        where: [type: ^type]
-    )
-    resp = Enum.map(resources, fn resource ->
-      ResourceView.render("resource.json", %{resource: resource})
-    end)
-
-    {:ok, resp}
+      resources =
+        QueriesResources.add_role_scope(account_user)
+        |> assoc(:resources) |> where(type: ^type)
+        |> Repo.all
+        |> Phoenix.View.render_many( ResourceView, "resource.json")
+    {:ok, resources}
   end
 
   def find(account_user_id, id) do
