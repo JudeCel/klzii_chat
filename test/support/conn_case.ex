@@ -33,8 +33,10 @@ defmodule KlziiChat.ConnCase do
   end
 
   setup tags do
+    :ok = Ecto.Adapters.SQL.Sandbox.checkout(KlziiChat.Repo)
+
     unless tags[:async] do
-      :ok = Ecto.Adapters.SQL.Sandbox.checkout(KlziiChat.Repo)
+      Ecto.Adapters.SQL.Sandbox.mode(KlziiChat.Repo, {:shared, self()})
     end
 
     {:ok, conn: Phoenix.ConnTest.build_conn()}
