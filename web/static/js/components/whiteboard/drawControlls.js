@@ -27,8 +27,12 @@
 			this.ftInit();
 			var freetransEl = this;
 			var bb = freetransEl.getBBox();
-			var rotateDragger = this.paper.circle(bb.cx + bb.width/2 + ftOption.handleLength, bb.cy, ftOption.handleRadius ).attr({ fill: ftOption.handleFill });
-			var translateDragger = this.paper.circle(bb.cx, bb.cy, ftOption.handleRadius ).attr({ fill: ftOption.handleFill });
+		//	var rotateDragger = this.paper.circle(bb.cx + bb.width/2 + ftOption.handleLength, bb.cy, ftOption.handleRadius ).attr({ fill: ftOption.handleFill });
+			var rotateDragger = this.paper.image("/images/svgControls/rotate.png", bb.cx  + bb.width/2, bb.cy, ftOption.handleRadius*2, ftOption.handleRadius*2).transform('r0.1');
+
+			//var translateDragger = this.paper.circle(bb.cx, bb.cy, ftOption.handleRadius ).attr({ fill: ftOption.handleFill });
+			var translateDragger = this.paper.image("/images/svgControls/move.png", bb.cx, bb.cy, ftOption.handleRadius*2, ftOption.handleRadius*2).transform('r0.1');
+			//translateDragger.attr({cx: bb.cx, cy: bb.cy});
 
 			this.initialWidth = bb.width/2;
 			this.initialHeight = bb.height/2;
@@ -39,7 +43,7 @@
 			freetransEl.data( "handlesGroup", handlesGroup );
 			freetransEl.data( "joinLine", joinLine);
 
-			freetransEl.data( "scaleFactor", calcDistance( bb.cx, bb.cy, rotateDragger.attr('cx'), rotateDragger.attr('cy') ) );
+			freetransEl.data( "scaleFactor", calcDistance( bb.cx, bb.cy, rotateDragger.attr('x'), rotateDragger.attr('y') ) );
 			translateDragger.drag( 	elementDragMove.bind(  translateDragger, freetransEl ),
 						elementDragStart.bind( translateDragger, freetransEl ),
 						elementDragEnd.bind( translateDragger, freetransEl ) );
@@ -105,8 +109,8 @@
 		};
 
 		Element.prototype.ftStoreStartCenter = function() {
-			this.data('ocx', this.attr('cx') );
-			this.data('ocy', this.attr('cy') );
+			this.data('ocx', this.attr('x') );
+			this.data('ocy', this.attr('y') );
 			return this;
 		}
 
@@ -140,12 +144,12 @@
 			if( this.data("joinLine") ) {
 				var x2 = 0, y2 = 0;
 				if (rotateHandle) {
-					x2 = rotateHandle.attr('cx');
-					y2 = rotateHandle.attr('cy');
+					x2 = rotateHandle.attr('x');
+					y2 = rotateHandle.attr('y');
 				}
 				this.data("joinLine").attr({ x1: objtps.x, y1: objtps.y, x2: x2, y2: y2 });
 			} else {
-				return this.paper.line( thisBB.cx, thisBB.cy, handle.attr('cx'), handle.attr('cy') ).attr( lineAttributes );
+				return this.paper.line( thisBB.cx, thisBB.cy, handle.attr('x'), handle.attr('y') ).attr( lineAttributes );
 			};
 
 			return this;
@@ -310,7 +314,7 @@
 
 	function elementDragStart( mainEl, x, y, ev ) {
 		this.ftInformSelected(mainEl, true);
-		this.parent().selectAll('circle').forEach( function( el, i ) {
+		this.parent().selectAll('image').forEach( function( el, i ) {
 				el.ftStoreStartCenter();
 		} );
 		mainEl.data("otx", mainEl.data("tx") || 0);
@@ -320,8 +324,9 @@
 	function elementDragMove( mainEl, dx, dy, x, y ) {
 		var dragHandle = this;
 
-		this.parent().selectAll('circle').forEach( function( el, i ) {
-			el.attr({ cx: +el.data('ocx') + dx, cy: +el.data('ocy') + dy });
+		this.parent().selectAll('image').forEach( function( el, i ) {
+			console.log("el", i, el.x);
+			el.attr({ x: +el.data('ocx') + dx, y: +el.data('ocy') + dy });
 
 		} );
 		mainEl.data("tx", mainEl.data("otx") + +dx);
@@ -371,7 +376,7 @@
 		var cx = mainBB.cx + normalised[0];
 		var cy = mainBB.cy + normalised[1];
 		mainEl.data("angle", Snap.angle( mainBB.cx, mainBB.cy, cx, cy) - 180);
-		handle.attr({ cx: cx, cy: cy });
+		handle.attr({ x: cx, y: cy });
 
 		mainEl.ftUpdateTransform();
 		mainEl.ftDrawJoinLine( handle );
