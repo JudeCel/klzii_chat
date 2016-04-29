@@ -5,7 +5,7 @@
 	Snap.plugin( function( Snap, Element, Paper, global  ) {
 
 		var ftOption = {
-			handleFill: "#c0c0c090",
+			handleFill: "#c0c0c0",
 			handleStrokeDash: "5,5",
 			handleStrokeWidth: "2",
 			handleLength: "75",
@@ -159,16 +159,16 @@
 		Element.prototype.ftUpdateTransform = function() {
 			var tstring = "t" + this.data("tx") + "," + this.data("ty") + this.ftGetInitialTransformMatrix().toTransformString() + "r" + this.data("angle") + 'S' + this.data("scale" );
 			this.attr({ transform: tstring });
-			this.data("bbT") && this.ftHighlightBB();
+			/*this.data("bbT") && */this.ftHighlightBB();
 			return this;
 		};
 
 		Element.prototype.ftHighlightBB = function() {
 			this.data("bbT") && this.data("bbT").remove();
 			this.data("bb") && this.data("bb").remove();
-			this.data("bbT", this.paper.rect( rectObjFromBB( this.getBBox(1) ) )
-							.attr({ fill: "none", stroke: ftOption.handleFill, strokeDasharray: ftOption.handleStrokeDash })
-							.transform( this.transform().global.toString() ) );
+			// this.data("bbT", this.paper.rect( rectObjFromBB( this.getBBox(1) ) )
+			// 				.attr({ fill: "none", stroke: ftOption.handleFill, strokeDasharray: ftOption.handleStrokeDash })
+			// 				.transform( this.transform().global.toString() ) );
 			this.data("bb", this.paper.rect( rectObjFromBB( this.getBBox() ) )
 							.attr({ fill: "none", stroke: ftOption.handleFill, strokeDasharray: ftOption.handleStrokeDash }) );
 			return this;
@@ -215,17 +215,17 @@
 		Paper.prototype.slider = function( params , callback) {
 						var myPaper = this,  myGroup;
 						var loaded = Snap.load( params.filename, function( frag ) {
-														myGroup = myPaper.group().add( frag );
-														myGroup.transform("t" + params.x + "," + params.y);
-														var myCap = myGroup.select( params.capSelector );
-														myCap.myGroup = myGroup;
-														myCap.data("sliderId", params.sliderId);
-														myCap.sliderAnyAngle( params );
-														sliderSetAttributes( myGroup, params.attr );
-														sliderSetAttributes( myCap, params.capattr );
-														myGroup.myCap = myCap;
-														callback(myGroup);
-										} );
+							myGroup = myPaper.group().add( frag );
+							myGroup.transform("t" + params.x + "," + params.y);
+							var myCap = myGroup.select( params.capSelector );
+							myCap.myGroup = myGroup;
+							myCap.data("sliderId", params.sliderId);
+							myCap.sliderAnyAngle( params );
+							sliderSetAttributes( myGroup, params.attr );
+							sliderSetAttributes( myCap, params.capattr );
+							myGroup.myCap = myCap;
+							callback(myGroup);
+						});
 						return myGroup;
 		}
 
