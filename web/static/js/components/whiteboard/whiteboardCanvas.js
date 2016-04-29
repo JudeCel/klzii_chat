@@ -210,12 +210,10 @@ const WhiteboardCanvas = React.createClass({
     this.scaleYControl.insertAfter(shape);
   },
   shapeFinishedTransform(shape) {
-    this.updateTransformControls(shape);
     this.activeShape = shape;
     this.sendObjectData('move');
   },
   shapeTransformed(shape) {
-    this.updateTransformControls(shape);
     this.activeShape = shape;
   },
   moveDistance(dx, dy) {
@@ -273,8 +271,10 @@ const WhiteboardCanvas = React.createClass({
         break;
 
       default:
-        var elEttributes = shape.matrix.split();
-        var transform = shape.ftGetInitialTransformMatrix().toTransformString()+"S"+(params.scaleX?params.scaleX:1)+","+(params.scaleY?params.scaleY:1)/*+"r"+elEttributes.rotate*/;
+        var elEttributes = shape.attr();
+        var matr = shape.ftGetInitialTransformMatrix().clone();
+        matr.scale(params.scaleX?params.scaleX:1, params.scaleY?params.scaleY:1);
+        var transform = shape.ftGetInitialTransformMatrix().toTransformString()+"S"+(params.scaleX?params.scaleX:1)+","+(params.scaleY?params.scaleY:1);
         shape.attr({transform: transform});
         break;
     };
@@ -285,7 +285,7 @@ const WhiteboardCanvas = React.createClass({
     var myDragEndFunc = function( el ) {
       self.scaling = false;
       self.activeShape.ftStoreInitialTransformMatrix();
-
+      el.setCapMaxPosition(el.data("posX"));
       self.sendObjectData('move');
     }
 
@@ -405,12 +405,16 @@ const WhiteboardCanvas = React.createClass({
     el.ftSetSelectedCallback(this.shapeSelected);
     el.ftSetTransformedCallback(this.shapeTransformed);
     el.ftSetFinishedTransformCallback(this.shapeFinishedTransform);
+    el.ftSetSelectedForRotationCallback(this.shapeSelectedForRotation);
   },
   addInputControl(el) {
     el.ftCreateHandles();
   },
   setStyle(el, colour, strokeWidth, strokeColour) {
     el.attr({'fill': colour, stroke: strokeColour, strokeWidth: strokeWidth});
+  },
+  shapeSelectedForRotation(el) {
+    this.updateTransformControls(el);
   },
   shapeSelected(el, selected) {
     if (selected){
@@ -423,7 +427,7 @@ const WhiteboardCanvas = React.createClass({
 
       if (el) {
         this.activeShape = el;
-        this.updateTransformControls(el);
+        this.hideScaleControls();
       }
     }
   },

@@ -30,6 +30,9 @@
 			var rotateDragger = this.paper.circle(bb.cx + bb.width/2 + ftOption.handleLength, bb.cy, ftOption.handleRadius ).attr({ fill: ftOption.handleFill });
 			var translateDragger = this.paper.circle(bb.cx, bb.cy, ftOption.handleRadius ).attr({ fill: ftOption.handleFill });
 
+			this.initialWidth = bb.width/2;
+			this.initialHeight = bb.height/2;
+
 			var joinLine = freetransEl.ftDrawJoinLine( rotateDragger );
 			var handlesGroup = this.paper.g( joinLine, rotateDragger, translateDragger );
 
@@ -42,7 +45,10 @@
 						elementDragEnd.bind( translateDragger, freetransEl ) );
 
 			freetransEl.unclick();
-			freetransEl.data("click", freetransEl.click( function() {  this.ftRemoveHandles() } ) );
+			freetransEl.data("click", freetransEl.click( function() {
+				freetransEl.onSelectedForRotation(freetransEl);
+				this.ftRemoveHandles();
+			} ) );
 
 			rotateDragger.drag(
 				dragHandleRotateMove.bind( rotateDragger, freetransEl ),
@@ -80,7 +86,9 @@
 		Element.prototype.ftSetSelectedCallback = function(c) {
 			this.onSelected = c;
 		}
-
+		Element.prototype.ftSetSelectedForRotationCallback = function(c) {
+			this.onSelectedForRotation = c;
+		}
 		Element.prototype.ftSetTransformedCallback = function(c) {
 			this.onTransformed = c;
 		}
@@ -103,7 +111,7 @@
 		}
 
 		Element.prototype.ftStoreInitialTransformMatrix = function() {
-			this.data('initialTransformMatrix', this.transform().localMatrix );
+			this.data('initialTransformMatrix', this.transform().globalMatrix );
 			return this;
 		};
 
@@ -243,7 +251,7 @@
 										this.data("startScreenCTM",startDragTarget.getScreenCTM());
 						}
 						this.data('origPosX', this.data("posX") ); this.data('origPosY', this.data("posY") );
-						this.data("onDragStartFunc")();
+						this.data("onDragStartFunc")(this);
 
 		}
 
@@ -252,22 +260,22 @@
 		// set a value 'fracX' which is a fraction of amount moved 0-1 we can use later.
 
 		function updateMovement( el, dx, dy ) {
-						// Below relies on parent being the file svg element, 9
-						var angle = el.myGroup.matrix.split().rotate;
-						var rotation = rotateVector(dx, dy, angle);
-						dx = rotation[0];
-						dy = rotation[1];
-						var snapInvMatrix = el.parent().transform().localMatrix.invert();
-						snapInvMatrix.e = snapInvMatrix.f = 0;
-						var tdx = snapInvMatrix.x( dx,dy ), tdy = snapInvMatrix.y( dx,dy );
+			// Below relies on parent being the file svg element, 9
+			var angle = el.myGroup.matrix.split().rotate;
+			var rotation = rotateVector(dx, dy, angle);
+			dx = rotation[0];
+			dy = rotation[1];
+			var snapInvMatrix = el.parent().transform().localMatrix.invert();
+			snapInvMatrix.e = snapInvMatrix.f = 0;
+			var tdx = snapInvMatrix.x( dx,dy ), tdy = snapInvMatrix.y( dx,dy );
 
-						el.data("posX", +el.data("origPosX") + tdx) ;// el.data("posY", +el.data("origPosY") + tdy);
-						var posX = +el.data("posX");
-						var maxPosX = +el.data("maxPosX");
-						var minPosX = +el.data("minPosX");
+			el.data("posX", +el.data("origPosX") + tdx) ;// el.data("posY", +el.data("origPosY") + tdy);
+			var posX = +el.data("posX");
+			var maxPosX = +el.data("maxPosX");
+			var minPosX = +el.data("minPosX");
 
-						if( posX < minPosX ) { el.data("posX", minPosX ); };
-						el.data("fracX", 1/ ( (maxPosX - minPosX) / el.data("posX") ) );
+			if( posX < minPosX ) { el.data("posX", minPosX ); };
+			el.data("fracX", 1/ ( (maxPosX - minPosX) / el.data("posX") ) );
 		}
 
 
@@ -292,7 +300,7 @@
 						this.data("onDragFunc")(this);
 		};
 		function endDrag() {
-						this.data('onDragEndFunc')();
+						this.data('onDragEndFunc')(this);
 		};
 	});
 
