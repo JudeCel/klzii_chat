@@ -1,5 +1,5 @@
-%{"arc": {:git, "https://github.com/stavro/arc.git", "72de630ab3aa9e2c7c7f92f67316096902f1e910", []},
-  "arc_ecto": {:git, "https://github.com/stavro/arc_ecto.git", "5fa0c2d666f91f399e25fd7cbb29d7e810c2bd52", []},
+%{"arc": {:hex, :arc, "0.5.2"},
+  "arc_ecto": {:hex, :arc_ecto, "0.4.1"},
   "base64url": {:hex, :base64url, "0.0.1"},
   "certifi": {:hex, :certifi, "0.4.0"},
   "combine": {:hex, :combine, "0.7.0"},
