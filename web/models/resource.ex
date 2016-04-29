@@ -1,6 +1,6 @@
 defmodule KlziiChat.Resource do
   use KlziiChat.Web, :model
-  use Arc.Ecto.Model
+  use Arc.Ecto.Schema
   alias KlziiChat.Uploaders.{Image, Video, File, Audio}
   alias KlziiChat.Files.UrlHelpers
 
@@ -34,17 +34,17 @@ defmodule KlziiChat.Resource do
   If no params are provided, an invalid changeset is returned
   with no validation performed.
   """
-  def changeset(model, params \\ :empty) do
-    model
-    |> cast(params, @required_fields, @optional_fields)
-    |> cast_attachments(params, @required_file_fields, @optional_file_fields)
+  def changeset(resource, params \\ %{}) do
+    resource
+    |> cast(params, (@required_fields ++ @optional_fields))
+    |> cast_attachments(params,(@required_file_fields ++ @optional_file_fields))
     |> parse_link
   end
 
-  def banner_changeset(model, params \\ :empty) do
+  def banner_changeset(model, params \\ %{}) do
     model
-    |> cast(params, @required_fields, @optional_fields)
-    |> cast_attachments(params, @required_file_fields, @optional_file_fields)
+    |> cast(params, (@required_fields ++ @optional_fields))
+    |> cast_attachments(params, (@required_file_fields ++ @optional_file_fields))
   end
 
   defp parse_link(base_changeset) do

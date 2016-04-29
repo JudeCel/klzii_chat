@@ -24,6 +24,6 @@ defmodule KlziiChat.Message do
   """
   def changeset(model, params \\ :empty) do
     model
-    |> cast(params, @required_fields, @optional_fields)
+    |> cast(params, (@required_fields ++  @optional_fields))
   end
 end

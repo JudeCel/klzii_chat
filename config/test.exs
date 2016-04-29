@@ -16,6 +16,7 @@ config :klzii_chat, KlziiChat.Repo,
   password: "postgres",
   database: "kliiko_development",
   hostname: "localhost",
-  pool: Ecto.Adapters.SQL.Sandbox
+  pool: Ecto.Adapters.SQL.Sandbox,
+  sql_sandbox: true
 config :guardian, Guardian,
     secret_key: "SttPra/cddsnX+Vko2i8KA=="

@@ -18,7 +18,7 @@ defmodule KlziiChat.Mixfile do
   # Type `mix help compile.app` for more information.
   def application do
     [mod: {KlziiChat, []},
-     applications: [:phoenix, :phoenix_html, :cowboy, :logger, :gettext, :quantum,
+     applications: [:phoenix, :phoenix_html, :cowboy, :logger, :gettext, :quantum,:phoenix_pubsub,
                     :phoenix_ecto, :postgrex, :ex_aws, :arc, :httpotion, :timex_ecto, :httpoison]]
   end
 
@@ -30,13 +30,15 @@ defmodule KlziiChat.Mixfile do
   #
   # Type `mix help deps` for examples and options.
   defp deps do
-    [{:phoenix, "~> 1.1.4"},
-     {:arc, "~> 0.5.1"},
-     {:arc_ecto, "~> 0.3.2"},
+    [{:phoenix, github: "phoenixframework/phoenix", override: true},
+     {:phoenix_pubsub, github: "phoenixframework/phoenix_pubsub", override: true},
+     {:arc_ecto, github: "stavro/arc_ecto", override: true},
+     {:arc, github: "stavro/arc", override: true},
+     {:phoenix_ecto, "~> 3.0.0-rc.0", override: true},
+     {:poison, "~> 2.1", override: true},
+     {:timex_ecto, github: "bitwalker/timex_ecto"},
      {:ex_aws, "~> 0.4.10"},
      {:httpotion, "~> 2.2.2"},
-     {:poison, "~> 1.2" },
-     {:phoenix_ecto, "~> 2.0"},
      {:postgrex,  "~> 0.11.1"},
      {:phoenix_html, "~> 2.5"},
      {:phoenix_live_reload, "~> 1.0", only: :dev},
@@ -45,10 +47,8 @@ defmodule KlziiChat.Mixfile do
      {:cowboy, "~> 1.0.4"},
      {:corsica, "~> 0.4"},
      {:timex, "~> 2.1"},
-     {:timex_ecto, "~> 1.0"},
      {:quantum, "~> 1.7"},
-     {:httpoison, "~> 0.7"},
-     {:poison, "~> 1.2"}
+     {:httpoison, "~> 0.7"}
     ]
   end
 
