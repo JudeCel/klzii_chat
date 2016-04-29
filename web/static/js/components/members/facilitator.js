@@ -16,15 +16,9 @@ const Facilitator = React.createClass({
   openBoardModal() {
     this.setState({ boardModalOpen: true });
   },
-  open(id, fun){
-    // if(isOwner(id)){ return fun }else {
-    //   ()->{}
-    // }
-  },
   render() {
     const { boardModalOpen } = this.state;
     const { facilitator, openAvatarModal, boardContent } = this.props;
-    console.log(this.isOwner(facilitator.id));
     return (
       <div className='facilitator-section'>
         <div className='div-inline-block'>

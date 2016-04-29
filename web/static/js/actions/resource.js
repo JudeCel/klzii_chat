@@ -42,6 +42,7 @@ const Actions = {
         req.field("name", name);
       });
       req.end((error, result) =>{
+        console.log(error);
         if (result) {
           dispatchByType(dispatch, {type: result.body.type, resources: [result.body.resource]})
         }
