@@ -46,6 +46,7 @@ defmodule KlziiChat.SessionChannel do
     case SessionMembersService.update_member(socket.assigns.session_member.id, params) do
       {:ok, sessionMember} ->
         broadcast socket, "update_member", sessionMember
+        push(socket, "self_info", sessionMember) # Update current user context
       {:error, reason} ->
         {:error, %{reason: reason}}
     end
