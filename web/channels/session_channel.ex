@@ -2,6 +2,7 @@ defmodule KlziiChat.SessionChannel do
   use KlziiChat.Web, :channel
   alias KlziiChat.Services.SessionService
   alias KlziiChat.Services.SessionMembersService
+  alias KlziiChat.{SessioPresence ,SessionMembersView}
 
   # This Channel is only for session context
   # Session Member information
@@ -24,21 +25,20 @@ defmodule KlziiChat.SessionChannel do
   end
 
   def handle_info(:after_join, socket) do
-    case SessionMembersService.update_online_status(socket.assigns.session_member.id, true)  do
-      {:ok, session_memeber} ->
-        socket = assign(socket, :session_member, session_memeber)
-      _->
-        nil
-    end
-
-    broadcast socket, "member_entered", socket.assigns.session_member
-    push(socket, "self_info", Map.put(socket.assigns.session_member, :jwt, buildJWT(socket.assigns.session_member)))
     case SessionMembersService.by_session(socket.assigns.session_id) do
       {:ok, members} ->
         push socket, "members", members
+        {:ok, _} = SessioPresence.track(socket, (socket.assigns.session_member.id |> to_string), %{
+          online_at: inspect(System.system_time(:seconds))
+        })
+        push socket, "presence_state", SessioPresence.list(socket)
+        push(socket, "self_info", SessionMembersView.render("current_member.json", member: socket.assigns.session_member))
+
       {:error, reason} ->
         {:error, %{reason: reason}}
     end
+
+
     {:noreply, socket}
   end
 
@@ -46,23 +46,11 @@ defmodule KlziiChat.SessionChannel do
     case SessionMembersService.update_member(socket.assigns.session_member.id, params) do
       {:ok, session_member} ->
         broadcast socket, "update_member", session_member
-        push(socket, "self_info", Map.put(session_member, :jwt, buildJWT(socket.assigns.session_member))) # Update current user context
+        push(socket, "self_info", SessionMembersView.render("current_member.json", member: session_member)) # Update current user context
       {:error, reason} ->
         {:error, %{reason: reason}}
     end
     {:noreply, socket}
-  end
-
-  # Need implemented presences logic for multiple nodes, and topics scope.
-  def terminate({reason, action}, socket) do
-    case SessionMembersService.update_online_status(socket.assigns.session_member.id, false)  do
-      {:ok, session_memeber} ->
-        socket = assign(socket, :session_member, session_memeber)
-      _ ->
-        nil
-    end
-    broadcast socket, "member_left", socket.assigns.session_member
-    :ok
   end
 
   def handle_out(event, payload, socket) do
@@ -75,11 +63,5 @@ defmodule KlziiChat.SessionChannel do
   # Add authorization logic here as required.
   defp authorized?(socket) do
     is_map(socket.assigns.session_member)
-  end
-
-  @spec buildJWT(Map.t) :: Map.t
-  defp buildJWT(member) do
-    { :ok, jwt, encoded_claims } =  Guardian.encode_and_sign(%KlziiChat.SessionMember{id: member.id})
-    jwt
   end
 end
