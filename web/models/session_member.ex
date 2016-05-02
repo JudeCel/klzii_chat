@@ -17,8 +17,8 @@ defmodule KlziiChat.SessionMember do
 
   end
 
-  @required_fields ~w(username colour online avatarData)
-  @optional_fields ~w()
+  @required_fields ~w(username colour)
+  @optional_fields ~w(avatarData online topicContext)
 
   @doc """
   Creates a changeset based on the `model` and `params`.

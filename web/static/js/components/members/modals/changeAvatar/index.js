@@ -2,6 +2,7 @@ import React, {PropTypes} from 'react';
 import { connect }        from 'react-redux';
 import { Modal }          from 'react-bootstrap';
 import onEnterModalMixin  from '../../../../mixins/onEnterModal';
+import MemberActions      from '../../../../actions/member';
 import Avatar             from '../../avatar';
 import AvatarPreview      from './preview';
 
@@ -23,6 +24,9 @@ const ChangeAvatarModal = React.createClass({
   },
   onSave(e) {
     this.props.onHide(e);
+    const { dispatch, channel } = this.props;
+    const {avatarData, username} = this.state
+    dispatch(MemberActions.updateAvatar(channel, { avatarData, username }));
   },
   onOpen(e) {
     this.setStateBasedOnCurrentUser();
@@ -145,7 +149,8 @@ const ChangeAvatarModal = React.createClass({
 const mapStateToProps = (state) => {
   return {
     colours: state.chat.session.colours,
-    currentUser: state.members.currentUser
+    currentUser: state.members.currentUser,
+    channel: state.chat.channel
   }
 };
 

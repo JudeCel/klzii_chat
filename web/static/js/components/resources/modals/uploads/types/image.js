@@ -5,7 +5,7 @@ const UploadTypeImage = React.createClass({
     const { url } = this.props;
 
     return (
-      <img src={ url } />
+      <img src={ url.thumb } />
     )
   }
 });
