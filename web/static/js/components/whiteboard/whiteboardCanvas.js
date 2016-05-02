@@ -434,6 +434,10 @@ const WhiteboardCanvas = React.createClass({
         this.activeShape = el;
         this.shapeSelectedForRotation(el);
       }
+    } else {
+      if (this.activeShape) {
+        this.hideScaleControls();
+      }
     }
   },
   deleteActive() {

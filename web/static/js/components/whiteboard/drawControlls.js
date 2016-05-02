@@ -48,6 +48,7 @@
 			freetransEl.unclick();
 			freetransEl.data("click", freetransEl.click( function() {
 				this.ftRemoveHandles();
+				this.ftInformSelected(this, false);
 			} ) );
 
 			rotateDragger.drag(
