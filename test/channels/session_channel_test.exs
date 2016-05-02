@@ -6,6 +6,7 @@ defmodule KlziiChat.SessionChannelTest do
   use KlziiChat.SessionMemberCase
 
   setup %{session: session, session: session, member: member, member2: member2} do
+    Ecto.Adapters.SQL.Sandbox.mode(Repo, {:shared, self()})
     channel_name =  "sessions:" <> Integer.to_string(session.id)
     {:ok, socket} = connect(UserSocket, %{"token" => member.token})
     {:ok, socket2} = connect(UserSocket, %{"token" => member2.token})
@@ -53,28 +54,25 @@ defmodule KlziiChat.SessionChannelTest do
 
     {:ok, _, socket2} = join(socket2, SessionChannel, channel_name)
 
-    session_member2 = socket2.assigns.session_member
-
     ref = leave(socket2)
     assert_reply ref, :ok
 
-    assert_push "member_left", session_member2
+    assert_push "member_left", %{id: session_member_id}
 
-    Repo.get_by!(SessionMember, id: session_member2.id).online |> refute
+    Repo.get_by!(SessionMember, id: session_member_id).online |> refute
   end
 
   test "when close channel broadcast others", %{socket: socket, socket2: socket2, channel_name: channel_name } do
     Process.flag(:trap_exit, true)
     {:ok, _, socket} = join(socket, SessionChannel, channel_name)
-    session_member = socket.assigns.session_member
 
     {:ok, _, _} = join(socket2, SessionChannel, channel_name)
 
     :ok = close(socket)
 
-    assert_push "member_left", session_member
+    assert_push "member_left", %{id: session_member_id}
 
-    Repo.get_by!(SessionMember, id: session_member.id).online |> refute
+    Repo.get_by!(SessionMember, id: session_member_id).online |> refute
   end
 
   test "when update session member broadcast others", %{socket: socket, socket2: socket2, channel_name: channel_name } do

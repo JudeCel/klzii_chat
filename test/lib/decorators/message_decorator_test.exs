@@ -1,21 +1,21 @@
-defmodule KlziiChat.Decorators.EventDecoratorTest do
+defmodule KlziiChat.Decorators.MessageDecoratorTest do
   use ExUnit.Case, async: true
-  alias  KlziiChat.Decorators.EventDecorator
+  alias  KlziiChat.Decorators.MessageDecorator
 
   test "votes count" do
-    result = EventDecorator.votes_count([%{}, %{}])
+    result = MessageDecorator.votes_count([%{}, %{}])
     assert(result == 2)
   end
 
   test "when has voted" do
     id = 2
     list = [%{sessionMemberId: id}, %{sessionMemberId: 4}]
-    EventDecorator.has_voted(list, id) |> assert
+    MessageDecorator.has_voted(list, id) |> assert
   end
 
   test "when not voted" do
     id = 2
     list = [%{sessionMemberId: 3}, %{sessionMemberId: 4}]
-    EventDecorator.has_voted(list, id) |> refute
+    MessageDecorator.has_voted(list, id) |> refute
   end
 end
