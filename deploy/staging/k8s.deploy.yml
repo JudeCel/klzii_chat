@@ -17,18 +17,19 @@ spec:
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  labels:
-    name: chat
-    env: staging
   name: chat
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      env: staging
+      name: chat
   template:
     metadata:
       labels:
         name: chat
         env: staging
-        version: "0.9.23"
+        version: "0.9.26"
     spec:
       containers:
       - env:
