@@ -42,21 +42,34 @@ const Resources = React.createClass({
     }
   },
   onCreate(child) {
-    const { name, url, files, resourceId } = this.state.resourceData;
+    const { name, url, files, resourceIds } = this.state.resourceData;
     const { dispatch, modalWindow, currentUserJwt } = this.props;
 
     if(url) {
       //youtube
-      console.log(name, url);
+      let data = {
+        type: 'link',
+        scope: 'youtube',
+        name: name,
+        file: url
+      };
+
+      dispatch(Actions.youtube(data, currentUserJwt));
     }
     else if(files) {
       // upload
-      console.log(name, files);
-      dispatch(Actions.upload(files, modalWindow, currentUserJwt, name));
+      let data = {
+        type: modalWindow,
+        scope: 'collage',
+        name: name,
+        files: files
+      };
+
+      dispatch(Actions.upload(data, currentUserJwt));
     }
     else {
       // resource id
-      console.log(name, resourceId);
+      console.error(resourceIds);
     }
 
     this.setState({ resourceData: {} });

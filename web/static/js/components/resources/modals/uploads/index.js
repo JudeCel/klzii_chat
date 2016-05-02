@@ -7,7 +7,11 @@ const UploadsIndex = React.createClass({
     const { resourceType, rendering, tabActive, onDelete, afterChange } = this.props;
 
     if(rendering == 'new') {
-      return (<UploadNew { ...{ resourceType, afterChange, tabActive } }/>)
+      return (
+        <div className='tab-content'>
+          <UploadNew { ...{ resourceType, afterChange, tabActive } }/>
+        </div>
+      )
     }
     else {
       return (<UploadList { ...{ resourceType, onDelete } }/>)
