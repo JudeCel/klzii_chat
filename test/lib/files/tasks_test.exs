@@ -33,7 +33,7 @@ defmodule KlziiChat.Files.TasksTest do
   end
 
   test "when init_dir then change current dir location" do
-    {:ok, dir} = FileZipTask.init_dir("1")
+    {:ok, _dir} = FileZipTask.init_dir("1")
     {:ok, tmp_dir_reg} = Regex.compile(System.tmp_dir)
     assert(Regex.match?(tmp_dir_reg, System.cwd))
   end
