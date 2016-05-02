@@ -175,6 +175,7 @@ const WhiteboardCanvas = React.createClass({
     this.shapes = [];
   },
   updateTransformControls(shape) {
+    console.log("tst");
     var angle = shape.matrix.split().rotate;
     var transformStr = "";
     var attrs = shape.attr();
@@ -215,6 +216,7 @@ const WhiteboardCanvas = React.createClass({
   },
   shapeTransformed(shape) {
     this.activeShape = shape;
+    this.updateTransformControls(shape);
   },
   moveDistance(dx, dy) {
     return Math.sqrt( Math.pow( dx, 2)  + Math.pow( dy, 2)  );
@@ -272,7 +274,7 @@ const WhiteboardCanvas = React.createClass({
 
       default:
         var elEttributes = shape.attr();
-        var matr = shape.ftGetInitialTransformMatrix().clone();
+        var matr = shape.ftGetInitialTransformMatrix();
         var transform = matr.toTransformString()+"S"+(params.scaleX?params.scaleX:1)+","+(params.scaleY?params.scaleY:1);
         shape.attr({transform: transform});
         break;
@@ -426,7 +428,7 @@ const WhiteboardCanvas = React.createClass({
 
       if (el) {
         this.activeShape = el;
-        this.hideScaleControls();
+        this.shapeSelectedForRotation(el);
       }
     }
   },

@@ -27,9 +27,10 @@
 			this.ftInit();
 			var freetransEl = this;
 			var bb = freetransEl.getBBox();
-			var rotateDragger = this.paper.image("/images/svgControls/rotate.png", bb.cx  + bb.width/2 - ftOption.handleRadius*2, bb.cy - ftOption.handleRadius*2, ftOption.handleRadius*2, ftOption.handleRadius*2).transform('r0.1');
+			var rotateDragger = this.paper.image("/images/svgControls/rotate.png", bb.cx  + bb.width/2 - ftOption.handleRadius*2, bb.cy - ftOption.handleRadius*2 - bb.height/2, ftOption.handleRadius*2, ftOption.handleRadius*2).transform('r0.1');
 			var translateDragger = this.paper.image("/images/svgControls/move.png", bb.cx - ftOption.handleRadius, bb.cy - ftOption.handleRadius, ftOption.handleRadius*2, ftOption.handleRadius*2).transform('r0.1');
 
+			this.data("startAngle", Snap.angle( bb.cx, bb.cy, rotateDragger.attr().x, rotateDragger.attr().y) - 180);
 			this.initialWidth = bb.width/2;
 			this.initialHeight = bb.height/2;
 
@@ -46,7 +47,6 @@
 
 			freetransEl.unclick();
 			freetransEl.data("click", freetransEl.click( function() {
-				freetransEl.onSelectedForRotation(freetransEl);
 				this.ftRemoveHandles();
 			} ) );
 
@@ -111,7 +111,7 @@
 		}
 
 		Element.prototype.ftStoreInitialTransformMatrix = function() {
-			this.data('initialTransformMatrix', this.transform().globalMatrix );
+			this.data('initialTransformMatrix', this.transform().localMatrix );
 			return this;
 		};
 
@@ -158,7 +158,8 @@
 		};
 
 		Element.prototype.ftUpdateTransform = function() {
-			var tstring = "t" + this.data("tx") + "," + this.data("ty") + this.ftGetInitialTransformMatrix().toTransformString() + "r" + this.data("angle") + 'S' + this.data("scale" );
+			var angle = this.data("angle") - this.data("startAngle");
+			var tstring = "t" + this.data("tx") + "," + this.data("ty") + this.ftGetInitialTransformMatrix().toTransformString() + "r" + angle;
 			this.attr({ transform: tstring });
 			this.ftHighlightBB();
 			return this;
@@ -271,19 +272,6 @@
 			el.data("fracX", 1/ ( (maxPosX - minPosX) / el.data("posX") ) );
 		}
 
-
-		function rotateVector(x, y, angle) {
-				var cx = 0, cy = 0;
-				x = Number(x);
-				y = Number(y);
-				var radians = (Math.PI / 180.0) * angle;
-				var cos = Math.cos(radians),
-						sin = Math.sin(radians),
-						nx = (cos * (x - cx)) + (sin * (y - cy)) + cx,
-						ny = (cos * (y - cy)) - (sin * (x - cx)) + cy;
-				return [nx, ny];
-		}
-
 		// Call the matrix checks above, and set any transformation
 		function moveDragSlider( dx,dy ) {
 						var posX;
@@ -362,7 +350,7 @@
 		var normalised = normalizeScaleVector(vx, vy, mainEl.data("scaleFactor"));
 		var cx = mainBB.cx + normalised[0];
 		var cy = mainBB.cy + normalised[1];
-		//tst__
+
 		mainEl.data("angle", Snap.angle( mainBB.cx, mainBB.cy, cx, cy) - 180);
 		handle.attr({ x: cx, y: cy });
 
@@ -380,6 +368,18 @@
 
 	function calcDistance(x1,y1,x2,y2) {
 		return Math.sqrt( Math.pow( (x1 - x2), 2)  + Math.pow( (y1 - y2), 2)  );
+	}
+
+	function rotateVector(x, y, angle) {
+		var cx = 0, cy = 0;
+		x = Number(x);
+		y = Number(y);
+		var radians = (Math.PI / 180.0) * angle;
+		var cos = Math.cos(radians),
+				sin = Math.sin(radians),
+				nx = (cos * (x - cx)) + (sin * (y - cy)) + cx,
+				ny = (cos * (y - cy)) - (sin * (x - cx)) + cy;
+		return [nx, ny];
 	}
 
 })();
