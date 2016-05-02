@@ -5,6 +5,9 @@
 # is restricted to this project.
 use Mix.Config
 
+# General application configuration
+config :klzii_chat,
+  ecto_repos: [KlziiChat.Repo]
 # Configures the endpoint
 config :klzii_chat, KlziiChat.Endpoint,
   url: [host: "localhost"],
