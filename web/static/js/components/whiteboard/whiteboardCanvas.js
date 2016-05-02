@@ -174,8 +174,7 @@ const WhiteboardCanvas = React.createClass({
     this.snap.clear();
     this.shapes = [];
   },
-  updateTransformControls(shape) {
-    console.log("tst");
+  updateTransformControls(shape, resetControlValues) {
     var angle = shape.matrix.split().rotate;
     var transformStr = "";
     var attrs = shape.attr();
@@ -192,8 +191,13 @@ const WhiteboardCanvas = React.createClass({
       width = attrs.rx*originalTransform.scalex;
       height = attrs.ry*originalTransform.scaley;
     } else {
-      width = box.width/2;
-      height = box.height/2;
+      if (resetControlValues) {
+        width = box.width/2;
+        height = box.height/2;
+      } else {
+        width = this.scaleXControl.myCap.data("posX");
+        height = this.scaleYControl.myCap.data("posX");
+      }
     }
 
     this.scaleXControl.myCap.setCapPosition(0);
@@ -415,7 +419,7 @@ const WhiteboardCanvas = React.createClass({
     el.attr({'fill': colour, stroke: strokeColour, strokeWidth: strokeWidth});
   },
   shapeSelectedForRotation(el) {
-    this.updateTransformControls(el);
+    this.updateTransformControls(el, true);
   },
   shapeSelected(el, selected) {
     if (selected){
