@@ -273,8 +273,7 @@ const WhiteboardCanvas = React.createClass({
       default:
         var elEttributes = shape.attr();
         var matr = shape.ftGetInitialTransformMatrix().clone();
-        matr.scale(params.scaleX?params.scaleX:1, params.scaleY?params.scaleY:1);
-        var transform = shape.ftGetInitialTransformMatrix().toTransformString()+"S"+(params.scaleX?params.scaleX:1)+","+(params.scaleY?params.scaleY:1);
+        var transform = matr.toTransformString()+"S"+(params.scaleX?params.scaleX:1)+","+(params.scaleY?params.scaleY:1);
         shape.attr({transform: transform});
         break;
     };
@@ -306,12 +305,12 @@ const WhiteboardCanvas = React.createClass({
     }
 
     self.snap.slider({ sliderId: "x", capSelector: "#cap", filename: "/images/svgControls/sl.svg",
-      x: "0", y:"0", min: "0", max: "300", centerOffsetX: "0", centerOffsetY: "0",
+      x: "0", y:"0", min: "10", max: "300", centerOffsetX: "0", centerOffsetY: "0",
       onDragEndFunc: myDragEndFunc, onDragStartFunc: myDragStartFunc, onDragFunc: myDragFunc,
       attr: { transform: 't-100,-100' } } , function(elX) {
           // Create vertical control
           self.snap.slider({ sliderId:"y", capSelector: "#cap", filename: "/images/svgControls/sl.svg",
-            x: "0", y:"0", min: "0", max: "300", centerOffsetX: "0", centerOffsetY: "0",
+            x: "0", y:"0", min: "10", max: "300", centerOffsetX: "0", centerOffsetY: "0",
             onDragEndFunc: myDragEndFunc, onDragStartFunc: myDragStartFunc, onDragFunc: myDragFunc,
             attr: { transform: 't-100,-100r90' } } , function(elY) {
               self.scaleXControl = elX;
@@ -804,20 +803,6 @@ const WhiteboardCanvas = React.createClass({
     }
 
     const { show, onHide, boardContent } = this.props;
-    /*
-    this.ModeEnum = {
-      none: 0,
-      rectangle: 1,
-      circle: 2,
-      scribble: 3,
-      scribbleFill: 4,
-      line: 5,
-      arrow: 6,
-      text: 7,
-      image: 8,
-      erase: 9
-    };
-    */
     return (
       <div style={divStyle} className="container">
         <svg id={ this.getName() }
