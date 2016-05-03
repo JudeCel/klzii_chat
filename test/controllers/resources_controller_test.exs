@@ -61,6 +61,7 @@ defmodule KlziiChat.ResourcesControllerTest do
   end
 
   test "init zip action", %{conn: conn, zip_resource: zip_resource, image_resource: image_resource} do
+    Ecto.Adapters.SQL.Sandbox.mode(Repo, {:shared, self()})
     file = %Plug.Upload{ content_type: "image/jpg", path: @image, filename: "hamster.jpg"}
     post(conn, "api/resources/upload", %{private: false, name: "hamster", type: "image", scope: "collage", file: file })
 

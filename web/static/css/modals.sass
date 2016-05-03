@@ -77,6 +77,11 @@
         border: 0
     .survey-create-section, .uploads-section
       @extend .no-border-radius
+      .gallery-section
+        @extend .resource-types
+        label
+          margin: 0px -10px -10px 0px
+          font-weight: normal
       ul li
         border-left: none
         border-right: none
@@ -85,8 +90,7 @@
         .fa
           @extend .cursor-pointer
           font-size: $input-size
-        img, video, audio
-          width: 100%
+        @extend .resource-types
   ul.tab-section
     padding: 0 20px
     a, .active > a, .active > a:hover

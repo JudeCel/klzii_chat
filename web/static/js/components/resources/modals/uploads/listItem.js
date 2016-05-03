@@ -3,8 +3,8 @@ import UploadTypes        from './types/index';
 
 const UploadListItem = React.createClass({
   getValuesFromObject(object) {
-    let { id, active, name, type, url, youtube } = object;
-    return { id, active, name, type, url, youtube };
+    let { id, active, name, type, url, scope } = object;
+    return { id, active, name, type, url, scope };
   },
   getInitialState() {
     let resource = this.props.resource || {};
@@ -15,7 +15,7 @@ const UploadListItem = React.createClass({
   },
   render() {
     const { justInput, onDelete, resourceType } = this.props;
-    const { id, active, name, type, url, youtube } = this.state;
+    const { id, active, name, type, url, scope } = this.state;
 
     if(justInput) {
       return (
@@ -36,7 +36,7 @@ const UploadListItem = React.createClass({
             <div className='col-md-6'>
               { name }
               <br />
-              <UploadTypes resourceType={ resourceType } url={ url } youtube={ youtube } />
+              <UploadTypes resourceType={ resourceType } url={ url } youtube={ scope == 'youtube' } />
             </div>
 
             <div className='col-md-6 text-right'>

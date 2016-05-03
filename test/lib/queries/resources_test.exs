@@ -1,7 +1,7 @@
 defmodule KlziiChat.Services.Resourecs do
   use KlziiChat.{ModelCase, SessionMemberCase}
   alias KlziiChat.Queries.Resources, as: QueriesResources
-  alias KlziiChat.{Repo, Resource, AccountUser}
+  alias KlziiChat.{Repo, Resource}
 
   setup %{account_user: account_user} do
     Ecto.build_assoc(
@@ -22,7 +22,7 @@ defmodule KlziiChat.Services.Resourecs do
     assert(count == 1 )
   end
 
-  test "find by params when params is empty return all resources", %{account_user: account_user, base_query: base_query} do
+  test "find by params when params is empty return all resources", %{base_query: base_query} do
     count = QueriesResources.find_by_params(base_query, %{}) |> Repo.all |> Enum.count
     assert(count == 1 )
   end

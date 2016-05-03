@@ -24,7 +24,7 @@ defmodule KlziiChat.Router do
     get "/ping", PingController, :index
   end
 
-  scope "api/resources", KlziiChat do
+  scope "/api/resources", KlziiChat do
     pipe_through :api
     # CORS Routes
     options "/", ResourcesController, :index
@@ -43,7 +43,7 @@ defmodule KlziiChat.Router do
     get "/:id", ResourcesController, :show
   end
 
-  scope "api/surveys", KlziiChat do
+  scope "/api/surveys", KlziiChat do
     pipe_through :api
     # CORS Routes
     options "/:id", SurveysController, :show
@@ -51,7 +51,7 @@ defmodule KlziiChat.Router do
     get "/:id", SurveysController, :show
   end
 
-  scope "api/banners", KlziiChat do
+  scope "/api/banners", KlziiChat do
     pipe_through :api
     # CORS Routes
     options "/", BannersController, :index
