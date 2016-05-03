@@ -14,7 +14,7 @@ defmodule KlziiChat.SessioPresence do
 
     for {key, %{metas: metas}} <- entries, into: %{} do
       id = String.to_integer(key)
-      {key, %{metas: metas, member: SessionMembersView.render("member.json", member: members[id])}}
+      {key, %{metas: metas, member: SessionMembersView.render("status.json", member: members[id])}}
     end
   end
 

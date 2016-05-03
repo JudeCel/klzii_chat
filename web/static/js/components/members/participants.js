@@ -29,7 +29,6 @@ const Participants = React.createClass({
 });
 
 const mapStateToProps = (state) => {
-  console.log(state.members.participants);
   return {
     currentUser: state.members.currentUser,
     participants: state.members.participants

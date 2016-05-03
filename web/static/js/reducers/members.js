@@ -13,28 +13,13 @@ const initialState = {
 export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
     case Constants.SYNC_MEMBERS_STATE:
-      let syncState_state = syncState(state, action.state)
-      return { ...state,
-        facilitator: syncState_state.facilitator,
-        observers: syncState_state.observers,
-        participants: syncState_state.participants
-      };
+      return syncState({...state}, action.state);
     case Constants.SYNC_MEMBERS_DIFF:
-      let syncDiff_state = syncDiff(state, action.diff)
-      return { ...state,
-        facilitator: syncDiff_state.facilitator,
-        observers: syncDiff_state.observers,
-        participants: syncDiff_state.participants
-      };
+      return syncDiff({...state}, action.diff)
     case Constants.SET_CURRENT_USER:
       return { ...state, currentUser: action.user };
     case Constants.UPDATE_MEMBER:
-      let update_state = updateMember(state, action.member)
-      return { ...state,
-        facilitator: update_state.facilitator,
-        observers: update_state.observers,
-        participants: update_state.participants
-      };
+      return updateMember({...state}, action.member);;
     case Constants.SET_MEMBERS:
       return { ...state,
         facilitator: action.facilitator,
@@ -46,56 +31,54 @@ export default function reducer(state = initialState, action = {}) {
   }
 }
 
-function onJoin(id, current, newPres) {
-  newPres.member.online = true
-}
-
-function onLeave(id, current, leftPres) {
-  if (current.metas.length == 0) {
-    current.member.online = false
+function onJoin(state) {
+  return (id, current, newPres) => {
+    newPres.member.online = true
+    updateMember(state, newPres.member)
   }
 }
 
-function updateMmeberStats(state, list) {
-  let tmpState = {...state}
-  Presence.list(list, (id, {member: member}) => {
-    tmpState = updateMember(tmpState, member)
-  })
-  return tmpState
+function onLeave(state) {
+  return (id, current, leftPres) =>{
+    if (current.metas.length == 0) {
+      leftPres.member.online = false
+      updateMember(state, leftPres.member)
+    }
+  }
 }
 
 function syncState(state, syncData) {
-  let {presences, facilitator, observers, participants} = state
-  Presence.syncState(presences, syncData, onJoin, onLeave)
-  return updateMmeberStats({facilitator, observers, participants}, presences);
+  Presence.syncState(state.presences, syncData, onJoin(state), onLeave(state))
+  return  state
 }
 
 function syncDiff(state, diff) {
-   let {presences, facilitator, observers, participants} = state
-   Presence.syncDiff(presences, diff, onJoin, onLeave)
-   return  updateMmeberStats({facilitator, observers, participants}, presences);
+   Presence.syncDiff(state.presences, diff, onJoin(state), onLeave(state))
+   return  state;
 }
 
 function updateMember(state, member) {
   switch (member.role) {
     case "facilitator":
-      return {...state, facilitator: member }
+      Object.assign(state.facilitator, member)
+      state.facilitator = {...state.facilitator, member};
       break;
     case "participant":
-      return {...state, participants: findAndUpdate(state.participants, member) }
+      state.participants =  findAndUpdate(state.participants, member);
       break
     case "observer":
-      return {...state, participants: findAndUpdate(state.observers, member) }
+      state.observers = findAndUpdate(state.observers, member) ;
       break
     default:
       return state;
   }
+  return state;
 }
  function findAndUpdate(members, member) {
    let newMembers = [];
     members.map((m) => {
      if (m.id == member.id) {
-       newMembers.push(member);
+       newMembers.push(Object.assign(m, member));
      }else{
        newMembers.push(m);
      }

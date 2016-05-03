@@ -32,7 +32,7 @@ defmodule KlziiChat.SessionChannel do
           online_at: inspect(System.system_time(:seconds))
         })
         push socket, "presence_state", SessioPresence.list(socket)
-        push(socket, "self_info", SessionMembersView.render("current_member.json", member: socket.assigns.session_member))
+        push(socket, "self_info", socket.assigns.session_member)
 
       {:error, reason} ->
         {:error, %{reason: reason}}
@@ -45,8 +45,8 @@ defmodule KlziiChat.SessionChannel do
   def handle_in("update_member", params, socket) do
     case SessionMembersService.update_member(socket.assigns.session_member.id, params) do
       {:ok, session_member} ->
-        broadcast socket, "update_member", session_member
-        push(socket, "self_info", SessionMembersView.render("current_member.json", member: session_member)) # Update current user context
+        broadcast(socket, "update_member", SessionMembersView.render("member.json", member: session_member))
+        push(socket, "self_info", SessionMembersView.render("current_member.json", member: session_member))
       {:error, reason} ->
         {:error, %{reason: reason}}
     end

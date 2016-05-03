@@ -12,9 +12,18 @@ defmodule KlziiChat.SessionMembersView do
     }
   end
 
+  def render("status.json", %{ member: member}) do
+    %{
+      id: member.id,
+      role: member.role
+    }
+  end
+
   def render("current_member.json", %{ member: member}) do
+    member_map = render("member.json", %{ member: member})
     permissions = %{
       jwt: buildJWT(member),
+      account_user_id: member.accountUserId,
       permissions: %{
         events: %{
           can_new_message: MessagePermissions.can_new_message(member)
@@ -24,7 +33,7 @@ defmodule KlziiChat.SessionMembersView do
         }
       }
     }
-    render("member.json", %{ member: member}) |> Map.merge(permissions)
+    Map.merge(member_map, permissions)
   end
 
   def render("group_by_role.json", %{ members: members}) do
