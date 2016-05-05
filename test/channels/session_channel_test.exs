@@ -1,8 +1,6 @@
 defmodule KlziiChat.SessionChannelTest do
   use KlziiChat.ChannelCase
-  alias KlziiChat.SessionChannel
-  alias KlziiChat.UserSocket
-  alias KlziiChat.{Repo, SessionMember}
+  alias KlziiChat.{Repo, UserSocket, SessionChannel}
   use KlziiChat.SessionMemberCase
 
   setup %{session: session, session: session, member: member, member2: member2} do
@@ -21,24 +19,34 @@ defmodule KlziiChat.SessionChannelTest do
     assert(reply.name == session.name)
 
     assert_push "self_info", _session_member
-
     assert_push "members", %{
       "facilitator" => _session_member,
       "observer" => [],
       "participant" => [member2]
     }
+    assert_push "presence_state", state
 
+    id = Map.get(state, session_member.id |> to_string)
+      |> Map.get(:member)
+      |> Map.get(:id)
+
+    assert(id == session_member.id)
   end
 
   test "when join member broadcast others", %{socket: socket, socket2: socket2, channel_name: channel_name } do
     {:ok, _, socket} =
       join(socket, SessionChannel, channel_name)
 
-    {:ok, _, socket2} =
+    {:ok, _, _socket2} =
       join(socket2, SessionChannel, channel_name)
 
-    _session_member = socket.assigns.session_member
-    _session_member2 = socket2.assigns.session_member
+    session_member = socket.assigns.session_member
+
+    assert_push "presence_diff", %{joins: joins}
+    id = Map.get(joins,session_member.id |> to_string)
+      |> Map.get(:member)
+      |> Map.get(:id)
+      assert(id == session_member.id)
   end
 
 
@@ -50,7 +58,6 @@ defmodule KlziiChat.SessionChannelTest do
 
     ref = leave(socket2)
     assert_reply ref, :ok
-
   end
 
   test "when close channel broadcast others", %{socket: socket, socket2: socket2, channel_name: channel_name } do

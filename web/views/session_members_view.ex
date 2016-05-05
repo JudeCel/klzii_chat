@@ -24,6 +24,7 @@ defmodule KlziiChat.SessionMembersView do
     permissions = %{
       jwt: buildJWT(member),
       account_user_id: member.accountUserId,
+      session_id: member.sessionId,
       permissions: %{
         events: %{
           can_new_message: MessagePermissions.can_new_message(member)

@@ -8,6 +8,8 @@ defmodule KlziiChat.SessionChannel do
   # Session Member information
   # Global messages for session
 
+  intercept ["unread_messages"]
+
   def join("sessions:" <> session_id, payload, socket) do
     {session_id, _} = Integer.parse(session_id)
     if authorized?(socket) do
@@ -32,7 +34,9 @@ defmodule KlziiChat.SessionChannel do
     end
 
       {:ok, _} = Presence.track(socket, (socket.assigns.session_member.id |> to_string), %{
-        online_at: inspect(System.system_time(:seconds))
+        online_at: inspect(System.system_time(:seconds)),
+        id: socket.assigns.session_member.id,
+        role: socket.assigns.session_member.role
       })
       push socket, "presence_state", Presence.list(socket)
       push(socket, "self_info", socket.assigns.session_member)
@@ -48,6 +52,11 @@ defmodule KlziiChat.SessionChannel do
       {:error, reason} ->
         {:error, %{reason: reason}}
     end
+    {:noreply, socket}
+  end
+
+  def handle_out("unread_messages", payload, socket) do
+    push socket, "unread_messages", payload
     {:noreply, socket}
   end
 

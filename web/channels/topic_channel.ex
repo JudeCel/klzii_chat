@@ -1,6 +1,6 @@
 defmodule KlziiChat.TopicChannel do
   use KlziiChat.Web, :channel
-  alias KlziiChat.Services.{MessageService, WhiteboardService, ResourceService}
+  alias KlziiChat.Services.{MessageService, WhiteboardService, ResourceService, MessageNotificationService}
   alias KlziiChat.{MessageView, Presence}
 
   # This Channel is only for Topic context
@@ -26,9 +26,11 @@ defmodule KlziiChat.TopicChannel do
   end
 
   def handle_info(:after_join, socket) do
-      {:ok, _} = Presence.track(socket, (socket.assigns.session_member.id |> to_string), %{
-        online_at: inspect(System.system_time(:seconds))
-      })
+    {:ok, _} = Presence.track(socket, (socket.assigns.session_member.id |> to_string), %{
+      online_at: inspect(System.system_time(:seconds)),
+      id: socket.assigns.session_member.id,
+      role: socket.assigns.session_member.role
+    })
     {:noreply, socket}
   end
 
@@ -53,11 +55,11 @@ defmodule KlziiChat.TopicChannel do
   def handle_in("new_message", payload, socket) do
     topic_id = socket.assigns.topic_id
     session_member = socket.assigns.session_member
-
     if String.length(payload["body"]) > 0  do
       case MessageService.create_message(session_member, topic_id, payload) do
         {:ok, message} ->
           broadcast! socket, "new_message",  message
+          MessageNotificationService.run(session_member.session_id, session_member.id, topic_id, message.id)
           {:reply, :ok, socket}
         {:error, reason} ->
           {:error, %{reason: reason}}

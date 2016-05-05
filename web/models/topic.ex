@@ -16,8 +16,8 @@ defmodule KlziiChat.Topic do
 
   end
 
-  @required_fields ~w(accountId type name active description )
-  @optional_fields ~w()
+  @required_fields ~w(accountId type name )
+  @optional_fields ~w(description active)
 
   @doc """
   Creates a changeset based on the `model` and `params`.

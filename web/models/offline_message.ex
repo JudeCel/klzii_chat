@@ -6,11 +6,13 @@ defmodule KlziiChat.OfflineMessage do
     belongs_to :session_member, KlziiChat.SessionMember, [foreign_key: :sessionMemberId]
     belongs_to :message, KlziiChat.Message, [foreign_key: :messageId]
     field :scope, :string, default: "normal"
-    timestamps [inserted_at: :createdAt, updated_at: :updatedAt]
+    field :createdAt, Timex.Ecto.DateTime
+    field :updatedAt, Timex.Ecto.DateTime
+    # timestamps [inserted_at: :createdAt, updated_at: :updatedAt]
   end
 
-  @required_fields ~w(scope sessionMemberId topicId messageId)
-  @optional_fields ~w()
+  @required_fields ~w(sessionMemberId topicId messageId)
+  @optional_fields ~w(scope)
 
   @doc """
   Creates a changeset based on the `model` and `params`.
