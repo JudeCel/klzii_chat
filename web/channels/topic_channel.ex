@@ -1,7 +1,7 @@
 defmodule KlziiChat.TopicChannel do
   use KlziiChat.Web, :channel
   alias KlziiChat.Services.{MessageService, WhiteboardService, ResourceService}
-  alias KlziiChat.MessageView
+  alias KlziiChat.{MessageView, Presence}
 
   # This Channel is only for Topic context
   # brodcast and receive messages from session members
@@ -12,15 +12,24 @@ defmodule KlziiChat.TopicChannel do
   def join("topics:" <> topic_id, _payload, socket) do
     if authorized?(socket) do
       session_member = socket.assigns.session_member
+      socket = assign(socket, :topic_id, String.to_integer(topic_id))
+      send(self, :after_join)
       case MessageService.history(topic_id, session_member) do
         {:ok, history} ->
-          {:ok, history, assign(socket, :topic_id, String.to_integer(topic_id))}
+          {:ok, history, socket}
         {:error, reason} ->
           {:error, %{reason: reason}}
       end
     else
       {:error, %{reason: "unauthorized"}}
     end
+  end
+
+  def handle_info(:after_join, socket) do
+      {:ok, _} = Presence.track(socket, (socket.assigns.session_member.id |> to_string), %{
+        online_at: inspect(System.system_time(:seconds))
+      })
+    {:noreply, socket}
   end
 
   def handle_in("resources", %{"type" => type}, socket) do

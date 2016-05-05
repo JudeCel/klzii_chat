@@ -34,21 +34,21 @@ defmodule KlziiChat.Mixfile do
      {:phoenix_pubsub, "~> 1.0.0-rc"},
      {:phoenix_ecto, "~> 3.0-rc"},
      {:phoenix_html, "~> 2.5"},
-     {:phoenix_live_reload, "~> 1.0.4", only: :dev},
+     {:phoenix_live_reload, "~> 1.0.5", only: :dev},
      {:timex_ecto, github: "bitwalker/timex_ecto"},
      {:poison, "~> 2.1", override: true},
      {:arc_ecto, "~> 0.4.1"},
      {:arc, "~> 0.5.2"},
-     {:ex_aws, "~> 0.4.10"},
+     {:ex_aws, "~> 0.4.18"},
      {:httpotion, "~> 2.2.2"},
      {:postgrex,  "~> 0.11.1"},
-     {:gettext, "~> 0.9"},
+     {:gettext, "~> 0.11"},
      {:guardian, "~> 0.10.1"},
      {:cowboy, "~> 1.0.4"},
      {:corsica, "~> 0.4"},
      {:timex, "~> 2.1"},
      {:quantum, "~> 1.7"},
-     {:httpoison, "~> 0.7"}
+     {:httpoison, "~> 0.8"}
     ]
   end
 

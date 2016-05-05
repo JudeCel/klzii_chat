@@ -1,6 +1,6 @@
 defmodule KlziiChat do
   use Application
-  alias KlziiChat.{Endpoint, Repo, SessioPresence}
+  alias KlziiChat.{Endpoint, Repo, Presence}
 
   # See http://elixir-lang.org/docs/stable/elixir/Application.html
   # for more information on OTP Applications
@@ -12,7 +12,7 @@ defmodule KlziiChat do
       supervisor(Endpoint, []),
       # Start the Ecto repository
       supervisor(Repo, []),
-      supervisor(SessioPresence, [])
+      supervisor(Presence, [])
       # Here you could define other workers and supervisors as children
       # worker(KlziiChat.Worker, [arg1, arg2, arg3]),
     ]
