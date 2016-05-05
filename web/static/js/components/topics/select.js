@@ -1,12 +1,11 @@
-import React, {PropTypes} from 'react';
-import { connect }        from 'react-redux';
-import { Dropdown, Button, SplitButton, MenuItem }    from 'react-bootstrap'
-import Actions            from '../../actions/topic';
+import React, {PropTypes}                           from 'react';
+import { connect }                                  from 'react-redux';
+import { Dropdown, Button, SplitButton, MenuItem }  from 'react-bootstrap'
+import Actions                                      from '../../actions/topic';
 
 const Select = React.createClass({
   changeTopic(event) {
     const { dispatch, channel } = this.props;
-
     let id = event.target.id;
     dispatch(Actions.changeTopic(channel, id));
   },
@@ -29,7 +28,7 @@ const Select = React.createClass({
               {
                 topics.map((topic) => {
                   return (
-                    <MenuItem id={ topic.id } key={ 'topic-' + topic.id } active={ current.id == topic.id }>{ topic.name }</MenuItem>
+                    <MenuItem onSelect={this.changeTopic} id={ topic.id } key={ 'topic-' + topic.id } active={ current.id == topic.id }>{ topic.name }</MenuItem>
                   )
                 })
               }
