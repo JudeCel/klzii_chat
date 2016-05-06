@@ -98,7 +98,7 @@ const Actions = {
       channel.on("member_entered", (resp) =>{
         updateMember(dispatch, resp);
       });
-      channel.on("member_update", (resp) =>{
+      channel.on("update_member", (resp) =>{
         updateMember(dispatch, resp);
       });
     }

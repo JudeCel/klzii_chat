@@ -20,7 +20,10 @@ config :ex_aws,
   region: System.get_env("AWS_REGION")
 
 config :arc,
-  bucket: System.get_env("ARC_BUCKET")
+  bucket: System.get_env("ARC_BUCKET"),
+  virtual_host: true
 
 config :guardian, Guardian,
   secret_key: System.get_env("GUARDIAN_SECRET_KEY")
+
+
