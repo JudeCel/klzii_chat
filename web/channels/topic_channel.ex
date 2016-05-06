@@ -35,7 +35,15 @@ defmodule KlziiChat.TopicChannel do
 
     MessageNotificationService.delete_unread_messages_for_topic(session_member.id, socket.assigns.topic_id)
     unread_messages = MessageNotificationService.get_unread_messages([session_member.id])
-    Endpoint.broadcast!("sessions:#{session_member.session_id}", "unread_messages", unread_messages)
+    id = "#{session_member.id}"
+    case unread_messages do
+      messages  when messages == %{} ->
+        IO.inspect(unread_messages)
+        empty_messages =  %{id =>  %{"topics" => %{}, "summary" => %{"normal" => 0, "replay" => 0 }}}
+        Endpoint.broadcast!("sessions:#{session_member.session_id}", "unread_messages", empty_messages)
+      messages->
+        Endpoint.broadcast!("sessions:#{session_member.session_id}", "unread_messages", messages)
+    end
     {:noreply, socket}
   end
 
