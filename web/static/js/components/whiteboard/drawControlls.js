@@ -159,7 +159,7 @@
 		};
 
 		Element.prototype.ftUpdateTransform = function() {
-			var angle = this.data("angle") - this.data("startAngle");
+			var angle = this.data("angle");
 			var tstring = "t" + this.data("tx") + "," + this.data("ty") + this.ftGetInitialTransformMatrix().toTransformString() + "r" + angle;
 			this.attr({ transform: tstring });
 			this.ftHighlightBB();
@@ -352,7 +352,8 @@
 		var cx = mainBB.cx + normalised[0];
 		var cy = mainBB.cy + normalised[1];
 
-		mainEl.data("angle", Snap.angle( mainBB.cx, mainBB.cy, cx, cy) - 180);
+		var angle = Snap.angle( mainBB.cx, mainBB.cy, cx, cy) - 180 - mainEl.data("startAngle");
+		mainEl.data("angle", angle);
 		handle.attr({ x: cx, y: cy });
 
 		mainEl.ftUpdateTransform();
