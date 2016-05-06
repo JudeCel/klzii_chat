@@ -4,7 +4,6 @@ import sessionActions       from '../actions/session';
 import topicActions         from '../actions/topic';
 import Messages             from '../components/messages/messages.js';
 import Input                from '../components/messages/input.js';
-import Whiteboard           from '../components/whiteboard';
 import Facilitator          from '../components/members/facilitator.js';
 import Participants         from '../components/members/participants.js';
 import ChangeAvatarModal    from '../components/members/modals/changeAvatar/index.js';
@@ -72,8 +71,6 @@ const ChatView = React.createClass({
                 <div className='col-md-4'>
                   <Messages/>
                 </div>
-
-                {/*<Whiteboard/>*/}
                 <WhiteboardCanvas member={ this.props }/>
                 <div className='col-md-12'>
                   <Input/>
