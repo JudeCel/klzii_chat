@@ -37,7 +37,9 @@ defmodule KlziiChat.Services.MessageNotificationService do
 
   def calculate_summary(map) do
     Map.keys(map) |> List.foldl(map, fn id, accumulator ->
+      default_summary = %{"summary" => %{"normal" => 0, "replay" => 0 }}
       topics = accumulator[id]["topics"]
+      accumulator = Map.put(accumulator, id, Map.merge(accumulator[id], default_summary))
       Map.keys(topics)
         |> Enum.reduce(accumulator, fn (key, acc) ->
           topic = topics[key]
@@ -50,10 +52,12 @@ defmodule KlziiChat.Services.MessageNotificationService do
   end
 
   def group_by_topics_and_scope(list) do
+    default_map = %{"topics" => %{}}
+
     List.foldl(list, %{}, fn(item, acc) ->
       id = Map.get(item, "id") |> to_string
       topic = Map.get(item, "topic")
-      new_acc = Map.put_new(acc, id, %{"topics" => %{}, "summary" => %{"normal" => 0, "replay" => 0 }})
+      new_acc = Map.put_new(acc, id, default_map)
 
       update_in(new_acc[id]["topics"], fn val ->
         key = Map.keys(topic)|> List.first
