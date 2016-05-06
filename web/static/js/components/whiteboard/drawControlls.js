@@ -51,6 +51,13 @@
 				this.ftInformSelected(this, false);
 			} ) );
 
+			if (this.setupDone) {
+				createScaleControl(this.paper, this);
+			} else {
+				this.setupDone = true;
+			}
+
+
 			rotateDragger.drag(
 				dragHandleRotateMove.bind( rotateDragger, freetransEl ),
 				dragHandleRotateStart.bind( rotateDragger, freetransEl  ),
@@ -87,9 +94,7 @@
 		Element.prototype.ftSetSelectedCallback = function(c) {
 			this.onSelected = c;
 		}
-		Element.prototype.ftSetSelectedForRotationCallback = function(c) {
-			this.onSelectedForRotation = c;
-		}
+
 		Element.prototype.ftSetTransformedCallback = function(c) {
 			this.onTransformed = c;
 		}
@@ -126,6 +131,8 @@
 			this.data( "bbT" ) && this.data("bbT").remove();
 			this.data( "bb" ) && this.data("bb").remove();
 			this.click( function() { this.ftCreateHandles() } ) ;
+			if (this.scaleXControl) this.scaleXControl.remove();
+			if (this.scaleYControl) this.scaleYControl.remove();
 			this.ftCleanUp();
 			return this;
 		};
@@ -163,6 +170,7 @@
 			var tstring = "t" + this.data("tx") + "," + this.data("ty") + this.ftGetInitialTransformMatrix().toTransformString() + "r" + angle;
 			this.attr({ transform: tstring });
 			this.ftHighlightBB();
+			this.updateTransformControls(this);
 			return this;
 		};
 
@@ -284,6 +292,132 @@
 		function endDrag() {
 						this.data('onDragEndFunc')(this);
 		};
+
+		//control creation
+		function createScaleControl(paper, activeShape) {
+	    var self = this;
+	    var transformObj;
+	    var myDragEndFunc = function( el ) {
+				activeShape.ftStoreInitialTransformMatrix();
+	      el.setCapMaxPosition(el.data("posX"));
+				informFinishedTransform(activeShape);
+	    }
+
+	    var myDragStartFunc = function(el) {
+	      activeShape.ftStoreInitialTransformMatrix();
+	    }
+
+	    // what we want to do when the slider changes. They could have separate funcs as the call back or just pick the right element
+	    var myDragFunc = function( el ) {
+	      if (!el) return;
+
+	      if( el.data("sliderId") == "x" ) {
+	        updateElementParameters(activeShape, {width: el.data("posX"), scaleX: el.data("fracX")});
+	      } else if( el.data("sliderId") == "y" ) {
+	        updateElementParameters(activeShape, {height: el.data("posX"), scaleY: el.data("fracX")});
+	      }
+				activeShape.ftHighlightBB();
+	    }
+
+	    paper.slider({ sliderId: "x", capSelector: "#cap", filename: "/images/svgControls/sl.svg",
+	      x: "0", y:"0", min: "10", max: "300", centerOffsetX: "0", centerOffsetY: "0",
+	      onDragEndFunc: myDragEndFunc, onDragStartFunc: myDragStartFunc, onDragFunc: myDragFunc,
+	      attr: { transform: 't-100,-100' } } , function(elX) {
+	          // Create vertical control
+	          paper.slider({ sliderId:"y", capSelector: "#cap", filename: "/images/svgControls/sl.svg",
+	            x: "0", y:"0", min: "10", max: "300", centerOffsetX: "0", centerOffsetY: "0",
+	            onDragEndFunc: myDragEndFunc, onDragStartFunc: myDragStartFunc, onDragFunc: myDragFunc,
+	            attr: { transform: 't-100,-100r90' } } , function(elY) {
+	              activeShape.scaleXControl = elX;
+	              activeShape.scaleYControl = elY;
+
+								activeShape.updateTransformControls(activeShape);
+	            });
+	      });
+	  }
+
+		function hideScaleControls(shape) {
+			shape.scaleXControl.attr({transform: "t-100,-100"});
+			shape.scaleYControl.attr({transform: "t-100,-100"});
+		}
+
+		function updateElementParameters(shape, params) {
+	    switch (shape.type) {
+	      case "ellipse":
+	        if (params.width) {
+	          shape.attr({rx: params.width});
+	        } else if (params.height) {
+	          shape.attr({ry: params.height});
+	        }
+	        break;
+	      case "rect":
+	        var tstring= shape.attr().transform;
+	        var width = shape.attr().width;
+	        var height = shape.attr().height;
+	        var attributes = {};
+	        if (params.width) {
+	          attributes.width = params.width*2;
+	          attributes.x = Number(shape.attr().x) - (attributes.width - width)/2;
+	        } else if (params.height) {
+	          attributes.height = params.height*2;
+	          attributes.y = Number(shape.attr().y) - (attributes.height - height)/2;
+	        }
+	        attributes.transform = tstring;
+	        shape.attr(attributes);
+	        break;
+
+	      default:
+	        var elEttributes = shape.attr();
+	        var matr = shape.ftGetInitialTransformMatrix();
+	        var transform = matr.toTransformString()+"S"+(params.scaleX?params.scaleX:1)+","+(params.scaleY?params.scaleY:1);
+	        shape.attr({transform: transform});
+	        break;
+	    }
+	  }
+
+		Element.prototype.updateTransformControls = function(shape, resetControlValues) {
+	    var angle = shape.matrix.split().rotate;
+	    var transformStr = "";
+	    var attrs = shape.attr();
+	    var width = 0;
+	    var height = 0;
+	    var box = shape.getBBox();
+	    transformStr = "t"+box.cx+","+box.cy+"r";
+
+	    var originalTransform = shape.matrix.split();
+	    if (shape.type == "rect") {
+	      width = attrs.width/2*originalTransform.scalex;
+	      height = attrs.height/2*originalTransform.scaley;
+	    } else if (shape.type == "ellipse") {
+	      width = attrs.rx*originalTransform.scalex;
+	      height = attrs.ry*originalTransform.scaley;
+	    } else {
+	      if (resetControlValues) {
+	        width = box.width/2;
+	        height = box.height/2;
+	      } else {
+	        width = shape.scaleXControl.myCap.data("posX");
+	        height = shape.scaleYControl.myCap.data("posX");
+	      }
+	    }
+
+	    shape.scaleXControl.myCap.setCapPosition(0);
+	    shape.scaleYControl.myCap.setCapPosition(0);
+	    shape.scaleXControl.attr({transform: transformStr+angle});
+	    shape.scaleYControl.attr({transform: transformStr+(angle+90)});
+	    shape.scaleXControl.myCap.setCapPosition(width);
+	    shape.scaleYControl.myCap.setCapPosition(height);
+
+	    shape.scaleXControl.myCap.setCapMaxPosition(width);
+	    shape.scaleYControl.myCap.setCapMaxPosition(height);
+
+
+	    shape.scaleXControl.insertAfter(shape);
+	    shape.scaleYControl.insertAfter(shape);
+	  }
+
+
+
 	});
 
 	function rectObjFromBB ( bb ) {

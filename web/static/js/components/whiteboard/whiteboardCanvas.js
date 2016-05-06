@@ -167,68 +167,29 @@ const WhiteboardCanvas = React.createClass({
     if (obj) {
       obj.ftRemove();
       this.shapes[uid] = null;
-      this.hideScaleControls();
     }
   },
   deleteAllObjects(obj) {
     this.snap.clear();
     this.shapes = [];
   },
-  updateTransformControls(shape, resetControlValues) {
-    var angle = shape.matrix.split().rotate;
-    var transformStr = "";
-    var attrs = shape.attr();
-    var width = 0;
-    var height = 0;
-    var box = shape.getBBox();
-    transformStr = "t"+box.cx+","+box.cy+"r";
-
-    var originalTransform = shape.matrix.split();
-    if (shape.type == "rect") {
-      width = attrs.width/2*originalTransform.scalex;
-      height = attrs.height/2*originalTransform.scaley;
-    } else if (shape.type == "ellipse") {
-      width = attrs.rx*originalTransform.scalex;
-      height = attrs.ry*originalTransform.scaley;
-    } else {
-      if (resetControlValues) {
-        width = box.width/2;
-        height = box.height/2;
-      } else {
-        width = this.scaleXControl.myCap.data("posX");
-        height = this.scaleYControl.myCap.data("posX");
-      }
-    }
-
-    this.scaleXControl.myCap.setCapPosition(0);
-    this.scaleYControl.myCap.setCapPosition(0);
-    this.scaleXControl.attr({transform: transformStr+angle});
-    this.scaleYControl.attr({transform: transformStr+(angle+90)});
-    this.scaleXControl.myCap.setCapPosition(width);
-    this.scaleYControl.myCap.setCapPosition(height);
-
-    this.scaleXControl.myCap.setCapMaxPosition(width);
-    this.scaleYControl.myCap.setCapMaxPosition(height);
-
-
-    this.scaleXControl.insertAfter(shape);
-    this.scaleYControl.insertAfter(shape);
-  },
   shapeFinishedTransform(shape) {
     this.activeShape = shape;
-    this.sendObjectData('move');
+    console.log("____", shape);
+    try {
+      this.sendObjectData('move');
+    } catch (e) {
+      console.log("_error__", e);
+    } finally {
+
+    }
+
   },
   shapeTransformed(shape) {
     this.activeShape = shape;
-    this.updateTransformControls(shape);
   },
   moveDistance(dx, dy) {
     return Math.sqrt( Math.pow( dx, 2)  + Math.pow( dy, 2)  );
-  },
-  hideScaleControls() {
-    //move off screen by x axis
-    this.scaleXControl.attr({transform: "t-100,-100"});
-    this.scaleYControl.attr({transform: "t-100,-100"});
   },
   initUnselectCallback() {
     var self = this;
@@ -237,7 +198,6 @@ const WhiteboardCanvas = React.createClass({
       if (mEl.target.id == self.getName()) {
         if (self.activeShape) self.activeShape.ftUnselect();
         self.activeShape = null;
-        self.hideScaleControls();
       }
     }, function(x, y, mEl) {
     } );
@@ -248,81 +208,7 @@ const WhiteboardCanvas = React.createClass({
     this.activeShape = null;
     var self = this;
     this.initMessaging();
-    this.createScaleControl();
     this.initUnselectCallback();
-  },
-  updateElementParameters(shape, params) {
-    switch (shape.type) {
-      case "ellipse":
-        if (params.width) {
-          shape.attr({rx: params.width});
-        } else if (params.height) {
-          shape.attr({ry: params.height});
-        }
-        break;
-      case "rect":
-        var tstring= shape.attr().transform;
-        var width = shape.attr().width;
-        var height = shape.attr().height;
-        var attributes = {};
-        if (params.width) {
-          attributes.width = params.width*2;
-          attributes.x = Number(shape.attr().x) - (attributes.width - width)/2;
-        } else if (params.height) {
-          attributes.height = params.height*2;
-          attributes.y = Number(shape.attr().y) - (attributes.height - height)/2;
-        }
-        attributes.transform = tstring;
-        shape.attr(attributes);
-        break;
-
-      default:
-        var elEttributes = shape.attr();
-        var matr = shape.ftGetInitialTransformMatrix();
-        var transform = matr.toTransformString()+"S"+(params.scaleX?params.scaleX:1)+","+(params.scaleY?params.scaleY:1);
-        shape.attr({transform: transform});
-        break;
-    };
-  },
-  createScaleControl() {
-    var self = this;
-    var transformObj;
-    var myDragEndFunc = function( el ) {
-      self.scaling = false;
-      self.activeShape.ftStoreInitialTransformMatrix();
-      el.setCapMaxPosition(el.data("posX"));
-      self.sendObjectData('move');
-    }
-
-    var myDragStartFunc = function(el) {
-      self.scaling = true;
-      self.activeShape.ftStoreInitialTransformMatrix();
-    }
-
-    // what we want to do when the slider changes. They could have separate funcs as the call back or just pick the right element
-    var myDragFunc = function( el ) {
-      if (!el) return;
-
-      if( el.data("sliderId") == "x" ) {
-        self.updateElementParameters(self.activeShape, {width: el.data("posX"), scaleX: el.data("fracX")});
-      } else if( el.data("sliderId") == "y" ) {
-         self.updateElementParameters(self.activeShape, {height: el.data("posX"), scaleY: el.data("fracX")});
-      }
-    }
-
-    self.snap.slider({ sliderId: "x", capSelector: "#cap", filename: "/images/svgControls/sl.svg",
-      x: "0", y:"0", min: "10", max: "300", centerOffsetX: "0", centerOffsetY: "0",
-      onDragEndFunc: myDragEndFunc, onDragStartFunc: myDragStartFunc, onDragFunc: myDragFunc,
-      attr: { transform: 't-100,-100' } } , function(elX) {
-          // Create vertical control
-          self.snap.slider({ sliderId:"y", capSelector: "#cap", filename: "/images/svgControls/sl.svg",
-            x: "0", y:"0", min: "10", max: "300", centerOffsetX: "0", centerOffsetY: "0",
-            onDragEndFunc: myDragEndFunc, onDragStartFunc: myDragStartFunc, onDragFunc: myDragFunc,
-            attr: { transform: 't-100,-100r90' } } , function(elY) {
-              self.scaleXControl = elX;
-              self.scaleYControl = elY;
-            });
-      });
   },
   setActiveFillColour(fill) {
     this.activeStrokeColour = this.activeColour;
@@ -410,16 +296,12 @@ const WhiteboardCanvas = React.createClass({
     el.ftSetSelectedCallback(this.shapeSelected);
     el.ftSetTransformedCallback(this.shapeTransformed);
     el.ftSetFinishedTransformCallback(this.shapeFinishedTransform);
-    el.ftSetSelectedForRotationCallback(this.shapeSelectedForRotation);
   },
   addInputControl(el) {
     el.ftCreateHandles();
   },
   setStyle(el, colour, strokeWidth, strokeColour) {
     el.attr({'fill': colour, stroke: strokeColour, strokeWidth: strokeWidth});
-  },
-  shapeSelectedForRotation(el) {
-    this.updateTransformControls(el, true);
   },
   shapeSelected(el, selected) {
     if (selected){
@@ -432,11 +314,6 @@ const WhiteboardCanvas = React.createClass({
 
       if (el) {
         this.activeShape = el;
-        this.shapeSelectedForRotation(el);
-      }
-    } else {
-      if (this.activeShape) {
-        this.hideScaleControls();
       }
     }
   },
@@ -446,11 +323,9 @@ const WhiteboardCanvas = React.createClass({
       this.activeShape.ftRemove();
       this.props.member.dispatch(whiteboardActions.deleteObject(this.state.channel, this.activeShape.id));
       this.activeShape = null;
-      this.hideScaleControls();
     }
   },
   deleteAll() {
-    this.hideScaleControls();
   	var message = {
   		action: "deleteAll"
   	};
@@ -496,7 +371,6 @@ const WhiteboardCanvas = React.createClass({
       var temp = this.activeShape;
       this.sendObjectData('draw');
       this.shapes[this.activeShape.id] = this.activeShape;
-      this.updateTransformControls(this.activeShape);
     }
     this.coords = null;
   },
