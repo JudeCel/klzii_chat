@@ -175,15 +175,7 @@ const WhiteboardCanvas = React.createClass({
   },
   shapeFinishedTransform(shape) {
     this.activeShape = shape;
-    console.log("____", shape);
-    try {
-      this.sendObjectData('move');
-    } catch (e) {
-      console.log("_error__", e);
-    } finally {
-
-    }
-
+    this.sendObjectData('move');
   },
   shapeTransformed(shape) {
     this.activeShape = shape;

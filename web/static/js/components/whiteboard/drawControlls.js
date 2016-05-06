@@ -40,7 +40,7 @@
 			freetransEl.data( "handlesGroup", handlesGroup );
 			freetransEl.data( "joinLine", joinLine);
 
-			freetransEl.data( "scaleFactor", calcDistance( bb.cx, bb.cy, rotateDragger.attr('x'), rotateDragger.attr('y') ) );
+			freetransEl.data( "scaleFactor", Snap.calcDistance( bb.cx, bb.cy, rotateDragger.attr('x'), rotateDragger.attr('y') ) );
 			translateDragger.drag( 	elementDragMove.bind(  translateDragger, freetransEl ),
 						elementDragStart.bind( translateDragger, freetransEl ),
 						elementDragEnd.bind( translateDragger, freetransEl ) );
@@ -56,7 +56,6 @@
 			} else {
 				this.setupDone = true;
 			}
-
 
 			rotateDragger.drag(
 				dragHandleRotateMove.bind( rotateDragger, freetransEl ),
@@ -503,7 +502,7 @@
 		}
 	}
 
-	function calcDistance(x1,y1,x2,y2) {
+	Snap.calcDistance = function(x1,y1,x2,y2) {
 		return Math.sqrt( Math.pow( (x1 - x2), 2)  + Math.pow( (y1 - y2), 2)  );
 	}
 
