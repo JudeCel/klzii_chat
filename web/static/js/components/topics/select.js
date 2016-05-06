@@ -38,7 +38,7 @@ const Select = React.createClass({
             <small>{unread_messages.summary.replay}</small>
           </i>
           <i className='viewers-section icon-eye'>
-            <small>{unread_messages.summary.replay}</small>
+            <small>{unread_messages.summary.normal}</small>
           </i>
         </div>
       </div>

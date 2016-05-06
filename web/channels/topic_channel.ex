@@ -1,7 +1,7 @@
 defmodule KlziiChat.TopicChannel do
   use KlziiChat.Web, :channel
   alias KlziiChat.Services.{MessageService, WhiteboardService, ResourceService, MessageNotificationService}
-  alias KlziiChat.{MessageView, Presence}
+  alias KlziiChat.{MessageView, Presence, Endpoint}
 
   # This Channel is only for Topic context
   # brodcast and receive messages from session members
@@ -33,9 +33,9 @@ defmodule KlziiChat.TopicChannel do
       role: session_member.role
     })
 
-    # MessageNotificationService.delete_unread_messages_for_topic(session_member.id, socket.assigns.topic_id)
-    # unread_messages = MessageNotificationService.get_unread_messages([session_member.id])
-    # push socket, "unread_messages", unread_messages
+    MessageNotificationService.delete_unread_messages_for_topic(session_member.id, socket.assigns.topic_id)
+    unread_messages = MessageNotificationService.get_unread_messages([session_member.id])
+    Endpoint.broadcast!("sessions:#{session_member.session_id}", "unread_messages", unread_messages)
     {:noreply, socket}
   end
 
