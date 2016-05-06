@@ -462,6 +462,7 @@
 	};
 
 	function dragHandleRotateEnd( mainElement ) {
+		this.ftStoreStartCenter();
 		informFinishedTransform(mainElement);
 	};
 
