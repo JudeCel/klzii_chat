@@ -26,11 +26,16 @@ defmodule KlziiChat.TopicChannel do
   end
 
   def handle_info(:after_join, socket) do
+    session_member = socket.assigns.session_member
     {:ok, _} = Presence.track(socket, (socket.assigns.session_member.id |> to_string), %{
       online_at: inspect(System.system_time(:seconds)),
-      id: socket.assigns.session_member.id,
-      role: socket.assigns.session_member.role
+      id: session_member.id,
+      role: session_member.role
     })
+
+    # MessageNotificationService.delete_unread_messages_for_topic(session_member.id, socket.assigns.topic_id)
+    # unread_messages = MessageNotificationService.get_unread_messages([session_member.id])
+    # push socket, "unread_messages", unread_messages
     {:noreply, socket}
   end
 

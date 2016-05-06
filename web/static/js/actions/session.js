@@ -91,6 +91,13 @@ const Actions = {
         members(dispatch, resp);
       });
 
+      channel.on("unread_messages", (messages) =>{
+        return dispatch({
+          type: Constants.SET_UNREAD_MESSAGES,
+          messages
+        });
+      });
+
       channel.on("presence_state", (state) =>{
         return dispatch({
           type: Constants.SYNC_MEMBERS_STATE,

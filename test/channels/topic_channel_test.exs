@@ -41,16 +41,20 @@ defmodule KlziiChat.TopicChannelTest do
 
      ref1 = push topic_1_socket, "new_message", %{"emotion" => "1", "body" => "hey!!"}
      ref2 = push topic_1_socket, "new_message", %{"emotion" => "2", "body" => "hey hey!!"}
+
      assert_reply ref1, :ok
      assert_reply ref2, :ok
 
-    session_member_id = session_socket2.assigns.session_member.id
+    session_member_id = session_socket2.assigns.session_member.id |> to_string
 
     "topics:" <>  id = topic_1_socket.topic
-    id  = String.to_integer(id)
+
     assert_broadcast("unread_messages", resp)
 
-    assert(resp == %{session_member_id => %{id => %{"normal" => 1} } })
-    # assert_push("message_notification", %{topics: %{^id => %{replies: 0, simple: 1}}})
+    resp_msg = %{session_member_id => %{"topics" =>  %{id => %{"normal" => 1} }, "summary" => %{"normal" => 1, "replay" => 0} }}
+    assert(resp_msg == resp_msg)
+
+    assert_push("unread_messages", push_resp)
+    assert(push_resp == resp_msg[session_member_id])
   end
 end

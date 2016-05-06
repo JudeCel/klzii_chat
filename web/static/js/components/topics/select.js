@@ -10,7 +10,7 @@ const Select = React.createClass({
     dispatch(Actions.changeTopic(channel, id));
   },
   render() {
-    const { current, topics, session } = this.props;
+    const { current, topics, session, unread_messages } = this.props;
 
     return (
       <div className='col-md-2 topic-select-section'>
@@ -35,7 +35,10 @@ const Select = React.createClass({
             </Dropdown.Menu>
           </Dropdown>
           <i className='viewers-section icon-eye'>
-            <small>3</small>
+            <small>{unread_messages.summary.replay}</small>
+          </i>
+          <i className='viewers-section icon-eye'>
+            <small>{unread_messages.summary.replay}</small>
           </i>
         </div>
       </div>
@@ -45,6 +48,7 @@ const Select = React.createClass({
 
 const mapStateToProps = (state) => {
   return {
+    unread_messages: state.messages.unreadMessages,
     session: state.chat.session,
     channel: state.topic.channel,
     current: state.topic.current,

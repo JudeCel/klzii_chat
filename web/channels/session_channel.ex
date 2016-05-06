@@ -56,7 +56,12 @@ defmodule KlziiChat.SessionChannel do
   end
 
   def handle_out("unread_messages", payload, socket) do
-    push socket, "unread_messages", payload
+    id = socket.assigns.session_member.id |> to_string
+    case Map.get(payload, id, nil) do
+      map when is_map(map) ->
+        push socket, "unread_messages", map
+      nil -> nil
+    end
     {:noreply, socket}
   end
 

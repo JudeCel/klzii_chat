@@ -2,13 +2,16 @@ import Constants from '../constants';
 
 const initialState = {
   all: [],
-  ready: false
+  ready: false,
+  unreadMessages: {"topics": {}, "summary": {"normal": 0, "replay": 0 }}
 };
 
 export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
     case Constants.SET_MESSAGES:
       return { ...state, all: action.messages };
+    case Constants.SET_UNREAD_MESSAGES:
+      return { ...state, unreadMessages: action.messages };
 
     case Constants.NEW_MESSAGE:
       return { ...state, all: newMessage(state.all, action.message) };
