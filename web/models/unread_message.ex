@@ -2,7 +2,7 @@ defmodule KlziiChat.UnreadMessage do
   use KlziiChat.Web, :model
 
   schema "UnreadMessages" do
-    belongs_to :topic, KlziiChat.Account, [foreign_key: :topicId]
+    belongs_to :topic, KlziiChat.Topic, [foreign_key: :topicId]
     belongs_to :session_member, KlziiChat.SessionMember, [foreign_key: :sessionMemberId]
     belongs_to :message, KlziiChat.Message, [foreign_key: :messageId]
     field :scope, :string, default: "normal"
