@@ -21,44 +21,19 @@ const Actions = {
     return dispatch => {
       dispatch({ type: Constants.SET_WHITEBOARD_EVENTS});
       channel.on("draw", (resp) =>{
-        if (window.buildWhiteboard) {
-          window.buildWhiteboard.processWhiteboard([resp]);
-        }
-
-        if (whiteboard) {
-          whiteboard.processWhiteboard([resp]);
-        }
-
+        whiteboard.processWhiteboard([resp]);
       });
 
       channel.on("delete_object", (resp) =>{
-        if (window.whiteboard) {
-          window.whiteboard.paint.deleteObject(resp.uid);
-        }
-
-        if (whiteboard) {
-          whiteboard.deleteObject(resp.uid);
-        }
+        whiteboard.deleteObject(resp.uid);
       });
 
       channel.on("delete_all", (resp) =>{
-        if (window.clearWhiteboard) {
-          window.clearWhiteboard();
-        }
-
-        if (whiteboard) {
-          whiteboard.deleteAllObjects(resp);
-        }
+        whiteboard.deleteAllObjects(resp);
       });
 
       channel.on("update_object", (resp) =>{
-        if (window.buildWhiteboard) {
-          window.buildWhiteboard.processWhiteboard([resp]);
-        }
-
-        if (whiteboard) {
-          whiteboard.processWhiteboard([resp]);
-        }
+        whiteboard.processWhiteboard([resp]);
       });
     }
   },
@@ -81,13 +56,7 @@ const Actions = {
           type: Constants.SET_WHITEBOARD_HISTORY,
           objects: data.history
         });
-        if (window.buildWhiteboard){
-          window.buildWhiteboard.processWhiteboard(data.history);
-        }
-
-        if (whiteboard) {
-          whiteboard.processWhiteboard(data.history);
-        }
+        whiteboard.processWhiteboard(data.history);
       })
       .receive('error', (data) => {
         dispatch({

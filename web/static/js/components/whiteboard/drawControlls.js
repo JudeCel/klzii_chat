@@ -330,7 +330,7 @@
 	              activeShape.scaleXControl = elX;
 	              activeShape.scaleYControl = elY;
 
-								activeShape.updateTransformControls(activeShape);
+								activeShape.updateTransformControls(activeShape, true);
 	            });
 	      });
 	  }
