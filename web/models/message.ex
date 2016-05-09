@@ -6,6 +6,7 @@ defmodule KlziiChat.Message do
     belongs_to :session_member, KlziiChat.SessionMember, [foreign_key: :sessionMemberId]
     belongs_to :reply, KlziiChat.Message, [foreign_key: :replyId]
     has_many :replies, KlziiChat.Message, [foreign_key: :replyId, on_delete: :delete_all]
+    has_many :unread_messages, KlziiChat.UnreadMessage, [foreign_key: :messageId, on_delete: :delete_all]
     has_many :votes, KlziiChat.Vote, [foreign_key: :messageId, on_delete: :delete_all]
     field :body, :string
     field :emotion, :integer

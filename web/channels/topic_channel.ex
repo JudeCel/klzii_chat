@@ -34,15 +34,8 @@ defmodule KlziiChat.TopicChannel do
     })
 
     UnreadMessageService.delete_unread_messages_for_topic(session_member.id, socket.assigns.topic_id)
-    unread_messages = UnreadMessageService.get_unread_messages([session_member.id])
-    id = "#{session_member.id}"
-    case unread_messages do
-      messages  when messages == %{} ->
-        empty_messages =  %{id =>  %{"topics" => %{}, "summary" => %{"normal" => 0, "reply" => 0 }}}
-        Endpoint.broadcast!("sessions:#{session_member.session_id}", "unread_messages", empty_messages)
-      messages->
-        Endpoint.broadcast!("sessions:#{session_member.session_id}", "unread_messages", messages)
-    end
+    messages = UnreadMessageService.sync_state(session_member.id)
+    Endpoint.broadcast!("sessions:#{session_member.session_id}", "unread_messages", messages)
     {:noreply, socket}
   end
 
@@ -70,11 +63,8 @@ defmodule KlziiChat.TopicChannel do
     if String.length(payload["body"]) > 0  do
       case MessageService.create_message(session_member, topic_id, payload) do
         {:ok, message} ->
-          unread_message = Task.async(fn ->
-            UnreadMessageService.process_new_message(session_member.session_id, topic_id, message.id)
-          end)
+          UnreadMessageService.process_new_message(session_member.session_id, topic_id, message.id)
           broadcast! socket, "new_message",  message
-          Task.await(unread_message)
           {:reply, :ok, socket}
         {:error, reason} ->
           {:error, %{reason: reason}}
