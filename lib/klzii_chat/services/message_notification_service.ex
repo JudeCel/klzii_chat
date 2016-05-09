@@ -1,5 +1,5 @@
 defmodule KlziiChat.Services.MessageNotificationService do
-  alias KlziiChat.{Repo, Message, SessionMember, OfflineMessage, Endpoint, Presence}
+  alias KlziiChat.{Repo, Message, SessionMember, UnreadMessage, Endpoint, Presence}
   import Ecto.Query, only: [from: 1, from: 2]
 
   def run(session_id, _session_member_id, topic_id, message_id) do
@@ -28,7 +28,7 @@ defmodule KlziiChat.Services.MessageNotificationService do
   end
 
   def get_unread_messages(session_member_ids) do
-    from(om in OfflineMessage,
+    from(om in UnreadMessage,
       where: om.sessionMemberId in ^session_member_ids,
       group_by: [:topicId, :scope, :sessionMemberId],
       select: %{"id" => om.sessionMemberId, "topic" => %{om.topicId => %{om.scope => count(om.scope)}}})
@@ -81,7 +81,7 @@ defmodule KlziiChat.Services.MessageNotificationService do
       [scope: scope, topicId: message.topicId, sessionMemberId: id, messageId: message.id, createdAt: Timex.DateTime.now, updatedAt: Timex.DateTime.now]
     end)
 
-    Repo.insert_all(OfflineMessage, offline_messages)
+    Repo.insert_all(UnreadMessage, offline_messages)
   end
 
   def get_message(message_id) do
@@ -95,7 +95,7 @@ defmodule KlziiChat.Services.MessageNotificationService do
   end
 
   def delete_unread_messages_for_topic(session_mmeber_id, topic_id) do
-    from(om in OfflineMessage, where: om.sessionMemberId == ^session_mmeber_id,  where: om.topicId == ^topic_id)
+    from(om in UnreadMessage, where: om.sessionMemberId == ^session_mmeber_id,  where: om.topicId == ^topic_id)
       |> Repo.delete_all
   end
 

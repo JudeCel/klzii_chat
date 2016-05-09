@@ -1,7 +1,7 @@
-defmodule KlziiChat.OfflineMessage do
+defmodule KlziiChat.UnreadMessage do
   use KlziiChat.Web, :model
 
-  schema "OfflineMessages" do
+  schema "UnreadMessages" do
     belongs_to :topic, KlziiChat.Account, [foreign_key: :topicId]
     belongs_to :session_member, KlziiChat.SessionMember, [foreign_key: :sessionMemberId]
     belongs_to :message, KlziiChat.Message, [foreign_key: :messageId]
