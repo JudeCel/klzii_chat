@@ -1,6 +1,6 @@
-defmodule KlziiChat.Services.MessageNotificationServiceTest do
+defmodule KlziiChat.Services.UnreadMessageServiceTest do
   use ExUnit.Case, async: true
-  alias  KlziiChat.Services.MessageNotificationService
+  alias  KlziiChat.Services.UnreadMessageService
 
   test "group topics and scopes" do
 
@@ -11,7 +11,7 @@ defmodule KlziiChat.Services.MessageNotificationServiceTest do
       %{"id" => 3, "topic" => %{2 => %{"replay" => 2}}},
       %{"id" => 1, "topic" => %{1 => %{"normal" => 7}}},
     ]
-    resp = MessageNotificationService.group_by_topics_and_scope(list)
+    resp = UnreadMessageService.group_by_topics_and_scope(list)
 
     result = %{
       "3" => %{"topics" =>  %{ "1" => %{"normal" => 2, "replay" => 5 },
@@ -36,11 +36,11 @@ defmodule KlziiChat.Services.MessageNotificationServiceTest do
       "1" => %{"topics" =>  %{ "1" => %{"normal" => 7 }},
               "summary" => %{"normal" => 7, "replay" => 0 }}
     }
-    resp = MessageNotificationService.calculate_summary(map)
+    resp = UnreadMessageService.calculate_summary(map)
     assert(resp == result)
   end
 
   test "find diff " do
-    MessageNotificationService.find_diff([1,2], [2]) == [1]
+    UnreadMessageService.find_diff([1,2], [2]) == [1]
   end
 end

@@ -1,4 +1,4 @@
-defmodule KlziiChat.Services.MessageNotificationService do
+defmodule KlziiChat.Services.UnreadMessageService do
   alias KlziiChat.{Repo, Message, SessionMember, UnreadMessage, Endpoint, Presence}
   import Ecto.Query, only: [from: 1, from: 2]
 

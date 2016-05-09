@@ -1,6 +1,6 @@
 defmodule KlziiChat.TopicChannel do
   use KlziiChat.Web, :channel
-  alias KlziiChat.Services.{MessageService, WhiteboardService, ResourceService, MessageNotificationService}
+  alias KlziiChat.Services.{MessageService, WhiteboardService, ResourceService, UnreadMessageService}
   alias KlziiChat.{MessageView, Presence, Endpoint}
 
   # This Channel is only for Topic context
@@ -33,8 +33,8 @@ defmodule KlziiChat.TopicChannel do
       role: session_member.role
     })
 
-    MessageNotificationService.delete_unread_messages_for_topic(session_member.id, socket.assigns.topic_id)
-    unread_messages = MessageNotificationService.get_unread_messages([session_member.id])
+    UnreadMessageService.delete_unread_messages_for_topic(session_member.id, socket.assigns.topic_id)
+    unread_messages = UnreadMessageService.get_unread_messages([session_member.id])
     id = "#{session_member.id}"
     case unread_messages do
       messages  when messages == %{} ->
@@ -71,7 +71,7 @@ defmodule KlziiChat.TopicChannel do
       case MessageService.create_message(session_member, topic_id, payload) do
         {:ok, message} ->
           broadcast! socket, "new_message",  message
-          MessageNotificationService.run(session_member.session_id, session_member.id, topic_id, message.id)
+          UnreadMessageService.run(session_member.session_id, session_member.id, topic_id, message.id)
           {:reply, :ok, socket}
         {:error, reason} ->
           {:error, %{reason: reason}}
