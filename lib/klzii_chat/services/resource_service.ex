@@ -109,8 +109,6 @@ defmodule KlziiChat.Services.ResourceService do
       case Repo.insert(changeset) do
         {:ok, resource} ->
           Task.async(fn -> KlziiChat.Files.Tasks.run(resource, ids) end)
-          |> Task.await
-
           {:ok, resource }
         {:error, reason} ->
           {:error, reason}

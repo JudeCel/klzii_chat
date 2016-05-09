@@ -3,27 +3,12 @@ defmodule KlziiChat.TopicChannelTest do
   use KlziiChat.SessionMemberCase
   alias KlziiChat.{Repo, Presence, UserSocket, SessionChannel, TopicChannel}
 
-  setup %{topic_1: topic_1, topic_2: topic_2, session: session, session: session, member: member, member2: member2} do
+  setup %{topic_1: topic_1, session: session, session: session, member: member, member2: member2} do
     Ecto.Adapters.SQL.Sandbox.mode(Repo, {:shared, self()})
     session_name =  "sessions:" <> Integer.to_string(session.id)
     tipic_1_name =  "topics:" <> Integer.to_string(topic_1.id)
-    tipic_2_name =  "topics:" <> Integer.to_string(topic_2.id)
     {:ok, socket} = connect(UserSocket, %{"token" => member.token})
-    {:ok, socket2} = connect(UserSocket, %{"token" => member2.token})
-    {:ok, socket: socket, socket2: socket2, session_name: session_name, tipic_1_name: tipic_1_name, tipic_2_name: tipic_2_name}
-  end
-
-  def topic_id(channel) do
-    case channel do
-      "topics:" <>  id ->
-        id
-      "sessions:" <>  id ->
-        id
-    end
-  end
-
-  def get_session_member_id(socket) do
-    socket.assigns.session_member.id |> to_string
+    {:ok, socket: socket, session_name: session_name, tipic_1_name: tipic_1_name}
   end
 
   test "presents register is enable for topics", %{socket: socket, tipic_1_name: tipic_1_name} do
@@ -40,30 +25,41 @@ defmodule KlziiChat.TopicChannelTest do
 
   test "can push new message", %{socket: socket, tipic_1_name: tipic_1_name} do
     {:ok, _, socket} = subscribe_and_join(socket, TopicChannel, tipic_1_name)
-      push socket, "new_message", %{"emotion" => "1", "body" => "hey!!"}
-      assert_broadcast "new_message", %KlziiChat.Message{}
+      body = "hey!!"
+      ref = push socket, "new_message", %{"emotion" => "1", "body" => body}
+      assert_reply ref, :ok
+      assert_push "new_message", message
+      assert(message.body == body)
   end
 
-  #  Offline messages from others topics
-  test "get unread messages notification", %{socket2: socket2, socket: socket, session_name: session_name, tipic_1_name: tipic_1_name, tipic_2_name: tipic_2_name} do
-    {:ok, _, session_socket} = join(socket, SessionChannel, session_name)
-    {:ok, _, topic_1_socket} = join(session_socket, TopicChannel, tipic_1_name)
+  test "can start message and unstart message", %{socket: socket, tipic_1_name: tipic_1_name} do
+    {:ok, _, socket} = subscribe_and_join(socket, TopicChannel, tipic_1_name)
+      body = "hey!!"
+      ref = push socket, "new_message", %{"emotion" => "1", "body" => body}
+      assert_reply ref, :ok
+      assert_push "new_message", message
 
-    {:ok, _, socket2} = join(socket2, TopicChannel, tipic_2_name)
-    {:ok, _, socket2} = subscribe_and_join(socket2, SessionChannel, session_name)
+      # star message
+      ref_star = push socket, "message_star", %{"id" => message.id}
+      assert_reply ref_star, :ok, message_star
+      assert(message_star.star)
+      # unstar message
+      ref_star = push socket, "message_star", %{"id" => message.id}
+      assert_reply ref_star, :ok, message_star
+      refute(message_star.star)
+  end
 
-    session_member_id = get_session_member_id(socket2)
-    id  = topic_id(tipic_1_name)
+  test "can push delete message", %{socket: socket, tipic_1_name: tipic_1_name} do
+    {:ok, _, socket} = subscribe_and_join(socket, TopicChannel, tipic_1_name)
+      ref = push socket, "new_message", %{"emotion" => "1", "body" => "hey!!"}
+      assert_reply ref, :ok
+      assert_push "new_message", message
 
-    ref1 = push topic_1_socket, "new_message", %{"emotion" => "1", "body" => "hey!!"}
-    ref2 = push topic_1_socket, "new_message", %{"emotion" => "2", "body" => "hey hey!!"}
+      ref2 = push socket, "delete_message", %{"id" => message.id}
+      assert_reply ref2, :ok
 
-    assert_reply ref1, :ok
-    assert_reply ref2, :ok
-
-    resp_msg = %{session_member_id => %{"topics" =>  %{id => %{"normal" => 1} }, "summary" => %{"normal" => 1, "replay" => 0} }}
-    assert_broadcast("unread_messages", broadcast_resp_msg)
-    assert(resp_msg == broadcast_resp_msg)
+      assert_push "delete_message", resp
+      assert(resp == %{id: message.id, replyId: nil})
   end
 
   test "when join send empty unread messages", %{socket: socket, session_name: session_name, tipic_1_name: tipic_1_name} do

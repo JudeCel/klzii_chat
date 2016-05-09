@@ -4,9 +4,9 @@ import { Dropdown, Button, SplitButton, MenuItem }  from 'react-bootstrap'
 import Actions                                      from '../../actions/topic';
 
 const Select = React.createClass({
-  changeTopic(event) {
+  changeTopic(_,e) {
     const { dispatch, channel } = this.props;
-    let id = event.target.id;
+    let id = e.target.id;
     dispatch(Actions.changeTopic(channel, id));
   },
   render() {

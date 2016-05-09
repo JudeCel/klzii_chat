@@ -70,8 +70,11 @@ defmodule KlziiChat.TopicChannel do
     if String.length(payload["body"]) > 0  do
       case MessageService.create_message(session_member, topic_id, payload) do
         {:ok, message} ->
+          unread_message = Task.async(fn ->
+            UnreadMessageService.process_new_message(session_member.session_id, topic_id, message.id)
+          end)
           broadcast! socket, "new_message",  message
-          UnreadMessageService.run(session_member.session_id, session_member.id, topic_id, message.id)
+          Task.await(unread_message)
           {:reply, :ok, socket}
         {:error, reason} ->
           {:error, %{reason: reason}}
@@ -84,7 +87,13 @@ defmodule KlziiChat.TopicChannel do
   def handle_in("delete_message", %{ "id" => id }, socket) do
     case MessageService.deleteById(socket.assigns.session_member, id) do
       {:ok, resp} ->
+        unread_message = Task.async(fn ->
+          topic_id = socket.assigns.topic_id
+          session_member = socket.assigns.session_member
+          UnreadMessageService.process_delete_message(session_member.session_id, topic_id, resp.id)
+        end)
         broadcast! socket, "delete_message", resp
+        Task.await(unread_message)
         {:reply, :ok, socket}
       {:error, reason} ->
         {:error, %{reason: reason}}

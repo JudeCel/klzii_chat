@@ -2,7 +2,23 @@ defmodule KlziiChat.Services.UnreadMessageService do
   alias KlziiChat.{Repo, Message, SessionMember, UnreadMessage, Endpoint, Presence}
   import Ecto.Query, only: [from: 1, from: 2]
 
-  def run(session_id, _session_member_id, topic_id, message_id) do
+
+  def process_delete_message(session_id, topic_id, message_id) do
+    _ = delete_message(message_id)
+    current_topic_presences = topic_presences(topic_id)
+    current_session_presences = session_presences(session_id)
+
+    all_session_member_ids = get_all_session_members(session_id)
+    unread_members_ids = find_diff(current_topic_presences, all_session_member_ids)
+    data = find_diff(current_topic_presences, current_session_presences) |> get_unread_messages
+    notify(session_id, data)
+  end
+
+  def delete_message(message_id) do
+    from(om in UnreadMessage, where: om.messageId == ^message_id)|> Repo.delete_all
+  end
+
+  def process_new_message(session_id, topic_id, message_id) do
     current_topic_presences = topic_presences(topic_id)
     current_session_presences = session_presences(session_id)
 

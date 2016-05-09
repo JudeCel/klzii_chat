@@ -8,7 +8,6 @@ defmodule KlziiChat.UnreadMessage do
     field :scope, :string, default: "normal"
     field :createdAt, Timex.Ecto.DateTime
     field :updatedAt, Timex.Ecto.DateTime
-    # timestamps [inserted_at: :createdAt, updated_at: :updatedAt]
   end
 
   @required_fields ~w(sessionMemberId topicId messageId)

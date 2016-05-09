@@ -85,4 +85,27 @@ defmodule KlziiChat.SessionChannelTest do
     assert_push "update_member", session_member
     assert_push "update_member", session_member2
   end
+
+  #  Offline messages from others topics
+  test "get unread messages notification", %{socket2: socket2, socket: socket, session_name: session_name, tipic_1_name: tipic_1_name, tipic_2_name: tipic_2_name} do
+    {:ok, _, session_socket} = join(socket, SessionChannel, session_name)
+    {:ok, _, topic_1_socket} = join(session_socket, TopicChannel, tipic_1_name)
+
+    {:ok, _, socket2} = join(socket2, TopicChannel, tipic_2_name)
+    {:ok, _, socket2} = subscribe_and_join(socket2, SessionChannel, session_name)
+
+    session_member_id = get_session_member_id(socket2)
+    id  = topic_id(tipic_1_name)
+
+    ref1 = push topic_1_socket, "new_message", %{"emotion" => "1", "body" => "hey!!"}
+    ref2 = push topic_1_socket, "new_message", %{"emotion" => "2", "body" => "hey hey!!"}
+
+    assert_reply ref1, :ok
+    assert_reply ref2, :ok
+
+    resp_msg = %{session_member_id => %{"topics" =>  %{id => %{"normal" => 1} }, "summary" => %{"normal" => 1, "replay" => 0} }}
+    assert_broadcast("unread_messages", broadcast_resp_msg)
+    assert(resp_msg == broadcast_resp_msg)
+  end
+
 end
