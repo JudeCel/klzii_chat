@@ -166,6 +166,10 @@
 
 		Element.prototype.ftUpdateTransform = function() {
 			var angle = this.data("angle");
+
+			var matr = this.ftGetInitialTransformMatrix().clone();
+			var splitParams = matr.split();
+
 			var tstring = "t" + this.data("tx") + "," + this.data("ty") + this.ftGetInitialTransformMatrix().toTransformString() + "r" + angle;
 			this.attr({ transform: tstring });
 			this.ftHighlightBB();
@@ -367,8 +371,9 @@
 
 	      default:
 	        var elEttributes = shape.attr();
-	        var matr = shape.ftGetInitialTransformMatrix();
-	        var transform = matr.toTransformString()+"S"+(params.scaleX?params.scaleX:1)+","+(params.scaleY?params.scaleY:1);
+	        var matr = shape.ftGetInitialTransformMatrix().clone();
+					var splitParams = matr.split();
+	        var transform = "t"+shape.data("tx")+','+ shape.data("ty")+matr.toTransformString()+"S"+(params.scaleX?params.scaleX:1)+","+(params.scaleY?params.scaleY:1);
 	        shape.attr({transform: transform});
 	        break;
 	    }
