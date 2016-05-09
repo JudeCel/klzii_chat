@@ -22,7 +22,8 @@ config :ex_aws,
 config :arc,
   bucket: System.get_env("ARC_BUCKET"),
   virtual_host: true
-  
 
 config :guardian, Guardian,
   secret_key: System.get_env("GUARDIAN_SECRET_KEY")
+
+
