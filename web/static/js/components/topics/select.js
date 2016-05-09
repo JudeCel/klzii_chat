@@ -35,7 +35,7 @@ const Select = React.createClass({
             </Dropdown.Menu>
           </Dropdown>
           <i className='viewers-section icon-eye'>
-            <small>{unread_messages.summary.replay}</small>
+            <small>{unread_messages.summary.reply}</small>
           </i>
           <i className='viewers-section icon-eye'>
             <small>{unread_messages.summary.normal}</small>

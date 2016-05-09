@@ -53,16 +53,16 @@ defmodule KlziiChat.Services.UnreadMessageService do
 
   def calculate_summary(map) do
     Map.keys(map) |> List.foldl(map, fn id, accumulator ->
-      default_summary = %{"summary" => %{"normal" => 0, "replay" => 0 }}
+      default_summary = %{"summary" => %{"normal" => 0, "reply" => 0 }}
       topics = accumulator[id]["topics"]
       accumulator = Map.put(accumulator, id, Map.merge(accumulator[id], default_summary))
       Map.keys(topics)
         |> Enum.reduce(accumulator, fn (key, acc) ->
           topic = topics[key]
           normal = topic["normal"] || 0
-          replay = topic["replay"] || 0
+          reply = topic["reply"] || 0
           acc = update_in(acc[id]["summary"]["normal"], fn k -> k + normal end)
-          update_in(acc[id]["summary"]["replay"], fn k -> k + replay end)
+          update_in(acc[id]["summary"]["reply"], fn k -> k + reply end)
       end)
     end)
   end
@@ -90,7 +90,7 @@ defmodule KlziiChat.Services.UnreadMessageService do
     offline_messages = Enum.map(session_member_ids, fn id ->
       scope = case message.reply do
         %Message{sessionMemberId: ^id} ->
-          "replay"
+          "reply"
         _ ->
           "normal"
       end

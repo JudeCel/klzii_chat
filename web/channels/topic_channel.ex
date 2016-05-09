@@ -38,7 +38,7 @@ defmodule KlziiChat.TopicChannel do
     id = "#{session_member.id}"
     case unread_messages do
       messages  when messages == %{} ->
-        empty_messages =  %{id =>  %{"topics" => %{}, "summary" => %{"normal" => 0, "replay" => 0 }}}
+        empty_messages =  %{id =>  %{"topics" => %{}, "summary" => %{"normal" => 0, "reply" => 0 }}}
         Endpoint.broadcast!("sessions:#{session_member.session_id}", "unread_messages", empty_messages)
       messages->
         Endpoint.broadcast!("sessions:#{session_member.session_id}", "unread_messages", messages)
