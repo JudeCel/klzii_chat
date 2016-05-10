@@ -6,6 +6,7 @@ defmodule KlziiChat.Account do
     has_many :account_users, KlziiChat.AccountUser, [foreign_key: :AccountId]
     has_many :users, through: [:account_users, :user]
     has_many :resources, KlziiChat.Resource, [foreign_key: :accountId]
+    has_many :topics, KlziiChat.Topic, [foreign_key: :accountId]
     timestamps [inserted_at: :createdAt, updated_at: :updatedAt]
   end
 
@@ -18,9 +19,9 @@ defmodule KlziiChat.Account do
   If no params are provided, an invalid changeset is returned
   with no validation performed.
   """
-  def changeset(model, params \\ :empty) do
+  def changeset(model, params \\ %{}) do
     model
-      |> cast(params, @required_fields, @optional_fields)
+      |> cast(params, (@required_fields ++  @optional_fields))
       |> unique_constraint(:name, name: :unique_name)
   end
 end

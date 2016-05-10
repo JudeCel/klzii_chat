@@ -1,17 +1,16 @@
-import React, {PropTypes} from 'react';
-import { connect }        from 'react-redux';
-import { Dropdown, Button, SplitButton, MenuItem }    from 'react-bootstrap'
-import Actions            from '../../actions/topic';
+import React, {PropTypes}                           from 'react';
+import { connect }                                  from 'react-redux';
+import { Dropdown, Button, SplitButton, MenuItem }  from 'react-bootstrap'
+import Actions                                      from '../../actions/topic';
 
 const Select = React.createClass({
-  changeTopic(event) {
+  changeTopic(_,e) {
     const { dispatch, channel } = this.props;
-
-    let id = event.target.id;
+    let id = e.target.id;
     dispatch(Actions.changeTopic(channel, id));
   },
   render() {
-    const { current, topics, session } = this.props;
+    const { current, topics, session, unread_messages } = this.props;
 
     return (
       <div className='col-md-2 topic-select-section'>
@@ -29,14 +28,17 @@ const Select = React.createClass({
               {
                 topics.map((topic) => {
                   return (
-                    <MenuItem id={ topic.id } key={ 'topic-' + topic.id } active={ current.id == topic.id }>{ topic.name }</MenuItem>
+                    <MenuItem onSelect={this.changeTopic} id={ topic.id } key={ 'topic-' + topic.id } active={ current.id == topic.id }>{ topic.name }</MenuItem>
                   )
                 })
               }
             </Dropdown.Menu>
           </Dropdown>
           <i className='viewers-section icon-eye'>
-            <small>3</small>
+            <small>{unread_messages.summary.reply}</small>
+          </i>
+          <i className='viewers-section icon-eye'>
+            <small>{unread_messages.summary.normal}</small>
           </i>
         </div>
       </div>
@@ -46,6 +48,7 @@ const Select = React.createClass({
 
 const mapStateToProps = (state) => {
   return {
+    unread_messages: state.messages.unreadMessages,
     session: state.chat.session,
     channel: state.topic.channel,
     current: state.topic.current,

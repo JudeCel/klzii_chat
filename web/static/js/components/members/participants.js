@@ -1,8 +1,10 @@
 import React, {PropTypes} from 'react';
 import Member             from './member.js';
 import { connect }        from 'react-redux';
+import isOwner   from '../../mixins/isOwner';
 
 const Participants = React.createClass({
+  mixins: [isOwner],
   evenClasses(even) {
     const className = 'cursor-pointer ';
     return className + (even ? 'avatar-even' : 'avatar-odd');
@@ -10,22 +12,12 @@ const Participants = React.createClass({
   render() {
     const { participants, openAvatarModal } = this.props;
 
-    //helper for testing
-    for(let i of Array(7).keys()) {
-      if(participants[0]) {
-        let last = participants.length-1;
-        let object = Object.assign({}, participants[last]);
-        object.id += 10;
-        participants.push(object);
-      }
-    }
-
     return (
       <div className='participants-section remove-side-margin'>
         {
           participants.map((participant, index) =>
             <div className='col-md-3' key={ participant.id }>
-              <div className={ this.evenClasses(index % 2 == 0) } onClick={ openAvatarModal }>
+              <div className={ this.evenClasses(index % 2 == 0) } onClick={ this.isOwner(participant.id) && openAvatarModal }>
                 <Member member={ participant } />
               </div>
             </div>
@@ -38,6 +30,7 @@ const Participants = React.createClass({
 
 const mapStateToProps = (state) => {
   return {
+    currentUser: state.members.currentUser,
     participants: state.members.participants
   }
 };
