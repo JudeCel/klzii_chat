@@ -17,7 +17,7 @@
 			this.unclick();
 			this.onSelected = null;
 			this.onTransformed = null;
-			this.onFinishTransform = null;
+			this.onFinishTransform = null; console.log("aaaa");
 			if (this.group) this.group.remove();
 			this.remove();
 			this.removeData();
@@ -26,13 +26,21 @@
 		Element.prototype.ftCreateHandles = function() {
 			this.ftInit();
 			var freetransEl = this;
-			var bb = freetransEl.getBBox();
+			if (!this.group) {
+					this.group = this.paper.g();
+			}
+			this.group.add( this );
+			var bb = this.getBBox();
 			var rotateDragger = this.paper.image("/images/svgControls/rotate.png", bb.cx  + bb.width/2 - ftOption.handleRadius*2, bb.cy - ftOption.handleRadius*2 - bb.height/2, ftOption.handleRadius*2, ftOption.handleRadius*2).transform('r0.1');
 			var translateDragger = this.paper.image("/images/svgControls/move.png", bb.cx - ftOption.handleRadius, bb.cy - ftOption.handleRadius, ftOption.handleRadius*2, ftOption.handleRadius*2).transform('r0.1');
 
 			this.data("startAngle", Snap.angle( bb.cx, bb.cy, rotateDragger.attr().x, rotateDragger.attr().y) - 180);
 			this.initialWidth = bb.width/2;
 			this.initialHeight = bb.height/2;
+			if (!this.group) {
+					this.group = this.paper.g();
+			}
+			this.group.add( this );
 
 			var joinLine = freetransEl.ftDrawJoinLine( rotateDragger );
 			var handlesGroup = this.paper.g( joinLine, rotateDragger, translateDragger );
@@ -169,19 +177,34 @@
 
 			var matr = this.ftGetInitialTransformMatrix().clone();
 			var splitParams = matr.split();
+			var bb = this.getBBox();
+			//matr.scale(1/splitParams.scalex, 1/splitParams.scaley, bb.cx, bb.cy);
+			//matr.scale(1,1);
+			//bb = this.getBBox();
 
-			var tstring = "t" + this.data("tx") + "," + this.data("ty") + this.ftGetInitialTransformMatrix().toTransformString() + "r" + angle;
+			//var tstring = "t" + this.data("tx") + "," + this.data("ty") + this.ftGetInitialTransformMatrix().toTransformString() + "r" + angle;
+			//var tstring = "t" + this.data("tx") + "," + this.data("ty") + matr.toTransformString() + "r" + angle+"s"+splitParams.scalex+","+ splitParams.scaley;
+		/*	var tstring = "s1,1";
 			this.attr({ transform: tstring });
+*/
+			var tstring = "s"+splitParams.scalex+","+ splitParams.scaley;
+			this.attr({ transform: tstring });
+
+			tstring = "t" + this.data("tx") + "," + this.data("ty") + "r" + angle;
+			this.group.attr({ transform: tstring });
+
 			this.ftHighlightBB();
 			this.updateTransformControls(this);
 			return this;
 		};
 
 		Element.prototype.ftHighlightBB = function() {
+			return;
 			this.data("bbT") && this.data("bbT").remove();
 			this.data("bb") && this.data("bb").remove();
 			this.data("bb", this.paper.rect( rectObjFromBB( this.getBBox() ) )
 							.attr({ fill: "none", stroke: ftOption.handleFill, strokeDasharray: ftOption.handleStrokeDash }) );
+			this.group.add(this.data("bb"));
 			return this;
 		};
 
