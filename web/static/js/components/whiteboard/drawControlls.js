@@ -26,9 +26,13 @@
 		Element.prototype.ftCreateHandles = function() {
 			this.ftInit();
 			var freetransEl = this;
-			if (!this.group) {
-					this.group = this.paper.g();
+
+			if (this.group) {
+				this.paper.add(this);
+				this.group.remove();	
 			}
+
+			this.group = this.paper.g();
 			this.group.add( this );
 			var bb = this.getBBox();
 			var rotateDragger = this.paper.image("/images/svgControls/rotate.png", bb.cx  + bb.width/2 - ftOption.handleRadius*2, bb.cy - ftOption.handleRadius*2 - bb.height/2, ftOption.handleRadius*2, ftOption.handleRadius*2).transform('r0.1');
