@@ -5,6 +5,7 @@ const initialState = {
   images: [],
   audios: [],
   files: [],
+  gallery: [],
   fetch: false,
   modalWindow: "" // "image", "video" "audio"
 };
@@ -25,6 +26,8 @@ export default function reducer(state = initialState, action = {}) {
       return { ...state, fetch: false, audios: [...state.audios, ...action.resources]};
     case Constants.SET_FILE_RESOURCES:
       return { ...state, fetch: false, files: [...state.files, ...action.resources]};
+    case Constants.SET_GALLERY_RESOURCES:
+      return { ...state, fetch: false, gallery: action.gallery};
     case Constants.OPEN_RESOURCE_MODAL:
       return { ...state, modalWindow: action.modal };
     case Constants.CLOASE_RESOURCE_MODAL:

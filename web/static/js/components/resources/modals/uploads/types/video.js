@@ -1,4 +1,5 @@
-import React, {PropTypes}  from 'react';
+import React, {PropTypes} from 'react';
+import Youtube            from './youtube';
 
 const UploadTypeVideo = React.createClass({
   render() {
@@ -6,7 +7,7 @@ const UploadTypeVideo = React.createClass({
 
     if(youtube) {
       return (
-        <iframe type='text/html' src={ "http://www.youtube.com/embed/" + url } frameBorder='0' />
+        <Youtube url={ url.full } />
       )
     }
     else {
