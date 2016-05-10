@@ -5,13 +5,13 @@ defmodule KlziiChat.Services.UnreadMessageServiceTest do
   test "group topics and scopes" do
 
     list = [
-      %{"id" => 3, "topic" => %{1 => %{"normal" => 2}}},
-      %{"id" => 3, "topic" => %{1 => %{"reply" => 5}}},
-      %{"id" => 3, "topic" => %{2 => %{"normal" => 1}}},
-      %{"id" => 3, "topic" => %{2 => %{"reply" => 2}}},
-      %{"id" => 3, "topic" => %{nil => %{nil => nil}}},
-      %{"id" => 1, "topic" => %{1 => %{"normal" => 7}}},
-      %{"id" => 1, "topic" => %{nil => %{nil => 0}}},
+      %{"id" => 3, "topic" => {1, %{"normal" => 2}}},
+      %{"id" => 3, "topic" => {1, %{"reply" => 5}}},
+      %{"id" => 3, "topic" => {2, %{"normal" => 1}}},
+      %{"id" => 3, "topic" => {2, %{"reply" => 2}}},
+      %{"id" => 3, "topic" => {nil, %{nil => nil}}},
+      %{"id" => 1, "topic" => {1, %{"normal" => 7}}},
+      %{"id" => 1, "topic" => {nil, %{nil => 0}}},
     ]
     resp = UnreadMessageService.group_by_topics_and_scope(list)
 

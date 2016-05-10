@@ -40,11 +40,12 @@ defmodule KlziiChat.Services.UnreadMessageService do
     case Mix.env do
       :test ->
         new_message(session_id, topic_id, message_id)
-      _ ->
-        Task.async(fn ->
+      _->
+        Task.start(fn ->
           new_message(session_id, topic_id, message_id)
         end)
     end
+    :ok
   end
 
   @spec new_message(Integer.t, Integer.t, Integer.t) :: :ok
@@ -79,7 +80,7 @@ defmodule KlziiChat.Services.UnreadMessageService do
       where: sm.id in ^session_member_ids,
       left_join: um in UnreadMessage, on: sm.id == um.sessionMemberId,
       group_by: [sm.id, um.scope, um.topicId],
-      select: %{"id" => sm.id, "topic" => %{um.topicId => %{um.scope => count(um.scope)}}}
+      select: %{"id" => sm.id, "topic" => {um.topicId, %{um.scope => count(um.scope)}}}
     )|> Repo.all
   end
 
@@ -106,8 +107,7 @@ defmodule KlziiChat.Services.UnreadMessageService do
     List.foldl(list, %{}, fn(item, acc) ->
       id = Map.get(item, "id") |> to_string
       new_acc = Map.put_new(acc, id, default_map)
-      topic = Map.get(item, "topic") |> Map.to_list
-
+      topic = Map.get(item, "topic")
       update_in(new_acc[id]["topics"], fn val ->
         update_topic_map(topic, val)
       end)
@@ -115,8 +115,8 @@ defmodule KlziiChat.Services.UnreadMessageService do
     end)
   end
 
-  def update_topic_map([nil: _], val), do: val
-  def update_topic_map([{id, scope}], val) do
+  def update_topic_map({nil, _}, val), do: val
+  def update_topic_map({id, scope}, val) do
     string_key = to_string(id)
     value = Map.get(val, string_key, %{})
     new_value = Map.merge(value, scope)
