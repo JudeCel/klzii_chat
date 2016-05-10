@@ -1,7 +1,7 @@
 defmodule KlziiChat.TopicChannelTest do
   use KlziiChat.ChannelCase
   use KlziiChat.SessionMemberCase
-  alias KlziiChat.{Repo, Presence, UserSocket, SessionChannel, TopicChannel}
+  alias KlziiChat.{Repo, Presence, UserSocket, TopicChannel}
 
   setup %{topic_1: topic_1, session: session, session: session, member: member, member2: member2} do
     Ecto.Adapters.SQL.Sandbox.mode(Repo, {:shared, self()})

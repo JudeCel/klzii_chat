@@ -80,7 +80,7 @@ defmodule KlziiChat.TopicChannel do
         unread_message = Task.async(fn ->
           topic_id = socket.assigns.topic_id
           session_member = socket.assigns.session_member
-          UnreadMessageService.process_delete_message(session_member.session_id, topic_id, resp.id)
+          UnreadMessageService.process_delete_message(session_member.session_id, topic_id)
         end)
         broadcast! socket, "delete_message", resp
         Task.await(unread_message)

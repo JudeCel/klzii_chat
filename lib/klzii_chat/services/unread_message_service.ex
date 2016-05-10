@@ -4,13 +4,11 @@ defmodule KlziiChat.Services.UnreadMessageService do
 
   @default_summary %{"summary" => %{"normal" => 0, "reply" => 0 }}
 
-  @spec process_delete_message(Integer.t, Integer.t, Integer.t) :: :ok
-  def process_delete_message(session_id, topic_id, message_id) do
+  @spec process_delete_message(Integer.t, Integer.t) :: :ok
+  def process_delete_message(session_id, topic_id) do
     current_topic_presences_ids = topic_presences_ids(topic_id)
     current_session_presences_ids = session_presences_ids(session_id)
 
-    all_session_member_ids = get_all_session_members(session_id)
-    unread_members_ids = find_diff(current_topic_presences_ids, all_session_member_ids)
     diff = find_diff(current_topic_presences_ids, current_session_presences_ids)
     data = get_unread_messages(diff) |> group_by_topics_and_scope |> calculate_summary
     notify(session_id, data)
