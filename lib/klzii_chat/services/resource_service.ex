@@ -84,7 +84,7 @@ defmodule KlziiChat.Services.ResourceService do
     |> Repo.delete_all
   end
 
-  @spec create_new_zip(%User{}, String.t, List.t) :: {:ok, %Resource{} } | %{status: :error, reason: String.t}
+  @spec create_new_zip(Integer.t, String.t, List.t) :: {:ok, %Resource{} } | %{status: :error, reason: String.t}
   def create_new_zip(account_user_id, name, ids) do
     account_user = Repo.get!(AccountUser, account_user_id) |> Repo.preload([:account])
     query =
@@ -109,8 +109,6 @@ defmodule KlziiChat.Services.ResourceService do
       case Repo.insert(changeset) do
         {:ok, resource} ->
           Task.async(fn -> KlziiChat.Files.Tasks.run(resource, ids) end)
-          |> Task.await
-
           {:ok, resource }
         {:error, reason} ->
           {:error, reason}

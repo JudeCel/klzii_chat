@@ -1,7 +1,7 @@
 defmodule KlziiChat.TopicChannel do
   use KlziiChat.Web, :channel
-  alias KlziiChat.Services.{MessageService, WhiteboardService, ResourceService}
-  alias KlziiChat.MessageView
+  alias KlziiChat.Services.{MessageService, WhiteboardService, ResourceService, UnreadMessageService}
+  alias KlziiChat.{MessageView, Presence, Endpoint}
 
   # This Channel is only for Topic context
   # brodcast and receive messages from session members
@@ -12,15 +12,31 @@ defmodule KlziiChat.TopicChannel do
   def join("topics:" <> topic_id, _payload, socket) do
     if authorized?(socket) do
       session_member = socket.assigns.session_member
+      socket = assign(socket, :topic_id, String.to_integer(topic_id))
+      send(self, :after_join)
       case MessageService.history(topic_id, session_member) do
         {:ok, history} ->
-          {:ok, history, assign(socket, :topic_id, String.to_integer(topic_id))}
+          {:ok, history, socket}
         {:error, reason} ->
           {:error, %{reason: reason}}
       end
     else
       {:error, %{reason: "unauthorized"}}
     end
+  end
+
+  def handle_info(:after_join, socket) do
+    session_member = socket.assigns.session_member
+    {:ok, _} = Presence.track(socket, (socket.assigns.session_member.id |> to_string), %{
+      online_at: inspect(System.system_time(:seconds)),
+      id: session_member.id,
+      role: session_member.role
+    })
+
+    UnreadMessageService.delete_unread_messages_for_topic(session_member.id, socket.assigns.topic_id)
+    messages = UnreadMessageService.sync_state(session_member.id)
+    Endpoint.broadcast!("sessions:#{session_member.session_id}", "unread_messages", messages)
+    {:noreply, socket}
   end
 
   def handle_in("resources", %{"type" => type}, socket) do
@@ -44,10 +60,10 @@ defmodule KlziiChat.TopicChannel do
   def handle_in("new_message", payload, socket) do
     topic_id = socket.assigns.topic_id
     session_member = socket.assigns.session_member
-
     if String.length(payload["body"]) > 0  do
       case MessageService.create_message(session_member, topic_id, payload) do
         {:ok, message} ->
+          UnreadMessageService.process_new_message(session_member.session_id, topic_id, message.id)
           broadcast! socket, "new_message",  message
           {:reply, :ok, socket}
         {:error, reason} ->
@@ -61,7 +77,13 @@ defmodule KlziiChat.TopicChannel do
   def handle_in("delete_message", %{ "id" => id }, socket) do
     case MessageService.deleteById(socket.assigns.session_member, id) do
       {:ok, resp} ->
+        unread_message = Task.async(fn ->
+          topic_id = socket.assigns.topic_id
+          session_member = socket.assigns.session_member
+          UnreadMessageService.process_delete_message(session_member.session_id, topic_id)
+        end)
         broadcast! socket, "delete_message", resp
+        Task.await(unread_message)
         {:reply, :ok, socket}
       {:error, reason} ->
         {:error, %{reason: reason}}
