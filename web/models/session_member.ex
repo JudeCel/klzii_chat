@@ -8,7 +8,6 @@ defmodule KlziiChat.SessionMember do
     has_many :messages, KlziiChat.Message, [foreign_key: :sessionMemberId]
     has_many :votes, KlziiChat.Vote, [foreign_key: :sessionMemberId]
     field :colour, :string
-    field :online, :boolean, default: false
     field :avatarData, :map, default: %{ base: 0, face: 3, body: 0, hair: 0, desk: 0, head: 0 }
     field :topicContext, :map, default: %{}
     field :token, :string
@@ -18,7 +17,7 @@ defmodule KlziiChat.SessionMember do
   end
 
   @required_fields ~w(username colour)
-  @optional_fields ~w(avatarData online topicContext)
+  @optional_fields ~w(avatarData topicContext)
 
   @doc """
   Creates a changeset based on the `model` and `params`.

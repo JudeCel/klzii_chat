@@ -91,13 +91,27 @@ const Actions = {
         members(dispatch, resp);
       });
 
-      channel.on("member_left", (resp) =>{
-        updateMember(dispatch, resp);
+      channel.on("unread_messages", (messages) =>{
+        return dispatch({
+          type: Constants.SET_UNREAD_MESSAGES,
+          messages
+        });
       });
 
-      channel.on("member_entered", (resp) =>{
-        updateMember(dispatch, resp);
+      channel.on("presence_state", (state) =>{
+        return dispatch({
+          type: Constants.SYNC_MEMBERS_STATE,
+          state
+        });
       });
+
+      channel.on("presence_diff", (diff) =>{
+        return dispatch({
+          type: Constants.SYNC_MEMBERS_DIFF,
+          diff
+        });
+      });
+
       channel.on("update_member", (resp) =>{
         updateMember(dispatch, resp);
       });

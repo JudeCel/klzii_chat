@@ -24,14 +24,14 @@ defmodule KlziiChat.Services.MessageService do
   def create_message(session_member, topic_id, %{"replyId" => replyId, "emotion" => emotion, "body" => body}) do
     if MessagePermissions.can_new_message(session_member) do
       replyId = get_integer_value(replyId)
-      replay_message = replay_message_prefix(replyId)
+      reply_message = reply_message_prefix(replyId)
 
       session_member = Repo.get!(SessionMember, session_member.id)
       build_assoc(
         session_member, :messages,
         replyId: replyId,
         sessionId: session_member.sessionId,
-        body: (replay_message <> body),
+        body: (reply_message <> body),
         emotion: get_integer_value(emotion),
         topicId: get_integer_value(topic_id)
       ) |> create
@@ -145,7 +145,7 @@ defmodule KlziiChat.Services.MessageService do
   end
 
 
-  defp replay_message_prefix(replyId) do
+  defp reply_message_prefix(replyId) do
     Repo.one(from m in Message, where: m.id == ^replyId, preload: [:session_member])
       |> case  do
         nil ->
