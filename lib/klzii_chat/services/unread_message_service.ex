@@ -127,9 +127,9 @@ defmodule KlziiChat.Services.UnreadMessageService do
     offline_messages = Enum.map(session_member_ids, fn id ->
       scope = case message.reply do
         %Message{sessionMemberId: ^id} ->
-          "reply"
+          UnreadMessage.scopes.reply
         _ ->
-          "normal"
+          UnreadMessage.scopes.normal
       end
       [scope: scope, topicId: message.topicId, sessionMemberId: id, messageId: message.id, createdAt: Timex.DateTime.now, updatedAt: Timex.DateTime.now]
     end)

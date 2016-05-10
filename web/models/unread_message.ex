@@ -23,4 +23,7 @@ defmodule KlziiChat.UnreadMessage do
     model
     |> cast(params, (@required_fields ++ @optional_fields))
   end
+
+  # Allowed scopes for this model
+  def scopes, do:  %{normal: "normal", reply: "reply"}
 end
