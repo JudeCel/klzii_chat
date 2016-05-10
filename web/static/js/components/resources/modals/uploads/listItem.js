@@ -10,8 +10,9 @@ const UploadListItem = React.createClass({
     let resource = this.props.resource || {};
     return this.getValuesFromObject(resource);
   },
-  onActivate() {
+  onActivate(e) {
     this.setState({ active: true });
+    console.log(e);
   },
   render() {
     const { justInput, onDelete, resourceType } = this.props;
@@ -36,7 +37,7 @@ const UploadListItem = React.createClass({
             <div className='col-md-6'>
               { name }
               <br />
-              <UploadTypes resourceType={ resourceType } url={ url } youtube={ scope == 'youtube' } />
+              <UploadTypes resourceType={ resourceType } url={ url } youtube={ scope == 'youtube' } id={id}/>
             </div>
 
             <div className='col-md-6 text-right'>

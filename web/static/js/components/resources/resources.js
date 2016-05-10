@@ -43,7 +43,7 @@ const Resources = React.createClass({
   },
   onCreate(child) {
     const { name, url, files, resourceIds } = this.state.resourceData;
-    const { dispatch, modalWindow, currentUserJwt } = this.props;
+    const { dispatch, modalWindow, currentUserJwt, sessionChannel } = this.props;
 
     if(url) {
       //youtube
@@ -67,9 +67,9 @@ const Resources = React.createClass({
 
       dispatch(Actions.upload(data, currentUserJwt));
     }
-    else {
-      // resource id
-      console.error(resourceIds);
+    else if (resourceIds) {
+      // TODO: update SessionResources
+      dispatch(Actions.toggleSessionRes(sessionChannel, resourceIds));
     }
 
     this.setState({ resourceData: {} });
@@ -128,7 +128,8 @@ const mapStateToProps = (state) => {
     currentUserJwt: state.members.currentUser.jwt,
     modalWindow: state.resources.modalWindow,
     channel: state.topic.channel,
-    permissions: state.members.currentUser.permissions
+    permissions: state.members.currentUser.permissions,
+    sessionChannel: state.chat.channel
   }
 };
 

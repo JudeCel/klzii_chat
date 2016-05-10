@@ -103,6 +103,11 @@ const Actions = {
         dispatch({type: Constants.DELETE_RESOURCES, resp: resp})
       })
     }
+  },
+  toggleSessionRes: (sessionChannel, resourceIds) => {
+    return dispatch => {
+      sessionChannel.push("toggleSessionRes", {resourceIds : resourceIds });
+    }
   }
 }
 
