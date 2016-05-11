@@ -12,6 +12,11 @@ defmodule KlziiChat.TopicChannelTest do
   end
 
   test "presents register is enable for topics", %{socket: socket, topic_1_name: topic_1_name} do
+    {:ok, _, socket} = subscribe_and_join(socket, TopicChannel, topic_1_name)
+    assert_push("console", %{})
+  end
+
+  test "presents register is enable for topics", %{socket: socket, topic_1_name: topic_1_name} do
     {:ok, _, socket} =
       join(socket, TopicChannel, topic_1_name)
       session_member = socket.assigns.session_member
@@ -92,6 +97,8 @@ defmodule KlziiChat.TopicChannelTest do
     _message_id = message.id
     assert_broadcast "new_message", %{ replyId:  _message_id}
   end
+
+
 
   # test "when join send empty unread messages", %{socket: socket,topic_1_name: topic_1_name} do
   #   {:ok, _, _} = subscribe_and_join(socket, TopicChannel, topic_1_name)
