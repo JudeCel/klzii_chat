@@ -1,12 +1,21 @@
 defmodule KlziiChat.Services.SessionResourcesService do
-  alias KlziiChat.{Repo, SessionResource}
+  alias KlziiChat.{Repo, SessionResource, SessionMember}
   alias KlziiChat.Services.UnreadMessageService
+  alias KlziiChat.Services.Permissions.Session, as: SessionPermissions
 
-  import Ecto
   import Ecto.Query
 
-  @spec toggle(Integer, [Integer], Integer) :: Map
   def toggle(session_id, resources_ids, session_member_id) do
+    session_member = Repo.get!(SessionMember, session_member_id)
+    if(SessionPermissions.can_toggle_resources(session_member)) do
+      do_toggle(session_id, resources_ids)
+    else
+      {:error, "Action not allowed!"}
+    end
+  end
+
+  @spec do_toggle(Integer, [Integer]) :: Map
+  def do_toggle(session_id, resources_ids) do
     :ok = delete_unused_session_resources(resources_ids, session_id)
 
     #TODO: replace insert with insert_all
@@ -17,6 +26,7 @@ defmodule KlziiChat.Services.SessionResourcesService do
     |> Repo.all()
     |> UnreadMessageService.find_diff(normalize_ids(resources_ids))
     |> Enum.map(&Repo.insert(%SessionResource{resourceId: &1, sessionId: session_id}))
+    |> Enum.map(fn({:ok, r}) -> r.id end)
   end
 
   def delete_unused_session_resources(resources_ids, session_id) do

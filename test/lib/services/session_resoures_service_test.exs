@@ -3,13 +3,13 @@ defmodule KlziiChat.Services.SessionResourcesServiceTest do
   alias KlziiChat.Services.SessionResourcesService
   alias KlziiChat.SessionResource
 
-  setup %{session: session, member: member, account_user: account_user} do
+  setup %{session: session, member: member, member2: member2, account_user: account_user} do
     img_resources = Enum.map(1..3, &create_image_resource(account_user, &1))
     img_resources_ids =
       Enum.map(img_resources, &Repo.insert(&1))
       |> Enum.map(fn({:ok, r}) -> r.id end)
 
-    {:ok, session_id: session.id, member_id: member.id, resources_id: img_resources_ids}
+    {:ok, session_id: session.id, member_id: member.id, member2_id: member2.id, resources_id: img_resources_ids}
   end
 
   test "toggle_add_3", %{session_id: session_id, member_id: member_id, resources_id: img_resources_ids} do
@@ -23,17 +23,22 @@ defmodule KlziiChat.Services.SessionResourcesServiceTest do
     assert(getAllSessionRes(session_id) === Enum.drop(img_resources_ids, 1))
   end
 
-  test "toggle_to_none_selected", %{session_id: session_id, member_id: member_id, resources_id: img_resources_ids} do
+  test "toggle_to_none", %{session_id: session_id, member_id: member_id, resources_id: img_resources_ids} do
     SessionResourcesService.toggle(session_id, img_resources_ids, member_id)
     SessionResourcesService.toggle(session_id, [], member_id)
     assert(getAllSessionRes(session_id) === [])
   end
 
+  test "toggle_wrong_member_role_error", %{session_id: session_id, member2_id: member2_id, resources_id: img_resources_ids} do
+    assert({:error, "Action not allowed!"} ===
+      SessionResourcesService.toggle(session_id, img_resources_ids, member2_id))
+  end
+
   test "delete_unused_session_resources_1", %{session_id: session_id, member_id: member_id, resources_id: img_resources_ids} do
     SessionResourcesService.toggle(session_id, img_resources_ids, member_id)
-    used_res = [Enum.at(img_resources_ids, 1)]
-    :ok = SessionResourcesService.delete_unused_session_resources(used_res, session_id)
-    assert(getAllSessionRes(session_id) === used_res)
+    used_res_id = [Enum.at(img_resources_ids, 1)]
+    :ok = SessionResourcesService.delete_unused_session_resources(used_res_id, session_id)
+    assert(getAllSessionRes(session_id) === used_res_id)
   end
 
   test "normalize_ids" do
