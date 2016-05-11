@@ -7,7 +7,7 @@ defmodule KlziiChat.Services.SessionResourcesService do
 
   @spec toggle(Integer, [Integer], Integer) :: Map
   def toggle(session_id, resources_ids, session_member_id) do
-    :ok = delete_session_resources(resources_ids, session_id)
+    :ok = delete_unused_session_resources(resources_ids, session_id)
 
     #TODO: replace insert with insert_all
 
@@ -19,7 +19,7 @@ defmodule KlziiChat.Services.SessionResourcesService do
     |> Enum.map(&Repo.insert(%SessionResource{resourceId: &1, sessionId: session_id}))
   end
 
-  def delete_session_resources(resources_ids, session_id) do
+  def delete_unused_session_resources(resources_ids, session_id) do
     from(sr in SessionResource,
       where: not sr.resourceId in ^resources_ids and sr.sessionId == ^session_id)
     |> Repo.delete_all()
@@ -28,14 +28,13 @@ defmodule KlziiChat.Services.SessionResourcesService do
   end
 
   def normalize_ids(ids) do
-    Enum.map(ids, fn(id) ->
-      if(is_bitstring(id)) do
-        {num_id, ""} = Integer.parse(id)
-        num_id
-      else
-        id
-      end
-    end)
+    Enum.map(ids, &get_normalized/1)
   end
 
+  defp get_normalized(id) when is_integer(id), do: id
+
+  defp get_normalized(id) when is_bitstring(id) do
+    {num_id, ""} = Integer.parse(id)
+    num_id
+  end
 end

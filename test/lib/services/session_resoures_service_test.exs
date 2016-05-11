@@ -4,23 +4,40 @@ defmodule KlziiChat.Services.SessionResourcesServiceTest do
   alias KlziiChat.SessionResource
 
   setup %{session: session, member: member, account_user: account_user} do
-    imgResources = Enum.map(1..10, &genImgRes(account_user, &1))
-    imgResIds =
-      Enum.map(imgResources, &Repo.insert(&1))
+    img_resources = Enum.map(1..3, &create_image_resource(account_user, &1))
+    img_resources_ids =
+      Enum.map(img_resources, &Repo.insert(&1))
       |> Enum.map(fn({:ok, r}) -> r.id end)
 
-    {:ok, session_id: session.id, member_id: member.id, resources_id: imgResIds}
+    {:ok, session_id: session.id, member_id: member.id, resources_id: img_resources_ids}
   end
 
-  test "toggle", %{session_id: session_id, member_id: member_id, resources_id: imgResIds} do
-    SessionResourcesService.toggle(session_id, Enum.take(imgResIds, 6), member_id)
-    assert(getAllSessionRes(session_id) === Enum.take(imgResIds, 6))
+  test "toggle", %{session_id: session_id, member_id: member_id, resources_id: img_resources_ids} do
+    SessionResourcesService.toggle(session_id, Enum.take(img_resources_ids, 2), member_id)
+    assert(getAllSessionRes(session_id) ===  Enum.take(img_resources_ids, 2))
 
-    SessionResourcesService.toggle(session_id, Enum.drop(imgResIds, 4), member_id)
-    assert(getAllSessionRes(session_id) === Enum.drop(imgResIds, 4))
+    SessionResourcesService.toggle(session_id, Enum.drop(img_resources_ids, 1), member_id)
+    assert(getAllSessionRes(session_id) === Enum.drop(img_resources_ids, 1))
+
+    SessionResourcesService.toggle(session_id, [], member_id)
+    assert(getAllSessionRes(session_id) === [])
   end
 
-  defp genImgRes(account_user, n) do
+  test "delete_unused_session_resources_1", %{session_id: session_id, member_id: member_id, resources_id: img_resources_ids} do
+    SessionResourcesService.toggle(session_id, img_resources_ids, member_id)
+    used_res = [Enum.at(img_resources_ids, 1)]
+    :ok = SessionResourcesService.delete_unused_session_resources(used_res, session_id)
+    assert(getAllSessionRes(session_id) === used_res)
+  end
+
+  test "normalize_ids" do
+    assert [] === SessionResourcesService.normalize_ids([])
+    assert [1] === SessionResourcesService.normalize_ids([1])
+    assert [1] === SessionResourcesService.normalize_ids(["1"])
+    assert [1, 2, 3, 4] === SessionResourcesService.normalize_ids([1, "2", 3, "4"])
+  end
+
+  defp create_image_resource(account_user, n) do
     Ecto.build_assoc(
       account_user.account, :resources,
       accountUserId: account_user.id,
@@ -30,8 +47,8 @@ defmodule KlziiChat.Services.SessionResourcesServiceTest do
     )
   end
 
-  defp getAllSessionRes(sessionId) do
-    from(sr in SessionResource, where: sr.sessionId == ^sessionId, select: sr.resourceId)
+  defp getAllSessionRes(session_id) do
+    from(sr in SessionResource, where: sr.sessionId == ^session_id, select: sr.resourceId)
     |> Repo.all()
   end
 end
