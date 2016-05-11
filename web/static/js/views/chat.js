@@ -12,7 +12,13 @@ import TopicSelect          from '../components/topics/select.js';
 import Resources            from '../components/resources/resources.js';
 import HeaderLinks          from '../components/header/links.js';
 
+import Notifications        from '../actions/notifications';
+import notificationMixin    from '../mixins/notification';
+import ReactToastr, { ToastContainer, ToastMessage } from 'react-toastr';
+var ToastMessageFactory     = React.createFactory(ToastMessage.animation);
+
 const ChatView = React.createClass({
+  mixins: [notificationMixin],
   getInitialState() {
     return {};
   },
@@ -22,6 +28,13 @@ const ChatView = React.createClass({
       backgroundColor: colours.mainBackground,
       borderColor: colours.mainBorder
     };
+  },
+  componentDidUpdate() {
+    const { notifications, dispatch } = this.props;
+    if(this.refs.notification && notifications.type) {
+      this.showNotification(this.refs.notification, notifications);
+      Notifications.clearNotification(dispatch);
+    }
   },
   componentWillMount() {
     this.props.dispatch(sessionActions.connectToChannel());
@@ -46,6 +59,8 @@ const ChatView = React.createClass({
     else if(sessionReady && topicReady) {
       return (
         <div id='chat-app-container'>
+          <ToastContainer ref='notification' className='toast-top-right' toastMessageFactory={ ToastMessageFactory } />
+
           <nav className='row header-section'>
             <div className='header-innerbox'>
               <TopicSelect/>
@@ -96,7 +111,8 @@ const mapStateToProps = (state) => {
     error: state.chat.error,
     topics: state.chat.session.topics,
     topicReady: state.topic.ready,
-    socket: state.chat.socket
+    socket: state.chat.socket,
+    notifications: state.notifications
   };
 };
 

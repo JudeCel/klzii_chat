@@ -5,7 +5,8 @@ import topic                from './topic';
 import whiteboard           from './whiteboard';
 import currentInput         from './currentInput';
 import messages             from './messages';
-import resources             from './resources';
+import resources            from './resources';
+import notifications        from './notifications';
 
 export default combineReducers({
   chat: chat,
@@ -14,5 +15,6 @@ export default combineReducers({
   whiteboard: whiteboard,
   currentInput: currentInput,
   messages: messages,
-  resources: resources
+  resources: resources,
+  notifications: notifications
 });

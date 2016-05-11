@@ -1,6 +1,8 @@
 import React, {PropTypes}  from 'react';
+import { connect }         from 'react-redux';
 import { Modal }           from 'react-bootstrap'
 import SurveyIndex         from './survey/index.js';
+import Notifications       from '../../../actions/notifications'
 
 const Survey = React.createClass({
   getInitialState() {
@@ -25,6 +27,7 @@ const Survey = React.createClass({
     const { rendering, survey } = this.state;
     if(rendering == 'new') {
       //call save
+      Notifications.showNotification(this.props.dispatch, { message: "heeeey", type: 'error' })
       console.log(survey);
     }
     else {
@@ -80,4 +83,9 @@ const Survey = React.createClass({
   }
 });
 
-export default Survey;
+
+const mapStateToProps = (state) => {
+  return {};
+};
+
+export default connect(mapStateToProps)(Survey);
