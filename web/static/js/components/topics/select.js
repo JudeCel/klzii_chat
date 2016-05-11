@@ -2,11 +2,11 @@ import React, {PropTypes}                           from 'react';
 import { connect }                                  from 'react-redux';
 import { Dropdown, Button, SplitButton, MenuItem }  from 'react-bootstrap'
 import Actions                                      from '../../actions/topic';
+import Badge                                        from './badge';
 
 const Select = React.createClass({
-  changeTopic(_,e) {
+  changeTopic(id) {
     const { dispatch, channel } = this.props;
-    let id = e.target.id;
     dispatch(Actions.changeTopic(channel, id));
   },
   render() {
@@ -28,18 +28,29 @@ const Select = React.createClass({
               {
                 topics.map((topic) => {
                   return (
-                    <MenuItem onSelect={this.changeTopic} id={ topic.id } key={ 'topic-' + topic.id } active={ current.id == topic.id }>{ topic.name }</MenuItem>
+                    <MenuItem onSelect={ this.changeTopic.bind(this, topic.id) } key={ 'topic-' + topic.id } active={ current.id == topic.id }>
+                      <div className='clearfix'>
+                        <span className='pull-left'>{ topic.name }</span>
+                        <span className='pull-right'>
+                          <Badge type='reply' data={ unread_messages.topics[topic.id] } />
+                          <Badge type='normal' data={ unread_messages.topics[topic.id] } />
+                        </span>
+                      </div>
+                    </MenuItem>
                   )
                 })
               }
             </Dropdown.Menu>
           </Dropdown>
-          <i className='viewers-section icon-eye'>
-            <small>{unread_messages.summary.reply}</small>
-          </i>
-          <i className='viewers-section icon-eye'>
-            <small>{unread_messages.summary.normal}</small>
-          </i>
+
+          <ul className='unread-messages-section'>
+            <li>
+              <Badge type='reply' data={ unread_messages.summary } />
+            </li>
+            <li>
+              <Badge type='normal' data={ unread_messages.summary } />
+            </li>
+          </ul>
         </div>
       </div>
     )
