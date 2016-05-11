@@ -12,13 +12,19 @@ defmodule KlziiChat.Services.SessionResourcesServiceTest do
     {:ok, session_id: session.id, member_id: member.id, resources_id: img_resources_ids}
   end
 
-  test "toggle", %{session_id: session_id, member_id: member_id, resources_id: img_resources_ids} do
-    SessionResourcesService.toggle(session_id, Enum.take(img_resources_ids, 2), member_id)
-    assert(getAllSessionRes(session_id) ===  Enum.take(img_resources_ids, 2))
+  test "toggle_add_3", %{session_id: session_id, member_id: member_id, resources_id: img_resources_ids} do
+    SessionResourcesService.toggle(session_id, img_resources_ids, member_id)
+    assert(getAllSessionRes(session_id) === img_resources_ids)
+  end
 
+  test "toggle_switch_2", %{session_id: session_id, member_id: member_id, resources_id: img_resources_ids} do
+    SessionResourcesService.toggle(session_id, Enum.take(img_resources_ids, 2), member_id)
     SessionResourcesService.toggle(session_id, Enum.drop(img_resources_ids, 1), member_id)
     assert(getAllSessionRes(session_id) === Enum.drop(img_resources_ids, 1))
+  end
 
+  test "toggle_to_none_selected", %{session_id: session_id, member_id: member_id, resources_id: img_resources_ids} do
+    SessionResourcesService.toggle(session_id, img_resources_ids, member_id)
     SessionResourcesService.toggle(session_id, [], member_id)
     assert(getAllSessionRes(session_id) === [])
   end
