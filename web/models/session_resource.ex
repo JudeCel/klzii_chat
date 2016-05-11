@@ -5,7 +5,6 @@ defmodule KlziiChat.SessionResource do
     belongs_to :resource, KlziiChat.Resource, [foreign_key: :resourceId]
     belongs_to :session, KlziiChat.Session, [foreign_key: :sessionId]
     timestamps [inserted_at: :createdAt, updated_at: :updatedAt]
-
   end
 
   @required_fields ~w(resourceId sessionId)
