@@ -6,12 +6,15 @@ defmodule KlziiChat.Services.SessionResourcesService do
 
   def toggle(sessionId, resourcesIds, sessionMemberId) do
     # remove all unseleted resources
-    from(sr in SessionResource, where: not sr.resourceId in ^resourcesIds and sr.sessionId == ^sessionId)
+    from(sr in SessionResource,
+      where: not sr.resourceId in ^resourcesIds and sr.sessionId == ^sessionId)
     |> Repo.delete_all()
 
     # id's of the resources left
     srIds =
-      from(sr in SessionResource, where: sr.sessionId == ^sessionId, select: sr.resourceId)
+      from(sr in SessionResource,
+        where: sr.sessionId == ^sessionId,
+        select: sr.resourceId)
       |> Repo.all()
 
     # add all new resoures that are unique
