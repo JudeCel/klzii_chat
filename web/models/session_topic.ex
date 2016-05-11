@@ -2,13 +2,14 @@ defmodule KlziiChat.SessionTopic do
   use KlziiChat.Web, :model
 
   schema "SessionTopics" do
-    belongs_to :session, KlziiChat.Session, [foreign_key: :SessionId]
-    belongs_to :topic, KlziiChat.Topic, [foreign_key: :TopicId]
+    belongs_to :session, KlziiChat.Session, [foreign_key: :sessionId]
+    belongs_to :topic, KlziiChat.Topic, [foreign_key: :topicId]
+    has_one :console, KlziiChat.Console,[foreign_key: :sessionTopicId]
     field :active, :boolean, default: false
     timestamps [inserted_at: :createdAt, updated_at: :updatedAt]
   end
 
-  @required_fields ~w(SessionId TopicId active)
+  @required_fields ~w(sessionId topicId active)
   @optional_fields ~w()
 
   @doc """

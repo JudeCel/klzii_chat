@@ -12,7 +12,7 @@ defmodule KlziiChat.Session do
     field :colours_used, :string
     has_many :session_members, KlziiChat.SessionMember, [foreign_key: :sessionId]
     belongs_to :brand_project_preference, KlziiChat.BrandProjectPreference, [foreign_key: :brandProjectPreferenceId]
-    has_many :session_topics, KlziiChat.SessionTopic, [foreign_key: :SessionId]
+    has_many :session_topics, KlziiChat.SessionTopic, [foreign_key: :sessionId]
     has_many :topics, through: [:session_topics, :topic]
     timestamps [inserted_at: :createdAt, updated_at: :updatedAt]
 
