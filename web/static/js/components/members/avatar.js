@@ -21,14 +21,8 @@ const Avatar = React.createClass({
     return `${specificId}-${member.id}`
   },
   componentDidMount() {
-    function randomNumber() {
-      return Math.floor(Math.random() * 4);
-    }
-
-    const { id, username, avatarData, colour, online, edit } = this.props.member;
-    const { base, face, body, hair, desk, head } = edit && avatarData
-      ? avatarData
-      : { base: 0, face: randomNumber(), body: randomNumber(), hair: randomNumber(), desk: randomNumber(), head: randomNumber() };
+    const { id, username, avatarData, colour, online } = this.props.member;
+    const { base, face, body, hair, desk, head } = avatarData
 
     let avatar = Snap('#' + this.pickId());
     if(this.shouldClearPrevious) {
@@ -36,7 +30,7 @@ const Avatar = React.createClass({
       this.shouldClearPrevious = false;
     }
     avatar.image(`/images/avatar/base_${this.padToTwo(base)}.svg`, 0, 0, 152, 140);
-    avatar.image(`/images/avatar/face_${this.padToTwo(face)}.svg`, 0, 0, 152, 140);
+    avatar.image(`/images/avatar/face_${this.pickFace(face, online)}.svg`, 0, 0, 152, 140);
     avatar.image(`/images/avatar/body_${this.padToTwo(body)}.svg`, 0, 0, 152, 140);
     avatar.image(`/images/avatar/hair_${this.padToTwo(hair)}.svg`, 0, 0, 152, 140);
     avatar.image(`/images/avatar/desk_${this.padToTwo(desk)}.svg`, 0, 0, 152, 140);
@@ -44,39 +38,16 @@ const Avatar = React.createClass({
     avatar.rect(25, 125, 100, 20, 1, 1).attr({fill: colour});
     avatar.text(76, 138, username).attr({fill: '#fff', "font-size": "75%", "text-anchor": "middle"});
     avatar.rect(30, 130, 90, 3, 5, 5).attr({fill: '#ccc', opacity: 0.2});
-    this.previousAvatarData = Object.assign({}, avatarData);
-    // Snap.load(`/images/avatar/base_${this.padToTwo(base)}.svg`, (baseSnap) => {
-    //   Snap.load(`/images/avatar/face_${this.pickFace(face, online)}.svg`, (faceSnap) => {
-    //     Snap.load(`/images/avatar/body_${this.padToTwo(body)}.svg`, (bodySnap) => {
-    //       Snap.load(`/images/avatar/hair_${this.padToTwo(hair)}.svg`, (hairSnap) => {
-    //         Snap.load(`/images/avatar/desk_${this.padToTwo(desk)}.svg`, (deskSnap) => {
-    //           Snap.load(`/images/avatar/head_${this.padToTwo(head)}.svg`, (headSnap) => {
-    //             if(this.shouldClearPrevious) {
-    //               avatar.clear();
-    //               this.shouldClearPrevious = false;
-    //             }
-    //
-    //             avatar.rect(25, 128, 100, 20, 1, 1).attr({fill: colour});
-    //             avatar.text(50, 141, username).attr({fill: '#fff', "font-size": "75%"});
-    //             avatar.rect(30, 133, 90, 3, 5, 5).attr({fill: '#ccc', opacity: 0.2});
-    //
-    //             avatar.append(baseSnap);
-    //             avatar.append(faceSnap);
-    //             avatar.append(bodySnap);
-    //             avatar.append(hairSnap);
-    //             avatar.append(deskSnap);
-    //             avatar.append(headSnap);
-    //             this.previousAvatarData = Object.assign({}, avatarData);
-    //           });
-    //         });
-    //       });
-    //     });
-    //   });
-    // });
+    this.previousData = {avatarData, username}
   },
   shouldComponentUpdate(nextProps) {
-    let equal = JSON.stringify(this.previousAvatarData) !== JSON.stringify(nextProps.member.avatarData);
-    return equal && this.previousAvatarData ? true : false;
+    if (this.previousData) {
+      let AvatarData = JSON.stringify(this.previousData.avatarData) != JSON.stringify(nextProps.member.avatarData);
+      let username = this.previousData.username != nextProps.member.username;
+      return(!(username && AvatarData))
+    }else {
+      return true
+    }
   },
   componentDidUpdate() {
     let avatar = Snap('#' + this.pickId());

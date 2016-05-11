@@ -47,7 +47,7 @@ defmodule KlziiChat.ResourcesControllerTest do
 
   test "upload youtube link", %{conn: conn} do
     file = "http://youtu.be/0zM3nApSvMg"
-    conn = post conn, resources_path(conn, :upload, name: "youtubeLink", type: "link", scope: "youtube", file: file)
+    conn = post conn, resources_path(conn, :upload, private: false, name: "youtubeLink", type: "link", scope: "youtube", file: file)
     assert json_response(conn, 200)["resource"] |> Map.get("name") == "youtubeLink"
     assert json_response(conn, 200)["resource"] |> Map.get("scope") == "youtube"
     assert json_response(conn, 200)["resource"] |> Map.get("type") == "link"
@@ -56,13 +56,14 @@ defmodule KlziiChat.ResourcesControllerTest do
 
   test "upload image", %{conn: conn} do
     file = %Plug.Upload{ content_type: "image/jpg", path: @image, filename: "hamster.jpg"}
-    conn = post(conn, "api/resources/upload", %{ name: "hamster", type: "image", scope: "collage", file: file })
+    conn = post(conn, "api/resources/upload", %{private: false,  name: "hamster", type: "image", scope: "collage", file: file })
     assert json_response(conn, 200)["resource"]["name"] == "hamster"
   end
 
   test "init zip action", %{conn: conn, zip_resource: zip_resource, image_resource: image_resource} do
+    Ecto.Adapters.SQL.Sandbox.mode(Repo, {:shared, self()})
     file = %Plug.Upload{ content_type: "image/jpg", path: @image, filename: "hamster.jpg"}
-    post(conn, "api/resources/upload", %{ name: "hamster", type: "image", scope: "collage", file: file })
+    post(conn, "api/resources/upload", %{private: false, name: "hamster", type: "image", scope: "collage", file: file })
 
     conn = post conn, resources_path(conn, :zip, %{"ids" => [zip_resource.id,image_resource.id], "name"=> "newZpi"})
     assert json_response(conn, 200)["resource"]["name"] == "newZpi"

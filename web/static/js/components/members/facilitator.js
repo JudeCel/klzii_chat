@@ -3,8 +3,10 @@ import Member             from './member.js'
 import { connect }        from 'react-redux';
 import Console            from '../console/index';
 import BoardModal         from './modals/facilitatorBoard';
+import isOwner   from '../../mixins/isOwner';
 
 const Facilitator = React.createClass({
+  mixins: [isOwner],
   getInitialState() {
     return { boardModalOpen: false };
   },
@@ -14,14 +16,17 @@ const Facilitator = React.createClass({
   openBoardModal() {
     this.setState({ boardModalOpen: true });
   },
+  selectClass(id) {
+    const className = 'div-inline-block';
+    return className + (this.isOwner(id) ? ' cursor-pointer' : '');
+  },
   render() {
     const { boardModalOpen } = this.state;
     const { facilitator, openAvatarModal, boardContent } = this.props;
-
     return (
       <div className='facilitator-section'>
         <div className='div-inline-block'>
-          <div className='div-inline-block cursor-pointer' onClick={ openAvatarModal }>
+          <div className={ this.selectClass(facilitator.id) } onClick={ this.isOwner(facilitator.id) && openAvatarModal }>
             <Member key={ facilitator.id } member={ facilitator } />
           </div>
 
@@ -47,6 +52,7 @@ const Facilitator = React.createClass({
 const mapStateToProps = (state) => {
   return {
     facilitator: state.members.facilitator,
+    currentUser: state.members.currentUser,
     boardContent: state.members.facilitator.boardContent || 'Say something nice if you wish!'
   }
 };

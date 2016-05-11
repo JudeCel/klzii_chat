@@ -1,6 +1,6 @@
 defmodule KlziiChat.SessionMemberCase do
   use ExUnit.CaseTemplate
-  alias KlziiChat.{User, AccountUser, Repo, Session, Account, SessionMember, BrandProjectPreference}
+  alias KlziiChat.{Repo, Topic, User, AccountUser , Session, Account, SessionMember, BrandProjectPreference}
 
 
   setup do
@@ -34,6 +34,21 @@ defmodule KlziiChat.SessionMemberCase do
       active: true
     } |> Repo.insert!
 
+    topic_1 = Ecto.build_assoc(account, :topics,
+      name: "cool topic 1",
+    ) |> Repo.insert!
+    Ecto.build_assoc(topic_1, :session_topics,
+      session: session,
+    ) |> Repo.insert!
+
+    topic_2 = Ecto.build_assoc(account, :topics,
+      name: "cool topic 2",
+    ) |> Repo.insert!
+
+    Ecto.build_assoc(topic_2, :session_topics,
+      session: session,
+    ) |> Repo.insert!
+
     member = %SessionMember{
       token: "oasu8asnx",
       username: "cool member",
@@ -43,7 +58,7 @@ defmodule KlziiChat.SessionMemberCase do
       accountUserId: 1
     } |> Repo.insert!
 
-    member2 = %SessionMember{
+    member_2 = %SessionMember{
       token: "==oasu8asnx",
       username: "cool member",
       sessionId: session.id,
@@ -52,6 +67,13 @@ defmodule KlziiChat.SessionMemberCase do
       accountUserId: 1
     } |> Repo.insert!
 
-    {:ok, account_user: account_user, session: session, session: session, member: member, member2: member2 }
+    {:ok,
+      topic_1: topic_1,
+      topic_2: topic_2,
+      member: member,
+      member2: member_2,
+      session: session,
+      account_user: account_user,
+    }
   end
 end

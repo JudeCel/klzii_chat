@@ -19,12 +19,12 @@ defmodule KlziiChat.User do
   If no params are provided, an invalid changeset is returned
   with no validation performed.
   """
-  def changeset(model, params \\ :empty) do
+  def changeset(model, params \\ %{}) do
     model
-    |> cast(params, @required_fields, @optional_fields)
+    |> cast(params, (@required_fields ++  @optional_fields))
   end
 
-  def seedChangeset(model, params \\ :empty) do
+  def seedChangeset(model, params \\ %{}) do
     model
     |> cast(params, ~w(email encryptedPassword), @optional_fields)
   end

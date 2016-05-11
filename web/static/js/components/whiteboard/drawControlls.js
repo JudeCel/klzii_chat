@@ -18,7 +18,7 @@
 			this.onSelected = null;
 			this.onTransformed = null;
 			this.onFinishTransform = null; console.log("aaaa");
-			if (this.group) this.group.remove();
+			//if (this.group) this.group.remove();
 			this.remove();
 			this.removeData();
 		}
@@ -27,24 +27,27 @@
 			this.ftInit();
 			var freetransEl = this;
 
-			if (this.group) {
-				this.paper.add(this);
-				this.group.remove();	
+			if (!this.group) {
+				//this.paper.add(this);
+				//this.attr(this.group.attr());
+			//	this.group.remove();
+				this.group = this.paper.g();
+				this.group.add( this );
 			}
 
-			this.group = this.paper.g();
-			this.group.add( this );
-			var bb = this.getBBox();
+
+			var bb = this.group.getBBox();
 			var rotateDragger = this.paper.image("/images/svgControls/rotate.png", bb.cx  + bb.width/2 - ftOption.handleRadius*2, bb.cy - ftOption.handleRadius*2 - bb.height/2, ftOption.handleRadius*2, ftOption.handleRadius*2).transform('r0.1');
 			var translateDragger = this.paper.image("/images/svgControls/move.png", bb.cx - ftOption.handleRadius, bb.cy - ftOption.handleRadius, ftOption.handleRadius*2, ftOption.handleRadius*2).transform('r0.1');
 
 			this.data("startAngle", Snap.angle( bb.cx, bb.cy, rotateDragger.attr().x, rotateDragger.attr().y) - 180);
 			this.initialWidth = bb.width/2;
 			this.initialHeight = bb.height/2;
-			if (!this.group) {
-					this.group = this.paper.g();
-			}
-			this.group.add( this );
+
+			// if (!this.group) {
+			// 		this.group = this.paper.g();
+			// }
+			// this.group.add( this );
 
 			var joinLine = freetransEl.ftDrawJoinLine( rotateDragger );
 			var handlesGroup = this.paper.g( joinLine, rotateDragger, translateDragger );
@@ -128,7 +131,7 @@
 		}
 
 		Element.prototype.ftStoreInitialTransformMatrix = function() {
-			this.data('initialTransformMatrix', this.transform().localMatrix );
+			this.data('initialTransformMatrix', this.group.transform().localMatrix );
 			return this;
 		};
 
@@ -191,10 +194,10 @@
 		/*	var tstring = "s1,1";
 			this.attr({ transform: tstring });
 */
-			var tstring = "s"+splitParams.scalex+","+ splitParams.scaley;
+		/*	var tstring = "s"+splitParams.scalex+","+ splitParams.scaley;
 			this.attr({ transform: tstring });
-
-			tstring = "t" + this.data("tx") + "," + this.data("ty") + "r" + angle;
+*/
+			var tstring = "t" + this.data("tx") + "," + this.data("ty") + "r" + angle + "s"+splitParams.scalex+","+ splitParams.scaley;
 			this.group.attr({ transform: tstring });
 
 			this.ftHighlightBB();
@@ -507,7 +510,7 @@
 	}
 	function dragHandleRotateMove( mainEl, dx, dy, x, y, event ) {
 		var handle = this;
-		var mainBB = mainEl.getBBox();
+		var mainBB = mainEl.group.getBBox();
 		var cx = Number(handle.data('ocx')) + dx;
 		var cy = Number(handle.data('ocy')) + dy;
 

@@ -13,26 +13,14 @@ defmodule KlziiChat.Services.SessionMembersService do
     end
   end
 
-  @spec update_online_status(Integer.t, Boolean.t) :: {:ok, Map.t} | {:error, Ecto.Changeset}
-  def update_online_status(id, staus) do
-    session_member = Repo.get_by!(SessionMember, id: id)
-    changeset = Ecto.Changeset.change(session_member, %{online: staus})
-    case Repo.update(changeset) do
-      {:ok, session_member} ->
-        {:ok, SessionMembersView.render("member.json", member: session_member)}
-      {:error, changeset} ->
-        {:error, changeset}
-    end
-  end
-
-  @spec update(Integer.t, Map.t) :: {:ok, %SessionMember{}} | {:error, Ecto.Changeset}
-  def update(id, params) do
+  @spec update_member(Integer.t, Map.t) :: {:ok, %SessionMember{}} | {:error, Ecto.Changeset}
+  def update_member(id, params) do
     session_member =  Repo.get_by!(SessionMember, id: id)
-    Ecto.Changeset.change(session_member, params)
+    SessionMember.changeset(session_member, params)
     |> Repo.update
     |> case do
         {:ok, session_member} ->
-          {:ok, SessionMembersView.render("member.json", member: session_member)}
+          {:ok, session_member}
         {:error, changeset} ->
           {:error, changeset}
       end

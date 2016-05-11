@@ -17,38 +17,65 @@ spec:
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  labels:
-    name: chat
-    env: staging
   name: chat
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      env: staging
+      name: chat
   template:
     metadata:
       labels:
         name: chat
         env: staging
-        version: "0.9.4"
+        version: "0.9.26"
     spec:
       containers:
       - env:
+        - name: AWS_ACCESS_KEY_ID
+          value: "AKIAJV2UHLF355DYBP6A"
+        - name: AWS_SECRET_ACCESS_KEY
+          value: "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"
+        - name: AWS_REGION
+          value: "us-west-2"
+        - name: ARC_BUCKET
+          value: "klzii-staging"
         - name: SECRET_KEY_BASE
           value: 265728C3CEE6D163E3A210D2C7952CF50EF3E1765E3FB69DC13E70C93E6D0EF8
+        - name: CORS_URL
+          value: ^https?://(.*\.?)klzii\.com
         - name: DB_USERNAME
-          value: klzii
+          valueFrom:
+            secretKeyRef:
+              name: postgres-credentials-staging
+              key: user
         - name: DB_PASSWORD
-          value: VQqttpXdE42u6PUKWusy
+          valueFrom:
+            secretKeyRef:
+              name: postgres-credentials-staging
+              key: password
         - name: DB_HOST
-          value: klzii-staging.cyujokxcbe0c.us-west-2.rds.amazonaws.com
+          value: postgres-master-staging
         - name: DB_DATABASE
           value: klzii_staging
         - name: SERVER_HOST
           value: chat.klzii.com
-        image: 944561038201.dkr.ecr.us-west-2.amazonaws.com/klzii_chat:latest
+        - name: GUARDIAN_SECRET_KEY
+          value: "SttPra/cddsnX+Vko2i8KA=="
+        volumeMounts:
+          - name: postgres-credentials-staging
+            mountPath: /etc/postgres-credentials
+        image: gcr.io/klzii-1262/klzii_chat:latest
         name: chat
         ports:
         - containerPort: 3000
           protocol: TCP
+      volumes:
+        - name: postgres-credentials-staging
+          secret:
+            secretName: postgres-credentials-staging
+
 ---
 apiVersion: v1
 data:
@@ -113,7 +140,7 @@ spec:
     spec:
       containers:
       - name: nginx-ssl-proxy
-        image: 944561038201.dkr.ecr.us-west-2.amazonaws.com/nginx-ssl-proxy:latest
+        image: gcr.io/klzii-1262/nginx-ssl-proxy:latest
         env:
         - name: SERVICE_HOST_ENV_NAME
           value: CHAT_SERVICE_HOST

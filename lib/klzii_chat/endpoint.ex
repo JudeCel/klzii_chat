@@ -19,7 +19,10 @@ defmodule KlziiChat.Endpoint do
     plug Phoenix.LiveReloader
     plug Phoenix.CodeReloader
   end
-
+  
+  if Application.get_env(:klzii_chat, :sql_sandbox) do
+    plug Phoenix.Ecto.SQL.Sandbox
+  end
 
   plug Plug.RequestId
   plug Plug.Logger
