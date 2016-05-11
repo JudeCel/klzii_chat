@@ -5,8 +5,12 @@ import isOwner   from '../../mixins/isOwner';
 
 const Participants = React.createClass({
   mixins: [isOwner],
-  evenClasses(even) {
-    const className = 'cursor-pointer ';
+  evenClasses(even, id) {
+    let className = '';
+    if(this.isOwner(id)) {
+      className = 'cursor-pointer ';
+    }
+
     return className + (even ? 'avatar-even' : 'avatar-odd');
   },
   render() {
@@ -17,7 +21,7 @@ const Participants = React.createClass({
         {
           participants.map((participant, index) =>
             <div className='col-md-3' key={ participant.id }>
-              <div className={ this.evenClasses(index % 2 == 0) } onClick={ this.isOwner(participant.id) && openAvatarModal }>
+              <div className={ this.evenClasses(index % 2 == 0, participant.id) } onClick={ this.isOwner(participant.id) && openAvatarModal }>
                 <Member member={ participant } />
               </div>
             </div>
