@@ -19,6 +19,7 @@ defmodule KlziiChat.Services.SessionResourcesService do
     :ok = delete_unused_session_resources(resources_ids, session_id)
 
     #TODO: replace insert with insert_all
+    #createdAt: Timex.DateTime.now, updatedAt: Timex.DateTime.now
 
     from(sr in SessionResource,
       where: sr.sessionId == ^session_id,
@@ -27,6 +28,7 @@ defmodule KlziiChat.Services.SessionResourcesService do
     |> ListHelper.find_diff(ListHelper.str_to_num(resources_ids))
     |> Enum.map(&Repo.insert(%SessionResource{resourceId: &1, sessionId: session_id}))
     |> Enum.map(fn({:ok, r}) -> r.id end)
+
   end
 
   def delete_unused_session_resources(resources_ids, session_id) do
@@ -35,5 +37,14 @@ defmodule KlziiChat.Services.SessionResourcesService do
     |> Repo.delete_all()
 
     :ok
+  end
+
+  #TODO: test!
+  def get_session_resources(session_id) do
+    session_resources_ids = from(sr in SessionResource,
+      where: sr.sessionId == ^session_id,
+      select: sr.resourceId)
+    |> Repo.all()
+    {:ok, session_resources_ids}
   end
 end
