@@ -5,7 +5,8 @@ const initialState = {
   channel: null,
   all: [],
   ready: false,
-  leave: false
+  leave: false,
+  console: {}
 };
 
 export default function reducer(state = initialState, action = {}) {
@@ -18,6 +19,10 @@ export default function reducer(state = initialState, action = {}) {
 
     case Constants.LEAVE_TOPIC:
       return { ...state, channel: null, current: {}, leave: true };
+
+    case Constants.SET_CONSOLE:
+      return { ...state, console: action.console };
+
     default:
       return state;
   }

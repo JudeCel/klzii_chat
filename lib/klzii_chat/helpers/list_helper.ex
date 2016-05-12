@@ -1,12 +1,27 @@
 defmodule KlziiChat.Helpers.ListHelper do
-  def normalize_ids(ids) do
-    Enum.map(ids, &get_normalized/1)
+
+  @spec str_to_num(List) :: List
+  def str_to_num(list) do
+    Enum.map(list, &get_num/1)
   end
 
-  defp get_normalized(id) when is_integer(id), do: id
+  defp get_num(l_el) when is_integer(l_el), do: l_el
 
-  defp get_normalized(id) when is_bitstring(id) do
-    {num_id, ""} = Integer.parse(id)
-    num_id
+  defp get_num(l_el) when is_bitstring(l_el) do
+    {num, ""} = Integer.parse(l_el)
+    num
+  end
+
+
+  @spec find_diff(List.t, List.t) :: List.t
+  def find_diff(first, second) do
+    List.foldl(first, second, fn (id, acc) ->
+      result = List.delete(acc, id)
+      if result == acc do
+        result ++ [id]
+      else
+        result
+      end
+    end)
   end
 end

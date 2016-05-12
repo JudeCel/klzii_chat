@@ -41,16 +41,4 @@ defmodule KlziiChat.Services.UnreadMessageServiceTest do
     resp = UnreadMessageService.calculate_summary(map)
     assert(resp == result)
   end
-
-  test "find diff " do
-    assert(UnreadMessageService.find_diff([7, 2], [2, 4]) == [4, 7])
-
-    assert(UnreadMessageService.find_diff([], [2, 4]) == [2, 4])
-
-    assert(UnreadMessageService.find_diff([1, 3], []) == [1, 3])
-
-    assert(UnreadMessageService.find_diff([1, 3], [3]) == [1])
-
-    assert(UnreadMessageService.find_diff([1, 3], [2]) == [2, 1, 3])
-  end
 end

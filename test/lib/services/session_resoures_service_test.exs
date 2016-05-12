@@ -41,13 +41,6 @@ defmodule KlziiChat.Services.SessionResourcesServiceTest do
     assert(getAllSessionRes(session_id) === used_res_id)
   end
 
-  test "normalize_ids" do
-    assert [] === SessionResourcesService.normalize_ids([])
-    assert [1] === SessionResourcesService.normalize_ids([1])
-    assert [1] === SessionResourcesService.normalize_ids(["1"])
-    assert [1, 2, 3, 4] === SessionResourcesService.normalize_ids([1, "2", 3, "4"])
-  end
-
   defp create_image_resource(account_user, n) do
     Ecto.build_assoc(
       account_user.account, :resources,
