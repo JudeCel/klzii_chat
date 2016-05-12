@@ -8,7 +8,7 @@ defmodule KlziiChat.SessionResourcesController do
   plug :if_current_member
 
   def index(conn, _, member, _) do
-    case SessionResourcesService.get_session_resources(member.session_member.sessionId, member.session_member.id) do
+    case SessionResourcesService.get_session_resources(member.session_member.id) do
       {:ok, session_resources} ->
         json(conn, Phoenix.View.render_many(session_resources, SessionResourcesView, "show.json", as: :session_resource))
       {:error, reason} ->
