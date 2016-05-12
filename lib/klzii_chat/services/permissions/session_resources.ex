@@ -1,4 +1,4 @@
-defmodule KlziiChat.Services.Permissions.Session do
+defmodule KlziiChat.Services.Permissions.SessionResources do
   import KlziiChat.Services.Permissions.Validations
 
   @spec can_toggle_resources(Map.t) :: Boolean.t

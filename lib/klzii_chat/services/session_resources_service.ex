@@ -1,13 +1,13 @@
 defmodule KlziiChat.Services.SessionResourcesService do
   alias KlziiChat.{Repo, SessionResource, SessionMember}
-  alias KlziiChat.Services.Permissions.Session, as: SessionPermissions
+  alias KlziiChat.Services.Permissions.SessionResources, as: SessionResourcesPermissions
   alias KlziiChat.Helpers.ListHelper
 
   import Ecto.Query
 
   def toggle(session_id, resources_ids, session_member_id) do
     session_member = Repo.get!(SessionMember, session_member_id)
-    if(SessionPermissions.can_toggle_resources(session_member)) do
+    if(SessionResourcesPermissions.can_toggle_resources(session_member)) do
       do_toggle(session_id, resources_ids)
     else
       {:error, "Action not allowed!"}
