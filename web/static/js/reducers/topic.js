@@ -28,11 +28,7 @@ export default function reducer(state = initialState, action = {}) {
   }
 }
 function find(toics, id) {
-  let topic = null;
-  toics.map((t) =>{
-    if (t.id == id) {
-      topic = t;
-    }
-  })
-  return topic;
+  return toics.find((t) => {
+    return t.id == id
+  });
 }
