@@ -16,6 +16,36 @@ defmodule KlziiChat.TopicChannelTest do
     assert_push("console", %{})
   end
 
+  test "set resource to console", %{account_user: account_user, socket: socket, topic_1_name: topic_1_name} do
+    {:ok, resource} = Ecto.build_assoc(
+      account_user.account, :resources,
+      accountUserId: account_user.id,
+      name: "test image 1",
+      type: "image",
+      scope: "collage"
+    ) |> Repo.insert
+
+    {:ok, _, socket} = subscribe_and_join(socket, TopicChannel, topic_1_name)
+    ref = push socket, "set_console_resource", %{"id" => resource.id}
+    assert_reply ref, :ok
+    assert_push("console", %{})
+  end
+
+  test "remove resource from console ", %{account_user: account_user, socket: socket, topic_1_name: topic_1_name} do
+    {:ok, resource} = Ecto.build_assoc(
+      account_user.account, :resources,
+      accountUserId: account_user.id,
+      name: "test image 1",
+      type: "image",
+      scope: "collage"
+    ) |> Repo.insert
+
+    {:ok, _, socket} = subscribe_and_join(socket, TopicChannel, topic_1_name)
+    ref = push socket, "remove_console_resource", %{"id" => resource.id}
+    assert_reply ref, :ok
+    assert_push("console", %{})
+  end
+
   test "presents register is enable for topics", %{socket: socket, topic_1_name: topic_1_name} do
     {:ok, _, socket} =
       join(socket, TopicChannel, topic_1_name)

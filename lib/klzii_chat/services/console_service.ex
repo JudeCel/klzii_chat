@@ -1,5 +1,6 @@
 defmodule KlziiChat.Services.ConsoleService do
   alias KlziiChat.{Repo, Console, Console, SessionTopic, Resource}
+  alias KlziiChat.Services.Permissions.Console, as: ConsolePermissions
   import Ecto
   import Ecto.Query, only: [from: 1, from: 2]
 
@@ -19,12 +20,42 @@ defmodule KlziiChat.Services.ConsoleService do
     end
   end
 
-  @spec add_resource(Integer, Integer, Integer) ::  {:ok, %Console{}}
-  def add_resource(session_id, topic_id, resource_id) do
+  @spec set_resource(Integer, Integer, Integer) ::  {:ok, %Console{}}
+  def set_resource(member, topic_id, resource_id) do
+    if ConsolePermissions.can_set_resource(member) do
+      {:ok, console} = get(member.session_id, topic_id)
+      set_id_by_action(resource_id, :add)
+      |> update_console(console)
+    else
+      {:error, "Action not allowed!"}
+    end
+  end
+
+  @spec remove_resource(Integer, Integer, Integer) ::  {:ok, %Console{}}
+  def remove_resource(member, topic_id, resource_id) do
+    if ConsolePermissions.can_remove_resource(member) do
+      {:ok, console} = get(member.session_id, topic_id)
+      set_id_by_action(resource_id, :remove)
+      |> update_console(console)
+    else
+      {:error, "Action not allowed!"}
+    end
+  end
+
+  def update_console(changeset, console) do
+    Console.changeset(console, changeset) |> Repo.update
+  end
+
+  def set_id_by_action(resource_id, action) do
     resource = Repo.get!(Resource, resource_id)
-    {:ok, console} = get(session_id, topic_id)
-    changeset = Map.put(%{}, String.to_atom("#{resource.type}Id" ), resource.id)
-    Console.changeset(console, changeset)
-      |> Repo.update
+    id = case action do
+      :add ->
+          resource.id
+      :remove ->
+        nil
+      _ ->
+        nil
+    end
+    Map.put(%{}, String.to_atom("#{resource.type}Id" ), id)
   end
 end
