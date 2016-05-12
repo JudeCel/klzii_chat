@@ -62,31 +62,29 @@ const WhiteboardCanvas = React.createClass({
 
     this.addStepToUndoHistory(objects);
   },
-  initMessaging() {
-    var self = this;
-    this.sendMessage = function (json) {
-      if (json.message.action == "deleteAll") {
-        self.addAllDeletedObjectsToHistory();
-      } else {
-        self.addStepToUndoHistory(json);
-      }
+  sendMessage(json) {
+    let self = this;
+    if (json.message.action == "deleteAll") {
+      self.addAllDeletedObjectsToHistory();
+    } else {
+      self.addStepToUndoHistory(json);
+    }
 
-      switch (json.type) {
-        case 'sendobject':
-          this.props.member.dispatch(whiteboardActions.sendobject(this.props.channal, json.message));
-          break;
-        case 'move':
-        case 'scale':
-        case 'rotate':
-          this.props.dispatch(whiteboardActions.updateObject(this.props.channal, json.message));
-          break;
-        case 'delete':
-          this.props.dispatch(whiteboardActions.deleteAll(this.props.channal));
-          break;
+    switch (json.type) {
+      case 'sendobject':
+        this.props.member.dispatch(whiteboardActions.sendobject(this.props.channal, json.message));
+        break;
+      case 'move':
+      case 'scale':
+      case 'rotate':
+        this.props.dispatch(whiteboardActions.updateObject(this.props.channal, json.message));
+        break;
+      case 'delete':
+        this.props.dispatch(whiteboardActions.deleteAll(this.props.channal));
+        break;
 
-        default:
-      }
-    }.bind(this);
+      default:
+    }
   },
   componentWillReceiveProps(nextProps) {
     if (nextProps.channal && this.state.needEvents) {
@@ -199,7 +197,6 @@ const WhiteboardCanvas = React.createClass({
 
     this.activeShape = null;
     var self = this;
-    this.initMessaging();
     this.initUnselectCallback();
   },
   setActiveFillColour(fill) {
@@ -622,7 +619,7 @@ const WhiteboardCanvas = React.createClass({
   },
   render() {
     var self = this;
-    var cornerRadius = "5";
+    var cornerRadius = 5;
     var speed = "0.3s";
     var scale = this.minimized?this.getMinimizedScale():1.0;
     var scaleParam = 'width ' + speed +' ease-in-out, height ' + speed + ' ease-in-out';

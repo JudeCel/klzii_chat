@@ -17,7 +17,7 @@
 			this.unclick();
 			this.onSelected = null;
 			this.onTransformed = null;
-			this.onFinishTransform = null; console.log("aaaa");
+			this.onFinishTransform = null;
 			//if (this.group) this.group.remove();
 			this.remove();
 			this.removeData();
@@ -27,30 +27,21 @@
 			this.ftInit();
 			var freetransEl = this;
 
-			if (!this.group) {
-				//this.paper.add(this);
-				//this.attr(this.group.attr());
-			//	this.group.remove();
-				this.group = this.paper.g();
-				this.group.add( this );
-			}
-
-
-			var bb = this.group.getBBox();
+			var bb = this.getBBox();
 			var rotateDragger = this.paper.image("/images/svgControls/rotate.png", bb.cx  + bb.width/2 - ftOption.handleRadius*2, bb.cy - ftOption.handleRadius*2 - bb.height/2, ftOption.handleRadius*2, ftOption.handleRadius*2).transform('r0.1');
 			var translateDragger = this.paper.image("/images/svgControls/move.png", bb.cx - ftOption.handleRadius, bb.cy - ftOption.handleRadius, ftOption.handleRadius*2, ftOption.handleRadius*2).transform('r0.1');
 
 			this.data("startAngle", Snap.angle( bb.cx, bb.cy, rotateDragger.attr().x, rotateDragger.attr().y) - 180);
 			this.initialWidth = bb.width/2;
 			this.initialHeight = bb.height/2;
-
-			// if (!this.group) {
-			// 		this.group = this.paper.g();
-			// }
-			// this.group.add( this );
-
 			var joinLine = freetransEl.ftDrawJoinLine( rotateDragger );
 			var handlesGroup = this.paper.g( joinLine, rotateDragger, translateDragger );
+
+			if (this.setupDone) {
+				createScaleControl(this.paper, this);
+			} else {
+				this.setupDone = true;
+			}
 
 			freetransEl.data( "handlesGroup", handlesGroup );
 			freetransEl.data( "joinLine", joinLine);
@@ -66,11 +57,6 @@
 				this.ftInformSelected(this, false);
 			} ) );
 
-			if (this.setupDone) {
-				createScaleControl(this.paper, this);
-			} else {
-				this.setupDone = true;
-			}
 
 			rotateDragger.drag(
 				dragHandleRotateMove.bind( rotateDragger, freetransEl ),
@@ -131,7 +117,7 @@
 		}
 
 		Element.prototype.ftStoreInitialTransformMatrix = function() {
-			this.data('initialTransformMatrix', this.group.transform().localMatrix );
+			this.data('initialTransformMatrix', this.transform().globalMatrix );
 			return this;
 		};
 
@@ -180,25 +166,14 @@
 		};
 
 		Element.prototype.ftUpdateTransform = function() {
-			var angle = this.data("angle");
+			var angle = this.data("angle") - 180;
 
 			var matr = this.ftGetInitialTransformMatrix().clone();
 			var splitParams = matr.split();
 			var bb = this.getBBox();
-			//matr.scale(1/splitParams.scalex, 1/splitParams.scaley, bb.cx, bb.cy);
-			//matr.scale(1,1);
-			//bb = this.getBBox();
 
-			//var tstring = "t" + this.data("tx") + "," + this.data("ty") + this.ftGetInitialTransformMatrix().toTransformString() + "r" + angle;
-			//var tstring = "t" + this.data("tx") + "," + this.data("ty") + matr.toTransformString() + "r" + angle+"s"+splitParams.scalex+","+ splitParams.scaley;
-		/*	var tstring = "s1,1";
+			var tstring = "t" + this.data("tx") + "," + this.data("ty") + "r" + angle + "s" + splitParams.scalex + ","+splitParams.scaley  ;
 			this.attr({ transform: tstring });
-*/
-		/*	var tstring = "s"+splitParams.scalex+","+ splitParams.scaley;
-			this.attr({ transform: tstring });
-*/
-			var tstring = "t" + this.data("tx") + "," + this.data("ty") + "r" + angle + "s"+splitParams.scalex+","+ splitParams.scaley;
-			this.group.attr({ transform: tstring });
 
 			this.ftHighlightBB();
 			this.updateTransformControls(this);
@@ -211,7 +186,7 @@
 			this.data("bb") && this.data("bb").remove();
 			this.data("bb", this.paper.rect( rectObjFromBB( this.getBBox() ) )
 							.attr({ fill: "none", stroke: ftOption.handleFill, strokeDasharray: ftOption.handleStrokeDash }) );
-			this.group.add(this.data("bb"));
+			this.add(this.data("bb"));
 			return this;
 		};
 
@@ -376,7 +351,7 @@
 
 		function updateElementParameters(shape, params) {
 	    switch (shape.type) {
-	      case "ellipse":
+	     	case "ellipse":
 	        if (params.width) {
 	          shape.attr({rx: params.width});
 	        } else if (params.height) {
@@ -404,7 +379,7 @@
 	        var matr = shape.ftGetInitialTransformMatrix().clone();
 					var splitParams = matr.split();
 	        var transform = "t"+shape.data("tx")+','+ shape.data("ty")+matr.toTransformString()+"S"+(params.scaleX?params.scaleX:1)+","+(params.scaleY?params.scaleY:1);
-	        shape.attr({transform: transform});
+	        shape.animate({transform: transform}, 1);
 	        break;
 	    }
 	  }
@@ -510,7 +485,7 @@
 	}
 	function dragHandleRotateMove( mainEl, dx, dy, x, y, event ) {
 		var handle = this;
-		var mainBB = mainEl.group.getBBox();
+		var mainBB = mainEl.getBBox();
 		var cx = Number(handle.data('ocx')) + dx;
 		var cy = Number(handle.data('ocy')) + dy;
 
