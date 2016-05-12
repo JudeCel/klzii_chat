@@ -33,7 +33,8 @@ defmodule KlziiChat.Services.ConsoleServiceTest do
 
   test "remove resource", %{member: member, topic_id: topic_id, resource: resource} do
     session_member = %{role: member.role, session_id: member.sessionId}
-    {:ok, console} = ConsoleService.remove_resource(session_member, topic_id, resource.id)
+    {:ok, _} = ConsoleService.set_resource(session_member, topic_id, resource.id)
+    {:ok, console} = ConsoleService.remove_resource(session_member, topic_id, "image")
     Map.get(console, String.to_atom(resource.type <> "Id"))
     |> is_nil |> assert
   end
