@@ -39,10 +39,10 @@ const Input = React.createClass({
     };
   },
   componentDidUpdate() {
-    let input = ReactDOM.findDOMNode(this).querySelector('#chat-input');
-    if(input) {
-      input.focus();
-    }
+    // let input = ReactDOM.findDOMNode(this).querySelector('#chat-input');
+    // if(input) {
+    //   input.focus();
+    // }
   },
   render() {
     const { currentEmotion, action, permissions, inputPrefix } = this.props;
