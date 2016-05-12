@@ -41,6 +41,26 @@ defmodule KlziiChat.TopicChannel do
     {:noreply, socket}
   end
 
+  def handle_in("set_console_resource", %{"id" => id}, socket) do
+    case ConsoleService.set_resource(socket.assigns.session_member, socket.assigns.topic_id, id) do
+      {:ok, console} ->
+        broadcast! socket, "console",  ConsoleView.render("show.json", %{console: console})
+        {:reply, :ok, socket}
+      {:error, reason} ->
+        {:error, %{reason: reason}}
+    end
+  end
+
+  def handle_in("remove_console_resource", %{"id" => id}, socket) do
+    case ConsoleService.remove_resource(socket.assigns.session_member, socket.assigns.topic_id, id) do
+      {:ok, console} ->
+        broadcast! socket, "console",  ConsoleView.render("show.json", %{console: console})
+        {:reply, :ok, socket}
+      {:error, reason} ->
+        {:error, %{reason: reason}}
+    end
+  end
+
   def handle_in("resources", %{"type" => type}, socket) do
     case ResourceService.get(socket.assigns.session_member.account_user_id, type) do
       {:ok, resources} ->
