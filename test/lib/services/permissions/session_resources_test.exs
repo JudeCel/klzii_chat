@@ -13,4 +13,17 @@ defmodule KlziiChat.Services.Permissions.SessionResourcesTest do
     SessionResourcesPermissions.can_toggle_resources(participant)
     |> refute
   end
+
+  test "facilitator can get session resources" do
+    facilitator = %{id: 1, role: "facilitator"}
+    SessionResourcesPermissions.can_get_resources(facilitator)
+    |> assert
+  end
+
+  test "participant can't get session resources" do
+    participant = %{id: 2, role: "participant"}
+    SessionResourcesPermissions.can_get_resources(participant)
+    |> refute
+  end
+
 end

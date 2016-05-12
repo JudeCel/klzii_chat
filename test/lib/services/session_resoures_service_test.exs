@@ -43,8 +43,13 @@ defmodule KlziiChat.Services.SessionResourcesServiceTest do
 
   test "get_sesion_resources", %{session_id: session_id, member_id: member_id, resources_id: img_resources_ids} do
     SessionResourcesService.toggle(session_id, img_resources_ids, member_id)
-    {:ok, session_resources_ids} = SessionResourcesService.get_session_resources(session_id)
+    {:ok, session_resources_ids} = SessionResourcesService.get_session_resources(session_id, member_id)
     assert(session_resources_ids === getAllSessionRes(session_id))
+  end
+
+  test "get_sesion_resources_wrong_member_role_error", %{session_id: session_id, member2_id: member2_id} do
+    assert({:error, "Action not allowed!"} ===
+      SessionResourcesService.get_session_resources(session_id, member2_id))
   end
 
   defp create_image_resource(account_user, n) do

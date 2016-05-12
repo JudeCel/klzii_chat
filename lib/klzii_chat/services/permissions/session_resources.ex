@@ -6,4 +6,10 @@ defmodule KlziiChat.Services.Permissions.SessionResources do
     roles = ["facilitator"]
     has_role(member.role, roles)
   end
+
+  @spec can_get_resources(Map.t) :: Boolean.t
+  def can_get_resources(member) do
+    roles = ["facilitator"]
+    has_role(member.role, roles)
+  end
 end

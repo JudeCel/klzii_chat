@@ -39,7 +39,17 @@ defmodule KlziiChat.Services.SessionResourcesService do
     :ok
   end
 
-  def get_session_resources(session_id) do
+
+  def get_session_resources(session_id, session_member_id) do
+    session_member = Repo.get!(SessionMember, session_member_id)
+    if(SessionResourcesPermissions.can_get_resources(session_member)) do
+      do_get_session_resources(session_id)
+    else
+      {:error, "Action not allowed!"}
+    end
+  end
+
+  defp do_get_session_resources(session_id) do
     session_resources_ids = from(sr in SessionResource,
       where: sr.sessionId == ^session_id,
       select: sr.resourceId)
