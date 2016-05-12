@@ -41,6 +41,7 @@
     "react-medium-editor": "^1.6.3",
     "react-rating": "^0.2.2",
     "react-redux": "^4.4.5",
+    "react-toastr": "^2.6.1",
     "redux": "^3.5.2",
     "redux-logger": "^2.6.1",
     "redux-thunk": "^2.0.1",
