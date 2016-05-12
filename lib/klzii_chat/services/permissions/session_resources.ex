@@ -1,8 +1,14 @@
 defmodule KlziiChat.Services.Permissions.SessionResources do
   import KlziiChat.Services.Permissions.Validations
 
-  @spec can_toggle_resources(Map.t) :: Boolean.t
-  def can_toggle_resources(member) do
+  @spec can_add_resources(Map.t) :: Boolean.t
+  def can_add_resources(member) do
+    roles = ["facilitator"]
+    has_role(member.role, roles)
+  end
+
+  @spec can_remove_resource(Map.t) :: Boolean.t
+  def can_remove_resource(member) do
     roles = ["facilitator"]
     has_role(member.role, roles)
   end
