@@ -61,9 +61,9 @@ defmodule KlziiChat.Router do
   end
 
   # TODO: Session Resources
-  scope "/api/session", KlziiChat do
+  scope "/api/session_resources", KlziiChat do
     pipe_through :api
-    options "/get_resources", SessionResourcesController, :get
+    options "/", SessionResourcesController, :index
     options "/toggle_resources", SessionResourcesController, :toggle
   end
 

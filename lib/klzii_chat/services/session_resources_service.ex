@@ -50,10 +50,10 @@ defmodule KlziiChat.Services.SessionResourcesService do
   end
 
   defp do_get_session_resources(session_id) do
-    session_resources_ids = from(sr in SessionResource,
+    session_resources = from(sr in SessionResource,
       where: sr.sessionId == ^session_id,
-      select: sr.resourceId)
+      preload: [:resource])
     |> Repo.all()
-    {:ok, session_resources_ids}
+    {:ok, session_resources}
   end
 end
