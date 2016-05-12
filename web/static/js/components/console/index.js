@@ -27,6 +27,13 @@ const Console = React.createClass({
     this.setState({ currentModal: modal });
     // dispatch(Actions.get(channel, modal));
   },
+  hasConsole(type) {
+    let { tConsole } = this.props;
+    return tConsole[type + '_id'];
+  },
+  consoleButtonClassName(type) {
+    return this.hasConsole(type) ? 'cursor-pointer active' : '';
+  },
   render() {
     const { currentModal } = this.state;
 
@@ -34,16 +41,16 @@ const Console = React.createClass({
       <div>
         <div className='console-section'>
           <ul className='icons'>
-            <li onClick={ this.openModal } data-modal='video'>
+            <li onClick={ this.openModal } className={ this.consoleButtonClassName('video') } data-modal='video'>
               <i className='icon-video-1' />
             </li>
-            <li onClick={ this.openModal } data-modal='audio'>
+            <li onClick={ this.openModal } className={ this.consoleButtonClassName('audio') } data-modal='audio'>
               <i className='icon-volume-up' />
             </li>
-            <li onClick={ this.openModal } data-modal='image'>
+            <li onClick={ this.openModal } className={ this.consoleButtonClassName('image') } data-modal='image'>
               <i className='icon-camera' />
             </li>
-            <li onClick={ this.openModal } data-modal='survey'>
+            <li onClick={ this.openModal } className={ this.consoleButtonClassName('survey') } data-modal='survey'>
               <i className='icon-ok-squared' />
             </li>
             <li>
@@ -62,7 +69,8 @@ const Console = React.createClass({
 const mapStateToProps = (state) => {
   return {
     colours: state.chat.session.colours,
-    channel: state.topic.channel
+    channel: state.topic.channel,
+    tConsole: state.topic.console
   }
 };
 

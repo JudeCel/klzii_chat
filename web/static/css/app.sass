@@ -83,7 +83,10 @@ body
       padding: 0
       width: 100%
       li
+        cursor: default
         width: 19%
+        &.active
+          @extend .cursor-pointer
   .input-section
     textarea
       resize: none

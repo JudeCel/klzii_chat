@@ -32,11 +32,22 @@ const Actions = {
       });
     }
   },
+  removeSessionResources:(jwt, data) => {
+    return dispatch => {
+      let csrf_token = localStorage.getItem('csrf_token');
+      request
+        .delete('/api/session_resources/remove_resources')
+        .set('X-CSRF-Token', csrf_token)
+        .set('Authorization', jwt)
+        .send({ resourceIds: data })
+        .end();
+    }
+  },
   createSessionResources:(jwt, data) => {
     return dispatch => {
       let csrf_token = localStorage.getItem('csrf_token');
       request
-        .post('/api/session_resources/toggle_resources')
+        .post('/api/session_resources/add_resources')
         .set('X-CSRF-Token', csrf_token)
         .set('Authorization', jwt)
         .send({ resourceIds: data })
@@ -56,7 +67,7 @@ const Actions = {
           }
           else {
             console.error(result.body);
-            dispatchByType(dispatch, result.body);
+            dispatchByType(dispatch, { type: 'video', resources: result.body });
           }
         });
     }
@@ -83,7 +94,7 @@ const Actions = {
     return dispatch => {
       let csrf_token = localStorage.getItem('csrf_token');
       request
-        .post('/api/resources/upload')
+        .post('/api/session_resources/upload')
         .send(data)
         .set('X-CSRF-Token', csrf_token)
         .set('Authorization', jwt)
@@ -101,7 +112,7 @@ const Actions = {
   upload:(data, jwt) =>{
     return (dispatch) => {
       let csrf_token = localStorage.getItem("csrf_token");
-      let req = request.post('/api/resources/upload');
+      let req = request.post('/api/session_resources/upload');
       req.set('X-CSRF-Token', csrf_token);
       req.set('Authorization', jwt);
       data.files.map((file)=> {

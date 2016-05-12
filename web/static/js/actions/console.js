@@ -10,12 +10,12 @@ const Actions = {
       });
     }
   },
-  removeFromConsole: (type) => {
+  removeFromConsole: (channel, type) => {
     return dispatch => {
       channel.push('remove_console_resource', { type: type });
     };
   },
-  addToConsole: (id) => {
+  addToConsole: (channel, id) => {
     return dispatch => {
       channel.push('set_console_resource', { id: id });
     };

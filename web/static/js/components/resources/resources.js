@@ -38,7 +38,7 @@ const Resources = React.createClass({
 
     let id = e.target.getAttribute('data-id');
     if(this.props.modalWindow != 'survey') {
-      dispatch(Actions.delete(channel, id));
+      dispatch(Actions.removeSessionResources(channel, id));
     }
   },
   onCreate(child) {
