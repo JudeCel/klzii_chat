@@ -34,6 +34,7 @@ defmodule KlziiChat.Router do
     options "/delete", ResourcesController, :delete
     options "/:id", ResourcesController, :show
 
+
     # Generic routes for API be call from original domain
     get "/", ResourcesController, :index
     get "/ping", ResourcesController, :ping
@@ -57,6 +58,13 @@ defmodule KlziiChat.Router do
     options "/", BannersController, :index
     # Generic routes for API be call from original domain
     get "/", BannersController, :index
+  end
+
+  # TODO: Session Resources
+  scope "/api/session", KlziiChat do
+    pipe_through :api
+    options "/get_resources", SessionResourcesController, :get
+    options "/toggle_resources", SessionResourcesController, :toggle
   end
 
 

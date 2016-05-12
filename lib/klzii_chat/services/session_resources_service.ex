@@ -14,12 +14,13 @@ defmodule KlziiChat.Services.SessionResourcesService do
     end
   end
 
-  @spec do_toggle(Integer, [Integer]) :: Map
+  @spec do_toggle(Integer, [Integer]) :: Tupple
   def do_toggle(session_id, resources_ids) do
     :ok = delete_unused_session_resources(resources_ids, session_id)
 
     #TODO: replace insert with insert_all
     #createdAt: Timex.DateTime.now, updatedAt: Timex.DateTime.now
+    #TODO: return value {:ok, [resources modified]} ?
 
     from(sr in SessionResource,
       where: sr.sessionId == ^session_id,
@@ -27,8 +28,7 @@ defmodule KlziiChat.Services.SessionResourcesService do
     |> Repo.all()
     |> ListHelper.find_diff(ListHelper.str_to_num(resources_ids))
     |> Enum.map(&Repo.insert(%SessionResource{resourceId: &1, sessionId: session_id}))
-    |> Enum.map(fn({:ok, r}) -> r.id end)
-
+    :ok
   end
 
   def delete_unused_session_resources(resources_ids, session_id) do

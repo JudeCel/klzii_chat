@@ -13,19 +13,19 @@ defmodule KlziiChat.Services.SessionResourcesServiceTest do
   end
 
   test "toggle_add_3", %{session_id: session_id, member_id: member_id, resources_id: img_resources_ids} do
-    SessionResourcesService.toggle(session_id, img_resources_ids, member_id)
+    :ok = SessionResourcesService.toggle(session_id, img_resources_ids, member_id)
     assert(getAllSessionRes(session_id) === img_resources_ids)
   end
 
   test "toggle_switch_2", %{session_id: session_id, member_id: member_id, resources_id: img_resources_ids} do
-    SessionResourcesService.toggle(session_id, Enum.take(img_resources_ids, 2), member_id)
-    SessionResourcesService.toggle(session_id, Enum.drop(img_resources_ids, 1), member_id)
+    :ok = SessionResourcesService.toggle(session_id, Enum.take(img_resources_ids, 2), member_id)
+    :ok = SessionResourcesService.toggle(session_id, Enum.drop(img_resources_ids, 1), member_id)
     assert(getAllSessionRes(session_id) === Enum.drop(img_resources_ids, 1))
   end
 
   test "toggle_to_none", %{session_id: session_id, member_id: member_id, resources_id: img_resources_ids} do
-    SessionResourcesService.toggle(session_id, img_resources_ids, member_id)
-    SessionResourcesService.toggle(session_id, [], member_id)
+    :ok = SessionResourcesService.toggle(session_id, img_resources_ids, member_id)
+    :ok = SessionResourcesService.toggle(session_id, [], member_id)
     assert(getAllSessionRes(session_id) === [])
   end
 
@@ -35,14 +35,14 @@ defmodule KlziiChat.Services.SessionResourcesServiceTest do
   end
 
   test "delete_unused_session_resources_1", %{session_id: session_id, member_id: member_id, resources_id: img_resources_ids} do
-    SessionResourcesService.toggle(session_id, img_resources_ids, member_id)
+    :ok = SessionResourcesService.toggle(session_id, img_resources_ids, member_id)
     used_res_id = [Enum.at(img_resources_ids, 1)]
     :ok = SessionResourcesService.delete_unused_session_resources(used_res_id, session_id)
     assert(getAllSessionRes(session_id) === used_res_id)
   end
 
   test "get_sesion_resources", %{session_id: session_id, member_id: member_id, resources_id: img_resources_ids} do
-    SessionResourcesService.toggle(session_id, img_resources_ids, member_id)
+    :ok = SessionResourcesService.toggle(session_id, img_resources_ids, member_id)
     {:ok, session_resources_ids} = SessionResourcesService.get_session_resources(session_id, member_id)
     assert(session_resources_ids === getAllSessionRes(session_id))
   end
