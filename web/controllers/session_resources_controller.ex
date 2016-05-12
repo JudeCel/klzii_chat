@@ -1,7 +1,7 @@
 defmodule KlziiChat.SessionResourcesController do
   use KlziiChat.Web, :controller
   alias KlziiChat.{SessionResourcesView}
-  alias KlziiChat.Services.{ SessionResourcesService }
+  alias KlziiChat.Services.{ SessionResourcesService, ResourceService}
   use Guardian.Phoenix.Controller
 
   plug Guardian.Plug.EnsureAuthenticated, handler: KlziiChat.Guardian.AuthErrorHandler
@@ -16,9 +16,23 @@ defmodule KlziiChat.SessionResourcesController do
     end
   end
 
-  def toggle(conn, %{"resourceIds" => resource_ids}, member, _) do
-    :ok = SessionResourcesService.toggle(member.session_member.sessionId, resource_ids, member.session_member.id)
-    json(conn, %{status: :ok})
+  def create(conn, %{"resource_ids" => resource_ids}, member, _) do
+    case SessionResourcesService.add_session_resources(member.session_member.sessionId, resource_ids, member.session_member.id) do
+      :ok ->
+        json(conn, %{status: :ok})
+      {:error, reason} ->
+        json(conn, %{error:  reason})
+    end
+  end
+
+  def upload(conn, params, member, _) do
+    case ResourceService.upload(params, member.account_user.id) do
+      {:ok, resource} ->
+        SessionResourcesService.add_session_resources(member.session_member.sessionId, [resource.id], member.session_member.id)
+        json(conn, %{status: :ok})
+      {:error, reason} ->
+        json(conn, %{status: :error, reason: reason})
+    end
   end
 
   defp if_current_member(conn, opts) do

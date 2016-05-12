@@ -64,7 +64,14 @@ defmodule KlziiChat.Router do
   scope "/api/session_resources", KlziiChat do
     pipe_through :api
     options "/", SessionResourcesController, :index
-    options "/toggle_resources", SessionResourcesController, :toggle
+    options "/upload", SessionResourcesController, :upload
+    options "/add_resources", SessionResourcesController, :create
+    options "/remove_resource", SessionResourcesController, :delete
+
+    get "/", SessionResourcesController, :index
+    post "/upload", SessionResourcesController, :upload
+    post "/add_resources", SessionResourcesController, :create
+    delete "/remove_resource", SessionResourcesController, :delete
   end
 
 
