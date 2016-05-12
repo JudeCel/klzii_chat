@@ -11,6 +11,7 @@ defmodule KlziiChat.BannersController do
     banners = BannerService.all
     json(conn, %{banners: banners})
   end
+  
   defp if_current_account_user(conn, opts) do
     if Guardian.Plug.current_resource(conn) do
       conn
