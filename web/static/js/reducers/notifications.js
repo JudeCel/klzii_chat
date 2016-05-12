@@ -1,12 +1,15 @@
 import Constants from '../constants';
 
-export default function reducer(state = {}, action = {}) {
+const initialState = {
+};
+
+export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
     case Constants.SHOW_NOTIFICATION:
       return { ...action.data };
     case Constants.CLEAR_NOTIFICATION:
-      return {};
+      return initialState;
     default:
       return state;
   }
-}
+};
