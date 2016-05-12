@@ -16,8 +16,9 @@ defmodule KlziiChat.SessionResourcesController do
     end
   end
 
-  def toggle(conn, _, member, _) do
-
+  def toggle(conn, %{"resourceIds" => resource_ids}, member, _) do
+    :ok = SessionResourcesService.toggle(member.session_member.sessionId, resource_ids, member.session_member.id)
+    json(conn, %{status: :ok})
   end
 
   defp if_current_member(conn, opts) do
