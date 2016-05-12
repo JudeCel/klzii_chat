@@ -1,5 +1,7 @@
 import React, {PropTypes} from 'react';
+import { connect }        from 'react-redux';
 import UploadTypes        from './types/index';
+import Actions            from '../../../../actions/console';
 
 const UploadListItem = React.createClass({
   getValuesFromObject(object) {
@@ -7,12 +9,22 @@ const UploadListItem = React.createClass({
     return { id, active, name, type, url, scope };
   },
   getInitialState() {
-    let resource = this.props.resource || {};
-    return this.getValuesFromObject(resource);
+    const { resource, tConsole, resourceType } = this.props;
+
+    let res = resource || {};
+    res.active = tConsole[resourceType + '_id'] == res.id ? true : false;
+    return this.getValuesFromObject(res);
   },
-  onActivate(e) {
+  onActivate() {
     this.setState({ active: true });
-    console.log(e);
+    const { dispatch, channel, resourceType } = this.props;
+
+    if(this.state.id) {
+      dispatch(Actions.addToConsole(channel, this.state.id));
+    }
+    else {
+      dispatch(Actions.removeFromConsole(channel, this.props.resourceType));
+    }
   },
   render() {
     const { justInput, onDelete, resourceType } = this.props;
@@ -52,4 +64,11 @@ const UploadListItem = React.createClass({
   }
 });
 
-export default UploadListItem;
+const mapStateToProps = (state) => {
+  return {
+    channel: state.topic.channel,
+    tConsole: state.topic.console
+  }
+};
+
+export default connect(mapStateToProps)(UploadListItem);
