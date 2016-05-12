@@ -39,7 +39,6 @@ defmodule KlziiChat.Services.SessionResourcesService do
     :ok
   end
 
-  #TODO: test!
   def get_session_resources(session_id) do
     session_resources_ids = from(sr in SessionResource,
       where: sr.sessionId == ^session_id,

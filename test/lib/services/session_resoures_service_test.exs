@@ -41,6 +41,12 @@ defmodule KlziiChat.Services.SessionResourcesServiceTest do
     assert(getAllSessionRes(session_id) === used_res_id)
   end
 
+  test "get_sesion_resources", %{session_id: session_id, member_id: member_id, resources_id: img_resources_ids} do
+    SessionResourcesService.toggle(session_id, img_resources_ids, member_id)
+    {:ok, session_resources_ids} = SessionResourcesService.get_session_resources(session_id)
+    assert(session_resources_ids === getAllSessionRes(session_id))
+  end
+
   defp create_image_resource(account_user, n) do
     Ecto.build_assoc(
       account_user.account, :resources,
