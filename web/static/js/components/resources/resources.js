@@ -16,7 +16,7 @@ const Resources = React.createClass({
     return modals.includes(this.props.modalWindow);
   },
   changeModalWindow(e) {
-    const { dispatch, channel, modalWindow } = this.props;
+    const { dispatch, currentUserJwt, modalWindow } = this.props;
     if(modalWindow.length) {
       this.closeModalWindow(e);
     }
@@ -24,7 +24,7 @@ const Resources = React.createClass({
     let modal = e.target.getAttribute('data-modal');
     dispatch({ type: Constants.OPEN_RESOURCE_MODAL, modal });
     if(modal != 'survey') {
-      dispatch(Actions.get(channel, modal));
+      dispatch(Actions.listSessionResources(currentUserJwt));
     }
   },
   closeModalWindow(e) {
@@ -69,7 +69,7 @@ const Resources = React.createClass({
     }
     else if (resourceIds) {
       // TODO: update SessionResources
-      dispatch(Actions.toggleSessionRes(sessionChannel, resourceIds));
+      dispatch(Actions.createSessionResources(currentUserJwt, resourceIds));
     }
 
     this.setState({ resourceData: {} });

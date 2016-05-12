@@ -32,6 +32,35 @@ const Actions = {
       });
     }
   },
+  createSessionResources:(jwt, data) => {
+    return dispatch => {
+      let csrf_token = localStorage.getItem('csrf_token');
+      request
+        .post('/api/session_resources/toggle_resources')
+        .set('X-CSRF-Token', csrf_token)
+        .set('Authorization', jwt)
+        .send({ resourceIds: data })
+        .end();
+    }
+  },
+  listSessionResources:(jwt) => {
+    return dispatch => {
+      let csrf_token = localStorage.getItem('csrf_token');
+      request
+        .get('/api/session_resources')
+        .set('X-CSRF-Token', csrf_token)
+        .set('Authorization', jwt)
+        .end(function(error, result) {
+          if(error) {
+            console.error(error);
+          }
+          else {
+            console.error(result.body);
+            dispatchByType(dispatch, result.body);
+          }
+        });
+    }
+  },
   list:(jwt, data) => {
     return dispatch => {
       let csrf_token = localStorage.getItem('csrf_token');
@@ -104,11 +133,6 @@ const Actions = {
       })
     }
   },
-  toggleSessionRes: (sessionChannel, resourceIds) => {
-    return dispatch => {
-      sessionChannel.push("toggleSessionRes", {resourceIds : resourceIds });
-    }
-  }
 }
 
 export default Actions;
