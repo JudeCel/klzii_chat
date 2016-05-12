@@ -1,27 +1,40 @@
 import React, {PropTypes} from 'react';
+import { connect }        from 'react-redux';
 import { Modal }          from 'react-bootstrap';
 import UploadsIndex       from './uploads/index';
-import ReactDOM           from 'react-dom';
+import mixins             from '../../../mixins';
+import Actions            from '../../../actions/resource';
 
 const Uploads = React.createClass({
+  mixins: [mixins.modalWindows],
   getInitialState() {
     return { rendering: 'index', tabActive: 1 };
   },
-  componentWillReceiveProps(nextProps) {
-    this.setState({ title: `Add ${nextProps.resourceType}` });
+  initialWithTitle(props) {
+    return { ...this.getInitialState(), title: `Add ${props.resourceType}` }
   },
-  onBack(e) {
+  componentWillReceiveProps(nextProps) {
+    if(nextProps.shouldRender && nextProps.modalWindows != this.props.modalWindows) {
+      this.loadResources(nextProps);
+    }
+  },
+  loadResources(props) {
+    const { resourceType, dispatch, channel } = props;
+    this.setState(this.initialWithTitle(props));
+    dispatch(Actions.get(channel, resourceType));
+  },
+  onBack() {
     if(this.state.rendering != 'index') {
       this.manipulateModalWindow();
-      this.setState(this.getInitialState());
+      this.setState(this.initialWithTitle(this.props));
     }
     else {
-      this.onClose(e);
+      this.onClose();
     }
   },
-  onClose(e) {
-    this.setState(this.getInitialState());
-    this.props.onHide(e);
+  onClose() {
+    this.setState(this.initialWithTitle(this.props));
+    this.closeAllModals();
   },
   onNew(e) {
     if(this.state.rendering == 'new') {
@@ -83,7 +96,7 @@ const Uploads = React.createClass({
     }
   },
   tabStyle(id) {
-    const { mainBorder } = this.props;
+    const { mainBorder } = this.props.colours;
     let style = { borderColor: mainBorder };
     if(this.isTabActive(id)) {
       style.backgroundColor = mainBorder;
@@ -92,12 +105,13 @@ const Uploads = React.createClass({
     return style;
   },
   render() {
+    const show = this.showSpecificModal('resources');
     const { rendering, tabActive, title } = this.state;
-    const { show, onHide, onDelete, onEnter, afterChange, resourceType } = this.props;
+    const { onDelete, afterChange, resourceType, shouldRender } = this.props;
 
-    if(show) {
+    if(show && shouldRender) {
       return (
-        <Modal id={ 'modal-uploads-'+resourceType } dialogClassName='modal-section' show={ show } onHide={ this.onClose } onEnter={ onEnter }>
+        <Modal id={ 'modal-uploads-'+resourceType } dialogClassName='modal-section' show={ show } onHide={ this.onClose } onEnter={ this.onEnterModal }>
           <ul className='nav nav-tabs nav-justified tab-section hidden'>
             <li className={ this.tabActiveClass(1) } onClick={ this.onTab }><a style={ this.tabStyle(1) } data-id={ 1 }>Resource List</a></li>
             <li className={ this.tabActiveClass(2, true) } onClick={ this.onTab }><a style={ this.tabStyle(2) } data-id={ 2 }>Add From URL</a></li>
@@ -132,4 +146,12 @@ const Uploads = React.createClass({
   }
 });
 
-export default Uploads;
+const mapStateToProps = (state) => {
+  return {
+    modalWindows: state.modalWindows,
+    colours: state.chat.session.colours,
+    channel: state.topic.channel,
+  }
+};
+
+export default connect(mapStateToProps)(Uploads);
