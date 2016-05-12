@@ -41,7 +41,7 @@ defmodule KlziiChat.TopicChannelTest do
     ) |> Repo.insert
 
     {:ok, _, socket} = subscribe_and_join(socket, TopicChannel, topic_1_name)
-    ref = push socket, "remove_console_resource", %{"id" => resource.id}
+    ref = push socket, "remove_console_resource", %{"type" => resource.type}
     assert_reply ref, :ok
     assert_push("console", %{})
   end

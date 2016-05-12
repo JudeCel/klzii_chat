@@ -24,38 +24,37 @@ defmodule KlziiChat.Services.ConsoleService do
   def set_resource(member, topic_id, resource_id) do
     if ConsolePermissions.can_set_resource(member) do
       {:ok, console} = get(member.session_id, topic_id)
-      set_id_by_action(resource_id, :add)
+      set_id_by_type(resource_id)
       |> update_console(console)
     else
       {:error, "Action not allowed!"}
     end
   end
 
-  @spec remove_resource(Integer, Integer, Integer) ::  {:ok, %Console{}}
-  def remove_resource(member, topic_id, resource_id) do
+  @spec remove_resource(Integer, Integer, String.t) ::  {:ok, %Console{}}
+  def remove_resource(member, topic_id, type) do
     if ConsolePermissions.can_remove_resource(member) do
       {:ok, console} = get(member.session_id, topic_id)
-      set_id_by_action(resource_id, :remove)
+      remove_id_by_type(type)
       |> update_console(console)
     else
       {:error, "Action not allowed!"}
     end
   end
 
-  def update_console(changeset, console) do
+  @spec update_console(Map, %Console{}) :: {:ok, %Console{}}
+  defp update_console(changeset, console) do
     Console.changeset(console, changeset) |> Repo.update
   end
 
-  def set_id_by_action(resource_id, action) do
+  @spec set_id_by_type(Integer) :: Map
+  defp set_id_by_type(resource_id) when is_integer(resource_id) do
     resource = Repo.get!(Resource, resource_id)
-    id = case action do
-      :add ->
-          resource.id
-      :remove ->
-        nil
-      _ ->
-        nil
-    end
-    Map.put(%{}, String.to_atom("#{resource.type}Id" ), id)
+    Map.put(%{}, String.to_atom("#{resource.type}Id" ), resource.id)
+  end
+
+  @spec remove_id_by_type(String.t) :: Map
+  defp remove_id_by_type(type) do
+    Map.put(%{}, String.to_atom("#{type}Id" ), nil)
   end
 end
