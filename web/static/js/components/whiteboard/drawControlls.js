@@ -166,13 +166,14 @@
 		};
 
 		Element.prototype.ftUpdateTransform = function() {
-			var angle = this.data("angle") - 180;
+			var angle = this.data("angle");
 
 			var matr = this.ftGetInitialTransformMatrix().clone();
 			var splitParams = matr.split();
 			var bb = this.getBBox();
 
-			var tstring = "t" + this.data("tx") + "," + this.data("ty") + "r" + angle + "s" + splitParams.scalex + ","+splitParams.scaley  ;
+			//copy original matrixes data here
+			var tstring = "t" + this.data("tx") + "," + this.data("ty") + "r" + angle + "s" + splitParams.scalex + "," + splitParams.scaley  ;
 			this.attr({ transform: tstring });
 
 			this.ftHighlightBB();
@@ -181,12 +182,11 @@
 		};
 
 		Element.prototype.ftHighlightBB = function() {
-			return;
 			this.data("bbT") && this.data("bbT").remove();
 			this.data("bb") && this.data("bb").remove();
-			this.data("bb", this.paper.rect( rectObjFromBB( this.getBBox() ) )
-							.attr({ fill: "none", stroke: ftOption.handleFill, strokeDasharray: ftOption.handleStrokeDash }) );
-			this.add(this.data("bb"));
+			this.data("bbT", this.paper.rect( rectObjFromBB( this.getBBox(1) ) )
+							.attr({ fill: "none", stroke: ftOption.handleFill, strokeDasharray: ftOption.handleStrokeDash })
+							.transform( this.transform().global.toString() ) );
 			return this;
 		};
 
