@@ -1,5 +1,6 @@
 defmodule KlziiChat.SessionResourcesControllerTest do
   use KlziiChat.{ConnCase, SessionMemberCase}
+  alias KlziiChat.Services.{SessionResourcesService}
   alias KlziiChat.{Repo}
   @image "test/fixtures/images/hamster.jpg"
 
@@ -17,7 +18,8 @@ defmodule KlziiChat.SessionResourcesControllerTest do
 
     {:ok,
       conn: put_req_header(conn, "accept", "application/json"),
-      image_resource: image_resource
+      image_resource: image_resource,
+      member: member
     }
   end
 
@@ -30,6 +32,13 @@ defmodule KlziiChat.SessionResourcesControllerTest do
   test "upload image", %{conn: conn} do
     file = %Plug.Upload{ content_type: "image/jpg", path: @image, filename: "hamster.jpg"}
     conn = post(conn, "api/session_resources/upload", %{private: false,  name: "hamster", type: "image", scope: "collage", file: file })
+    assert json_response(conn, 200)["status"] == "ok"
+  end
+
+  test "delete", %{conn: conn, image_resource: image_resource, member: member} do
+    {:ok, resurces} = SessionResourcesService.add_session_resources([image_resource.id], member.id)
+    resurce = List.first(resurces)
+    conn = delete conn, session_resources_path(conn, :delete, id: resurce.id)
     assert json_response(conn, 200)["status"] == "ok"
   end
 end

@@ -6,44 +6,39 @@ defmodule KlziiChat.Services.SessionResourcesServiceTest do
   setup %{session: session, member: member, member2: member2, account_user: account_user} do
     img_resources = Enum.map(1..3, &create_image_resource(account_user, &1))
     img_resource_ids =
-      Enum.map(img_resources, &Repo.insert(&1))
-      |> Enum.map(fn({:ok, r}) -> r.id end)
+      Enum.map(img_resources, &Repo.insert!(&1))
+      |> Enum.map(fn(r) -> r.id end)
+
 
     {:ok, session_id: session.id, member_id: member.id, member2_id: member2.id, resource_ids: img_resource_ids}
   end
 
   test "add_resources", %{session_id: session_id, member_id: member_id, resource_ids: img_resource_ids} do
-    :ok = SessionResourcesService.add_session_resources(session_id, img_resource_ids, member_id)
+    {:ok, _} = SessionResourcesService.add_session_resources(img_resource_ids, member_id)
     assert(getAllSessionResIds(session_id) === img_resource_ids)
   end
 
-  test "add_wrong_member_role_error", %{session_id: session_id, member2_id: member2_id, resource_ids: img_resource_ids} do
-    assert({:error, "Action not allowed!"} ===
-      SessionResourcesService.add_session_resources(session_id, img_resource_ids, member2_id))
-  end
-
-
   test "delete_session_resource", %{session_id: session_id, member_id: member_id, resource_ids: img_resource_ids} do
-    :ok = SessionResourcesService.add_session_resources(session_id, img_resource_ids, member_id)
-    :ok = SessionResourcesService.delete_session_resource(session_id, List.first(img_resource_ids), member_id)
+    {:ok, session_resources} = SessionResourcesService.add_session_resources(img_resource_ids, member_id)
+    session_resource = List.first(session_resources)
+    {:ok, _} = SessionResourcesService.delete(member_id, session_resource.id)
     assert(getAllSessionResIds(session_id) === Enum.drop(img_resource_ids, 1))
   end
 
-  test "delete_wrong_member_role_error", %{session_id: session_id, member2_id: member2_id, resource_ids: img_resource_ids} do
-    assert({:error, "Action not allowed!"} ===
-      SessionResourcesService.delete_session_resource(session_id, img_resource_ids, member2_id))
-  end
-
-
   test "get_sesion_resources", %{session_id: session_id, member_id: member_id, resource_ids: img_resource_ids} do
-    :ok = SessionResourcesService.add_session_resources(session_id, img_resource_ids, member_id)
-    {:ok, session_resources_ids} = SessionResourcesService.get_session_resources(session_id, member_id)
+    {:ok, _} = SessionResourcesService.add_session_resources(img_resource_ids, member_id)
+    {:ok, session_resources_ids} = SessionResourcesService.get_session_resources(member_id)
     assert(session_resources_ids === getAllSessionRes(session_id))
   end
 
-  test "get_sesion_resources_wrong_member_role_error", %{session_id: session_id, member2_id: member2_id} do
+  test "delete_wrong_member_role_error", %{member2_id: member2_id} do
     assert({:error, "Action not allowed!"} ===
-      SessionResourcesService.get_session_resources(session_id, member2_id))
+      SessionResourcesService.delete(member2_id, "not important" ))
+  end
+
+  test "get_sesion_resources_wrong_member_role_error", %{member2_id: member2_id} do
+    assert({:error, "Action not allowed!"} ===
+      SessionResourcesService.get_session_resources(member2_id))
   end
 
   defp create_image_resource(account_user, n) do
