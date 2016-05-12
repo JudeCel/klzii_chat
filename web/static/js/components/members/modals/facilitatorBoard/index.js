@@ -3,11 +3,12 @@ import { Modal }          from 'react-bootstrap'
 import { connect }        from 'react-redux';
 import onEnterModalMixin  from '../../../../mixins/onEnterModal';
 import Board              from './board';
+import Actions            from '../../../../actions/facilitatorBoard';
 
 const BoardModal = React.createClass({
   mixins: [onEnterModalMixin],
   getInitialState() {
-    return { content: '' };
+    return { content: this.props.boardContent };
   },
   shouldComponentUpdate(nextProps, nextState) {
     return this.state.content === nextState.content;
@@ -24,7 +25,7 @@ const BoardModal = React.createClass({
     this.props.onHide(e);
   },
   onSave(e) {
-    console.log(this.state.content);
+    Actions.saveBoard(this.props.dispatch, this.state.content);
     this.onClose(e);
   },
   setContent(content) {
