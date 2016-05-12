@@ -65,6 +65,9 @@ defmodule KlziiChat.Router do
     pipe_through :api
     options "/", SessionResourcesController, :index
     options "/toggle_resources", SessionResourcesController, :toggle
+
+    get "/", SessionResourcesController, :index
+    post "/toggle_resources", SessionResourcesController, :toggle
   end
 
 
