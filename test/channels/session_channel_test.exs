@@ -33,6 +33,9 @@ defmodule KlziiChat.SessionChannelTest do
       |> Map.get(:id)
 
     assert(id == session_member.id)
+
+    #TODO: Session Resources
+    assert_push("session_resources_ids", %{})
   end
 
   test "when join member broadcast others", %{socket: socket, socket2: socket2, channel_name: channel_name } do

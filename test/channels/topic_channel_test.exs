@@ -11,7 +11,7 @@ defmodule KlziiChat.TopicChannelTest do
     {:ok, socket: socket, socket2: socket2, topic_1_name: topic_1_name}
   end
 
-  test "receive empty console on subscribing", %{socket: socket, topic_1_name: topic_1_name} do
+  test "receive console on subscribing", %{socket: socket, topic_1_name: topic_1_name} do
     {:ok, _, _} = subscribe_and_join(socket, TopicChannel, topic_1_name)
     assert_push("console", %{})
   end
