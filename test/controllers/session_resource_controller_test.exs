@@ -38,7 +38,7 @@ defmodule KlziiChat.SessionResourcesControllerTest do
   test "delete", %{conn: conn, image_resource: image_resource, member: member} do
     {:ok, resurces} = SessionResourcesService.add_session_resources([image_resource.id], member.id)
     resurce = List.first(resurces)
-    conn = delete conn, session_resources_path(conn, :delete, id: resurce.id)
+    conn = delete conn, session_resources_path(conn, :delete, resurce.id)
     assert json_response(conn, 200)["status"] == "ok"
   end
 end

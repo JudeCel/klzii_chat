@@ -66,12 +66,12 @@ defmodule KlziiChat.Router do
     options "/", SessionResourcesController, :index
     options "/upload", SessionResourcesController, :upload
     options "/add_resources", SessionResourcesController, :create
-    options "/id", SessionResourcesController, :delete
+    options "/:id", SessionResourcesController, :delete
 
     get "/", SessionResourcesController, :index
     post "/upload", SessionResourcesController, :upload
     post "/add_resources", SessionResourcesController, :create
-    delete "/id", SessionResourcesController, :delete
+    delete "/:id", SessionResourcesController, :delete
   end
 
 
