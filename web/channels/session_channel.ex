@@ -1,6 +1,6 @@
 defmodule KlziiChat.SessionChannel do
   use KlziiChat.Web, :channel
-  alias KlziiChat.Services.{SessionService, SessionResourcesService, SessionMembersService}
+  alias KlziiChat.Services.{SessionService, SessionMembersService}
   alias KlziiChat.{Presence, SessionMembersView, SessionResourcesView}
 
   # This Channel is only for session context
@@ -37,10 +37,8 @@ defmodule KlziiChat.SessionChannel do
         id: socket.assigns.session_member.id,
         role: socket.assigns.session_member.role
       })
-      {:ok, session_resources_ids} = SessionResourcesService.get_session_resources(socket.assigns.session_id)
       push socket, "presence_state", Presence.list(socket)
       push(socket, "self_info", socket.assigns.session_member)
-      push(socket, "session_resources_ids", SessionResourcesView.render("show.json", %{session_resources_ids: session_resources_ids}))
     {:noreply, socket}
   end
 
