@@ -18,7 +18,6 @@
 			this.onSelected = null;
 			this.onTransformed = null;
 			this.onFinishTransform = null;
-			//if (this.group) this.group.remove();
 			this.remove();
 			this.removeData();
 		}
@@ -117,7 +116,7 @@
 		}
 
 		Element.prototype.ftStoreInitialTransformMatrix = function() {
-			this.data('initialTransformMatrix', this.transform().globalMatrix );
+			this.data('initialTransformMatrix', this.transform().localMatrix );
 			return this;
 		};
 
@@ -171,9 +170,7 @@
 			var matr = this.ftGetInitialTransformMatrix().clone();
 			var splitParams = matr.split();
 			var bb = this.getBBox();
-
-			//copy original matrixes data here
-			var tstring = "t" + this.data("tx") + "," + this.data("ty") + "r" + angle + "s" + splitParams.scalex + "," + splitParams.scaley  ;
+			var tstring = "t" + this.data("tx") + "," + this.data("ty") + "r" + angle + "s" + splitParams.scalex + "," + splitParams.scaley;
 			this.attr({ transform: tstring });
 
 			this.ftHighlightBB();
@@ -205,11 +202,7 @@
 			this.data("maxPosX", params.max); this.data("minPosX", params.min);
 			this.data("centerOffsetX", params.centerOffsetX); this.data("centerOffsetY", params.centerOffsetY)
 			this.data("posX", params.min);
-			if( params.type == 'knob' ) {
-				this.drag( moveDragKnob, startDrag, endDrag );
-			} else {
-				this.drag( moveDragSlider, startDrag, endDrag );
-			}
+			this.drag( moveDragSlider, startDrag, endDrag );
 		}
 
 		Element.prototype.setCapMaxPosition = function( posX ) {
@@ -226,20 +219,20 @@
 		// Also choose which id is the cap
 
 		Paper.prototype.slider = function( params , callback) {
-						var myPaper = this,  myGroup;
-						var loaded = Snap.load( params.filename, function( frag ) {
-							myGroup = myPaper.group().add( frag );
-							myGroup.transform("t" + params.x + "," + params.y);
-							var myCap = myGroup.select( params.capSelector );
-							myCap.myGroup = myGroup;
-							myCap.data("sliderId", params.sliderId);
-							myCap.sliderAnyAngle( params );
-							sliderSetAttributes( myGroup, params.attr );
-							sliderSetAttributes( myCap, params.capattr );
-							myGroup.myCap = myCap;
-							callback(myGroup);
-						});
-						return myGroup;
+			var myPaper = this,  myGroup;
+			var loaded = Snap.load( params.filename, function( frag ) {
+				myGroup = myPaper.group().add( frag );
+				myGroup.transform("t" + params.x + "," + params.y);
+				var myCap = myGroup.select( params.capSelector );
+				myCap.myGroup = myGroup;
+				myCap.data("sliderId", params.sliderId);
+				myCap.sliderAnyAngle( params );
+				sliderSetAttributes( myGroup, params.attr );
+				sliderSetAttributes( myCap, params.capattr );
+				myGroup.myCap = myCap;
+				callback(myGroup);
+			});
+			return myGroup;
 		}
 
 	 // Extra func, to pass through extra attributes passed when creating the slider
@@ -291,14 +284,14 @@
 
 		// Call the matrix checks above, and set any transformation
 		function moveDragSlider( dx,dy ) {
-						var posX;
-						updateMovement( this, dx, dy );
-						posX = this.data("posX");
-						this.attr({ transform: this.data("origTransform") + (posX ? "T" : "t") + [posX,0] });
-						this.data("onDragFunc")(this);
+			var posX;
+			updateMovement( this, dx, dy );
+			posX = this.data("posX");
+			this.attr({ transform: this.data("origTransform") + (posX ? "T" : "t") + [posX,0] });
+			this.data("onDragFunc")(this);
 		};
 		function endDrag() {
-						this.data('onDragEndFunc')(this);
+			this.data('onDragEndFunc')(this);
 		};
 
 		//control creation
@@ -424,9 +417,6 @@
 	    shape.scaleXControl.insertAfter(shape);
 	    shape.scaleYControl.insertAfter(shape);
 	  }
-
-
-
 	});
 
 	function rectObjFromBB ( bb ) {
@@ -438,8 +428,11 @@
 		this.parent().selectAll('image').forEach( function( el, i ) {
 				el.ftStoreStartCenter();
 		} );
-		mainEl.data("otx", mainEl.data("tx") || 0);
-		mainEl.data("oty", mainEl.data("ty") || 0);
+		mainEl.ftStoreStartCenter();
+
+		var split = mainEl.matrix.split();
+		mainEl.data("otx", split.tx || 0);
+		mainEl.data("oty", split.ty || 0);
 	};
 
 	function elementDragMove( mainEl, dx, dy, x, y ) {
@@ -456,6 +449,8 @@
 	}
 
 	function elementDragEnd( mainEl, dx, dy, x, y ) {
+		mainEl.data("tx", mainEl.data("otx") + +dx);
+		mainEl.data("ty", mainEl.data("oty") + +dy);
 		informFinishedTransform(mainEl);
 	};
 
@@ -473,6 +468,7 @@
 	function dragHandleRotateEnd( mainElement ) {
 		this.ftStoreStartCenter();
 		informFinishedTransform(mainElement);
+		mainElement.ftStoreInitialTransformMatrix();
 	};
 
 	function normalizeScaleVector(x, y, s) {
