@@ -1,10 +1,10 @@
 import React, {PropTypes} from 'react';
 import Member             from './member.js';
 import { connect }        from 'react-redux';
-import isOwner   from '../../mixins/isOwner';
+import mixins             from '../../mixins';
 
 const Participants = React.createClass({
-  mixins: [isOwner],
+  mixins: [mixins.validations],
   evenClasses(even, id) {
     let className = '';
     if(this.isOwner(id)) {
