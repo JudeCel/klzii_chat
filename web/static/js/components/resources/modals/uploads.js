@@ -1,31 +1,74 @@
 import React, {PropTypes} from 'react';
+import { connect }        from 'react-redux';
 import { Modal }          from 'react-bootstrap';
 import UploadsIndex       from './uploads/index';
-import ReactDOM           from 'react-dom';
+import mixins             from '../../../mixins';
+import Actions            from '../../../actions/resource';
 
 const Uploads = React.createClass({
+  mixins: [mixins.modalWindows],
   getInitialState() {
     return { rendering: 'index', tabActive: 1 };
   },
-  componentWillReceiveProps(nextProps) {
-    this.setState({ title: `Add ${nextProps.resourceType}` });
+  initialWithTitle(props) {
+    return { ...this.getInitialState(), title: `Add ${props.modalName}` }
   },
-  onBack(e) {
+  componentWillReceiveProps(nextProps) {
+    if(nextProps.show && nextProps.modalWindows != this.props.modalWindows) {
+      this.setState(this.initialWithTitle(nextProps), function() {
+        const { dispatch, currentUserJwt, modalName } = this.props;
+        dispatch(Actions.listSessionResources(currentUserJwt, { type: [modalName] }));
+      });
+    }
+  },
+  onCreate() {
+    const { name, url, files, resourceIds } = this.state.resourceData;
+    const { dispatch, currentUserJwt, modalName } = this.props;
+
+    if(url) {
+      let data = {
+        type: 'link',
+        scope: 'youtube',
+        name: name,
+        file: url
+      };
+
+      dispatch(Actions.youtube(data, currentUserJwt));
+    }
+    else if(files) {
+      let data = {
+        type: modalName,
+        scope: 'collage',
+        name: name,
+        files: files
+      };
+
+      dispatch(Actions.upload(data, currentUserJwt));
+    }
+    else if (resourceIds) {
+      dispatch(Actions.createSessionResources(currentUserJwt, resourceIds));
+    }
+  },
+  afterChange(data) {
+    this.setState(data);
+  },
+  onBack() {
     if(this.state.rendering != 'index') {
       this.manipulateModalWindow();
-      this.setState(this.getInitialState());
+      this.setState(this.initialWithTitle(this.props));
     }
     else {
-      this.onClose(e);
+      this.onClose();
     }
   },
-  onClose(e) {
-    this.setState(this.getInitialState());
-    this.props.onHide(e);
+  onClose() {
+    this.setState(this.initialWithTitle(this.props));
+    this.closeAllModals();
   },
   onNew(e) {
     if(this.state.rendering == 'new') {
-      this.props.onCreate(this);
+      this.onCreate();
+      this.onBack();
     }
     else {
       this.setState({ rendering: 'new', title: this.tabModalTitles()[1] }, function() {
@@ -35,7 +78,7 @@ const Uploads = React.createClass({
     }
   },
   manipulateModalWindow() {
-    let id = 'modal-uploads-' + this.props.resourceType;
+    let id = 'modal-uploads-' + this.props.modalName;
     let modal = document.getElementById(id);
     let parent = modal.querySelector('.modal-section');
     let tabs = modal.querySelector('.tab-section');
@@ -64,18 +107,17 @@ const Uploads = React.createClass({
     }
   },
   tabModalTitles() {
-    const { resourceType } = this.props;
-    return { 1: `${resourceType} Resource List`, 2: `Add a ${resourceType} from URL`, 3: `Upload a ${resourceType}` };
+    const { modalName } = this.props;
+    return { 1: `${modalName} Resource List`, 2: `Add ${modalName} from URL`, 3: `Upload ${modalName}` };
   },
-  onTab(e) {
-    const id = e.target.dataset.id;
+  onTab(id) {
     this.setState({ tabActive: id, title: this.tabModalTitles()[id] });
   },
   isTabActive(id) {
     return id == this.state.tabActive;
   },
   tabActiveClass(id, videoCheck) {
-    if(videoCheck && this.props.resourceType != 'video') {
+    if(videoCheck && this.props.modalName != 'video') {
       return 'hidden';
     }
     else {
@@ -83,7 +125,7 @@ const Uploads = React.createClass({
     }
   },
   tabStyle(id) {
-    const { mainBorder } = this.props;
+    const { mainBorder } = this.props.colours;
     let style = { borderColor: mainBorder };
     if(this.isTabActive(id)) {
       style.backgroundColor = mainBorder;
@@ -93,15 +135,24 @@ const Uploads = React.createClass({
   },
   render() {
     const { rendering, tabActive, title } = this.state;
-    const { show, onHide, onDelete, onEnter, afterChange, resourceType } = this.props;
+    const { modalName, show } = this.props;
+    const tabs = [
+      { order: 1, title: 'Resource List' },
+      { order: 2, title: 'Add From URL' },
+      { order: 3, title: 'Upload' },
+    ];
 
     if(show) {
       return (
-        <Modal id={ 'modal-uploads-'+resourceType } dialogClassName='modal-section' show={ show } onHide={ this.onClose } onEnter={ onEnter }>
+        <Modal id={ 'modal-uploads-' + modalName } dialogClassName='modal-section' show={ show } onHide={ this.onClose } onEnter={ this.onEnterModal }>
           <ul className='nav nav-tabs nav-justified tab-section hidden'>
-            <li className={ this.tabActiveClass(1) } onClick={ this.onTab }><a style={ this.tabStyle(1) } data-id={ 1 }>Resource List</a></li>
-            <li className={ this.tabActiveClass(2, true) } onClick={ this.onTab }><a style={ this.tabStyle(2) } data-id={ 2 }>Add From URL</a></li>
-            <li className={ this.tabActiveClass(3) } onClick={ this.onTab }><a style={ this.tabStyle(3) } data-id={ 3 }>Upload</a></li>
+            {
+              tabs.map((tab, index) =>
+                <li key={ tab.order } className={ this.tabActiveClass(tab.order, tab.order == 2) } onClick={ this.onTab.bind(this, tab.order) }>
+                  <a style={ this.tabStyle(tab.order) }>{ tab.title }</a>
+                </li>
+              )
+            }
           </ul>
 
           <Modal.Header>
@@ -110,7 +161,7 @@ const Uploads = React.createClass({
             </div>
 
             <div className='col-md-8 modal-title'>
-              <h4>{ title || `Add ${resourceType}` }</h4>
+              <h4>{ title || `Add ${modalName}` }</h4>
             </div>
 
             <div className='col-md-2'>
@@ -120,7 +171,7 @@ const Uploads = React.createClass({
 
           <Modal.Body>
             <div className='row uploads-section'>
-              <UploadsIndex { ...{ rendering, tabActive, resourceType, onDelete, afterChange } } />
+              <UploadsIndex { ...{ rendering, tabActive, modalName, afterChange: this.afterChange } } />
             </div>
           </Modal.Body>
         </Modal>
@@ -132,4 +183,13 @@ const Uploads = React.createClass({
   }
 });
 
-export default Uploads;
+const mapStateToProps = (state) => {
+  return {
+    modalWindows: state.modalWindows,
+    colours: state.chat.session.colours,
+    currentUserJwt: state.members.currentUser.jwt,
+    channel: state.topic.channel,
+  }
+};
+
+export default connect(mapStateToProps)(Uploads);

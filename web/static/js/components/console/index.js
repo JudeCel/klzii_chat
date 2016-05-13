@@ -1,66 +1,57 @@
 import React, {PropTypes} from 'react';
 import { connect }        from 'react-redux';
-import Constants          from '../../constants';
 import Modals             from './modals';
-import onEnterModalMixin  from '../../mixins/onEnterModal';
+import mixins             from '../../mixins';
 
 const { SurveyModal, UploadsModal } = Modals;
 
 const Console = React.createClass({
-  mixins: [onEnterModalMixin],
+  mixins: [mixins.modalWindows, mixins.helpers],
   getInitialState() {
-    return { currentModal: null };
+    return { modalName: null };
   },
-  compareState(modals) {
-    return modals.includes(this.state.currentModal);
+  shouldShow(modals) {
+    return modals.includes(this.state.modalName) && this.showSpecificModal('console');
   },
-  closeModal(e) {
-    const { dispatch } = this.props;
-    dispatch({ type: Constants.CLOSE_CONSOLE_MODAL, modal: this.state.currentModal });
-    this.setState({ currentModal: null });
+  openModal(type) {
+    if(this.isConsoleActive(type)) {
+      this.setState({ modalName: type }, function() {
+        this.openSpecificModal('console');
+      });
+    }
   },
-  openModal(e) {
-    const { dispatch, channel } = this.props;
-
-    let modal = e.currentTarget.getAttribute('data-modal');
-    dispatch({ type: Constants.OPEN_CONSOLE_MODAL, modal });
-    this.setState({ currentModal: modal });
-    // dispatch(Actions.get(channel, modal));
-  },
-  hasConsole(type) {
-    let { tConsole } = this.props;
-    return tConsole[type + '_id'];
+  isConsoleActive(type) {
+    return this.getConsoleResourceId(type);
   },
   consoleButtonClassName(type) {
-    return this.hasConsole(type) ? 'cursor-pointer active' : '';
+    return this.isConsoleActive(type) ? 'cursor-pointer active' : '';
   },
   render() {
-    const { currentModal } = this.state;
+    const { modalName } = this.state;
+    const consoleButtons = [
+      { type: 'video',  className: 'icon-video-1'    },
+      { type: 'audio',  className: 'icon-volume-up'  },
+      { type: 'image',  className: 'icon-camera'     },
+      { type: 'survey', className: 'icon-ok-squared' },
+      { type: 'pdf',    className: 'icon-pdf'        },
+    ];
 
     return (
       <div>
         <div className='console-section'>
           <ul className='icons'>
-            <li onClick={ this.openModal } className={ this.consoleButtonClassName('video') } data-modal='video'>
-              <i className='icon-video-1' />
-            </li>
-            <li onClick={ this.openModal } className={ this.consoleButtonClassName('audio') } data-modal='audio'>
-              <i className='icon-volume-up' />
-            </li>
-            <li onClick={ this.openModal } className={ this.consoleButtonClassName('image') } data-modal='image'>
-              <i className='icon-camera' />
-            </li>
-            <li onClick={ this.openModal } className={ this.consoleButtonClassName('survey') } data-modal='survey'>
-              <i className='icon-ok-squared' />
-            </li>
-            <li>
-              <i className='icon-pdf' />
-            </li>
+            {
+              consoleButtons.map((button, index) =>
+                <li key={ index } onClick={ this.openModal.bind(this, button.type) } className={ this.consoleButtonClassName(button.type) }>
+                  <i className={ button.className } />
+                </li>
+              )
+            }
           </ul>
         </div>
 
-        <SurveyModal show={ this.compareState(['survey']) } onHide={ this.closeModal } onEnter={ this.onEnter } />
-        <UploadsModal show={ this.compareState(['video', 'audio', 'image']) } onHide={ this.closeModal } onEnter={ this.onEnter } resourceType={ currentModal } />
+        <SurveyModal show={ this.shouldShow(['survey']) } />
+        <UploadsModal show={ this.shouldShow(['video', 'audio', 'image']) } modalName={ modalName } />
       </div>
     )
   }
@@ -68,9 +59,8 @@ const Console = React.createClass({
 
 const mapStateToProps = (state) => {
   return {
-    colours: state.chat.session.colours,
-    channel: state.topic.channel,
-    tConsole: state.topic.console
+    modalWindows: state.modalWindows,
+    console: state.topic.console
   }
 };
 

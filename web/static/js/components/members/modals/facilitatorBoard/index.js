@@ -1,44 +1,43 @@
 import React, {PropTypes} from 'react';
 import { Modal }          from 'react-bootstrap'
 import { connect }        from 'react-redux';
-import onEnterModalMixin  from '../../../../mixins/onEnterModal';
+import mixins             from '../../../../mixins';
 import Board              from './board';
+import Actions            from '../../../../actions/facilitatorBoard';
 
 const BoardModal = React.createClass({
-  mixins: [onEnterModalMixin],
+  mixins: [mixins.modalWindows],
   getInitialState() {
-    return { content: '' };
+    return { content: this.props.boardContent };
   },
   shouldComponentUpdate(nextProps, nextState) {
-    return this.state.content === nextState.content;
+    return this.state.content === nextState.content && nextProps.hasPermissions;
   },
   onOpen(e) {
-    this.onEnter(e);
+    this.onEnterModal(e);
 
     let preview = document.getElementsByClassName('medium-editor-anchor-preview')[0];
     let toolbar = document.getElementsByClassName('medium-editor-toolbar medium-editor-stalker-toolbar')[0];
     e.appendChild(preview);
     e.appendChild(toolbar);
   },
-  onClose(e) {
-    this.props.onHide(e);
-  },
   onSave(e) {
-    console.log(this.state.content);
-    this.onClose(e);
+    Actions.saveBoard(this.props.dispatch, this.state.content);
+    this.closeAllModals();
   },
   setContent(content) {
     this.setState({ content: content });
   },
   render() {
-    const { show, onHide, boardContent } = this.props;
+    const show = this.showSpecificModal('facilitatorBoard');
+    const { boardContent } = this.props;
 
     if(show) {
       return (
-        <Modal dialogClassName='modal-section facilitator-board-modal' show={ show } onHide={ onHide } onEnter={ this.onOpen }>
+        <Modal dialogClassName='modal-section facilitator-board-modal' show={ show } onHide={ this.closeAllModals } onEnter={ this.onOpen }>
           <Modal.Header>
             <div className='col-md-2'>
-              <span className='pull-left fa icon-reply' onClick={ this.onClose }></span>
+              <span className='pull-left fa icon-reply' onClick={ this.closeAllModals }></span>
             </div>
 
             <div className='col-md-8 modal-title'>
@@ -66,6 +65,7 @@ const BoardModal = React.createClass({
 
 const mapStateToProps = (state) => {
   return {
+    modalWindows: state.modalWindows,
     colours: state.chat.session.colours,
   }
 };

@@ -1,13 +1,13 @@
 import React, {PropTypes} from 'react';
 import { connect }        from 'react-redux';
 import { Modal }          from 'react-bootstrap';
-import onEnterModalMixin  from '../../../../mixins/onEnterModal';
+import mixins             from '../../../../mixins';
 import MemberActions      from '../../../../actions/member';
 import Avatar             from '../../avatar';
 import AvatarPreview      from './preview';
 
 const ChangeAvatarModal = React.createClass({
-  mixins: [onEnterModalMixin],
+  mixins: [mixins.modalWindows],
   getInitialState() {
     return { tabActive: 'hair' };
   },
@@ -20,17 +20,17 @@ const ChangeAvatarModal = React.createClass({
   },
   onClose(e) {
     this.setState(this.getInitialState());
-    this.props.onHide(e);
+    this.closeAllModals();
   },
   onSave(e) {
-    this.props.onHide(e);
     const { dispatch, channel } = this.props;
-    const {avatarData, username} = this.state
+    const { avatarData, username } = this.state
+    this.closeAllModals();
     dispatch(MemberActions.updateAvatar(channel, { avatarData, username }));
   },
   onOpen(e) {
     this.setStateBasedOnCurrentUser();
-    this.onEnter(e);
+    this.onEnterModal(e);
   },
   onNameChange(e) {
     this.setState({ username: e.target.value });
@@ -65,7 +65,8 @@ const ChangeAvatarModal = React.createClass({
     return type == this.state.tabActive ? className : className + ' hidden';
   },
   render() {
-    const { show, colours } = this.props;
+    const show = this.showSpecificModal('avatar');
+    const { colours } = this.props;
     const { id, username, avatarData, colour, tabActive } = this.state;
     const tabs = [
       { type: 'hair' },
@@ -148,6 +149,7 @@ const ChangeAvatarModal = React.createClass({
 
 const mapStateToProps = (state) => {
   return {
+    modalWindows: state.modalWindows,
     colours: state.chat.session.colours,
     currentUser: state.members.currentUser,
     channel: state.chat.channel

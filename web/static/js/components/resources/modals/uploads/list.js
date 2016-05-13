@@ -7,15 +7,15 @@ const UploadList = React.createClass({
     return this.props[resources];
   },
   render() {
-    const { resourceType, onDelete } = this.props;
-    const sessionResources = this.chooseResourceType(resourceType);
+    const { modalName } = this.props;
+    const sessionResources = this.chooseResourceType(modalName);
 
     return (
       <ul className='list-group'>
-        <UploadListItem key={ -1 } justInput={ true } resourceType={ resourceType } />
+        <UploadListItem key={ 'none' } justInput={ true } modalName={ modalName } />
         {
           sessionResources.map((sr, index) =>
-            <UploadListItem key={ index } resource={ sr.resource } resourceType={ resourceType } onDelete={ onDelete } />
+            <UploadListItem key={ index } resource={ sr.resource } modalName={ modalName } />
           )
         }
       </ul>

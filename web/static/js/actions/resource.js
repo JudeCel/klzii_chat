@@ -54,11 +54,12 @@ const Actions = {
         .end();
     }
   },
-  listSessionResources:(jwt) => {
+  listSessionResources:(jwt, data) => {
     return dispatch => {
       let csrf_token = localStorage.getItem('csrf_token');
       request
         .get('/api/session_resources')
+        .query({ 'type[]': data.type, 'scope[]': data.scope })
         .set('X-CSRF-Token', csrf_token)
         .set('Authorization', jwt)
         .end(function(error, result) {
@@ -66,17 +67,33 @@ const Actions = {
             console.error(error);
           }
           else {
-            console.error(result.body);
-            dispatchByType(dispatch, { type: 'video', resources: result.body });
+            dispatchByType(dispatch, { type: data.type[0], resources: result.body });
           }
         });
     }
   },
-  list:(jwt, data) => {
+  getConsoleResource:(jwt, resourceId) => {
     return dispatch => {
       let csrf_token = localStorage.getItem('csrf_token');
       request
-        .get('/api/resources')
+        .get('/api/resources/' + resourceId)
+        .set('X-CSRF-Token', csrf_token)
+        .set('Authorization', jwt)
+        .end(function(error, result) {
+          if(error) {
+            console.error(error);
+          }
+          else {
+            dispatch({ type: Constants.SET_CONSOLE_RESOURCE, data: result.body.resource });
+          }
+        });
+    }
+  },
+  getGalleryList:(jwt, data) => {
+    return dispatch => {
+      let csrf_token = localStorage.getItem('csrf_token');
+      request
+        .get('/api/session_resources/gallery')
         .query({ 'type[]': data.type, 'scope[]': data.scope })
         .set('X-CSRF-Token', csrf_token)
         .set('Authorization', jwt)
@@ -122,7 +139,6 @@ const Actions = {
         req.field("name", data.name);
       });
       req.end((error, result) =>{
-        console.log(error);
         if (result) {
           dispatchByType(dispatch, {type: result.body.type, resources: [result.body.resource]})
         }
