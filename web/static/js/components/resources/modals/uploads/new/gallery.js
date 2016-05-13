@@ -41,7 +41,7 @@ const GalleryNew = React.createClass({
       data.type = [modalName];
     }
 
-    dispatch(Actions.list(currentUserJwt, data));
+    dispatch(Actions.getGalleryList(currentUserJwt, data));
   },
   render() {
     const { modalName, active, resources } = this.props;

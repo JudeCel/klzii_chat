@@ -15,13 +15,11 @@ const Uploads = React.createClass({
   },
   componentWillReceiveProps(nextProps) {
     if(nextProps.show && nextProps.modalWindows != this.props.modalWindows) {
-      this.setState(this.initialWithTitle(nextProps));
+      this.setState(this.initialWithTitle(nextProps), function() {
+        const { dispatch, currentUserJwt, modalName } = this.props;
+        dispatch(Actions.listSessionResources(currentUserJwt, { type: [modalName] }));
+      });
     }
-  },
-  openModal(e) {
-    this.onEnterModal(e);
-    const { dispatch, currentUserJwt } = this.props;
-    dispatch(Actions.listSessionResources(currentUserJwt));
   },
   onCreate() {
     const { name, url, files, resourceIds } = this.state.resourceData;
@@ -146,7 +144,7 @@ const Uploads = React.createClass({
 
     if(show) {
       return (
-        <Modal id={ 'modal-uploads-' + modalName } dialogClassName='modal-section' show={ show } onHide={ this.onClose } onEnter={ this.openModal }>
+        <Modal id={ 'modal-uploads-' + modalName } dialogClassName='modal-section' show={ show } onHide={ this.onClose } onEnter={ this.onEnterModal }>
           <ul className='nav nav-tabs nav-justified tab-section hidden'>
             {
               tabs.map((tab, index) =>

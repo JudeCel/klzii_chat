@@ -54,11 +54,12 @@ const Actions = {
         .end();
     }
   },
-  listSessionResources:(jwt) => {
+  listSessionResources:(jwt, data) => {
     return dispatch => {
       let csrf_token = localStorage.getItem('csrf_token');
       request
         .get('/api/session_resources')
+        .query({ 'type[]': data.type, 'scope[]': data.scope })
         .set('X-CSRF-Token', csrf_token)
         .set('Authorization', jwt)
         .end(function(error, result) {
@@ -66,7 +67,7 @@ const Actions = {
             console.error(error);
           }
           else {
-            dispatchByType(dispatch, { type: 'video', resources: result.body });
+            dispatchByType(dispatch, { type: data.type[0], resources: result.body });
           }
         });
     }
@@ -88,11 +89,11 @@ const Actions = {
         });
     }
   },
-  list:(jwt, data) => {
+  getGalleryList:(jwt, data) => {
     return dispatch => {
       let csrf_token = localStorage.getItem('csrf_token');
       request
-        .get('/api/resources')
+        .get('/api/session_resources/gallery')
         .query({ 'type[]': data.type, 'scope[]': data.scope })
         .set('X-CSRF-Token', csrf_token)
         .set('Authorization', jwt)
