@@ -6,7 +6,8 @@ const initialState = {
   all: [],
   ready: false,
   leave: false,
-  console: {}
+  console: {},
+  consoleResource: {}
 };
 
 export default function reducer(state = initialState, action = {}) {
@@ -22,6 +23,9 @@ export default function reducer(state = initialState, action = {}) {
 
     case Constants.SET_CONSOLE:
       return { ...state, console: action.console };
+
+    case Constants.SET_CONSOLE_RESOURCE:
+      return { ...state, consoleResource: action.data };
 
     default:
       return state;

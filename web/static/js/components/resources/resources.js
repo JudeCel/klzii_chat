@@ -1,99 +1,48 @@
 import React, {PropTypes} from 'react';
 import { connect }        from 'react-redux';
-import Constants          from '../../constants';
-import Actions            from '../../actions/resource';
 import mixins             from '../../mixins';
 import Modals             from './modals';
 
 const { UploadsModal, SurveyModal } = Modals;
 
 const Resources = React.createClass({
-  mixins: [mixins.modalWindows],
+  mixins: [mixins.modalWindows, mixins.validations],
   getInitialState() {
-    return { resourceData: {}, currentModal: null };
+    return { currentModal: null };
   },
-  compareState(modals) {
-    return modals.includes(this.state.currentModal);
+  shouldShow(modals) {
+    return modals.includes(this.state.currentModal) && this.showSpecificModal('resources');
   },
   openModal(modal) {
     this.setState({ currentModal: modal }, function() {
       this.openSpecificModal('resources');
     });
   },
-  onDelete(id) {
-    const { dispatch, channel } = this.props;
-    dispatch(Actions.delete(channel, id));
-  },
-  onCreate(child) {
-    const { name, url, files, resourceId } = this.state.resourceData;
-    const { dispatch, currentUserJwt } = this.props;
-
-    if(url) {
-      //youtube
-      let data = {
-        type: 'link',
-        scope: 'youtube',
-        name: name,
-        file: url
-      };
-
-      dispatch(Actions.youtube(data, currentUserJwt));
-    }
-    else if(files) {
-      // upload
-      let data = {
-        type: modalWindow,
-        scope: 'collage',
-        name: name,
-        files: files
-      };
-
-      dispatch(Actions.upload(data, currentUserJwt));
-    }
-    else if (resourceIds) {
-      // TODO: update SessionResources
-      dispatch(Actions.createSessionResources(currentUserJwt, resourceIds));
-    }
-
-    this.setState({ resourceData: {} });
-    child.onBack();
-  },
-  afterChange(data) {
-    this.setState(data);
-  },
   render() {
     const { currentModal } = this.state;
-    const { permissions } = this.props;
+    const resourceButtons = [
+      { type: 'video', className: 'icon-video-1' },
+      { type: 'audio', className: 'icon-volume-up' },
+      { type: 'image', className: 'icon-picture' },
+      { type: 'video', className: 'icon-camera' },
+      { type: 'survey', className: 'icon-ok-squared' },
+    ]
 
-    if(permissions && permissions.resources.can_upload) {
+    if(this.hasPermissions('resources', 'can_upload')) {
       return (
         <div className='resources-section col-md-4'>
           <ul className='icons'>
-            <li onClick={ this.openModal.bind(this, 'video') }>
-              <i className='icon-video-1' />
-            </li>
-            <li onClick={ this.openModal.bind(this, 'audio') }>
-              <i className='icon-volume-up' />
-            </li>
-            <li onClick={ this.openModal.bind(this, 'image') }>
-              <i className='icon-picture' />
-            </li>
-            <li>
-              <i className='icon-camera' />
-            </li>
-            <li onClick={ this.openModal.bind(this, 'survey') }>
-              <i className='icon-ok-squared' />
-            </li>
+            {
+              resourceButtons.map((button, index) =>
+                <li key={ index } onClick={ this.openModal.bind(this, button.type) }>
+                  <i className={ button.className } />
+                </li>
+              )
+            }
           </ul>
 
-          <UploadsModal
-            resourceType={ currentModal }
-            shouldRender={ this.compareState(['video', 'audio', 'image']) }
-            onDelete={ this.onDelete }
-            afterChange={ this.afterChange }
-            onCreate={ this.onCreate }
-          />
-          <SurveyModal shouldRender={ this.compareState(['survey']) } />
+          <UploadsModal show={ this.shouldShow(['video', 'audio', 'image']) } modalName={ currentModal } />
+          <SurveyModal show={ this.shouldShow(['survey']) } />
         </div>
       )
     }
@@ -105,11 +54,8 @@ const Resources = React.createClass({
 
 const mapStateToProps = (state) => {
   return {
-    permissions: state.members.currentUser.permissions,
+    currentUser: state.members.currentUser,
     modalWindows: state.modalWindows,
-    currentUserJwt: state.members.currentUser.jwt,
-    channel: state.topic.channel,
-    permissions: state.members.currentUser.permissions
   }
 };
 

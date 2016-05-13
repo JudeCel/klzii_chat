@@ -30,21 +30,21 @@ const GalleryNew = React.createClass({
     });
   },
   loadResources() {
-    const { currentUserJwt, resourceType, dispatch } = this.props;
+    const { currentUserJwt, modalName, dispatch } = this.props;
     let data = {};
 
-    if(resourceType == 'video') {
+    if(modalName == 'video') {
       data.type = ['video', 'link'];
       data.scope = ['collage', 'youtube'];
     }
     else {
-      data.type = [resourceType];
+      data.type = [modalName];
     }
 
     dispatch(Actions.list(currentUserJwt, data));
   },
   render() {
-    const { resourceType, active, resources } = this.props;
+    const { modalName, active, resources } = this.props;
 
     if(active) {
       if(resources.length == 0) {
@@ -68,7 +68,7 @@ const GalleryNew = React.createClass({
                     </div>
 
                     <div>
-                      <UploadTypes resourceType={ resourceType } url={ resource.url } youtube={ resource.scope == 'youtube' } />
+                      <UploadTypes modalName={ modalName } url={ resource.url } youtube={ resource.scope == 'youtube' } />
                     </div>
                   </div>
                 )
