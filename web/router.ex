@@ -67,25 +67,13 @@ defmodule KlziiChat.Router do
     options "/upload", SessionResourcesController, :upload
     options "/add_resources", SessionResourcesController, :create
     options "/:id", SessionResourcesController, :delete
-<<<<<<< HEAD
     options "/gallery", SessionResourcesController, :gallery
-=======
-    options "/gallery", SessionResourcesController, :show
->>>>>>> 859eea0a79d54d57ea41c3d8fd5f25f01082c0e4
 
     get "/", SessionResourcesController, :index
     post "/upload", SessionResourcesController, :upload
     post "/add_resources", SessionResourcesController, :create
     delete "/:id", SessionResourcesController, :delete
-<<<<<<< HEAD
     get "/gallery", SessionResourcesController, :gallery
-=======
-    get "/gallery", SessionResourcesController, :show
-
-
->>>>>>> 859eea0a79d54d57ea41c3d8fd5f25f01082c0e4
-  end
-
 
   # Other scopes may use custom stacks.
   # scope "/api", KlziiChat do
