@@ -74,6 +74,7 @@ defmodule KlziiChat.Router do
     post "/add_resources", SessionResourcesController, :create
     delete "/:id", SessionResourcesController, :delete
     get "/gallery", SessionResourcesController, :gallery
+  end
 
   # Other scopes may use custom stacks.
   # scope "/api", KlziiChat do

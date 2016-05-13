@@ -46,6 +46,7 @@ defmodule KlziiChat.SessionResourcesController do
   end
 
   def gallery(conn, params, member, _) do
+    IO.puts("GALLERY!!!!!!!!!!!!!!!!!!!!!!")
     query =
       QueriesResources.add_role_scope(member.account_user)
       |> QueriesResources.find_by_params(params)
