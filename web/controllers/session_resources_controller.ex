@@ -17,8 +17,8 @@ defmodule KlziiChat.SessionResourcesController do
     end
   end
 
-  def create(conn, %{"resource_ids" => resource_ids}, member, _) do
-    case SessionResourcesService.add_session_resources(member.session_member.sessionId, resource_ids, member.session_member.id) do
+  def create(conn, %{"resourceIds" => resource_ids}, member, _) do
+    case SessionResourcesService.add_session_resources(resource_ids, member.session_member.id) do
       {:ok, _} ->
         json(conn, %{status: :ok})
       {:error, reason} ->
