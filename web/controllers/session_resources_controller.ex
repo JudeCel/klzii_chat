@@ -1,6 +1,6 @@
 defmodule KlziiChat.SessionResourcesController do
   use KlziiChat.Web, :controller
-  alias KlziiChat.{SessionResourcesView}
+  alias KlziiChat.{SessionResourcesView, ResourceView}
   alias KlziiChat.Services.{ SessionResourcesService, ResourceService}
   alias KlziiChat.Queries.Resources, as: QueriesResources
   use Guardian.Phoenix.Controller
@@ -46,11 +46,10 @@ defmodule KlziiChat.SessionResourcesController do
   end
 
   def gallery(conn, params, member, _) do
-    IO.puts("GALLERY!!!!!!!!!!!!!!!!!!!!!!")
     query =
       QueriesResources.add_role_scope(member.account_user)
       |> QueriesResources.find_by_params(params)
-      |> QueriesResources.exclude_by_session_id(member.account_user.id, member.session_member.id)
+      |> QueriesResources.exclude_by_session_id(member.account_user.account.id, member.session_member.id)
     resources =
       Repo.all(query)
       |> Enum.map(fn resource ->
