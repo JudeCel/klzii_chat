@@ -2,6 +2,7 @@ defmodule KlziiChat.SessionResourcesController do
   use KlziiChat.Web, :controller
   alias KlziiChat.{SessionResourcesView}
   alias KlziiChat.Services.{ SessionResourcesService, ResourceService}
+  alias KlziiChat.Queries.Resources, as: QueriesResources
   use Guardian.Phoenix.Controller
 
   plug Guardian.Plug.EnsureAuthenticated, handler: KlziiChat.Guardian.AuthErrorHandler
@@ -42,6 +43,19 @@ defmodule KlziiChat.SessionResourcesController do
       {:error, reason} ->
         json(conn, %{status: :error, reason: reason})
     end
+  end
+
+  def show(conn, params, member, _) do
+    query =
+      QueriesResources.add_role_scope(member.account_user)
+      |> QueriesResources.find_by_params(params)
+      |> QueriesResources.exclude_by_session_id(member.account_user.id, member.session_member.id)
+    resources =
+      Repo.all(query)
+      |> Enum.map(fn resource ->
+        ResourceView.render("resource.json", %{resource: resource})
+      end)
+    json(conn, %{resources: resources})
   end
 
   defp if_current_member(conn, opts) do

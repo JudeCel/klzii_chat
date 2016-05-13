@@ -16,7 +16,6 @@ defmodule KlziiChat.ResourcesController do
     query =
       QueriesResources.add_role_scope(member.account_user)
       |> QueriesResources.find_by_params(params)
-      |> QueriesResources.exclude_by_session_id(member.account_user.id, member.session_member.id)
     resources =
       Repo.all(query)
       |> Enum.map(fn resource ->
