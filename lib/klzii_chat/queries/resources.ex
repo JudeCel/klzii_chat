@@ -3,6 +3,7 @@ defmodule KlziiChat.Queries.Resources do
   import Ecto.Query
 
   alias KlziiChat.{Resource, AccountUser}
+  alias KlziiChat.Services.SessionResourcesService
 
   def add_role_scope(account_user = %AccountUser{role: "admin"}) do
     from(r in assoc(account_user.account, :resources))
@@ -33,5 +34,10 @@ defmodule KlziiChat.Queries.Resources do
   end
   def build_scope(query, _)  do
     query
+  end
+
+  def exclude_by_session_id(query, account_user_id, session_member_id) do
+    {:ok, session_resources} = SessionResourcesService.get_session_resources(session_member_id)
+    from(r in query, where: not r.id in ^session_resources and r.accountId  == ^account_user_id)
   end
 end
