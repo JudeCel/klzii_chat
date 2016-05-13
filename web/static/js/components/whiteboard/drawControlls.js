@@ -31,6 +31,10 @@
 			var translateDragger = this.paper.image("/images/svgControls/move.png", bb.cx - ftOption.handleRadius, bb.cy - ftOption.handleRadius, ftOption.handleRadius*2, ftOption.handleRadius*2).transform('r0.1');
 
 			this.data("startAngle", Snap.angle( bb.cx, bb.cy, rotateDragger.attr().x, rotateDragger.attr().y) - 180);
+
+			var splitParams = this.matrix.split();
+			this.data("angle", splitParams.rotate);
+
 			this.initialWidth = bb.width/2;
 			this.initialHeight = bb.height/2;
 			var joinLine = freetransEl.ftDrawJoinLine( rotateDragger );
@@ -85,8 +89,10 @@
 		Element.prototype.ftInit = function() {
 			this.data("angle", 0);
 			this.data("scale", 1);
-			this.data("tx", 0);
-			this.data("ty", 0);
+			if (!this.data("tx")) {
+				this.data("tx", 0);
+				this.data("ty", 0);
+			}
 			return this;
 		};
 
@@ -104,7 +110,7 @@
 
 		Element.prototype.ftCleanUp = function() {
 			var myClosureEl = this;
-			var myData = ["angle", "scale", "scaleFactor", "tx", "ty", "otx", "oty", "bb", "bbT", "initialTransformMatrix", "handlesGroup", "joinLine"];
+			var myData = ["angle", "scale", "scaleFactor",/* "tx", "ty",*/ "otx", "oty", "bb", "bbT", "initialTransformMatrix", "handlesGroup", "joinLine"];
 			myData.forEach( function( el ) { myClosureEl.removeData([el]) });
 			return this;
 		};
@@ -155,7 +161,6 @@
 			} else {
 				return this.paper.line( thisBB.cx, thisBB.cy, handleBB.cx, handleBB.cy ).attr( lineAttributes );
 			};
-
 			return this;
 		};
 
@@ -175,6 +180,9 @@
 
 			this.ftHighlightBB();
 			this.updateTransformControls(this);
+
+			console.log("__", tstring);
+
 			return this;
 		};
 
@@ -430,14 +438,14 @@
 		} );
 		mainEl.ftStoreStartCenter();
 
-		var split = mainEl.matrix.split();
-		mainEl.data("otx", split.tx || 0);
-		mainEl.data("oty", split.ty || 0);
+		//var split = mainEl.matrix.split();
+		console.log("start__", mainEl.data("otx"), mainEl.data("oty"), mainEl.data("tx"), mainEl.data("ty"));
+		mainEl.data("otx", mainEl.data("tx") || 0);
+		mainEl.data("oty", mainEl.data("ty") || 0);
 	};
 
 	function elementDragMove( mainEl, dx, dy, x, y ) {
 		var dragHandle = this;
-
 		this.parent().selectAll('image').forEach( function( el, i ) {
 			el.attr({ x: +el.data('ocx') + dx, y: +el.data('ocy') + dy});
 		} );
@@ -449,9 +457,8 @@
 	}
 
 	function elementDragEnd( mainEl, dx, dy, x, y ) {
-		mainEl.data("tx", mainEl.data("otx") + +dx);
-		mainEl.data("ty", mainEl.data("oty") + +dy);
 		informFinishedTransform(mainEl);
+		mainEl.ftStoreInitialTransformMatrix();
 	};
 
 	function informFinishedTransform(mainEl) {
@@ -463,6 +470,7 @@
 	function dragHandleRotateStart( mainElement ) {
 		this.ftInformSelected(mainElement, true);
 		this.ftStoreStartCenter();
+		mainElement.ftStoreInitialTransformMatrix();
 	};
 
 	function dragHandleRotateEnd( mainElement ) {
@@ -492,7 +500,7 @@
 		var cx = mainBB.cx + normalised[0];
 		var cy = mainBB.cy + normalised[1];
 
-		var angle = Snap.angle( mainBB.cx, mainBB.cy, cx, cy) - 180 - mainEl.data("startAngle");
+		var angle = Snap.angle( mainBB.cx, mainBB.cy, cx, cy) - 180;
 		mainEl.data("angle", angle);
 		handle.attr({ x: cx, y: cy });
 
