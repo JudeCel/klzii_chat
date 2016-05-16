@@ -17,11 +17,11 @@ defmodule KlziiChat.Services.SessionResourcesService do
     end
   end
 
-  @spec do_add(Integer, [Integer]) :: :ok
-  defp do_add(session_id, resource_ids) do
-    #TODO: replace insert with insert_all
-    #createdAt: Timex.DateTime.now, updatedAt: Timex.DateTime.now
+  @spec do_add(Integer, Integer) :: {:ok, Map}
+  defp do_add(session_id, resource_ids) when is_integer(resource_ids), do: do_add(session_id, [resource_ids])
 
+  @spec do_add(Integer, [Integer]) :: {:ok, Map}
+  defp do_add(session_id, resource_ids) do
     sr_map =
       from(sr in SessionResource, where: sr.sessionId == ^session_id, select: sr.resourceId)
       |> Repo.all()

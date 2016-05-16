@@ -59,7 +59,7 @@ defmodule KlziiChat.TopicChannelTest do
       scope: "collage"
     ) |> Repo.insert!
 
-    {:ok, session_resources} = SessionResourcesService.add_session_resources([resource.id], socket.assigns.session_member.id)
+    {:ok, session_resources} = SessionResourcesService.add_session_resources(resource.id, socket.assigns.session_member.id)
     session_resource = List.first(session_resources)
 
     ref = push socket, "set_console_resource", %{"id" => session_resource.resourceId}

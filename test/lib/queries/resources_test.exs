@@ -89,7 +89,7 @@ defmodule KlziiChat.Services.Resourecs do
 
       %{:"AccountId" => accountId} = account_user
 
-      {:ok, _} = SessionResourcesService.add_session_resources([resource.id], member_id)
+      {:ok, _} = SessionResourcesService.add_session_resources(resource.id, member_id)
 
       count =
         QueriesResources.base_query(account_user)
