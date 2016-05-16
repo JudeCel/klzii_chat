@@ -31,9 +31,11 @@ const Actions = {
         .set('X-CSRF-Token', csrf_token)
         .set('Authorization', jwt)
         .send({ id })
-        .end(function(error, _) {
+        .end(function(error, resp) {
           if(error) {
             console.error(error);
+          }else {
+            dispatch({type: Constants.DELETE_RESOURCES, resp: resp.body });
           }
         });
     }

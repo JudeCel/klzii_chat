@@ -7,4 +7,10 @@ defmodule KlziiChat.SessionResourcesView do
       resource: Phoenix.View.render_one(session_resource.resource, ResourceView, "resource.json")
     }
   end
+
+  def render("delete.json", %{session_resource: session_resource})do
+    %{id: session_resource.id,
+      type: session_resource.resource.type
+    }
+  end
 end

@@ -38,8 +38,8 @@ defmodule KlziiChat.SessionResourcesController do
 
   def delete(conn, %{"id" => id}, member, _) do
     case SessionResourcesService.delete(member.session_member.id, id) do
-      {:ok, _} ->
-        json(conn, %{status: :ok})
+      {:ok, session_resource} ->
+        json(conn, KlziiChat.SessionResourcesView.render("delete.json", %{session_resource: session_resource}))
       {:error, reason} ->
         json(conn, %{status: :error, reason: reason})
     end
