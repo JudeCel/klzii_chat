@@ -30,12 +30,11 @@
 		Element.prototype.ftCreateHandles = function() {
 			if (this.setupDone) this.ftInit();
 			var freetransEl = this;
-
 			var bb = this.getBBox();
 			var splitParams = this.matrix.split();
 
 			var rotation = rotateVector(bb.height/2, 0, splitParams.rotate - 90);
-			var rotateDragger = this.paper.image("/images/svgControls/rotate.png", bb.cx - ftOption.handleRadius*2 + rotation[0], bb.cy - ftOption.handleRadius*2 - rotation[1], ftOption.handleRadius*2, ftOption.handleRadius*2).transform('r0.1');
+			var rotateDragger = this.paper.image("/images/svgControls/rotate.png", bb.cx + rotation[0], bb.cy - rotation[1], ftOption.handleRadius*2, ftOption.handleRadius*2).transform('r0.1');
 			var translateDragger = this.paper.image("/images/svgControls/move.png", bb.cx - ftOption.handleRadius, bb.cy - ftOption.handleRadius, ftOption.handleRadius*2, ftOption.handleRadius*2).transform('r0.1');
 			this.data("angle", splitParams.rotate);
 
@@ -115,7 +114,7 @@
 
 		Element.prototype.ftCleanUp = function() {
 			var myClosureEl = this;
-			var myData = ["angle", "scale", "scaleFactor",/* "tx", "ty",*/ "otx", "oty", "bb", "bbT", "initialTransformMatrix", "handlesGroup", "joinLine"];
+			var myData = ["angle", "scale", "scaleFactor", "otx", "oty", "bb", "bbT", "initialTransformMatrix", "handlesGroup", "joinLine"];
 			myData.forEach( function( el ) { myClosureEl.removeData([el]) });
 			return this;
 		};
@@ -127,7 +126,7 @@
 		}
 
 		Element.prototype.ftStoreInitialTransformMatrix = function() {
-			this.data('initialTransformMatrix', this.transform().localMatrix );
+			this.data('initialTransformMatrix', this.transform().globalMatrix );
 			return this;
 		};
 
@@ -179,8 +178,7 @@
 
 			var matr = this.ftGetInitialTransformMatrix().clone();
 			var splitParams = matr.split();
-			var bb = this.getBBox();
-			var tstring = "t" + this.data("tx") + "," + this.data("ty") + "r" + angle + "S" + splitParams.scalex + "," + splitParams.scaley ;
+			var tstring = "t" + this.data("tx") + "," + this.data("ty") + "r" + angle + "s" + splitParams.scalex + "," + splitParams.scaley ;
 			this.attr({ transform: tstring });
 
 			this.ftHighlightBB();
@@ -424,13 +422,12 @@
 	    shape.scaleYControl.myCap.setCapPosition(0);
 	    shape.scaleXControl.attr({transform: transformStr+angle});
 	    shape.scaleYControl.attr({transform: transformStr+(angle+90)});
+
 	    shape.scaleXControl.myCap.setCapPosition(width);
 	    shape.scaleYControl.myCap.setCapPosition(height);
 
 	    shape.scaleXControl.myCap.setCapMaxPosition(width);
 	    shape.scaleYControl.myCap.setCapMaxPosition(height);
-
-
 	    shape.scaleXControl.insertAfter(shape);
 	    shape.scaleYControl.insertAfter(shape);
 	  }
