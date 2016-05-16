@@ -3,7 +3,8 @@ import { connect }        from 'react-redux';
 import { Modal }          from 'react-bootstrap';
 import UploadTypes        from '../../resources/modals/uploads/types';
 import mixins             from '../../../mixins';
-import Actions            from '../../../actions/resource';
+import Actions            from '../../../actions/session_resource';
+
 
 const UploadsConsole = React.createClass({
   mixins: [mixins.modalWindows, mixins.helpers],

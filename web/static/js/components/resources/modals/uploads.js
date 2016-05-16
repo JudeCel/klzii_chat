@@ -3,7 +3,7 @@ import { connect }        from 'react-redux';
 import { Modal }          from 'react-bootstrap';
 import UploadsIndex       from './uploads/index';
 import mixins             from '../../../mixins';
-import Actions            from '../../../actions/resource';
+import Actions            from '../../../actions/session_resource';
 
 const Uploads = React.createClass({
   mixins: [mixins.modalWindows],
@@ -17,7 +17,7 @@ const Uploads = React.createClass({
     if(nextProps.show && nextProps.modalWindows != this.props.modalWindows) {
       this.setState(this.initialWithTitle(nextProps), function() {
         const { dispatch, currentUserJwt, modalName } = this.props;
-        dispatch(Actions.listSessionResources(currentUserJwt, { type: [modalName] }));
+        dispatch(Actions.index(currentUserJwt, { type: [modalName] }));
       });
     }
   },
@@ -46,7 +46,7 @@ const Uploads = React.createClass({
       dispatch(Actions.upload(data, currentUserJwt));
     }
     else if (resourceIds) {
-      dispatch(Actions.createSessionResources(currentUserJwt, resourceIds));
+      dispatch(Actions.create(currentUserJwt, resourceIds));
     }
   },
   afterChange(data) {

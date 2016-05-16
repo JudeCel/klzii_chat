@@ -8,8 +8,8 @@ defmodule KlziiChat.SessionResourcesController do
   plug Guardian.Plug.EnsureAuthenticated, handler: KlziiChat.Guardian.AuthErrorHandler
   plug :if_current_member
 
-  def index(conn, _, member, _) do
-    case SessionResourcesService.get_session_resources(member.session_member.id) do
+  def index(conn, params, member, _) do
+    case SessionResourcesService.get_session_resources(member.session_member.id, params) do
       {:ok, session_resources} ->
         json(conn, Phoenix.View.render_many(session_resources, SessionResourcesView, "show.json", as: :session_resource))
       {:error, reason} ->
@@ -17,14 +17,23 @@ defmodule KlziiChat.SessionResourcesController do
     end
   end
 
-  def create(conn, %{"resourceIds" => resource_ids}, member, _) do
-    case SessionResourcesService.add_session_resources(resource_ids, member.session_member.id) do
+  def create(conn, %{"ids" => ids}, member, _) do
+    case SessionResourcesService.add_session_resources(ids, member.session_member.id) do
       {:ok, _} ->
         json(conn, %{status: :ok})
       {:error, reason} ->
         json(conn, %{error:  reason})
     end
   end
+
+  # def show(conn, %{"id" => id}, member, _) do
+  #   case SessionResourcesService.find(member.session_member.id, id) do
+  #     {:ok, session_resource} ->
+  #       json(conn, Phoenix.View.render(session_resource, SessionResourcesView, "show.json", as: :session_resource))
+  #     {:error, reason} ->
+  #       json(conn, %{error:  reason})
+  #   end
+  # end
 
   def upload(conn, params, member, _) do
     case ResourceService.upload(params, member.account_user.id) do
@@ -46,16 +55,13 @@ defmodule KlziiChat.SessionResourcesController do
   end
 
   def gallery(conn, params, member, _) do
-    query =
+    resources =
       QueriesResources.base_query(member.account_user)
       |> QueriesResources.find_by_params(params)
       |> QueriesResources.exclude_by_session_id(member.account_user.account.id, member.session_member.id)
-    resources =
-      Repo.all(query)
-      |> Enum.map(fn resource ->
-        ResourceView.render("resource.json", %{resource: resource})
-      end)
-    json(conn, %{resources: resources})
+      |> Repo.all
+      |> Phoenix.View.render_many(ResourceView, "resource.json", as: :resource)
+    json(conn, resources)
   end
 
   defp if_current_member(conn, opts) do

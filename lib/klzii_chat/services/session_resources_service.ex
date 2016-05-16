@@ -3,6 +3,7 @@ defmodule KlziiChat.Services.SessionResourcesService do
   alias KlziiChat.Services.{ConsoleService}
   alias KlziiChat.Services.Permissions.SessionResources, as: SessionResourcesPermissions
   alias KlziiChat.Helpers.ListHelper
+  alias KlziiChat.Queries.Resources, as: QueriesResources
 
   import Ecto.Query
 
@@ -61,20 +62,32 @@ defmodule KlziiChat.Services.SessionResourcesService do
       :ok
   end
 
-  def get_session_resources(session_member_id) do
+  def find(session_member_id, id) do
     session_member = Repo.get!(SessionMember, session_member_id)
     if(SessionResourcesPermissions.can_get_resources(session_member)) do
-      do_get(session_member.sessionId)
+      session_resource = from(sr in SessionResource,
+        where: sr.id == ^id,
+        preload: [:resource])
+      |> Repo.one
+      {:ok, session_resource}
     else
       {:error, "Action not allowed!"}
     end
   end
 
-  defp do_get(session_id) do
-    session_resources = from(sr in SessionResource,
-      where: sr.sessionId == ^session_id,
-      preload: [:resource])
-    |> Repo.all()
-    {:ok, session_resources}
+  def get_session_resources(session_member_id, params) do
+    session_member = Repo.get!(SessionMember, session_member_id) |> Repo.preload([account_user: [:account]])
+    if(SessionResourcesPermissions.can_get_resources(session_member)) do
+      resource_query =
+        QueriesResources.base_query(session_member.account_user)
+        |> QueriesResources.find_by_params(params)
+        session_resources =
+          from(sr in SessionResource, where: sr.sessionId == ^session_member.sessionId, preload: [resource: ^resource_query])
+          |> Repo.all
+        {:ok, session_resources}
+    else
+      {:error, "Action not allowed!"}
+    end
   end
+
 end

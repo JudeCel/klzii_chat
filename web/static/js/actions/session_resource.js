@@ -23,38 +23,28 @@ function dispatchByType(dispatch, resp) {
 }
 
 const Actions = {
-  subscribeEvents: (channel) =>{
-    return dispatch => {
-      dispatch({ type: Constants.SET_MESSAGES_EVENTS});
-      channel.on("resources", (resp) =>{
-        dispatch({ type: Constants.SET_MESSAGES_EVENTS});
-        return new_message(dispatch, resp);
-      });
-    }
-  },
-  removeSessionResources:(jwt, data) => {
+  remove:(jwt, id) => {
     return dispatch => {
       let csrf_token = localStorage.getItem('csrf_token');
       request
-        .delete('/api/session_resources/remove_resources')
+        .delete("/api/session_resources/${id}")
+        .set('X-CSRF-Token', csrf_token)
+        .set('Authorization', jwt)
+        .end();
+    }
+  },
+  create:(jwt, data) => {
+    return dispatch => {
+      let csrf_token = localStorage.getItem('csrf_token');
+      request
+        .post('/api/session_resources')
         .set('X-CSRF-Token', csrf_token)
         .set('Authorization', jwt)
         .send({ resourceIds: data })
         .end();
     }
   },
-  createSessionResources:(jwt, data) => {
-    return dispatch => {
-      let csrf_token = localStorage.getItem('csrf_token');
-      request
-        .post('/api/session_resources/add_resources')
-        .set('X-CSRF-Token', csrf_token)
-        .set('Authorization', jwt)
-        .send({ resourceIds: data })
-        .end();
-    }
-  },
-  listSessionResources:(jwt, data) => {
+  index:(jwt, data) => {
     return dispatch => {
       let csrf_token = localStorage.getItem('csrf_token');
       request
@@ -72,24 +62,7 @@ const Actions = {
         });
     }
   },
-  getConsoleResource:(jwt, resourceId) => {
-    return dispatch => {
-      let csrf_token = localStorage.getItem('csrf_token');
-      request
-        .get('/api/resources/' + resourceId)
-        .set('X-CSRF-Token', csrf_token)
-        .set('Authorization', jwt)
-        .end(function(error, result) {
-          if(error) {
-            console.error(error);
-          }
-          else {
-            dispatch({ type: Constants.SET_CONSOLE_RESOURCE, data: result.body.resource });
-          }
-        });
-    }
-  },
-  getGalleryList:(jwt, data) => {
+  getGallery:(jwt, data) => {
     return dispatch => {
       let csrf_token = localStorage.getItem('csrf_token');
       request
@@ -102,7 +75,7 @@ const Actions = {
             console.error(error);
           }
           else {
-            dispatchByType(dispatch, { type: 'gallery', resources: result.body.resources });
+            dispatchByType(dispatch, { type: 'gallery', resources: result.body });
           }
         });
     }
@@ -118,10 +91,6 @@ const Actions = {
         .end(function(error, result) {
           if(error) {
             console.error(error);
-          }
-          else {
-            console.error(result.body.resource);
-            dispatchByType(dispatch, { type: 'video', resources: [result.body.resource] });
           }
         });
     }
@@ -139,27 +108,12 @@ const Actions = {
         req.field("name", data.name);
       });
       req.end((error, result) =>{
-        if (result) {
-          dispatchByType(dispatch, {type: result.body.type, resources: [result.body.resource]})
+        if(error) {
+          console.error(error);
         }
       });
     }
-  },
-  get:(channel, type) => {
-    return dispatch => {
-      dispatch({ type: Constants.GET_RESOURCE });
-      channel.push("resources", {type: type}).receive('ok', (resp) =>{
-        dispatchByType(dispatch, resp);
-      })
-    }
-  },
-  delete:(channel, id) => {
-    return dispatch => {
-      channel.push("deleteResources", { id: id }).receive('ok', (resp) =>{
-        dispatch({type: Constants.DELETE_RESOURCES, resp: resp})
-      })
-    }
-  },
+  }
 }
 
 export default Actions;

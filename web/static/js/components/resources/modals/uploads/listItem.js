@@ -1,13 +1,13 @@
 import React, {PropTypes} from 'react';
 import { connect }        from 'react-redux';
 import UploadTypes        from './types/index';
-import ResourceActions    from '../../../../actions/resource';
+import SesssionResourceActions    from '../../../../actions/session_resource';
 import ConsoleActions     from '../../../../actions/console';
 
 const UploadListItem = React.createClass({
   onDelete(id) {
     const { dispatch, channel } = this.props;
-    dispatch(ResourceActions.delete(channel, id));
+    dispatch(SesssionResourceActions.delete(channel, id));
   },
   getValuesFromObject(object) {
     let { id, active, name, type, url, scope } = object;

@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
 import { connect }        from 'react-redux';
-import Actions            from '../../../../../actions/resource';
+import Actions            from '../../../../../actions/session_resource';
 import UploadTypes        from './../types/index';
 
 const GalleryNew = React.createClass({
@@ -41,13 +41,13 @@ const GalleryNew = React.createClass({
       data.type = [modalName];
     }
 
-    dispatch(Actions.getGalleryList(currentUserJwt, data));
+    dispatch(Actions.getGallery(currentUserJwt, data));
   },
   render() {
-    const { modalName, active, resources } = this.props;
+    const { modalName, active, gallery } = this.props;
 
     if(active) {
-      if(resources.length == 0) {
+      if(gallery.length == 0) {
         return (
           <div className='col-md-12 gallery-section text-center'>No resources found</div>
         )
@@ -56,7 +56,7 @@ const GalleryNew = React.createClass({
         return (
           <div className='col-md-12 gallery-section'>
             {
-              resources.map((resource, index) => {
+              gallery.map((resource, index) => {
                 return (
                   <div className='col-md-4' key={ resource.id }>
                     <div>
@@ -88,7 +88,7 @@ const GalleryNew = React.createClass({
 const mapStateToProps = (state) => {
   return {
     currentUserJwt: state.members.currentUser.jwt,
-    resources: state.resources.gallery,
+    gallery: state.resources.gallery,
   }
 };
 
