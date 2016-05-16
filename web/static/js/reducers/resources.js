@@ -48,6 +48,7 @@ function pluralizeTypeName(name) {
   switch (name) {
     case 'image':
       return 'images'
+    case 'link':
     case 'video':
       return 'videos'
     case 'audio':

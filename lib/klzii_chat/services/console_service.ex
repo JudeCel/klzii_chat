@@ -52,11 +52,21 @@ defmodule KlziiChat.Services.ConsoleService do
   @spec set_id_by_type(Integer) :: Map
   defp set_id_by_type(resource_id) when is_integer(resource_id) do
     resource = Repo.get!(Resource, resource_id)
-    Map.put(%{}, String.to_atom("#{resource.type}Id" ), resource.id)
+    Map.put(%{},get_field_from_type(resource.type), resource.id)
   end
 
   @spec remove_id_by_type(String.t) :: Map
   defp remove_id_by_type(type) do
-    Map.put(%{}, String.to_atom("#{type}Id" ), nil)
+    Map.put(%{}, get_field_from_type(type), nil)
+  end
+
+  @spec get_field_from_type(String.t) :: Map
+  def get_field_from_type(resurce_type) do
+    case resurce_type do
+      "link" ->
+        String.to_atom("videoId")
+      type ->
+        String.to_atom("#{type}Id" )
+    end
   end
 end

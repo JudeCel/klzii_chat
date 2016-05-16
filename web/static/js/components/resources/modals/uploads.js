@@ -6,7 +6,7 @@ import mixins             from '../../../mixins';
 import Actions            from '../../../actions/session_resource';
 
 const Uploads = React.createClass({
-  mixins: [mixins.modalWindows],
+  mixins: [mixins.modalWindows, mixins.helpers],
   getInitialState() {
     return { rendering: 'index', tabActive: 1 };
   },
@@ -17,7 +17,7 @@ const Uploads = React.createClass({
     if(nextProps.show && nextProps.modalWindows != this.props.modalWindows) {
       this.setState(this.initialWithTitle(nextProps), function() {
         const { dispatch, currentUserJwt, modalName } = this.props;
-        dispatch(Actions.index(currentUserJwt, { type: [modalName] }));
+        dispatch(Actions.index(currentUserJwt, { type: this.get_session_resource_types(modalName) }));
       });
     }
   },

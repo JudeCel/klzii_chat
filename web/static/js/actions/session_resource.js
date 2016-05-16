@@ -3,6 +3,7 @@ import request   from 'superagent';
 
 function dispatchByType(dispatch, resp) {
   switch (resp.type) {
+    case "link":
     case "video":
       dispatch({type: Constants.SET_VIDEO_RESOURCES, resources: resp.resources });
       break;
