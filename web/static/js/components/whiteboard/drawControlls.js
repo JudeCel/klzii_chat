@@ -23,16 +23,22 @@
 		}
 
 		Element.prototype.ftCreateHandles = function() {
-			this.ftInit();
+			if (this.setupDone)	this.ftInit();
+
 			var freetransEl = this;
 
 			var bb = this.getBBox();
-			var rotateDragger = this.paper.image("/images/svgControls/rotate.png", bb.cx  + bb.width/2 - ftOption.handleRadius*2, bb.cy - ftOption.handleRadius*2 - bb.height/2, ftOption.handleRadius*2, ftOption.handleRadius*2).transform('r0.1');
+			//var rotateDragger = this.paper.image("/images/svgControls/rotate.png", bb.cx  + bb.width/2 - ftOption.handleRadius*2, bb.cy - ftOption.handleRadius*2 - bb.height/2, ftOption.handleRadius*2, ftOption.handleRadius*2).transform('r0.1');
+
+			var splitParams = this.matrix.split();
+
+			var rotation = rotateVector(bb.height/2, 0, splitParams.rotate - 90);
+			var rotateDragger = this.paper.image("/images/svgControls/rotate.png", bb.cx - ftOption.handleRadius*2 + rotation[0], bb.cy - ftOption.handleRadius*2 - rotation[1], ftOption.handleRadius*2, ftOption.handleRadius*2).transform('r0.1');
 			var translateDragger = this.paper.image("/images/svgControls/move.png", bb.cx - ftOption.handleRadius, bb.cy - ftOption.handleRadius, ftOption.handleRadius*2, ftOption.handleRadius*2).transform('r0.1');
 
 			this.data("startAngle", Snap.angle( bb.cx, bb.cy, rotateDragger.attr().x, rotateDragger.attr().y) - 180);
 
-			var splitParams = this.matrix.split();
+
 			this.data("angle", splitParams.rotate);
 
 			this.initialWidth = bb.width/2;
@@ -180,8 +186,6 @@
 
 			this.ftHighlightBB();
 			this.updateTransformControls(this);
-
-			console.log("__", tstring);
 
 			return this;
 		};
@@ -379,8 +383,14 @@
 	        var elEttributes = shape.attr();
 	        var matr = shape.ftGetInitialTransformMatrix().clone();
 					var splitParams = matr.split();
-	        var transform = "t"+shape.data("tx")+','+ shape.data("ty")+matr.toTransformString()+"S"+(params.scaleX?params.scaleX:1)+","+(params.scaleY?params.scaleY:1);
-	        shape.animate({transform: transform}, 1);
+					var splitParams = shape.matrix.split();
+					var scX = 1;
+					var scY = 1;
+					if (params.scaleX) scX = params.scaleX;
+					if (params.scaleY) scY = params.scaleY;
+
+					var transform = matr.toTransformString()+"S"+scX+","+scY;
+	        shape.attr({transform: transform});
 	        break;
 	    }
 	  }
@@ -438,8 +448,6 @@
 		} );
 		mainEl.ftStoreStartCenter();
 
-		//var split = mainEl.matrix.split();
-		console.log("start__", mainEl.data("otx"), mainEl.data("oty"), mainEl.data("tx"), mainEl.data("ty"));
 		mainEl.data("otx", mainEl.data("tx") || 0);
 		mainEl.data("oty", mainEl.data("ty") || 0);
 	};
@@ -500,7 +508,7 @@
 		var cx = mainBB.cx + normalised[0];
 		var cy = mainBB.cy + normalised[1];
 
-		var angle = Snap.angle( mainBB.cx, mainBB.cy, cx, cy) - 180;
+		var angle = Snap.angle( mainBB.cx, mainBB.cy, cx, cy) - 90;
 		mainEl.data("angle", angle);
 		handle.attr({ x: cx, y: cy });
 
