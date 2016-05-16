@@ -42,7 +42,7 @@ defmodule KlziiChat.TopicChannel do
   end
 
   def handle_in("set_console_resource", %{"id" => id}, socket) do
-    case ConsoleService.set_resource(socket.assigns.session_member, socket.assigns.topic_id, id) do
+    case ConsoleService.set_resource(socket.assigns.session_member.id, socket.assigns.topic_id, id) do
       {:ok, console} ->
         broadcast! socket, "console",  ConsoleView.render("show.json", %{console: console})
         {:reply, :ok, socket}
@@ -52,7 +52,7 @@ defmodule KlziiChat.TopicChannel do
   end
 
   def handle_in("remove_console_resource", %{"type" => type}, socket) do
-    case ConsoleService.remove_resource(socket.assigns.session_member, socket.assigns.topic_id, type) do
+    case ConsoleService.remove_resource(socket.assigns.session_member.id, socket.assigns.topic_id, type) do
       {:ok, console} ->
         broadcast! socket, "console",  ConsoleView.render("show.json", %{console: console})
         {:reply, :ok, socket}

@@ -2,6 +2,7 @@ defmodule KlziiChat.TopicChannelTest do
   use KlziiChat.ChannelCase
   use KlziiChat.SessionMemberCase
   alias KlziiChat.{Repo, Presence, UserSocket, TopicChannel}
+  alias KlziiChat.Services.{SessionResourcesService}
 
   setup %{topic_1: topic_1, session: session, session: session, member: member, member2: member2} do
     Ecto.Adapters.SQL.Sandbox.mode(Repo, {:shared, self()})
@@ -44,6 +45,29 @@ defmodule KlziiChat.TopicChannelTest do
     ref = push socket, "remove_console_resource", %{"type" => resource.type}
     assert_reply ref, :ok
     assert_push("console", %{})
+  end
+
+  test "remove resource from console when resource enable", %{account_user: account_user, socket: socket, topic_1_name: topic_1_name} do
+    {:ok, _, socket} = subscribe_and_join(socket, TopicChannel, topic_1_name)
+    assert_push("console", %{})
+
+    resource = Ecto.build_assoc(
+      account_user.account, :resources,
+      accountUserId: account_user.id,
+      name: "test image 1",
+      type: "image",
+      scope: "collage"
+    ) |> Repo.insert!
+
+    {:ok, session_resources} = SessionResourcesService.add_session_resources([resource.id], socket.assigns.session_member.id)
+    session_resource = List.first(session_resources)
+
+    ref = push socket, "set_console_resource", %{"id" => session_resource.resourceId}
+    assert_reply ref, :ok
+
+    {:ok, _} = SessionResourcesService.delete(socket.assigns.session_member.id, session_resource.id)
+
+    assert_push("console", %{audio_id: nil, file_id: nil, image_id: nil, survey_id: nil, video_id: nil})
   end
 
   test "presents register is enable for topics", %{socket: socket, topic_1_name: topic_1_name} do

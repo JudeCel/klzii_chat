@@ -1,5 +1,6 @@
 defmodule KlziiChat.Services.SessionResourcesService do
-  alias KlziiChat.{Repo, SessionResource, SessionMember}
+  alias KlziiChat.{Endpoint, Repo, SessionResource, SessionMember, Console, ConsoleView, SessionTopic}
+  alias KlziiChat.Services.{ConsoleService}
   alias KlziiChat.Services.Permissions.SessionResources, as: SessionResourcesPermissions
   alias KlziiChat.Helpers.ListHelper
 
@@ -34,11 +35,35 @@ defmodule KlziiChat.Services.SessionResourcesService do
   def delete(session_member_id, session_resource_id) do
     session_member = Repo.get!(SessionMember, session_member_id)
     if(SessionResourcesPermissions.can_get_resources(session_member)) do
-      result = Repo.get_by!(SessionResource, id: session_resource_id) |> Repo.delete!
-      {:ok, result}
+      session_resource = Repo.get_by!(SessionResource, id: session_resource_id) |> Repo.preload([:resource]) |> Repo.delete!
+      :ok = delete_related_consoles(session_resource.resource, session_member.id)
+      {:ok, session_resource}
     else
       {:error, "Action not allowed!"}
     end
+  end
+
+
+  @spec delete_related_consoles(%SessionResource{}, Integer) :: :ok
+  def delete_related_consoles(resource, session_member_id) do
+    session_member = Repo.get!(SessionMember, session_member_id)
+    resourceId = resource.id
+    session_topicIds = from(st in SessionTopic, where: st.sessionId == ^session_member.sessionId, select: st.id) |> Repo.all
+    consoles = from(c in Console,
+      where: c.sessionTopicId in ^session_topicIds,
+      where:
+        c.audioId == ^resourceId or
+        c.videoId == ^resourceId or
+        c.imageId == ^resourceId or
+        c.fileId == ^resourceId,
+      preload: [:sessionTopic]
+      ) |> Repo.all
+        |> Enum.map(fn console ->
+          {:ok, new_console} = ConsoleService.remove_resource(session_member.id, console.sessionTopic.topicId, resource.type)
+          data = ConsoleView.render("show.json", %{console: new_console})
+          Endpoint.broadcast!( "topics:#{console.sessionTopic.topicId}", "console", data)
+      end)
+      :ok
   end
 
   def get_session_resources(session_member_id) do
