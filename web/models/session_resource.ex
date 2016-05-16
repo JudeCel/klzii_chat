@@ -1,10 +1,12 @@
 defmodule KlziiChat.SessionResource do
   use KlziiChat.Web, :model
+  use Timex.Ecto.Timestamps
 
   schema "SessionResources" do
     belongs_to :resource, KlziiChat.Resource, [foreign_key: :resourceId]
     belongs_to :session, KlziiChat.Session, [foreign_key: :sessionId]
-    timestamps [inserted_at: :createdAt, updated_at: :updatedAt]
+    field :createdAt, Timex.Ecto.DateTime
+    field :updatedAt, Timex.Ecto.DateTime
   end
 
   @required_fields ~w(resourceId sessionId)

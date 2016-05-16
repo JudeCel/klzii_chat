@@ -38,7 +38,7 @@ defmodule KlziiChat.SessionResourcesController do
   def upload(conn, params, member, _) do
     case ResourceService.upload(params, member.account_user.id) do
       {:ok, resource} ->
-        SessionResourcesService.add_session_resources([resource.id], member.session_member.id)
+        SessionResourcesService.add_session_resources(resource.id, member.session_member.id)
         json(conn, %{status: :ok})
       {:error, reason} ->
         json(conn, %{status: :error, reason: reason})

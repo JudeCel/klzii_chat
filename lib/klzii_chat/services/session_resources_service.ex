@@ -5,6 +5,8 @@ defmodule KlziiChat.Services.SessionResourcesService do
   alias KlziiChat.Helpers.ListHelper
   alias KlziiChat.Queries.Resources, as: QueriesResources
 
+  use Timex
+
   import Ecto.Query
 
   def add_session_resources(resource_ids, session_member_id) do
@@ -16,16 +18,19 @@ defmodule KlziiChat.Services.SessionResourcesService do
     end
   end
 
-  @spec do_add(Integer, [Integer]) :: :ok
-  defp do_add(session_id, resource_ids) do
-    #TODO: replace insert with insert_all
-    #createdAt: Timex.DateTime.now, updatedAt: Timex.DateTime.now
+  @spec do_add(Integer, Integer) :: {:ok, Map}
+  defp do_add(session_id, resource_ids) when is_integer(resource_ids), do: do_add(session_id, [resource_ids])
 
-    session_resources = from(sr in SessionResource, where: sr.sessionId == ^session_id, select: sr.resourceId)
+  @spec do_add(Integer, [Integer]) :: {:ok, Map}
+  defp do_add(session_id, resource_ids) do
+    sr_map =
+      from(sr in SessionResource, where: sr.sessionId == ^session_id, select: sr.resourceId)
       |> Repo.all()
       |> ListHelper.find_diff(ListHelper.str_to_num(resource_ids))
-      |> Enum.map(&Repo.insert!(%SessionResource{resourceId: &1, sessionId: session_id}))
-      {:ok, session_resources}
+      |> Enum.map(&%{resourceId: &1, sessionId: session_id, createdAt: DateTime.now, updatedAt: DateTime.now})
+
+    {_, inserted_resources} = Repo.insert_all(SessionResource, sr_map, returning: [:resourceId, :sessionId, :id])
+    {:ok, inserted_resources}
   end
 
   def delete(session_member_id, session_resource_id) do
