@@ -281,13 +281,13 @@ const WhiteboardCanvas = React.createClass({
     this.activeStrokeColour = 'red';
   },
   prepareNewElement(el) {
-    el.ftCreateHandles();
+    el.ftSetupControls();
     el.ftSetSelectedCallback(this.shapeSelected);
     el.ftSetTransformedCallback(this.shapeTransformed);
     el.ftSetFinishedTransformCallback(this.shapeFinishedTransform);
   },
   addInputControl(el) {
-    el.ftCreateHandles();
+    el.ftSetupControls();
   },
   setStyle(el, colour, strokeWidth, strokeColour) {
     el.attr({'fill': colour, stroke: strokeColour, strokeWidth: strokeWidth});

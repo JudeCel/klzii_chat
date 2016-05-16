@@ -22,23 +22,20 @@
 			this.removeData();
 		}
 
-		Element.prototype.ftCreateHandles = function() {
-			if (this.setupDone)	this.ftInit();
+		Element.prototype.ftSetupControls = function() {
+			this.click( function() { this.ftCreateHandles() } ) ;
+		}
 
+		Element.prototype.ftCreateHandles = function() {
+			this.ftInit();
 			var freetransEl = this;
 
 			var bb = this.getBBox();
-			//var rotateDragger = this.paper.image("/images/svgControls/rotate.png", bb.cx  + bb.width/2 - ftOption.handleRadius*2, bb.cy - ftOption.handleRadius*2 - bb.height/2, ftOption.handleRadius*2, ftOption.handleRadius*2).transform('r0.1');
-
 			var splitParams = this.matrix.split();
 
 			var rotation = rotateVector(bb.height/2, 0, splitParams.rotate - 90);
 			var rotateDragger = this.paper.image("/images/svgControls/rotate.png", bb.cx - ftOption.handleRadius*2 + rotation[0], bb.cy - ftOption.handleRadius*2 - rotation[1], ftOption.handleRadius*2, ftOption.handleRadius*2).transform('r0.1');
 			var translateDragger = this.paper.image("/images/svgControls/move.png", bb.cx - ftOption.handleRadius, bb.cy - ftOption.handleRadius, ftOption.handleRadius*2, ftOption.handleRadius*2).transform('r0.1');
-
-			this.data("startAngle", Snap.angle( bb.cx, bb.cy, rotateDragger.attr().x, rotateDragger.attr().y) - 180);
-
-
 			this.data("angle", splitParams.rotate);
 
 			this.initialWidth = bb.width/2;
