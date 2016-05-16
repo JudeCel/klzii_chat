@@ -16,4 +16,12 @@ defmodule KlziiChat.Helpers.ListHelperTest do
     assert(ListHelper.find_diff([1, 3], [3]) == [1])
     assert(ListHelper.find_diff([1, 3], [2]) == [2, 1, 3])
   end
+
+  test "find diff from left side" do
+    assert(ListHelper.find_diff_of_left([7, 2], [2, 4]) == [4])
+    assert(ListHelper.find_diff_of_left([], [2, 4]) == [2,4])
+    assert(ListHelper.find_diff_of_left([1, 3], []) == [])
+    assert(ListHelper.find_diff_of_left([1, 3], [3]) == [])
+    assert(ListHelper.find_diff_of_left([1, 3], [2]) == [2])
+  end
 end

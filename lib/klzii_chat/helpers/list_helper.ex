@@ -24,4 +24,12 @@ defmodule KlziiChat.Helpers.ListHelper do
       end
     end)
   end
+
+  @spec find_diff_of_left(List.t, List.t) :: List.t
+  def find_diff_of_left(first, second) do
+    List.foldl(first, second, fn (id, acc) ->
+      List.delete(acc, id)
+    end)
+  end
+
 end

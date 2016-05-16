@@ -40,7 +40,7 @@ const Actions = {
         });
     }
   },
-  create:(jwt, data) => {
+  create:(jwt, data, type) => {
     return dispatch => {
       let csrf_token = localStorage.getItem('csrf_token');
       request
@@ -51,7 +51,8 @@ const Actions = {
         .end(function(error, _) {
           if(error) {
             console.error(error);
-          }else {
+          }else{
+            dispatch(Actions.index(jwt, { type: [type] }));
             dispatch({type: Constants.SET_GALLERY_RESOURCES, gallery: []});
           }
         });

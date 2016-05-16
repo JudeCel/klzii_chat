@@ -26,7 +26,7 @@ defmodule KlziiChat.Services.SessionResourcesService do
     sr_map =
       from(sr in SessionResource, where: sr.sessionId == ^session_id, select: sr.resourceId)
       |> Repo.all()
-      |> ListHelper.find_diff(ListHelper.str_to_num(resource_ids))
+      |> ListHelper.find_diff_of_left(ListHelper.str_to_num(resource_ids))
       |> Enum.map(&%{resourceId: &1, sessionId: session_id, createdAt: DateTime.now, updatedAt: DateTime.now})
 
     {_, inserted_resources} = Repo.insert_all(SessionResource, sr_map, returning: true)

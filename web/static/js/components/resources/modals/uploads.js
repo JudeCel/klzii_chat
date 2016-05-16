@@ -46,7 +46,7 @@ const Uploads = React.createClass({
       dispatch(Actions.upload(data, currentUserJwt));
     }
     else if (resourceIds) {
-      dispatch(Actions.create(currentUserJwt, resourceIds));
+      dispatch(Actions.create(currentUserJwt, resourceIds, modalName));
     }
   },
   afterChange(data) {
