@@ -24,10 +24,11 @@
 
 		Element.prototype.ftSetupControls = function() {
 			this.click( function() { this.ftCreateHandles() } ) ;
+			this.ftCreateHandles();
 		}
 
 		Element.prototype.ftCreateHandles = function() {
-			this.ftInit();
+			if (this.setupDone) this.ftInit();
 			var freetransEl = this;
 
 			var bb = this.getBBox();
@@ -90,9 +91,10 @@
 		}
 
 		Element.prototype.ftInit = function() {
-			this.data("angle", 0);
-			this.data("scale", 1);
 			if (!this.data("tx")) {
+				this.data("angle", 0);
+				this.data("scale", 1);
+
 				this.data("tx", 0);
 				this.data("ty", 0);
 			}
@@ -178,7 +180,7 @@
 			var matr = this.ftGetInitialTransformMatrix().clone();
 			var splitParams = matr.split();
 			var bb = this.getBBox();
-			var tstring = "t" + this.data("tx") + "," + this.data("ty") + "r" + angle + "s" + splitParams.scalex + "," + splitParams.scaley;
+			var tstring = "t" + this.data("tx") + "," + this.data("ty") + "r" + angle + "S" + splitParams.scalex + "," + splitParams.scaley ;
 			this.attr({ transform: tstring });
 
 			this.ftHighlightBB();
