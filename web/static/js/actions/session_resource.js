@@ -122,6 +122,8 @@ const Actions = {
         .end(function(error, result) {
           if(error) {
             console.error(error);
+          }else {
+            dispatch(Actions.index(jwt, { type: [data.type] }));
           }
         });
     }
@@ -141,6 +143,9 @@ const Actions = {
       req.end((error, result) =>{
         if(error) {
           console.error(error);
+        }
+        else {
+          dispatch(Actions.index(jwt, { type: [data.type] }));
         }
       });
     }
