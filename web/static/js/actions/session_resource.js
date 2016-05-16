@@ -89,6 +89,23 @@ const Actions = {
         });
     }
   },
+  getConsoleResource:(jwt, resourceId) => {
+    return dispatch => {
+     let csrf_token = localStorage.getItem('csrf_token');
+     request
+       .get('/api/resources/' + resourceId)
+       .set('X-CSRF-Token', csrf_token)
+       .set('Authorization', jwt)
+       .end(function(error, result) {
+         if(error) {
+           console.error(error);
+         }
+         else {
+          dispatch({ type: Constants.SET_CONSOLE_RESOURCE, data: result.body.resource });
+         }
+       });
+    }
+ },
   youtube:(data, jwt) => {
     return dispatch => {
       let csrf_token = localStorage.getItem('csrf_token');
