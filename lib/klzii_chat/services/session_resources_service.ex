@@ -29,7 +29,7 @@ defmodule KlziiChat.Services.SessionResourcesService do
       |> ListHelper.find_diff(ListHelper.str_to_num(resource_ids))
       |> Enum.map(&%{resourceId: &1, sessionId: session_id, createdAt: DateTime.now, updatedAt: DateTime.now})
 
-    {_, inserted_resources} = Repo.insert_all(SessionResource, sr_map, returning: [:resourceId, :sessionId, :id])
+    {_, inserted_resources} = Repo.insert_all(SessionResource, sr_map, returning: true)
     {:ok, inserted_resources}
   end
 

@@ -51,6 +51,8 @@ const Actions = {
         .end(function(error, _) {
           if(error) {
             console.error(error);
+          }else {
+            dispatch({type: Constants.SET_GALLERY_RESOURCES, gallery: []});
           }
         });
     }

@@ -25,20 +25,25 @@ defmodule KlziiChat.SessionResourcesControllerTest do
 
   test "upload youtube link", %{conn: conn} do
     file = "http://youtu.be/0zM3nApSvMg"
-    conn = post conn, session_resources_path(conn, :upload, private: false, name: "youtubeLink", type: "link", scope: "youtube", file: file)
-    assert json_response(conn, 200)["status"] == "ok"
+    %{"status" => status} = post(conn, session_resources_path(conn, :upload, private: false, name: "youtubeLink", type: "link", scope: "youtube", file: file))
+      |> json_response(200)
+    assert(status == "ok")
   end
 
   test "upload image", %{conn: conn} do
     file = %Plug.Upload{ content_type: "image/jpg", path: @image, filename: "hamster.jpg"}
-    conn = post(conn, "api/session_resources/upload", %{private: false,  name: "hamster", type: "image", scope: "collage", file: file })
-    assert json_response(conn, 200)["status"] == "ok"
+    %{"status" => status} = post(conn, "api/session_resources/upload", %{private: false,  name: "hamster", type: "image", scope: "collage", file: file })
+      |> json_response(200)
+    assert(status == "ok")
   end
 
   test "delete", %{conn: conn, image_resource: image_resource, member: member} do
-    {:ok, resurces} = SessionResourcesService.add_session_resources(image_resource.id, member.id)
-    resurce = List.first(resurces)
-    conn = delete conn, session_resources_path(conn, :delete, resurce.id)
-    assert json_response(conn, 200)["status"] == "ok"
+    {:ok, session_resources} = SessionResourcesService.add_session_resources(image_resource.id, member.id)
+    session_resource = List.first(session_resources) |> Repo.preload([:resource])
+    %{"id" => id, "type" => type} = delete(conn, session_resources_path(conn, :delete, session_resource.id))
+      |> json_response(200)
+
+    assert(id == session_resource.id)
+    assert(type == session_resource.resource.type)
   end
 end
