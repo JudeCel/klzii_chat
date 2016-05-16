@@ -31,7 +31,7 @@ defmodule KlziiChat.Services.SessionResourcesService do
     session_member = Repo.get!(SessionMember, session_member_id)
     if(SessionResourcesPermissions.can_get_resources(session_member)) do
       session_resource = Repo.get_by!(SessionResource, id: session_resource_id) |> Repo.preload([:resource]) |> Repo.delete!
-      delete_related_consoles(session_resource, session_member.id)
+      :ok = delete_related_consoles(session_resource.resource, session_member.id)
       {:ok, session_resource}
     else
       {:error, "Action not allowed!"}
@@ -39,24 +39,26 @@ defmodule KlziiChat.Services.SessionResourcesService do
   end
 
 
-  def delete_related_consoles(session_resource, session_member_id) do
+  @spec delete_related_consoles(%SessionResource{}, Integer) :: :ok
+  def delete_related_consoles(resource, session_member_id) do
     session_member = Repo.get!(SessionMember, session_member_id)
-    session_id = session_member.sessionId
-    session_topicIds = from(st in SessionTopic, where: st.sessionId == ^session_id, select: st.id) |> Repo.all
+    resourceId = resource.id
+    session_topicIds = from(st in SessionTopic, where: st.sessionId == ^session_member.sessionId, select: st.id) |> Repo.all
     consoles = from(c in Console,
       where: c.sessionTopicId in ^session_topicIds,
       where:
-        c.audioId == ^session_resource.resourceId or
-        c.videoId == ^session_resource.resourceId or
-        c.imageId == ^session_resource.resourceId or
-        c.fileId == ^session_resource.resourceId,
+        c.audioId == ^resourceId or
+        c.videoId == ^resourceId or
+        c.imageId == ^resourceId or
+        c.fileId == ^resourceId,
       preload: [:sessionTopic]
       ) |> Repo.all
         |> Enum.map(fn console ->
-          {:ok, new_console} = ConsoleService.remove_resource(session_member.id, console.sessionTopic.topicId, session_resource.resource.type)
+          {:ok, new_console} = ConsoleService.remove_resource(session_member.id, console.sessionTopic.topicId, resource.type)
           data = ConsoleView.render("show.json", %{console: new_console})
           Endpoint.broadcast!( "topics:#{console.sessionTopic.topicId}", "console", data)
       end)
+      :ok
   end
 
   def get_session_resources(session_member_id) do
