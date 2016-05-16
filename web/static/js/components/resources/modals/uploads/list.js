@@ -9,13 +9,12 @@ const UploadList = React.createClass({
   render() {
     const { modalName } = this.props;
     const sessionResources = this.chooseResourceType(modalName);
-
     return (
       <ul className='list-group'>
         <UploadListItem key={ 'none' } justInput={ true } modalName={ modalName } />
         {
-          sessionResources.map((sr, index) =>
-            <UploadListItem key={ index } resource={ sr.resource } modalName={ modalName } />
+          sessionResources.map((sr) =>
+            <UploadListItem key={ sr.id } sessionResourceId = {sr.id} resource={ sr.resource } modalName={ modalName } />
           )
         }
       </ul>

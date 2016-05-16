@@ -33,9 +33,8 @@ defmodule KlziiChat.Queries.Resources do
     query
   end
 
-  def exclude_by_session_id(query, account_id, session_member_id) do
-    {:ok, session_resources} = SessionResourcesService.get_session_resources(session_member_id)
+  def exclude_by_ids(query, session_resources) do
     session_resource_ids = Enum.map(session_resources, fn(%{resourceId: resource_id}) -> resource_id end)
-    from(r in query, where: not r.id in ^session_resource_ids and r.accountId  == ^account_id)
+    from(r in query, where: not r.id in ^session_resource_ids)
   end
 end

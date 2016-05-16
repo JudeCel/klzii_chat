@@ -55,10 +55,11 @@ defmodule KlziiChat.SessionResourcesController do
   end
 
   def gallery(conn, params, member, _) do
+    {:ok, session_resources} = SessionResourcesService.get_session_resources(member.session_member.id, params)
     resources =
       QueriesResources.base_query(member.account_user)
       |> QueriesResources.find_by_params(params)
-      |> QueriesResources.exclude_by_session_id(member.account_user.account.id, member.session_member.id)
+      |> QueriesResources.exclude_by_ids(session_resources)
       |> Repo.all
       |> Phoenix.View.render_many(ResourceView, "resource.json", as: :resource)
     json(conn, resources)

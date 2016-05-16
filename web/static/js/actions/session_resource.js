@@ -23,25 +23,34 @@ function dispatchByType(dispatch, resp) {
 }
 
 const Actions = {
-  remove:(jwt, id) => {
+  delete:(jwt, id) => {
     return dispatch => {
       let csrf_token = localStorage.getItem('csrf_token');
       request
-        .delete("/api/session_resources/${id}")
+        .delete(`/api/session_resources/${id}`)
         .set('X-CSRF-Token', csrf_token)
         .set('Authorization', jwt)
-        .end();
+        .send({ id })
+        .end(function(error, _) {
+          if(error) {
+            console.error(error);
+          }
+        });
     }
   },
   create:(jwt, data) => {
     return dispatch => {
       let csrf_token = localStorage.getItem('csrf_token');
       request
-        .post('/api/session_resources')
+        .post('/api/session_resources/create')
         .set('X-CSRF-Token', csrf_token)
         .set('Authorization', jwt)
-        .send({ resourceIds: data })
-        .end();
+        .send({ ids: data })
+        .end(function(error, _) {
+          if(error) {
+            console.error(error);
+          }
+        });
     }
   },
   index:(jwt, data) => {

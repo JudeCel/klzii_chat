@@ -1,29 +1,25 @@
-import React, {PropTypes} from 'react';
-import { connect }        from 'react-redux';
-import UploadTypes        from './types/index';
-import SesssionResourceActions    from '../../../../actions/session_resource';
-import ConsoleActions     from '../../../../actions/console';
+import React, {PropTypes}      from 'react';
+import { connect }             from 'react-redux';
+import UploadTypes             from './types/index';
+import SesssionResourceActions from '../../../../actions/session_resource';
+import ConsoleActions          from '../../../../actions/console';
 
 const UploadListItem = React.createClass({
   onDelete(id) {
-    const { dispatch, channel } = this.props;
-    dispatch(SesssionResourceActions.delete(channel, id));
-  },
-  getValuesFromObject(object) {
-    let { id, active, name, type, url, scope } = object;
-    return { id, active, name, type, url, scope };
+    const { dispatch, jwt } = this.props;
+    dispatch(SesssionResourceActions.delete(jwt, id));
   },
   getInitialState() {
-    const { resource, tConsole, modalName } = this.props;
-
+    const { sessionResourceId, resource, tConsole, modalName } = this.props;
     let res = resource || {};
     res.active = tConsole[modalName + '_id'] == res.id ? true : false;
-    return this.getValuesFromObject(res);
+    res.sessionResourceId = sessionResourceId;
+    return res
   },
   onActivate() {
     this.setState({ active: true });
     const { dispatch, channel, modalName } = this.props;
-
+    
     if(this.state.id) {
       dispatch(ConsoleActions.addToConsole(channel, this.state.id));
     }
@@ -33,7 +29,7 @@ const UploadListItem = React.createClass({
   },
   render() {
     const { justInput, modalName } = this.props;
-    const { id, active, name, type, url, scope } = this.state;
+    const { sessionResourceId, id, active, name, type, url, scope } = this.state;
 
     if(justInput) {
       return (
@@ -60,7 +56,7 @@ const UploadListItem = React.createClass({
             <div className='col-md-6 text-right'>
               <input id={ 'question' + id } name='active' type='radio' className='with-font' onClick={ this.onActivate } defaultChecked={ active } />
               <label htmlFor={ 'question' + id } />
-              <span className='fa fa-times' onClick={ this.onDelete.bind(this, id) } />
+              <span className='fa fa-times' onClick={ this.onDelete.bind(this, sessionResourceId) } />
             </div>
           </div>
         </li>
@@ -72,7 +68,8 @@ const UploadListItem = React.createClass({
 const mapStateToProps = (state) => {
   return {
     channel: state.topic.channel,
-    tConsole: state.topic.console
+    tConsole: state.topic.console,
+    jwt: state.members.currentUser.jwt
   }
 };
 
