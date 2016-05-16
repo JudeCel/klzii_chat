@@ -47,7 +47,7 @@ defmodule KlziiChat.SessionResourcesController do
 
   def gallery(conn, params, member, _) do
     query =
-      QueriesResources.add_role_scope(member.account_user)
+      QueriesResources.base_query(member.account_user)
       |> QueriesResources.find_by_params(params)
       |> QueriesResources.exclude_by_session_id(member.account_user.account.id, member.session_member.id)
     resources =

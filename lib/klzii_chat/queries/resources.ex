@@ -5,11 +5,8 @@ defmodule KlziiChat.Queries.Resources do
   alias KlziiChat.{Resource, AccountUser}
   alias KlziiChat.Services.SessionResourcesService
 
-  def add_role_scope(account_user = %AccountUser{role: "admin"}) do
+  def base_query(account_user) do
     from(r in assoc(account_user.account, :resources))
-  end
-  def add_role_scope(account_user) do
-    from(r in assoc(account_user.account, :resources), where: [private: false])
   end
 
   def find_by_params(base_query, params) do

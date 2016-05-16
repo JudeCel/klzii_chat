@@ -1,7 +1,7 @@
 defmodule KlziiChat.Services.Resourecs do
   use KlziiChat.{ModelCase, SessionMemberCase}
   alias KlziiChat.Queries.Resources, as: QueriesResources
-  alias KlziiChat.{Repo, Resource}
+  alias KlziiChat.{Repo}
   alias KlziiChat.Services.SessionResourcesService
 
   setup %{account_user: account_user, session: session, member: member} do
@@ -13,12 +13,12 @@ defmodule KlziiChat.Services.Resourecs do
       scope: "zip"
     ) |> Repo.insert!
 
-    base_query = Ecto.Query.from(r in Resource)
+    base_query = QueriesResources.base_query(account_user)
     {:ok, base_query: base_query, account_user: account_user, session_id: session.id, member_id: member.id,}
   end
 
-  test "when admin can see all resources", %{account_user: account_user} do
-    count = QueriesResources.add_role_scope(account_user)
+  test "init base query ", %{account_user: account_user} do
+    count = QueriesResources.base_query(account_user)
       |> Repo.all |> Enum.count
     assert(count == 1 )
   end
@@ -92,7 +92,7 @@ defmodule KlziiChat.Services.Resourecs do
       {:ok, _} = SessionResourcesService.add_session_resources([resource.id], member_id)
 
       count =
-        QueriesResources.add_role_scope(account_user)
+        QueriesResources.base_query(account_user)
         |> QueriesResources.find_by_params(%{})
         |> QueriesResources.exclude_by_session_id(accountId, member_id)
         |> Repo.all
