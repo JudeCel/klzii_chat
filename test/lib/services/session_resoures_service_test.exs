@@ -9,26 +9,29 @@ defmodule KlziiChat.Services.SessionResourcesServiceTest do
       Enum.map(img_resources, &Repo.insert!(&1))
       |> Enum.map(fn(r) -> r.id end)
 
-
     {:ok, session_id: session.id, member_id: member.id, member2_id: member2.id, resource_ids: img_resource_ids}
   end
 
-  test "add_resources", %{session_id: session_id, member_id: member_id, resource_ids: img_resource_ids} do
-    {:ok, _} = SessionResourcesService.add_session_resources(img_resource_ids, member_id)
-    assert(getAllSessionResIds(session_id) === img_resource_ids)
+  test "add_resources", %{member_id: member_id, resource_ids: img_resource_ids} do
+    {:ok, resp} = SessionResourcesService.add_session_resources(img_resource_ids, member_id)
+    last = List.last(resp)
+    Repo.get!(SessionResource, last.id)
   end
 
   test "delete_session_resource", %{session_id: session_id, member_id: member_id, resource_ids: img_resource_ids} do
     {:ok, session_resources} = SessionResourcesService.add_session_resources(img_resource_ids, member_id)
     session_resource = List.first(session_resources)
-    {:ok, _} = SessionResourcesService.delete(member_id, session_resource.id)
-    assert(getAllSessionResIds(session_id) === Enum.drop(img_resource_ids, 1))
+    {:ok, session_resource} = SessionResourcesService.delete(member_id, session_resource.id)
+
+    assert_raise(Ecto.NoResultsError, fn ->
+      Repo.get_by!(SessionResource, id: session_resource.id, sessionId: session_id)
+    end)
   end
 
   test "get_sesion_resources", %{session_id: session_id, member_id: member_id, resource_ids: img_resource_ids} do
-    {:ok, _} = SessionResourcesService.add_session_resources(img_resource_ids, member_id)
-    {:ok, session_resources_ids} = SessionResourcesService.get_session_resources(member_id)
-    assert(session_resources_ids === getAllSessionRes(session_id))
+    {:ok, new_session_resources} = SessionResourcesService.add_session_resources(img_resource_ids, member_id)
+    last = List.last(new_session_resources)
+    Repo.get_by!(SessionResource, id: last.id, sessionId: session_id)
   end
 
   test "delete_wrong_member_role_error", %{member2_id: member2_id} do
@@ -38,7 +41,7 @@ defmodule KlziiChat.Services.SessionResourcesServiceTest do
 
   test "get_sesion_resources_wrong_member_role_error", %{member2_id: member2_id} do
     assert({:error, "Action not allowed!"} ===
-      SessionResourcesService.get_session_resources(member2_id))
+      SessionResourcesService.get_session_resources(member2_id, %{}))
   end
 
   defp create_image_resource(account_user, n) do
@@ -49,15 +52,5 @@ defmodule KlziiChat.Services.SessionResourcesServiceTest do
       type: "image",
       scope: "collage"
     )
-  end
-
-  defp getAllSessionRes(session_id) do
-    from(sr in SessionResource, where: sr.sessionId == ^session_id, preload: [:resource])
-    |> Repo.all()
-  end
-
-  defp getAllSessionResIds(session_id) do
-    from(sr in SessionResource, where: sr.sessionId == ^session_id, select: sr.resourceId)
-    |> Repo.all()
   end
 end

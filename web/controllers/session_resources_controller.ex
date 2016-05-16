@@ -26,15 +26,6 @@ defmodule KlziiChat.SessionResourcesController do
     end
   end
 
-  # def show(conn, %{"id" => id}, member, _) do
-  #   case SessionResourcesService.find(member.session_member.id, id) do
-  #     {:ok, session_resource} ->
-  #       json(conn, Phoenix.View.render(session_resource, SessionResourcesView, "show.json", as: :session_resource))
-  #     {:error, reason} ->
-  #       json(conn, %{error:  reason})
-  #   end
-  # end
-
   def upload(conn, params, member, _) do
     case ResourceService.upload(params, member.account_user.id) do
       {:ok, resource} ->

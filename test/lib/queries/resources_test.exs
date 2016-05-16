@@ -87,14 +87,12 @@ defmodule KlziiChat.Services.Resourecs do
         scope: "zip"
       ) |> Repo.insert!
 
-      %{:"AccountId" => accountId} = account_user
-
       {:ok, _} = SessionResourcesService.add_session_resources(resource.id, member_id)
-
+      {:ok, session_resources} = SessionResourcesService.get_session_resources(member_id, %{})
       count =
         QueriesResources.base_query(account_user)
         |> QueriesResources.find_by_params(%{})
-        |> QueriesResources.exclude_by_session_id(accountId, member_id)
+        |> QueriesResources.exclude_by_ids(session_resources)
         |> Repo.all
         |> Enum.count
 

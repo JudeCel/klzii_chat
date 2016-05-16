@@ -1,5 +1,5 @@
 defmodule KlziiChat.Services.SessionResourcesService do
-  alias KlziiChat.{Endpoint, Repo, SessionResource, SessionMember, Console, ConsoleView, SessionTopic}
+  alias KlziiChat.{Endpoint, Repo, Resource, SessionResource, SessionMember, Console, ConsoleView, SessionTopic}
   alias KlziiChat.Services.{ConsoleService}
   alias KlziiChat.Services.Permissions.SessionResources, as: SessionResourcesPermissions
   alias KlziiChat.Helpers.ListHelper
@@ -19,7 +19,7 @@ defmodule KlziiChat.Services.SessionResourcesService do
   end
 
   @spec do_add(Integer, Integer) :: {:ok, Map}
-  defp do_add(session_id, resource_ids) when is_integer(resource_ids), do: do_add(session_id, [resource_ids])
+  defp do_add(session_id, resource_id) when is_integer(resource_id), do: do_add(session_id, [resource_id])
 
   @spec do_add(Integer, [Integer]) :: {:ok, Map}
   defp do_add(session_id, resource_ids) do
@@ -33,6 +33,7 @@ defmodule KlziiChat.Services.SessionResourcesService do
     {:ok, inserted_resources}
   end
 
+  @spec delete(Integer, Integer) :: {:ok, %SessionResource{}} | {:error, String}
   def delete(session_member_id, session_resource_id) do
     session_member = Repo.get!(SessionMember, session_member_id)
     if(SessionResourcesPermissions.can_get_resources(session_member)) do
@@ -45,12 +46,12 @@ defmodule KlziiChat.Services.SessionResourcesService do
   end
 
 
-  @spec delete_related_consoles(%SessionResource{}, Integer) :: :ok
+  @spec delete_related_consoles(%Resource{}, Integer) :: :ok
   def delete_related_consoles(resource, session_member_id) do
     session_member = Repo.get!(SessionMember, session_member_id)
     resourceId = resource.id
     session_topicIds = from(st in SessionTopic, where: st.sessionId == ^session_member.sessionId, select: st.id) |> Repo.all
-    consoles = from(c in Console,
+    from(c in Console,
       where: c.sessionTopicId in ^session_topicIds,
       where:
         c.audioId == ^resourceId or
