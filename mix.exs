@@ -48,7 +48,9 @@ defmodule KlziiChat.Mixfile do
      {:corsica, "~> 0.4"},
      {:timex, "~> 2.1"},
      {:quantum, "~> 1.7"},
-     {:httpoison, "~> 0.8"}
+     {:httpoison, "~> 0.8"},
+     {:earmark, "~> 0.1", only: :dev},
+     {:ex_doc, "~> 0.11", only: :dev}
     ]
   end
 
