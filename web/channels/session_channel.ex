@@ -1,8 +1,7 @@
 defmodule KlziiChat.SessionChannel do
   use KlziiChat.Web, :channel
-  alias KlziiChat.Services.SessionService
-  alias KlziiChat.Services.SessionMembersService
-  alias KlziiChat.{Presence , SessionMembersView}
+  alias KlziiChat.Services.{SessionService, SessionMembersService}
+  alias KlziiChat.{Presence, SessionMembersView, SessionResourcesView}
 
   # This Channel is only for session context
   # Session Member information
@@ -40,7 +39,6 @@ defmodule KlziiChat.SessionChannel do
       })
       push socket, "presence_state", Presence.list(socket)
       push(socket, "self_info", socket.assigns.session_member)
-
     {:noreply, socket}
   end
 

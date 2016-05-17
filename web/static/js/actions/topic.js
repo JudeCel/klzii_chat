@@ -1,5 +1,6 @@
 import Constants        from '../constants';
 import MessagesActions  from './messages';
+import ConsoleActions   from './console';
 
 export function joinChannal(dispatch, socket, topicId) {
   const channel = socket.channel("topics:" + topicId);
@@ -10,8 +11,9 @@ export function joinChannal(dispatch, socket, topicId) {
       channel,
       currentId: topicId
     });
-    dispatch(MessagesActions.subscribeMessageEvents(channel))
-    
+    dispatch(MessagesActions.subscribeMessageEvents(channel));
+    dispatch(ConsoleActions.subscribeConsoleEvents(channel));
+
     channel.join()
     .receive('ok', (resp) => {
       dispatch({

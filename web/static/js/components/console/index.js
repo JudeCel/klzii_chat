@@ -6,44 +6,52 @@ import mixins             from '../../mixins';
 const { SurveyModal, UploadsModal } = Modals;
 
 const Console = React.createClass({
-  mixins: [mixins.modalWindows],
+  mixins: [mixins.modalWindows, mixins.helpers],
   getInitialState() {
-    return { currentModal: null };
+    return { modalName: null };
   },
-  compareState(modals) {
-    return modals.includes(this.state.currentModal);
+  shouldShow(modals) {
+    return modals.includes(this.state.modalName) && this.showSpecificModal('console');
   },
-  openModal(modal) {
-    this.setState({ currentModal: modal });
-    this.openSpecificModal('console');
+  openModal(type) {
+    if(this.isConsoleActive(type)) {
+      this.setState({ modalName: type }, function() {
+        this.openSpecificModal('console');
+      });
+    }
+  },
+  isConsoleActive(type) {
+    return this.getConsoleResourceId(type);
+  },
+  consoleButtonClassName(type) {
+    return this.isConsoleActive(type) ? 'cursor-pointer active' : '';
   },
   render() {
-    const { currentModal } = this.state;
+    const { modalName } = this.state;
+    const consoleButtons = [
+      { type: 'video',  className: 'icon-video-1'    },
+      { type: 'audio',  className: 'icon-volume-up'  },
+      { type: 'image',  className: 'icon-camera'     },
+      { type: 'survey', className: 'icon-ok-squared' },
+      { type: 'pdf',    className: 'icon-pdf'        },
+    ];
 
     return (
       <div>
         <div className='console-section'>
           <ul className='icons'>
-            <li onClick={ this.openModal.bind(this, 'video') }>
-              <i className='icon-video-1' />
-            </li>
-            <li onClick={ this.openModal.bind(this, 'audio') }>
-              <i className='icon-volume-up' />
-            </li>
-            <li onClick={ this.openModal.bind(this, 'image') }>
-              <i className='icon-camera' />
-            </li>
-            <li onClick={ this.openModal.bind(this, 'survey') }>
-              <i className='icon-ok-squared' />
-            </li>
-            <li>
-              <i className='icon-pdf' />
-            </li>
+            {
+              consoleButtons.map((button, index) =>
+                <li key={ index } onClick={ this.openModal.bind(this, button.type) } className={ this.consoleButtonClassName(button.type) }>
+                  <i className={ button.className } />
+                </li>
+              )
+            }
           </ul>
         </div>
 
-        <SurveyModal shouldRender={ this.compareState(['survey']) } />
-        <UploadsModal shouldRender={ this.compareState(['video', 'audio', 'image']) } resourceType={ currentModal } />
+        <SurveyModal show={ this.shouldShow(['survey']) } />
+        <UploadsModal show={ this.shouldShow(['video', 'audio', 'image']) } modalName={ modalName } />
       </div>
     )
   }
@@ -51,7 +59,8 @@ const Console = React.createClass({
 
 const mapStateToProps = (state) => {
   return {
-    modalWindows: state.modalWindows
+    modalWindows: state.modalWindows,
+    console: state.topic.console
   }
 };
 

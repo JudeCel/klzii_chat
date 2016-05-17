@@ -1,15 +1,15 @@
-defmodule KlziiChat.SessionTopic do
+defmodule KlziiChat.SessionResource do
   use KlziiChat.Web, :model
+  use Timex.Ecto.Timestamps
 
-  schema "SessionTopics" do
+  schema "SessionResources" do
+    belongs_to :resource, KlziiChat.Resource, [foreign_key: :resourceId]
     belongs_to :session, KlziiChat.Session, [foreign_key: :sessionId]
-    belongs_to :topic, KlziiChat.Topic, [foreign_key: :topicId]
-    has_one :console, KlziiChat.Console,[foreign_key: :sessionTopicId]
-    field :active, :boolean, default: false
-    timestamps [inserted_at: :createdAt, updated_at: :updatedAt]
+    field :createdAt, Timex.Ecto.DateTime
+    field :updatedAt, Timex.Ecto.DateTime
   end
 
-  @required_fields ~w(sessionId topicId active)
+  @required_fields ~w(resourceId sessionId)
   @optional_fields ~w()
 
   @doc """

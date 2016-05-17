@@ -28,7 +28,7 @@ const UploadNew = React.createClass({
     }
   },
   render() {
-    const { resourceType } = this.props;
+    const { modalName } = this.props;
     const { fileName } = this.state;
     const fileTypes = {
       image: '.gif, .jpg, .png',
@@ -55,7 +55,7 @@ const UploadNew = React.createClass({
 
           <div className='col-md-10'>
             <div className='input-group'>
-              <input type='file' className='hidden' id='uploadFile' onChange={ this.onFileChange } accept={ fileTypes[resourceType] } />
+              <input type='file' className='hidden' id='uploadFile' onChange={ this.onFileChange } accept={ fileTypes[modalName] } />
               <input type='text' className='form-control no-border-radius' value={ fileName } disabled='true' />
               <span onClick={ this.openSelect } className='input-group-addon no-border-radius cursor-pointer'>Choose File</span>
             </div>

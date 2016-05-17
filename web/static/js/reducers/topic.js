@@ -5,7 +5,9 @@ const initialState = {
   channel: null,
   all: [],
   ready: false,
-  leave: false
+  leave: false,
+  console: {},
+  consoleResource: {}
 };
 
 export default function reducer(state = initialState, action = {}) {
@@ -18,16 +20,19 @@ export default function reducer(state = initialState, action = {}) {
 
     case Constants.LEAVE_TOPIC:
       return { ...state, channel: null, current: {}, leave: true };
+
+    case Constants.SET_CONSOLE:
+      return { ...state, console: action.console };
+
+    case Constants.SET_CONSOLE_RESOURCE:
+      return { ...state, consoleResource: action.data };
+
     default:
       return state;
   }
 }
 function find(toics, id) {
-  let topic = null;
-  toics.map((t) =>{
-    if (t.id == id) {
-      topic = t;
-    }
-  })
-  return topic;
+  return toics.find((t) => {
+    return t.id == id
+  });
 }

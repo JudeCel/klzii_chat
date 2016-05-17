@@ -9,11 +9,6 @@ const Survey = React.createClass({
   getInitialState() {
     return { rendering: 'index', survey: {} };
   },
-  shouldComponentUpdate(nextProps, nextState) {
-    return nextProps.shouldRender && nextProps.modalWindows != this.props.modalWindows
-      || !nextProps.shouldRender && nextProps.modalWindows == this.props.modalWindows
-      || this.state.rendering != nextState.rendering;
-  },
   afterChange(data) {
     this.setState(data);
   },
@@ -63,11 +58,10 @@ const Survey = React.createClass({
     }
   },
   render() {
-    const show = this.showSpecificModal('resources');
     const { rendering } = this.state;
-    const { shouldRender } = this.props;
+    const { show } = this.props;
 
-    if(show && shouldRender) {
+    if(show) {
       return (
         <Modal dialogClassName='modal-section' show={ show } onHide={ this.onClose } onEnter={ this.onShow }>
           <Modal.Header>

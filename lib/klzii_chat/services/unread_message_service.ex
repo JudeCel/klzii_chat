@@ -1,5 +1,6 @@
 defmodule KlziiChat.Services.UnreadMessageService do
   alias KlziiChat.{Repo, Message, SessionMember, UnreadMessage, Endpoint, Presence}
+  alias KlziiChat.Helpers.ListHelper
   import Ecto.Query, only: [from: 1, from: 2]
 
   @default_summary %{"summary" => %{"normal" => 0, "reply" => 0 }}
@@ -9,7 +10,7 @@ defmodule KlziiChat.Services.UnreadMessageService do
     current_topic_presences_ids = topic_presences_ids(topic_id)
     current_session_presences_ids = session_presences_ids(session_id)
 
-    diff = find_diff(current_topic_presences_ids, current_session_presences_ids)
+    diff = ListHelper.find_diff(current_topic_presences_ids, current_session_presences_ids)
     data = get_unread_messages(diff) |> group_by_topics_and_scope |> calculate_summary
     notify(session_id, data)
   end
@@ -57,13 +58,13 @@ defmodule KlziiChat.Services.UnreadMessageService do
     all_session_member_ids = get_all_session_members(session_id)
 
     # get all members who not connected to specific topic.
-    unread_members_ids = find_diff(current_topic_presences_ids, all_session_member_ids)
+    unread_members_ids = ListHelper.find_diff(current_topic_presences_ids, all_session_member_ids)
 
     # Create unread messages for session members
     insert_offline_records(unread_members_ids, message)
 
     # find conected session member ids for notification
-    notifiable_session_member_ids = find_diff(current_topic_presences_ids, current_session_presences_ids)
+    notifiable_session_member_ids = ListHelper.find_diff(current_topic_presences_ids, current_session_presences_ids)
 
     # get data for notifications
     data = get_unread_messages(notifiable_session_member_ids) |> group_by_topics_and_scope |> calculate_summary
@@ -140,18 +141,6 @@ defmodule KlziiChat.Services.UnreadMessageService do
   @spec get_message(Integer.t) :: %Message{}
   def get_message(message_id) do
     Repo.get_by!(Message, id: message_id) |> Repo.preload([:reply])
-  end
-
-  @spec find_diff(List.t, List.t) :: List.t
-  def find_diff(first, second) do
-    List.foldl(first, second, fn (id, acc) ->
-      result = List.delete(acc, id)
-      if result == acc do
-        result ++ [id]
-      else
-        result
-      end
-    end)
   end
 
   @spec delete_unread_messages_for_topic(String.t, String.t) :: {Integer.t, nil | [term]}

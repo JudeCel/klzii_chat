@@ -1,7 +1,7 @@
 defmodule KlziiChat.TopicChannel do
   use KlziiChat.Web, :channel
-  alias KlziiChat.Services.{MessageService, WhiteboardService, ResourceService, UnreadMessageService}
-  alias KlziiChat.{MessageView, Presence, Endpoint}
+  alias KlziiChat.Services.{MessageService, WhiteboardService, ResourceService, UnreadMessageService, ConsoleService}
+  alias KlziiChat.{MessageView, Presence, Endpoint, ConsoleView}
 
   # This Channel is only for Topic context
   # brodcast and receive messages from session members
@@ -27,6 +27,7 @@ defmodule KlziiChat.TopicChannel do
 
   def handle_info(:after_join, socket) do
     session_member = socket.assigns.session_member
+    {:ok, console} = ConsoleService.get(session_member.session_id, socket.assigns.topic_id)
     {:ok, _} = Presence.track(socket, (socket.assigns.session_member.id |> to_string), %{
       online_at: inspect(System.system_time(:seconds)),
       id: session_member.id,
@@ -36,7 +37,28 @@ defmodule KlziiChat.TopicChannel do
     UnreadMessageService.delete_unread_messages_for_topic(session_member.id, socket.assigns.topic_id)
     messages = UnreadMessageService.sync_state(session_member.id)
     Endpoint.broadcast!("sessions:#{session_member.session_id}", "unread_messages", messages)
+    push socket, "console", ConsoleView.render("show.json", %{console: console})
     {:noreply, socket}
+  end
+
+  def handle_in("set_console_resource", %{"id" => id}, socket) do
+    case ConsoleService.set_resource(socket.assigns.session_member.id, socket.assigns.topic_id, id) do
+      {:ok, console} ->
+        broadcast! socket, "console",  ConsoleView.render("show.json", %{console: console})
+        {:reply, :ok, socket}
+      {:error, reason} ->
+        {:error, %{reason: reason}}
+    end
+  end
+
+  def handle_in("remove_console_resource", %{"type" => type}, socket) do
+    case ConsoleService.remove_resource(socket.assigns.session_member.id, socket.assigns.topic_id, type) do
+      {:ok, console} ->
+        broadcast! socket, "console",  ConsoleView.render("show.json", %{console: console})
+        {:reply, :ok, socket}
+      {:error, reason} ->
+        {:error, %{reason: reason}}
+    end
   end
 
   def handle_in("resources", %{"type" => type}, socket) do
