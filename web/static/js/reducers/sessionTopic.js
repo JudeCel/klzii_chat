@@ -1,7 +1,7 @@
 import Constants from '../constants';
 
 const initialState = {
-  current: { id: 0, name: 'Topic' },
+  current: {},
   channel: null,
   all: [],
   ready: false,
@@ -12,13 +12,13 @@ const initialState = {
 
 export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
-    case Constants.SET_TOPIC_CHANNEL:
+    case Constants.SET_SESSION_TOPIC_CHANNEL:
       return { ...state, current: find(state.all, action.currentId), channel: action.channel, ready: true};
 
-    case Constants.SET_TOPICS:
+    case Constants.SET_SESSION_TOPICS:
       return { ...state, all: action.all};
 
-    case Constants.LEAVE_TOPIC:
+    case Constants.SET_SESSION_TOPIC:
       return { ...state, channel: null, current: {}, leave: true };
 
     case Constants.SET_CONSOLE:
@@ -31,8 +31,8 @@ export default function reducer(state = initialState, action = {}) {
       return state;
   }
 }
-function find(toics, id) {
-  return toics.find((t) => {
-    return t.id == id
+function find(sessionTopics, id) {
+  return sessionTopics.find((st) => {
+    return st.id == id
   });
 }

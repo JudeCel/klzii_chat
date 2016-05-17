@@ -2,7 +2,7 @@ defmodule KlziiChat.Message do
   use KlziiChat.Web, :model
 
   schema "Messages" do
-    belongs_to :topic, KlziiChat.Topic, [foreign_key: :topicId]
+    belongs_to :session_topic, KlziiChat.SessionTopic, [foreign_key: :sessionTopicId]
     belongs_to :session_member, KlziiChat.SessionMember, [foreign_key: :sessionMemberId]
     belongs_to :reply, KlziiChat.Message, [foreign_key: :replyId]
     has_many :replies, KlziiChat.Message, [foreign_key: :replyId, on_delete: :delete_all]
@@ -14,7 +14,7 @@ defmodule KlziiChat.Message do
     timestamps [inserted_at: :createdAt, updated_at: :updatedAt]
   end
 
-  @required_fields ~w(topicId sessionMemberId body)
+  @required_fields ~w(sessionTopicId sessionMemberId body)
   @optional_fields ~w(emotion star replyId)
 
   @doc """

@@ -3,7 +3,7 @@ defmodule KlziiChat.UserSocket do
   import KlziiChat.Services.SessionMembersService, only: [find_by_token: 1]
   ## Channels
   channel "sessions:*", KlziiChat.SessionChannel
-  channel "topics:*", KlziiChat.TopicChannel
+  channel "session_topic:*", KlziiChat.SessionTopicChannel
 
   ## Transports
   transport :websocket, Phoenix.Transports.WebSocket

@@ -39,6 +39,7 @@ defmodule KlziiChat.SessionMemberCase do
     ) |> Repo.insert!
     session_topic_1 = Ecto.build_assoc(topic_1, :session_topics,
       session: session,
+      name: "cool session topic 1"
     ) |> Repo.insert!
 
     topic_2 = Ecto.build_assoc(account, :topics,
@@ -47,6 +48,7 @@ defmodule KlziiChat.SessionMemberCase do
 
     session_topic_2 = Ecto.build_assoc(topic_2, :session_topics,
       session: session,
+      name: "cool session topic 2"
     ) |> Repo.insert!
 
     member = %SessionMember{

@@ -50,20 +50,19 @@ defmodule KlziiChat.Services.SessionResourcesService do
   def delete_related_consoles(resource, session_member_id) do
     session_member = Repo.get!(SessionMember, session_member_id)
     resourceId = resource.id
-    session_topicIds = from(st in SessionTopic, where: st.sessionId == ^session_member.sessionId, select: st.id) |> Repo.all
+    session_topic_ids = from(st in SessionTopic, where: st.sessionId == ^session_member.sessionId, select: st.id) |> Repo.all
     from(c in Console,
-      where: c.sessionTopicId in ^session_topicIds,
+      where: c.sessionTopicId in ^session_topic_ids,
       where:
         c.audioId == ^resourceId or
         c.videoId == ^resourceId or
         c.imageId == ^resourceId or
-        c.fileId == ^resourceId,
-      preload: [:sessionTopic]
+        c.fileId == ^resourceId
       ) |> Repo.all
         |> Enum.map(fn console ->
-          {:ok, new_console} = ConsoleService.remove_resource(session_member.id, console.sessionTopic.topicId, resource.type)
+          {:ok, new_console} = ConsoleService.remove_resource(session_member.id, console.sessionTopicId, resource.type)
           data = ConsoleView.render("show.json", %{console: new_console})
-          Endpoint.broadcast!( "topics:#{console.sessionTopic.topicId}", "console", data)
+          Endpoint.broadcast!( "session_topic:#{console.sessionTopicId}", "console", data)
       end)
       :ok
   end

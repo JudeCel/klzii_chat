@@ -89,7 +89,7 @@ const mapStateToProps = (state) => {
     inputPrefix: state.currentInput.inputPrefix,
     permissions: state.members.currentUser.permissions,
     currentInput: state.currentInput,
-    topicChannel: state.topic.channel
+    topicChannel: state.sessionTopic.channel
   }
 };
 

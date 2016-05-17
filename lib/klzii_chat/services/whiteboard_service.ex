@@ -1,12 +1,12 @@
 defmodule KlziiChat.Services.WhiteboardService do
-  alias KlziiChat.{Repo, Shape, ShapeView, SessionMember, Topic}
+  alias KlziiChat.{Repo, Shape, ShapeView, SessionMember, SessionTopic}
   import Ecto
   import Ecto.Query, only: [from: 1, from: 2]
 
-  def history(topic_id, tag) do
-    topic = Repo.get!(Topic, topic_id)
+  def history(topic_id, _) do
+    session_topic = Repo.get!(SessionTopic, topic_id)
     shapes = Repo.all(
-      from e in assoc(topic, :shapes),
+      from e in assoc(session_topic, :shapes),
       preload: [:session_member]
     )
     {:ok, Phoenix.View.render_many(shapes, ShapeView, "show.json")}
@@ -34,26 +34,25 @@ defmodule KlziiChat.Services.WhiteboardService do
     end
   end
 
-  def update_object(session_member_id, topic_id, params) do
+  def update_object(_session_member_id, _, params) do
     Repo.get_by!(Shape, uid: params["id"])
     |> Ecto.Changeset.change(event: params)
     |> update
   end
 
-
-  def create_object(session_member_id, topic_id, params) do
+  def create_object(session_member_id, session_topic_id, params) do
     session_member = Repo.get!(SessionMember, session_member_id)
     changeset = build_assoc(
       session_member, :shapes,
       sessionId: session_member.sessionId,
       event: params,
       uid: params["id"],
-      topicId: topic_id
+      sessionTopicId: session_topic_id
     )
     create(changeset)
   end
 
-  def deleteAll(session_member_id, topicId, params) do
+  def deleteAll(_session_member_id, _, params) do
     Enum.map(params["objects"], &(&1["id"])) |> deleteByUids
   end
 
@@ -61,10 +60,10 @@ defmodule KlziiChat.Services.WhiteboardService do
     query = from(e in Shape, where: e.uid in ^ids)
 
     case Repo.delete_all(query) do
-      {_count, _model}        -> # Deleted with success
-        {:ok}
-      {:error, changeset} -> # Something went wrong
+      {:error, changeset} ->
         {:error, changeset}
+      {_count, _model} -> # Deleted with success
+        {:ok}
     end
   end
 end

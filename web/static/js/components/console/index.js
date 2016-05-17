@@ -60,7 +60,7 @@ const Console = React.createClass({
 const mapStateToProps = (state) => {
   return {
     modalWindows: state.modalWindows,
-    console: state.topic.console
+    console: state.sessionTopic.console
   }
 };
 

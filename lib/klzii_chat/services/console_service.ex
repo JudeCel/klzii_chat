@@ -2,16 +2,10 @@ defmodule KlziiChat.Services.ConsoleService do
   alias KlziiChat.{Repo, Console, Console, SessionTopic, Resource, SessionMember}
   alias KlziiChat.Services.Permissions.Console, as: ConsolePermissions
   import Ecto
-  import Ecto.Query, only: [from: 1, from: 2]
 
   @spec get(Integer, Integer) ::  {:ok, %Console{}}
-  def get(session_id, topic_id) do
-    session_topic = from(st in SessionTopic,
-      where: st.sessionId == ^session_id,
-      where: st.topicId == ^topic_id,
-      preload: [:console]
-    ) |> Repo.one
-
+  def get(_, session_topic_id) do
+    session_topic = Repo.get!(SessionTopic, session_topic_id) |> Repo.preload([:console])
     case session_topic.console do
       nil ->
         build_assoc(session_topic, :console) |> Repo.insert
@@ -21,10 +15,10 @@ defmodule KlziiChat.Services.ConsoleService do
   end
 
   @spec set_resource(Integer, Integer, Integer) :: {:ok, %Console{}} | {:error, String.t}
-  def set_resource(member_id, topic_id, resource_id) do
+  def set_resource(member_id, session_topic_id, resource_id) do
     session_member = Repo.get!(SessionMember, member_id)
     if ConsolePermissions.can_set_resource(session_member) do
-      {:ok, console} = get(session_member.sessionId, topic_id)
+      {:ok, console} = get(session_member.sessionId, session_topic_id)
       set_id_by_type(resource_id)
       |> update_console(console)
     else
@@ -33,10 +27,10 @@ defmodule KlziiChat.Services.ConsoleService do
   end
 
   @spec remove_resource(Integer, Integer, String.t) ::  {:ok, %Console{}} | {:error, String.t}
-  def remove_resource(member_id, topic_id, type) do
+  def remove_resource(member_id, session_topic_id, type) do
     session_member = Repo.get!(SessionMember, member_id)
     if ConsolePermissions.can_remove_resource(session_member) do
-      {:ok, console} = get(session_member.sessionId, topic_id)
+      {:ok, console} = get(session_member.sessionId, session_topic_id)
       remove_id_by_type(type)
       |> update_console(console)
     else

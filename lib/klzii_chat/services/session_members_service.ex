@@ -1,6 +1,5 @@
 defmodule KlziiChat.Services.SessionMembersService do
   alias KlziiChat.{Repo, SessionMember, SessionMembersView}
-  import Ecto
   import Ecto.Query, only: [from: 1, from: 2]
 
   @spec find_by_token(String.t) :: nil | Map.t

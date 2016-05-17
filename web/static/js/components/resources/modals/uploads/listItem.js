@@ -67,7 +67,7 @@ const UploadListItem = React.createClass({
 
 const mapStateToProps = (state) => {
   return {
-    channel: state.topic.channel,
+    channel: state.sessionTopic.channel,
     tConsole: state.topic.console,
     jwt: state.members.currentUser.jwt
   }

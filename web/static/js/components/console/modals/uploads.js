@@ -48,8 +48,8 @@ const mapStateToProps = (state) => {
     modalWindows: state.modalWindows,
     currentUserJwt: state.members.currentUser.jwt,
     colours: state.chat.session.colours,
-    console: state.topic.console,
-    consoleResource: state.topic.consoleResource
+    console: state.sessionTopic.console,
+    consoleResource: state.sessionTopic.consoleResource
   }
 };
 

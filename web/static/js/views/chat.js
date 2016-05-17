@@ -1,14 +1,14 @@
 import React, { PropTypes } from 'react';
 import { connect }          from 'react-redux';
 import sessionActions       from '../actions/session';
-import topicActions         from '../actions/topic';
+import sessionTopicActions  from '../actions/sessionTopic';
 import Messages             from '../components/messages/messages.js';
 import Input                from '../components/messages/input.js';
 import Whiteboard           from '../components/whiteboard';
 import Facilitator          from '../components/members/facilitator.js';
 import Participants         from '../components/members/participants.js';
 import ChangeAvatarModal    from '../components/members/modals/changeAvatar/index.js';
-import TopicSelect          from '../components/topics/select.js';
+import SessionTopicSelect          from '../components/sessionTopics/select.js';
 import Resources            from '../components/resources/resources.js';
 import HeaderLinks          from '../components/header/links.js';
 
@@ -40,8 +40,8 @@ const ChatView = React.createClass({
     this.props.dispatch(sessionActions.connectToChannel());
   },
   componentWillReceiveProps(nextProps){
-    if(nextProps.sessionReady && !nextProps.topicReady) {
-      this.props.dispatch(topicActions.selectCurrent(nextProps.socket, nextProps.topics));
+    if(nextProps.sessionReady && !nextProps.sessionTopicReady) {
+      this.props.dispatch(sessionTopicActions.selectCurrent(nextProps.socket, nextProps.session_topics));
     }
   },
   openAvatarModal() {
@@ -51,19 +51,19 @@ const ChatView = React.createClass({
     this.setState({ openAvatarModal: false });
   },
   render() {
-    const { error, sessionReady, topicReady } = this.props;
+    const { error, sessionReady, sessionTopicReady } = this.props;
 
     if(error) {
       return (<div>{error}</div>)
     }
-    else if(sessionReady && topicReady) {
+    else if(sessionReady && sessionTopicReady) {
       return (
         <div id='chat-app-container'>
           <ToastContainer ref='notification' className='toast-top-right' toastMessageFactory={ ToastMessageFactory } />
 
           <nav className='row header-section'>
             <div className='header-innerbox'>
-              <TopicSelect/>
+              <SessionTopicSelect/>
               <Resources/>
               <HeaderLinks/>
             </div>
@@ -109,8 +109,8 @@ const mapStateToProps = (state) => {
     colours: state.chat.session.colours,
     sessionReady: state.chat.ready,
     error: state.chat.error,
-    topics: state.chat.session.topics,
-    topicReady: state.topic.ready,
+    session_topics: state.chat.session.session_topics,
+    sessionTopicReady: state.sessionTopic.ready,
     socket: state.chat.socket,
     notifications: state.notifications
   };

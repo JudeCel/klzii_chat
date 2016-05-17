@@ -1,23 +1,23 @@
-defmodule KlziiChat.TopicChannelTest do
+defmodule KlziiChat.SessionTopicChannelTest do
   use KlziiChat.ChannelCase
   use KlziiChat.SessionMemberCase
-  alias KlziiChat.{Repo, Presence, UserSocket, TopicChannel}
+  alias KlziiChat.{Repo, Presence, UserSocket, SessionTopicChannel}
   alias KlziiChat.Services.{SessionResourcesService}
 
-  setup %{topic_1: topic_1, session: session, session: session, member: member, member2: member2} do
+  setup %{session_topic_1: session_topic_1, session: session, session: session, member: member, member2: member2} do
     Ecto.Adapters.SQL.Sandbox.mode(Repo, {:shared, self()})
-    topic_1_name =  "topics:" <> Integer.to_string(topic_1.id)
+    session_topic_1_name =  "session_topic:" <> Integer.to_string(session_topic_1.id)
     {:ok, socket} = connect(UserSocket, %{"token" => member.token})
     {:ok, socket2} = connect(UserSocket, %{"token" => member2.token})
-    {:ok, socket: socket, socket2: socket2, topic_1_name: topic_1_name}
+    {:ok, socket: socket, socket2: socket2, session_topic_1_name: session_topic_1_name}
   end
 
-  test "receive console on subscribing", %{socket: socket, topic_1_name: topic_1_name} do
-    {:ok, _, _} = subscribe_and_join(socket, TopicChannel, topic_1_name)
+  test "receive console on subscribing", %{socket: socket, session_topic_1_name: session_topic_1_name} do
+    {:ok, _, _} = subscribe_and_join(socket, SessionTopicChannel, session_topic_1_name)
     assert_push("console", %{})
   end
 
-  test "set resource to console", %{account_user: account_user, socket: socket, topic_1_name: topic_1_name} do
+  test "set resource to console", %{account_user: account_user, socket: socket, session_topic_1_name: session_topic_1_name} do
     {:ok, resource} = Ecto.build_assoc(
       account_user.account, :resources,
       accountUserId: account_user.id,
@@ -26,13 +26,13 @@ defmodule KlziiChat.TopicChannelTest do
       scope: "collage"
     ) |> Repo.insert
 
-    {:ok, _, socket} = subscribe_and_join(socket, TopicChannel, topic_1_name)
+    {:ok, _, socket} = subscribe_and_join(socket, SessionTopicChannel, session_topic_1_name)
     ref = push socket, "set_console_resource", %{"id" => resource.id}
     assert_reply ref, :ok
     assert_push("console", %{})
   end
 
-  test "remove resource from console ", %{account_user: account_user, socket: socket, topic_1_name: topic_1_name} do
+  test "remove resource from console ", %{account_user: account_user, socket: socket, session_topic_1_name: session_topic_1_name} do
     {:ok, resource} = Ecto.build_assoc(
       account_user.account, :resources,
       accountUserId: account_user.id,
@@ -41,14 +41,14 @@ defmodule KlziiChat.TopicChannelTest do
       scope: "collage"
     ) |> Repo.insert
 
-    {:ok, _, socket} = subscribe_and_join(socket, TopicChannel, topic_1_name)
+    {:ok, _, socket} = subscribe_and_join(socket, SessionTopicChannel, session_topic_1_name)
     ref = push socket, "remove_console_resource", %{"type" => resource.type}
     assert_reply ref, :ok
     assert_push("console", %{})
   end
 
-  test "remove resource from console when resource enable", %{account_user: account_user, socket: socket, topic_1_name: topic_1_name} do
-    {:ok, _, socket} = subscribe_and_join(socket, TopicChannel, topic_1_name)
+  test "remove resource from console when resource enable", %{account_user: account_user, socket: socket, session_topic_1_name: session_topic_1_name} do
+    {:ok, _, socket} = subscribe_and_join(socket, SessionTopicChannel, session_topic_1_name)
     assert_push("console", %{})
 
     resource = Ecto.build_assoc(
@@ -70,9 +70,9 @@ defmodule KlziiChat.TopicChannelTest do
     assert_push("console", %{audio_id: nil, file_id: nil, image_id: nil, survey_id: nil, video_id: nil})
   end
 
-  test "presents register is enable for topics", %{socket: socket, topic_1_name: topic_1_name} do
+  test "presents register is enable for topics", %{socket: socket, session_topic_1_name: session_topic_1_name} do
     {:ok, _, socket} =
-      join(socket, TopicChannel, topic_1_name)
+      join(socket, SessionTopicChannel, session_topic_1_name)
       session_member = socket.assigns.session_member
 
       id = Presence.list(socket)
@@ -82,8 +82,8 @@ defmodule KlziiChat.TopicChannelTest do
       assert(id == session_member.id)
   end
 
-  test "can push new message", %{socket: socket, topic_1_name: topic_1_name} do
-    {:ok, _, socket} = subscribe_and_join(socket, TopicChannel, topic_1_name)
+  test "can push new message", %{socket: socket, session_topic_1_name: session_topic_1_name} do
+    {:ok, _, socket} = subscribe_and_join(socket, SessionTopicChannel, session_topic_1_name)
       body = "hey!!"
       ref = push socket, "new_message", %{"emotion" => "1", "body" => body}
       assert_reply ref, :ok
@@ -91,8 +91,8 @@ defmodule KlziiChat.TopicChannelTest do
       assert(message.body == body)
   end
 
-  test "can start message and unstart message", %{socket: socket, topic_1_name: topic_1_name} do
-    {:ok, _, socket} = subscribe_and_join(socket, TopicChannel, topic_1_name)
+  test "can start message and unstart message", %{socket: socket, session_topic_1_name: session_topic_1_name} do
+    {:ok, _, socket} = subscribe_and_join(socket, SessionTopicChannel, session_topic_1_name)
       body = "hey!!"
       ref = push socket, "new_message", %{"emotion" => "1", "body" => body}
       assert_reply ref, :ok
@@ -108,8 +108,8 @@ defmodule KlziiChat.TopicChannelTest do
       refute(message_star.star)
   end
 
-  test "can push delete message", %{socket: socket, topic_1_name: topic_1_name} do
-    {:ok, _, socket} = subscribe_and_join(socket, TopicChannel, topic_1_name)
+  test "can push delete message", %{socket: socket, session_topic_1_name: session_topic_1_name} do
+    {:ok, _, socket} = subscribe_and_join(socket, SessionTopicChannel, session_topic_1_name)
       ref = push socket, "new_message", %{"emotion" => "1", "body" => "hey!!"}
       assert_reply ref, :ok
       assert_push "new_message", message
@@ -121,8 +121,8 @@ defmodule KlziiChat.TopicChannelTest do
       assert(resp == %{id: message.id, replyId: nil})
   end
 
-  test "can thumbs up for message", %{socket: socket, topic_1_name: topic_1_name} do
-    {:ok, _, socket} = subscribe_and_join(socket, TopicChannel, topic_1_name)
+  test "can thumbs up for message", %{socket: socket, session_topic_1_name: session_topic_1_name} do
+    {:ok, _, socket} = subscribe_and_join(socket, SessionTopicChannel, session_topic_1_name)
       ref = push socket, "new_message", %{"emotion" => "1", "body" => "hey!!"}
       assert_reply ref, :ok
       assert_push "new_message", message
@@ -134,12 +134,11 @@ defmodule KlziiChat.TopicChannelTest do
       assert(resp.has_voted)
   end
 
-  test "can reply ", %{socket: socket, socket2: socket2, topic_1_name: topic_1_name} do
-    {:ok, _, socket} = subscribe_and_join(socket, TopicChannel, topic_1_name)
-    {:ok, _, socket2} = subscribe_and_join(socket2, TopicChannel, topic_1_name)
+  test "can reply ", %{socket: socket, session_topic_1_name: session_topic_1_name} do
+    {:ok, _, socket} = subscribe_and_join(socket, SessionTopicChannel, session_topic_1_name)
     message_body = "hey!!"
 
-    message_ref = push socket2, "new_message", %{"emotion" => "1", "body" => message_body}
+    message_ref = push socket, "new_message", %{"emotion" => "1", "body" => message_body}
     assert_reply message_ref, :ok
     assert_push "new_message", message
     assert(message.body == message_body)
@@ -147,8 +146,7 @@ defmodule KlziiChat.TopicChannelTest do
     reply_body = "replyId body"
     reply_ref = push socket, "new_message", %{"emotion" => "1", "replyId" => message.id, "body" => reply_body}
     assert_reply reply_ref, :ok
-
-    _message_id = message.id
-    assert_broadcast "new_message", %{ replyId:  _message_id}
+    assert_push("new_message", %{body: "@cool member replyId body", replyId: message_id })
+    assert(message_id == message.id)
   end
 end

@@ -99,7 +99,7 @@ const Messages =  React.createClass({
 const mapStateToProps = (state) => {
   return {
     messages: state.messages.all,
-    channel: state.topic.channel
+    channel: state.sessionTopic.channel
   }
 };
 

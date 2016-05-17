@@ -2,14 +2,14 @@ import Constants        from '../constants';
 import MessagesActions  from './messages';
 import ConsoleActions   from './console';
 
-export function joinChannal(dispatch, socket, topicId) {
-  const channel = socket.channel("topics:" + topicId);
+export function joinChannal(dispatch, socket, sessionTopicId) {
+  const channel = socket.channel("session_topic:" + sessionTopicId);
 
   if (channel.state != 'joined') {
     dispatch({
-      type: Constants.SET_TOPIC_CHANNEL,
+      type: Constants.SET_SESSION_TOPIC_CHANNEL,
       channel,
-      currentId: topicId
+      currentId: sessionTopicId
     });
     dispatch(MessagesActions.subscribeMessageEvents(channel));
     dispatch(ConsoleActions.subscribeConsoleEvents(channel));
@@ -24,42 +24,42 @@ export function joinChannal(dispatch, socket, topicId) {
     .receive('error', (resp) =>{
       return dispatch({
         type: Constants.SOCKET_CONNECTION_ERROR,
-        error: "Channale ERROR!!!"
+        error: "Channel ERROR!!!"
       });
     });
   }
 };
 
-function selectActive(topics) {
-  let currentTopicId = null;
+function selectActive(sessionTopics) {
+  let currentSessionTopicId = null;
   topics.map((t) =>{
     if (t.active) {
-      currentTopicId = t.id;
+      currentSessionTopicId = t.id;
     }
   })
-  return (currentTopicId || topics[0].id)
+  return (currentSessionTopicId || sessionTopics[0].id)
 }
 
 function leave_chanal(dispatch, channal) {
   channal.leave();
-  dispatch({ type: Constants.LEAVE_TOPIC });
+  dispatch({ type: Constants.SET_SESSION_TOPIC });
 }
 
 const Actions = {
-  selectCurrent: (socket, topics) =>{
+  selectCurrent: (socket, sessionTopics) =>{
     return dispatch => {
       dispatch({
-        type: Constants.SET_TOPICS,
-        all: topics
+        type: Constants.SET_SESSION_TOPICS,
+        all: sessionTopics
       });
-      let topic = selectActive(topics);
-      joinChannal(dispatch, socket, topic);
+      let sessionTopicId = sessionTopics[0].id;
+      joinChannal(dispatch, socket, sessionTopicId);
     }
   },
-  changeTopic: (currentChannal, topicId) =>{
+  changeSessionTopic: (currentChannal, sessionTopicId) =>{
     return dispatch => {
       leave_chanal(dispatch, currentChannal);
-      joinChannal(dispatch, currentChannal.socket, topicId);
+      joinChannal(dispatch, currentChannal.socket, sessionTopicId);
     }
   }
 }
