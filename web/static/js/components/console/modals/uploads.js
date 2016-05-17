@@ -31,7 +31,7 @@ const UploadsConsole = React.createClass({
 
           <Modal.Body>
             <div className='row uploads-console-section'>
-              <UploadTypes modalName={ modalName } { ...consoleResource } />
+              <UploadTypes modalName={ modalName } { ...consoleResource } youtube={ consoleResource.scope == 'youtube' } />
             </div>
           </Modal.Body>
         </Modal>
