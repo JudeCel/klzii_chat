@@ -20,7 +20,7 @@ defmodule KlziiChat.Services.ConsoleService do
     end
   end
 
-  @spec set_resource(Integer, Integer, Integer) ::  {:ok, %Console{}}
+  @spec set_resource(Integer, Integer, Integer) :: {:ok, %Console{}} | {:error, String.t}
   def set_resource(member_id, topic_id, resource_id) do
     session_member = Repo.get!(SessionMember, member_id)
     if ConsolePermissions.can_set_resource(session_member) do
@@ -32,7 +32,7 @@ defmodule KlziiChat.Services.ConsoleService do
     end
   end
 
-  @spec remove_resource(Integer, Integer, String.t) ::  {:ok, %Console{}}
+  @spec remove_resource(Integer, Integer, String.t) ::  {:ok, %Console{}} | {:error, String.t}
   def remove_resource(member_id, topic_id, type) do
     session_member = Repo.get!(SessionMember, member_id)
     if ConsolePermissions.can_remove_resource(session_member) do
@@ -60,7 +60,7 @@ defmodule KlziiChat.Services.ConsoleService do
     Map.put(%{}, get_field_from_type(type), nil)
   end
 
-  @spec get_field_from_type(String.t) :: Map
+  @spec get_field_from_type(String.t) :: Atom.t
   def get_field_from_type(resurce_type) do
     case resurce_type do
       "link" ->
