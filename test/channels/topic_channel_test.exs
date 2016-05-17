@@ -151,15 +151,4 @@ defmodule KlziiChat.TopicChannelTest do
     _message_id = message.id
     assert_broadcast "new_message", %{ replyId:  _message_id}
   end
-
-
-
-  # test "when join send empty unread messages", %{socket: socket,topic_1_name: topic_1_name} do
-  #   {:ok, _, _} = subscribe_and_join(socket, TopicChannel, topic_1_name)
-  #
-  #   first_resp_msg = %{"topics" =>  %{}, "summary" => %{"normal" => 0, "reply" => 0} }
-  #   assert_push("unread_messages", push_resp_msg)
-  #   assert(first_resp_msg == push_resp_msg)
-  # end
-
 end
