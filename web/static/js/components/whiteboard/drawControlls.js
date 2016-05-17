@@ -24,18 +24,29 @@
 
 		Element.prototype.ftSetupControls = function() {
 			this.click( function() { this.ftCreateHandles() } ) ;
-			this.ftCreateHandles();
+		}
+
+		Element.prototype.ftUpdateRotateHandler = function() {
+			var bb = getShapeSize(this);
+			var splitParams = this.matrix.split();
+
+			var rotation = rotateVector(bb.height/2, 0, splitParams.rotate - 90);
+			if (!this.rotateDragger) {
+				this.rotateDragger = this.paper.image("/images/svgControls/rotate.png", bb.cx + rotation[0], bb.cy - rotation[1], ftOption.handleRadius*2, ftOption.handleRadius*2);
+			} else {
+				this.rotateDragger.attr({x: bb.cx + rotation[0], y: bb.cy - rotation[1]});
+			}
 		}
 
 		Element.prototype.ftCreateHandles = function() {
 			if (this.setupDone) this.ftInit();
 			var freetransEl = this;
+			freetransEl.ftStoreInitialTransformMatrix();
 			var bb = this.getBBox();
 			var splitParams = this.matrix.split();
-
-			var rotation = rotateVector(bb.height/2, 0, splitParams.rotate - 90);
-			var rotateDragger = this.paper.image("/images/svgControls/rotate.png", bb.cx + rotation[0], bb.cy - rotation[1], ftOption.handleRadius*2, ftOption.handleRadius*2).transform('r0.1');
-			var translateDragger = this.paper.image("/images/svgControls/move.png", bb.cx - ftOption.handleRadius, bb.cy - ftOption.handleRadius, ftOption.handleRadius*2, ftOption.handleRadius*2).transform('r0.1');
+			this.ftUpdateRotateHandler();
+			var rotateDragger = this.rotateDragger;
+			var translateDragger = this.paper.image("/images/svgControls/move.png", bb.cx - ftOption.handleRadius, bb.cy - ftOption.handleRadius, ftOption.handleRadius*2, ftOption.handleRadius*2);
 			this.data("angle", splitParams.rotate);
 
 			this.initialWidth = bb.width/2;
@@ -69,7 +80,6 @@
 				dragHandleRotateStart.bind( rotateDragger, freetransEl  ),
 				dragHandleRotateEnd.bind( rotateDragger, freetransEl  )
 			);
-			freetransEl.ftStoreInitialTransformMatrix();
 
 			freetransEl.ftHighlightBB();
 			this.ftInformSelected(this, true);
@@ -135,6 +145,7 @@
 		};
 
 		Element.prototype.ftRemoveHandles = function() {
+			this.rotateDragger = null;
 			this.unclick();
 			if (this.data( "handlesGroup"))	this.data( "handlesGroup").remove();
 			this.data( "bbT" ) && this.data("bbT").remove();
@@ -175,12 +186,10 @@
 
 		Element.prototype.ftUpdateTransform = function() {
 			var angle = this.data("angle");
-
 			var matr = this.ftGetInitialTransformMatrix().clone();
 			var splitParams = matr.split();
 			var tstring = "t" + this.data("tx") + "," + this.data("ty") + "r" + angle + "s" + splitParams.scalex + "," + splitParams.scaley ;
 			this.attr({ transform: tstring });
-
 			this.ftHighlightBB();
 			this.updateTransformControls(this);
 
@@ -282,7 +291,7 @@
 			snapInvMatrix.e = snapInvMatrix.f = 0;
 			var tdx = snapInvMatrix.x( dx,dy ), tdy = snapInvMatrix.y( dx,dy );
 
-			el.data("posX", +el.data("origPosX") + tdx) ;// el.data("posY", +el.data("origPosY") + tdy);
+			el.data("posX", +el.data("origPosX") + tdx);
 			var posX = +el.data("posX");
 			var maxPosX = +el.data("maxPosX");
 			var minPosX = +el.data("minPosX");
@@ -326,6 +335,8 @@
 	      } else if( el.data("sliderId") == "y" ) {
 	        updateElementParameters(activeShape, {height: el.data("posX"), scaleY: el.data("fracX")});
 	      }
+
+				activeShape.ftUpdateRotateHandler();
 				activeShape.ftHighlightBB();
 	    }
 
@@ -443,7 +454,6 @@
 				el.ftStoreStartCenter();
 		} );
 		mainEl.ftStoreStartCenter();
-
 		mainEl.data("otx", mainEl.data("tx") || 0);
 		mainEl.data("oty", mainEl.data("ty") || 0);
 	};
@@ -510,7 +520,7 @@
 
 		mainEl.ftUpdateTransform();
 		mainEl.ftDrawJoinLine( handle );
-
+		console.log("_=====", getShapeSize(mainEl));
 		informTransformed(mainEl);
 	};
 
@@ -534,6 +544,18 @@
 				nx = (cos * (x - cx)) + (sin * (y - cy)) + cx,
 				ny = (cos * (y - cy)) - (sin * (x - cx)) + cy;
 		return [nx, ny];
+	}
+
+	function getShapeSize(shape) {
+		var clone = shape.clone();
+		clone.ftStoreInitialTransformMatrix();
+		var matr = clone.ftGetInitialTransformMatrix().clone();
+		var splitParams = matr.split();
+		var tstring = "t" + shape.data("tx") + "," + shape.data("ty") + "r0" + "s" + splitParams.scalex + "," + splitParams.scaley ;
+		clone.attr({ transform: tstring });
+		var box = clone.getBBox();
+		clone.remove();
+		return box;
 	}
 
 })();
