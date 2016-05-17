@@ -11,7 +11,6 @@ const Select = React.createClass({
   },
   render() {
     const { current, sessionTopics, session, unread_messages } = this.props;
-    console.log(unread_messages);
 
     return (
       <div className='col-md-2 topic-select-section'>
