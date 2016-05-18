@@ -132,8 +132,8 @@ defmodule KlziiChat.SessionTopicChannel do
     end
   end
 
-  def handle_in("update_message", %{"id" => id, "body" => body}, socket) do
-    case MessageService.update_message(id, body, socket.assigns.session_member) do
+  def handle_in("update_message", %{"id" => id, "body" => body, "emotion" => emotion}, socket) do
+    case MessageService.update_message(id, body, emotion, socket.assigns.session_member) do
       {:ok, message} ->
         broadcast! socket, "update_message", message
         {:reply, :ok, socket}

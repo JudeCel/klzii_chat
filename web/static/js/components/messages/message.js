@@ -20,10 +20,10 @@ const Message = React.createClass({
   },
   editData() {
     const { message } = this.props;
-
     return {
       id: message.id,
-      body: message.body
+      body: message.body,
+      emotion: message.emotion
     };
   },
   replyData() {

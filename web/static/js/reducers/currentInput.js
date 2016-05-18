@@ -21,17 +21,17 @@ export default function reducer(state = initialState, action = {}) {
       if (state.action == 'edit' ) {
         return initialState;
       }else{
-        return { ...state, action: 'edit', inputPrefix: "Edit:", id: action.id, value: action.value};
+        return { ...state, action: 'edit', inputPrefix: "Edit:", id: action.id, value: action.value, emotion: action.emotion};
       }
 
     case Constants.SET_INPUT_EMOTION:
         return { ...state, emotion: action.emotion};
-        
+
     case Constants.SET_INPUT_REPLY:
       if (state.action == 'reply' ) {
         return initialState;
       }else{
-        return { ...state, action: 'reply', inputPrefix: "Reply:", replyId: action.replyId, value: ''};
+        return { ...initialState, action: 'reply', inputPrefix: "Reply:", replyId: action.replyId, value: ''};
       }
     default:
       return state;

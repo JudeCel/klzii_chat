@@ -85,11 +85,11 @@ defmodule KlziiChat.Services.MessageService do
     end
   end
 
-  @spec update_message(Integer.t, String.t, Map.t) :: %Message{} | {:error, String.t}
-  def update_message(id, body, session_member) do
+  @spec update_message(Integer.t, String.t, String.t, Map.t) :: %Message{} | {:error, String.t}
+  def update_message(id, body, emotion, session_member) do
     event = Repo.get_by!(Message, id: id)
     if MessagePermissions.can_edit(session_member, event) do
-      Ecto.Changeset.change(event, body: body )
+      Ecto.Changeset.change(event, body: body, emotion: IntegerHelper.get_num(emotion) )
         |> update_msg
     else
       {:error, "Action not allowed!"}
