@@ -97,7 +97,6 @@ const WhiteboardCanvas = React.createClass({
     this.activeStrokeColour = this.activeColour;
   },
   isFacilitator() {
-    return true;
     return this.props.currentUser.role == "facilitator";
   },
   canEditShape(item) {
