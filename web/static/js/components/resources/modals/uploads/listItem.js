@@ -19,7 +19,7 @@ const UploadListItem = React.createClass({
   onActivate() {
     this.setState({ active: true });
     const { dispatch, channel, modalName } = this.props;
-    
+
     if(this.state.id) {
       dispatch(ConsoleActions.addToConsole(channel, this.state.id));
     }
@@ -68,7 +68,7 @@ const UploadListItem = React.createClass({
 const mapStateToProps = (state) => {
   return {
     channel: state.sessionTopic.channel,
-    tConsole: state.topic.console,
+    tConsole: state.sessionTopic.console,
     jwt: state.members.currentUser.jwt
   }
 };
