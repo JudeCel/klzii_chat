@@ -98,7 +98,7 @@ const Message = React.createClass({
 
           <div className={ this.bodyClassname() }>
             <p className='text-break-all'>
-              { message.body }
+              <div dangerouslySetInnerHTML={{ __html: message.body }}></div>
             </p>
           </div>
 
