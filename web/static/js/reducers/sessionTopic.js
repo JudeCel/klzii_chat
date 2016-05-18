@@ -18,6 +18,9 @@ export default function reducer(state = initialState, action = {}) {
     case Constants.SET_SESSION_TOPICS:
       return { ...state, all: action.all};
 
+    case Constants.UPDATE_SESSION_TOPIC:
+      return { ...state, all: findAndUpdate(state.all, action.session_topic)};
+
     case Constants.SET_SESSION_TOPIC:
       return { ...state, channel: null, current: {}, leave: true };
 
@@ -35,4 +38,16 @@ function find(sessionTopics, id) {
   return sessionTopics.find((st) => {
     return st.id == id
   });
+}
+
+function findAndUpdate(session_topics, session_topic) {
+  let newSession_topics = [];
+   session_topics.map((st) => {
+    if (st.id == session_topic.id) {
+      newSession_topics.push(Object.assign(st, session_topic));
+    }else{
+      newSession_topics.push(st);
+    }
+  });
+  return newSession_topics;
 }

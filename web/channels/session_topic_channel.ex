@@ -1,7 +1,8 @@
 defmodule KlziiChat.SessionTopicChannel do
   use KlziiChat.Web, :channel
-  alias KlziiChat.Services.{MessageService, WhiteboardService, ResourceService, UnreadMessageService, ConsoleService}
-  alias KlziiChat.{MessageView, Presence, Endpoint, ConsoleView}
+  alias KlziiChat.Services.{MessageService, WhiteboardService, ResourceService,
+    UnreadMessageService, ConsoleService, SessionTopicService}
+  alias KlziiChat.{MessageView, Presence, Endpoint, ConsoleView, SessionTopicView}
 
   # This Channel is only for Topic context
   # brodcast and receive messages from session members
@@ -39,6 +40,32 @@ defmodule KlziiChat.SessionTopicChannel do
     Endpoint.broadcast!("sessions:#{session_member.session_id}", "unread_messages", messages)
     push socket, "console", ConsoleView.render("show.json", %{console: console})
     {:noreply, socket}
+  end
+
+  def handle_in("board_message", payload, socket) do
+    session_topic_id = socket.assigns.session_topic_id
+    session_member = socket.assigns.session_member
+    if String.length(payload["message"]) > 0  do
+      case SessionTopicService.board_message(session_member.id, session_topic_id, payload) do
+        {:ok, session_topic} ->
+          broadcast!(socket, "board_message",  SessionTopicView.render("show.json", %{session_topic: session_topic}))
+          # TODO need move to GenEvent handler
+          new_message = %{"emotion" => 1, "body" => session_topic.boardMessage}
+          case MessageService.create_message(session_member, session_topic_id, new_message) do
+            {:ok, message} ->
+              UnreadMessageService.process_new_message(session_member.session_id, session_topic_id, message.id)
+              broadcast!(socket, "new_message",  message)
+              {:reply, :ok, socket}
+            {:error, reason} ->
+              {:error, %{reason: reason}}
+          end
+          {:reply, :ok, socket}
+        {:error, reason} ->
+          {:error, %{reason: reason}}
+      end
+    else
+      {:error, %{reason: "Message too short"}}
+    end
   end
 
   def handle_in("set_console_resource", %{"id" => id}, socket) do
@@ -85,6 +112,7 @@ defmodule KlziiChat.SessionTopicChannel do
     if String.length(payload["body"]) > 0  do
       case MessageService.create_message(session_member, session_topic_id, payload) do
         {:ok, message} ->
+          # TODO need move to GenEvent handler
           UnreadMessageService.process_new_message(session_member.session_id, session_topic_id, message.id)
           broadcast!(socket, "new_message",  message)
           {:reply, :ok, socket}

@@ -5,7 +5,7 @@ ENV NODE_ENV=production
 
 RUN mkdir -p /var/www/klzii_chat
 
-RUN sudo apt-get install imagemagick --assume-yes
+RUN sudo apt-get update && sudo apt-get install imagemagick --assume-yes
 
 WORKDIR /var/www/klzii_chat
 COPY . /var/www/klzii_chat

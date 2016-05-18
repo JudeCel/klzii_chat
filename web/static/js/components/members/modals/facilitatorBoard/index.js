@@ -22,7 +22,8 @@ const BoardModal = React.createClass({
     e.appendChild(toolbar);
   },
   onSave(e) {
-    Actions.saveBoard(this.props.dispatch, this.state.content);
+    let { channel, dispatch } = this.props
+    Actions.saveBoard(channel, dispatch, this.state.content);
     this.closeAllModals();
   },
   setContent(content) {
@@ -67,6 +68,7 @@ const mapStateToProps = (state) => {
   return {
     modalWindows: state.modalWindows,
     colours: state.chat.session.colours,
+    channel: state.sessionTopic.channel
   }
 };
 
