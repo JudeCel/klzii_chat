@@ -23,19 +23,21 @@
 		}
 
 		Element.prototype.ftSetupControls = function() {
-			this.click( function() { this.ftCreateHandles() } ) ;
+			this.click( function() { this.ftCreateHandles();} ) ;
 		}
 
 		Element.prototype.ftUpdateRotateHandler = function() {
+			var box = this.getBBox();
 			var bb = getShapeSize(this);
 			var splitParams = this.matrix.split();
-
-			var rotation = rotateVector(bb.height/2, 0, splitParams.rotate - 90);
+			var rotation = rotateVector(bb.height/2, 0, splitParams.rotate -90);
 			if (!this.rotateDragger) {
-				this.rotateDragger = this.paper.image("/images/svgControls/rotate.png", bb.cx + rotation[0], bb.cy - rotation[1], ftOption.handleRadius*2, ftOption.handleRadius*2);
+				this.rotateDragger = this.paper.image("/images/svgControls/rotate.png", box.cx + rotation[0], box.cy - rotation[1], ftOption.handleRadius*2, ftOption.handleRadius*2);
 			} else {
-				this.rotateDragger.attr({x: bb.cx + rotation[0], y: bb.cy - rotation[1]});
+				this.rotateDragger.attr('x', box.cx + rotation[0]);
+				this.rotateDragger.attr('y', box.cy - rotation[1]);
 			}
+			console.log("___", bb.height);
 		}
 
 		Element.prototype.ftCreateHandles = function() {
@@ -44,24 +46,20 @@
 			freetransEl.ftStoreInitialTransformMatrix();
 			var bb = this.getBBox();
 			var splitParams = this.matrix.split();
-			this.ftUpdateRotateHandler();
-			var rotateDragger = this.rotateDragger;
+
 			var translateDragger = this.paper.image("/images/svgControls/move.png", bb.cx - ftOption.handleRadius, bb.cy - ftOption.handleRadius, ftOption.handleRadius*2, ftOption.handleRadius*2);
 			this.data("angle", splitParams.rotate);
+			this.translateDragger = translateDragger;
+			this.ftUpdateRotateHandler();
+			var rotateDragger = this.rotateDragger;
 
 			this.initialWidth = bb.width/2;
 			this.initialHeight = bb.height/2;
-			var joinLine = freetransEl.ftDrawJoinLine( rotateDragger );
-			var handlesGroup = this.paper.g( joinLine, rotateDragger, translateDragger );
+			var handlesGroup = this.paper.g( /*joinLine,*/ rotateDragger, translateDragger );
 
-			if (this.setupDone) {
-				createScaleControl(this.paper, this);
-			} else {
-				this.setupDone = true;
-			}
-
+			createScaleControl(this.paper, this);
+			this.setupDone = true;
 			freetransEl.data( "handlesGroup", handlesGroup );
-			freetransEl.data( "joinLine", joinLine);
 
 			freetransEl.data( "scaleFactor", Snap.calcDistance( bb.cx, bb.cy, rotateDragger.attr('x'), rotateDragger.attr('y') ) );
 			translateDragger.drag( 	elementDragMove.bind(  translateDragger, freetransEl ),
@@ -100,13 +98,11 @@
 		}
 
 		Element.prototype.ftInit = function() {
-			if (!this.data("tx")) {
-				this.data("angle", 0);
-				this.data("scale", 1);
+			this.data("angle", 0);
+			this.data("scale", 1);
 
-				this.data("tx", 0);
-				this.data("ty", 0);
-			}
+			this.data("tx", 0);
+			this.data("ty", 0);
 			return this;
 		};
 
@@ -136,7 +132,9 @@
 		}
 
 		Element.prototype.ftStoreInitialTransformMatrix = function() {
-			this.data('initialTransformMatrix', this.transform().globalMatrix );
+			this.data('initialTransformMatrix', this.transform().localMatrix );
+			this.data("tx", 0);
+			this.data("ty", 0);
 			return this;
 		};
 
@@ -185,10 +183,8 @@
 		};
 
 		Element.prototype.ftUpdateTransform = function() {
-			var angle = this.data("angle");
 			var matr = this.ftGetInitialTransformMatrix().clone();
-			var splitParams = matr.split();
-			var tstring = "t" + this.data("tx") + "," + this.data("ty") + "r" + angle + "s" + splitParams.scalex + "," + splitParams.scaley ;
+			var tstring = "t" + this.data("tx") + "," + this.data("ty") + matr.toTransformString();
 			this.attr({ transform: tstring });
 			this.ftHighlightBB();
 			this.updateTransformControls(this);
@@ -200,8 +196,8 @@
 			this.data("bbT") && this.data("bbT").remove();
 			this.data("bb") && this.data("bb").remove();
 			this.data("bbT", this.paper.rect( rectObjFromBB( this.getBBox(1) ) )
-							.attr({ fill: "none", stroke: ftOption.handleFill, strokeDasharray: ftOption.handleStrokeDash })
-							.transform( this.transform().global.toString() ) );
+				.attr({ fill: "none", stroke: ftOption.handleFill, strokeDasharray: ftOption.handleStrokeDash })
+				.transform( this.transform().global.toString() ) );
 			return this;
 		};
 
@@ -338,7 +334,7 @@
 
 				activeShape.ftUpdateRotateHandler();
 				activeShape.ftHighlightBB();
-	    }
+			}
 
 	    paper.slider({ sliderId: "x", capSelector: "#cap", filename: "/images/svgControls/sl.svg",
 	      x: "0", y:"0", min: "10", max: "300", centerOffsetX: "0", centerOffsetY: "0",
@@ -410,7 +406,8 @@
 	    var width = 0;
 	    var height = 0;
 	    var box = shape.getBBox();
-	    transformStr = "t"+box.cx+","+box.cy+"r";
+			var boxSize = getShapeSize(shape);
+			transformStr = "t"+ this.translateDragger.attr("x") + "," + this.translateDragger.attr("y") + "r";
 
 	    var originalTransform = shape.matrix.split();
 	    if (shape.type == "rect") {
@@ -421,8 +418,8 @@
 	      height = attrs.ry*originalTransform.scaley;
 	    } else {
 	      if (resetControlValues) {
-	        width = box.width/2;
-	        height = box.height/2;
+	        width = boxSize.width/2;
+	        height = boxSize.height/2;
 	      } else {
 	        width = shape.scaleXControl.myCap.data("posX");
 	        height = shape.scaleYControl.myCap.data("posX");
@@ -441,6 +438,8 @@
 	    shape.scaleYControl.myCap.setCapMaxPosition(height);
 	    shape.scaleXControl.insertAfter(shape);
 	    shape.scaleYControl.insertAfter(shape);
+
+			//console.log("shape__", this.translateDragger.attr("x"));
 	  }
 	});
 
@@ -466,7 +465,7 @@
 		mainEl.data("tx", mainEl.data("otx") + +dx);
 		mainEl.data("ty", mainEl.data("oty") + +dy);
 		mainEl.ftUpdateTransform();
-		mainEl.ftDrawJoinLine( dragHandle );
+		//mainEl.ftDrawJoinLine( dragHandle );
 		informTransformed(mainEl);
 	}
 
@@ -517,10 +516,12 @@
 		var angle = Snap.angle( mainBB.cx, mainBB.cy, cx, cy) - 90;
 		mainEl.data("angle", angle);
 		handle.attr({ x: cx, y: cy });
+		var matr = mainEl.ftGetInitialTransformMatrix().clone();
+		var splitParams = matr.split();
+		mainEl.attr({ transform: "t" + mainEl.data("tx") + "," + mainEl.data("ty") + "r" +  angle + "s" + splitParams.scalex + "," + splitParams.scaley});
+		mainEl.ftHighlightBB();
+		mainEl.updateTransformControls(mainEl);
 
-		mainEl.ftUpdateTransform();
-		mainEl.ftDrawJoinLine( handle );
-		console.log("_=====", getShapeSize(mainEl));
 		informTransformed(mainEl);
 	};
 
@@ -548,10 +549,9 @@
 
 	function getShapeSize(shape) {
 		var clone = shape.clone();
-		clone.ftStoreInitialTransformMatrix();
-		var matr = clone.ftGetInitialTransformMatrix().clone();
+		var matr = shape.matrix;
 		var splitParams = matr.split();
-		var tstring = "t" + shape.data("tx") + "," + shape.data("ty") + "r0" + "s" + splitParams.scalex + "," + splitParams.scaley ;
+		var tstring = "r0" + "s" + splitParams.scalex + "," + splitParams.scaley ;
 		clone.attr({ transform: tstring });
 		var box = clone.getBBox();
 		clone.remove();
