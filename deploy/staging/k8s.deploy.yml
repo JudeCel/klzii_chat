@@ -66,7 +66,7 @@ spec:
         volumeMounts:
           - name: postgres-credentials-staging
             mountPath: /etc/postgres-credentials
-        image: gcr.io/klzii-1262/klzii_chat:latest
+        image: gcr.io/klzii-1303/klzii_chat:latest
         name: chat
         ports:
         - containerPort: 3000
@@ -140,7 +140,7 @@ spec:
     spec:
       containers:
       - name: nginx-ssl-proxy
-        image: gcr.io/klzii-1262/nginx-ssl-proxy:latest
+        image: janjiss/nginx-ssl-proxy-websockets:latest
         env:
         - name: SERVICE_HOST_ENV_NAME
           value: CHAT_SERVICE_HOST
