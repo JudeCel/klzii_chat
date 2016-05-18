@@ -3,7 +3,8 @@ defmodule KlziiChat.SessionTopicView do
 
   def render("show.json", %{session_topic: session_topic}) do
     %{id: session_topic.id,
-      name: session_topic.name
+      name: session_topic.name,
+      boardMessage: session_topic.boardMessage
     }
   end
 end

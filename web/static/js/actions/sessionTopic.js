@@ -13,6 +13,7 @@ export function joinChannal(dispatch, socket, sessionTopicId) {
     });
     dispatch(MessagesActions.subscribeMessageEvents(channel));
     dispatch(ConsoleActions.subscribeConsoleEvents(channel));
+    dispatch(Actions.subscribeEvents(channel));
 
     channel.join()
     .receive('ok', (resp) => {
@@ -46,6 +47,16 @@ function leave_chanal(dispatch, channal) {
 }
 
 const Actions = {
+  subscribeEvents: (channel) => {
+      return dispatch => {
+        channel.on("board_message", (resp) =>{
+          return dispatch({
+            type: Constants.UPDATE_SESSION_TOPIC,
+            session_topic: resp
+          });
+        });
+      }
+  },
   selectCurrent: (socket, sessionTopics) =>{
     return dispatch => {
       dispatch({

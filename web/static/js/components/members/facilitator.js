@@ -17,7 +17,7 @@ const Facilitator = React.createClass({
   },
   render() {
     const { facilitator, boardContent } = this.props;
-    const hasPermissions = this.hasPermissions('events', 'can_change_board');
+    const hasPermissions = this.hasPermissions('events', 'can_board_message');
 
     return (
       <div className='facilitator-section'>
@@ -48,7 +48,7 @@ const mapStateToProps = (state) => {
     modalWindows: state.modalWindows,
     facilitator: state.members.facilitator,
     currentUser: state.members.currentUser,
-    boardContent: state.members.facilitator.boardContent || 'Say something nice if you wish!'
+    boardContent: state.sessionTopic.current.boardMessage
   }
 };
 
