@@ -2,17 +2,19 @@ defmodule KlziiChat.Services.ReportingService do
   alias Ecto.DateTime
 
   def topic_history_CSV_stream(topic_history) do
-    Stream.map(topic_history, &filter(&1))
-    |> CSV.Encoder.encode(headers: true)
+    svn_header = "name,comment,date,is tagged,is reply,emotion\r\n"
+    svn_strings = Stream.map(topic_history, &to_svn_string(&1))
+    Stream.concat([svn_header], svn_strings)
   end
 
-  defp filter(%{body: body, emotion: emotion, replyId: replyId,
-    session_member: %{username: name}, star: star, time: time}) do
+  def to_svn_string(%{body: body, emotion: emotion, replyId: replyId, session_member: %{username: name},
+    star: star, time: time}) do
 
-    %{ "name" => name, "comment" => body, "date" => DateTime.to_string(time),
-      "is tagged" => to_string(star), "is reply" => to_string(replyId == nil),
-      "emotion" => emotion
-    }
+    "#{name},#{body},#{DateTime.to_string(time)},#{to_string(star)},#{to_string(replyId !== nil)},#{emotion}\r\n"
+  end
+
+  def topic_history_TXT_stream(topic_history) do
+    Stream.map(topic_history, fn(%{body: body}) -> "#{body}\r\n\r\n" end)
   end
 
   #  %{body: "test message 2", emotion: 2, has_voted: false, id: 105,
