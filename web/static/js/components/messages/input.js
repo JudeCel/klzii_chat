@@ -22,7 +22,7 @@ const Input = React.createClass({
       dispatch(MessagesActions.sendMessage(topicChannel, currentInput));
     }
   },
-  onSelectEmotion(e) {
+  onSelectEmotion(_, e) {
     const { topicChannel, currentInput, dispatch } = this.props;
     dispatch(Actions.changeEmotion(e.target.text));
   },
