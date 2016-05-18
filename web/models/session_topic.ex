@@ -8,7 +8,6 @@ defmodule KlziiChat.SessionTopic do
     has_many :shapes, KlziiChat.Shape, [foreign_key: :sessionTopicId]
     has_one :console, KlziiChat.Console,[foreign_key: :sessionTopicId]
     field :name, :string
-    field :active, :boolean, default: false
     timestamps [inserted_at: :createdAt, updated_at: :updatedAt]
   end
 
