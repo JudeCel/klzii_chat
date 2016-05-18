@@ -21,8 +21,8 @@ defmodule KlziiChat.Services.WhiteboardService do
     end
   end
 
-  def build_object_response(event) do
-    Phoenix.View.render_many(event, ShapeView, "show.json")
+  def build_object_response(shape) do
+    ShapeView.render("show.json", %{shape: shape})
   end
 
   def create(changeset) do
