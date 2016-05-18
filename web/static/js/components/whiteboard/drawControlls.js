@@ -34,10 +34,10 @@
 			if (!this.rotateDragger) {
 				this.rotateDragger = this.paper.image("/images/svgControls/rotate.png", box.cx + rotation[0], box.cy - rotation[1], ftOption.handleRadius*2, ftOption.handleRadius*2);
 			} else {
-				this.rotateDragger.attr('x', box.cx + rotation[0]);
-				this.rotateDragger.attr('y', box.cy - rotation[1]);
+				var dBox = this.translateDragger.getBBox();
+				this.rotateDragger.attr('x', dBox.cx + rotation[0]);
+				this.rotateDragger.attr('y', dBox.cy - rotation[1]);
 			}
-			console.log("___", bb.height);
 		}
 
 		Element.prototype.ftCreateHandles = function() {
@@ -55,7 +55,7 @@
 
 			this.initialWidth = bb.width/2;
 			this.initialHeight = bb.height/2;
-			var handlesGroup = this.paper.g( /*joinLine,*/ rotateDragger, translateDragger );
+			var handlesGroup = this.paper.g( rotateDragger, translateDragger );
 
 			createScaleControl(this.paper, this);
 			this.setupDone = true;
@@ -132,13 +132,17 @@
 		}
 
 		Element.prototype.ftStoreInitialTransformMatrix = function() {
-			this.data('initialTransformMatrix', this.transform().localMatrix );
+			this.data('initialTransformMatrix', this.transform() );
 			this.data("tx", 0);
 			this.data("ty", 0);
 			return this;
 		};
 
 		Element.prototype.ftGetInitialTransformMatrix = function() {
+			return this.data('initialTransformMatrix').localMatrix;
+		};
+
+		Element.prototype.ftGetInitialFullransformMatrix = function() {
 			return this.data('initialTransformMatrix');
 		};
 
@@ -517,8 +521,19 @@
 		mainEl.data("angle", angle);
 		handle.attr({ x: cx, y: cy });
 		var matr = mainEl.ftGetInitialTransformMatrix().clone();
+		//var matr = mainEl.transform().globalMatrix.clone();
+
 		var splitParams = matr.split();
-		mainEl.attr({ transform: "t" + mainEl.data("tx") + "," + mainEl.data("ty") + "r" +  angle + "s" + splitParams.scalex + "," + splitParams.scaley});
+//		console.log("__", mainEl.ftGetInitialFullransformMatrix().localMatrix.invert(), splitParams.dx);
+	//	mainEl.attr({ transform: "t" + (mainEl.data("tx"))+ "," + mainEl.data("ty") + "r" +  angle + "s" + splitParams.scalex + "," + splitParams.scaley});
+//		mainEl.attr({ transform: "t" +splitParams.dx + "," + mainEl.data("ty") + "r" +  angle + "s" + splitParams.scalex + "," + splitParams.scaley});
+		//console.log("___", mainEl.ftGetInitialFullransformMatrix());
+		//mainEl.attr({ transform: "t" + mainEl.data("tx") + "," + mainEl.data("ty") +  /*matr.toTransformString() +*/ "r" +  angle + "s" + splitParams.scalex + "," + splitParams.scaley});
+		//var point = "," + mainBB.cx + "," + mainBB.cy;
+		var mainDBB = mainEl.translateDragger.getBBox();
+		//matr.rotate(angle - splitParams.rotate, mainDBB.cx, mainDBB.cy);
+		mainEl.transform(matr.toTransformString() + 'r' + angle);
+
 		mainEl.ftHighlightBB();
 		mainEl.updateTransformControls(mainEl);
 
