@@ -40,7 +40,7 @@ defmodule KlziiChat.Services.MessageService do
   end
 
   @spec create_message(Map.t, Integer.t, Map.t) :: {:ok, Map.t }
-  def create_message(session_member, topic_id, %{"emotion" => emotion, "body" => body}) do
+  def create_message(session_member, session_topic_id, %{"emotion" => emotion, "body" => body}) do
     if MessagePermissions.can_new_message(session_member) do
       session_member = Repo.get!(SessionMember, session_member.id)
       build_assoc(
@@ -48,7 +48,7 @@ defmodule KlziiChat.Services.MessageService do
         sessionId: session_member.sessionId,
         body: body,
         emotion: IntegerHelper.get_num(emotion),
-        sessionTopicId: IntegerHelper.get_num(topic_id)
+        sessionTopicId: IntegerHelper.get_num(session_topic_id)
       ) |> create
     else
       {:error, "Action not allowed!"}
@@ -96,11 +96,11 @@ defmodule KlziiChat.Services.MessageService do
     end
   end
 
-  @spec update_msg(%Message{}) :: %Message{}
+  @spec update_msg(%Message{}) :: {:ok, %Message{}} | {:error, Ecto.Changeset.t}
   def update_msg(changeset) do
     case Repo.update(changeset) do
-      {:ok, event} ->
-        {:ok, preload_dependencies(event)}
+      {:ok, message} ->
+        {:ok, preload_dependencies(message)}
       {:error, changeset} ->
         {:error, changeset}
     end
@@ -143,7 +143,7 @@ defmodule KlziiChat.Services.MessageService do
     end
   end
 
-
+  @spec reply_message_prefix(Integer.t) :: String.t
   defp reply_message_prefix(replyId) do
     Repo.one(from m in Message, where: m.id == ^replyId, preload: [:session_member])
       |> case  do
