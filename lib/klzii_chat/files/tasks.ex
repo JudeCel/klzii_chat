@@ -1,6 +1,5 @@
 defmodule KlziiChat.Files.Tasks do
   alias KlziiChat.{Repo, Resource, ResourceView}
-  import Ecto
   import Ecto.Query
 
   def zip_extension, do: ".zip"
@@ -54,7 +53,7 @@ defmodule KlziiChat.Files.Tasks do
       )|> Repo.all
       |> Enum.map(fn resource ->
         resp = ResourceView.render("resource.json", %{resource: resource})
-        name = resp.name <> "." <> (resp.extension || "") 
+        name = resp.name <> "." <> (resp.extension || "")
         {name, resp.url.full}
       end)
     {:ok, result}
@@ -90,8 +89,8 @@ defmodule KlziiChat.Files.Tasks do
   end
 
   @spec build_zip(String.t, String.t) :: {:ok, String.t }
-  def build_zip(zip_name, resource_id) do
-     {:ok, file_name} = :zip.create(zip_name <> zip_extension, files_in_dir(zip_name))
+  def build_zip(zip_name, _) do
+     {:ok, _} = :zip.create(zip_name <> zip_extension, files_in_dir(zip_name))
   end
 
   @spec init_dir(String.t) :: {:ok, String.t }

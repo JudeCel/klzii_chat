@@ -1,25 +1,32 @@
-import React, {PropTypes}  from 'react';
-import { Modal }           from 'react-bootstrap'
-import SurveyIndex         from './survey/index.js';
+import React, {PropTypes} from 'react';
+import { connect }        from 'react-redux';
+import { Modal }          from 'react-bootstrap'
+import SurveyIndex        from './survey/index.js';
+import mixins             from '../../../mixins';
 
 const Survey = React.createClass({
+  mixins: [mixins.modalWindows],
   getInitialState() {
     return { rendering: 'index', survey: {} };
   },
   afterChange(data) {
     this.setState(data);
   },
-  onBack(e) {
+  onClose() {
+    this.setState(this.getInitialState());
+    this.closeAllModals();
+  },
+  onBack() {
     if(this.state.rendering != 'index') {
       this.setState(this.getInitialState());
     }
     else {
-      this.props.onHide(e);
+      this.onClose();
     }
   },
-  onOpen(e) {
+  onShow(e) {
     this.setState(this.getInitialState());
-    this.props.onEnter(e);
+    this.onEnterModal(e);
   },
   onNew() {
     const { rendering, survey } = this.state;
@@ -52,32 +59,44 @@ const Survey = React.createClass({
   },
   render() {
     const { rendering } = this.state;
-    const { show, onHide } = this.props;
+    const { show } = this.props;
 
-    return (
-      <Modal dialogClassName='modal-section' show={ show } onHide={ onHide } onEnter={ this.onOpen }>
-        <Modal.Header>
-          <div className='col-md-2'>
-            <span className='pull-left fa icon-reply' onClick={ this.onBack }></span>
-          </div>
+    if(show) {
+      return (
+        <Modal dialogClassName='modal-section' show={ show } onHide={ this.onClose } onEnter={ this.onShow }>
+          <Modal.Header>
+            <div className='col-md-2'>
+              <span className='pull-left fa icon-reply' onClick={ this.onBack }></span>
+            </div>
 
-          <div className='col-md-8 modal-title'>
-            <h4>Voting</h4>
-          </div>
+            <div className='col-md-8 modal-title'>
+              <h4>Voting</h4>
+            </div>
 
-          <div className='col-md-2'>
-            <span className={ this.newButtonClass(rendering) } onClick={ this.onNew }></span>
-          </div>
-        </Modal.Header>
+            <div className='col-md-2'>
+              <span className={ this.newButtonClass(rendering) } onClick={ this.onNew }></span>
+            </div>
+          </Modal.Header>
 
-        <Modal.Body>
-          <div className='row survey-create-section'>
-            <SurveyIndex rendering={ rendering } afterChange={ this.afterChange } onView={ this.onView } />
-          </div>
-        </Modal.Body>
-      </Modal>
-    )
+          <Modal.Body>
+            <div className='row survey-create-section'>
+              <SurveyIndex rendering={ rendering } afterChange={ this.afterChange } onView={ this.onView } />
+            </div>
+          </Modal.Body>
+        </Modal>
+      )
+    }
+    else {
+      return (false)
+    }
   }
 });
 
-export default Survey;
+const mapStateToProps = (state) => {
+  return {
+    modalWindows: state.modalWindows,
+    colours: state.chat.session.colours,
+  }
+};
+
+export default connect(mapStateToProps)(Survey);

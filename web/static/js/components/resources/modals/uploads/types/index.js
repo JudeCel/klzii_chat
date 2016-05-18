@@ -5,15 +5,19 @@ import UploadTypeAudio    from './audio';
 
 const UploadTypeIndex = React.createClass({
   render() {
-    const { resourceType, url, youtube } = this.props;
+    const { modalName, url, youtube } = this.props;
 
-    if(resourceType == 'image') {
+    if(!url) {
+      return (<div>Not found</div>)
+    }
+
+    if(modalName == 'image') {
       return (<UploadTypeImage url={ url } />)
     }
-    else if(resourceType == 'video') {
+    else if(modalName == 'video') {
       return (<UploadTypeVideo url={ url } youtube={ youtube } />)
     }
-    else if(resourceType == 'audio') {
+    else if(modalName == 'audio') {
       return (<UploadTypeAudio url={ url } />)
     }
     else {

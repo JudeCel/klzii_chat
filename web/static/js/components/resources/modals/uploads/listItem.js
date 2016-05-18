@@ -1,21 +1,35 @@
-import React, {PropTypes} from 'react';
-import UploadTypes        from './types/index';
+import React, {PropTypes}      from 'react';
+import { connect }             from 'react-redux';
+import UploadTypes             from './types/index';
+import SesssionResourceActions from '../../../../actions/session_resource';
+import ConsoleActions          from '../../../../actions/console';
 
 const UploadListItem = React.createClass({
-  getValuesFromObject(object) {
-    let { id, active, name, type, url, youtube } = object;
-    return { id, active, name, type, url, youtube };
+  onDelete(id) {
+    const { dispatch, jwt } = this.props;
+    dispatch(SesssionResourceActions.delete(jwt, id));
   },
   getInitialState() {
-    let resource = this.props.resource || {};
-    return this.getValuesFromObject(resource);
+    const { sessionResourceId, resource, tConsole, modalName } = this.props;
+    let res = resource || {};
+    res.active = tConsole[modalName + '_id'] == res.id ? true : false;
+    res.sessionResourceId = sessionResourceId;
+    return res
   },
   onActivate() {
     this.setState({ active: true });
+    const { dispatch, channel, modalName } = this.props;
+
+    if(this.state.id) {
+      dispatch(ConsoleActions.addToConsole(channel, this.state.id));
+    }
+    else {
+      dispatch(ConsoleActions.removeFromConsole(channel, this.props.modalName));
+    }
   },
   render() {
-    const { justInput, onDelete, resourceType } = this.props;
-    const { id, active, name, type, url, youtube } = this.state;
+    const { justInput, modalName } = this.props;
+    const { sessionResourceId, id, active, name, type, url, scope } = this.state;
 
     if(justInput) {
       return (
@@ -36,13 +50,13 @@ const UploadListItem = React.createClass({
             <div className='col-md-6'>
               { name }
               <br />
-              <UploadTypes resourceType={ resourceType } url={ url } youtube={ youtube } />
+              <UploadTypes modalName={ modalName } url={ url } youtube={ scope == 'youtube' }/>
             </div>
 
             <div className='col-md-6 text-right'>
               <input id={ 'question' + id } name='active' type='radio' className='with-font' onClick={ this.onActivate } defaultChecked={ active } />
-              <label htmlFor={ 'question' + id }></label>
-              <span className='fa fa-times' onClick={ onDelete } data-id={ id }></span>
+              <label htmlFor={ 'question' + id } />
+              <span className='fa fa-times' onClick={ this.onDelete.bind(this, sessionResourceId) } />
             </div>
           </div>
         </li>
@@ -51,4 +65,12 @@ const UploadListItem = React.createClass({
   }
 });
 
-export default UploadListItem;
+const mapStateToProps = (state) => {
+  return {
+    channel: state.sessionTopic.channel,
+    tConsole: state.sessionTopic.console,
+    jwt: state.members.currentUser.jwt
+  }
+};
+
+export default connect(mapStateToProps)(UploadListItem);

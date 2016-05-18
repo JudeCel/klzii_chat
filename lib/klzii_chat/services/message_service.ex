@@ -1,14 +1,15 @@
 defmodule KlziiChat.Services.MessageService do
-  alias KlziiChat.{Repo, Message, MessageView, SessionMember, Vote, Topic}
+  alias KlziiChat.{Repo, Message, MessageView, SessionMember, Vote, SessionTopic}
   alias KlziiChat.Services.Permissions.Messages, as: MessagePermissions
+  alias KlziiChat.Helpers.IntegerHelper
   import Ecto
   import Ecto.Query
 
   @spec history(Integer.t, Map.t) :: {:ok, List.t }
-  def history(topic_id, session_member) do
-    topic = Repo.get!(Topic, topic_id)
+  def history(session_topic_id, session_member) do
+    session_topic = Repo.get!(SessionTopic, session_topic_id)
     messages = Repo.all(
-      from e in assoc(topic, :messages),
+      from e in assoc(session_topic, :messages),
         where: is_nil(e.replyId),
         order_by: [asc: e.createdAt],
         limit: 200,
@@ -21,19 +22,17 @@ defmodule KlziiChat.Services.MessageService do
   end
 
   @spec create_message(Map.t, Integer.t, Map.t) :: {:ok, Map.t }
-  def create_message(session_member, topic_id, %{"replyId" => replyId, "emotion" => emotion, "body" => body}) do
+  def create_message(session_member, session_topic_id, %{"replyId" => replyId, "emotion" => emotion, "body" => body}) do
     if MessagePermissions.can_new_message(session_member) do
-      replyId = get_integer_value(replyId)
       reply_message = reply_message_prefix(replyId)
-
       session_member = Repo.get!(SessionMember, session_member.id)
       build_assoc(
         session_member, :messages,
-        replyId: replyId,
+        replyId: IntegerHelper.get_num(replyId),
         sessionId: session_member.sessionId,
         body: (reply_message <> body),
-        emotion: get_integer_value(emotion),
-        topicId: get_integer_value(topic_id)
+        emotion: IntegerHelper.get_num(emotion),
+        sessionTopicId: IntegerHelper.get_num(session_topic_id)
       ) |> create
     else
       {:error, "Action not allowed!"}
@@ -41,15 +40,15 @@ defmodule KlziiChat.Services.MessageService do
   end
 
   @spec create_message(Map.t, Integer.t, Map.t) :: {:ok, Map.t }
-  def create_message(session_member, topic_id, %{"emotion" => emotion, "body" => body}) do
+  def create_message(session_member, session_topic_id, %{"emotion" => emotion, "body" => body}) do
     if MessagePermissions.can_new_message(session_member) do
       session_member = Repo.get!(SessionMember, session_member.id)
       build_assoc(
         session_member, :messages,
         sessionId: session_member.sessionId,
         body: body,
-        emotion: get_integer_value(emotion),
-        topicId: get_integer_value(topic_id)
+        emotion: IntegerHelper.get_num(emotion),
+        sessionTopicId: IntegerHelper.get_num(session_topic_id)
       ) |> create
     else
       {:error, "Action not allowed!"}
@@ -61,9 +60,9 @@ defmodule KlziiChat.Services.MessageService do
     result = Repo.get_by!(Message, id: id)
     if MessagePermissions.can_delete(session_member, result) do
       case Repo.delete!(result) do
-        {:error, error} -> # Something went wrong
+        {:error, error} ->
           {:error, error}
-        event   -> # Deleted with success
+        event ->
           {:ok, %{ id: event.id, replyId: event.replyId } }
       end
     else
@@ -86,22 +85,22 @@ defmodule KlziiChat.Services.MessageService do
     end
   end
 
-  @spec update_message(Integer.t, String.t, Map.t) :: %Message{} | {:error, String.t}
-  def update_message(id, body, session_member) do
+  @spec update_message(Integer.t, String.t, String.t, Map.t) :: %Message{} | {:error, String.t}
+  def update_message(id, body, emotion, session_member) do
     event = Repo.get_by!(Message, id: id)
     if MessagePermissions.can_edit(session_member, event) do
-      Ecto.Changeset.change(event, body: body )
+      Ecto.Changeset.change(event, body: body, emotion: IntegerHelper.get_num(emotion) )
         |> update_msg
     else
       {:error, "Action not allowed!"}
     end
   end
 
-  @spec update_msg(%Message{}) :: %Message{}
+  @spec update_msg(%Message{}) :: {:ok, %Message{}} | {:error, Ecto.Changeset.t}
   def update_msg(changeset) do
     case Repo.update(changeset) do
-      {:ok, event} ->
-        {:ok, preload_dependencies(event)}
+      {:ok, message} ->
+        {:ok, preload_dependencies(message)}
       {:error, changeset} ->
         {:error, changeset}
     end
@@ -144,7 +143,7 @@ defmodule KlziiChat.Services.MessageService do
     end
   end
 
-
+  @spec reply_message_prefix(Integer.t) :: String.t
   defp reply_message_prefix(replyId) do
     Repo.one(from m in Message, where: m.id == ^replyId, preload: [:session_member])
       |> case  do
@@ -153,13 +152,5 @@ defmodule KlziiChat.Services.MessageService do
         message ->
           "@" <> message.session_member.username <> " "
       end
-  end
-
-  defp get_integer_value(value) do
-    if is_integer(value) do
-      value
-    else
-      String.to_integer(value)
-    end
   end
 end

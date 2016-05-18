@@ -15,7 +15,8 @@ const Messages =  React.createClass({
     let id = e.target.getAttribute('data-id');
     let value = e.target.getAttribute('data-body');
     let replyId = e.target.getAttribute('data-replyid');
-    return { id, value, replyId };
+    let emotion = e.target.getAttribute('data-emotion');
+    return { id, value, replyId, emotion };
   },
   deleteMessage(e) {
     let { id, replyId } = this.getDataAttrs(e);
@@ -42,8 +43,8 @@ const Messages =  React.createClass({
     this.props.dispatch({ type: Constants.SET_INPUT_REPLY, replyId });
   },
   editMessage(e) {
-    let { id, value } = this.getDataAttrs(e);
-    this.props.dispatch({ type: Constants.SET_INPUT_EDIT, id, value });
+    let { id, value, emotion } = this.getDataAttrs(e);
+    this.props.dispatch({ type: Constants.SET_INPUT_EDIT, id, value, emotion });
   },
   componentWillUpdate() {
     let chatMessages = ReactDOM.findDOMNode(this);
@@ -99,7 +100,7 @@ const Messages =  React.createClass({
 const mapStateToProps = (state) => {
   return {
     messages: state.messages.all,
-    channel: state.topic.channel
+    channel: state.sessionTopic.channel
   }
 };
 

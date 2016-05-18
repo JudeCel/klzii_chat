@@ -773,9 +773,10 @@ const WhiteboardCanvas = React.createClass({
   }
 });
 const mapStateToProps = (state) => {
+  console.log(state);
   return {
     whiteboard: state.whiteboard,
-    channal: state.topic.channel,
+    channal: state.sessionTopic.channel,
     currentUser: state.members.currentUser,
   }
 };

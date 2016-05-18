@@ -2,7 +2,7 @@ defmodule KlziiChat.UnreadMessage do
   use KlziiChat.Web, :model
 
   schema "UnreadMessages" do
-    belongs_to :topic, KlziiChat.Topic, [foreign_key: :topicId]
+    belongs_to :session_topic, KlziiChat.SessionTopic, [foreign_key: :sessionTopicId]
     belongs_to :session_member, KlziiChat.SessionMember, [foreign_key: :sessionMemberId]
     belongs_to :message, KlziiChat.Message, [foreign_key: :messageId]
     field :scope, :string, default: "normal"
@@ -10,7 +10,7 @@ defmodule KlziiChat.UnreadMessage do
     field :updatedAt, Timex.Ecto.DateTime
   end
 
-  @required_fields ~w(sessionMemberId topicId messageId)
+  @required_fields ~w(sessionMemberId sessionTopicId messageId)
   @optional_fields ~w(scope)
 
   @doc """

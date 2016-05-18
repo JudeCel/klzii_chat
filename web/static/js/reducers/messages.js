@@ -3,7 +3,7 @@ import Constants from '../constants';
 const initialState = {
   all: [],
   ready: false,
-  unreadMessages: {topics: {}, summary: {normal: 0, reply: 0 }}
+  unreadMessages: {session_topics: {}, summary: {normal: 0, reply: 0 }}
 };
 
 export default function reducer(state = initialState, action = {}) {

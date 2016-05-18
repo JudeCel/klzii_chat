@@ -1,10 +1,10 @@
 import React, {PropTypes} from 'react';
 import Member             from './member.js';
 import { connect }        from 'react-redux';
-import isOwner   from '../../mixins/isOwner';
+import mixins             from '../../mixins';
 
 const Participants = React.createClass({
-  mixins: [isOwner],
+  mixins: [mixins.validations, mixins.modalWindows],
   evenClasses(even, id) {
     let className = '';
     if(this.isOwner(id)) {
@@ -21,7 +21,7 @@ const Participants = React.createClass({
         {
           participants.map((participant, index) =>
             <div className='col-md-3' key={ participant.id }>
-              <div className={ this.evenClasses(index % 2 == 0, participant.id) } onClick={ this.isOwner(participant.id) && openAvatarModal }>
+              <div className={ this.evenClasses(index % 2 == 0, participant.id) } onClick={ this.isOwner(participant.id) && this.openSpecificModal.bind(this, 'avatar') }>
                 <Member member={ participant } />
               </div>
             </div>
@@ -34,6 +34,7 @@ const Participants = React.createClass({
 
 const mapStateToProps = (state) => {
   return {
+    modalWindows: state.modalWindows,
     currentUser: state.members.currentUser,
     participants: state.members.participants
   }

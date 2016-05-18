@@ -17,6 +17,8 @@ $input-size: 1.5em
 @import 'whiteboard.sass'
 @import '../../../node_modules/medium-editor/dist/css/medium-editor.css'
 @import '../../../node_modules/medium-editor/dist/css/themes/beagle.css'
+@import 'dependencies/animate/animate.min.css'
+@import 'dependencies/toastr/toastr.min.css'
 
 
 body
@@ -82,7 +84,10 @@ body
       padding: 0
       width: 100%
       li
+        cursor: default
         width: 19%
+        &.active
+          @extend .cursor-pointer
   .input-section
     textarea
       resize: none
@@ -99,7 +104,6 @@ body
     max-height: 550px
     .message-section
       margin: 0
-      margin-right: 5px
       .push-image-down
         padding-top: 25px
       .push-image-up
@@ -173,3 +177,6 @@ body
 @media (min-width: 2000px)
   .room-outerbox, .header-innerbox
     width: 1600px
+
+.toast-top-right
+  top: 130px

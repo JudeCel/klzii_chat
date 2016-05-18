@@ -4,13 +4,17 @@ import UploadList         from './list';
 
 const UploadsIndex = React.createClass({
   render() {
-    const { resourceType, rendering, tabActive, onDelete, afterChange } = this.props;
+    const { modalName, rendering, tabActive, afterChange } = this.props;
 
     if(rendering == 'new') {
-      return (<UploadNew { ...{ resourceType, afterChange, tabActive } }/>)
+      return (
+        <div className='tab-content'>
+          <UploadNew { ...{ modalName, afterChange, tabActive } }/>
+        </div>
+      )
     }
     else {
-      return (<UploadList { ...{ resourceType, onDelete } }/>)
+      return (<UploadList { ...{ modalName } }/>)
     }
   }
 });

@@ -1,8 +1,7 @@
 defmodule KlziiChat.SessionChannel do
   use KlziiChat.Web, :channel
-  alias KlziiChat.Services.SessionService
-  alias KlziiChat.Services.SessionMembersService
-  alias KlziiChat.{Presence , SessionMembersView}
+  alias KlziiChat.Services.{SessionService, SessionMembersService}
+  alias KlziiChat.{Presence, SessionMembersView}
 
   # This Channel is only for session context
   # Session Member information
@@ -10,7 +9,7 @@ defmodule KlziiChat.SessionChannel do
 
   intercept ["unread_messages"]
 
-  def join("sessions:" <> session_id, payload, socket) do
+  def join("sessions:" <> session_id, _, socket) do
     {session_id, _} = Integer.parse(session_id)
     if authorized?(socket) do
       send(self, :after_join)
@@ -40,7 +39,6 @@ defmodule KlziiChat.SessionChannel do
       })
       push socket, "presence_state", Presence.list(socket)
       push(socket, "self_info", socket.assigns.session_member)
-
     {:noreply, socket}
   end
 
@@ -60,7 +58,8 @@ defmodule KlziiChat.SessionChannel do
     case Map.get(payload, id, nil) do
       map when is_map(map) ->
         push socket, "unread_messages", map
-      nil -> nil
+      nil ->
+        nil
     end
     {:noreply, socket}
   end

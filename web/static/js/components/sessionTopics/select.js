@@ -1,16 +1,16 @@
 import React, {PropTypes}                           from 'react';
 import { connect }                                  from 'react-redux';
 import { Dropdown, Button, SplitButton, MenuItem }  from 'react-bootstrap'
-import Actions                                      from '../../actions/topic';
+import Actions                                      from '../../actions/sessionTopic';
 import Badge                                        from './badge';
 
 const Select = React.createClass({
-  changeTopic(id) {
+  changeSessionTopic(id) {
     const { dispatch, channel } = this.props;
-    dispatch(Actions.changeTopic(channel, id));
+    dispatch(Actions.changeSessionTopic(channel, id));
   },
   render() {
-    const { current, topics, session, unread_messages } = this.props;
+    const { current, sessionTopics, session, unread_messages } = this.props;
 
     return (
       <div className='col-md-2 topic-select-section'>
@@ -26,14 +26,14 @@ const Select = React.createClass({
             <Dropdown.Toggle className='no-border-radius' />
             <Dropdown.Menu className='no-border-radius'>
               {
-                topics.map((topic) => {
+                sessionTopics.map((sessionTopic) => {
                   return (
-                    <MenuItem onSelect={ this.changeTopic.bind(this, topic.id) } key={ 'topic-' + topic.id } active={ current.id == topic.id }>
+                    <MenuItem onSelect={ this.changeSessionTopic.bind(this, sessionTopic.id) } key={ 'sessionTopic-' + sessionTopic.id } active={ current.id == sessionTopic.id }>
                       <div className='clearfix'>
-                        <span className='pull-left'>{ topic.name }</span>
+                        <span className='pull-left'>{ sessionTopic.name }</span>
                         <span className='pull-right'>
-                          <Badge type='reply' data={ unread_messages.topics[topic.id] } />
-                          <Badge type='normal' data={ unread_messages.topics[topic.id] } />
+                          <Badge type='reply' data={ unread_messages.session_topics[sessionTopic.id] } />
+                          <Badge type='normal' data={ unread_messages.session_topics[sessionTopic.id] } />
                         </span>
                       </div>
                     </MenuItem>
@@ -61,9 +61,9 @@ const mapStateToProps = (state) => {
   return {
     unread_messages: state.messages.unreadMessages,
     session: state.chat.session,
-    channel: state.topic.channel,
-    current: state.topic.current,
-    topics: state.topic.all,
+    channel: state.sessionTopic.channel,
+    current: state.sessionTopic.current,
+    sessionTopics: state.sessionTopic.all,
   };
 };
 

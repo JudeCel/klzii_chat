@@ -1,16 +1,17 @@
 defmodule KlziiChat.Services.UnreadMessageService do
   alias KlziiChat.{Repo, Message, SessionMember, UnreadMessage, Endpoint, Presence}
+  alias KlziiChat.Helpers.ListHelper
   import Ecto.Query, only: [from: 1, from: 2]
 
   @default_summary %{"summary" => %{"normal" => 0, "reply" => 0 }}
 
   @spec process_delete_message(Integer.t, Integer.t) :: :ok
-  def process_delete_message(session_id, topic_id) do
-    current_topic_presences_ids = topic_presences_ids(topic_id)
+  def process_delete_message(session_id, session_topic_id) do
+    current_topic_presences_ids = topic_presences_ids(session_topic_id)
     current_session_presences_ids = session_presences_ids(session_id)
 
-    diff = find_diff(current_topic_presences_ids, current_session_presences_ids)
-    data = get_unread_messages(diff) |> group_by_topics_and_scope |> calculate_summary
+    diff = ListHelper.find_diff(current_topic_presences_ids, current_session_presences_ids)
+    data = get_unread_messages(diff) |> group_by_session_topics_and_scope |> calculate_summary
     notify(session_id, data)
   end
 
@@ -18,11 +19,11 @@ defmodule KlziiChat.Services.UnreadMessageService do
   def sync_state(session_member_id) do
     id = "#{session_member_id}"
     get_unread_messages([session_member_id])
-      |> group_by_topics_and_scope
+      |> group_by_session_topics_and_scope
       |> calculate_summary
       |> case do
           messages  when messages == %{} ->
-            %{id =>  Map.merge(%{"topics" => %{}}, @default_summary)}
+            %{id =>  Map.merge(%{"session_topics" => %{}}, @default_summary)}
           messages->
             messages
         end
@@ -34,21 +35,21 @@ defmodule KlziiChat.Services.UnreadMessageService do
   end
 
   @spec process_new_message(Integer.t, Integer.t, Integer.t) :: :ok | nil
-  def process_new_message(session_id, topic_id, message_id) do
+  def process_new_message(session_id, session_topic_id, message_id) do
     case Mix.env do
       :test ->
-        new_message(session_id, topic_id, message_id)
+        new_message(session_id, session_topic_id, message_id)
       _->
         Task.start(fn ->
-          new_message(session_id, topic_id, message_id)
+          new_message(session_id, session_topic_id, message_id)
         end)
     end
     :ok
   end
 
   @spec new_message(Integer.t, Integer.t, Integer.t) :: :ok
-  def new_message(session_id, topic_id, message_id) do
-    current_topic_presences_ids = topic_presences_ids(topic_id)
+  def new_message(session_id, session_topic_id, message_id) do
+    current_topic_presences_ids = topic_presences_ids(session_topic_id)
     current_session_presences_ids = session_presences_ids(session_id)
 
     message = get_message(message_id)
@@ -57,16 +58,16 @@ defmodule KlziiChat.Services.UnreadMessageService do
     all_session_member_ids = get_all_session_members(session_id)
 
     # get all members who not connected to specific topic.
-    unread_members_ids = find_diff(current_topic_presences_ids, all_session_member_ids)
+    unread_members_ids = ListHelper.find_diff(current_topic_presences_ids, all_session_member_ids)
 
     # Create unread messages for session members
     insert_offline_records(unread_members_ids, message)
 
     # find conected session member ids for notification
-    notifiable_session_member_ids = find_diff(current_topic_presences_ids, current_session_presences_ids)
+    notifiable_session_member_ids = ListHelper.find_diff(current_topic_presences_ids, current_session_presences_ids)
 
     # get data for notifications
-    data = get_unread_messages(notifiable_session_member_ids) |> group_by_topics_and_scope |> calculate_summary
+    data = get_unread_messages(notifiable_session_member_ids) |> group_by_session_topics_and_scope |> calculate_summary
 
     #notify members
     notify(session_id, data)
@@ -77,15 +78,15 @@ defmodule KlziiChat.Services.UnreadMessageService do
     from(sm in SessionMember,
       where: sm.id in ^session_member_ids,
       left_join: um in UnreadMessage, on: sm.id == um.sessionMemberId,
-      group_by: [sm.id, um.scope, um.topicId],
-      select: %{"id" => sm.id, "topic" => {um.topicId, %{um.scope => count(um.scope)}}}
+      group_by: [sm.id, um.scope, um.sessionTopicId],
+      select: %{"id" => sm.id, "session_topic" => {um.sessionTopicId, %{um.scope => count(um.scope)}}}
     )|> Repo.all
   end
 
   @spec calculate_summary(Map.t) :: Map.t
   def calculate_summary(map) do
     Map.keys(map) |> List.foldl(map, fn id, accumulator ->
-      topics = accumulator[id]["topics"]
+      topics = accumulator[id]["session_topics"]
       accumulator = Map.put(accumulator, id, Map.merge(accumulator[id], @default_summary))
       Map.keys(topics)
         |> Enum.reduce(accumulator, fn (key, acc) ->
@@ -98,15 +99,15 @@ defmodule KlziiChat.Services.UnreadMessageService do
     end)
   end
 
-  @spec group_by_topics_and_scope(List.t) :: Map.t
-  def group_by_topics_and_scope(list) do
-    default_map = %{"topics" => %{}}
+  @spec group_by_session_topics_and_scope(List.t) :: Map.t
+  def group_by_session_topics_and_scope(list) do
+    default_map = %{"session_topics" => %{}}
 
     List.foldl(list, %{}, fn(item, acc) ->
       id = Map.get(item, "id") |> to_string
       new_acc = Map.put_new(acc, id, default_map)
-      topic = Map.get(item, "topic")
-      update_in(new_acc[id]["topics"], fn val ->
+      topic = Map.get(item, "session_topic")
+      update_in(new_acc[id]["session_topics"], fn val ->
         update_topic_map(topic, val)
       end)
 
@@ -131,7 +132,8 @@ defmodule KlziiChat.Services.UnreadMessageService do
         _ ->
           UnreadMessage.scopes.normal
       end
-      [scope: scope, topicId: message.topicId, sessionMemberId: id, messageId: message.id, createdAt: Timex.DateTime.now, updatedAt: Timex.DateTime.now]
+      [ scope: scope, sessionTopicId: message.sessionTopicId, sessionMemberId: id,
+        messageId: message.id, createdAt: Timex.DateTime.now, updatedAt: Timex.DateTime.now ]
     end)
 
     Repo.insert_all(UnreadMessage, offline_messages)
@@ -142,21 +144,9 @@ defmodule KlziiChat.Services.UnreadMessageService do
     Repo.get_by!(Message, id: message_id) |> Repo.preload([:reply])
   end
 
-  @spec find_diff(List.t, List.t) :: List.t
-  def find_diff(first, second) do
-    List.foldl(first, second, fn (id, acc) ->
-      result = List.delete(acc, id)
-      if result == acc do
-        result ++ [id]
-      else
-        result
-      end
-    end)
-  end
-
   @spec delete_unread_messages_for_topic(String.t, String.t) :: {Integer.t, nil | [term]}
-  def delete_unread_messages_for_topic(session_mmeber_id, topic_id) do
-    from(om in UnreadMessage, where: om.sessionMemberId == ^session_mmeber_id,  where: om.topicId == ^topic_id)
+  def delete_unread_messages_for_topic(session_mmeber_id, session_topic_id) do
+    from(om in UnreadMessage, where: om.sessionMemberId == ^session_mmeber_id,  where: om.sessionTopicId == ^session_topic_id)
       |> Repo.delete_all
   end
 
@@ -173,8 +163,8 @@ defmodule KlziiChat.Services.UnreadMessageService do
   end
 
   @spec topic_presences_ids(String.t) :: List.t
-  def topic_presences_ids(topic_id) do
-    Presence.list("topics:#{topic_id}") |> Map.keys |> Enum.map(&(String.to_integer(&1)))
+  def topic_presences_ids(session_topic_id) do
+    Presence.list("session_topic:#{session_topic_id}") |> Map.keys |> Enum.map(&(String.to_integer(&1)))
   end
 
   @spec session_presences_ids(String.t) :: List.t

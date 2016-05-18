@@ -57,7 +57,7 @@ defmodule KlziiChat.ResourceView do
     end
   end
 
-  defp url_builder(resource, model, field, version \\ :orginal) do
+  defp url_builder(resource, model, field, version) do
     if field do
       model.url({field, resource}, version) |> UrlHelpers.add_domain
     else

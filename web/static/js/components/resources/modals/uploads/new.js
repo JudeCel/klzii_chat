@@ -1,31 +1,49 @@
 import React, {PropTypes} from 'react';
 import NewUpload          from './new/upload';
 import NewYoutube         from './new/youtube';
+import NewGallery         from './new/gallery';
 
 const UploadNew = React.createClass({
-  isCurrentActive(id) {
-    return this.props.tabActive == id;
+  currentActives() {
+    let tab = this.props.tabActive;
+    return {
+      1: tab == 1,
+      2: tab == 2,
+      3: tab == 3
+    };
   },
   activeClass(id) {
     let className = 'tab-pane';
-    return this.isCurrentActive(id) ? className + ' active' : className;
+    return this.currentActives()[id] ? className + ' active' : className;
   },
   render() {
-    const { resourceType, afterChange } = this.props;
+    const { modalName, afterChange } = this.props;
+    let tabs = this.currentActives();
 
-    return (
-      <div>
-        <div className='tab-content'>
-          <div className={ this.activeClass(1) }>1</div>
-          <div className={ this.activeClass(2) }>
-            <NewYoutube { ...{ afterChange }} />
-          </div>
-          <div className={ this.activeClass(3) }>
-            <NewUpload { ...{ resourceType, afterChange }} />
-          </div>
+    if(tabs[1]) {
+      return (
+        <div className={ this.activeClass(1) }>
+          <NewGallery { ...{ modalName, afterChange, active: tabs[1] }} />
         </div>
-      </div>
-    )
+      )
+    }
+    else if(tabs[2]) {
+      return (
+        <div className={ this.activeClass(2) }>
+          <NewYoutube { ...{ afterChange }} />
+        </div>
+      )
+    }
+    else if(tabs[3]) {
+      return (
+        <div className={ this.activeClass(3) }>
+          <NewUpload { ...{ modalName, afterChange }} />
+        </div>
+      )
+    }
+    else {
+      return (false)
+    }
   }
 });
 

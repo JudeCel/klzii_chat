@@ -20,10 +20,10 @@ const Message = React.createClass({
   },
   editData() {
     const { message } = this.props;
-
     return {
       id: message.id,
-      body: message.body
+      body: message.body,
+      emotion: message.emotion
     };
   },
   replyData() {
@@ -98,7 +98,7 @@ const Message = React.createClass({
 
           <div className={ this.bodyClassname() }>
             <p className='text-break-all'>
-              { message.body }
+              <div dangerouslySetInnerHTML={{ __html: message.body }}></div>
             </p>
           </div>
 

@@ -20,15 +20,13 @@ export function joinChannal(dispatch) {
 
     channel.join()
     .receive('ok', (session) => {
-
       dispatch({
         type: Constants.SET_SESSION,
         session
       });
     })
     .receive('error', (error) =>{
-      console.log(error);
-      return dispatch({
+      dispatch({
         type: Constants.SOCKET_CONNECTED,
         error
       });
@@ -36,9 +34,12 @@ export function joinChannal(dispatch) {
   }
 
   let whenConnectionCrash = (event) =>{
-    return dispatch({
+    dispatch({
       type: Constants.SOCKET_CONNECTION_ERROR,
       error: "Socket connection error"
+    });
+    dispatch({
+      type: Constants.CLOSE_ALL_MODAL_WINDOWS
     });
   }
 

@@ -22,7 +22,7 @@ const Input = React.createClass({
       dispatch(MessagesActions.sendMessage(topicChannel, currentInput));
     }
   },
-  onSelectEmotion(e) {
+  onSelectEmotion(_, e) {
     const { topicChannel, currentInput, dispatch } = this.props;
     dispatch(Actions.changeEmotion(e.target.text));
   },
@@ -37,12 +37,6 @@ const Input = React.createClass({
       placeholder: 'Message',
       id: 'chat-input',
     };
-  },
-  componentDidUpdate() {
-    // let input = ReactDOM.findDOMNode(this).querySelector('#chat-input');
-    // if(input) {
-    //   input.focus();
-    // }
   },
   render() {
     const { currentEmotion, action, permissions, inputPrefix } = this.props;
@@ -89,7 +83,7 @@ const mapStateToProps = (state) => {
     inputPrefix: state.currentInput.inputPrefix,
     permissions: state.members.currentUser.permissions,
     currentInput: state.currentInput,
-    topicChannel: state.topic.channel
+    topicChannel: state.sessionTopic.channel
   }
 };
 

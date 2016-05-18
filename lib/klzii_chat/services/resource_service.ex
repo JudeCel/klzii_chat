@@ -1,5 +1,5 @@
 defmodule KlziiChat.Services.ResourceService do
-  alias KlziiChat.{Repo, AccountUser, Resource, ResourceView, User}
+  alias KlziiChat.{Repo, AccountUser, Resource, ResourceView}
   alias KlziiChat.Services.Permissions.Resources, as: ResourcePermissions
   alias KlziiChat.Queries.Resources, as: QueriesResources
 
@@ -40,7 +40,7 @@ defmodule KlziiChat.Services.ResourceService do
     account_user = Repo.get!(AccountUser, account_user_id)
       |> Repo.preload([:account])
       resources =
-        QueriesResources.add_role_scope(account_user)
+        QueriesResources.base_query(account_user)
         |> where(type: ^type)
         |> Repo.all
         |> Phoenix.View.render_many( ResourceView, "resource.json")
@@ -51,7 +51,7 @@ defmodule KlziiChat.Services.ResourceService do
     account_user = Repo.get!(AccountUser, account_user_id)
       |> Repo.preload([:account])
     resource =
-      QueriesResources.add_role_scope(account_user)
+      QueriesResources.base_query(account_user)
       |> where([r], r.id in ^[id])
       |> Repo.one
     {:ok, resource}
@@ -61,14 +61,14 @@ defmodule KlziiChat.Services.ResourceService do
   def deleteByIds(account_user_id, ids) do
     account_user = Repo.get!(AccountUser, account_user_id) |> Repo.preload([:account])
 
-    query = QueriesResources.add_role_scope(account_user) |> where([r], r.id in ^ids)
+    query = QueriesResources.base_query(account_user) |> where([r], r.id in ^ids)
     result = Repo.all(query)
 
     if ResourcePermissions.can_delete(account_user, result) do
       case Repo.delete_all(query) do
         {:error, error} ->
           {:error, error}
-        {count, nil} ->
+        {_count, nil} ->
           {:ok, result}
       end
     else

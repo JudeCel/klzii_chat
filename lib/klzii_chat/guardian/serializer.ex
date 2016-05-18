@@ -12,7 +12,7 @@ defmodule KlziiChat.Guardian.Serializer do
       member =
       Repo.get(SessionMember, String.to_integer(id))
       |> Repo.preload([account_user: [:account] ])
-      { :ok, member.account_user }
+      { :ok, %{account_user: member.account_user, session_member: member} }
     else
       { :error, "Unknown resource type" }
     end
@@ -20,10 +20,10 @@ defmodule KlziiChat.Guardian.Serializer do
 
   def from_token("AccountUser:" <> id) do
     if Regex.match?(~r/^[0-9]*$/, id) do
-      member =
+      account_user =
       Repo.get(AccountUser, String.to_integer(id))
       |> Repo.preload([:account])
-      { :ok, member }
+      { :ok, %{account_user: account_user, session_member: nil} }
     else
       { :error, "Unknown resource type" }
     end

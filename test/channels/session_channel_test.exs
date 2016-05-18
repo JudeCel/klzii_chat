@@ -1,16 +1,16 @@
 defmodule KlziiChat.SessionChannelTest do
   use KlziiChat.ChannelCase
-  alias KlziiChat.{Repo, UserSocket, SessionChannel, TopicChannel}
+  alias KlziiChat.{Repo, UserSocket, SessionChannel, SessionTopicChannel}
   use KlziiChat.SessionMemberCase
 
-  setup %{topic_1: topic_1, session: session, session: session, member: member, member2: member2} do
+  setup %{session_topic_1: session_topic_1, session: session, session: session, member: member, member2: member2} do
     Ecto.Adapters.SQL.Sandbox.mode(Repo, {:shared, self()})
     channel_name =  "sessions:" <> Integer.to_string(session.id)
-    topic_1_name =  "topics:" <> Integer.to_string(topic_1.id)
+    session_topic_1_name =  "session_topic:" <> Integer.to_string(session_topic_1.id)
 
     {:ok, socket} = connect(UserSocket, %{"token" => member.token})
     {:ok, socket2} = connect(UserSocket, %{"token" => member2.token})
-    {:ok, socket: socket, socket2: socket2, channel_name: channel_name, topic_1_name: topic_1_name}
+    {:ok, socket: socket, socket2: socket2, channel_name: channel_name, session_topic_1_name: session_topic_1_name}
   end
 
   test "after join events", %{socket: socket, session: session, channel_name: channel_name} do
@@ -68,9 +68,9 @@ defmodule KlziiChat.SessionChannelTest do
     assert_push "update_member", session_member2
   end
 
-  #  Offline messages from others topics
-  test "get unread messages notification when new message", %{socket2: socket2, socket: socket, channel_name: channel_name, topic_1_name: topic_1_name} do
-    {:ok, _, socket2} = join(socket2, TopicChannel, topic_1_name)
+  #  Offline messages from others session_topics
+  test "get unread messages notification when new message", %{socket2: socket2, socket: socket, channel_name: channel_name, session_topic_1_name: session_topic_1_name} do
+    {:ok, _, socket2} = join(socket2, SessionTopicChannel, session_topic_1_name)
     {:ok, _, socket} = subscribe_and_join(socket, SessionChannel, channel_name)
 
     ref1 = push socket2, "new_message", %{"emotion" => "1", "body" => "hey!!"}
@@ -79,13 +79,13 @@ defmodule KlziiChat.SessionChannelTest do
     assert_reply ref2, :ok
 
     session_member_id = "#{socket.assigns.session_member.id}"
-    "topics:" <> id = topic_1_name
+    "session_topic:" <> id = session_topic_1_name
 
-    assert_broadcast("unread_messages", %{^session_member_id => %{"topics" =>  %{^id => %{"normal" => 1} }, "summary" => %{"normal" => 1, "reply" => 0} }})
+    assert_broadcast("unread_messages", %{^session_member_id => %{"session_topics" =>  %{^id => %{"normal" => 1} }, "summary" => %{"normal" => 1, "reply" => 0} }})
   end
 
-  test "get unread messages notification when delete message", %{socket2: socket2, socket: socket, channel_name: channel_name, topic_1_name: topic_1_name} do
-    {:ok, _, socket2} = join(socket2, TopicChannel, topic_1_name)
+  test "get unread messages notification when delete message", %{socket2: socket2, socket: socket, channel_name: channel_name, session_topic_1_name: session_topic_1_name} do
+    {:ok, _, socket2} = join(socket2, SessionTopicChannel, session_topic_1_name)
     {:ok, _, socket} = subscribe_and_join(socket, SessionChannel, channel_name)
 
     ref1 = push socket2, "new_message", %{"emotion" => "1", "body" => "hey!!"}
@@ -94,7 +94,7 @@ defmodule KlziiChat.SessionChannelTest do
     ref2 = push socket2, "delete_message", %{"id" => message.id}
     assert_reply ref2, :ok
     session_member_id = "#{socket.assigns.session_member.id}"
-    assert_broadcast("unread_messages", %{^session_member_id => %{"topics" =>  %{}, "summary" => %{"normal" => 0, "reply" => 0} }})
+    assert_broadcast("unread_messages", %{^session_member_id => %{"session_topics" =>  %{}, "summary" => %{"normal" => 0, "reply" => 0} }})
   end
 
 end

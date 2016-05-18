@@ -20,7 +20,8 @@ const Board = React.createClass({
     }
   },
   onChange(content, data) {
-    if(data.origElements.textContent.length < this.maxInputLength) {
+    let length = data.origElements.textContent.length;
+    if(length > 0 && length < this.maxInputLength) {
       this.setState({ content: content });
       this.props.setContent(content);
     }
