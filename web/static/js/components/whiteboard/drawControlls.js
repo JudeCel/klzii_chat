@@ -521,18 +521,14 @@
 		mainEl.data("angle", angle);
 		handle.attr({ x: cx, y: cy });
 		var matr = mainEl.ftGetInitialTransformMatrix().clone();
-		//var matr = mainEl.transform().globalMatrix.clone();
-
 		var splitParams = matr.split();
-//		console.log("__", mainEl.ftGetInitialFullransformMatrix().localMatrix.invert(), splitParams.dx);
-	//	mainEl.attr({ transform: "t" + (mainEl.data("tx"))+ "," + mainEl.data("ty") + "r" +  angle + "s" + splitParams.scalex + "," + splitParams.scaley});
-//		mainEl.attr({ transform: "t" +splitParams.dx + "," + mainEl.data("ty") + "r" +  angle + "s" + splitParams.scalex + "," + splitParams.scaley});
-		//console.log("___", mainEl.ftGetInitialFullransformMatrix());
-		//mainEl.attr({ transform: "t" + mainEl.data("tx") + "," + mainEl.data("ty") +  /*matr.toTransformString() +*/ "r" +  angle + "s" + splitParams.scalex + "," + splitParams.scaley});
-		//var point = "," + mainBB.cx + "," + mainBB.cy;
 		var mainDBB = mainEl.translateDragger.getBBox();
-		//matr.rotate(angle - splitParams.rotate, mainDBB.cx, mainDBB.cy);
-		mainEl.transform(matr.toTransformString() + 'r' + angle);
+		var myMatrix = new Snap.Matrix();
+
+		myMatrix.rotate(angle, mainDBB.cx, mainDBB.cy);
+		myMatrix.add(matr);
+
+		mainEl.transform( myMatrix.toTransformString());
 
 		mainEl.ftHighlightBB();
 		mainEl.updateTransformControls(mainEl);
