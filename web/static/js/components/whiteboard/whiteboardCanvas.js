@@ -122,6 +122,9 @@ const WhiteboardCanvas = React.createClass({
         case "text":
           obj = self.snap.text(0, 0, event.element.attr.textVal).transform('r0.1');
           break;
+        case "image":
+          obj = self.snap.image(event.element.attr.href, 0, 0, 0, 0).transform('r0.1');
+          break;
         default:
           break;
       };
@@ -253,12 +256,13 @@ const WhiteboardCanvas = React.createClass({
     this.mode = this.ModeEnum.arrow;
     this.setState({});
   },
-  addImage(url, coords) {
+  addImage() {
     this.mode = this.ModeEnum.image;
     this.setState({});
-    var r = this.snap.image(url ,coords.x, coords.y, coords.width, coords.height).transform('r0.1');
-    this.setStyle(r);
-    this.prepareNewElement(r);
+    var coords = {x: 10, y: 20, width: 200, height:100};
+    var url = "/images/logo.png";
+    this.activeShape = this.snap.image(url ,coords.x, coords.y, coords.width, coords.height).transform('r0.1');
+    this.handleObjectCreated();
   },
   addScribbleEmpty(){
     this.addScribble();
@@ -702,6 +706,7 @@ const WhiteboardCanvas = React.createClass({
 
                     <i className={this.toolStyle(this.ModeEnum.rectangle)+" fa fa-square-o"} aria-hidden="true" onClick={this.addRectEmpty}></i>
                     <i className={this.toolStyle(this.ModeEnum.rectangleFill)+" fa fa-square"} aria-hidden="true" onClick={this.addRectFilled}></i>
+                    <i className={this.toolStyle(this.ModeEnum.image)+" fa fa-file-image-o"} aria-hidden="true" onClick={this.addImage}></i>
                   </Popover>
                 }>
                 <Button className={this.isShapeSectionActive()}><i className="fa fa-star" aria-hidden="true"></i></Button>
@@ -777,6 +782,7 @@ const mapStateToProps = (state) => {
     whiteboard: state.whiteboard,
     channal: state.sessionTopic.channel,
     currentUser: state.members.currentUser,
+    resourceImages: state.resources.images
   }
 };
 export default connect(mapStateToProps)(WhiteboardCanvas);
