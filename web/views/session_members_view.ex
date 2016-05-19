@@ -57,7 +57,7 @@ defmodule KlziiChat.SessionMembersView do
 
   @spec buildJWT(Map.t) :: Map.t
   defp buildJWT(member) do
-    { :ok, jwt, encoded_claims } =  Guardian.encode_and_sign(%KlziiChat.SessionMember{id: member.id})
+    { :ok, jwt, _encoded_claims } =  Guardian.encode_and_sign(%KlziiChat.SessionMember{id: member.id})
     jwt
   end
 end
