@@ -256,12 +256,13 @@ const WhiteboardCanvas = React.createClass({
     this.mode = this.ModeEnum.arrow;
     this.setState({});
   },
-  addImage() {
+  prepareImage() {
+    this.addImage("/images/logo.png", 10, 20, 200, 100);
+  },
+  addImage(url, x, y, width, height) {
     this.mode = this.ModeEnum.image;
     this.setState({});
-    var coords = {x: 10, y: 20, width: 200, height:100};
-    var url = "/images/logo.png";
-    this.activeShape = this.snap.image(url ,coords.x, coords.y, coords.width, coords.height).transform('r0.1');
+    this.activeShape = this.snap.image(url , x, y, width, height).transform('r0.1');
     this.handleObjectCreated();
   },
   addScribbleEmpty(){
@@ -706,7 +707,7 @@ const WhiteboardCanvas = React.createClass({
 
                     <i className={this.toolStyle(this.ModeEnum.rectangle)+" fa fa-square-o"} aria-hidden="true" onClick={this.addRectEmpty}></i>
                     <i className={this.toolStyle(this.ModeEnum.rectangleFill)+" fa fa-square"} aria-hidden="true" onClick={this.addRectFilled}></i>
-                    <i className={this.toolStyle(this.ModeEnum.image)+" fa fa-file-image-o"} aria-hidden="true" onClick={this.addImage}></i>
+                    <i className={this.toolStyle(this.ModeEnum.image)+" fa fa-file-image-o"} aria-hidden="true" onClick={this.prepareImage}></i>
                   </Popover>
                 }>
                 <Button className={this.isShapeSectionActive()}><i className="fa fa-star" aria-hidden="true"></i></Button>

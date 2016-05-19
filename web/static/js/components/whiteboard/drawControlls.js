@@ -29,8 +29,10 @@
 		Element.prototype.ftUpdateRotateHandler = function() {
 			var box = this.getBBox();
 			var bb = getShapeSize(this);
-			var splitParams = this.matrix.split();
-			var rotation = rotateVector(bb.height/2, 0, splitParams.rotate -90);
+			var splitParams = this.transform().globalMatrix.split();
+			var angle = this.data("angle");
+			console.log(bb.width);
+			var rotation = rotateVector(bb.height/2, 0, angle - 90);
 			if (!this.rotateDragger) {
 				this.rotateDragger = this.paper.image("/images/svgControls/rotate.png", box.cx + rotation[0], box.cy - rotation[1], ftOption.handleRadius*2, ftOption.handleRadius*2);
 			} else {
@@ -404,7 +406,7 @@
 	  }
 
 		Element.prototype.updateTransformControls = function(shape, resetControlValues) {
-	    var angle = shape.matrix.split().rotate;
+	    var angle = shape.data("angle");//shape.matrix.split().rotate;
 	    var transformStr = "";
 	    var attrs = shape.attr();
 	    var width = 0;
@@ -442,8 +444,6 @@
 	    shape.scaleYControl.myCap.setCapMaxPosition(height);
 	    shape.scaleXControl.insertAfter(shape);
 	    shape.scaleYControl.insertAfter(shape);
-
-			//console.log("shape__", this.translateDragger.attr("x"));
 	  }
 	});
 
@@ -513,13 +513,12 @@
 		var vx = cx - mainBB.cx;
 		var vy = cy - mainBB.cy;
 
-		var normalised = normalizeScaleVector(vx, vy, mainEl.data("scaleFactor"));
+		var normalised = normalizeScaleVector(vx, vy, 1);
 		var cx = mainBB.cx + normalised[0];
 		var cy = mainBB.cy + normalised[1];
 
 		var angle = Snap.angle( mainBB.cx, mainBB.cy, cx, cy) - 90;
 		mainEl.data("angle", angle);
-		handle.attr({ x: cx, y: cy });
 		var matr = mainEl.ftGetInitialTransformMatrix().clone();
 		var splitParams = matr.split();
 		var mainDBB = mainEl.translateDragger.getBBox();
@@ -532,6 +531,7 @@
 
 		mainEl.ftHighlightBB();
 		mainEl.updateTransformControls(mainEl);
+		mainEl.ftUpdateRotateHandler();
 
 		informTransformed(mainEl);
 	};
@@ -559,11 +559,19 @@
 	}
 
 	function getShapeSize(shape) {
+
+		//console.log(shape.transform().local );
 		var clone = shape.clone();
-		var matr = shape.matrix;
+		var matr = shape.transform().localMatrix;
 		var splitParams = matr.split();
-		var tstring = "r0" + "s" + splitParams.scalex + "," + splitParams.scaley ;
-		clone.attr({ transform: tstring });
+		console.log(splitParams);
+		var myMatrix = new Snap.Matrix();
+		myMatrix.scale(splitParams.scalex, splitParams.scaley);
+		myMatrix.e = matr.e;
+		myMatrix.f = matr.f;
+		var tstring = myMatrix.toTransformString();
+	//	var tstring = matr.toTransformString();
+		clone.transform(tstring + "r0");
 		var box = clone.getBBox();
 		clone.remove();
 		return box;
