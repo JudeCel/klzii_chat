@@ -525,7 +525,7 @@
 		var mainDBB = mainEl.translateDragger.getBBox();
 		var myMatrix = new Snap.Matrix();
 
-		myMatrix.rotate(angle, mainDBB.cx, mainDBB.cy);
+		myMatrix.rotate(angle - splitParams.rotate, mainDBB.cx, mainDBB.cy);
 		myMatrix.add(matr);
 
 		mainEl.transform( myMatrix.toTransformString());
