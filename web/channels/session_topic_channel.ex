@@ -1,7 +1,7 @@
 defmodule KlziiChat.SessionTopicChannel do
   use KlziiChat.Web, :channel
   alias KlziiChat.Services.{MessageService, WhiteboardService, ResourceService,
-    UnreadMessageService, ConsoleService, SessionTopicService}
+    UnreadMessageService, ConsoleService, SessionTopicService, SessionMembersService}
   alias KlziiChat.{MessageView, Presence, Endpoint, ConsoleView, SessionTopicView}
 
   # This Channel is only for Topic context
@@ -113,6 +113,7 @@ defmodule KlziiChat.SessionTopicChannel do
       case MessageService.create_message(session_member, session_topic_id, payload) do
         {:ok, message} ->
           # TODO need move to GenEvent handler
+          SessionMembersService.update_emotion(session_member.id,session_topic_id, message.emotion)
           UnreadMessageService.process_new_message(session_member.session_id, session_topic_id, message.id)
           broadcast!(socket, "new_message",  message)
           {:reply, :ok, socket}
