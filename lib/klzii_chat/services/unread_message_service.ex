@@ -108,20 +108,20 @@ defmodule KlziiChat.Services.UnreadMessageService do
       new_acc = Map.put_new(acc, id, default_map)
       topic = Map.get(item, "session_topic")
       update_in(new_acc[id]["session_topics"], fn val ->
-        update_topic_map(topic, val)
+        update_session_topic_map(topic, val)
       end)
 
     end)
   end
 
-  def update_topic_map({nil, _}, val), do: val
-  def update_topic_map({id, scope}, val) do
+  def update_session_topic_map({nil, _}, val), do: val
+  def update_session_topic_map({id, scope}, val) do
     string_key = to_string(id)
     value = Map.get(val, string_key, %{})
     new_value = Map.merge(value, scope)
     Map.put(val, string_key, new_value)
   end
-  def update_topic_map(_, val), do: val
+  def update_session_topic_map(_, val), do: val
 
   @spec insert_offline_records(List.t, %Message{}) :: {Iinteger.t, nil | [term]}
   def insert_offline_records(session_member_ids, message) do

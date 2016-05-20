@@ -1,6 +1,6 @@
 defmodule KlziiChat.SessionMemberCase do
   use ExUnit.CaseTemplate
-  alias KlziiChat.{Repo, Topic, User, AccountUser , Session, Account, SessionMember, BrandProjectPreference}
+  alias KlziiChat.{Repo, User , Session, Account, SessionMember, BrandProjectPreference}
 
 
   setup do
