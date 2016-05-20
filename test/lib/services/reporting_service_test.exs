@@ -3,12 +3,16 @@ defmodule KlziiChat.Services.ReportingServiceTest do
   alias KlziiChat.Services.{MessageService, ReportingService}
 
   setup %{session_topic_1: session_topic_1, member: member} do
+    {:ok, create_date1} = Ecto.DateTime.cast("2016-05-20T09:50:00Z")
+    {:ok, create_date2} = Ecto.DateTime.cast("2016-05-20T09:55:00Z")
+
     Ecto.build_assoc(
       session_topic_1, :messages,
       sessionTopicId: session_topic_1.id,
       sessionMemberId: member.id,
       body: "test message 1",
-      emotion: 1
+      emotion: 1,
+      createdAt: create_date1
     ) |> Repo.insert!()
 
     Ecto.build_assoc(
@@ -16,7 +20,8 @@ defmodule KlziiChat.Services.ReportingServiceTest do
       sessionTopicId: session_topic_1.id,
       sessionMemberId: member.id,
       body: "test message 2",
-      emotion: 2
+      emotion: 2,
+      createdAt: create_date2
     ) |> Repo.insert!()
 
     {:ok, session_topic_id: session_topic_1.id, member: member}
@@ -31,6 +36,7 @@ defmodule KlziiChat.Services.ReportingServiceTest do
 
     assert(length(topic_hist_csv) == 3)
     assert(List.first(topic_hist_csv) == "name,comment,date,is tagged,is reply,emotion\r\n")
+    assert(List.last(topic_hist_csv) == "cool member,test message 2,2016-05-20 09:55:00,false,false,2\r\n")
   end
 
   test "convert message history to CSV string" do
@@ -43,10 +49,11 @@ defmodule KlziiChat.Services.ReportingServiceTest do
 
   test "convert topic history to TXT", %{member: member, session_topic_id: session_topic_id} do
     {:ok, topic_history} = MessageService.history(session_topic_id, member)
-    IO.inspect(topic_history)
 
-    ReportingService.topic_history_TXT_stream(topic_history)
-    |> Enum.to_list()
-    |> IO.inspect
+    topic_hist_txt =
+      ReportingService.topic_history_TXT_stream(topic_history)
+      |> Enum.to_list()
+
+    assert(List.last(topic_hist_txt) == "test message 2\r\n\r\n")
   end
 end
