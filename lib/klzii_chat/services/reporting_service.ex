@@ -1,5 +1,24 @@
 defmodule KlziiChat.Services.ReportingService do
+  alias KlziiChat.Services.MessageService
   alias Ecto.DateTime
+  @report_types [:csv, :txt, :pdf]
+
+  def save_file(path_to_file, type, session_member, session, session_topic) when type in @report_types do
+    {:ok, file} = File.open(path_to_file, [:write])
+    {:ok, topic_history} = MessageService.history(session_topic.id, session_member)
+
+    csv_header = "name,comment,date,is tagged,is reply,emotion\r\n"
+    txt_header = "#{session.name} / #{session_topic.name}\r\n\r\n"
+
+    report_stream =
+      case type do
+        :csv -> topic_history_CSV_stream(csv_header, topic_history)
+        :txt -> topic_history_TXT_stream(txt_header, topic_history)
+      end
+
+   Enum.each(report_stream, &IO.write(file, &1))
+   :ok = File.close(file)
+  end
 
   def topic_history_CSV_stream(svn_header, topic_history) do
     svn_strings = Stream.map(topic_history, &to_svn_string(&1))

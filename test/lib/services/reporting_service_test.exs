@@ -24,11 +24,11 @@ defmodule KlziiChat.Services.ReportingServiceTest do
       createdAt: create_date2
     ) |> Repo.insert!()
 
-    {:ok, session_name: session.name, session_topic_id: session_topic_1.id, session_topic_name: session_topic_1.name, member: member}
+    {:ok, session: session, session_topic: session_topic_1, session_member: member}
   end
 
-  test "convert topic history to CSV", %{member: member, session_topic_id: session_topic_id} do
-    {:ok, topic_history} = MessageService.history(session_topic_id, member)
+  test "convert topic history to CSV", %{session_member: session_member, session_topic: session_topic} do
+    {:ok, topic_history} = MessageService.history(session_topic.id, session_member)
 
     csv_header = "name,comment,date,is tagged,is reply,emotion\r\n"
 
@@ -49,10 +49,10 @@ defmodule KlziiChat.Services.ReportingServiceTest do
     assert(ReportingService.to_svn_string(message) == message_svn)
   end
 
-  test "convert topic history to TXT", %{member: member, session_name: session_name, session_topic_id: session_topic_id, session_topic_name: session_topic_name} do
-    {:ok, topic_history} = MessageService.history(session_topic_id, member)
+  test "convert topic history to TXT", %{session_member: session_member, session: session, session_topic: session_topic} do
+    {:ok, topic_history} = MessageService.history(session_topic.id, session_member)
 
-    txt_header = "#{session_name} / #{session_topic_name}\r\n\r\n"  # "cool session / cool session topic 1"
+    txt_header = "#{session.name} / #{session_topic.name}\r\n\r\n"  # "cool session / cool session topic 1"
 
     topic_hist_txt =
       ReportingService.topic_history_TXT_stream(txt_header, topic_history)
@@ -61,5 +61,10 @@ defmodule KlziiChat.Services.ReportingServiceTest do
     assert(length(topic_hist_txt) == 3)
     assert(List.first(topic_hist_txt) == txt_header)
     assert(List.last(topic_hist_txt) == "test message 2\r\n\r\n")
+  end
+
+  test "save_file", %{session: session, session_topic: session_topic, session_member: session_member} do
+    ReportingService.save_file("test_report.csv", :csv, session_member, session, session_topic)
+    ReportingService.save_file("test_report.txt", :txt, session_member, session, session_topic)
   end
 end
