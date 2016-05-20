@@ -2,16 +2,17 @@
 (function() {
 	var lineAttributes = { stroke: 'red', strokeWidth: 2, strokeDasharray: "5,5" };
 	var startDragTarget, startDragElement, startBBox, startScreenCTM;
+	var ftOption = {
+		handleFill: "#c0c0c0",
+		handleStrokeDash: "5,5",
+		handleStrokeWidth: "2",
+		handleLength: "75",
+		handleRadius: "7",
+		handleLineWidth: 2,
+	};
+
 	Snap.plugin( function( Snap, Element, Paper, global  ) {
 
-		var ftOption = {
-			handleFill: "#c0c0c0",
-			handleStrokeDash: "5,5",
-			handleStrokeWidth: "2",
-			handleLength: "75",
-			handleRadius: "7",
-			handleLineWidth: 2,
-		};
 		Element.prototype.ftRemove = function(c) {
 			this.ftRemoveHandles();
 			this.unclick();
@@ -31,14 +32,16 @@
 			var bb = getShapeSize(this);
 			var splitParams = this.transform().globalMatrix.split();
 			var angle = this.data("angle");
-			console.log(bb.width);
 			var rotation = rotateVector(bb.height/2, 0, angle - 90);
 			if (!this.rotateDragger) {
 				this.rotateDragger = this.paper.image("/images/svgControls/rotate.png", box.cx + rotation[0], box.cy - rotation[1], ftOption.handleRadius*2, ftOption.handleRadius*2);
 			} else {
 				var dBox = this.translateDragger.getBBox();
-				this.rotateDragger.attr('x', dBox.cx + rotation[0]);
-				this.rotateDragger.attr('y', dBox.cy - rotation[1]);
+				// this.rotateDragger.attr('x', dBox.cx + rotation[0]);
+				// this.rotateDragger.attr('y', dBox.cy - rotation[1]);
+
+				this.rotateDragger.attr('x', bb.posX);
+				this.rotateDragger.attr('y', bb.posY);
 			}
 		}
 
@@ -47,14 +50,16 @@
 			var freetransEl = this;
 			freetransEl.ftStoreInitialTransformMatrix();
 			var bb = this.getBBox();
+			freetransEl.ftHighlightBB();
 			var splitParams = this.matrix.split();
 
 			var translateDragger = this.paper.image("/images/svgControls/move.png", bb.cx - ftOption.handleRadius, bb.cy - ftOption.handleRadius, ftOption.handleRadius*2, ftOption.handleRadius*2);
 			this.data("angle", splitParams.rotate);
 			this.translateDragger = translateDragger;
+
+
 			this.ftUpdateRotateHandler();
 			var rotateDragger = this.rotateDragger;
-
 			this.initialWidth = bb.width/2;
 			this.initialHeight = bb.height/2;
 			var handlesGroup = this.paper.g( rotateDragger, translateDragger );
@@ -81,7 +86,6 @@
 				dragHandleRotateEnd.bind( rotateDragger, freetransEl  )
 			);
 
-			freetransEl.ftHighlightBB();
 			this.ftInformSelected(this, true);
 			return this;
 		};
@@ -198,12 +202,17 @@
 			return this;
 		};
 
+		function pathFromObj( bb ) {
+			return bb.path;
+		}
+
 		Element.prototype.ftHighlightBB = function() {
 			this.data("bbT") && this.data("bbT").remove();
 			this.data("bb") && this.data("bb").remove();
-			this.data("bbT", this.paper.rect( rectObjFromBB( this.getBBox(1) ) )
+			 this.data("bbT", this.paper.path( pathFromObj( this.getBBox(1) ), 0, 0 )
 				.attr({ fill: "none", stroke: ftOption.handleFill, strokeDasharray: ftOption.handleStrokeDash })
 				.transform( this.transform().global.toString() ) );
+				console.log("~!!!!");
 			return this;
 		};
 
@@ -337,9 +346,8 @@
 	      } else if( el.data("sliderId") == "y" ) {
 	        updateElementParameters(activeShape, {height: el.data("posX"), scaleY: el.data("fracX")});
 	      }
-
-				activeShape.ftUpdateRotateHandler();
 				activeShape.ftHighlightBB();
+				activeShape.ftUpdateRotateHandler();
 			}
 
 	    paper.slider({ sliderId: "x", capSelector: "#cap", filename: "/images/svgControls/sl.svg",
@@ -413,6 +421,7 @@
 	    var height = 0;
 	    var box = shape.getBBox();
 			var boxSize = getShapeSize(shape);
+			console.log("=====", boxSize);
 			transformStr = "t"+ this.translateDragger.attr("x") + "," + this.translateDragger.attr("y") + "r";
 
 	    var originalTransform = shape.matrix.split();
@@ -559,25 +568,42 @@
 	}
 
 	function getShapeSize(shape) {
-		// if (shape.cloned) {
-		// 	shape.cloned.remove();
-		// }
-		var clone = shape.clone();
-		var matr = shape.transform().globalMatrix;
-		var matrInv = shape.transform().globalMatrix.invert();
+		var matr = shape.matrix.clone().invert();
 		var splitParams = matr.split();
-		var myMatrix = new Snap.Matrix();
+
 		var mainDBB = shape.translateDragger.getBBox();
-		myMatrix.rotate(-splitParams.rotate, mainDBB.cx, mainDBB.cy);
-		myMatrix.add(matr)
-		var tstring = myMatrix.toTransformString();
-		clone.transform( tstring );
-		var box = clone.getBBox();
 
-		clone.remove();
+		var rVector = rotateVector(1000, 0, splitParams.rotate + 90);
+		var pHorizontal = "M" + mainDBB.cx + " " + mainDBB.cy + " L" + (mainDBB.cx + rVector[0]) + " " + (mainDBB.cy + rVector[1]);
+		var intersectLine = shape.paper.path(pHorizontal, 0, 0)
+			.attr({ fill: "none", stroke: ftOption.handleFill, strokeDasharray: ftOption.handleStrokeDash });
 
-		//shape.cloned = clone;
-		return box;
+		var rVectorH = rotateVector(0, 1000, splitParams.rotate + 90);
+		var pVertical = "M" + mainDBB.cx + " " + mainDBB.cy + " L" + (mainDBB.cx + rVectorH[0]) + " " + (mainDBB.cy + rVectorH[1]);
+		var intersectLineH = shape.paper.path(pVertical, 0, 0)
+			.attr({ fill: "none", stroke: ftOption.handleFill, strokeDasharray: ftOption.handleStrokeDash });
+
+		var mSize = {};
+		if (shape.data("bbT")) {
+			var transformedPath = Snap.path.map(shape.data("bbT"), shape.data("bbT").transform().localMatrix);
+			var intersects = Snap.path.intersection(transformedPath, intersectLine);
+			var intersectsV = Snap.path.intersection(transformedPath, intersectLineH);
+
+			mSize = {
+				width: Snap.calcDistance(mainDBB.cx, intersects[0].x, mainDBB.cy, intersects[0].y),
+				height: Snap.calcDistance(mainDBB.cx, intersectsV[0].x, mainDBB.cy, intersectsV[0].y),
+				posX: intersects[0].x,
+				posY: intersects[0].y
+			};
+		} else {
+			var box = shape.getBBox();
+			mSize = {width: box.width, height: box.height};
+		}
+
+		intersectLine.remove();
+		intersectLineH.remove();
+
+		return mSize;
 	}
 
 })();
