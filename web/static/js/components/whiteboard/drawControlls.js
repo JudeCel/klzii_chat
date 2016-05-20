@@ -422,13 +422,8 @@
 	      width = attrs.rx*originalTransform.scalex;
 	      height = attrs.ry*originalTransform.scaley;
 	    } else {
-	      if (resetControlValues) {
 	        width = boxSize.width/2;
 	        height = boxSize.height/2;
-	      } else {
-	        width = shape.scaleXControl.myCap.data("posX");
-	        height = shape.scaleYControl.myCap.data("posX");
-	      }
 	    }
 
 	    shape.scaleXControl.myCap.setCapPosition(0);
