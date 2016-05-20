@@ -559,21 +559,24 @@
 	}
 
 	function getShapeSize(shape) {
-
-		//console.log(shape.transform().local );
+		// if (shape.cloned) {
+		// 	shape.cloned.remove();
+		// }
 		var clone = shape.clone();
-		var matr = shape.transform().localMatrix;
+		var matr = shape.transform().globalMatrix;
+		var matrInv = shape.transform().globalMatrix.invert();
 		var splitParams = matr.split();
-		console.log(splitParams);
 		var myMatrix = new Snap.Matrix();
-		myMatrix.scale(splitParams.scalex, splitParams.scaley);
-		myMatrix.e = matr.e;
-		myMatrix.f = matr.f;
+		var mainDBB = shape.translateDragger.getBBox();
+		myMatrix.rotate(-splitParams.rotate, mainDBB.cx, mainDBB.cy);
+		myMatrix.add(matr)
 		var tstring = myMatrix.toTransformString();
-	//	var tstring = matr.toTransformString();
-		clone.transform(tstring + "r0");
+		clone.transform( tstring );
 		var box = clone.getBBox();
+
 		clone.remove();
+
+		//shape.cloned = clone;
 		return box;
 	}
 
