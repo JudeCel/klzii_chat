@@ -30,16 +30,10 @@
 		Element.prototype.ftUpdateRotateHandler = function() {
 			var box = this.getBBox();
 			var bb = getShapeSize(this);
-			var splitParams = this.transform().globalMatrix.split();
-			var angle = this.data("angle");
-			var rotation = rotateVector(bb.height/2, 0, angle - 90);
 			if (!this.rotateDragger) {
-				this.rotateDragger = this.paper.image("/images/svgControls/rotate.png", box.cx + rotation[0], box.cy - rotation[1], ftOption.handleRadius*2, ftOption.handleRadius*2);
+				this.rotateDragger = this.paper.image("/images/svgControls/rotate.png", bb.posX, bb.posY, ftOption.handleRadius*2, ftOption.handleRadius*2);
 			} else {
 				var dBox = this.translateDragger.getBBox();
-				// this.rotateDragger.attr('x', dBox.cx + rotation[0]);
-				// this.rotateDragger.attr('y', dBox.cy - rotation[1]);
-
 				this.rotateDragger.attr('x', bb.posX);
 				this.rotateDragger.attr('y', bb.posY);
 			}
@@ -212,7 +206,6 @@
 			 this.data("bbT", this.paper.path( pathFromObj( this.getBBox(1) ), 0, 0 )
 				.attr({ fill: "none", stroke: ftOption.handleFill, strokeDasharray: ftOption.handleStrokeDash })
 				.transform( this.transform().global.toString() ) );
-				console.log("~!!!!");
 			return this;
 		};
 
@@ -352,13 +345,11 @@
 
 	    paper.slider({ sliderId: "x", capSelector: "#cap", filename: "/images/svgControls/sl.svg",
 	      x: "0", y:"0", min: "10", max: "300", centerOffsetX: "0", centerOffsetY: "0",
-	      onDragEndFunc: myDragEndFunc, onDragStartFunc: myDragStartFunc, onDragFunc: myDragFunc,
-	      attr: { transform: 't-100,-100' } } , function(elX) {
+	      onDragEndFunc: myDragEndFunc, onDragStartFunc: myDragStartFunc, onDragFunc: myDragFunc}, function(elX) {
 	          // Create vertical control
 	          paper.slider({ sliderId:"y", capSelector: "#cap", filename: "/images/svgControls/sl.svg",
 	            x: "0", y:"0", min: "10", max: "300", centerOffsetX: "0", centerOffsetY: "0",
-	            onDragEndFunc: myDragEndFunc, onDragStartFunc: myDragStartFunc, onDragFunc: myDragFunc,
-	            attr: { transform: 't-100,-100r90' } } , function(elY) {
+	            onDragEndFunc: myDragEndFunc, onDragStartFunc: myDragStartFunc, onDragFunc: myDragFunc} , function(elY) {
 	              activeShape.scaleXControl = elX;
 	              activeShape.scaleYControl = elY;
 
@@ -414,14 +405,13 @@
 	  }
 
 		Element.prototype.updateTransformControls = function(shape, resetControlValues) {
-	    var angle = shape.data("angle");//shape.matrix.split().rotate;
+	    var angle = shape.data("angle");
 	    var transformStr = "";
 	    var attrs = shape.attr();
 	    var width = 0;
 	    var height = 0;
 	    var box = shape.getBBox();
 			var boxSize = getShapeSize(shape);
-			console.log("=====", boxSize);
 			transformStr = "t"+ this.translateDragger.attr("x") + "," + this.translateDragger.attr("y") + "r";
 
 	    var originalTransform = shape.matrix.split();
@@ -478,7 +468,6 @@
 		mainEl.data("tx", mainEl.data("otx") + +dx);
 		mainEl.data("ty", mainEl.data("oty") + +dy);
 		mainEl.ftUpdateTransform();
-		//mainEl.ftDrawJoinLine( dragHandle );
 		informTransformed(mainEl);
 	}
 
@@ -590,8 +579,8 @@
 			var intersectsV = Snap.path.intersection(transformedPath, intersectLineH);
 
 			mSize = {
-				width: Snap.calcDistance(mainDBB.cx, intersects[0].x, mainDBB.cy, intersects[0].y),
-				height: Snap.calcDistance(mainDBB.cx, intersectsV[0].x, mainDBB.cy, intersectsV[0].y),
+				height: Snap.calcDistance(mainDBB.cx, mainDBB.cy, intersects[0].x, intersects[0].y) * 2,
+				width: Snap.calcDistance(mainDBB.cx, mainDBB.cy, intersectsV[0].x, intersectsV[0].y) * 2,
 				posX: intersects[0].x,
 				posY: intersects[0].y
 			};
