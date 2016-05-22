@@ -1,9 +1,8 @@
 defmodule KlziiChat.Services.ReportingService do
   alias KlziiChat.Services.MessageService
   alias Ecto.DateTime
-  @report_types [:csv, :txt, :pdf]
 
-  def save_file(path_to_file, type, session_member, session, session_topic) when type in @report_types do
+  def save_file(path_to_file, type, session_member, session, session_topic) when type in [:csv, :txt] do
     {:ok, file} = File.open(path_to_file, [:write])
     {:ok, topic_history} = MessageService.history(session_topic.id, session_member)
 
@@ -20,6 +19,18 @@ defmodule KlziiChat.Services.ReportingService do
    :ok = File.close(file)
   end
 
+  def save_file(path_to_file, type, session_member, session, session_topic) when type == :pdf do
+    {:ok, topic_history} = MessageService.history(session_topic.id, session_member)
+    html_header = "<h1>#{session.name} : #{session_topic.name}</h1>"
+    html_stream = topic_history_HTML_stream(html_header, topic_history)
+    html_stream
+
+    #process = Porcelain.spawn("wkhtmltopdf", ["-", "test_report.pdf"], in: html, out: Map.new, err: :out)
+    #result = Porcelain.Process.await(process)
+    #IO.inspect(result)
+  end
+
+
   def topic_history_CSV_stream(svn_header, topic_history) do
     svn_strings = Stream.map(topic_history, &to_svn_string(&1))
     Stream.concat([svn_header], svn_strings)
@@ -34,6 +45,33 @@ defmodule KlziiChat.Services.ReportingService do
   def topic_history_TXT_stream(txt_header, topic_history) do
     txt_strings = Stream.map(topic_history, fn(%{body: body}) -> "#{body}\r\n\r\n" end)
     Stream.concat([txt_header], txt_strings)
+  end
+
+  def topic_history_HTML_stream(html_header, topic_history) do
+    path = System.cwd
+
+    html_start =
+      """
+      <!DOCTYPE html>
+      <html>
+      <body>
+      """
+
+    html_end =
+      """
+      </body>
+      </html>
+      """
+
+    html_strings = Stream.map(topic_history, fn(%{body: body, session_member: %{username: name}, time: time}) ->
+      """
+      <hr />
+      <p><span class="name">#{name}</span><span class="datetime">#{time}</span></p>
+      <p class="comment">#{body}</div>
+      """
+    end)
+
+    Stream.concat([[html_start, html_header], html_strings, [html_end]])
   end
 
   #  %{body: "test message 2", emotion: 2, has_voted: false, id: 105,

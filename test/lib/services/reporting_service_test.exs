@@ -66,5 +66,8 @@ defmodule KlziiChat.Services.ReportingServiceTest do
   test "save_file", %{session: session, session_topic: session_topic, session_member: session_member} do
     ReportingService.save_file("test_report.csv", :csv, session_member, session, session_topic)
     ReportingService.save_file("test_report.txt", :txt, session_member, session, session_topic)
+    ReportingService.save_file("test_report.html", :pdf, session_member, session, session_topic)
+    |> Enum.to_list()
+    |> IO.inspect()
   end
 end
