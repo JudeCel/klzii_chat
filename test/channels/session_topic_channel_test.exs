@@ -82,17 +82,6 @@ defmodule KlziiChat.SessionTopicChannelTest do
       assert(id == session_member.id)
   end
 
-  test "can push new board message", %{socket: socket, session_topic_1_name: session_topic_1_name} do
-    {:ok, _, socket} = subscribe_and_join(socket, SessionTopicChannel, session_topic_1_name)
-      message_text = "hey new board message !!!"
-      ref = push socket, "board_message", %{"message" => message_text}
-      assert_reply ref, :ok
-      assert_push "board_message", board_message
-      assert(board_message.boardMessage == message_text)
-      assert_push "new_message", message
-      assert(message.body == message_text)
-  end
-
   test "can push new message", %{socket: socket, session_topic_1_name: session_topic_1_name} do
     {:ok, _, socket} = subscribe_and_join(socket, SessionTopicChannel, session_topic_1_name)
       body = "hey!!"

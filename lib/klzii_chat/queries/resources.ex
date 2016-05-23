@@ -10,8 +10,8 @@ defmodule KlziiChat.Queries.Resources do
   end
 
   @spec find_by_params(Ecto.Query.t, map) :: Ecto.Query.t
-  def find_by_params(base_query, params) do
-    build_type(base_query, params) |> build_scope(params)
+  def find_by_params(query, params) do
+    build_type(query, params) |> build_scope(params)
   end
 
   @spec build_type(Ecto.Query.t, map) :: Ecto.Query.t
