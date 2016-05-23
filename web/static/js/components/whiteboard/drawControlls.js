@@ -413,7 +413,7 @@
 	    var box = shape.translateDragger.getBBox();
 			var boxSize = getShapeSize(shape);
 			var boxScaler = shape.scaleXControl.getBBox();
-			transformStr = "t" + (box.cx - boxScaler.width/2) + "," + (box.cy -  boxScaler.height/2)+"r";
+			transformStr = "t" + box.cx + "," + (box.cy -  boxScaler.height/2)+"r";
 
 	    var originalTransform = shape.matrix.split();
 	    if (shape.type == "rect") {
