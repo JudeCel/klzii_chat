@@ -344,11 +344,11 @@
 			}
 
 	    paper.slider({ sliderId: "x", capSelector: "#cap", filename: "/images/svgControls/sl.svg",
-	      x: "0", y:"0", min: "10", max: "300", centerOffsetX: "0", centerOffsetY: "0",
+	      x: "0", y:"0", min: "20", max: "300", centerOffsetX: "0", centerOffsetY: "0",
 	      onDragEndFunc: myDragEndFunc, onDragStartFunc: myDragStartFunc, onDragFunc: myDragFunc}, function(elX) {
 	          // Create vertical control
 	          paper.slider({ sliderId:"y", capSelector: "#cap", filename: "/images/svgControls/sl.svg",
-	            x: "0", y:"0", min: "10", max: "300", centerOffsetX: "0", centerOffsetY: "0",
+	            x: "0", y:"0", min: "20", max: "300", centerOffsetX: "0", centerOffsetY: "0",
 	            onDragEndFunc: myDragEndFunc, onDragStartFunc: myDragStartFunc, onDragFunc: myDragFunc} , function(elY) {
 	              activeShape.scaleXControl = elX;
 	              activeShape.scaleYControl = elY;

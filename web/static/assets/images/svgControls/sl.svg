@@ -27,16 +27,16 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="3.959798"
-     inkscape:cx="-1.7567717"
-     inkscape:cy="1000.6792"
+     inkscape:cx="-39.763761"
+     inkscape:cy="990.57767"
      inkscape:document-units="px"
      inkscape:current-layer="g3733"
      showgrid="false"
      inkscape:window-width="1920"
      inkscape:window-height="1035"
-     inkscape:window-x="1920"
-     inkscape:window-y="1"
-     inkscape:window-maximized="1" />
+     inkscape:window-x="1927"
+     inkscape:window-y="0"
+     inkscape:window-maximized="0" />
   <metadata
      id="metadata7">
     <rdf:RDF>
@@ -57,41 +57,29 @@
     <g
        id="g3733">
       <image
-         y="0.7984913"
+         y="0.53574735"
          x="0.5101772"
          id="cap"
-         xlink:href="data:image/png;base64,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
+         xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMgAAADICAYAAACtWK6eAAAABmJLR0QA/wD/AP+gvaeTAAAACXBI
+WXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4AUXDjszVkLyUAAAAuVJREFUeNrt20uO00AUhtHbmGY5
+rIGd8bMztoQQE4RoBh3UUdTO01V+nSPVKLLkW/KnxHJcBQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQF+xBbgmxjfixTZw4kUkb3EIhPcC2XUkx3EIhLFA
+dhnJaRwC4Vwgu4rkvTgEwqVAdhHJWBwC4ZpANh3JuTgEwrWBbDKSS3EIhFsC2VQk18QhEG4NZBOR
+XBuHQLgnkFVHckscAuHeQFYZya1xCIRHAllVJPfEIRAeDWQVkdwbh0CYIpBFR/JIHAJhqkAWGcmj
+cQiEKQNZVCRTxCEQpg5kEZFMFYdAaBHIrJFMGYdAaBXILJFMHYdAaBlI10haxCEQWgfSJZJWcQiE
+HoE0jaRlHAKhVyBNImkdh0DoGcikkfSIY8+BPFfVp8N6PqyPVTUc1vPRGgSyrEh6xWFZc62zkQwX
+4vjqm56N+1JVT1X1/ZZAxIFIRgIRByIZCUQciOQokkEcMB7JIA4Yj2QQB4xH8sE+wLjh8Fvr6VAM
+8OpbVeX/PYhI4CSO45t0kcBJHKeBiARxnPw3670n6SJBHGcCEQniOHi6cGDKM5JH/a2qH2c+/1lV
+f0Y++11Vv84c+7le3xOhQRzXSnlhiv5W8cJUz0igZyCZ+oQjEDYSSFqddATCygNJ6xOPQFhpIOl1
+8hEIKwskvQeIQFhJIJlriAiEhQeSuQeJQFhoIFnKMBEICwskSxsoAmEhgWSpQ0UgzBxIlj5YBMJM
+gWQtw0UgdA4kaxswAqFTIFnrkBEIjQPJ2geNQGgUSLYybATCxIFkawNHIEwUSLY6dATCg4Fk64NH
+INwZSPYyfATCjYFkbxsQgXBlINnrJkQgXAgke9+ICISRQGIb3iIB1wQAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMBs/gF81h08ko1JCwAAAABJRU5ErkJg
+gg==
 "
          preserveAspectRatio="none"
-         height="18.172541"
-         width="18.172541"
-         inkscape:label="#cap" />
+         height="17.159842"
+         width="17.159842" />
     </g>
   </g>
 </svg>
