@@ -1,7 +1,7 @@
 defmodule KlziiChat.SessionTopicChannel do
   use KlziiChat.Web, :channel
   alias KlziiChat.Services.{MessageService, WhiteboardService, ResourceService,
-    UnreadMessageService, ConsoleService, SessionTopicService, SessionMembersService}
+    UnreadMessageService, ConsoleService, SessionTopicService}
   alias KlziiChat.{MessageView, Presence, Endpoint, ConsoleView, SessionTopicView}
 
   # This Channel is only for Topic context
@@ -102,9 +102,7 @@ defmodule KlziiChat.SessionTopicChannel do
     if String.length(payload["body"]) > 0  do
       case MessageService.create_message(session_member, session_topic_id, payload) do
         {:ok, message} ->
-          # TODO need move to GenEvent handler
-          SessionMembersService.update_emotion(session_member.id,session_topic_id, message.emotion)
-          UnreadMessageService.process_new_message(session_member.session_id, session_topic_id, message.id)
+          KlziiChat.BackgroundTasks.Message.new(message.id)
           broadcast!(socket, "new_message",  message)
           {:reply, :ok, socket}
         {:error, reason} ->
@@ -118,13 +116,9 @@ defmodule KlziiChat.SessionTopicChannel do
   def handle_in("delete_message", %{ "id" => id }, socket) do
     case MessageService.deleteById(socket.assigns.session_member, id) do
       {:ok, resp} ->
-        unread_message = Task.async(fn ->
-          session_topic_id = socket.assigns.session_topic_id
-          session_member = socket.assigns.session_member
-          UnreadMessageService.process_delete_message(session_member.session_id, session_topic_id)
-        end)
+        session_member = socket.assigns.session_member
+        KlziiChat.BackgroundTasks.Message.delete(session_member.session_id, socket.assigns.session_topic_id)
         broadcast! socket, "delete_message", resp
-        Task.await(unread_message)
         {:reply, :ok, socket}
       {:error, reason} ->
         {:error, %{reason: reason}}
