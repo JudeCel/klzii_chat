@@ -63,11 +63,21 @@ defmodule KlziiChat.Services.ReportingServiceTest do
     assert(List.last(topic_hist_txt) == "test message 2\r\n\r\n")
   end
 
+  test "convert topic history to HTML", %{session_member: session_member, session: session, session_topic: session_topic} do
+    {:ok, topic_history} = MessageService.history(session_topic.id, session_member)
+
+    topic_hist_html = ReportingService.topic_history_HTML(System.cwd(), session.name, session_topic.name, topic_history)
+
+    assert(String.contains?(topic_hist_html,
+        ~s(<span class="name">cool member</span><span class="datetime">2016-05-20 09:55:00</span>)
+      )
+    )
+    assert(String.contains?(topic_hist_html, ~s(<p class="comment">test message 2</p>)))
+  end
+
   test "save_file", %{session: session, session_topic: session_topic, session_member: session_member} do
     ReportingService.save_file("test_report.csv", :csv, session_member, session, session_topic)
     ReportingService.save_file("test_report.txt", :txt, session_member, session, session_topic)
-    ReportingService.save_file("test_report.html", :pdf, session_member, session, session_topic)
-    |> Enum.to_list()
-    |> IO.inspect()
+    ReportingService.save_file("test_report.pdf", :pdf, session_member, session, session_topic)
   end
 end

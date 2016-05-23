@@ -3,11 +3,9 @@ defmodule KlziiChat.Services.ReportingService do
   alias Ecto.DateTime
 
   def save_file(path_to_file, type, session_member, session, session_topic) when type in [:csv, :txt] do
-    {:ok, file} = File.open(path_to_file, [:write])
-    {:ok, topic_history} = MessageService.history(session_topic.id, session_member)
-
     csv_header = "name,comment,date,is tagged,is reply,emotion\r\n"
     txt_header = "#{session.name} / #{session_topic.name}\r\n\r\n"
+    {:ok, topic_history} = MessageService.history(session_topic.id, session_member)
 
     report_stream =
       case type do
@@ -15,19 +13,16 @@ defmodule KlziiChat.Services.ReportingService do
         :txt -> topic_history_TXT_stream(txt_header, topic_history)
       end
 
+   {:ok, file} = File.open(path_to_file, [:write])
    Enum.each(report_stream, &IO.write(file, &1))
    :ok = File.close(file)
   end
 
   def save_file(path_to_file, type, session_member, session, session_topic) when type == :pdf do
     {:ok, topic_history} = MessageService.history(session_topic.id, session_member)
-    html_header = "<h1>#{session.name} : #{session_topic.name}</h1>"
-    html_stream = topic_history_HTML_stream(html_header, topic_history)
-    html_stream
 
-    #process = Porcelain.spawn("wkhtmltopdf", ["-", "test_report.pdf"], in: html, out: Map.new, err: :out)
-    #result = Porcelain.Process.await(process)
-    #IO.inspect(result)
+    html = topic_history_HTML(System.cwd(), session.name, session_topic.name, topic_history)
+    Porcelain.exec("wkhtmltopdf", ["-", path_to_file], in: html, out: :string, err: :out)
   end
 
 
@@ -47,31 +42,10 @@ defmodule KlziiChat.Services.ReportingService do
     Stream.concat([txt_header], txt_strings)
   end
 
-  def topic_history_HTML_stream(html_header, topic_history) do
-    path = System.cwd
-
-    html_start =
-      """
-      <!DOCTYPE html>
-      <html>
-      <body>
-      """
-
-    html_end =
-      """
-      </body>
-      </html>
-      """
-
-    html_strings = Stream.map(topic_history, fn(%{body: body, session_member: %{username: name}, time: time}) ->
-      """
-      <hr />
-      <p><span class="name">#{name}</span><span class="datetime">#{time}</span></p>
-      <p class="comment">#{body}</div>
-      """
-    end)
-
-    Stream.concat([[html_start, html_header], html_strings, [html_end]])
+  def topic_history_HTML(base_path, session_name, session_topic_name, topic_history) do
+    EEx.eval_file(Path.absname("web/templates/report/topic_history_report.html.eex", base_path),
+      [session_name: session_name, session_topic_name: session_topic_name, topic_history: topic_history]
+    )
   end
 
   #  %{body: "test message 2", emotion: 2, has_voted: false, id: 105,

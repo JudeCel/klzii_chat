@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Klzii Chat history</title>
+  </head>
+
+  <body>
+    <h3><%= session_name %> : <%= session_topic_name %></h3>
+
+    <%= Enum.map(topic_history, fn(%{body: body, session_member: %{username: name}, time: time}) ->
+      """
+      <hr />
+      <h4><span class="name">#{name}</span><span class="datetime">#{Ecto.DateTime.to_string(time)}</span></h4>
+      <p class="comment">#{body}</p>
+      """
+    end) %>
+
+  </body>
+</html>
