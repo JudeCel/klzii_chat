@@ -395,7 +395,6 @@ const WhiteboardCanvas = React.createClass({
     if (!this.isValidButton(e)) return;
     if (this.minimized) return;
     if (!this.coords) return;
-
     var coordsMove = this.eventCoords(e);
     coordsMove = {x: coordsMove.x - this.canvasCoords.x, y: coordsMove.y - this.canvasCoords.y};
 
@@ -778,7 +777,6 @@ const WhiteboardCanvas = React.createClass({
   }
 });
 const mapStateToProps = (state) => {
-  console.log(state);
   return {
     whiteboard: state.whiteboard,
     channal: state.sessionTopic.channel,
