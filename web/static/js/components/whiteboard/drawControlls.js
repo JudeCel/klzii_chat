@@ -413,7 +413,7 @@
 	    var box = shape.translateDragger.getBBox();
 			var boxSize = getShapeSize(shape);
 			var boxScaler = shape.scaleXControl.getBBox();
-			transformStr = "t" + box.cx + "," + box.cy+"r";
+			transformStr = "t" + (box.cx - boxScaler.width/2) + "," + (box.cy -  boxScaler.height/2)+"r";
 
 	    var originalTransform = shape.matrix.split();
 	    if (shape.type == "rect") {
@@ -423,8 +423,8 @@
 	      width = attrs.rx*originalTransform.scalex;
 	      height = attrs.ry*originalTransform.scaley;
 	    } else {
-	        width = boxSize.width/2;
-	        height = boxSize.height/2;
+        width = boxSize.width/2;
+        height = boxSize.heightDown/2;
 	    }
 
 	    shape.scaleXControl.myCap.setCapPosition(0);
@@ -571,15 +571,23 @@
 		var intersectLineH = shape.paper.path(pVertical, 0, 0)
 			.attr({ fill: "none", stroke: ftOption.handleFill, strokeDasharray: ftOption.handleStrokeDash });
 
+		var rVectorHDown = rotateVector(0, 1000, splitParams.rotate);
+		var pVerticalDown = "M" + mainDBB.cx + " " + mainDBB.cy + " L" + (mainDBB.cx + rVectorHDown[0]) + " " + (mainDBB.cy + rVectorHDown[1]);
+		var intersectLineHDown = shape.paper.path(pVerticalDown, 0, 0)
+			.attr({ fill: "none", stroke: ftOption.handleFill, strokeDasharray: ftOption.handleStrokeDash });
+
 		var mSize = {};
 		if (shape.data("bbT")) {
 			var transformedPath = Snap.path.map(shape.data("bbT"), shape.data("bbT").transform().localMatrix);
 			var intersects = Snap.path.intersection(transformedPath, intersectLine);
 			var intersectsV = Snap.path.intersection(transformedPath, intersectLineH);
+			var intersectsVDown = Snap.path.intersection(transformedPath, intersectLineHDown);
 
+			// depending on shape size/angle and form vertical size up and down can vary a bit
 			mSize = {
 				height: Snap.calcDistance(mainDBB.cx, mainDBB.cy, intersects[0].x, intersects[0].y) * 2,
 				width: Snap.calcDistance(mainDBB.cx, mainDBB.cy, intersectsV[0].x, intersectsV[0].y) * 2,
+				heightDown: Snap.calcDistance(mainDBB.cx, mainDBB.cy, intersectsVDown[0].x, intersectsVDown[0].y) * 2,
 				posX: intersects[0].x,
 				posY: intersects[0].y
 			};
@@ -590,6 +598,7 @@
 
 		intersectLine.remove();
 		intersectLineH.remove();
+		intersectLineHDown.remove();
 
 		return mSize;
 	}
