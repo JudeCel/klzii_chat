@@ -24,4 +24,3 @@ npm-debug.log
 # secrets file as long as you replace its contents by environment
 # variables.
 /config/dev.exs
-/doc/

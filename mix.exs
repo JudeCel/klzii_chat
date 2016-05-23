@@ -52,8 +52,8 @@ defmodule KlziiChat.Mixfile do
      {:httpoison, "~> 0.8"},
      {:earmark, "~> 0.1", only: :dev},
      {:ex_doc, "~> 0.11", only: :dev},
-     {:porcelain, "~> 2.0"}
-    ]
+     {:porcelain, "~> 2.0"},
+     {:credo, "~> 0.4.0-beta1", only: :dev}]
   end
 
   # Aliases are shortcut or tasks specific to the current project.

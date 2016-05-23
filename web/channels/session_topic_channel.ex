@@ -49,16 +49,6 @@ defmodule KlziiChat.SessionTopicChannel do
       case SessionTopicService.board_message(session_member.id, session_topic_id, payload) do
         {:ok, session_topic} ->
           broadcast!(socket, "board_message",  SessionTopicView.render("show.json", %{session_topic: session_topic}))
-          # TODO need move to GenEvent handler
-          new_message = %{"emotion" => 1, "body" => session_topic.boardMessage}
-          case MessageService.create_message(session_member, session_topic_id, new_message) do
-            {:ok, message} ->
-              UnreadMessageService.process_new_message(session_member.session_id, session_topic_id, message.id)
-              broadcast!(socket, "new_message",  message)
-              {:reply, :ok, socket}
-            {:error, reason} ->
-              {:error, %{reason: reason}}
-          end
           {:reply, :ok, socket}
         {:error, reason} ->
           {:error, %{reason: reason}}
