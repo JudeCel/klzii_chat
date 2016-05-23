@@ -159,7 +159,7 @@ defmodule KlziiChat.Services.UnreadMessageService do
 
   @spec notify(String.t, Map.t) :: :ok
   def notify(session_id, data) do
-    Endpoint.broadcast!( "sessions:#{session_id}", "unread_messages", data)
+    Endpoint.broadcast!("sessions:#{session_id}", "unread_messages", data)
   end
 
   @spec topic_presences_ids(String.t) :: List.t

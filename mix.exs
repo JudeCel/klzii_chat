@@ -50,7 +50,8 @@ defmodule KlziiChat.Mixfile do
      {:quantum, "~> 1.7"},
      {:httpoison, "~> 0.8"},
      {:earmark, "~> 0.1", only: :dev},
-     {:ex_doc, "~> 0.11", only: :dev}
+     {:ex_doc, "~> 0.11", only: :dev},
+     {:credo, "~> 0.4.0-beta1", only: :dev}
     ]
   end
 
