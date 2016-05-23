@@ -410,9 +410,10 @@
 	    var attrs = shape.attr();
 	    var width = 0;
 	    var height = 0;
-	    var box = shape.getBBox();
+	    var box = shape.translateDragger.getBBox();
 			var boxSize = getShapeSize(shape);
-			transformStr = "t"+ this.translateDragger.attr("x") + "," + this.translateDragger.attr("y") + "r";
+			var boxScaler = shape.scaleXControl.getBBox();
+			transformStr = "t" + box.cx + "," + box.cy+"r";
 
 	    var originalTransform = shape.matrix.split();
 	    if (shape.type == "rect") {
@@ -428,8 +429,11 @@
 
 	    shape.scaleXControl.myCap.setCapPosition(0);
 	    shape.scaleYControl.myCap.setCapPosition(0);
-	    shape.scaleXControl.attr({transform: transformStr+angle});
-	    shape.scaleYControl.attr({transform: transformStr+(angle+90)});
+
+			var angle = Snap.angle( box.cx , box.cy, boxSize.posX, boxSize.posY)-90;
+
+			shape.scaleXControl.attr({transform: transformStr+angle});
+			shape.scaleYControl.attr({transform: transformStr+(angle+90)});
 
 	    shape.scaleXControl.myCap.setCapPosition(width);
 	    shape.scaleYControl.myCap.setCapPosition(height);
