@@ -631,7 +631,7 @@ const WhiteboardCanvas = React.createClass({
       borderRadius: cornerRadius,
       position: "absolute",
       top: '10px',
-      right: '10px',
+      left: (window.innerWidth - this.getWidth()) / 3 + "px" ,
       WebkitTransition: 'all',
       msTransition: 'all',
       width: this.getWidth()+'px',
