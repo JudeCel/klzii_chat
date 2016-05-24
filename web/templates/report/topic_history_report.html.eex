@@ -15,7 +15,7 @@
       <%= Enum.map(topic_history, fn(%{body: body, session_member: %{username: name, id: id, role: role}, time: time}) ->
         """
         <tr>
-          <td class="svg" rowspan="3"><svg class="svg#{id}" width="100" height="100"></svg></td>
+          <td class="svg_holder" rowspan="3"><svg class="svg#{id}" width="152" height="140"></svg></td>
           <td class="bottom_border" colspan="2"></td>
         </tr>
         <tr>
@@ -32,7 +32,9 @@
     <script type="text/javascript">
       var sessionMembers = <%= Poison.encode!(session_members["participant"]) %>;
       sessionMembers.push(<%= Poison.encode!(session_members["facilitator"]) %>);
-      sessionMembers.forEach(setAvatar);
+      sessionMembers.forEach(function(sessionMember){
+        setAvatar(sessionMember, '<%= Path.absname("web/static/assets/images/avatar", base_path) %>');
+      });
     </script>
 
   </body>

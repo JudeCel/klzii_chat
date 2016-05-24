@@ -6,8 +6,9 @@ td.bottom_border{
   border-bottom:2pt solid gray;
 }
 
-td.svg {
-  width: 10%;
+td.svg_holder {
+  width: 152px;
+  text-align: top;
 }
 
 td.time {
