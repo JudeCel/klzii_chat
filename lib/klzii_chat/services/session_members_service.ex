@@ -1,5 +1,5 @@
 defmodule KlziiChat.Services.SessionMembersService do
-  alias KlziiChat.{Repo, SessionMember, SessionMembersView}
+  alias KlziiChat.{Repo, Message, SessionMember, SessionMembersView}
   import Ecto.Query, only: [from: 1, from: 2]
 
   @spec find_by_token(String.t) :: nil | Map.t
@@ -19,15 +19,15 @@ defmodule KlziiChat.Services.SessionMembersService do
     |> update_member
   end
 
-  @spec update_emotion(Integer, Integer, Integer) :: Map.t
-  def update_emotion(session_member_id, session_topic_id, emotion) do
-    params = %{"avatar" => %{"emotion"=> emotion}}
-    update_session_topic_context(session_member_id, session_topic_id, params)
+  @spec update_emotion(Integer) :: Map.t
+  def update_emotion(message_id) do
+    message =  Repo.get_by!(Message, id: message_id) |> Repo.preload([:session_member, :session_topic])
+    params = %{"avatar" => %{"emotion"=> message.emotion}}
+    update_session_topic_context(message.session_member, message.session_topic.id, params)
   end
 
-  @spec update_session_topic_context(Integer, Integer, Map.t) :: {:ok, %SessionMember{}} | {:error, Ecto.Changeset.t}
-  def update_session_topic_context(session_member_id, session_topic_id, params) do
-    session_member =  Repo.get_by!(SessionMember, id: session_member_id)
+  @spec update_session_topic_context(%SessionMember{}, Integer, Map.t) :: {:ok, %SessionMember{}} | {:error, Ecto.Changeset.t}
+  def update_session_topic_context(session_member, session_topic_id, params) do
     session_topic_context = merge_session_topic_context(session_member.sessionTopicContext, params, session_topic_id)
     SessionMember.changeset(session_member, %{sessionTopicContext: session_topic_context})
     |> update_member

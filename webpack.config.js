@@ -25,7 +25,7 @@ function plugins() {
     new CopyWebpackPlugin([{ from: 'web/static/assets/images', to: "images" }]),
     new webpack.optimize.DedupePlugin()
   ]
-  
+
   switch (process.env.NODE_ENV) {
     case "production":
       return defaultList.concat(productionList)
@@ -53,6 +53,10 @@ var config = module.exports = {
   resolve: {
     extensions: ['', '.js', '.sass', '.scss'],
     modulesDirectories: ['node_modules'],
+  },
+
+  resolveLoader: {
+    root: path.join(__dirname, 'node_modules')
   },
 
   // more information on how our modules are structured, and
@@ -90,7 +94,6 @@ var config = module.exports = {
   // what plugins we'll be using - in this case, just our ExtractTextPlugin.
   // we'll also tell the plugin where the final CSS file should be generated
   // (relative to config.output.path)
-
   plugins: plugins(),
 };
 

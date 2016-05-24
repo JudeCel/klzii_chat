@@ -17,23 +17,23 @@ const Actions = {
       dispatch({type: Constants.SET_WHITEBOARD_BUILT})
     };
   },
-  subscribeWhiteboardEvents: (channel) =>{
+  subscribeWhiteboardEvents: (channel, whiteboard) =>{
     return dispatch => {
       dispatch({ type: Constants.SET_WHITEBOARD_EVENTS});
       channel.on("draw", (resp) =>{
-        window.buildWhiteboard.processWhiteboard([resp]);
+        whiteboard.processWhiteboard([resp]);
       });
 
       channel.on("delete_object", (resp) =>{
-        window.whiteboard.paint.deleteObject(resp.uid);
+        whiteboard.deleteObject(resp.uid);
       });
 
       channel.on("delete_all", (resp) =>{
-        window.clearWhiteboard();
+        whiteboard.deleteAllObjects(resp);
       });
 
       channel.on("update_object", (resp) =>{
-        window.buildWhiteboard.processWhiteboard([resp]);
+        whiteboard.processWhiteboard([resp]);
       });
     }
   },
@@ -48,7 +48,7 @@ const Actions = {
       });
     };
   },
-  getWhiteboardHistory: (channel) => {
+  getWhiteboardHistory: (channel, whiteboard) => {
     return dispatch => {
       channel.push('whiteboardHistory')
       .receive('ok', (data)=>{
@@ -56,7 +56,7 @@ const Actions = {
           type: Constants.SET_WHITEBOARD_HISTORY,
           objects: data.history
         });
-        window.buildWhiteboard.processWhiteboard(data.history);
+        whiteboard.processWhiteboard(data.history);
       })
       .receive('error', (data) => {
         dispatch({
@@ -70,7 +70,19 @@ const Actions = {
     return dispatch => {
       channel.push('delete_object', {uid: uid})
       .receive('ok', (data)=>{
-        console.log(data);
+      })
+      .receive('error', (data) => {
+        dispatch({
+          type: Constants.SEND_OBJECT_ERROR,
+          error: data.error
+        });
+      });
+    };
+  },
+  deleteAll: (channel) => {
+    return dispatch => {
+      channel.push('deleteAll', {})
+      .receive('ok', (data)=>{
       })
       .receive('error', (data) => {
         dispatch({
@@ -84,7 +96,6 @@ const Actions = {
     return dispatch => {
       channel.push('update_object', {object: object})
       .receive('ok', (data)=>{
-        console.log(data);
       })
       .receive('error', (data) => {
         dispatch({
