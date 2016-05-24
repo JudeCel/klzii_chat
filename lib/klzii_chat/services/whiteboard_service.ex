@@ -3,7 +3,7 @@ defmodule KlziiChat.Services.WhiteboardService do
   import Ecto
   import Ecto.Query, only: [from: 1, from: 2]
 
-  def history(session_topic_id, _) do
+  def history(session_topic_id) do
     session_topic = Repo.get!(SessionTopic, session_topic_id)
     shapes = Repo.all(
       from e in assoc(session_topic, :shapes),

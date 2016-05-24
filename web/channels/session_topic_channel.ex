@@ -156,7 +156,7 @@ defmodule KlziiChat.SessionTopicChannel do
   end
 
   def handle_in("whiteboardHistory", _payload, socket) do
-    case WhiteboardService.history(socket.assigns.session_topic_id, socket.assigns.session_member) do
+    case WhiteboardService.history(socket.assigns.session_topic_id) do
       {:ok, history} ->
         {:reply, {:ok, %{history: history} }, socket}
       {:error, reason} ->
