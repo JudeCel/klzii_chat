@@ -1,5 +1,5 @@
 defmodule KlziiChat.Services.ReportingService do
-  alias KlziiChat.Services.MessageService
+  alias KlziiChat.Services.{MessageService, SessionMembersService}
   alias Ecto.DateTime
 
   def save_file(path_to_file, type, session_member, session, session_topic) when type in [:csv, :txt] do
@@ -20,8 +20,9 @@ defmodule KlziiChat.Services.ReportingService do
 
   def save_file(path_to_file, type, session_member, session, session_topic) when type == :pdf do
     {:ok, topic_history} = MessageService.history(session_topic.id, session_member)
+    {:ok, session_members} = SessionMembersService.by_session(session.id)
 
-    html = topic_history_HTML(System.cwd(), session.name, session_topic.name, topic_history)
+    html = topic_history_HTML(System.cwd(), session.name, session_topic.name, topic_history, session_members)
     Porcelain.exec("wkhtmltopdf", ["-", path_to_file], in: html, out: :string, err: :out)
   end
 
@@ -42,13 +43,14 @@ defmodule KlziiChat.Services.ReportingService do
     Stream.concat([txt_header], txt_strings)
   end
 
-  def topic_history_HTML(base_path, session_name, session_topic_name, topic_history) do
-    EEx.eval_file(Path.absname("web/templates/report/topic_history_report.html.eex", base_path),
-      [session_name: session_name,
+  def topic_history_HTML(base_path, session_name, session_topic_name, topic_history, session_members) do
+    EEx.eval_file(Path.absname("web/templates/report/topic_history_report.html.eex", base_path), [
+      base_path: base_path,
+      session_name: session_name,
       session_topic_name: session_topic_name,
       topic_history: topic_history,
-      base_path: base_path]
-    )
+      session_members: session_members
+    ])
   end
 
   #  %{body: "test message 2", emotion: 2, has_voted: false, id: 105,
@@ -59,5 +61,7 @@ defmodule KlziiChat.Services.ReportingService do
   #       "face" => 3, "hair" => 0, "head" => 0}, colour: "00000", id: 507,
   #     role: "facilitator", username: "cool member"}, star: false,
   #   time: #Ecto.DateTime<2016-05-18 12:47:04>, votes_count: 0}
+
+
 
 end

@@ -1,8 +1,8 @@
 defmodule KlziiChat.Services.ReportingServiceTest do
   use KlziiChat.{ModelCase, SessionMemberCase}
-  alias KlziiChat.Services.{MessageService, ReportingService}
+  alias KlziiChat.Services.{MessageService, ReportingService, SessionMembersService}
 
-  setup %{session: session, session_topic_1: session_topic_1, member: member} do
+  setup %{session: session, session_topic_1: session_topic_1, member: member, member2: member2} do
     {:ok, create_date1} = Ecto.DateTime.cast("2016-05-20T09:50:00Z")
     {:ok, create_date2} = Ecto.DateTime.cast("2016-05-20T09:55:00Z")
 
@@ -18,7 +18,7 @@ defmodule KlziiChat.Services.ReportingServiceTest do
     Ecto.build_assoc(
       session_topic_1, :messages,
       sessionTopicId: session_topic_1.id,
-      sessionMemberId: member.id,
+      sessionMemberId: member2.id,
       body: "test message 2",
       emotion: 2,
       createdAt: create_date2
@@ -38,7 +38,7 @@ defmodule KlziiChat.Services.ReportingServiceTest do
 
     assert(length(topic_hist_csv) == 3)
     assert(List.first(topic_hist_csv) == csv_header)
-    assert(List.last(topic_hist_csv) == "cool member,test message 2,2016-05-20 09:55:00,false,false,2\r\n")
+    assert(List.last(topic_hist_csv) == "cool member 2,test message 2,2016-05-20 09:55:00,false,false,2\r\n")
   end
 
   test "convert 1 message from history to CSV string" do
@@ -65,16 +65,10 @@ defmodule KlziiChat.Services.ReportingServiceTest do
 
   test "convert topic history to HTML", %{session_member: session_member, session: session, session_topic: session_topic} do
     {:ok, topic_history} = MessageService.history(session_topic.id, session_member)
+    {:ok, session_members} = SessionMembersService.by_session(session.id)
 
-    topic_hist_html = ReportingService.topic_history_HTML(System.cwd(), session.name, session_topic.name, topic_history)
+    topic_hist_html = ReportingService.topic_history_HTML(System.cwd(), session.name, session_topic.name, topic_history, session_members)
     IO.inspect(topic_hist_html)
-    IO.inspect(session)
-
-    assert(String.contains?(topic_hist_html,
-        ~s(<span class="name">cool member</span><span class="datetime">2016-05-20 09:55:00</span>)
-      )
-    )
-    assert(String.contains?(topic_hist_html, ~s(<p class="comment">test message 2</p>)))
   end
 
   test "save_file", %{session: session, session_topic: session_topic, session_member: session_member} do

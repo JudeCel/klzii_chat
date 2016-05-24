@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <title>Klzii Chat history</title>
     <script src="<%= Path.absname("web/static/js/reporting/snap.svg-min.js", base_path) %>"></script>
+    <script src="<%= Path.absname("web/static/js/reporting/avatar.js", base_path) %>"></script>
     <link rel="stylesheet" href="<%= Path.absname("web/static/css/reporting/reporting.css", base_path) %>">
   </head>
 
@@ -11,27 +12,29 @@
     <h3><%= session_name %> : <%= session_topic_name %></h3>
 
     <table>
-      <%= Enum.map(topic_history, fn(%{body: body, session_member: %{username: name, id: id}, time: time}) ->
+      <%= Enum.map(topic_history, fn(%{body: body, session_member: %{username: name, id: id, role: role}, time: time}) ->
         """
         <tr>
-          <td class="svg" rowspan="3"><svg class="svg" width="100" height="100"></svg></td>
+          <td class="svg" rowspan="3"><svg class="svg#{id}" width="100" height="100"></svg></td>
           <td class="bottom_border" colspan="2"></td>
         </tr>
         <tr>
-          <td class="name">#{name}</td>
-          <td class="time">#{Ecto.DateTime.to_string(time)}</td>
+          <td class="name #{role}">#{name}</td>
+          <td class="time #{role}">#{Ecto.DateTime.to_string(time)}</td>
         </tr>
         <tr>
-          <td class="body" colspan="3">#{body}</td>
+          <td class="body #{role}" colspan="3">#{body}</td>
         </tr>
         """
       end) %>
-    <table>
+    </table>
 
-    <script>
-      var s = Snap("svg");
-      // Lets create big circle in the middle:
-      var bigCircle = s.circle(50, 50, 25);
+    <script type="text/javascript">
+      const facilitator = <%= Poison.encode!(session_members["facilitator"]) %>;
+      const participants = <%= Poison.encode!(session_members["participant"]) %>;
+      setAvatar(facilitator);
+      participants.forEach(setAvatar);
     </script>
+
   </body>
 </html>
