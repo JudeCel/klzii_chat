@@ -3,9 +3,9 @@
   <head>
     <meta charset="utf-8">
     <title>Klzii Chat history</title>
-    <script src="<%= Path.absname("web/static/js/reporting/snap.svg-min.js", base_path) %>"></script>
-    <script src="<%= Path.absname("web/static/js/reporting/avatar.js", base_path) %>"></script>
-    <link rel="stylesheet" href="<%= Path.absname("web/static/css/reporting/reporting.css", base_path) %>">
+    <script type="text/javascript" src="<%= Path.absname("web/static/js/reporting/snap.svg-min.js", base_path) %>"></script>
+    <script type="text/javascript" src="<%= Path.absname("web/static/js/reporting/avatar.js", base_path) %>"></script>
+    <link rel="stylesheet" type = "text/css" href="<%= Path.absname("web/static/css/reporting/reporting.css", base_path) %>">
   </head>
 
   <body>
@@ -30,10 +30,9 @@
     </table>
 
     <script type="text/javascript">
-      const facilitator = <%= Poison.encode!(session_members["facilitator"]) %>;
-      const participants = <%= Poison.encode!(session_members["participant"]) %>;
-      setAvatar(facilitator);
-      participants.forEach(setAvatar);
+      var sessionMembers = <%= Poison.encode!(session_members["participant"]) %>;
+      sessionMembers.push(<%= Poison.encode!(session_members["facilitator"]) %>);
+      sessionMembers.forEach(setAvatar);
     </script>
 
   </body>
