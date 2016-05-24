@@ -1,0 +1,15 @@
+table {
+ width: 100%;
+}
+
+td.bottom_border{
+  border-bottom:2pt solid gray;
+}
+
+td.svg {
+  width: 10%;
+}
+
+td.time {
+  text-align: right;
+}

@@ -67,6 +67,8 @@ defmodule KlziiChat.Services.ReportingServiceTest do
     {:ok, topic_history} = MessageService.history(session_topic.id, session_member)
 
     topic_hist_html = ReportingService.topic_history_HTML(System.cwd(), session.name, session_topic.name, topic_history)
+    IO.inspect(topic_hist_html)
+    IO.inspect(session)
 
     assert(String.contains?(topic_hist_html,
         ~s(<span class="name">cool member</span><span class="datetime">2016-05-20 09:55:00</span>)

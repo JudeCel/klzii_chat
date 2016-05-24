@@ -44,7 +44,10 @@ defmodule KlziiChat.Services.ReportingService do
 
   def topic_history_HTML(base_path, session_name, session_topic_name, topic_history) do
     EEx.eval_file(Path.absname("web/templates/report/topic_history_report.html.eex", base_path),
-      [session_name: session_name, session_topic_name: session_topic_name, topic_history: topic_history]
+      [session_name: session_name,
+      session_topic_name: session_topic_name,
+      topic_history: topic_history,
+      base_path: base_path]
     )
   end
 
