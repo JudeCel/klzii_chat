@@ -203,8 +203,9 @@ defmodule KlziiChat.SessionTopicChannel do
 
   def handle_in("deleteAll", payload, socket) do
     session_member_id = socket.assigns.session_member.id
+
     session_topic_id = socket.assigns.session_topic_id
-    WhiteboardService.deleteAll(session_member_id, session_topic_id,  payload)
+    WhiteboardService.deleteAll(session_topic_id, payload)
     broadcast! socket, "delete_all", %{}
     {:reply, :ok, socket}
   end

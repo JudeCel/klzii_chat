@@ -6,6 +6,7 @@ defmodule KlziiChat.SessionMember do
     belongs_to :account_user, KlziiChat.AccountUser, [foreign_key: :accountUserId]
     belongs_to :session, KlziiChat.Session, [foreign_key: :sessionId]
     has_many :messages, KlziiChat.Message, [foreign_key: :sessionMemberId]
+    has_many :shapes, KlziiChat.Shape, [foreign_key: :sessionMemberId]
     has_many :votes, KlziiChat.Vote, [foreign_key: :sessionMemberId]
     field :colour, :string
     field :avatarData, :map, default: %{ base: 0, face: 3, body: 0, hair: 0, desk: 0, head: 0 }

@@ -3,8 +3,8 @@ defmodule KlziiChat.Services.WhiteboardService do
   import Ecto
   import Ecto.Query, only: [from: 1, from: 2]
 
-  def history(topic_id, _) do
-    session_topic = Repo.get!(SessionTopic, topic_id)
+  def history(session_topic_id) do
+    session_topic = Repo.get!(SessionTopic, session_topic_id)
     shapes = Repo.all(
       from e in assoc(session_topic, :shapes),
       preload: [:session_member]
@@ -21,8 +21,8 @@ defmodule KlziiChat.Services.WhiteboardService do
     end
   end
 
-  def build_object_response(event) do
-    Phoenix.View.render(event, ShapeView, "show.json")
+  def build_object_response(shape) do
+    ShapeView.render("show.json", %{shape: shape})
   end
 
   def create(changeset) do
@@ -52,8 +52,11 @@ defmodule KlziiChat.Services.WhiteboardService do
     create(changeset)
   end
 
-  def deleteAll(_session_member_id, _, params) do
-    Enum.map(params["objects"], &(&1["id"])) |> deleteByUids
+  def deleteAll(session_topic_id, params) do
+    session_topic = Repo.get!(SessionTopic, session_topic_id)
+      from(e in assoc(session_topic, :shapes)
+    )|> Repo.delete_all
+    # Enum.map(params["objects"], &(&1["id"])) |> deleteByUids
   end
 
   def deleteByUids(ids) do
