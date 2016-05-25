@@ -63,17 +63,14 @@ defmodule KlziiChat.Services.ReportingServiceTest do
     assert(List.last(topic_hist_txt) == "test message 2\r\n\r\n")
   end
 
-  test "convert topic history to HTML", %{session_member: session_member, session: session, session_topic: session_topic} do
+  test "convert topic history to HTML", %{session_member: session_member, session: session, session_topic: session_topic, member: member, member2: member2} do
     {:ok, topic_history} = MessageService.history(session_topic.id, session_member)
     {:ok, session_members} = SessionMembersService.by_session(session.id)
 
     topic_hist_html = ReportingService.topic_history_HTML(System.cwd(), session.name, session_topic.name, topic_history, session_members)
-    IO.inspect(topic_hist_html)
-  end
 
-  test "save_file", %{session: session, session_topic: session_topic, session_member: session_member} do
-    ReportingService.save_file("test_report.csv", :csv, session_member, session, session_topic)
-    ReportingService.save_file("test_report.txt", :txt, session_member, session, session_topic)
-    ReportingService.save_file("test_report.pdf", :pdf, session_member, session, session_topic)
+    assert(String.contains?(topic_hist_html, "svg#{member.id}"))
+    assert(String.contains?(topic_hist_html, "<td class=\"name #{member2.role}\">#{member2.username}</td>"))
+    assert(String.contains?(topic_hist_html, Poison.encode!(session_members["participant"])))
   end
 end
