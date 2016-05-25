@@ -3,14 +3,18 @@ table {
 }
 
 td.bottom_border{
-  border-bottom:2pt solid gray;
+  border-bottom: 2pt solid gray;
 }
 
 td.svg_holder {
-  width: 152px;
-  text-align: top;
+  width: 1%;
+  white-space: nowrap;
 }
 
 td.time {
   text-align: right;
+}
+
+.body.facilitator {
+  color: red;
 }

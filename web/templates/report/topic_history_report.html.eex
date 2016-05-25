@@ -15,7 +15,7 @@
       <%= Enum.map(topic_history, fn(%{body: body, session_member: %{username: name, id: id, role: role}, time: time}) ->
         """
         <tr>
-          <td class="svg_holder" rowspan="3"><svg class="svg#{id}" width="152" height="140"></svg></td>
+          <td class="svg_holder" rowspan="3"><svg class="svg#{id}" width="76" height="70" ></svg></td>
           <td class="bottom_border" colspan="2"></td>
         </tr>
         <tr>
