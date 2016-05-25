@@ -1,63 +1,71 @@
 import Constants                          from '../constants';
-function whiteboardHistory(dispatch, data) {
-  dispatch({
-    type: Constants.SET_WHITEBOARD_READY_TO_BUILD,
-    objects: data
-  });
-}
+export function joinChannal(dispatch, socket, sessionTopicId) {
+  const channel = socket.channel("whiteboard:" + sessionTopicId);
+
+  if (channel.state != 'joined') {
+    dispatch({
+      type: Constants.SET_WHITEBOARD_CHANNEL,
+      channel
+    });
+    dispatch(Actions.subscribeEvents(channel))
+
+    channel.join()
+    .receive('ok', (resp) => {
+      dispatch({
+        type: Constants.SET_WHITEBOARD_HISTORY,
+        objects: resp
+      });
+    })
+    .receive('error', (resp) =>{
+      return dispatch({
+        type: Constants.SOCKET_CONNECTION_ERROR,
+        error: "Channel ERROR!!!"
+      });
+    });
+  }
+};
 
 const Actions = {
-  connectToTopicChannel: (socket, topicId) => {
+  connectToChannel: (socket, sessionTopicId) => {
     return dispatch => {
-      return joinChannal(dispatch, socket, topicId);
+      return joinChannal(dispatch, socket, sessionTopicId);
     };
   },
-  setWhiteboardBuilt: (socket, topicId) => {
-    return dispatch => {
-      dispatch({type: Constants.SET_WHITEBOARD_BUILT})
-    };
-  },
-  subscribeWhiteboardEvents: (channel, whiteboard) =>{
+  subscribeEvents: (channel) =>{
     return dispatch => {
       dispatch({ type: Constants.SET_WHITEBOARD_EVENTS});
       channel.on("draw", (resp) =>{
-        whiteboard.processWhiteboard([resp]);
+        dispatch({
+          type: Constants.SET_WHITEBOARD_SHAPE,
+          shape: resp
+        });
       });
 
       channel.on("delete_object", (resp) =>{
-        whiteboard.deleteObject(resp.uid);
+        dispatch({
+          type: Constants.DELETE_WHITEBOARD_SHAPE,
+          shape: resp
+        });
       });
 
       channel.on("delete_all", (resp) =>{
-        whiteboard.deleteAllObjects(resp);
+        dispatch({
+          type: Constants.DELETE_ALL_WHITEBOARD_SHAPES,
+        });
       });
 
       channel.on("update_object", (resp) =>{
-        whiteboard.processWhiteboard([resp]);
+        dispatch({
+          type: Constants.UPDATE_WHITEBOARD_SHAPE,
+          shape: resp
+        });
       });
     }
   },
   sendobject: (channel, payload) => {
     return dispatch => {
       channel.push(payload.action, payload)
-      .receive('error', (data) => {
-        dispatch({
-          type: Constants.SEND_OBJECT_ERROR,
-          error: data.error
-        });
-      });
-    };
-  },
-  getWhiteboardHistory: (channel, whiteboard) => {
-    return dispatch => {
-      channel.push('whiteboardHistory')
-      .receive('ok', (data)=>{
-        dispatch({
-          type: Constants.SET_WHITEBOARD_HISTORY,
-          objects: data.history
-        });
-        whiteboard.processWhiteboard(data.history);
-      })
+      .receive('ok', (data)=>{ })
       .receive('error', (data) => {
         dispatch({
           type: Constants.SEND_OBJECT_ERROR,
@@ -69,21 +77,7 @@ const Actions = {
   deleteObject: (channel, uid) => {
     return dispatch => {
       channel.push('delete_object', {uid: uid})
-      .receive('ok', (data)=>{
-      })
-      .receive('error', (data) => {
-        dispatch({
-          type: Constants.SEND_OBJECT_ERROR,
-          error: data.error
-        });
-      });
-    };
-  },
-  deleteAll: (channel) => {
-    return dispatch => {
-      channel.push('deleteAll', {})
-      .receive('ok', (data)=>{
-      })
+      .receive('ok', (data)=>{})
       .receive('error', (data) => {
         dispatch({
           type: Constants.SEND_OBJECT_ERROR,
@@ -95,8 +89,7 @@ const Actions = {
   updateObject: (channel, object) => {
     return dispatch => {
       channel.push('update_object', {object: object})
-      .receive('ok', (data)=>{
-      })
+      .receive('ok', (data)=>{ console.log(data, 'update_object') })
       .receive('error', (data) => {
         dispatch({
           type: Constants.SEND_OBJECT_ERROR,

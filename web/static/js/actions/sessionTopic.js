@@ -1,6 +1,7 @@
 import Constants        from '../constants';
 import MessagesActions  from './messages';
 import ConsoleActions   from './console';
+import WhiteboardActions   from './whiteboard';
 
 export function joinChannal(dispatch, socket, sessionTopicId) {
   const channel = socket.channel("session_topic:" + sessionTopicId);
@@ -13,7 +14,9 @@ export function joinChannal(dispatch, socket, sessionTopicId) {
     });
     dispatch(MessagesActions.subscribeMessageEvents(channel));
     dispatch(ConsoleActions.subscribeConsoleEvents(channel));
+    dispatch(WhiteboardActions.connectToChannel(socket, sessionTopicId));
     dispatch(Actions.subscribeEvents(channel));
+
 
     channel.join()
     .receive('ok', (resp) => {

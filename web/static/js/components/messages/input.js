@@ -24,7 +24,7 @@ const Input = React.createClass({
   },
   onSelectEmotion(_, e) {
     const { topicChannel, currentInput, dispatch } = this.props;
-    dispatch(Actions.changeEmotion(e.target.text));
+    dispatch(Actions.changeEmotion(e.target.getAttribute('data')));
   },
   defaultProps() {
     const { value } = this.props;
@@ -46,14 +46,16 @@ const Input = React.createClass({
         <div className='input-section'>
           <Dropdown id='emotion-selector' bsSize='medium' onSelect={this.onSelectEmotion}>
             <Button className='no-border-radius'>
-              { currentEmotion }
+              <div key={currentEmotion} className={"emoticon-" + currentEmotion}/>
             </Button>
             <Dropdown.Toggle className='no-border-radius' />
             <Dropdown.Menu className='no-border-radius'>
               {
-                [1,2,3,4,5,6].map((emotion) => {
+                [0,1,2,3,4,5,6].map((emotion) => {
                   return (
-                    <MenuItem id={ emotion } key={ emotion } active={ currentEmotion == emotion }>{ emotion }</MenuItem>
+                    <MenuItem id={ emotion } key={ emotion } active={ currentEmotion == emotion }>
+                      <div key={emotion} data={emotion} className={"emoticon-" + emotion}/>
+                    </MenuItem>
                   )
                 })
               }

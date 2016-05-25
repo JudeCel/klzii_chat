@@ -81,9 +81,7 @@ const Message = React.createClass({
     return (
       <div className='message-section media'>
         <div className={ this.mediaImagePosition() }>
-          <span className='media-object glyphicon glyphicon-th' aria-hidden='true' style={{ color: message.session_member.colour }}>
-            {message.emotion}
-          </span>
+          <div className={"emoticon-" + message.emotion} aria-hidden='true' style={{ color: message.session_member.colour }}/>
         </div>
 
         <div className='media-body'>
