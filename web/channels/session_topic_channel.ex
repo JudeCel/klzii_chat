@@ -1,6 +1,6 @@
 defmodule KlziiChat.SessionTopicChannel do
   use KlziiChat.Web, :channel
-  alias KlziiChat.Services.{MessageService, WhiteboardService, ResourceService,
+  alias KlziiChat.Services.{MessageService, ResourceService,
     UnreadMessageService, ConsoleService, SessionTopicService}
   alias KlziiChat.{MessageView, Presence, Endpoint, ConsoleView, SessionTopicView}
 
@@ -153,61 +153,6 @@ defmodule KlziiChat.SessionTopicChannel do
       {:error, reason} ->
         {:error, %{reason: reason}}
     end
-  end
-
-  def handle_in("whiteboardHistory", _payload, socket) do
-    case WhiteboardService.history(socket.assigns.session_topic_id) do
-      {:ok, history} ->
-        {:reply, {:ok, %{history: history} }, socket}
-      {:error, reason} ->
-        {:error, %{reason: reason}}
-    end
-  end
-
-  def handle_in("draw", payload, socket) do
-    session_member_id = socket.assigns.session_member.id
-    session_topic_id = socket.assigns.session_topic_id
-    case WhiteboardService.create_object(session_member_id, session_topic_id,  payload) do
-      {:ok, shape} ->
-        broadcast! socket, "draw", shape
-        {:reply, :ok, socket}
-      {:error, reason} ->
-        {:error, %{reason: reason}}
-    end
-    {:noreply, socket}
-  end
-
-  def handle_in("update_object", %{"object" => object}, socket) do
-    session_member_id = socket.assigns.session_member.id
-    session_topic_id = socket.assigns.session_topic_id
-    case WhiteboardService.update_object(session_member_id, session_topic_id,  object) do
-      {:ok, shape} ->
-        broadcast! socket, "update_object", shape
-        {:reply, :ok, socket}
-      {:error, reason} ->
-        {:error, %{reason: reason}}
-    end
-    {:noreply, socket}
-  end
-
-  def handle_in("delete_object", %{"uid" => uid}, socket) do
-    case WhiteboardService.deleteByUids([uid]) do
-      {:ok} ->
-        broadcast! socket, "delete_object", %{uid: uid}
-        {:reply, :ok, socket}
-      {:error, reason} ->
-        {:error, %{reason: reason}}
-    end
-    {:noreply, socket}
-  end
-
-  def handle_in("deleteAll", payload, socket) do
-    session_member_id = socket.assigns.session_member.id
-
-    session_topic_id = socket.assigns.session_topic_id
-    WhiteboardService.deleteAll(session_topic_id, payload)
-    broadcast! socket, "delete_all", %{}
-    {:reply, :ok, socket}
   end
 
   def handle_out(message, payload, socket) do

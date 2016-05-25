@@ -4,6 +4,7 @@ defmodule KlziiChat.UserSocket do
   ## Channels
   channel "sessions:*", KlziiChat.SessionChannel
   channel "session_topic:*", KlziiChat.SessionTopicChannel
+  channel "whiteboard:*", KlziiChat.WhiteboardChannel
 
   ## Transports
   transport :websocket, Phoenix.Transports.WebSocket

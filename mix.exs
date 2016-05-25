@@ -32,7 +32,7 @@ defmodule KlziiChat.Mixfile do
   defp deps do
     [{:phoenix, "~> 1.2.0-rc"},
      {:phoenix_pubsub, "~> 1.0.0-rc"},
-     {:phoenix_ecto, "~> 3.0-rc"},
+     {:phoenix_ecto, github: "phoenixframework/phoenix_ecto"},
      {:phoenix_html, "~> 2.5"},
      {:phoenix_live_reload, "~> 1.0.5", only: :dev},
      {:timex_ecto, github: "bitwalker/timex_ecto"},

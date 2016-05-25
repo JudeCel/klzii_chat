@@ -34,13 +34,12 @@ const WhiteboardCanvas = React.createClass({
       image: 10,
       erase: 11
     };
-    this.shapes = [];
     this.mode = this.ModeEnum.none;
 
     this.strokeWidthArray = [2, 4, 6];
     this.strokeWidth = this.strokeWidthArray[0];
 
-    return {content: '', addTextDisabled: true, addTextValue: '', needEvents: true, channel: null};
+    return {shapes: {}, content: '', addTextDisabled: true, addTextValue: ''};
   },
   addStepToUndoHistory(json) {
     var self = this;
@@ -54,12 +53,12 @@ const WhiteboardCanvas = React.createClass({
   addAllDeletedObjectsToHistory() {
     var self = this;
     var objects = [];
-    Object.keys(this.shapes).forEach(function(key, index) {
-      if (self.shapes[key]) {
-        objects.push(JSON.stringify(self.prepareMessage(self.shapes[key], "removeObject")));
+    Object.keys(this.state.shapes).forEach(function(key, index) {
+      let element = self.state.shapes[key]
+      if (element) {
+        objects.push(JSON.stringify(self.prepareMessage(element, "removeObject")));
       }
     });
-
     this.addStepToUndoHistory(objects);
   },
   sendMessage(json) {
@@ -72,29 +71,28 @@ const WhiteboardCanvas = React.createClass({
 
     switch (json.type) {
       case 'sendobject':
-        this.props.member.dispatch(whiteboardActions.sendobject(this.props.channal, json.message));
+        this.props.member.dispatch(whiteboardActions.sendobject(this.props.channel, json.message));
         break;
       case 'move':
       case 'scale':
       case 'rotate':
-        this.props.dispatch(whiteboardActions.updateObject(this.props.channal, json.message));
+        this.props.dispatch(whiteboardActions.updateObject(this.props.channel, json.message));
         break;
       case 'delete':
-        this.props.dispatch(whiteboardActions.deleteAll(this.props.channal));
+        this.props.dispatch(whiteboardActions.deleteAll(this.props.channel));
         break;
 
       default:
     }
   },
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.channal && this.state.needEvents) {
-      nextProps.dispatch(whiteboardActions.subscribeWhiteboardEvents(nextProps.channal, this));
-      nextProps.dispatch(whiteboardActions.getWhiteboardHistory(nextProps.channal, this));
-      this.state.channel = nextProps.channal;
-      this.state.needEvents = false;
+  componentWillReceiveProps(nextProps, privProps) {
+    if (nextProps.channel) {
+      if (nextProps.shapes != privProps.shapes) {
+        this.processWhiteboard(nextProps.shapes)
+      }
+      this.activeColour = this.isFacilitator() ? 'red' : this.props.currentUser.colour;
+      this.activeStrokeColour = this.activeColour;
     }
-    this.activeColour = this.isFacilitator()?'red':this.props.currentUser.colour;
-    this.activeStrokeColour = this.activeColour;
   },
   isFacilitator() {
     return this.props.currentUser.role == "facilitator";
@@ -104,7 +102,7 @@ const WhiteboardCanvas = React.createClass({
   },
   processShapeData(event) {
     var self = this;
-    var obj = self.shapes[event.id];
+    var obj = self.state.shapes[event.id];
     if (event.eventType != "remove" && !obj) {
       switch (event.element.type) {
         case "ellipse":
@@ -137,15 +135,19 @@ const WhiteboardCanvas = React.createClass({
     if (obj){
       if (event.eventType == "remove" || event.eventType == "removeObject") {
         obj.ftRemove();
-        self.shapes[event.id] = null;
+        let newShapes = {...self.state.shapes}
+        newShapes[event.id] = null
+        self.setState({shapes: newShapes})
       } else {
         var attrs = (event.element.attr instanceof Function)?event.element.attr():event.element.attr;
         obj.attr(attrs);
         obj.created = true;
 
-        if (!self.shapes[event.id]) {
+        if (!self.state.shapes[event.id]) {
           obj.id = event.id;
-          self.shapes[event.id] = obj;
+          let newShapes = {...self.state.shapes}
+          newShapes[event.id] = obj;
+          self.setState({shapes: newShapes})
         }
 
         //check if arrow
@@ -158,21 +160,25 @@ const WhiteboardCanvas = React.createClass({
   //process incoming messages about shapes from remote users
   processWhiteboard(data) {
     var self = this;
+    if (data.length == 0) {
+      this.deleteAllObjects()
+    }
     data.map(function(item) {
       var event = item.event;
       self.processShapeData(event);
     });
   },
   deleteObject(uid) {
-    var obj = this.shapes[uid];
+    var obj = this.state.shapes[uid];
     if (obj) {
       obj.ftRemove();
-      this.shapes[uid] = null;
+      this.setState({shapes: delete this.state.shapes[uid] })
+      // this.shapes[uid] = null;
     }
   },
-  deleteAllObjects(obj) {
+  deleteAllObjects() {
     this.snap.clear();
-    this.shapes = [];
+    this.setState({shapes: {}});
   },
   shapeFinishedTransform(shape) {
     this.activeShape = shape;
@@ -298,16 +304,16 @@ const WhiteboardCanvas = React.createClass({
     el.attr({'fill': colour, stroke: strokeColour, strokeWidth: strokeWidth});
   },
   shapeSelected(el, selected) {
+    let self = this;
     if (selected){
-      var self = this;
-      Object.keys(this.shapes).forEach(function(key, index) {
-        if (self.shapes[key] && self.shapes[key].id != el.id) {
-          self.shapes[key].ftUnselect();
+      Object.keys(this.state.shapes).forEach(function(key, index) {
+        if (self.state.shapes[key] && self.state.shapes[key].id != el.id) {
+          self.state.shapes[key].ftUnselect();
         }
       });
 
       if (el) {
-        this.activeShape = el;
+        self.activeShape = el;
       }
     }
   },
@@ -315,7 +321,7 @@ const WhiteboardCanvas = React.createClass({
     if (this.activeShape && this.canEditShape(this.activeShape)) {
       this.sendObjectData('removeObject');
       this.activeShape.ftRemove();
-      this.props.member.dispatch(whiteboardActions.deleteObject(this.state.channel, this.activeShape.id));
+      this.props.member.dispatch(whiteboardActions.deleteObject(this.props.channel, this.activeShape.id));
       this.activeShape = null;
     }
   },
@@ -343,7 +349,7 @@ const WhiteboardCanvas = React.createClass({
   prepareMessage(shape, action, mainAction) {
     var	message = {
       id: shape.id,
-      action: mainAction||"draw",
+      action: (mainAction || "draw"),
 			eventType: action,
       userName: this.props.currentUser.username
 		};
@@ -364,7 +370,7 @@ const WhiteboardCanvas = React.createClass({
       this.prepareNewElement(this.activeShape);
       var temp = this.activeShape;
       this.sendObjectData('draw');
-      this.shapes[this.activeShape.id] = this.activeShape;
+      this.state.shapes[this.activeShape.id] = this.activeShape;
     }
     this.coords = null;
   },
@@ -622,6 +628,9 @@ const WhiteboardCanvas = React.createClass({
     return "btn " + (enabled?"btn-warning":"btn-default");
   },
   render() {
+    const { show, onHide, boardContent, channel } = this.props;
+    // not render if not set channel
+    if (!channel) { return false }
     var self = this;
     var cornerRadius = 5;
     var speed = "0.3s";
@@ -678,8 +687,6 @@ const WhiteboardCanvas = React.createClass({
       'marginRight': 'auto',
       display: this.isMinimized()?'none':'block'
     }
-
-    const { show, onHide, boardContent } = this.props;
     return (
       <div style={divStyle} className="container">
         <svg id={ this.getName() }
@@ -778,8 +785,8 @@ const WhiteboardCanvas = React.createClass({
 });
 const mapStateToProps = (state) => {
   return {
-    whiteboard: state.whiteboard,
-    channal: state.sessionTopic.channel,
+    shapes: state.whiteboard.shapes,
+    channel: state.whiteboard.channel,
     currentUser: state.members.currentUser,
     resourceImages: state.resources.images
   }
