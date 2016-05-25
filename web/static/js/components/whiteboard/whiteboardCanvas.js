@@ -47,7 +47,7 @@ const WhiteboardCanvas = React.createClass({
     if (self.undoHistoryIdx > 0 && self.undoHistoryIdx < self.undoHistory.length) {
       self.undoHistory.slice(0, self.undoHistoryIdx );
     }
-    self.undoHistory.push(JSON.stringify(json) );
+    self.undoHistory.push(json);
     self.undoHistoryIdx = self.undoHistory.length;
   },
   addAllDeletedObjectsToHistory() {
@@ -56,20 +56,58 @@ const WhiteboardCanvas = React.createClass({
     Object.keys(this.state.shapes).forEach(function(key, index) {
       let element = self.state.shapes[key]
       if (element) {
-        objects.push(JSON.stringify(self.prepareMessage(element, "delete")));
+        objects.push(self.prepareMessage(element, "delete"));
       }
     });
     this.addStepToUndoHistory(objects);
   },
-  sendMessage(json) {
-    let self = this;
-    if (json.type == "deleteAll") {
-      self.addAllDeletedObjectsToHistory();
+  handleHistoryObject(idx, reverse) {
+    var self = this;
+    var currentStep = this.undoHistory[this.undoHistoryIdx];
+    if (currentStep instanceof Array) {
+      currentStep.map(function(element) {
+        self.processHistoryStep(element, reverse);
+      });
     } else {
-      self.addStepToUndoHistory(json);
+      this.processHistoryStep(currentStep, reverse);
     }
-
-    switch (json.type) {
+  },
+  undoStep() {
+    this.undoHistoryIdx--;
+    if (this.undoHistoryIdx < 0) {
+      this.undoHistoryIdx = 0;
+      return;
+    }
+    this.handleHistoryObject(this.undoHistoryIdx, true);
+  },
+  redoStep() {
+    this.undoHistoryIdx++;
+    if (this.undoHistoryIdx > this.undoHistory.length - 1) {
+      this.undoHistoryIdx = this.undoHistory.length - 1;
+      return;
+    }
+    this.handleHistoryObject(this.undoHistoryIdx, false);
+  },
+  processHistoryStep(currentStep, reverse) {
+    if (reverse) {
+      if (currentStep.eventType == "delete") {
+        currentStep.eventType = "draw";
+      } else if (currentStep.eventType == "draw") {
+        currentStep.eventType = "delete";
+      }
+    }
+    this.sendMessage(currentStep);
+  },
+  processHistory(json){
+    if (json.eventType == "deleteAll") {
+      this.addAllDeletedObjectsToHistory();
+    } else {
+      this.addStepToUndoHistory(json);
+    }
+  },
+  sendMessage(json) {
+    this.processHistory(json);
+    switch (json.eventType) {
       case 'draw':
         this.props.dispatch(whiteboardActions.create(this.props.channel, json.message));
         break;
@@ -314,26 +352,15 @@ const WhiteboardCanvas = React.createClass({
     if (this.activeShape && this.canEditShape(this.activeShape)) {
       this.sendObjectData('delete');
       this.activeShape.ftRemove();
-      var message = {
-        action: "delete"
-      };
-      var messageJSON = {
-        type: 'delete',
-        message: message
-      };
-      this.sendMessage(messageJSON);
       this.activeShape = null;
     }
-  },
-  buildMessage(){
-
   },
   deleteAll() {
   	var message = {
   		action: "deleteAll"
   	};
   	var messageJSON = {
-  		type: 'deleteAll',
+  		eventType: 'deleteAll',
   		message: message
   	};
     this.sendMessage(messageJSON);
@@ -353,13 +380,12 @@ const WhiteboardCanvas = React.createClass({
     var	message = {
       id: shape.id,
       action: (mainAction || "draw"),
-			eventType: action,
       userName: this.props.currentUser.username
 		};
 
     message.element = shape;
     return {
-      type: action,
+      eventType: action,
       message: message
     }
   },
@@ -559,43 +585,6 @@ const WhiteboardCanvas = React.createClass({
       this.sendObjectData('update');
     }
     this.setState({});
-  },
-  handleHistoryObject(idx, reverse) {
-    var self = this;
-    var currentStep = JSON.parse(this.undoHistory[this.undoHistoryIdx]);
-    if (currentStep instanceof Array) {
-      currentStep.map(function(element) {
-        self.processHistoryStep(JSON.parse(element).message, reverse);
-      });
-    } else {
-      this.processHistoryStep(currentStep.message, reverse);
-    }
-  },
-  undoStep() {
-    this.undoHistoryIdx--;
-    if (this.undoHistoryIdx < 0) {
-      this.undoHistoryIdx = 0;
-      return;
-    }
-    this.handleHistoryObject(this.undoHistoryIdx, true);
-  },
-  redoStep() {
-    this.undoHistoryIdx++;
-    if (this.undoHistoryIdx > this.undoHistory.length - 1) {
-      this.undoHistoryIdx = this.undoHistory.length - 1;
-      return;
-    }
-    this.handleHistoryObject(this.undoHistoryIdx, false);
-  },
-  processHistoryStep(currentStep, reverse) {
-    if (reverse) {
-      if (currentStep.eventType == "delete") {
-        currentStep.eventType = "draw";
-      } else if (currentStep.eventType == "draw") {
-        currentStep.eventType = "delete";
-      }
-    }
-    this.sendMessage(currentStep);
   },
   toolStyle(toolType) {
     return "btn " + ((toolType == this.mode)?"btn-warning":"btn-default");
