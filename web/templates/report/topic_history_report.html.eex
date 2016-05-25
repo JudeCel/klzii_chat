@@ -15,15 +15,16 @@
       <%= Enum.map(topic_history, fn(%{body: body, session_member: %{username: name, id: id, role: role}, time: time}) ->
         """
         <tr>
-          <td class="svg_holder" rowspan="3"><svg class="svg#{id}" width="76" height="70" ></svg></td>
+          <td></td>
           <td class="bottom_border" colspan="2"></td>
         </tr>
         <tr>
+          <td class="svg_holder" rowspan="2"><svg class="svg#{id}" width="76" height="70" ></svg></td>
           <td class="name #{role}">#{name}</td>
           <td class="time #{role}">#{Ecto.DateTime.to_string(time)}</td>
         </tr>
         <tr>
-          <td class="body #{role}" colspan="3">#{body}</td>
+          <td class="body #{role}" colspan="3">"#{body}"</td>
         </tr>
         """
       end) %>
