@@ -90,7 +90,7 @@ const WhiteboardCanvas = React.createClass({
       if (nextProps.shapes != privProps.shapes) {
         this.processWhiteboard(nextProps.shapes)
       }
-      this.activeColour = this.isFacilitator() ? 'red' : this.props.currentUser.colour;
+      this.activeColour = this.props.currentUser.colour;
       this.activeStrokeColour = this.activeColour;
     }
   },
