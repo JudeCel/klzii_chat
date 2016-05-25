@@ -52,7 +52,7 @@ defmodule KlziiChat.Services.WhiteboardService do
     create(changeset)
   end
 
-  def deleteAll(session_topic_id, params) do
+  def deleteAll(session_topic_id) do
     session_topic = Repo.get!(SessionTopic, session_topic_id)
       from(e in assoc(session_topic, :shapes)
     )|> Repo.delete_all

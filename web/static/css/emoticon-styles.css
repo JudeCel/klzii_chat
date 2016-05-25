@@ -5,11 +5,11 @@
     height: 55px;
     background-image: url("/images/emotions/emoticon_0_sprite.svg");
 
-    -webkit-animation: play 3s steps(6) infinite;
-       -moz-animation: play 3s steps(6) infinite;
-        -ms-animation: play 3s steps(6) infinite;
-         -o-animation: play 3s steps(6) infinite;
-            animation: play 3s steps(6) infinite;
+    -webkit-animation: play 1.5s steps(6) infinite;
+       -moz-animation: play 1.5s steps(6) infinite;
+        -ms-animation: play 1.5s steps(6) infinite;
+         -o-animation: play 1.5s steps(6) infinite;
+            animation: play 1.5s steps(6) infinite;
 }
 
 .emoticon-1 {
@@ -17,11 +17,11 @@
     height: 55px;
     background-image: url("/images/emotions/emoticon_1_sprite.svg");
 
-    -webkit-animation: play 3s steps(6) infinite;
-       -moz-animation: play 3s steps(6) infinite;
-        -ms-animation: play 3s steps(6) infinite;
-         -o-animation: play 3s steps(6) infinite;
-            animation: play 3s steps(6) infinite;
+    -webkit-animation: play 1.5s steps(6) infinite;
+       -moz-animation: play 1.5s steps(6) infinite;
+        -ms-animation: play 1.5s steps(6) infinite;
+         -o-animation: play 1.5s steps(6) infinite;
+            animation: play 1.5s steps(6) infinite;
 }
 
 .emoticon-2 {
@@ -29,11 +29,11 @@
     height: 55px;
     background-image: url("/images/emotions/emoticon_2_sprite.svg");
 
-    -webkit-animation: play 3s steps(6) infinite;
-       -moz-animation: play 3s steps(6) infinite;
-        -ms-animation: play 3s steps(6) infinite;
-         -o-animation: play 3s steps(6) infinite;
-            animation: play 3s steps(6) infinite;
+    -webkit-animation: play 1.5s steps(6) infinite;
+       -moz-animation: play 1.5s steps(6) infinite;
+        -ms-animation: play 1.5s steps(6) infinite;
+         -o-animation: play 1.5s steps(6) infinite;
+            animation: play 1.5s steps(6) infinite;
 }
 
 .emoticon-3 {
@@ -41,11 +41,11 @@
     height: 55px;
     background-image: url("/images/emotions/emoticon_3_sprite.svg");
 
-    -webkit-animation: play 3s steps(6) infinite;
-       -moz-animation: play 3s steps(6) infinite;
-        -ms-animation: play 3s steps(6) infinite;
-         -o-animation: play 3s steps(6) infinite;
-            animation: play 3s steps(6) infinite;
+    -webkit-animation: play 1.5s steps(6) infinite;
+       -moz-animation: play 1.5s steps(6) infinite;
+        -ms-animation: play 1.5s steps(6) infinite;
+         -o-animation: play 1.5s steps(6) infinite;
+            animation: play 1.5s steps(6) infinite;
 }
 
 .emoticon-4 {
@@ -53,11 +53,11 @@
     height: 55px;
     background-image: url("/images/emotions/emoticon_4_sprite.svg");
 
-    -webkit-animation: play 3s steps(6) infinite;
-       -moz-animation: play 3s steps(6) infinite;
-        -ms-animation: play 3s steps(6) infinite;
-         -o-animation: play 3s steps(6) infinite;
-            animation: play 3s steps(6) infinite;
+    -webkit-animation: play 1.5s steps(6) infinite;
+       -moz-animation: play 1.5s steps(6) infinite;
+        -ms-animation: play 1.5s steps(6) infinite;
+         -o-animation: play 1.5s steps(6) infinite;
+            animation: play 1.5s steps(6) infinite;
 }
 
 .emoticon-5 {
@@ -65,11 +65,11 @@
     height: 55px;
     background-image: url("/images/emotions/emoticon_5_sprite.svg");
 
-    -webkit-animation: play 3s steps(6) infinite;
-       -moz-animation: play 3s steps(6) infinite;
-        -ms-animation: play 3s steps(6) infinite;
-         -o-animation: play 3s steps(6) infinite;
-            animation: play 3s steps(6) infinite;
+    -webkit-animation: play 1.5s steps(6) infinite;
+       -moz-animation: play 1.5s steps(6) infinite;
+        -ms-animation: play 1.5s steps(6) infinite;
+         -o-animation: play 1.5s steps(6) infinite;
+            animation: play 1.5s steps(6) infinite;
 }
 
 .emoticon-6 {
@@ -77,11 +77,11 @@
     height: 55px;
     background-image: url("/images/emotions/emoticon_6_sprite.svg");
 
-    -webkit-animation: play 3s steps(6) infinite;
-       -moz-animation: play 3s steps(6) infinite;
-        -ms-animation: play 3s steps(6) infinite;
-         -o-animation: play 3s steps(6) infinite;
-            animation: play 3s steps(6) infinite;
+    -webkit-animation: play 1.5s steps(6) infinite;
+       -moz-animation: play 1.5s steps(6) infinite;
+        -ms-animation: play 1.5s steps(6) infinite;
+         -o-animation: play 1.5s steps(6) infinite;
+            animation: play 1.5s steps(6) infinite;
 }
 
 @-webkit-keyframes play {

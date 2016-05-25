@@ -43,7 +43,7 @@ const WhiteboardCanvas = React.createClass({
   },
   addStepToUndoHistory(json) {
     var self = this;
-    //if made a few undo steps, then remove next redo steps first
+    //if made a few undo steps, then delete next redo steps first
     if (self.undoHistoryIdx > 0 && self.undoHistoryIdx < self.undoHistory.length) {
       self.undoHistory.slice(0, self.undoHistoryIdx );
     }
@@ -52,36 +52,36 @@ const WhiteboardCanvas = React.createClass({
   },
   addAllDeletedObjectsToHistory() {
     var self = this;
-    var objects = [];
+    let objects = [];
     Object.keys(this.state.shapes).forEach(function(key, index) {
       let element = self.state.shapes[key]
       if (element) {
-        objects.push(JSON.stringify(self.prepareMessage(element, "removeObject")));
+        objects.push(JSON.stringify(self.prepareMessage(element, "delete")));
       }
     });
     this.addStepToUndoHistory(objects);
   },
   sendMessage(json) {
     let self = this;
-    if (json.message.action == "deleteAll") {
+    if (json.type == "deleteAll") {
       self.addAllDeletedObjectsToHistory();
     } else {
       self.addStepToUndoHistory(json);
     }
 
     switch (json.type) {
-      case 'sendobject':
-        this.props.member.dispatch(whiteboardActions.sendobject(this.props.channel, json.message));
+      case 'draw':
+        this.props.dispatch(whiteboardActions.create(this.props.channel, json.message));
         break;
-      case 'move':
-      case 'scale':
-      case 'rotate':
-        this.props.dispatch(whiteboardActions.updateObject(this.props.channel, json.message));
+      case 'update':
+        this.props.dispatch(whiteboardActions.update(this.props.channel, json.message));
         break;
-      case 'delete':
+      case 'deleteAll':
         this.props.dispatch(whiteboardActions.deleteAll(this.props.channel));
         break;
-
+      case 'delete':
+        this.props.dispatch(whiteboardActions.delete(this.props.channel, json.message.id));
+        break;
       default:
     }
   },
@@ -103,7 +103,7 @@ const WhiteboardCanvas = React.createClass({
   processShapeData(event) {
     var self = this;
     var obj = self.state.shapes[event.id];
-    if (event.eventType != "remove" && !obj) {
+    if (event.eventType != "delete" && !obj) {
       switch (event.element.type) {
         case "ellipse":
           obj = self.snap.ellipse(0, 0, 0, 0).transform('r0.1');
@@ -133,7 +133,8 @@ const WhiteboardCanvas = React.createClass({
     }
 
     if (obj){
-      if (event.eventType == "remove" || event.eventType == "removeObject") {
+
+      if (event.eventType == "delete") {
         obj.ftRemove();
         let newShapes = {...self.state.shapes}
         newShapes[event.id] = null
@@ -161,20 +162,12 @@ const WhiteboardCanvas = React.createClass({
   processWhiteboard(data) {
     var self = this;
     if (data.length == 0) {
-      this.deleteAllObjects()
+      this.deleteAllObjects();
     }
     data.map(function(item) {
       var event = item.event;
       self.processShapeData(event);
     });
-  },
-  deleteObject(uid) {
-    var obj = this.state.shapes[uid];
-    if (obj) {
-      obj.ftRemove();
-      this.setState({shapes: delete this.state.shapes[uid] })
-      // this.shapes[uid] = null;
-    }
   },
   deleteAllObjects() {
     this.snap.clear();
@@ -182,7 +175,7 @@ const WhiteboardCanvas = React.createClass({
   },
   shapeFinishedTransform(shape) {
     this.activeShape = shape;
-    this.sendObjectData('move');
+    this.sendObjectData('update');
   },
   shapeTransformed(shape) {
     this.activeShape = shape;
@@ -319,18 +312,28 @@ const WhiteboardCanvas = React.createClass({
   },
   deleteActive() {
     if (this.activeShape && this.canEditShape(this.activeShape)) {
-      this.sendObjectData('removeObject');
+      this.sendObjectData('delete');
       this.activeShape.ftRemove();
-      this.props.member.dispatch(whiteboardActions.deleteObject(this.props.channel, this.activeShape.id));
+      var message = {
+        action: "delete"
+      };
+      var messageJSON = {
+        type: 'delete',
+        message: message
+      };
+      this.sendMessage(messageJSON);
       this.activeShape = null;
     }
+  },
+  buildMessage(){
+
   },
   deleteAll() {
   	var message = {
   		action: "deleteAll"
   	};
   	var messageJSON = {
-  		type: 'sendobject',
+  		type: 'deleteAll',
   		message: message
   	};
     this.sendMessage(messageJSON);
@@ -356,7 +359,7 @@ const WhiteboardCanvas = React.createClass({
 
     message.element = shape;
     return {
-      type: 'sendobject',
+      type: action,
       message: message
     }
   },
@@ -519,9 +522,6 @@ const WhiteboardCanvas = React.createClass({
   shouldComponentUpdate: function () {
     return true;
   },
-  update: function () {
-    this.setState({});
-  },
   onOpen(e) {
   },
   onClose(e) {
@@ -556,7 +556,7 @@ const WhiteboardCanvas = React.createClass({
     this.strokeWidth = e.target.value;
     if (this.activeShape) {
       this.activeShape.attr({strokeWidth: this.strokeWidth});
-      this.sendObjectData('move');
+      this.sendObjectData('update');
     }
     this.setState({});
   },
@@ -589,14 +589,13 @@ const WhiteboardCanvas = React.createClass({
   },
   processHistoryStep(currentStep, reverse) {
     if (reverse) {
-      if (currentStep.eventType == "removeObject" || currentStep.eventType == "remove") {
+      if (currentStep.eventType == "delete") {
         currentStep.eventType = "draw";
       } else if (currentStep.eventType == "draw") {
-        currentStep.eventType = "remove";
+        currentStep.eventType = "delete";
       }
     }
-
-    this.processShapeData(currentStep);
+    this.sendMessage(currentStep);
   },
   toolStyle(toolType) {
     return "btn " + ((toolType == this.mode)?"btn-warning":"btn-default");
