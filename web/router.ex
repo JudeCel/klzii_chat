@@ -60,7 +60,14 @@ defmodule KlziiChat.Router do
     get "/", BannersController, :index
   end
 
-  # TODO: Session Resources
+  scope "/api/auth", KlziiChat do
+    pipe_through :api
+    # CORS Routes
+    options "/token", AuthController, :token
+    # Generic routes for API be call from original domain
+    get "/token",AuthController, :token
+  end
+
   scope "/api/session_resources", KlziiChat do
     pipe_through :api
     options "/", SessionResourcesController, :index
