@@ -41,20 +41,20 @@ const Actions = {
         });
       });
 
-      channel.on("delete_object", (resp) =>{
+      channel.on("delete", (resp) =>{
         dispatch({
           type: Constants.DELETE_WHITEBOARD_SHAPE,
           shape: resp
         });
       });
 
-      channel.on("delete_all", (resp) =>{
+      channel.on("deleteAll", (resp) =>{
         dispatch({
-          type: Constants.DELETE_ALL_WHITEBOARD_SHAPES,
+          type: Constants.DELETE_ALL_WHITEBOARD_SHAPES
         });
       });
 
-      channel.on("update_object", (resp) =>{
+      channel.on("update", (resp) =>{
         dispatch({
           type: Constants.UPDATE_WHITEBOARD_SHAPE,
           shape: resp
@@ -62,9 +62,9 @@ const Actions = {
       });
     }
   },
-  sendobject: (channel, payload) => {
+  create: (channel, payload) => {
     return dispatch => {
-      channel.push(payload.action, payload)
+      channel.push("draw", payload)
       .receive('ok', (data)=>{ })
       .receive('error', (data) => {
         dispatch({
@@ -74,9 +74,9 @@ const Actions = {
       });
     };
   },
-  deleteObject: (channel, uid) => {
+  delete: (channel, uid) => {
     return dispatch => {
-      channel.push('delete_object', {uid: uid})
+      channel.push('delete', {uid})
       .receive('ok', (data)=>{})
       .receive('error', (data) => {
         dispatch({
@@ -86,10 +86,22 @@ const Actions = {
       });
     };
   },
-  updateObject: (channel, object) => {
+  deleteAll: (channel) => {
     return dispatch => {
-      channel.push('update_object', {object: object})
-      .receive('ok', (data)=>{ console.log(data, 'update_object') })
+      channel.push('deleteAll')
+      .receive('ok', (data)=>{})
+      .receive('error', (data) => {
+        dispatch({
+          type: Constants.SEND_OBJECT_ERROR,
+          error: data.error
+        });
+      });
+    };
+  },
+  update: (channel, object) => {
+    return dispatch => {
+      channel.push('update', {object: object})
+      .receive('ok', (data)=>{ })
       .receive('error', (data) => {
         dispatch({
           type: Constants.SEND_OBJECT_ERROR,

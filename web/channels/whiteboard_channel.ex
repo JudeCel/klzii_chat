@@ -1,8 +1,7 @@
 defmodule KlziiChat.WhiteboardChannel do
   use KlziiChat.Web, :channel
-  alias KlziiChat.Services.{MessageService, WhiteboardService, ResourceService,
-    UnreadMessageService, ConsoleService, SessionTopicService}
-  alias KlziiChat.{MessageView, Presence, Endpoint, ConsoleView, SessionTopicView}
+  alias KlziiChat.Services.{ WhiteboardService}
+
   @moduledoc """
       This channel is for whiteboard events.
       whiteboard id is session topic id.
@@ -36,13 +35,13 @@ defmodule KlziiChat.WhiteboardChannel do
     {:noreply, socket}
   end
 
-  def handle_in("update_object", %{"object" => object}, socket) do
+  def handle_in("update", %{"object" => object}, socket) do
     session_member_id = socket.assigns.session_member.id
     session_topic_id = socket.assigns.session_topic_id
 
     case WhiteboardService.update_object(session_member_id, session_topic_id,  object) do
       {:ok, shape} ->
-        broadcast! socket, "update_object", shape
+        broadcast! socket, "update", shape
         {:reply, :ok, socket}
       {:error, reason} ->
         {:error, %{reason: reason}}
@@ -50,10 +49,10 @@ defmodule KlziiChat.WhiteboardChannel do
     {:noreply, socket}
   end
 
-  def handle_in("delete_object", %{"uid" => uid}, socket) do
+  def handle_in("delete", %{"uid" => uid}, socket) do
     case WhiteboardService.deleteByUids([uid]) do
       {:ok} ->
-        broadcast! socket, "delete_object", %{uid: uid}
+        broadcast! socket, "delete", %{uid: uid}
         {:reply, :ok, socket}
       {:error, reason} ->
         {:error, %{reason: reason}}
@@ -61,11 +60,11 @@ defmodule KlziiChat.WhiteboardChannel do
     {:noreply, socket}
   end
 
-  def handle_in("deleteAll", payload, socket) do
+  def handle_in("deleteAll", _, socket) do
     session_member_id = socket.assigns.session_member.id
     session_topic_id = socket.assigns.session_topic_id
-    WhiteboardService.deleteAll(session_topic_id, payload)
-    broadcast! socket, "delete_all", %{}
+    WhiteboardService.deleteAll(session_topic_id)
+    broadcast! socket, "deleteAll", %{}
     {:reply, :ok, socket}
   end
 

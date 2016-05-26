@@ -31,7 +31,7 @@ export default function reducer(state = initialState, action = {}) {
 }
 function findAndUpdate(list, element) {
   let newList = [];
-   members.each((e) => {
+   list.map((e) => {
     if (e.id == element.id) {
       newList.push(Object.assign(e, element));
     }else{
