@@ -73,4 +73,9 @@ defmodule KlziiChat.Services.ReportingServiceTest do
     assert(String.contains?(topic_hist_html, "<td class=\"name #{member2.role}\">#{member2.username}</td>"))
     assert(String.contains?(topic_hist_html, Poison.encode!(session_members["participant"])))
   end
+
+  test "report file", %{session_member: session_member, session: session, session_topic: session_topic, member: member, member2: member2} do
+    ReportingService.save_file("report_test.pdf", :pdf, session_member, session, session_topic)
+  end
+
 end
