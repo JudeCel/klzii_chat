@@ -1,5 +1,6 @@
 defmodule KlziiChat.Services.ReportingService do
   alias KlziiChat.Services.{MessageService, SessionMembersService}
+  alias KlziiChat.Decorators.MessageDecorator
   alias Ecto.DateTime
   require EEx
 
@@ -12,7 +13,6 @@ defmodule KlziiChat.Services.ReportingService do
     Enum.each(report_stream, &IO.write(file, &1))
     File.close(file)
   end
-
 #  def write_to_file(path, :pdf, session_member, session, session_topic) do
 #    {:ok, topic_history} = MessageService.history(session_topic.id, session_member)
 #    {:ok, session_members} = SessionMembersService.by_session(session.id)
@@ -31,11 +31,13 @@ defmodule KlziiChat.Services.ReportingService do
 
   def get_header(:txt, session_name, session_topic_name), do: "#{session_name} / #{session_topic_name}\r\n\r\n"
   def get_header(:csv, _, _), do: "name,comment,date,is tagged,is reply,emotion\r\n"
+  def get_header(:html, session_name, session_topic_name), do: "#{session_name} : #{session_topic_name}"
 
   def topic_hist_filter(:csv, %{body: body, emotion: emotion, replyId: replyId, session_member: %{username: name},
     star: star, time: time}) do
 
-    "#{name},#{body},#{DateTime.to_string(time)},#{to_string(star)},#{to_string(replyId !== nil)},#{emotion}\r\n"
+    "#{name},#{body},#{DateTime.to_string(time)},#{to_string(star)},#{to_string(replyId !== nil)}," <>
+      "#{MessageDecorator.emotion_name(emotion)}\r\n"
   end
 
   def topic_hist_filter(:txt, %{body: body}), do: "#{body}\r\n\r\n"
@@ -50,6 +52,6 @@ defmodule KlziiChat.Services.ReportingService do
 #    ])
 #  end
 
-#  EEx.function_from_file :def, :get_HTML, @layout_path, [:report_information]
+  #EEx.function_from_file :def, :get_HTML, @layout_path, [:assigns]
 
 end

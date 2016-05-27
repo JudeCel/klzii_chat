@@ -19,6 +19,6 @@ defmodule KlziiChat.Decorators.MessageDecorator do
   end
 
   @spec emotion_name(integer) :: String.t
-  def emotion_name(emotion_id), do: Map.get(@emotion_names, emotion_id, :error)
+  def emotion_name(emotion_id) when is_integer(emotion_id), do: Map.get(@emotion_names, emotion_id, :error)
 
 end

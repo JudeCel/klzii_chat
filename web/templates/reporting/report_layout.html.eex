@@ -3,23 +3,22 @@
   <head>
     <meta charset="utf-8">
     <title>Klzii Chat history</title>
-    <script type="text/javascript" src="<%= Path.expand(".web/static/js/reporting/snap.svg-min.js") %>"></script>
-    <script type="text/javascript" src="<%= Path.expand(".web/static/js/reporting/avatar.js") %>"></script>
     <link rel="stylesheet" type = "text/css" href="<%= Path.expand(".web/static/css/reporting/reporting.css") %>">
   </head>
 
   <body>
-    <h3><%= session_name %> : <%= session_topic_name %></h3>
+    <h3><%= @header %></h3>
 
     <table>
-      <%= Enum.map(topic_history, fn(%{body: body, session_member: %{username: name, id: id, role: role}, time: time}) ->
+      <%= Enum.map(@topic_history, fn(%{body: body, emotion: emotion_id, session_member: %{username: name, id: id, role: role}, time: time}) ->
+        emotion_svg_path = Path.expand("./web/static/assets/images/emotions/emoticon_#{emotion_id}_sprite.svg")
         """
         <tr>
           <td></td>
           <td class="bottom_border" colspan="2"></td>
         </tr>
         <tr>
-          <td class="svg_holder" rowspan="2"><svg class="svg#{id}" width="76" height="70" ></svg></td>
+          <td class="svg_holder" rowspan="2"><svg class="emotion" src="#{emotion_svg_path}" width="76" height="70" ></svg></td>
           <td class="name #{role}">#{name}</td>
           <td class="time #{role}">#{Ecto.DateTime.to_string(time)}</td>
         </tr>
@@ -29,14 +28,5 @@
         """
       end) %>
     </table>
-
-    <script type="text/javascript">
-      var sessionMembers = <%= Poison.encode!(session_members["participant"]) %>;
-      sessionMembers.push(<%= Poison.encode!(session_members["facilitator"]) %>);
-      sessionMembers.forEach(function(sessionMember){
-        setAvatar(sessionMember, '<%= Path.absname("web/static/assets/images/avatar", base_path) %>');
-      });
-    </script>
-
   </body>
 </html>
