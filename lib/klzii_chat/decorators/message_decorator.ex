@@ -1,12 +1,12 @@
 defmodule KlziiChat.Decorators.MessageDecorator do
 
-  @emotion_names %{ 0 => "Smiling",
-                    1 => "Happy",
-                    2 => "Sad",
-                    3 => "Angry",
-                    4 => "Confused",
-                    5 => "Loving",
-                    6 => "Sleepy" }
+  @emotion_names %{ 0 => "normal",
+                    1 => "smiling",
+                    2 => "sad",
+                    3 => "angry",
+                    4 => "confused",
+                    5 => "loving",
+                    6 => "sleepy" }
 
   @spec votes_count(List.t) :: Integer.t
   def votes_count(votes) do

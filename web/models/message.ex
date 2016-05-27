@@ -10,7 +10,6 @@ defmodule KlziiChat.Message do
     has_many :votes, KlziiChat.Vote, [foreign_key: :messageId, on_delete: :delete_all]
     field :body, :string
     field :emotion, :integer
-    field :emotion_name, :string, virtual: true
     field :star, :boolean, default: false
     timestamps [inserted_at: :createdAt, updated_at: :updatedAt]
   end
