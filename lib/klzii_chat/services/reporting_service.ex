@@ -3,6 +3,8 @@ defmodule KlziiChat.Services.ReportingService do
   alias Ecto.DateTime
   require EEx
 
+  @layout_path Path.expand("./web/templates/reporting/report_layout.html.eex")
+
   def write_to_file(path, report_format, session_member, session, session_topic) when report_format in [:txt, :csv] do
     {:ok, report_stream} = get_stream(report_format, session, session_topic, session_member)
 
@@ -11,24 +13,26 @@ defmodule KlziiChat.Services.ReportingService do
     File.close(file)
   end
 
-  def write_to_file(path_to_file, :pdf, session_member, session, session_topic) do
-    #{:ok, topic_history} = MessageService.history(session_topic.id, session_member)
-    {:ok, session_members} = SessionMembersService.by_session(session.id)
+#  def write_to_file(path, :pdf, session_member, session, session_topic) do
+#    {:ok, topic_history} = MessageService.history(session_topic.id, session_member)
+#    {:ok, session_members} = SessionMembersService.by_session(session.id)
 
-    html = topic_history_HTML(System.cwd(), session.name, session_topic.name, topic_history, session_members)
-    Porcelain.exec("wkhtmltopdf", ["-", path_to_file], in: html, out: :string, err: :out)
-  end
+#    html = get_HTML(session.name, session_topic.name, topic_history, session_members)
+    #Porcelain.exec("wkhtmltopdf", ["-", path_to_file], in: html, out: :string, err: :out)
+#  end
 
   def get_stream(report_format, session, session_topic, session_member) do
-    report_headers = [txt: "#{session.name} / #{session_topic.name}\r\n\r\n",
-      csv: "name,comment,date,is tagged,is reply,emotion\r\n"]
     {:ok, topic_history} = MessageService.history(session_topic.id, session_member)
 
     stream = Stream.map(topic_history, &topic_hist_filter(report_format, &1))
-    [report_headers[report_format] | stream]
+    header = get_header(report_format, session.name, session_topic.name)
+    Stream.concat([header], stream)
   end
 
-  def topic_hist_filter(:svn, %{body: body, emotion: emotion, replyId: replyId, session_member: %{username: name},
+  def get_header(:txt, session_name, session_topic_name), do: "#{session_name} / #{session_topic_name}\r\n\r\n"
+  def get_header(:csv, _, _), do: "name,comment,date,is tagged,is reply,emotion\r\n"
+
+  def topic_hist_filter(:csv, %{body: body, emotion: emotion, replyId: replyId, session_member: %{username: name},
     star: star, time: time}) do
 
     "#{name},#{body},#{DateTime.to_string(time)},#{to_string(star)},#{to_string(replyId !== nil)},#{emotion}\r\n"
@@ -36,16 +40,16 @@ defmodule KlziiChat.Services.ReportingService do
 
   def topic_hist_filter(:txt, %{body: body}), do: "#{body}\r\n\r\n"
 
-  def topic_history_HTML(base_path, session_name, session_topic_name, topic_history, session_members) do
-    EEx.eval_file(Path.absname("web/templates/report/topic_history_report.html.eex", base_path), [
-      base_path: base_path,
-      session_name: session_name,
-      session_topic_name: session_topic_name,
-      topic_history: topic_history,
-      session_members: session_members
-    ])
-  end
+#  def topic_history_HTML(base_path, session_name, session_topic_name, topic_history, session_members) do
+#    EEx.eval_file(), [
+#      base_path: base_path,
+#      session_name: session_name,
+#      session_topic_name: session_topic_name,
+#      topic_history: topic_history,
+#      session_members: session_members
+#    ])
+#  end
 
-   EEx.function_from_file :def, :sample, "sample.eex", [:a, :b]
+#  EEx.function_from_file :def, :get_HTML, @layout_path, [:report_information]
 
 end

@@ -3,9 +3,9 @@
   <head>
     <meta charset="utf-8">
     <title>Klzii Chat history</title>
-    <script type="text/javascript" src="<%= Path.absname("web/static/js/reporting/snap.svg-min.js", base_path) %>"></script>
-    <script type="text/javascript" src="<%= Path.absname("web/static/js/reporting/avatar.js", base_path) %>"></script>
-    <link rel="stylesheet" type = "text/css" href="<%= Path.absname("web/static/css/reporting/reporting.css", base_path) %>">
+    <script type="text/javascript" src="<%= Path.expand(".web/static/js/reporting/snap.svg-min.js") %>"></script>
+    <script type="text/javascript" src="<%= Path.expand(".web/static/js/reporting/avatar.js") %>"></script>
+    <link rel="stylesheet" type = "text/css" href="<%= Path.expand(".web/static/css/reporting/reporting.css") %>">
   </head>
 
   <body>
