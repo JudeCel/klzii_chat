@@ -48,7 +48,7 @@ defmodule KlziiChat.Services.ReportingServiceTest do
       ReportingService.get_stream(:csv, session, session_topic, session_member)
       |> Enum.to_list()
 
-    assert(List.first(csv_stream) ==      ReportingService.get_header(:csv, session.name, session_topic.name))
+    assert(List.first(csv_stream) == ReportingService.get_header(:csv, session.name, session_topic.name))
     assert(List.last(csv_stream) == "cool member 2,test message 2,2016-05-20 09:55:00,false,false,2\r\n")
   end
 end
