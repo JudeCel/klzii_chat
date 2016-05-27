@@ -51,7 +51,7 @@ const WhiteboardCanvas = React.createClass({
     self.undoHistoryIdx = self.undoHistory.length;
   },
   addAllDeletedObjectsToHistory() {
-    var self = this;
+    let self = this;
     let objects = [];
     Object.keys(this.state.shapes).forEach(function(key, index) {
       let element = self.state.shapes[key]
@@ -62,14 +62,14 @@ const WhiteboardCanvas = React.createClass({
     this.addStepToUndoHistory(objects);
   },
   handleHistoryObject(idx, reverse) {
-    var self = this;
-    var currentStep = this.undoHistory[this.undoHistoryIdx];
+    let self = this
+    let currentStep = self.undoHistory[this.undoHistoryIdx];
     if (currentStep instanceof Array) {
       currentStep.map(function(element) {
         self.processHistoryStep(element, reverse);
       });
     } else {
-      this.processHistoryStep(currentStep, reverse);
+      self.processHistoryStep(currentStep, reverse);
     }
   },
   undoStep() {
@@ -106,7 +106,6 @@ const WhiteboardCanvas = React.createClass({
     }
   },
   sendMessage(json) {
-    this.processHistory(json);
     switch (json.eventType) {
       case 'draw':
         this.props.dispatch(whiteboardActions.create(this.props.channel, json.message));
@@ -198,13 +197,27 @@ const WhiteboardCanvas = React.createClass({
   },
   //process incoming messages about shapes from remote users
   processWhiteboard(data) {
-    var self = this;
-    if (data.length == 0) {
-      this.deleteAllObjects();
-    }
-    data.map(function(item) {
-      var event = item.event;
+    let self = this;
+    var dataKeys = Object.keys(data);
+    var shapesKeys = Object.keys(self.state.shapes)
+
+    dataKeys.map((key) => {
+      let item = data[key]
+      let event = item.event;
       self.processShapeData(event);
+
+      let position = shapesKeys.indexOf(key)
+      if (position >-1) {
+        shapesKeys.splice(position, 1);
+      }
+    });
+
+    let childrens = self.snap.paper.children();
+    childrens.map(function(item) {
+      let position = shapesKeys.indexOf(item.id)
+      if (position > -1) {
+        item.remove();
+      }
     });
   },
   deleteAllObjects() {
@@ -364,6 +377,7 @@ const WhiteboardCanvas = React.createClass({
   		message: message
   	};
     this.sendMessage(messageJSON);
+    this.processHistory(messageJSON);
   },
   getName() {
     return 'Whiteboard_';
@@ -390,7 +404,9 @@ const WhiteboardCanvas = React.createClass({
     }
   },
   sendObjectData(action, mainAction) {
-    this.sendMessage(this.prepareMessage(this.activeShape, action, mainAction));
+    let message = this.prepareMessage(this.activeShape, action, mainAction)
+    this.sendMessage(message);
+    this.processHistory(message);
   },
   handleObjectCreated() {
     if (this.activeShape && !this.activeShape.created) {
