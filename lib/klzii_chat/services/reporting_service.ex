@@ -1,10 +1,8 @@
 defmodule KlziiChat.Services.ReportingService do
-  alias KlziiChat.Services.{MessageService, SessionMembersService}
+  alias KlziiChat.Services.{MessageService}
   alias KlziiChat.Decorators.MessageDecorator
+  alias KlziiChat.Helpers.HTMLReportingHelper
   alias Ecto.DateTime
-  require EEx
-
-  @layout_path Path.expand("./web/templates/reporting/report_layout.html.eex")
 
   def write_to_file(path, report_format, session_member, session, session_topic) when report_format in [:txt, :csv] do
     {:ok, report_stream} = get_stream(report_format, session, session_topic, session_member)
@@ -52,6 +50,12 @@ defmodule KlziiChat.Services.ReportingService do
 #    ])
 #  end
 
-  #EEx.function_from_file :def, :get_HTML, @layout_path, [:assigns]
+  def get_html(session, session_topic, session_member) do
+    {:ok, topic_history} = MessageService.history(session_topic.id, session_member)
 
+      HTMLReportingHelper.get_html(%{
+        header: get_header(:html, session.name, session_topic.name),
+        topic_history: topic_history
+      })
+  end
 end

@@ -63,4 +63,10 @@ defmodule KlziiChat.Services.ReportingServiceTest do
     assert(List.last(txt_stream) == "test message 2\r\n\r\n")
   end
 
+  test "topic history - HTML", %{session: session, session_topic: session_topic, session_member: session_member} do
+    ReportingService.get_html(session, session_topic, session_member)
+    |>IO.inspect()
+  end
+
+
 end
