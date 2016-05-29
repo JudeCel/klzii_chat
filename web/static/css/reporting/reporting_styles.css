@@ -11,6 +11,11 @@ td.svg_holder {
   white-space: nowrap;
 }
 
+img {
+  width: 55px;
+  height: 55px;
+}
+
 td.time {
   text-align: right;
 }

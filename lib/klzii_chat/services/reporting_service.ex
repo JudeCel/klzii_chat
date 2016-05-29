@@ -11,13 +11,13 @@ defmodule KlziiChat.Services.ReportingService do
     Enum.each(report_stream, &IO.write(file, &1))
     File.close(file)
   end
-#  def write_to_file(path, :pdf, session_member, session, session_topic) do
-#    {:ok, topic_history} = MessageService.history(session_topic.id, session_member)
-#    {:ok, session_members} = SessionMembersService.by_session(session.id)
 
-#    html = get_HTML(session.name, session_topic.name, topic_history, session_members)
-    #Porcelain.exec("wkhtmltopdf", ["-", path_to_file], in: html, out: :string, err: :out)
-#  end
+  def write_to_file(path, :pdf, session_member, session, session_topic) do
+    {:ok, html_text} = get_html(session, session_topic, session_member)
+    {:ok, file} = File.open(path, [:write])
+    IO.write(file, html_text)
+    File.close(file)
+  end
 
   def get_stream(report_format, session, session_topic, session_member) do
     {:ok, topic_history} = MessageService.history(session_topic.id, session_member)
@@ -40,22 +40,14 @@ defmodule KlziiChat.Services.ReportingService do
 
   def topic_hist_filter(:txt, %{body: body}), do: "#{body}\r\n\r\n"
 
-#  def topic_history_HTML(base_path, session_name, session_topic_name, topic_history, session_members) do
-#    EEx.eval_file(), [
-#      base_path: base_path,
-#      session_name: session_name,
-#      session_topic_name: session_topic_name,
-#      topic_history: topic_history,
-#      session_members: session_members
-#    ])
-#  end
-
   def get_html(session, session_topic, session_member) do
     {:ok, topic_history} = MessageService.history(session_topic.id, session_member)
 
+    html_text =
       HTMLReportingHelper.get_html(%{
         header: get_header(:html, session.name, session_topic.name),
         topic_history: topic_history
       })
+    {:ok, html_text}
   end
 end

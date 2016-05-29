@@ -66,6 +66,8 @@ defmodule KlziiChat.Services.ReportingServiceTest do
   test "topic history - HTML", %{session: session, session_topic: session_topic, session_member: session_member} do
     ReportingService.get_html(session, session_topic, session_member)
     |>IO.inspect()
+
+    ReportingService.write_to_file("test.html", :pdf, session_member, session, session_topic)
   end
 
 

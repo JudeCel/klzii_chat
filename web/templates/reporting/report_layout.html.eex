@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <title>Klzii Chat history</title>
-    <link rel="stylesheet" type = "text/css" href="<%= Path.expand("web/static/css/reporting/reporting.css") %>">
+    <link rel="stylesheet" type = "text/css" href="<%= Path.expand("./web/static/css/reporting/reporting_styles.css") %>">
   </head>
 
   <body>
@@ -11,14 +11,15 @@
 
     <table>
       <%= Enum.map(@topic_history, fn(%{body: body, emotion: emotion_id, session_member: %{username: name, role: role}, time: time}) ->
-        emotion_svg_path = Path.expand("web/static/assets/images/emotions/emoticon_#{emotion_id}_sprite.svg")
+        svg_path = Path.expand("./web/static/assets/images/emotions/emoticon_#{emotion_id}_sprite.svg")
+        sprite_start = 165
         """
         <tr>
           <td></td>
           <td class="bottom_border" colspan="2"></td>
         </tr>
         <tr>
-          <td class="svg_holder" rowspan="2"><svg class="emotion" src="#{emotion_svg_path}" width="76" height="70" ></svg></td>
+          <td class="svg_holder" rowspan="2"><img src="#{svg_path}#svgView(viewBox(#{sprite_start}, 0, 55, 55))"></img></td>
           <td class="name #{role}">#{name}</td>
           <td class="time #{role}">#{Ecto.DateTime.to_string(time)}</td>
         </tr>
