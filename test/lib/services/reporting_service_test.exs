@@ -70,12 +70,5 @@ defmodule KlziiChat.Services.ReportingServiceTest do
     assert(String.contains?(html_text, "cool member 2"))
     assert(String.contains?(html_text, "test message 2"))
     assert(String.contains?(html_text, "2016-05-20 09:55:00"))
-
-    ReportingService.write_to_file("test", :pdf, session_member, session, session_topic)
-    |> IO.inspect
-
-    ReportingService.write_to_file("test", :csv, session_member, session, session_topic)
-    |> IO.inspect
-
   end
 end

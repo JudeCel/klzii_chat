@@ -19,6 +19,15 @@ defmodule KlziiChat.Decorators.MessageDecorator do
   end
 
   @spec emotion_name(integer) :: String.t
-  def emotion_name(emotion_id) when is_integer(emotion_id), do: Map.get(@emotion_names, emotion_id, :error)
+  def emotion_name(emotion_id) when is_integer(emotion_id) do
+    Map.get(@emotion_names, emotion_id, {:error, "incorrect emotion id"})
+  end
 
+  @spec emotion_name(String.t) :: String.t
+  def emotion_name(emotion_id) when is_bitstring(emotion_id) do
+    case Integer.parse(emotion_id) do
+      {emotion_num_id, ""} -> emotion_name(emotion_num_id)
+      _ -> {:error, "incorrect emotion id"}
+    end
+  end
 end
