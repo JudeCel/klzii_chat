@@ -4,12 +4,11 @@ defmodule KlziiChat.Services.ReportingService do
   alias KlziiChat.Helpers.HTMLReportingHelper
   alias Ecto.DateTime
 
-  @tmp_path "/tmp/klzii_chat/reporting"
+  @tmp_path Path.expand("/tmp/klzii_chat/reporting") 
   @emoticons %{emoticons_qnt: 7, sprites_qnt: 6, emoticon_size: [55, 55]}
 
   def write_to_file(report_name, report_format, session_member, session, session_topic) when report_format in [:txt, :csv] do
-    report_file_path = Path.join(@tmp_path, report_name) <> "." <> to_string(report_format)
-
+    report_file_path = get_full_report_path(@tmp_path, report_name, report_format)
     {:ok, file} = File.open(report_file_path, [:write])
 
     get_stream(report_format, session, session_topic, session_member)
@@ -20,8 +19,8 @@ defmodule KlziiChat.Services.ReportingService do
   end
 
   def write_to_file(report_name, :pdf, session_member, session, session_topic) do
-    html_tmp_file_path = Path.join(@tmp_path, report_name) <> ".html"
-    pdf_report_file_path = Path.join(@tmp_path, report_name) <> ".pdf"
+    html_tmp_file_path = get_full_report_path(@tmp_path, report_name, "html")
+    pdf_report_file_path = get_full_report_path(@tmp_path, report_name, :pdf)
 
     {:ok, html_tmp_file} = File.open(html_tmp_file_path, [:write])
     html_text = get_html(session, session_topic, session_member)
@@ -34,6 +33,10 @@ defmodule KlziiChat.Services.ReportingService do
         {:ok, pdf_report_file_path}
       {stdout, _} -> {:error, stdout}
     end
+  end
+
+  def get_full_report_path(tmp_path, report_name, report_format) do
+    Path.join(tmp_path, report_name) <> "." <> to_string(report_format)
   end
 
   def get_stream(report_format, session, session_topic, session_member) do
