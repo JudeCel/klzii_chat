@@ -28,9 +28,12 @@ defmodule KlziiChat.Services.ReportingService do
     :ok = IO.write(html_tmp_file, html_text)
     :ok = File.close(html_tmp_file)
 
-    {_, 0} = System.cmd("wkhtmltopdf", ["file://" <> html_tmp_file_path, pdf_report_file_path], stderr_to_stdout: true)
-    :ok = File.rm(html_tmp_file_path)
-    {:ok, pdf_report_file_path}
+    case System.cmd("wkhtmltopdf", ["file://" <> html_tmp_file_path, pdf_report_file_path], stderr_to_stdout: true) do
+      {_, 0} ->
+        :ok = File.rm(html_tmp_file_path)
+        {:ok, pdf_report_file_path}
+      {stdout, _} -> {:error, stdout}
+    end
   end
 
   def get_stream(report_format, session, session_topic, session_member) do
