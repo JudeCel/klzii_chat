@@ -30,12 +30,15 @@
     </table>
 
     <script type="text/javascript">
+      var selected_emotion = 55 * 3;
       for(var i = 0; i <= 6; i++) {
         var svg_class = ".svg-" + i;
         var svg_path = "<%= Path.expand("web/static/assets/images/emotions/emoticon_") %>" + i + "_sprite.svg";
         var emotionSvg = Snap(svg_class);
-        if(emotionSvg)
+        if(emotionSvg) {
           emotionSvg.image(svg_path, 0, 0, 330, 55);
+          emotionSvg.attr({viewBox: selected_emotion + ", 0, 55, 55"});
+        }
       }
     </script>
 
