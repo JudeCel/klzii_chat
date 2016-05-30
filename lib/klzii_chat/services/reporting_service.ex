@@ -7,12 +7,15 @@ defmodule KlziiChat.Services.ReportingService do
   @tmp_path "/tmp/klzii_chat/reporting"
 
   def write_to_file(report_name, report_format, session_member, session, session_topic) when report_format in [:txt, :csv] do
-    {:ok, file} = File.open(report_name, [:write])
+    report_file_path = Path.join(@tmp_path, report_name) <> "." <> to_string(report_format)
+
+    {:ok, file} = File.open(report_file_path, [:write])
 
     get_stream(report_format, session, session_topic, session_member)
-    |> Enum.each(&IO.write(file, &1))
+    |> Enum.each(&(:ok = IO.write(file, &1)))
 
-    File.close(file)
+    :ok = File.close(file)
+    {:ok, report_file_path}
   end
 
   def write_to_file(report_name, :pdf, session_member, session, session_topic) do
@@ -24,7 +27,9 @@ defmodule KlziiChat.Services.ReportingService do
     :ok = IO.write(html_tmp_file, html_text)
     :ok = File.close(html_tmp_file)
 
-    System.cmd("wkhtmltopdf", ["file://" <> html_tmp_file_path, pdf_report_file_path])
+    {_, 0} = System.cmd("wkhtmltopdf", ["file://" <> html_tmp_file_path, pdf_report_file_path], stderr_to_stdout: true)
+    :ok = File.rm(html_tmp_file_path)
+    {:ok, pdf_report_file_path}
   end
 
   def get_stream(report_format, session, session_topic, session_member) when report_format in [:txt, :csv] do

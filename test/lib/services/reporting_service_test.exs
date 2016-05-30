@@ -73,5 +73,9 @@ defmodule KlziiChat.Services.ReportingServiceTest do
 
     ReportingService.write_to_file("test", :pdf, session_member, session, session_topic)
     |> IO.inspect
+
+    ReportingService.write_to_file("test", :csv, session_member, session, session_topic)
+    |> IO.inspect
+
   end
 end
