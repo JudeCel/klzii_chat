@@ -31,40 +31,40 @@ defmodule KlziiChat.Services.ReportingServiceTest do
     {:ok, session: session, session_topic: session_topic_1, session_member: member, topic_history: topic_history}
   end
 
-  test "topic history filters", %{topic_history: [th1, th2] = topic_history} do
+  test "topic history filters", %{topic_history: [th1, th2]} do
     csv_history_string = "#{th1.session_member.username},#{th1.body},#{DateTime.to_string(th1.time)}," <>
       "#{to_string(th1.star)},#{to_string(th1.replyId !== nil)},#{MessageDecorator.emotion_name(th1.emotion)}\r\n"
     txt_history_string = "#{th2.body}\r\n\r\n"
 
-    assert(ReportingService.topic_hist_filter(:csv, List.first(topic_history)) == csv_history_string)
-    assert(ReportingService.topic_hist_filter(:txt, List.last(topic_history)) == txt_history_string)
+    assert(ReportingService.topic_hist_filter(:csv, th1) == csv_history_string)
+    assert(ReportingService.topic_hist_filter(:txt, th2) == txt_history_string)
   end
 
   test "topic history headers", %{session: session, session_topic: session_topic} do
     assert(ReportingService.get_header(:txt, session.name, session_topic.name) ==
-      "cool session / cool session topic 1\r\n\r\n")
+      "#{session.name} / #{session_topic.name}\r\n\r\n")
     assert(ReportingService.get_header(:csv, session.name, session_topic.name) ==
       "name,comment,date,is tagged,is reply,emotion\r\n")
     assert(ReportingService.get_header(:html, session.name, session_topic.name) ==
-      "cool session : cool session topic 1")
+      "#{session.name} : #{session_topic.name}")
   end
 
-  test "topic history stream - CSV", %{session: session, session_topic: session_topic, session_member: session_member} do
+  test "topic history stream - CSV", %{session: session, session_topic: session_topic, session_member: session_member, topic_history: [_, th2]} do
     csv_stream =
       ReportingService.get_stream(:csv, session, session_topic, session_member)
       |> Enum.to_list()
 
     assert(List.first(csv_stream) == ReportingService.get_header(:csv, session.name, session_topic.name))
-    assert(List.last(csv_stream) == "cool member 2,test message 2,2016-05-20 09:55:00,false,false,smiling\r\n")
+    assert(List.last(csv_stream) == ReportingService.topic_hist_filter(:csv, th2))
   end
 
-  test "topic history stream - TXT", %{session: session, session_topic: session_topic, session_member: session_member} do
+  test "topic history stream - TXT", %{session: session, session_topic: session_topic, session_member: session_member, topic_history: [_, th2]} do
     txt_stream =
       ReportingService.get_stream(:txt, session, session_topic, session_member)
       |> Enum.to_list()
 
     assert(List.first(txt_stream) == ReportingService.get_header(:txt, session.name, session_topic.name))
-    assert(List.last(txt_stream) == "test message 2\r\n\r\n")
+    assert(List.last(txt_stream) == ReportingService.topic_hist_filter(:txt, th2))
   end
 
   test "topic history - HTML", %{session: session, session_topic: session_topic, session_member: session_member} do
