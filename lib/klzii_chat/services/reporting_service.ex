@@ -32,7 +32,7 @@ defmodule KlziiChat.Services.ReportingService do
     {:ok, pdf_report_file_path}
   end
 
-  def get_stream(report_format, session, session_topic, session_member) when report_format in [:txt, :csv] do
+  def get_stream(report_format, session, session_topic, session_member) do
     {:ok, topic_history} = MessageService.history(session_topic.id, session_member)
 
     stream = Stream.map(topic_history, &topic_hist_filter(report_format, &1))
@@ -58,7 +58,8 @@ defmodule KlziiChat.Services.ReportingService do
 
     HTMLReportingHelper.html_from_template(%{
       header: get_header(:html, session.name, session_topic.name),
-      topic_history: topic_history
+      topic_history: topic_history,
+      emoticon_size: [55, 55]
     })
   end
 end

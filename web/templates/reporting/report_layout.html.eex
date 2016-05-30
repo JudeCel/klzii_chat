@@ -7,6 +7,8 @@
     <script type="text/javascript" src="<%= Path.expand("./web/static/js/reporting/snap.svg-min.js") %>"></script>
   </head>
 
+  <% [emoticon_height, emoticon_width] = @emoticon_size %>
+
   <body>
     <h3><%= @header %></h3>
 
@@ -18,7 +20,7 @@
           <td class="bottom_border" colspan="2"></td>
         </tr>
         <tr>
-          <td class="svg_holder" rowspan="2"><svg class="svg-#{emotion_id}" height="55" width="55"></svg></td>
+          <td class="svg_holder" rowspan="2"><svg class="svg-#{emotion_id}" height="#{emoticon_height}" width="#{emoticon_width}"></svg></td>
           <td class="name #{role}">#{name}</td>
           <td class="time #{role}">#{Ecto.DateTime.to_string(time)}</td>
         </tr>
@@ -30,14 +32,15 @@
     </table>
 
     <script type="text/javascript">
-      var selected_emotion = 55 * 3;
+      var fourth_emotion_x = <%= emoticon_width %> * 3;
+      var emotion_viewbox = fourth_emotion_x + ", 0, " + <%= emoticon_width %> + ", " + <%= emoticon_height %>; //"x, y, width, heigh"
       for(var i = 0; i <= 6; i++) {
         var svg_class = ".svg-" + i;
         var svg_path = "<%= Path.expand("web/static/assets/images/emotions/emoticon_") %>" + i + "_sprite.svg";
         var emotionSvg = Snap(svg_class);
         if(emotionSvg) {
           emotionSvg.image(svg_path, 0, 0, 330, 55);
-          emotionSvg.attr({viewBox: selected_emotion + ", 0, 55, 55"});
+          emotionSvg.attr({viewBox: emotion_viewbox});
         }
       }
     </script>
