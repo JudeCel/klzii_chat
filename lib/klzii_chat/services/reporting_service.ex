@@ -59,6 +59,7 @@ defmodule KlziiChat.Services.ReportingService do
     HTMLReportingHelper.html_from_template(%{
       header: get_header(:html, session.name, session_topic.name),
       topic_history: topic_history,
+      emoticon_qnt: 7,
       emoticon_size: [55, 55]
     })
   end

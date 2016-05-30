@@ -32,9 +32,10 @@
     </table>
 
     <script type="text/javascript">
+      var emoticon_qnt = <%= @emoticon_qnt %>;
       var fourth_emotion_x = <%= emoticon_width %> * 3;
       var emotion_viewbox = fourth_emotion_x + ", 0, " + <%= emoticon_width %> + ", " + <%= emoticon_height %>; //"x, y, width, heigh"
-      for(var i = 0; i <= 6; i++) {
+      for(var i = 0; i < emoticon_qnt; i++) {
         var svg_class = ".svg-" + i;
         var svg_path = "<%= Path.expand("web/static/assets/images/emotions/emoticon_") %>" + i + "_sprite.svg";
         var emotionSvg = Snap(svg_class);
