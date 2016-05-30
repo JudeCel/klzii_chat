@@ -28,7 +28,7 @@ defmodule KlziiChat.Services.ReportingService do
     :ok = File.close(html_tmp_file)
 
     {_, 0} = System.cmd("wkhtmltopdf", ["file://" <> html_tmp_file_path, pdf_report_file_path], stderr_to_stdout: true)
-    #:ok = File.rm(html_tmp_file_path)
+    :ok = File.rm(html_tmp_file_path)
     {:ok, pdf_report_file_path}
   end
 
