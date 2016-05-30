@@ -6,7 +6,8 @@ defmodule KlziiChat.AuthController do
   plug :if_current_member
 
   def token(conn, _, member, _) do
-    json(conn, %{token: member.session_member.token})
+    token = member.session_member.token
+    json(conn, %{redirect_url: build_redirect_url(token)})
   end
 
   defp if_current_member(conn, opts) do
@@ -15,5 +16,9 @@ defmodule KlziiChat.AuthController do
     else
       KlziiChat.Guardian.AuthErrorHandler.unauthenticated(conn, opts)
     end
+ end
+
+ defp build_redirect_url(token) do
+   KlziiChat.Router.Helpers.chat_url(KlziiChat.Endpoint, :index, token: token)
  end
 end

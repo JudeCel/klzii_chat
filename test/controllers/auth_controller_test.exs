@@ -10,6 +10,8 @@ defmodule KlziiChat.AuthControllerTest do
 
   test "get auth token", %{conn: conn, member: member} do
     conn = get(conn, "/api/auth/token")
-    assert(json_response(conn, 200)["token"] == member.token)
+    json_response(conn, 200)["redirect_url"]
+      |> String.contains?(member.token)
+      |> assert
   end
 end
