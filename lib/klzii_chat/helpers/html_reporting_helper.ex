@@ -1,7 +1,24 @@
 defmodule KlziiChat.Helpers.HTMLReportingHelper do
   require EEx
 
-  @template_path Path.expand("./web/templates/reporting/report_layout.html.eex")
+  EEx.function_from_file(
+    :def,
+    :html_from_template,
+    Path.expand("./web/templates/reporting/report_layout.html.eex"),
+    [:assigns]
+  )
 
-  EEx.function_from_file(:def, :html_from_template, @template_path, [:assigns])
+  EEx.function_from_file(
+    :def,
+    :html_table_from_template,
+    Path.expand("./web/templates/reporting/report_table.html.eex"),
+    [:assigns]
+  )
+
+  EEx.function_from_file(
+    :def,
+    :html_emoticon_script_from_template,
+    Path.expand("./web/templates/reporting/report_emoticon_script_template.html.eex"),
+    [:assigns]
+  )
 end

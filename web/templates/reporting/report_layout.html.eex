@@ -7,50 +7,16 @@
     <script type="text/javascript" src="<%= Path.expand("./web/static/js/reporting/snap.svg-min.js") %>"></script>
   </head>
 
-  <% %{emoticon_size: [emoticon_width, emoticon_height]} = @emoticon %>
-
   <body>
     <h3><%= @header %></h3>
 
-    <table>
-      <%= Enum.map(@topic_history, fn(%{body: body, emotion: emotion_id, session_member: %{username: name, role: role}, time: time}) ->
-        """
-        <tr>
-          <td></td>
-          <td class="bottom_border" colspan="2"></td>
-        </tr>
-        <tr>
-          <td class="svg_holder" rowspan="2"><svg class="svg-#{emotion_id}" width="#{emoticon_width}" height="#{emoticon_height}"></svg></td>
-          <td class="name #{role}">#{name}</td>
-          <td class="time #{role}">#{Ecto.DateTime.to_string(time)}</td>
-        </tr>
-        <tr>
-          <td class="body #{role}" colspan="3">"#{body}"</td>
-        </tr>
-        """
-      end) %>
-    </table>
+    <%=
+      html_table_from_template(%{topic_history: @topic_history, emoticon: @emoticon})
+    %>
 
-    <% %{emoticons_qnt: emoticons_qnt, sprites_qnt: sprites_qnt} = @emoticon %>
-
-    <script type="text/javascript">
-      var emoticon_qnt = <%= emoticons_qnt %>;
-      var sprites_qnt = <%= sprites_qnt %>;
-      var emoticon_width = <%= emoticon_width %>;
-      var emoticon_height = <%= emoticon_height %>;
-      var fourth_emotion_x = 3 * <%= emoticon_width %>;
-
-      for(var i = 0; i < emoticon_qnt; i++) {
-        var svg_class = ".svg-" + i;
-        var svg_path = "<%= Path.expand("web/static/assets/images/emotions/emoticon_") %>" + i + "_sprite.svg";
-        var emotionSvg = Snap(svg_class);
-        if(emotionSvg) {
-          emotionSvg.image(svg_path, 0, 0, sprites_qnt * emoticon_width, emoticon_height);
-          // viewBox coordinates: "start x, start y, width, heigh"});
-          emotionSvg.attr({viewBox: fourth_emotion_x + ", 0, " + emoticon_width + ", " + emoticon_height});
-        }
-      }
-    </script>
+    <%=
+      html_emoticon_script_from_template(%{emoticon: @emoticon})
+    %>
 
   </body>
 </html>
