@@ -67,7 +67,6 @@ defmodule KlziiChat.Services.ReportingServiceTest do
     html_text = ReportingService.get_html(session, session_topic, session_member)
 
     assert(String.contains?(html_text, ReportingService.get_header(:html, session.name, session_topic.name)))
-    assert(String.contains?(html_text, Path.expand("./web/static/assets/images/emotions/emoticon_1_sprite.svg")))
     assert(String.contains?(html_text, "cool member 2"))
     assert(String.contains?(html_text, "test message 2"))
     assert(String.contains?(html_text, "2016-05-20 09:55:00"))
