@@ -80,13 +80,4 @@ defmodule KlziiChat.Services.ReportingServiceTest do
 
     assert(html_text == html_from_tempale)
   end
-
-  test "get full path to report file" do
-    tmp_path = "/tmp/klzii_chat/reporting"
-    report_name = "test_report"
-    assert(ReportingService.get_full_report_path(tmp_path, report_name, :pdf) ==
-      Path.join(tmp_path, report_name) <> "." <> to_string(:pdf))
-    assert(ReportingService.get_full_report_path(tmp_path, report_name, "html") ==
-      Path.join(tmp_path, report_name) <> ".html")
-  end
 end
