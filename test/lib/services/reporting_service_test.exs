@@ -1,6 +1,8 @@
 defmodule KlziiChat.Services.ReportingServiceTest do
   use KlziiChat.{ModelCase, SessionMemberCase}
-  alias KlziiChat.Services.{MessageService, ReportingService, SessionMembersService}
+  alias KlziiChat.Services.{MessageService, ReportingService}
+  alias KlziiChat.Decorators.MessageDecorator
+  alias Ecto.DateTime
 
   setup %{session: session, session_topic_1: session_topic_1, member: member, member2: member2} do
     {:ok, create_date1} = Ecto.DateTime.cast("2016-05-20T09:50:00Z")
@@ -29,11 +31,13 @@ defmodule KlziiChat.Services.ReportingServiceTest do
     {:ok, session: session, session_topic: session_topic_1, session_member: member, topic_history: topic_history}
   end
 
-  test "topic history filters", %{topic_history: topic_history} do
-    assert(ReportingService.topic_hist_filter(:csv, List.first(topic_history)) ==
-      "cool member,test message 1,2016-05-20 09:50:00,false,false,normal\r\n")
-    assert(ReportingService.topic_hist_filter(:txt, List.last(topic_history)) ==
-      "test message 2\r\n\r\n")
+  test "topic history filters", %{topic_history: [th1, th2] = topic_history} do
+    csv_history_string = "#{th1.session_member.username},#{th1.body},#{DateTime.to_string(th1.time)}," <>
+      "#{to_string(th1.star)},#{to_string(th1.replyId !== nil)},#{MessageDecorator.emotion_name(th1.emotion)}\r\n"
+    txt_history_string = "#{th2.body}\r\n\r\n"
+
+    assert(ReportingService.topic_hist_filter(:csv, List.first(topic_history)) == csv_history_string)
+    assert(ReportingService.topic_hist_filter(:txt, List.last(topic_history)) == txt_history_string)
   end
 
   test "topic history headers", %{session: session, session_topic: session_topic} do
