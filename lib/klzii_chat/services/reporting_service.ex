@@ -28,7 +28,7 @@ defmodule KlziiChat.Services.ReportingService do
     :ok = File.close(html_tmp_file)
 
     {_, 0} = System.cmd("wkhtmltopdf", ["file://" <> html_tmp_file_path, pdf_report_file_path], stderr_to_stdout: true)
-    :ok = File.rm(html_tmp_file_path)
+    #:ok = File.rm(html_tmp_file_path)
     {:ok, pdf_report_file_path}
   end
 
@@ -59,7 +59,7 @@ defmodule KlziiChat.Services.ReportingService do
     HTMLReportingHelper.html_from_template(%{
       header: get_header(:html, session.name, session_topic.name),
       topic_history: topic_history,
-      emoticon_size: [55, 55]
+      emoticon: %{emoticons_qnt: 7, sprites_qnt: 6, emoticon_size: [55, 55]}
     })
   end
 end
