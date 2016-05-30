@@ -5,6 +5,7 @@ defmodule KlziiChat.Services.ReportingService do
   alias Ecto.DateTime
 
   @tmp_path "/tmp/klzii_chat/reporting"
+  @emoticons %{emoticons_qnt: 7, sprites_qnt: 6, emoticon_size: [55, 55]}
 
   def write_to_file(report_name, report_format, session_member, session, session_topic) when report_format in [:txt, :csv] do
     report_file_path = Path.join(@tmp_path, report_name) <> "." <> to_string(report_format)
@@ -59,7 +60,7 @@ defmodule KlziiChat.Services.ReportingService do
     HTMLReportingHelper.html_from_template(%{
       header: get_header(:html, session.name, session_topic.name),
       topic_history: topic_history,
-      emoticon: %{emoticons_qnt: 7, sprites_qnt: 6, emoticon_size: [55, 55]}
+      emoticon: @emoticons
     })
   end
 end

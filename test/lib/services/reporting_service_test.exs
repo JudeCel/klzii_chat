@@ -2,7 +2,10 @@ defmodule KlziiChat.Services.ReportingServiceTest do
   use KlziiChat.{ModelCase, SessionMemberCase}
   alias KlziiChat.Services.{MessageService, ReportingService}
   alias KlziiChat.Decorators.MessageDecorator
+  alias KlziiChat.Helpers.HTMLReportingHelper
   alias Ecto.DateTime
+
+  @emoticons %{emoticons_qnt: 7, sprites_qnt: 6, emoticon_size: [55, 55]}
 
   setup %{session: session, session_topic_1: session_topic_1, member: member, member2: member2} do
     {:ok, create_date1} = Ecto.DateTime.cast("2016-05-20T09:50:00Z")
@@ -67,12 +70,14 @@ defmodule KlziiChat.Services.ReportingServiceTest do
     assert(List.last(txt_stream) == ReportingService.topic_hist_filter(:txt, th2))
   end
 
-  test "topic history - HTML", %{session: session, session_topic: session_topic, session_member: session_member} do
+  test "topic history - HTML", %{session: session, session_topic: session_topic, session_member: session_member, topic_history: topic_history} do
     html_text = ReportingService.get_html(session, session_topic, session_member)
+    html_from_tempale = HTMLReportingHelper.html_from_template(%{
+          header: ReportingService.get_header(:html, session.name, session_topic.name),
+          topic_history: topic_history,
+          emoticon: @emoticons
+        })
 
-    assert(String.contains?(html_text, ReportingService.get_header(:html, session.name, session_topic.name)))
-    assert(String.contains?(html_text, "cool member 2"))
-    assert(String.contains?(html_text, "test message 2"))
-    assert(String.contains?(html_text, "2016-05-20 09:55:00"))
+    assert(html_text == html_from_tempale)
   end
 end
