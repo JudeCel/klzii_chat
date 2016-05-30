@@ -4,22 +4,30 @@ defmodule KlziiChat.Services.ReportingService do
   alias KlziiChat.Helpers.HTMLReportingHelper
   alias Ecto.DateTime
 
-  def write_to_file(path, report_format, session_member, session, session_topic) when report_format in [:txt, :csv] do
-    {:ok, report_stream} = get_stream(report_format, session, session_topic, session_member)
+  @tmp_path "/tmp/klzii_chat/reporting"
 
-    {:ok, file} = File.open(path, [:write])
-    Enum.each(report_stream, &IO.write(file, &1))
+  def write_to_file(report_name, report_format, session_member, session, session_topic) when report_format in [:txt, :csv] do
+    {:ok, file} = File.open(report_name, [:write])
+
+    get_stream(report_format, session, session_topic, session_member)
+    |> Enum.each(&IO.write(file, &1))
+
     File.close(file)
   end
 
-  def write_to_file(path, :pdf, session_member, session, session_topic) do
-    {:ok, html_text} = get_html(session, session_topic, session_member)
-    {:ok, file} = File.open(path, [:write])
-    IO.write(file, html_text)
-    File.close(file)
+  def write_to_file(report_name, :pdf, session_member, session, session_topic) do
+    html_tmp_file_path = Path.join(@tmp_path, report_name) <> ".html"
+    pdf_report_file_path = Path.join(@tmp_path, report_name) <> ".pdf"
+
+    {:ok, html_tmp_file} = File.open(html_tmp_file_path, [:write])
+    html_text = get_html(session, session_topic, session_member)
+    :ok = IO.write(html_tmp_file, html_text)
+    :ok = File.close(html_tmp_file)
+
+    System.cmd("wkhtmltopdf", ["file://" <> html_tmp_file_path, pdf_report_file_path])
   end
 
-  def get_stream(report_format, session, session_topic, session_member) do
+  def get_stream(report_format, session, session_topic, session_member) when report_format in [:txt, :csv] do
     {:ok, topic_history} = MessageService.history(session_topic.id, session_member)
 
     stream = Stream.map(topic_history, &topic_hist_filter(report_format, &1))
@@ -43,11 +51,9 @@ defmodule KlziiChat.Services.ReportingService do
   def get_html(session, session_topic, session_member) do
     {:ok, topic_history} = MessageService.history(session_topic.id, session_member)
 
-    html_text =
-      HTMLReportingHelper.get_html(%{
-        header: get_header(:html, session.name, session_topic.name),
-        topic_history: topic_history
-      })
-    {:ok, html_text}
+    HTMLReportingHelper.html_from_template(%{
+      header: get_header(:html, session.name, session_topic.name),
+      topic_history: topic_history
+    })
   end
 end
