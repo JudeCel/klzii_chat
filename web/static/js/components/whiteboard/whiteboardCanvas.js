@@ -44,11 +44,11 @@ const WhiteboardCanvas = React.createClass({
   addStepToUndoHistory(json) {
     var self = this;
     //if made a few undo steps, then delete next redo steps first
-    if (self.undoHistoryIdx > 0 && self.undoHistoryIdx < self.undoHistory.length) {
-      self.undoHistory.slice(0, self.undoHistoryIdx );
+    if (self.undoHistoryIdx > 0 && self.undoHistoryIdx < self.undoHistory.length - 1) {
+      self.undoHistory = self.undoHistory.slice(0, self.undoHistoryIdx);
     }
     self.undoHistory.push(JSON.stringify(json));
-    self.undoHistoryIdx = self.undoHistory.length;
+    self.undoHistoryIdx = self.undoHistory.length - 1;
   },
   addAllDeletedObjectsToHistory() {
     let self = this;
@@ -74,19 +74,21 @@ const WhiteboardCanvas = React.createClass({
   },
   undoStep() {
     this.undoHistoryIdx--;
+    console.log("idx", this.undoHistoryIdx, this.undoHistory.length);
     if (this.undoHistoryIdx < 0) {
       this.undoHistoryIdx = 0;
-      return;
+    } else {
+      this.handleHistoryObject(this.undoHistoryIdx, true);
     }
-    this.handleHistoryObject(this.undoHistoryIdx, true);
   },
   redoStep() {
     this.undoHistoryIdx++;
+    console.log("idx", this.undoHistoryIdx, this.undoHistory.length);
     if (this.undoHistoryIdx > this.undoHistory.length - 1) {
       this.undoHistoryIdx = this.undoHistory.length - 1;
-      return;
+    } else {
+      this.handleHistoryObject(this.undoHistoryIdx, false);
     }
-    this.handleHistoryObject(this.undoHistoryIdx, false);
   },
   processHistoryStep(currentStep, reverse) {
     if (reverse) {
@@ -191,6 +193,10 @@ const WhiteboardCanvas = React.createClass({
         if (event.element.attr.style && event.element.attr.style.indexOf("marker") != -1) {
           obj.attr({markerStart: self.getArrowShape(event.element.attr.stroke)});
         }
+      }
+
+      if (self.activeShape && self.activeShape.id == obj.id) {
+        self.activeShape.ftHighlightBB();
       }
     }
   },
@@ -658,7 +664,7 @@ const WhiteboardCanvas = React.createClass({
       background: this.WHITEBOARD_BACKGROUND_COLOUR,
       borderColor: this.WHITEBOARD_BORDER_COLOUR,
       borderWidth: 1,
-      zIndex: 1000,
+      zIndex: 5000,
       padding: 10 + 'px'
     };
 
