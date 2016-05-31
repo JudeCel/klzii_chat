@@ -1,6 +1,5 @@
 defmodule KlziiChat.Services.BannerService do
   alias KlziiChat.{Repo, Banner, BannerView}
-  import Ecto
   import Ecto.Query, only: [from: 1, from: 2]
 
   def all do
