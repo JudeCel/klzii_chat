@@ -1,0 +1,8 @@
+--require ./test/js/common.js
+--recursive
+--check-leaks
+--colors
+--timeout 6000
+--slow 200
+--full-trace
+--compilers js:babel-register
