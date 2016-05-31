@@ -45,7 +45,7 @@ const WhiteboardCanvas = React.createClass({
     var self = this;
     //if made a few undo steps, then delete next redo steps first
     if (self.undoHistoryIdx > 0 && self.undoHistoryIdx < self.undoHistory.length - 1) {
-      self.undoHistory = self.undoHistory.slice(0, self.undoHistoryIdx);
+      self.undoHistory = self.undoHistory.slice(0, self.undoHistoryIdx + 1);
     }
     self.undoHistory.push(JSON.stringify(json));
     self.undoHistoryIdx = self.undoHistory.length - 1;
@@ -74,7 +74,6 @@ const WhiteboardCanvas = React.createClass({
   },
   undoStep() {
     this.undoHistoryIdx--;
-    console.log("idx", this.undoHistoryIdx, this.undoHistory.length);
     if (this.undoHistoryIdx < 0) {
       this.undoHistoryIdx = 0;
     } else {
@@ -83,7 +82,6 @@ const WhiteboardCanvas = React.createClass({
   },
   redoStep() {
     this.undoHistoryIdx++;
-    console.log("idx", this.undoHistoryIdx, this.undoHistory.length);
     if (this.undoHistoryIdx > this.undoHistory.length - 1) {
       this.undoHistoryIdx = this.undoHistory.length - 1;
     } else {
@@ -766,8 +764,8 @@ const WhiteboardCanvas = React.createClass({
                 <Button bsStyle="default"><i className="fa fa-eraser" aria-hidden="true"></i></Button>
               </OverlayTrigger>
 
-              <Button bsStyle="default"><i className="fa fa-undo" aria-hidden="true" onClick={this.undoStep}></i></Button>
-              <Button bsStyle="default"><i className="fa fa-repeat" aria-hidden="true" onClick={this.redoStep}></i></Button>
+              <Button bsStyle="default" onClick={this.undoStep}><i className="fa fa-undo" aria-hidden="true"></i></Button>
+              <Button bsStyle="default" onClick={this.redoStep}><i className="fa fa-repeat" aria-hidden="true"></i></Button>
         </ButtonToolbar>
 
         <Modal dialogClassName='modal-section facilitator-board-modal' show={ this.mode == this.ModeEnum.text } onHide={ onHide } onEnter={ this.onOpen }>
