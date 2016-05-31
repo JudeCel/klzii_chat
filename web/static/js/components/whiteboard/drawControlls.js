@@ -301,7 +301,7 @@
 			var minPosX = +el.data("minPosX");
 
 			if( posX < minPosX ) { el.data("posX", minPosX ); };
-			el.data("fracX", 1/ ( (maxPosX - minPosX) / el.data("posX") ) );
+			el.data("fracX", el.data("posX")/maxPosX );
 		}
 
 		// Call the matrix checks above, and set any transformation
@@ -392,14 +392,17 @@
 	        var elEttributes = shape.attr();
 	        var matr = shape.ftGetInitialTransformMatrix().clone();
 					var splitParams = matr.split();
-					var splitParams = shape.matrix.split();
 					var scX = 1;
 					var scY = 1;
 					if (params.scaleX) scX = params.scaleX;
 					if (params.scaleY) scY = params.scaleY;
+					// if (params.scaleY) scY = (params.scaleY + splitParams.scaley)/2;
 
 					var transform = matr.toTransformString()+"S"+scX+","+scY;
 	        shape.attr({transform: transform});
+
+					// console.log("____", params.scaleX, splitParams.scalex, "__", (params.scaleX + splitParams.scalex)/2);
+
 	        break;
 	    }
 	  }
