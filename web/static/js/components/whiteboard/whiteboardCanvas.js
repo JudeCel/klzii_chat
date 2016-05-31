@@ -47,7 +47,7 @@ const WhiteboardCanvas = React.createClass({
     if (self.undoHistoryIdx > 0 && self.undoHistoryIdx < self.undoHistory.length) {
       self.undoHistory.slice(0, self.undoHistoryIdx );
     }
-    self.undoHistory.push(json);
+    self.undoHistory.push(JSON.stringify(json));
     self.undoHistoryIdx = self.undoHistory.length;
   },
   addAllDeletedObjectsToHistory() {
@@ -63,7 +63,7 @@ const WhiteboardCanvas = React.createClass({
   },
   handleHistoryObject(idx, reverse) {
     let self = this
-    let currentStep = self.undoHistory[this.undoHistoryIdx];
+    let currentStep = JSON.parse(self.undoHistory[this.undoHistoryIdx]);
     if (currentStep instanceof Array) {
       currentStep.map(function(element) {
         self.processHistoryStep(element, reverse);
@@ -180,7 +180,6 @@ const WhiteboardCanvas = React.createClass({
         var attrs = (event.element.attr instanceof Function)?event.element.attr():event.element.attr;
         obj.attr(attrs);
         obj.created = true;
-
         if (!self.state.shapes[event.id]) {
           obj.id = event.id;
           let newShapes = {...self.state.shapes}
@@ -383,7 +382,7 @@ const WhiteboardCanvas = React.createClass({
     return 'Whiteboard_';
   },
   shouldComponentUpdate(nextProps) {
-    return true;
+    return false;
   },
   componentDidUpdate() {
   },
