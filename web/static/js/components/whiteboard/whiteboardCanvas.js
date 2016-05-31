@@ -639,14 +639,16 @@ const WhiteboardCanvas = React.createClass({
     var cornerRadius = 5;
     var speed = "0.3s";
     var scale = this.minimized?this.getMinimizedScale():1.0;
-    var scaleParam = 'width ' + speed +' ease-in-out, height ' + speed + ' ease-in-out';
+    var scaleParam = 'width ' + speed +' ease-in-out, height ' + speed + ' ease-in-out, 0.3s left ease-in-out';
+    let left = "calc(50% - " + this.getWidth()/2 + "px)";
+
     var divStyle = {
+      WebkitTransition: 'all',
+      WebkitTransitionProperty: "left",
+      msTransition: 'all',
       borderRadius: cornerRadius,
       position: "absolute",
-      top: '10px',
-      left: (window.innerWidth - this.getWidth()) / 3 + "px" ,
-      WebkitTransition: 'all',
-      msTransition: 'all',
+      left: left,
       width: this.getWidth()+'px',
       height: this.getHeight()+'px',
       'WebkitTransition': scaleParam,
@@ -691,6 +693,7 @@ const WhiteboardCanvas = React.createClass({
       'marginRight': 'auto',
       display: this.isMinimized()?'none':'block'
     }
+
     return (
       <div style={divStyle} className="container">
         <svg id={ this.getName() }
