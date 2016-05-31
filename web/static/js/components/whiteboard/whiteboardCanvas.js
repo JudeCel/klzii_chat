@@ -47,6 +47,7 @@ const WhiteboardCanvas = React.createClass({
     if (self.undoHistoryIdx > 0 && self.undoHistoryIdx < self.undoHistory.length - 1) {
       self.undoHistory = self.undoHistory.slice(0, self.undoHistoryIdx + 1);
     }
+    //converting to JSON is necessary
     self.undoHistory.push(JSON.stringify(json));
     self.undoHistoryIdx = self.undoHistory.length - 1;
   },
@@ -662,7 +663,7 @@ const WhiteboardCanvas = React.createClass({
       background: this.WHITEBOARD_BACKGROUND_COLOUR,
       borderColor: this.WHITEBOARD_BORDER_COLOUR,
       borderWidth: 1,
-      zIndex: 5000,
+      zIndex: 1010,
       padding: 10 + 'px'
     };
 
@@ -766,6 +767,7 @@ const WhiteboardCanvas = React.createClass({
 
               <Button bsStyle="default" onClick={this.undoStep}><i className="fa fa-undo" aria-hidden="true"></i></Button>
               <Button bsStyle="default" onClick={this.redoStep}><i className="fa fa-repeat" aria-hidden="true"></i></Button>
+
         </ButtonToolbar>
 
         <Modal dialogClassName='modal-section facilitator-board-modal' show={ this.mode == this.ModeEnum.text } onHide={ onHide } onEnter={ this.onOpen }>
