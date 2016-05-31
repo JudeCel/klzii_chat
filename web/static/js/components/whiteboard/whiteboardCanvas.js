@@ -171,7 +171,6 @@ const WhiteboardCanvas = React.createClass({
     }
 
     if (obj){
-
       if (event.eventType == "delete") {
         obj.ftRemove();
         let newShapes = {...self.state.shapes}
@@ -196,6 +195,7 @@ const WhiteboardCanvas = React.createClass({
 
       if (self.activeShape && self.activeShape.id == obj.id) {
         self.activeShape.ftHighlightBB();
+      //  this.activeShape.updateTransformControls(this.activeShape, true);
       }
     }
   },
@@ -215,18 +215,13 @@ const WhiteboardCanvas = React.createClass({
         shapesKeys.splice(position, 1);
       }
     });
-
     let childrens = self.snap.paper.children();
     childrens.map(function(item) {
       let position = shapesKeys.indexOf(item.id)
       if (position > -1) {
-        item.remove();
+        item.ftRemove();
       }
     });
-  },
-  deleteAllObjects() {
-    this.snap.clear();
-    this.setState({shapes: {}});
   },
   shapeFinishedTransform(shape) {
     this.activeShape = shape;
@@ -527,8 +522,6 @@ const WhiteboardCanvas = React.createClass({
       if (this.activeShape.type == "line") {
         this.activeShape.attr({x1: coordsMove.x, y1: coordsMove.y});
       }
-
-      this.activeShape.ftHighlightBB();
     }
   },
   isValidButton(e) {
@@ -663,7 +656,7 @@ const WhiteboardCanvas = React.createClass({
       background: this.WHITEBOARD_BACKGROUND_COLOUR,
       borderColor: this.WHITEBOARD_BORDER_COLOUR,
       borderWidth: 1,
-      zIndex: 1010,
+      zIndex: 1050,
       padding: 10 + 'px'
     };
 
