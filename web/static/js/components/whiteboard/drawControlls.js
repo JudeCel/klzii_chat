@@ -396,13 +396,9 @@
 					var scY = 1;
 					if (params.scaleX) scX = params.scaleX;
 					if (params.scaleY) scY = params.scaleY;
-					// if (params.scaleY) scY = (params.scaleY + splitParams.scaley)/2;
 
 					var transform = matr.toTransformString()+"S"+scX+","+scY;
 	        shape.attr({transform: transform});
-
-					// console.log("____", params.scaleX, splitParams.scalex, "__", (params.scaleX + splitParams.scalex)/2);
-
 	        break;
 	    }
 	  }
