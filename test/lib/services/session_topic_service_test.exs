@@ -27,9 +27,8 @@ defmodule KlziiChat.Services.SessionTopicServiceTest do
       createdAt: create_date2
     ) |> Repo.insert!()
 
-    {:ok, session_topic: session_topic_1, member: member, member2: member2, create_date1: create_date1, create_date2: create_date2}
+    {:ok, session_topic: session_topic_1, member2: member2, create_date1: create_date1, create_date2: create_date2}
   end
-
 
   test "get all sesion topic messages", %{session_topic: session_topic, create_date1: create_date1, create_date2: create_date2} do
     {:ok, [first_mes, second_mes]} = SessionTopicService.message_history(session_topic.id, false, false)
@@ -37,7 +36,7 @@ defmodule KlziiChat.Services.SessionTopicServiceTest do
     assert(second_mes.createdAt == create_date2)
   end
 
-  test "get starts only topic mesages", %{session_topic: session_topic} do
+  test "get stars only topic messages", %{session_topic: session_topic} do
     {:ok, [message]} = SessionTopicService.message_history(session_topic.id, true, false)
     assert(message.star == true)
     assert(message.body == "test message 1")
@@ -48,4 +47,9 @@ defmodule KlziiChat.Services.SessionTopicServiceTest do
     assert(session_member.role == "participant")
     assert(session_member.username == member2.username)
   end
+
+  test "get stars only topic messages excluding facilitator - empty result", %{session_topic: session_topic} do
+    assert ({:ok, []} = SessionTopicService.message_history(session_topic.id, true, true))
+  end
+
 end
