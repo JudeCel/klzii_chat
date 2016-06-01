@@ -63,7 +63,7 @@ const WhiteboardCanvas = React.createClass({
     this.addStepToUndoHistory(objects);
   },
   handleHistoryObject(idx, reverse) {
-    let self = this
+    let self = this;
     let currentStep = JSON.parse(self.undoHistory[this.undoHistoryIdx]);
     if (currentStep instanceof Array) {
       currentStep.map(function(element) {
@@ -191,11 +191,11 @@ const WhiteboardCanvas = React.createClass({
         if (event.element.attr.style && event.element.attr.style.indexOf("marker") != -1) {
           obj.attr({markerStart: self.getArrowShape(event.element.attr.stroke)});
         }
-      }
 
-      if (self.activeShape && self.activeShape.id == obj.id) {
-        self.activeShape.ftHighlightBB();
-      //  this.activeShape.updateTransformControls(this.activeShape, true);
+        if (self.activeShape && obj.id == self.activeShape.id) {
+          var obj = self.state.shapes[self.activeShape.id];
+          obj.ftCreateHandles();
+        }
       }
     }
   },

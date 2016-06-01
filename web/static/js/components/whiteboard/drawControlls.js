@@ -47,38 +47,52 @@
 			freetransEl.ftHighlightBB();
 			var splitParams = this.matrix.split();
 
-			var translateDragger = this.paper.image("/images/svgControls/move.png", bb.cx - ftOption.handleRadius, bb.cy - ftOption.handleRadius, ftOption.handleRadius*2, ftOption.handleRadius*2);
-			this.data("angle", splitParams.rotate);
-			this.translateDragger = translateDragger;
+			var setupEvents = false;
 
+			if (!this.translateDragger) {
+				var translateDragger = this.paper.image("/images/svgControls/move.png", bb.cx - ftOption.handleRadius, bb.cy - ftOption.handleRadius, ftOption.handleRadius*2, ftOption.handleRadius*2);
+				this.translateDragger = translateDragger;
+				setupEvents = true;
+			} else {
+				this.translateDragger.attr({"x": bb.cx - ftOption.handleRadius, "y": bb.cy - ftOption.handleRadius});
+			}
+
+			this.data("angle", splitParams.rotate);
 
 			this.ftUpdateRotateHandler();
 			var rotateDragger = this.rotateDragger;
 			this.initialWidth = bb.width/2;
 			this.initialHeight = bb.height/2;
-			var handlesGroup = this.paper.g( rotateDragger, translateDragger );
 
-			createScaleControl(this.paper, this);
-			this.setupDone = true;
-			freetransEl.data( "handlesGroup", handlesGroup );
+			if (setupEvents) {
+				var handlesGroup = this.paper.g( rotateDragger, this.translateDragger );
 
-			freetransEl.data( "scaleFactor", Snap.calcDistance( bb.cx, bb.cy, rotateDragger.attr('x'), rotateDragger.attr('y') ) );
-			translateDragger.drag( 	elementDragMove.bind(  translateDragger, freetransEl ),
-						elementDragStart.bind( translateDragger, freetransEl ),
-						elementDragEnd.bind( translateDragger, freetransEl ) );
+				if (!this.scaleXControl) {
+					createScaleControl(this.paper, this);
+				}
 
-			freetransEl.unclick();
-			freetransEl.data("click", freetransEl.click( function() {
-				this.ftRemoveHandles();
-				this.ftInformSelected(this, false);
-			} ) );
+				this.setupDone = true;
+				freetransEl.data( "handlesGroup", handlesGroup );
+
+				this.translateDragger.drag( 	elementDragMove.bind(  this.translateDragger, freetransEl ),
+							elementDragStart.bind( this.translateDragger, freetransEl ),
+							elementDragEnd.bind( this.translateDragger, freetransEl ) );
+
+				freetransEl.unclick();
+				freetransEl.data("click", freetransEl.click( function() {
+					this.ftRemoveHandles();
+					this.ftInformSelected(this, false);
+				} ) );
 
 
-			rotateDragger.drag(
-				dragHandleRotateMove.bind( rotateDragger, freetransEl ),
-				dragHandleRotateStart.bind( rotateDragger, freetransEl  ),
-				dragHandleRotateEnd.bind( rotateDragger, freetransEl  )
-			);
+				rotateDragger.drag(
+					dragHandleRotateMove.bind( rotateDragger, freetransEl ),
+					dragHandleRotateStart.bind( rotateDragger, freetransEl  ),
+					dragHandleRotateEnd.bind( rotateDragger, freetransEl  )
+				);
+			} else {
+				Snap.updateTransformControls(this);
+			}
 
 			this.ftInformSelected(this, true);
 			return this;
@@ -148,6 +162,8 @@
 
 		Element.prototype.ftRemoveHandles = function() {
 			this.rotateDragger = null;
+			this.translateDragger = null;
+
 			this.unclick();
 			if (this.data( "handlesGroup"))	this.data( "handlesGroup").remove();
 			this.data( "bbT" ) && this.data("bbT").remove();
@@ -155,6 +171,8 @@
 			this.click( function() { this.ftCreateHandles() } ) ;
 			if (this.scaleXControl) this.scaleXControl.remove();
 			if (this.scaleYControl) this.scaleYControl.remove();
+			this.scaleXControl = null;
+			this.scaleYControl = null;
 			this.ftCleanUp();
 			return this;
 		};
@@ -191,7 +209,7 @@
 			var tstring = "t" + this.data("tx") + "," + this.data("ty") + matr.toTransformString();
 			this.attr({ transform: tstring });
 			this.ftHighlightBB();
-			this.updateTransformControls(this);
+			Snap.updateTransformControls(this);
 
 			return this;
 		};
@@ -353,7 +371,7 @@
 	              activeShape.scaleXControl = elX;
 	              activeShape.scaleYControl = elY;
 
-								activeShape.updateTransformControls(activeShape, true);
+								Snap.updateTransformControls(activeShape, true);
 	            });
 	      });
 	  }
@@ -403,7 +421,8 @@
 	    }
 	  }
 
-		Element.prototype.updateTransformControls = function(shape, resetControlValues) {
+		Snap.updateTransformControls = function(shape, resetControlValues) {
+			shape.ftHighlightBB();
 	    var angle = shape.data("angle");
 	    var transformStr = "";
 	    var attrs = shape.attr();
@@ -526,7 +545,7 @@
 		mainEl.transform( myMatrix.toTransformString());
 
 		mainEl.ftHighlightBB();
-		mainEl.updateTransformControls(mainEl);
+		Snap.updateTransformControls(mainEl);
 		mainEl.ftUpdateRotateHandler();
 
 		informTransformed(mainEl);
