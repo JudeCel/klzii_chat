@@ -89,7 +89,8 @@ const WhiteboardCanvas = React.createClass({
       this.handleHistoryObject(this.undoHistoryIdx, false);
     }
   },
-  processHistoryStep(currentStep, reverse) {
+  processHistoryStep(currentStepBase, reverse) {
+    let currentStep = {...currentStepBase};
     if (reverse) {
       if (currentStep.eventType == "delete") {
         currentStep.eventType = "draw";
@@ -175,7 +176,7 @@ const WhiteboardCanvas = React.createClass({
         obj.ftRemove();
         let newShapes = {...self.state.shapes}
         newShapes[event.id] = null
-        self.setState({shapes: newShapes})
+        self.state.shapes = newShapes;
       } else {
         var attrs = (event.element.attr instanceof Function)?event.element.attr():event.element.attr;
         obj.attr(attrs);
@@ -184,7 +185,7 @@ const WhiteboardCanvas = React.createClass({
           obj.id = event.id;
           let newShapes = {...self.state.shapes}
           newShapes[event.id] = obj;
-          self.setState({shapes: newShapes})
+          self.state.shapes = newShapes;
         }
 
         //check if arrow
@@ -193,8 +194,7 @@ const WhiteboardCanvas = React.createClass({
         }
 
         if (self.activeShape && obj.id == self.activeShape.id) {
-          var obj = self.state.shapes[self.activeShape.id];
-          obj.ftCreateHandles();
+          self.activeShape.ftCreateHandles();
         }
       }
     }
@@ -380,11 +380,6 @@ const WhiteboardCanvas = React.createClass({
   },
   getName() {
     return 'Whiteboard_';
-  },
-  shouldComponentUpdate(nextProps) {
-    return false;
-  },
-  componentDidUpdate() {
   },
   eventCoords(e) {
     return({x: Number(e.clientX), y: Number(e.clientY)});
