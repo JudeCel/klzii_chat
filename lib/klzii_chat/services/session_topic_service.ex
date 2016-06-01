@@ -1,6 +1,7 @@
 defmodule KlziiChat.Services.SessionTopicService do
-  alias KlziiChat.{Repo, SessionMember, SessionTopic}
+  alias KlziiChat.{Repo, SessionMember, SessionTopic, SessionMember}
   alias KlziiChat.Services.Permissions.SessionTopic, as: SessionTopicPermissions
+  alias KlziiChat.Queries.Messages, as: QueriesMessages
 
   @spec board_message(Integer, Integer, Map) :: {:ok, Map } | {:error, String.t}
   def board_message(session_member_id, session_topic_id, %{"message" => message}) do
@@ -11,5 +12,18 @@ defmodule KlziiChat.Services.SessionTopicService do
     else
       {:error, "Action not allowed!"}
     end
+  end
+
+  @spec message_history(integer, boolean, boolean) :: {:ok, Map }
+  def message_history(session_topic_id, stars_only, exclude_facilitator) do
+    query =
+      QueriesMessages.base_query(session_topic_id, stars_only)
+      |> QueriesMessages.join_session_member()
+
+    if exclude_facilitator, do: query = QueriesMessages.exclude_facilitator(query)
+
+    query = QueriesMessages.sort_select(query)
+
+    {:ok, Repo.all(query)}
   end
 end
