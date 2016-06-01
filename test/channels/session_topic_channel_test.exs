@@ -16,6 +16,10 @@ defmodule KlziiChat.SessionTopicChannelTest do
     {:ok, socket: socket, socket2: socket2, session_topic_1_name: session_topic_1_name}
   end
 
+  test "when unauthorized", %{socket: socket, session_topic_1_name: session_topic_1_name} do
+    {:error,  %{reason: "unauthorized"}} = join(socket, SessionTopicChannel, session_topic_1_name <> "2233")
+  end
+
   test "receive console on subscribing", %{socket: socket, session_topic_1_name: session_topic_1_name} do
     {:ok, _, _} = subscribe_and_join(socket, SessionTopicChannel, session_topic_1_name)
     assert_push("console", %{})

@@ -8,8 +8,8 @@ defmodule KlziiChat.SessionTopicChannel do
 
 
   @moduledoc """
-    This Channel is only for Topic context brodcast and receive messages from session members
-    History for specific topic
+    This Channel is only for Session Topic context brodcast and receive messages from session members
+    History for specific session topic
   """
 
   intercept ["new_message", "update_message", "update_message", "thumbs_up"]
