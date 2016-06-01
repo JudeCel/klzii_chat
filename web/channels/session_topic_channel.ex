@@ -16,10 +16,9 @@ defmodule KlziiChat.SessionTopicChannel do
 
   def join("session_topic:" <> session_topic_id, _payload, socket) do
     if authorized?(socket, session_topic_id) do
-      session_member = get_session_member(socket)
       socket = assign(socket, :session_topic_id, String.to_integer(session_topic_id))
       send(self, :after_join)
-      case MessageService.history(session_topic_id, session_member) do
+      case MessageService.history(session_topic_id, get_session_member(socket)) do
         {:ok, history} ->
           {:ok, history, socket}
         {:error, reason} ->
