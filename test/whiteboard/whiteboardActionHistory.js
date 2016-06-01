@@ -12,11 +12,6 @@ describe("testWhiteboard", ()=> {
   let step6RedoObject = "six_redo";
   let step7RedoObject = "seven_redo";
 
-  before(function() {
-  });
-  after(function() {
-  });
-
   it("Test Whiteboard undo history", () => {
     assert.equal(null, undoHistoryFactory.undoStepObject());
     //at this point we should have 0 steps in history
