@@ -61,7 +61,6 @@ defmodule KlziiChat.WhiteboardChannel do
   end
 
   def handle_in("deleteAll", _, socket) do
-    session_member_id = socket.assigns.session_member.id
     session_topic_id = socket.assigns.session_topic_id
     WhiteboardService.deleteAll(session_topic_id)
     broadcast! socket, "deleteAll", %{}

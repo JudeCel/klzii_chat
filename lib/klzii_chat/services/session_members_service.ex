@@ -3,7 +3,7 @@ defmodule KlziiChat.Services.SessionMembersService do
   import Ecto.Query, only: [from: 1, from: 2]
 
   @spec get_member_from_token(String.t) :: {:ok, %AccountUser{}} | {:error, String.t}
-  defp get_member_from_token(token) do
+  def get_member_from_token(token) do
     with {:ok, claims} <- Guardian.decode_and_verify(token),
          {:ok, member} <- KlziiChat.Guardian.Serializer.from_token(claims["sub"]),
      do: {:ok, member}

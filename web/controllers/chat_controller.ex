@@ -1,6 +1,11 @@
 defmodule KlziiChat.ChatController do
   use KlziiChat.Web, :controller
+  import KlziiChat.Services.SessionMembersService, only: [get_member_from_token: 1]
 
+  @doc """
+    This index action is only for dev or test env.
+    Parameter token dev should be Session member token
+  """
   def index(conn, %{"token_dev" => token}) do
     case Mix.env do
       env when env in [:dev, :test] ->
@@ -26,11 +31,5 @@ defmodule KlziiChat.ChatController do
           |> halt
       end
     end
-  end
-
-  defp get_member_from_token(token) do
-    with {:ok, claims} <- Guardian.decode_and_verify(token),
-         {:ok, member} <- KlziiChat.Guardian.Serializer.from_token(claims["sub"]),
-     do: {:ok, member}
   end
 end
