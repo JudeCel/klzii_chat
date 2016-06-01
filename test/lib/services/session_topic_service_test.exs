@@ -1,7 +1,6 @@
 defmodule KlziiChat.Services.SessionTopicServiceTest do
   use KlziiChat.{ModelCase, SessionMemberCase}
   alias KlziiChat.Services.SessionTopicService
-  alias Ecto.DateTime
 
   setup %{session_topic_1: session_topic_1, member: member, member2: member2} do
     {:ok, create_date1} = Ecto.DateTime.cast("2016-05-20T09:50:00Z")
@@ -43,13 +42,12 @@ defmodule KlziiChat.Services.SessionTopicServiceTest do
   end
 
   test "get topic messages excluding facilitator", %{session_topic: session_topic, member2: member2} do
-    {:ok, [%{session_member: session_member }]} = SessionTopicService.message_history(session_topic.id, false, true)
+    {:ok, [%{session_member: session_member}]} = SessionTopicService.message_history(session_topic.id, false, true)
     assert(session_member.role == "participant")
     assert(session_member.username == member2.username)
   end
 
-  test "get stars only topic messages excluding facilitator - empty result", %{session_topic: session_topic} do
-    assert ({:ok, []} = SessionTopicService.message_history(session_topic.id, true, true))
+  test "get empty result for stars only topic messages excluding facilitator", %{session_topic: session_topic} do
+    {:ok, []} = SessionTopicService.message_history(session_topic.id, true, true)
   end
-
 end
