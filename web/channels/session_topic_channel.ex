@@ -1,7 +1,6 @@
 defmodule KlziiChat.SessionTopicChannel do
   use KlziiChat.Web, :channel
-  alias KlziiChat.Services.{MessageService, ResourceService,
-    UnreadMessageService, ConsoleService, SessionTopicService}
+  alias KlziiChat.Services.{MessageService, UnreadMessageService, ConsoleService, SessionTopicService}
   alias KlziiChat.{MessageView, Presence, Endpoint, ConsoleView, SessionTopicView}
   import(KlziiChat.Authorisations.Channels.SessionTopic, only: [authorized?: 2])
   import(KlziiChat.Helpers.SocketHelper, only: [get_session_member: 1])
@@ -76,24 +75,6 @@ defmodule KlziiChat.SessionTopicChannel do
       {:ok, console} ->
         broadcast! socket, "console",  ConsoleView.render("show.json", %{console: console})
         {:reply, :ok, socket}
-      {:error, reason} ->
-        {:error, %{reason: reason}}
-    end
-  end
-
-  def handle_in("resources", %{"type" => type}, socket) do
-    case ResourceService.get(get_session_member(socket).account_user_id, type) do
-      {:ok, resources} ->
-        {:reply, {:ok, %{type: type, resources: resources}}, socket}
-      {:error, reason} ->
-        {:error, %{reason: reason}}
-    end
-  end
-
-  def handle_in("deleteResources", %{"id" => id}, socket) do
-    case ResourceService.deleteByIds(get_session_member(socket).account_user_id, [id]) do
-      {:ok, resources} ->
-        {:reply, {:ok, %{ id: List.first(resources).id, type: List.first(resources).type }}, socket}
       {:error, reason} ->
         {:error, %{reason: reason}}
     end

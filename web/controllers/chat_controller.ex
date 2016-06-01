@@ -4,7 +4,7 @@ defmodule KlziiChat.ChatController do
 
   @doc """
     This index action is only for dev or test env.
-    Parameter token dev should be Session member token
+    Parameter token_dev should be Session member token
   """
   def index(conn, %{"token_dev" => token}) do
     case Mix.env do
