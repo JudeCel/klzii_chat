@@ -28,5 +28,8 @@ defmodule KlziiChat.Services.SessionTopicServiceTest do
     {:ok, session: session, session_topic: session_topic_1, session_member: member}
   end
 
+  test "base query - all messages", %{session_topic: session_topic} do
+    
+  end
 
 end

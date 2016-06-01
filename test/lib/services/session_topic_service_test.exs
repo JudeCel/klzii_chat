@@ -27,28 +27,25 @@ defmodule KlziiChat.Services.SessionTopicServiceTest do
       createdAt: create_date2
     ) |> Repo.insert!()
 
-    {:ok, session_topic: session_topic_1, member: member, member2: member2}
+    {:ok, session_topic: session_topic_1, member: member, member2: member2, create_date1: create_date1, create_date2: create_date2}
   end
 
 
-  test "get all sesion topic messages", %{session_topic: session_topic} do
-    {:ok, messages} = SessionTopicService.message_history(session_topic.id, false, false)
-    assert(Enum.count(messages) == 2)
+  test "get all sesion topic messages", %{session_topic: session_topic, create_date1: create_date1, create_date2: create_date2} do
+    {:ok, [first_mes, second_mes]} = SessionTopicService.message_history(session_topic.id, false, false)
+    assert(first_mes.createdAt == create_date1)
+    assert(second_mes.createdAt == create_date2)
   end
 
-  test "get starts only topic mesages", %{session_topic: session_topic, member: member} do
-    {:ok, [ %{ body: body, star: star, session_member: %{username: username} } ]}
-      = SessionTopicService.message_history(session_topic.id, true, false)
-    assert(body == "test message 1")
-    assert(star == true)
-    assert(username = member.username)
+  test "get starts only topic mesages", %{session_topic: session_topic} do
+    {:ok, [message]} = SessionTopicService.message_history(session_topic.id, true, false)
+    assert(message.star == true)
+    assert(message.body == "test message 1")
   end
 
   test "get topic messages excluding facilitator", %{session_topic: session_topic, member2: member2} do
-    {:ok, [ %{ body: body, session_member: %{username: username, role: role} } ]}
-    = SessionTopicService.message_history(session_topic.id, false, true)
-    assert(body == "test message 2")
-    assert(role == "participant")
-    assert(username = member2.username)
+    {:ok, [%{session_member: session_member }]} = SessionTopicService.message_history(session_topic.id, false, true)
+    assert(session_member.role == "participant")
+    assert(session_member.username == member2.username)
   end
 end
