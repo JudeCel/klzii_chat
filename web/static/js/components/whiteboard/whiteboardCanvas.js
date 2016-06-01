@@ -5,12 +5,10 @@ import { Modal }          from 'react-bootstrap'
 import whiteboardActions    from '../../actions/whiteboard'
 import { connect }          from 'react-redux';
 require("./drawControlls");
+import undoHistoryFactory  from './actionHistory';
 
 const WhiteboardCanvas = React.createClass({
   getInitialState:function() {
-    this.undoHistory = [];
-    this.undoHistoryIdx = 0;
-
     this.minimized = true;
     this.scaling = false;
     this.MIN_WIDTH = 316;
@@ -41,30 +39,8 @@ const WhiteboardCanvas = React.createClass({
 
     return {shapes: {}, content: '', addTextDisabled: true, addTextValue: ''};
   },
-  addStepToUndoHistory(json) {
-    var self = this;
-    //if made a few undo steps, then delete next redo steps first
-    if (self.undoHistoryIdx > 0 && self.undoHistoryIdx < self.undoHistory.length - 1) {
-      self.undoHistory = self.undoHistory.slice(0, self.undoHistoryIdx + 1);
-    }
-    //converting to JSON is necessary
-    self.undoHistory.push(JSON.stringify(json));
-    self.undoHistoryIdx = self.undoHistory.length - 1;
-  },
-  addAllDeletedObjectsToHistory() {
+  handleHistoryObject(currentStep, reverse) {
     let self = this;
-    let objects = [];
-    Object.keys(this.state.shapes).forEach(function(key, index) {
-      let element = self.state.shapes[key]
-      if (element) {
-        objects.push(self.prepareMessage(element, "delete"));
-      }
-    });
-    this.addStepToUndoHistory(objects);
-  },
-  handleHistoryObject(idx, reverse) {
-    let self = this;
-    let currentStep = JSON.parse(self.undoHistory[this.undoHistoryIdx]);
     if (currentStep instanceof Array) {
       currentStep.map(function(element) {
         self.processHistoryStep(element, reverse);
@@ -74,19 +50,15 @@ const WhiteboardCanvas = React.createClass({
     }
   },
   undoStep() {
-    this.undoHistoryIdx--;
-    if (this.undoHistoryIdx < 0) {
-      this.undoHistoryIdx = 0;
-    } else {
-      this.handleHistoryObject(this.undoHistoryIdx, true);
+    var step = undoHistoryFactory.undoStepObject();
+    if (step) {
+      this.handleHistoryObject(step, true);
     }
   },
   redoStep() {
-    this.undoHistoryIdx++;
-    if (this.undoHistoryIdx > this.undoHistory.length - 1) {
-      this.undoHistoryIdx = this.undoHistory.length - 1;
-    } else {
-      this.handleHistoryObject(this.undoHistoryIdx, false);
+    var step = undoHistoryFactory.redoStepObject();
+    if (step) {
+      this.handleHistoryObject(step, false);
     }
   },
   processHistoryStep(currentStepBase, reverse) {
@@ -99,13 +71,6 @@ const WhiteboardCanvas = React.createClass({
       }
     }
     this.sendMessage(currentStep);
-  },
-  processHistory(json){
-    if (json.eventType == "deleteAll") {
-      this.addAllDeletedObjectsToHistory();
-    } else {
-      this.addStepToUndoHistory(json);
-    }
   },
   sendMessage(json) {
     switch (json.eventType) {
@@ -131,13 +96,14 @@ const WhiteboardCanvas = React.createClass({
       }
       this.activeColour = this.props.currentUser.colour;
       this.activeStrokeColour = this.activeColour;
+      undoHistoryFactory.setHistoryOwner(this.props.currentUser.account_user_id);
     }
   },
   isFacilitator() {
     return this.props.currentUser.role == "facilitator";
   },
   canEditShape(item) {
-    return (this.isFacilitator() || item.userName == this.props.currentUser.username);
+    return (this.isFacilitator() || item.creator == this.props.currentUser.account_user_id);
   },
   processShapeData(event) {
     var self = this;
@@ -376,7 +342,7 @@ const WhiteboardCanvas = React.createClass({
   		message: message
   	};
     this.sendMessage(messageJSON);
-    this.processHistory(messageJSON);
+    undoHistoryFactory.processHistory(messageJSON, this.state.shapes);
   },
   getName() {
     return 'Whiteboard_';
@@ -384,23 +350,11 @@ const WhiteboardCanvas = React.createClass({
   eventCoords(e) {
     return({x: Number(e.clientX), y: Number(e.clientY)});
   },
-  prepareMessage(shape, action, mainAction) {
-    var	message = {
-      id: shape.id,
-      action: (mainAction || "draw"),
-      userName: this.props.currentUser.username
-		};
 
-    message.element = shape;
-    return {
-      eventType: action,
-      message: message
-    }
-  },
   sendObjectData(action, mainAction) {
-    let message = this.prepareMessage(this.activeShape, action, mainAction)
+    let message = undoHistoryFactory.prepareMessage(this.activeShape, action, mainAction)
     this.sendMessage(message);
-    this.processHistory(message);
+    undoHistoryFactory.processHistory(message, this.state.shapes);
   },
   handleObjectCreated() {
     if (this.activeShape && !this.activeShape.created) {
