@@ -3,32 +3,32 @@ defmodule KlziiChat.Services.WhiteboardService do
   import Ecto
   import Ecto.Query, only: [from: 1, from: 2]
 
-  def history(session_topic_id) do
+  def history(session_topic_id, session_member_id) do
     session_topic = Repo.get!(SessionTopic, session_topic_id)
+    session_member = Repo.get!(SessionMember, session_member_id)
     shapes = Repo.all(
       from e in assoc(session_topic, :shapes),
       preload: [:session_member]
     )
-    {:ok, Phoenix.View.render_many(shapes, ShapeView, "show.json")}
+    resp = Enum.map(shapes, fn shape ->
+      ShapeView.render("show.json", %{shape: shape, member: session_member})
+    end)
+    {:ok, resp}
   end
 
   def update(changeset) do
     case Repo.update changeset do
-      {:ok, event} ->
-        {:ok, build_object_response(event)}
+      {:ok, shape} ->
+        {:ok, shape}
       {:error, changeset} ->
         {:error, changeset}
     end
   end
 
-  def build_object_response(shape) do
-    ShapeView.render("show.json", %{shape: shape})
-  end
-
   def create(changeset) do
     case Repo.insert(changeset) do
-      {:ok, event} ->
-        {:ok, build_object_response(event)}
+      {:ok, shape} ->
+        {:ok, shape}
       {:error, changeset} ->
         {:error, changeset}
     end
