@@ -23,14 +23,11 @@ defmodule KlziiChat.UserSocket do
   # performing token verification on connect.
   def connect(%{"token" => token}, socket) do
     case sign_in(socket, token) do
-     {:ok, authed_socket, guardian_params} ->
-       session_member = guardian_params.resource.session_member
-       session_member_map = Phoenix.View.render(KlziiChat.SessionMembersView, "current_member.json", member: session_member)
-       {:ok, assign(authed_socket, :session_member, session_member_map )}
-     _ ->
-       #unauthenticated socket
+      {:ok, authed_socket, _guardian_params} ->
+        {:ok, assign(authed_socket, :session_member, get_current_resource(authed_socket) )}
+      _ ->
        {:error, "Token not found"}
-   end
+    end
   end
 
   def connect(_params, _socket), do: :error
@@ -45,4 +42,9 @@ defmodule KlziiChat.UserSocket do
   #
   # Returning `nil` makes this socket anonymous.
   def id(socket), do: "session_member_socket:#{socket.assigns.session_member.id}"
+
+  defp get_current_resource(socket) do
+    member = current_resource(socket)
+    Phoenix.View.render(KlziiChat.SessionMembersView, "current_member.json", member: member.session_member)
+  end
 end

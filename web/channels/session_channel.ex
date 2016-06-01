@@ -2,16 +2,20 @@ defmodule KlziiChat.SessionChannel do
   use KlziiChat.Web, :channel
   alias KlziiChat.Services.{SessionService, SessionMembersService}
   alias KlziiChat.{Presence, SessionMembersView}
+  import(KlziiChat.Authorisations.Channels.Session, only: [authorized?: 2])
+  import(KlziiChat.Helpers.SocketHelper, only: [get_session_member: 1])
 
-  # This Channel is only for session context
-  # Session Member information
-  # Global messages for session
+  @moduledoc """
+    This Channel is only for session context
+    Session Member information
+    Global messages for session
+  """
 
   intercept ["unread_messages"]
 
   def join("sessions:" <> session_id, _, socket) do
     {session_id, _} = Integer.parse(session_id)
-    if authorized?(socket) do
+    if authorized?(socket, session_id) do
       send(self, :after_join)
       case SessionService.find(session_id) do
         {:ok, session} ->
@@ -32,18 +36,18 @@ defmodule KlziiChat.SessionChannel do
         {:error, %{reason: reason}}
     end
 
-      {:ok, _} = Presence.track(socket, (socket.assigns.session_member.id |> to_string), %{
+      {:ok, _} = Presence.track(socket, (get_session_member(socket).id |> to_string), %{
         online_at: inspect(System.system_time(:seconds)),
-        id: socket.assigns.session_member.id,
-        role: socket.assigns.session_member.role
+        id: get_session_member(socket).id,
+        role: get_session_member(socket).role
       })
       push socket, "presence_state", Presence.list(socket)
-      push(socket, "self_info", socket.assigns.session_member)
+      push(socket, "self_info", get_session_member(socket))
     {:noreply, socket}
   end
 
   def handle_in("update_member", params, socket) do
-    case SessionMembersService.update_member(socket.assigns.session_member.id, params) do
+    case SessionMembersService.update_member(get_session_member(socket).id, params) do
       {:ok, session_member} ->
         broadcast(socket, "update_member", SessionMembersView.render("member.json", member: session_member))
         push(socket, "self_info", SessionMembersView.render("current_member.json", member: session_member))
@@ -54,7 +58,7 @@ defmodule KlziiChat.SessionChannel do
   end
 
   def handle_out("unread_messages", payload, socket) do
-    id = socket.assigns.session_member.id |> to_string
+    id = get_session_member(socket).id |> to_string
     case Map.get(payload, id, nil) do
       map when is_map(map) ->
         push socket, "unread_messages", map
@@ -62,10 +66,5 @@ defmodule KlziiChat.SessionChannel do
         nil
     end
     {:noreply, socket}
-  end
-
-  # Add authorization logic here as required.
-  defp authorized?(socket) do
-    is_map(socket.assigns.session_member)
   end
 end
