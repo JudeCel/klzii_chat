@@ -43,7 +43,7 @@ defmodule KlziiChat.Mixfile do
      {:httpotion, "~> 2.2.2"},
      {:postgrex,  "~> 0.11.1"},
      {:gettext, "~> 0.11"},
-     {:guardian, "~> 0.10.1"},
+     {:guardian, "~> 0.12.0"},
      {:cowboy, "~> 1.0.4"},
      {:corsica, "~> 0.4"},
      {:timex, "~> 2.1"},

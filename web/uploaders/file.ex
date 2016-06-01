@@ -32,6 +32,7 @@ defmodule KlziiChat.Uploaders.File do
     str = "#{version}_#{scope.name}"
     Regex.replace(~r/( |-)/, str, "")
   end
+  def filename(version, _), do: version
 
   def storage_dir(_, {file, scope}) do
     case Mix.env do
@@ -41,8 +42,4 @@ defmodule KlziiChat.Uploaders.File do
         "priv/static/uploads/file/#{scope.accountId}/"
     end
   end
-
-
-  # To make the destination file the same as the version:
-  def filename(version, _), do: version
 end

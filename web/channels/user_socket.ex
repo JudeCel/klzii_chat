@@ -1,6 +1,6 @@
 defmodule KlziiChat.UserSocket do
   use Phoenix.Socket
-  import KlziiChat.Services.SessionMembersService, only: [find_by_token: 1]
+  import Guardian.Phoenix.Socket
   ## Channels
   channel "sessions:*", KlziiChat.SessionChannel
   channel "session_topic:*", KlziiChat.SessionTopicChannel
@@ -8,7 +8,7 @@ defmodule KlziiChat.UserSocket do
 
   ## Transports
   transport :websocket, Phoenix.Transports.WebSocket
-  # transport :longpoll, Phoenix.Transports.LongPoll
+  transport :longpoll, Phoenix.Transports.LongPoll
 
   # Socket params are passed from the client and can
   # be used to verify and authenticate a user. After
@@ -22,13 +22,14 @@ defmodule KlziiChat.UserSocket do
   # See `Phoenix.Token` documentation for examples in
   # performing token verification on connect.
   def connect(%{"token" => token}, socket) do
-    case find_by_token(token) do
-      nil ->
-        {:error, "Token not found"}
-      session_member ->
-        {:ok, assign(socket, :session_member, session_member)}
+    case sign_in(socket, token) do
+      {:ok, authed_socket, _guardian_params} ->
+        {:ok, assign(authed_socket, :session_member, get_current_resource(authed_socket) )}
+      _ ->
+       {:error, "Token not found"}
     end
   end
+
   def connect(_params, _socket), do: :error
   # Socket id's are topics that allow you to identify all sockets for a given user:
   #
@@ -41,4 +42,9 @@ defmodule KlziiChat.UserSocket do
   #
   # Returning `nil` makes this socket anonymous.
   def id(socket), do: "session_member_socket:#{socket.assigns.session_member.id}"
+
+  defp get_current_resource(socket) do
+    member = current_resource(socket)
+    Phoenix.View.render(KlziiChat.SessionMembersView, "current_member.json", member: member.session_member)
+  end
 end
