@@ -103,9 +103,13 @@ const WhiteboardCanvas = React.createClass({
     return this.props.currentUser.role == "facilitator";
   },
   canEditShape(item) {
-    return (this.isFacilitator() || item.creator == this.props.currentUser.account_user_id);
+    return (this.isFacilitator() || item.permissions.can_edit);
   },
-  processShapeData(event) {
+  shouldCreateHandles(event, obj) {
+    return (this.canEditShape(event) || obj.permissions.can_delete);
+  },
+  processShapeData(item) {
+    let event = item.event;
     var self = this;
     var obj = self.state.shapes[event.id];
     if (event.eventType != "delete" && !obj) {
@@ -131,7 +135,11 @@ const WhiteboardCanvas = React.createClass({
         default:
           break;
       };
-      if (obj && !obj.created && self.canEditShape(event)) {
+    }
+
+    if (obj) {
+      obj.permissions = item.permissions;
+      if (!obj.created && self.shouldCreateHandles(event, obj)) {
         self.prepareNewElement(obj);
         obj.created = true;
       }
@@ -173,8 +181,7 @@ const WhiteboardCanvas = React.createClass({
 
     dataKeys.map((key) => {
       let item = data[key]
-      let event = item.event;
-      self.processShapeData(event);
+      self.processShapeData(item);
 
       let position = shapesKeys.indexOf(key)
       if (position >-1) {
@@ -327,7 +334,7 @@ const WhiteboardCanvas = React.createClass({
     }
   },
   deleteActive() {
-    if (this.activeShape && this.canEditShape(this.activeShape)) {
+    if (this.activeShape && this.activeShape.permissions.can_delete) {
       this.sendObjectData('delete');
       this.activeShape.ftRemove();
       this.activeShape = null;
@@ -368,6 +375,7 @@ const WhiteboardCanvas = React.createClass({
     this.coords = null;
   },
   handleMouseDown: function(e){
+    if (!this.props.currentUser.permissions.events.can_new_shape) return;
     if (!this.isValidButton(e)) return;
     if (this.minimized) return;
     if (this.scaling) return;
@@ -391,6 +399,7 @@ const WhiteboardCanvas = React.createClass({
     return arrow.marker(0,0, 10,10, 0,5);
   },
   handleMouseMove(e) {
+    if (!this.props.currentUser.permissions.events.can_new_shape) return;
     if (!this.isValidButton(e)) return;
     if (this.minimized) return;
     if (!this.coords) return;

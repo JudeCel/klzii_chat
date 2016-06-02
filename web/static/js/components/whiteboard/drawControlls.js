@@ -602,10 +602,19 @@
 			var intersectsVDown = Snap.path.intersection(transformedPath, intersectLineHDown);
 
 			// depending on shape size/angle and form vertical size up and down can vary a bit
+			var nxDown = intersectsVDown[0].x?intersectsVDown[0].x:0;
+			var nyDown = intersectsVDown[0].y?intersectsVDown[0].y:0;
+
+			var nx = intersects.length?intersects[0].x:0;
+			var ny = intersects.length?intersects[0].y:0;
+
+			var nxV = intersectsV.length?intersectsV[0].x:0;
+			var nyV = intersectsV.length?intersectsV[0].y:0;
+
 			mSize = {
-				height: Snap.calcDistance(mainDBB.cx, mainDBB.cy, intersects[0].x, intersects[0].y) * 2,
-				width: Snap.calcDistance(mainDBB.cx, mainDBB.cy, intersectsV[0].x, intersectsV[0].y) * 2,
-				heightDown: Snap.calcDistance(mainDBB.cx, mainDBB.cy, intersectsVDown[0].x, intersectsVDown[0].y) * 2,
+				height: Snap.calcDistance(mainDBB.cx, mainDBB.cy, nx, ny) * 2,
+				width: Snap.calcDistance(mainDBB.cx, mainDBB.cy, nxV, nyV) * 2,
+				heightDown: Snap.calcDistance(mainDBB.cx, mainDBB.cy, nxDown, nyDown) * 2,
 				posX: intersects[0].x,
 				posY: intersects[0].y
 			};
