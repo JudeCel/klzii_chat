@@ -50,15 +50,19 @@ defmodule KlziiChat.Services.FileServiceTest do
 
   test "convet HTML to PDF" do
     path_to_html = FileService.compose_path(@tmp_path, @report_name, "html")
-    path_to_pdf = FileService.compose_path(@tmp_path, @report_name, "html")
+    path_to_pdf = FileService.compose_path(@tmp_path, @report_name, "pdf")
 
     :ok = File.touch(path_to_html)
-    {:ok, path_to_pdf} = FileService.html_to_pdf(path_to_html)
+    {:ok, ^path_to_pdf} = FileService.html_to_pdf(path_to_html)
 
     assert(File.exists?(path_to_html) == false)
     assert(File.exists?(path_to_pdf) == true)
 
     :ok = File.rm(path_to_pdf)
+  end
+
+  test "wkhtmltopdf error (non 0 exit code)" do
+    {:error, _} = FileService.wkhtmltopdf("somethingwrong")
   end
 
 end

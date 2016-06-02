@@ -29,7 +29,7 @@ defmodule KlziiChat.Services.FileService do
   end
 
   @spec wkhtmltopdf(String.t) :: {:ok | :error, String.t}
-  defp wkhtmltopdf(path_to_html) do
+  def wkhtmltopdf(path_to_html) do
     path_to_pdf = Path.rootname(path_to_html) <> ".pdf"
 
     case System.cmd("wkhtmltopdf", ["file://" <> path_to_html, path_to_pdf], stderr_to_stdout: true) do
