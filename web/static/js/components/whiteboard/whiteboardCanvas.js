@@ -50,14 +50,14 @@ const WhiteboardCanvas = React.createClass({
     }
   },
   undoStep() {
-    var step = undoHistoryFactory.currentStepObject();
+    let step = undoHistoryFactory.currentStepObject();
     undoHistoryFactory.undoStepObject();
     if (step) {
       this.handleHistoryObject(step, true);
     }
   },
   redoStep() {
-    var step = undoHistoryFactory.currentStepObject();
+    let step = undoHistoryFactory.currentStepObject();
     undoHistoryFactory.redoStepObject();
     if (step) {
       this.handleHistoryObject(step, false);
@@ -99,17 +99,13 @@ const WhiteboardCanvas = React.createClass({
       }
       this.activeColour = this.props.currentUser.colour;
       this.activeStrokeColour = this.activeColour;
-      undoHistoryFactory.setHistoryOwner(this.props.currentUser.account_user_id);
     }
   },
-  isFacilitator() {
-    return this.props.currentUser.role == "facilitator";
-  },
   canEditShape(item) {
-    return (this.isFacilitator() || item.permissions.can_edit);
+    return (item.permissions.can_edit);
   },
-  shouldCreateHandles(event, obj) {
-    return (this.canEditShape(event) || obj.permissions.can_delete);
+  shouldCreateHandles(obj) {
+    return (obj.permissions.can_edit || obj.permissions.can_delete);
   },
   processShapeData(item) {
     let event = item.event;
@@ -142,7 +138,7 @@ const WhiteboardCanvas = React.createClass({
 
     if (obj) {
       obj.permissions = item.permissions;
-      if (!obj.created && self.shouldCreateHandles(event, obj)) {
+      if (!obj.created && self.shouldCreateHandles(obj)) {
         self.prepareNewElement(obj);
         obj.created = true;
       }
@@ -355,7 +351,18 @@ const WhiteboardCanvas = React.createClass({
   		message: message
   	};
     this.sendMessage(messageJSON);
-    undoHistoryFactory.processHistory(messageJSON, this.state.shapes);
+    undoHistoryFactory.addStepToUndoHistory(this.addAllDeletedObjectsToHistory(this.state.shapes));
+  },
+  addAllDeletedObjectsToHistory(shapes) {
+    let objects = [];
+    let self = this;
+    Object.keys(shapes).forEach(function(key, index) {
+      let element = shapes[key];
+      if (element) {
+        objects.push(self.prepareMessage(element, "delete"));
+      }
+    });
+    return objects;
   },
   getName() {
     return 'Whiteboard_';
@@ -363,11 +370,10 @@ const WhiteboardCanvas = React.createClass({
   eventCoords(e) {
     return({x: Number(e.clientX), y: Number(e.clientY)});
   },
-
   sendObjectData(action, mainAction) {
-    let message = undoHistoryFactory.prepareMessage(this.activeShape, action, mainAction)
+    let message = this.prepareMessage(this.activeShape, action, mainAction)
     this.sendMessage(message);
-    undoHistoryFactory.processHistory(message, this.state.shapes);
+    undoHistoryFactory.addStepToUndoHistory(message);
   },
   handleObjectCreated() {
     if (this.activeShape && !this.activeShape.created) {
@@ -591,6 +597,18 @@ const WhiteboardCanvas = React.createClass({
       enabled = true;
     }
     return "btn " + (enabled?"btn-warning":"btn-default");
+  },
+  prepareMessage(shape, action, mainAction) {
+    let	message = {
+      id: shape.id,
+      action: (mainAction || "draw")
+    };
+
+    message.element = shape;
+    return {
+      eventType: action,
+      message: message
+    }
   },
   render() {
     const { show, onHide, boardContent, channel } = this.props;
