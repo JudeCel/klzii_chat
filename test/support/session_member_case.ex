@@ -53,7 +53,7 @@ defmodule KlziiChat.SessionMemberCase do
       boardMessage: "greeting message for cool session topic 2 !"
     ) |> Repo.insert!
 
-    member = %SessionMember{
+    facilitator = %SessionMember{
       token: "oasu8asnx",
       username: "cool member",
       sessionId: session.id,
@@ -62,7 +62,7 @@ defmodule KlziiChat.SessionMemberCase do
       accountUserId: 1
     } |> Repo.insert!
 
-    member_2 = %SessionMember{
+    participant = %SessionMember{
       token: "==oasu8asnx",
       username: "cool member 2",
       sessionId: session.id,
@@ -76,8 +76,8 @@ defmodule KlziiChat.SessionMemberCase do
       topic_2: topic_2,
       session_topic_1: session_topic_1,
       session_topic_2: session_topic_2,
-      member: member,
-      member2: member_2,
+      facilitator: facilitator,
+      participant: participant,
       session: session,
       account_user: account_user,
     }

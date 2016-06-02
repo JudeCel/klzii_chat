@@ -3,12 +3,12 @@ defmodule KlziiChat.SessionChannelTest do
   alias KlziiChat.{Repo, UserSocket, SessionChannel, SessionTopicChannel}
   use KlziiChat.SessionMemberCase
 
-  setup %{session_topic_1: session_topic_1, session: session, session: session, member: member, member2: member2} do
+  setup %{session_topic_1: session_topic_1, session: session, session: session, facilitator: facilitator, participant: participant} do
     Ecto.Adapters.SQL.Sandbox.mode(Repo, {:shared, self()})
     channel_name =  "sessions:" <> Integer.to_string(session.id)
     session_topic_1_name =  "session_topic:" <> Integer.to_string(session_topic_1.id)
-    { :ok, jwt1, _encoded_claims } =  Guardian.encode_and_sign(member)
-    { :ok, jwt2, _encoded_claims } =  Guardian.encode_and_sign(member2)
+    { :ok, jwt1, _encoded_claims } =  Guardian.encode_and_sign(facilitator)
+    { :ok, jwt2, _encoded_claims } =  Guardian.encode_and_sign(participant)
 
     {:ok, socket} = connect(UserSocket, %{"token" => jwt1})
     {:ok, socket2} = connect(UserSocket, %{"token" => jwt2})

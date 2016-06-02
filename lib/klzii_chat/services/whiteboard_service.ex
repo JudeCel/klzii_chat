@@ -1,6 +1,7 @@
 defmodule KlziiChat.Services.WhiteboardService do
   alias KlziiChat.{Repo, Shape, ShapeView, SessionMember, SessionTopic}
   alias KlziiChat.Services.Permissions.Whiteboard, as: WhiteboardPermissions
+  alias KlziiChat.Queries.Shapes, as: ShapesQueries
   import Ecto
   import Ecto.Query, only: [from: 1, from: 2]
 
@@ -39,7 +40,7 @@ defmodule KlziiChat.Services.WhiteboardService do
     session_member = Repo.get!(SessionMember, session_member_id)
     shape = Repo.get_by!(Shape, uid: params["id"])
 
-    if WhiteboardPermissions.can_edit(session_member, shape) do 
+    if WhiteboardPermissions.can_edit(session_member, shape) do
       Ecto.Changeset.change(shape, event: params)
       |> update
     else
@@ -63,21 +64,25 @@ defmodule KlziiChat.Services.WhiteboardService do
     end
   end
 
-  def deleteAll(session_topic_id) do
+  def deleteAll(session_member_id, session_topic_id) do
+    session_member = Repo.get!(SessionMember, session_member_id)
     session_topic = Repo.get!(SessionTopic, session_topic_id)
-      from(e in assoc(session_topic, :shapes)
-    )|> Repo.delete_all
-    # Enum.map(params["objects"], &(&1["id"])) |> deleteByUids
+    {_count, _model}  =
+      ShapesQueries.find_shapes_for_delete(session_member, session_topic)
+      |> Repo.delete_all
+    {status, result} = history(session_topic.id, session_member.id)
+    {status, result}
   end
 
-  def deleteByUids(ids) do
-    query = from(e in Shape, where: e.uid in ^ids)
+  def deleteByUid(session_member_id, id) do
+    session_member = Repo.get!(SessionMember, session_member_id)
+    query = from(e in Shape, where: e.uid == ^id)
+    shape = Repo.one(query)
 
-    case Repo.delete_all(query) do
-      {:error, changeset} ->
-        {:error, changeset}
-      {_count, _model} -> # Deleted with success
-        {:ok}
+    if WhiteboardPermissions.can_delete(session_member, shape) do
+      Repo.delete(shape)
+    else
+      {:error, "Action not allowed!"}
     end
   end
 end

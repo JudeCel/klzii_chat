@@ -3,7 +3,7 @@ defmodule KlziiChat.Services.ConsoleServiceTest do
   alias KlziiChat.Services.ConsoleService
   alias KlziiChat.Console
 
-  setup %{session_topic_1: session_topic_1, session: session, member: member, account_user: account_user} do
+  setup %{session_topic_1: session_topic_1, session: session, account_user: account_user} do
 
      resource = Ecto.build_assoc(
       account_user.account, :resources,
@@ -21,7 +21,7 @@ defmodule KlziiChat.Services.ConsoleServiceTest do
       scope: "collage"
     ) |> Repo.insert!
 
-    {:ok, session_id: session.id, member: member, youtube_resource: youtube_resource, resource: resource, session_topic_1: session_topic_1.id}
+    {:ok, session_id: session.id, youtube_resource: youtube_resource, resource: resource, session_topic_1: session_topic_1.id}
   end
 
   test "get console", %{session_id: session_id, session_topic_1: session_topic_1} do
@@ -31,30 +31,30 @@ defmodule KlziiChat.Services.ConsoleServiceTest do
     assert(%Console{} = same_console )
   end
 
-  test "add resource", %{member: member, session_topic_1: session_topic_1, resource: resource} do
-    {:ok, console} = ConsoleService.set_resource(member.id, session_topic_1, resource.id)
+  test "add resource", %{facilitator: facilitator, session_topic_1: session_topic_1, resource: resource} do
+    {:ok, console} = ConsoleService.set_resource(facilitator.id, session_topic_1, resource.id)
     image_id = Map.get(console, String.to_atom(resource.type <> "Id"))
     assert(image_id == resource.id)
     assert(%Console{} = console )
   end
 
-  test "remove resource ", %{member: member, session_topic_1: session_topic_1, resource: resource} do
-    {:ok, _} = ConsoleService.set_resource(member.id, session_topic_1, resource.id)
-    {:ok, console} = ConsoleService.remove_resource(member.id, session_topic_1, "image")
+  test "remove resource ", %{facilitator: facilitator, session_topic_1: session_topic_1, resource: resource} do
+    {:ok, _} = ConsoleService.set_resource(facilitator.id, session_topic_1, resource.id)
+    {:ok, console} = ConsoleService.remove_resource(facilitator.id, session_topic_1, "image")
     Map.get(console, String.to_atom(resource.type <> "Id"))
     |> is_nil |> assert
   end
 
-  test "add resource #youtube", %{member: member, session_topic_1: session_topic_1, youtube_resource: resource} do
-    {:ok, console} = ConsoleService.set_resource(member.id, session_topic_1, resource.id)
+  test "add resource #youtube", %{facilitator: facilitator, session_topic_1: session_topic_1, youtube_resource: resource} do
+    {:ok, console} = ConsoleService.set_resource(facilitator.id, session_topic_1, resource.id)
     video_id = Map.get(console, String.to_atom("videoId"))
     assert(video_id == resource.id)
     assert(%Console{} = console )
   end
 
-  test "remove resource #youtube", %{member: member, session_topic_1: session_topic_1, youtube_resource: resource} do
-    {:ok, _} = ConsoleService.set_resource(member.id, session_topic_1, resource.id)
-    {:ok, console} = ConsoleService.remove_resource(member.id, session_topic_1, "video")
+  test "remove resource #youtube", %{facilitator: facilitator, session_topic_1: session_topic_1, youtube_resource: resource} do
+    {:ok, _} = ConsoleService.set_resource(facilitator.id, session_topic_1, resource.id)
+    {:ok, console} = ConsoleService.remove_resource(facilitator.id, session_topic_1, "video")
     Map.get(console, String.to_atom(resource.type <> "Id"))
     |> is_nil |> assert
   end

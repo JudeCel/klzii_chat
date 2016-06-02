@@ -4,8 +4,8 @@ defmodule KlziiChat.SessionResourcesControllerTest do
   alias KlziiChat.{Repo}
   @image "test/fixtures/images/hamster.jpg"
 
-  setup %{conn: conn, member: member, account_user: account_user} do
-    { :ok, jwt, _encoded_claims } =  Guardian.encode_and_sign(member)
+  setup %{conn: conn, facilitator: facilitator, account_user: account_user} do
+    { :ok, jwt, _encoded_claims } =  Guardian.encode_and_sign(facilitator)
     conn = put_req_header(conn, "authorization", jwt)
 
     image_resource = Ecto.build_assoc(
@@ -18,8 +18,7 @@ defmodule KlziiChat.SessionResourcesControllerTest do
 
     {:ok,
       conn: put_req_header(conn, "accept", "application/json"),
-      image_resource: image_resource,
-      member: member
+      image_resource: image_resource
     }
   end
 
@@ -37,8 +36,8 @@ defmodule KlziiChat.SessionResourcesControllerTest do
     assert(status == "ok")
   end
 
-  test "delete", %{conn: conn, image_resource: image_resource, member: member} do
-    {:ok, session_resources} = SessionResourcesService.add_session_resources(image_resource.id, member.id)
+  test "delete", %{conn: conn, image_resource: image_resource, facilitator: facilitator} do
+    {:ok, session_resources} = SessionResourcesService.add_session_resources(image_resource.id, facilitator.id)
     session_resource = List.first(session_resources) |> Repo.preload([:resource])
     %{"id" => id, "type" => type} = delete(conn, session_resources_path(conn, :delete, session_resource.id))
       |> json_response(200)
