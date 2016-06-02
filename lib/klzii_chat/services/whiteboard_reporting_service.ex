@@ -1,14 +1,24 @@
 defmodule KlziiChat.Services.WhiteboardReportingService do
-  alias KlziiChat.Services.{WhiteboardService, FileService}
+  alias KlziiChat.{Repo, Shape}
   alias KlziiChat.Helpers.HTMLWhiteboardReportHelper
+  alias KlziiChat.Services.FileService
 
-    def save_report(path_to_file, :pdf, session_topic_id, session_member_id) do
-      {:ok, wb_history} = WhiteboardService.history(session_topic_id, session_member_id)
-      wb_elements = Enum.map(wb_history, &elements_filer(&1))
+  import Ecto.Query, only: [from: 2]
 
-      html_text = HTMLWhiteboardReportHelper.html_from_template(%{elements: wb_elements})
+    def save_report(path_to_file, :pdf, session_topic_id) do
+      wb_events = get_all_events(session_topic_id)
+
+      html_text = HTMLWhiteboardReportHelper.html_from_template(%{wb_events: wb_events})
       :ok = FileService.write_data(path_to_file, html_text)
     end
 
-    def elements_filer(%{event: %{"element" => %{"attr" => attr, "type" => type}}}), do: Map.put(attr, "type", type)
+
+    def get_all_events(session_topic_id) do
+      Repo.all(
+        from shape in Shape,
+        where: shape.sessionTopicId == ^session_topic_id,
+        order_by: [asc: shape.updatedAt],
+        select: shape.event
+      )
+    end
 end

@@ -13,9 +13,10 @@
   </body>
 
   <script>
-    var elements = <%= Poison.encode!(@elements) %>
-    elements.forEach(function(element) {
-      draw(".whiteboard", element);
+    var wb_events = <%= Poison.encode!(@wb_events) %>
+    wb_events.forEach(function(event) {
+      if(event.action == "draw")
+        draw("whiteboard", event.element.type, event.element.attr);
     });
   </script>
 </html>

@@ -13,7 +13,7 @@ defmodule KlziiChat.Services.WhiteboardReportingServiceTest do
       """
     event2 =
       """
-      {"id": "lineSiovhiuqt37", "action": "draw", "element": {"attr": {"x1": "116.875", "x2": "141.875", "y1": "367.3125", "y2": "88.3125", "fill": "undefined", "style": "stroke-width: 2;", "stroke": "#e51e39", "transform": "matrix(1,0.0017,-0.0017,1,0.1535,-0.2466)"}, "type": "line"}, "userName": "Facilitator - AccountManager"}
+      {"id": "ellipseSioxy861o64", "action": "draw", "element": {"attr": {"cx": "709.5416564941406", "cy": "391.4166564941406", "rx": "5", "ry": "40", "fill": "#e51e39", "style": "stroke-width: 2;", "stroke": "#e51e39", "transform": "matrix(1,0.0017,-0.0017,1,0.6842,-1.2378)"}, "type": "ellipse"}, "userName": "Facilitator - AccountManager"}
       """
 
 
@@ -35,14 +35,14 @@ defmodule KlziiChat.Services.WhiteboardReportingServiceTest do
       createdAt: create_date2
     ) |> Repo.insert!()
 
-    {:ok, session_topic: session_topic_1, facilitator: facilitator}
+    {:ok, session_topic: session_topic_1, event1: event1}
   end
 
-  test "white board history", %{session_topic: session_topic, facilitator: facilitator} do
-#    WhiteboardService.history(session_topic.id, member.id)
-#    |> IO.inspect()
-
-    WhiteboardReportingService.save_report("test.html", :pdf, session_topic.id, facilitator.id)
+  test "get all events", %{session_topic: session_topic, event1: event1} do
+    WhiteboardReportingService.save_report("test.html", :pdf, session_topic.id)
+    events = WhiteboardReportingService.get_all_events(session_topic.id)
+    assert(Enum.count(events) == 2)
+    assert(List.first(events) == Poison.decode!(event1))
   end
 
 end

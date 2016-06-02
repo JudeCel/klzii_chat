@@ -13,9 +13,10 @@
   </body>
 
   <script>
-    var elements = [{"y2":"99.3125","y1":"267.3125","x2":"376.875","x1":"432.875","type":"line","transform":"matrix(1,0.0017,-0.0017,1,0.173,-0.6567)","style":"stroke-width: 2;","stroke":"#e51e39","fill":"undefined"},{"y2":"88.3125","y1":"367.3125","x2":"141.875","x1":"116.875","type":"line","transform":"matrix(1,0.0017,-0.0017,1,0.1535,-0.2466)","style":"stroke-width: 2;","stroke":"#e51e39","fill":"undefined"}]
-    elements.forEach(function(element) {
-      draw(".whiteboard", element);
+    var wb_events = [{"userName":"Facilitator - AccountManager","id":"lineSiovhiuqt2o","element":{"type":"line","attr":{"y2":"99.3125","y1":"267.3125","x2":"376.875","x1":"432.875","transform":"matrix(1,0.0017,-0.0017,1,0.173,-0.6567)","style":"stroke-width: 2;","stroke":"#e51e39","fill":"undefined"}},"action":"draw"},{"userName":"Facilitator - AccountManager","id":"ellipseSioxy861o64","element":{"type":"ellipse","attr":{"transform":"matrix(1,0.0017,-0.0017,1,0.6842,-1.2378)","style":"stroke-width: 2;","stroke":"#e51e39","ry":"40","rx":"5","fill":"#e51e39","cy":"391.4166564941406","cx":"709.5416564941406"}},"action":"draw"}]
+    wb_events.forEach(function(event) {
+      if(event.action == "draw")
+        draw("whiteboard", event.element.type, event.element.attr);
     });
   </script>
 </html>
