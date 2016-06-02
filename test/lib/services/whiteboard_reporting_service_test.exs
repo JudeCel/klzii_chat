@@ -1,9 +1,9 @@
-defmodule KlziiChat.Services.ReportingServiceTest do
+defmodule KlziiChat.Services.WhiteboardReportingServiceTest do
   use KlziiChat.{ModelCase, SessionMemberCase}
   alias KlziiChat.Services.WhiteboardService
   alias KlziiChat.Services.WhiteboardReportingService
 
-  setup %{session: session, session_topic_1: session_topic_1, member: member, member2: member2} do
+  setup %{session_topic_1: session_topic_1, facilitator: facilitator, participant: participant} do
     {:ok, create_date1} = Ecto.DateTime.cast("2016-05-20T09:50:00Z")
     {:ok, create_date2} = Ecto.DateTime.cast("2016-05-20T09:55:00Z")
 
@@ -20,7 +20,7 @@ defmodule KlziiChat.Services.ReportingServiceTest do
     Ecto.build_assoc(
       session_topic_1, :shapes,
       sessionTopicId: session_topic_1.id,
-      sessionMemberId: member.id,
+      sessionMemberId: facilitator.id,
       uid: "lineSiovhiuqt29",
       event: Poison.decode!(event1),
       createdAt: create_date1
@@ -29,20 +29,20 @@ defmodule KlziiChat.Services.ReportingServiceTest do
     Ecto.build_assoc(
       session_topic_1, :shapes,
       sessionTopicId: session_topic_1.id,
-      sessionMemberId: member2.id,
+      sessionMemberId: participant.id,
       uid: "lineSiovhiuqt37",
       event: Poison.decode!(event2),
       createdAt: create_date2
     ) |> Repo.insert!()
 
-    {:ok, session_topic: session_topic_1, member: member}
+    {:ok, session_topic: session_topic_1, facilitator: facilitator}
   end
 
-  test "white board history", %{session_topic: session_topic, member: member} do
-    WhiteboardService.history(session_topic.id, member.id)
-    |> IO.inspect()
+  test "white board history", %{session_topic: session_topic, facilitator: facilitator} do
+#    WhiteboardService.history(session_topic.id, member.id)
+#    |> IO.inspect()
 
-    WhiteboardReportingService.save_report("test.html", :pdf, session_topic.id, member.id)
+    WhiteboardReportingService.save_report("test.html", :pdf, session_topic.id, facilitator.id)
   end
 
 end

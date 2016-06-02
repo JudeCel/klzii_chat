@@ -7,14 +7,14 @@ defmodule KlziiChat.Services.ReportingServiceTest do
 
   @emoticons %{emoticons_qnt: 7, sprites_qnt: 6, emoticon_size: [55, 55]}
 
-  setup %{session: session, session_topic_1: session_topic_1, member: member, member2: member2} do
+  setup %{session: session, session_topic_1: session_topic_1, facilitator: facilitator, participant: participant} do
     {:ok, create_date1} = Ecto.DateTime.cast("2016-05-20T09:50:00Z")
     {:ok, create_date2} = Ecto.DateTime.cast("2016-05-20T09:55:00Z")
 
     Ecto.build_assoc(
       session_topic_1, :messages,
       sessionTopicId: session_topic_1.id,
-      sessionMemberId: member.id,
+      sessionMemberId: facilitator.id,
       body: "test message 1",
       emotion: 0,
       createdAt: create_date1
@@ -23,15 +23,15 @@ defmodule KlziiChat.Services.ReportingServiceTest do
     Ecto.build_assoc(
       session_topic_1, :messages,
       sessionTopicId: session_topic_1.id,
-      sessionMemberId: member2.id,
+      sessionMemberId: participant.id,
       body: "test message 2",
       emotion: 1,
       createdAt: create_date2
     ) |> Repo.insert!()
 
-    {:ok, topic_history} = MessageService.history(session_topic_1.id, member)
+    {:ok, topic_history} = MessageService.history(session_topic_1.id, participant)
 
-    {:ok, session: session, session_topic: session_topic_1, session_member: member, topic_history: topic_history}
+    {:ok, session: session, session_topic: session_topic_1, session_member: facilitator, topic_history: topic_history}
   end
 
   test "topic history filters", %{topic_history: [th1, th2]} do
