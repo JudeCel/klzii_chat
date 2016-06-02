@@ -50,19 +50,18 @@ const WhiteboardCanvas = React.createClass({
     }
   },
   undoStep() {
-    var step = undoHistoryFactory.undoStepObject();
+    var step = undoHistoryFactory.currentStepObject();
+    undoHistoryFactory.undoStepObject();
     if (step) {
       this.handleHistoryObject(step, true);
     }
   },
   redoStep() {
-    var step = undoHistoryFactory.redoStepObject();
-    //step = undoHistoryFactory.undoStepObject();
+    var step = undoHistoryFactory.currentStepObject();
+    undoHistoryFactory.redoStepObject();
     if (step) {
-      console.log("___", step);
       this.handleHistoryObject(step, false);
     }
-    //undoHistoryFactory.redoStepObject();
   },
   processHistoryStep(currentStepBase, reverse) {
     let currentStep = {...currentStepBase};
@@ -116,7 +115,6 @@ const WhiteboardCanvas = React.createClass({
     let event = item.event;
     var self = this;
     var obj = self.state.shapes[event.id];
-    console.log("_______processShapeData________", item, event.action, "_____obj?", obj?"present":"nope");
     if (event.action != "delete" && !obj) {
       switch (event.element.type) {
         case "ellipse":
@@ -151,7 +149,6 @@ const WhiteboardCanvas = React.createClass({
     }
 
     if (obj) {
-      console.log("__shape here", event.action);
       if (event.action == "delete") {
         obj.ftRemove();
         self.state.shapes[event.id] = null;
@@ -196,6 +193,10 @@ const WhiteboardCanvas = React.createClass({
     childrens.map(function(item) {
       let position = shapesKeys.indexOf(item.id)
       if (position > -1) {
+        if (self.activeShape && self.activeShape.id == item.id) {
+          self.activeShape = null;
+        }
+        self.state.shapes[item.id] = null;
         item.ftRemove();
       }
     });

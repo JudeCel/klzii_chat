@@ -3,7 +3,7 @@ let undoHistoryIdx = 0;
 let historyOwner = "";
 
 function copyObject(obj) {
-  return return JSON.parse(JSON.stringify(obj));
+  return JSON.parse(JSON.stringify(obj));
 }
 
 function addStepToUndoHistory(json) {
@@ -11,7 +11,6 @@ function addStepToUndoHistory(json) {
   if (undoHistoryIdx > 0 && undoHistoryIdx < undoHistory.length - 1) {
     undoHistory = undoHistory.slice(0, undoHistoryIdx + 1);
   }
-  //converting to JSON is necessary
   undoHistory.push(copyObject(json));
   undoHistoryIdx = undoHistory.length - 1;
 }
@@ -19,7 +18,7 @@ function addStepToUndoHistory(json) {
 function addAllDeletedObjectsToHistory(shapes) {
   let objects = [];
   Object.keys(shapes).forEach(function(key, index) {
-    let element = shapes[key]
+    let element = shapes[key];
     if (element) {
       objects.push(prepareMessage(element, "delete"));
     }
@@ -35,30 +34,26 @@ function processHistory(json, shapes){
   }
 }
 
+function currentStepObject() {
+  return undoHistory[undoHistoryIdx];
+}
 function undoStepObject() {
   undoHistoryIdx--;
   if (undoHistoryIdx < 0) {
     undoHistoryIdx = 0;
-  }
-  if (undoHistory[undoHistoryIdx]) {
-    //return JSON.parse(undoHistory[undoHistoryIdx]);
-    return undoHistory[undoHistoryIdx];
-  } else {
     return null;
+  } else {
+    return undoHistory[undoHistoryIdx];
   }
 }
 
 function redoStepObject() {
-  console.log("lnegth", undoHistory.length, undoHistoryIdx);
   undoHistoryIdx++;
   if (undoHistoryIdx > undoHistory.length - 1) {
     undoHistoryIdx = undoHistory.length - 1;
-  }
-
-  if (undoHistory[undoHistoryIdx]) {
-    return undoHistory[undoHistoryIdx];
-  } else {
     return null;
+  } else {
+    return undoHistory[undoHistoryIdx];
   }
 }
 
@@ -92,5 +87,6 @@ module.exports = {
   addStepToUndoHistory: addStepToUndoHistory,
   getActionCount: getActionCount,
   prepareMessage: prepareMessage,
-  setHistoryOwner: setHistoryOwner
+  setHistoryOwner: setHistoryOwner,
+  currentStepObject: currentStepObject
 };
