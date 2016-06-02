@@ -110,6 +110,11 @@ const ChangeAvatarModal = React.createClass({
                             </div>
                           )
                         }
+
+                        {/* Default one */}
+                        <div key={ -1 } className='col-md-3 cursor-pointer' onClick={ this.chooseAvatar } data-id={ -1 }>
+                          <AvatarPreview index={ -1 } type={ tab.type } />
+                        </div>
                       </div>
                     )
                   }
