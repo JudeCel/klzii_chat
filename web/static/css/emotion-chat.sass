@@ -3,11 +3,11 @@
   height: 55px
   background-image: url($image) !important
 
-  -webkit-animation: play $time steps($steps) infinite
-  -moz-animation: play $time steps($steps) infinite
-  -ms-animation: play $time steps($steps) infinite
-  -o-animation: play $time steps($steps) infinite
-  animation: play $time steps($steps) infinite
+  -webkit-animation: play-chat $time steps($steps) infinite
+  -moz-animation: play-chat $time steps($steps) infinite
+  -ms-animation: play-chat $time steps($steps) infinite
+  -o-animation: play-chat $time steps($steps) infinite
+  animation: play-chat $time steps($steps) infinite
 
 @mixin keyframe-chat
   from
@@ -23,17 +23,17 @@ $emotion-chat-max: 6
   .emotion-chat-#{$i}
     @include emotion-chat("/images/emotions/emoticon_#{$i}_sprite.svg", 1.5s, 6)
 
-@-webkit-keyframes play
+@-webkit-keyframes play-chat
   @include keyframe-chat
 
-@-moz-keyframes play
+@-moz-keyframes play-chat
   @include keyframe-chat
 
-@-ms-keyframes play
+@-ms-keyframes play-chat
   @include keyframe-chat
 
-@-o-keyframes play
+@-o-keyframes play-chat
   @include keyframe-chat
 
-@keyframes play
+@keyframes play-chat
   @include keyframe-chat

@@ -26,7 +26,9 @@ const Avatar = React.createClass({
     }
 
     if(face) {
-      avatar.image(`/images/avatar/${type}_${this.pickFace(index, this.props.member.online)}.svg`, 0, 0, 152, 140);
+      const startPos = 6*152;
+      let image = avatar.image(`/images/avatar/${type}_${this.pickFace(index, this.props.member.online)}_anim.svg`, 0, 0, startPos, 140);
+      image.addClass(`emotion-avatar-${index}`)
     }
     else {
       avatar.image(`/images/avatar/${type}_${this.padToTwo(index)}.svg`, 0, 0, 152, 140);
