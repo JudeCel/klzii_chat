@@ -41,7 +41,5 @@ defmodule KlziiChat.Uploaders.Video do
     str = "#{version}_#{scope.name}"
     Regex.replace(~r/( |-)/, str, "")
   end
-
-  # To make the destination file the same as the version:
   def filename(version, _), do: version
 end

@@ -1,21 +1,23 @@
 defmodule KlziiChat.SessionTopicChannel do
   use KlziiChat.Web, :channel
-  alias KlziiChat.Services.{MessageService, ResourceService,
-    UnreadMessageService, ConsoleService, SessionTopicService}
+  alias KlziiChat.Services.{MessageService, UnreadMessageService, ConsoleService, SessionTopicService}
   alias KlziiChat.{MessageView, Presence, Endpoint, ConsoleView, SessionTopicView}
+  import(KlziiChat.Authorisations.Channels.SessionTopic, only: [authorized?: 2])
+  import(KlziiChat.Helpers.SocketHelper, only: [get_session_member: 1])
 
-  # This Channel is only for Topic context
-  # brodcast and receive messages from session members
-  # History for specific topic
+
+  @moduledoc """
+    This Channel is only for Session Topic context brodcast and receive messages from session members
+    History for specific session topic
+  """
 
   intercept ["new_message", "update_message", "update_message", "thumbs_up"]
 
   def join("session_topic:" <> session_topic_id, _payload, socket) do
-    if authorized?(socket) do
-      session_member = socket.assigns.session_member
+    if authorized?(socket, session_topic_id) do
       socket = assign(socket, :session_topic_id, String.to_integer(session_topic_id))
       send(self, :after_join)
-      case MessageService.history(session_topic_id, session_member) do
+      case MessageService.history(session_topic_id, get_session_member(socket)) do
         {:ok, history} ->
           {:ok, history, socket}
         {:error, reason} ->
@@ -27,9 +29,9 @@ defmodule KlziiChat.SessionTopicChannel do
   end
 
   def handle_info(:after_join, socket) do
-    session_member = socket.assigns.session_member
+    session_member = get_session_member(socket)
     {:ok, console} = ConsoleService.get(session_member.session_id, socket.assigns.session_topic_id)
-    {:ok, _} = Presence.track(socket, (socket.assigns.session_member.id |> to_string), %{
+    {:ok, _} = Presence.track(socket, (get_session_member(socket).id |> to_string), %{
       online_at: inspect(System.system_time(:seconds)),
       id: session_member.id,
       role: session_member.role
@@ -44,7 +46,7 @@ defmodule KlziiChat.SessionTopicChannel do
 
   def handle_in("board_message", payload, socket) do
     session_topic_id = socket.assigns.session_topic_id
-    session_member = socket.assigns.session_member
+    session_member = get_session_member(socket)
     if String.length(payload["message"]) > 0  do
       case SessionTopicService.board_message(session_member.id, session_topic_id, payload) do
         {:ok, session_topic} ->
@@ -59,7 +61,7 @@ defmodule KlziiChat.SessionTopicChannel do
   end
 
   def handle_in("set_console_resource", %{"id" => id}, socket) do
-    case ConsoleService.set_resource(socket.assigns.session_member.id, socket.assigns.session_topic_id, id) do
+    case ConsoleService.set_resource(get_session_member(socket).id, socket.assigns.session_topic_id, id) do
       {:ok, console} ->
         broadcast! socket, "console",  ConsoleView.render("show.json", %{console: console})
         {:reply, :ok, socket}
@@ -69,7 +71,7 @@ defmodule KlziiChat.SessionTopicChannel do
   end
 
   def handle_in("remove_console_resource", %{"type" => type}, socket) do
-    case ConsoleService.remove_resource(socket.assigns.session_member.id, socket.assigns.session_topic_id, type) do
+    case ConsoleService.remove_resource(get_session_member(socket).id, socket.assigns.session_topic_id, type) do
       {:ok, console} ->
         broadcast! socket, "console",  ConsoleView.render("show.json", %{console: console})
         {:reply, :ok, socket}
@@ -78,27 +80,9 @@ defmodule KlziiChat.SessionTopicChannel do
     end
   end
 
-  def handle_in("resources", %{"type" => type}, socket) do
-    case ResourceService.get(socket.assigns.session_member.account_user_id, type) do
-      {:ok, resources} ->
-        {:reply, {:ok, %{type: type, resources: resources}}, socket}
-      {:error, reason} ->
-        {:error, %{reason: reason}}
-    end
-  end
-
-  def handle_in("deleteResources", %{"id" => id}, socket) do
-    case ResourceService.deleteByIds(socket.assigns.session_member.account_user_id, [id]) do
-      {:ok, resources} ->
-        {:reply, {:ok, %{ id: List.first(resources).id, type: List.first(resources).type }}, socket}
-      {:error, reason} ->
-        {:error, %{reason: reason}}
-    end
-  end
-
   def handle_in("new_message", payload, socket) do
     session_topic_id = socket.assigns.session_topic_id
-    session_member = socket.assigns.session_member
+    session_member = get_session_member(socket)
     if String.length(payload["body"]) > 0  do
       case MessageService.create_message(session_member, session_topic_id, payload) do
         {:ok, message} ->
@@ -114,9 +98,9 @@ defmodule KlziiChat.SessionTopicChannel do
   end
 
   def handle_in("delete_message", %{ "id" => id }, socket) do
-    case MessageService.deleteById(socket.assigns.session_member, id) do
+    case MessageService.deleteById(get_session_member(socket), id) do
       {:ok, resp} ->
-        session_member = socket.assigns.session_member
+        session_member = get_session_member(socket)
         KlziiChat.BackgroundTasks.Message.delete(session_member.session_id, socket.assigns.session_topic_id)
         broadcast! socket, "delete_message", resp
         {:reply, :ok, socket}
@@ -126,7 +110,7 @@ defmodule KlziiChat.SessionTopicChannel do
   end
 
   def handle_in("message_star", %{"id" => id}, socket) do
-    session_member = socket.assigns.session_member
+    session_member = get_session_member(socket)
     case MessageService.star(id, session_member) do
       {:ok, message} ->
         {:reply, {:ok, MessageView.render("show.json", %{message: message, member: session_member}) }, socket}
@@ -136,7 +120,7 @@ defmodule KlziiChat.SessionTopicChannel do
   end
 
   def handle_in("thumbs_up", %{"id" => id}, socket) do
-    case MessageService.thumbs_up(id, socket.assigns.session_member) do
+    case MessageService.thumbs_up(id, get_session_member(socket)) do
       {:ok, message} ->
         broadcast! socket, "update_message", message
         {:reply, :ok, socket}
@@ -146,7 +130,7 @@ defmodule KlziiChat.SessionTopicChannel do
   end
 
   def handle_in("update_message", %{"id" => id, "body" => body, "emotion" => emotion}, socket) do
-    case MessageService.update_message(id, body, emotion, socket.assigns.session_member) do
+    case MessageService.update_message(id, body, emotion, get_session_member(socket)) do
       {:ok, message} ->
         broadcast! socket, "update_message", message
         {:reply, :ok, socket}
@@ -156,14 +140,8 @@ defmodule KlziiChat.SessionTopicChannel do
   end
 
   def handle_out(message, payload, socket) do
-    session_member = socket.assigns.session_member
+    session_member = get_session_member(socket)
     push socket, message, MessageView.render("show.json", %{message: payload, member: session_member})
     {:noreply, socket}
-  end
-
-  # Add authorization logic here as required.
-  # TODO: Need verification by topic and session context.
-  defp authorized?(socket) do
-    is_map(socket.assigns.session_member)
   end
 end

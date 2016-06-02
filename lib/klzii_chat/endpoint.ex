@@ -19,7 +19,7 @@ defmodule KlziiChat.Endpoint do
     plug Phoenix.LiveReloader
     plug Phoenix.CodeReloader
   end
-  
+
   if Application.get_env(:klzii_chat, :sql_sandbox) do
     plug Phoenix.Ecto.SQL.Sandbox
   end
@@ -39,6 +39,8 @@ defmodule KlziiChat.Endpoint do
   plug Plug.Session,
     store: :cookie,
     key: "_klzii_chat_key",
-    signing_salt: "Rkjb13qZ"
+    signing_salt: "Rkjb13qZ",
+    log: :debug
+    
   plug KlziiChat.Router
 end

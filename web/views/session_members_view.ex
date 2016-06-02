@@ -3,6 +3,7 @@ defmodule KlziiChat.SessionMembersView do
   alias KlziiChat.Services.Permissions.Messages, as: MessagePermissions
   alias KlziiChat.Services.Permissions.Resources, as: ResourcePermissions
   alias KlziiChat.Services.Permissions.SessionTopic, as: SessionTopicPermissions
+  alias KlziiChat.Services.Permissions.Whiteboard, as: WhiteboardcPermissions
 
   def render("member.json", %{ member: member}) do
     %{id: member.id,
@@ -29,7 +30,8 @@ defmodule KlziiChat.SessionMembersView do
       permissions: %{
         events: %{
           can_new_message: MessagePermissions.can_new_message(member),
-          can_board_message: SessionTopicPermissions.can_board_message(member)
+          can_board_message: SessionTopicPermissions.can_board_message(member),
+          can_new_shape: WhiteboardcPermissions.can_new_shape(member),
         },
         resources: %{
           can_upload: ResourcePermissions.can_upload(member)

@@ -1,15 +1,12 @@
 defmodule KlziiChat.Services.SessionMembersService do
-  alias KlziiChat.{Repo, Message, SessionMember, SessionMembersView}
+  alias KlziiChat.{Repo, Message, AccountUser, SessionMember, SessionMembersView}
   import Ecto.Query, only: [from: 1, from: 2]
 
-  @spec find_by_token(String.t) :: nil | Map.t
-  def find_by_token(token) do
-    case Repo.get_by(SessionMember, token: token) do
-      nil ->
-        nil
-      session_member ->
-        Phoenix.View.render(SessionMembersView, "current_member.json", member: session_member)
-    end
+  @spec get_member_from_token(String.t) :: {:ok, %AccountUser{}} | {:error, String.t}
+  def get_member_from_token(token) do
+    with {:ok, claims} <- Guardian.decode_and_verify(token),
+         {:ok, member} <- KlziiChat.Guardian.Serializer.from_token(claims["sub"]),
+     do: {:ok, member}
   end
 
   @spec update_member(Integer.t, Map.t) :: {:ok, %SessionMember{}} | {:error, Ecto.Changeset.t}
