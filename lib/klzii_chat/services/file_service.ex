@@ -19,4 +19,25 @@ defmodule KlziiChat.Services.FileService do
     Enum.each(data_stream, &(:ok = IO.binwrite(file, &1)))
     File.close(file)
   end
+
+  @spec html_to_pdf(String.t) :: :ok | {:error, String.t}
+  def html_to_pdf(path_to_html) do
+    case File.exists?(path_to_html) and Path.extname(path_to_html) == ".html" do
+      true -> wkhtmltopdf(path_to_html)
+      false -> {:error, "HTML file not found"}
+    end
+  end
+
+  @spec wkhtmltopdf(String.t) :: {:ok | :error, String.t}
+  defp wkhtmltopdf(path_to_html) do
+    path_to_pdf = Path.rootname(path_to_html) <> ".pdf"
+
+    case System.cmd("wkhtmltopdf", ["file://" <> path_to_html, path_to_pdf], stderr_to_stdout: true) do
+      {_, 0} ->
+        :ok = File.rm(path_to_html)
+        {:ok, path_to_pdf}
+      {stdout, _} -> {:error, stdout}
+    end
+  end
+
 end

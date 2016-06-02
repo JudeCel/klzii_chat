@@ -12,7 +12,6 @@ defmodule KlziiChat.Services.WhiteboardReportingService do
       :ok = FileService.write_data(path_to_file, html_text)
     end
 
-
     def get_all_events(session_topic_id) do
       Repo.all(
         from shape in Shape,

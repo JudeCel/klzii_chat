@@ -16,7 +16,7 @@
     var wb_events = <%= Poison.encode!(@wb_events) %>
     wb_events.forEach(function(event) {
       if(event.action == "draw") {
-        draw("whiteboard", event.element.type, event.element.attr, "<%= Path.expand("./web/static/assets") %>");
+        draw("whiteboard", event.element.type, event.element.attr, "<%= Path.expand("./web/static/assets") %>"); <%# TODO: correct full path to images upload folder %>
       }
     });
   </script>
