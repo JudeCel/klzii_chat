@@ -10,6 +10,7 @@ import undoHistoryFactory  from './actionHistory';
 const WhiteboardCanvas = React.createClass({
   getInitialState:function() {
     this.minimized = true;
+    this.shapes = [];
     this.scaling = false;
     this.MIN_WIDTH = 316;
     this.MIN_HEIGHT = 153;
@@ -37,7 +38,7 @@ const WhiteboardCanvas = React.createClass({
     this.strokeWidthArray = [2, 4, 6];
     this.strokeWidth = this.strokeWidthArray[0];
 
-    return {shapes: {}, content: '', addTextDisabled: true, addTextValue: ''};
+    return {content: '', addTextDisabled: true, addTextValue: ''};
   },
   handleHistoryObject(currentStep, reverse) {
     let self = this;
@@ -110,7 +111,7 @@ const WhiteboardCanvas = React.createClass({
   processShapeData(item) {
     let event = item.event;
     var self = this;
-    var obj = self.state.shapes[event.id];
+    var obj = self.shapes[event.id];
     if (event.action != "delete" && !obj) {
       switch (event.element.type) {
         case "ellipse":
@@ -147,16 +148,16 @@ const WhiteboardCanvas = React.createClass({
     if (obj) {
       if (event.action == "delete") {
         obj.ftRemove();
-        self.state.shapes[event.id] = null;
+        self.shapes[event.id] = null;
       } else {
         var attrs = (event.element.attr instanceof Function)?event.element.attr():event.element.attr;
         obj.attr(attrs);
         obj.created = true;
-        if (!self.state.shapes[event.id]) {
+        if (!self.shapes[event.id]) {
           obj.id = event.id;
-          let newShapes = {...self.state.shapes}
+          let newShapes = {...self.shapes}
           newShapes[event.id] = obj;
-          self.state.shapes = newShapes;
+          self.shapes = newShapes;
         }
 
         //check if arrow
@@ -174,7 +175,7 @@ const WhiteboardCanvas = React.createClass({
   processWhiteboard(data) {
     let self = this;
     var dataKeys = Object.keys(data);
-    var shapesKeys = Object.keys(self.state.shapes)
+    var shapesKeys = Object.keys(self.shapes)
 
     dataKeys.map((key) => {
       let item = data[key]
@@ -192,7 +193,7 @@ const WhiteboardCanvas = React.createClass({
         if (self.activeShape && self.activeShape.id == item.id) {
           self.activeShape = null;
         }
-        self.state.shapes[item.id] = null;
+        self.shapes[item.id] = null;
         item.ftRemove();
       }
     });
@@ -323,9 +324,9 @@ const WhiteboardCanvas = React.createClass({
   shapeSelected(el, selected) {
     let self = this;
     if (selected){
-      Object.keys(this.state.shapes).forEach(function(key, index) {
-        if (self.state.shapes[key] && self.state.shapes[key].id != el.id) {
-          self.state.shapes[key].ftUnselect();
+      Object.keys(this.shapes).forEach(function(key, index) {
+        if (self.shapes[key] && self.shapes[key].id != el.id) {
+          self.shapes[key].ftUnselect();
         }
       });
 
@@ -338,7 +339,7 @@ const WhiteboardCanvas = React.createClass({
     if (this.activeShape && this.activeShape.permissions.can_delete) {
       this.sendObjectData('delete');
       this.activeShape.ftRemove();
-      this.state.shapes[this.activeShape.id] = null;
+      this.shapes[this.activeShape.id] = null;
       this.activeShape = null;
     }
   },
@@ -351,7 +352,7 @@ const WhiteboardCanvas = React.createClass({
   		message: message
   	};
     this.sendMessage(messageJSON);
-    undoHistoryFactory.addStepToUndoHistory(this.addAllDeletedObjectsToHistory(this.state.shapes));
+    undoHistoryFactory.addStepToUndoHistory(this.addAllDeletedObjectsToHistory(this.shapes));
   },
   addAllDeletedObjectsToHistory(shapes) {
     let objects = [];
@@ -382,7 +383,7 @@ const WhiteboardCanvas = React.createClass({
       this.prepareNewElement(this.activeShape);
       var temp = this.activeShape;
       this.sendObjectData('draw');
-      this.state.shapes[this.activeShape.id] = this.activeShape;
+      this.shapes[this.activeShape.id] = this.activeShape;
     }
     this.coords = null;
   },
