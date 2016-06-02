@@ -3,10 +3,10 @@ defmodule KlziiChat.WhiteboardChannelTest do
   use KlziiChat.SessionMemberCase
   alias KlziiChat.{Repo, UserSocket, WhiteboardChannel}
 
-  setup %{session_topic_1: session_topic_1, session: session, session: session, member: member} do
+  setup %{session_topic_1: session_topic_1, session: session, session: session, facilitator: facilitator} do
     Ecto.Adapters.SQL.Sandbox.mode(Repo, {:shared, self()})
     whiteboard_name =  "whiteboard:" <> Integer.to_string(session_topic_1.id)
-    { :ok, jwt, _encoded_claims } =  Guardian.encode_and_sign(member)
+    { :ok, jwt, _encoded_claims } =  Guardian.encode_and_sign(facilitator)
     {:ok, socket} = connect(UserSocket, %{"token" => jwt})
     {:ok, socket: socket, whiteboard_name: whiteboard_name}
   end
