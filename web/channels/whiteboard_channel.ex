@@ -38,7 +38,6 @@ defmodule KlziiChat.WhiteboardChannel do
       {:error, reason} ->
         {:error, %{reason: reason}}
     end
-    {:noreply, socket}
   end
 
   def handle_in("update", %{"object" => object}, socket) do
@@ -52,31 +51,34 @@ defmodule KlziiChat.WhiteboardChannel do
       {:error, reason} ->
         {:error, %{reason: reason}}
     end
-    {:noreply, socket}
   end
 
   def handle_in("delete", %{"uid" => uid}, socket) do
-    case WhiteboardService.deleteByUids([uid]) do
-      {:ok} ->
-        broadcast!(socket, "delete", %{uid: uid})
+    session_member = get_session_member(socket)
+    case WhiteboardService.deleteByUid(session_member.id, uid) do
+      {:ok, shape} ->
+        broadcast!(socket, "delete", %{uid: shape.uid})
         {:reply, :ok, socket}
       {:error, reason} ->
         {:error, %{reason: reason}}
     end
-    {:noreply, socket}
   end
 
   def handle_in("deleteAll", _, socket) do
     session_topic_id = socket.assigns.session_topic_id
-    WhiteboardService.deleteAll(session_topic_id)
-    broadcast!(socket, "deleteAll", %{})
-    {:reply, :ok, socket}
+    session_member = get_session_member(socket)
+    case WhiteboardService.deleteAll(session_member.id, session_topic_id) do
+      {:ok, remaining_shapes} ->
+        broadcast!(socket, "deleteAll", %{"shapes" => remaining_shapes})
+          {:reply, :ok, socket}
+      {:error, reason} ->
+        {:error, %{reason: reason}}
+    end
   end
 
   def handle_out(message, payload, socket) do
     session_member = get_session_member(socket)
     push(socket, message, ShapeView.render("show.json", %{shape: payload, member: session_member}))
-    # |> IO.inspect
     {:noreply, socket}
   end
 end

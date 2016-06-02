@@ -34,31 +34,47 @@ defmodule KlziiChat.WhiteboardChannelTest do
       socket = subscribe_and_join!(socket, WhiteboardChannel, whiteboard_name)
 
       body =  %{"type" => 23, "id" => "12"}
-      push(socket, "draw", body)
-      assert_receive(%Phoenix.Socket.Broadcast{})
-
+      ref = push(socket, "draw", body)
+      assert_reply(ref, :ok)
       assert_push "draw", shape
       assert(shape.event == body)
 
       update_body = %{"object" => %{"id" => body["id"], "event" => %{"type" => "1"} }}
-      push socket, "update", update_body
-      assert_receive(%Phoenix.Socket.Broadcast{})
+      update_ref = push socket, "update", update_body
+      assert_reply(update_ref, :ok)
       assert_push "update", update_shape
 
       assert(update_shape.event == update_body["object"] )
   end
 
 
-  # test "can push delete message", %{socket: socket, whiteboard_name: whiteboard_name} do
-  #   {:ok, _, socket} = subscribe_and_join(socket, SessionTopicChannel, whiteboard_name)
-  #     ref = push socket, "new_message", %{"emotion" => "1", "body" => "hey!!"}
-  #     assert_reply ref, :ok
-  #     assert_push "new_message", message
-  #
-  #     ref2 = push socket, "delete_message", %{"id" => message.id}
-  #     assert_reply ref2, :ok
-  #
-  #     assert_push "delete_message", resp
-  #     assert(resp == %{id: message.id, replyId: nil})
-  # end
+  test "can push delete shape", %{socket: socket, whiteboard_name: whiteboard_name} do
+    socket = subscribe_and_join!(socket, WhiteboardChannel, whiteboard_name)
+
+    body =  %{"type" => 23, "id" => "12"}
+    ref = push(socket, "draw", body)
+    assert_reply(ref, :ok)
+
+    assert_push "draw", shape
+    assert(shape.event == body)
+
+    delete_ref = push socket, "delete", %{"uid" => body["id"]}
+    assert_reply(delete_ref, :ok)
+    assert_push "delete", delete_shape
+    assert(delete_shape == %{uid: body["id"]})
+  end
+
+  test "can push delete all shape", %{socket: socket, whiteboard_name: whiteboard_name} do
+    socket = subscribe_and_join!(socket, WhiteboardChannel, whiteboard_name)
+
+    body =  %{"type" => 23, "id" => "12"}
+    ref = push(socket, "draw", body)
+    assert_reply(ref, :ok)
+    assert_push "draw", shape
+
+    delete_ref = push socket, "deleteAll", %{}
+    assert_reply(delete_ref, :ok)
+    assert_push "deleteAll", remaining_shapes
+    assert(remaining_shapes == %{"shapes" => []})
+  end
 end
