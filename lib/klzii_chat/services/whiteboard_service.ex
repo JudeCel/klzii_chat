@@ -67,8 +67,11 @@ defmodule KlziiChat.Services.WhiteboardService do
   def deleteAll(session_member_id, session_topic_id) do
     session_member = Repo.get!(SessionMember, session_member_id)
     session_topic = Repo.get!(SessionTopic, session_topic_id)
-    ShapesQueries.find_shapes_for_delete(session_member, session_topic) |> Repo.delete_all
-    history(session_topic.id, session_member.id)
+    {_count, _model}  =
+      ShapesQueries.find_shapes_for_delete(session_member, session_topic)
+      |> Repo.delete_all
+    {status, result} = history(session_topic.id, session_member.id)
+    {status, result}
   end
 
   def deleteByUid(session_member_id, id) do
