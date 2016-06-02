@@ -1,6 +1,7 @@
 defmodule KlziiChat.Services.ReportingServiceTest do
   use KlziiChat.{ModelCase, SessionMemberCase}
   alias KlziiChat.Services.WhiteboardService
+  alias KlziiChat.Services.WhiteboardReportingService
 
   setup %{session: session, session_topic_1: session_topic_1, member: member, member2: member2} do
     {:ok, create_date1} = Ecto.DateTime.cast("2016-05-20T09:50:00Z")
@@ -34,12 +35,14 @@ defmodule KlziiChat.Services.ReportingServiceTest do
       createdAt: create_date2
     ) |> Repo.insert!()
 
-    {:ok, session_topic: session_topic_1}
+    {:ok, session_topic: session_topic_1, member: member}
   end
 
-  test "white board history", %{session_topic: session_topic} do
-    WhiteboardService.history(session_topic.id)
+  test "white board history", %{session_topic: session_topic, member: member} do
+    WhiteboardService.history(session_topic.id, member.id)
     |> IO.inspect()
+
+    WhiteboardReportingService.save_report("test.html", :pdf, session_topic.id, member.id)
   end
 
 end

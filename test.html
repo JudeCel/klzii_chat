@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Klzii Chat Whiteboard</title>
+    <link rel="stylesheet" type = "text/css" href="/home/molly101/work/diatom/klzii_chat/web/static/css/reporting/whiteboard_styles.css">
+    <link rel="stylesheet" type = "text/css" href="/home/molly101/work/diatom/klzii_chat/web/static/css/reporting/whiteboard_shapes.css">
+    <script type="text/javascript" src="/home/molly101/work/diatom/klzii_chat/web/static/js/reporting/snap.svg-min.js"></script>
+  </head>
+
+  <body>
+    <svg class="whiteboard"></svg>
+  </body>
+
+  <script>
+    var shapes = [{"y2":"88.3125","y1":"367.3125","x2":"141.875","x1":"116.875","transform":"matrix(1,0.0017,-0.0017,1,0.1535,-0.2466)","style":"stroke-width: 2;","stroke":"#e51e39","fill":"undefined"},{"y2":"99.3125","y1":"267.3125","x2":"376.875","x1":"432.875","transform":"matrix(1,0.0017,-0.0017,1,0.173,-0.6567)","style":"stroke-width: 2;","stroke":"#e51e39","fill":"undefined"}]
+    shapes.forEach(function(element) {
+      draw("whiteboard", element);
+    });
+  </script>
+</html>

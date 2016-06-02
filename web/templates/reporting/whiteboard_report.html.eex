@@ -13,6 +13,9 @@
   </body>
 
   <script>
-    var shapes = <%= Poison.encode! %>
+    var shapes = <%= Poison.encode!(@elements) %>
+    shapes.forEach(function(element) {
+      draw("whiteboard", element);
+    });
   </script>
 </html>
