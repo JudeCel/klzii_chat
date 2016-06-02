@@ -2,13 +2,17 @@ let undoHistory = [];
 let undoHistoryIdx = 0;
 let historyOwner = "";
 
+function copyObject(obj) {
+  return return JSON.parse(JSON.stringify(obj));
+}
+
 function addStepToUndoHistory(json) {
   //if made a few undo steps, then delete next redo steps first
   if (undoHistoryIdx > 0 && undoHistoryIdx < undoHistory.length - 1) {
     undoHistory = undoHistory.slice(0, undoHistoryIdx + 1);
   }
   //converting to JSON is necessary
-  undoHistory.push(JSON.stringify(json));
+  undoHistory.push(copyObject(json));
   undoHistoryIdx = undoHistory.length - 1;
 }
 
@@ -35,19 +39,26 @@ function undoStepObject() {
   undoHistoryIdx--;
   if (undoHistoryIdx < 0) {
     undoHistoryIdx = 0;
-    return null;
+  }
+  if (undoHistory[undoHistoryIdx]) {
+    //return JSON.parse(undoHistory[undoHistoryIdx]);
+    return undoHistory[undoHistoryIdx];
   } else {
-    return JSON.parse(undoHistory[undoHistoryIdx]);
+    return null;
   }
 }
 
 function redoStepObject() {
+  console.log("lnegth", undoHistory.length, undoHistoryIdx);
   undoHistoryIdx++;
   if (undoHistoryIdx > undoHistory.length - 1) {
     undoHistoryIdx = undoHistory.length - 1;
-    return null;
+  }
+
+  if (undoHistory[undoHistoryIdx]) {
+    return undoHistory[undoHistoryIdx];
   } else {
-    return JSON.parse(undoHistory[undoHistoryIdx]);
+    return null;
   }
 }
 

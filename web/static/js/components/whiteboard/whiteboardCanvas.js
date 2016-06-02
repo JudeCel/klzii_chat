@@ -57,13 +57,17 @@ const WhiteboardCanvas = React.createClass({
   },
   redoStep() {
     var step = undoHistoryFactory.redoStepObject();
+    //step = undoHistoryFactory.undoStepObject();
     if (step) {
+      console.log("___", step);
       this.handleHistoryObject(step, false);
     }
+    //undoHistoryFactory.redoStepObject();
   },
   processHistoryStep(currentStepBase, reverse) {
     let currentStep = {...currentStepBase};
     if (reverse) {
+
       if (currentStep.eventType == "delete") {
         currentStep.eventType = "draw";
       } else if (currentStep.eventType == "draw") {
@@ -112,7 +116,8 @@ const WhiteboardCanvas = React.createClass({
     let event = item.event;
     var self = this;
     var obj = self.state.shapes[event.id];
-    if (event.eventType != "delete" && !obj) {
+    console.log("_______processShapeData________", item, event.action, "_____obj?", obj?"present":"nope");
+    if (event.action != "delete" && !obj) {
       switch (event.element.type) {
         case "ellipse":
           obj = self.snap.ellipse(0, 0, 0, 0).transform('r0.1');
@@ -145,12 +150,11 @@ const WhiteboardCanvas = React.createClass({
       }
     }
 
-    if (obj){
-      if (event.eventType == "delete") {
+    if (obj) {
+      console.log("__shape here", event.action);
+      if (event.action == "delete") {
         obj.ftRemove();
-        let newShapes = {...self.state.shapes}
-        newShapes[event.id] = null
-        self.state.shapes = newShapes;
+        self.state.shapes[event.id] = null;
       } else {
         var attrs = (event.element.attr instanceof Function)?event.element.attr():event.element.attr;
         obj.attr(attrs);
@@ -337,6 +341,7 @@ const WhiteboardCanvas = React.createClass({
     if (this.activeShape && this.activeShape.permissions.can_delete) {
       this.sendObjectData('delete');
       this.activeShape.ftRemove();
+      this.state.shapes[this.activeShape.id] = null;
       this.activeShape = null;
     }
   },
