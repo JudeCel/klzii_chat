@@ -10,5 +10,5 @@ defmodule KlziiChat.Services.WhiteboardReportingService do
       :ok = FileService.write_data(path_to_file, html_text)
     end
 
-    def elements_filer(%{event: %{"element" => %{"attr" => attr}}}), do: attr
+    def elements_filer(%{event: %{"element" => %{"attr" => attr, "type" => type}}}), do: Map.put(attr, "type", type)
 end

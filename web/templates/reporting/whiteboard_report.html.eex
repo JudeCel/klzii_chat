@@ -4,8 +4,8 @@
     <meta charset="utf-8">
     <title>Klzii Chat Whiteboard</title>
     <link rel="stylesheet" type = "text/css" href="<%= Path.expand("./web/static/css/reporting/whiteboard_styles.css") %>">
-    <link rel="stylesheet" type = "text/css" href="<%= Path.expand("./web/static/css/reporting/whiteboard_shapes.css") %>">
     <script type="text/javascript" src="<%= Path.expand("./web/static/js/reporting/snap.svg-min.js") %>"></script>
+    <script type="text/javascript" src="<%= Path.expand("./web/static/js/reporting/whiteboard_report.js") %>"></script>
   </head>
 
   <body>
@@ -13,9 +13,9 @@
   </body>
 
   <script>
-    var shapes = <%= Poison.encode!(@elements) %>
-    shapes.forEach(function(element) {
-      draw("whiteboard", element);
+    var elements = <%= Poison.encode!(@elements) %>
+    elements.forEach(function(element) {
+      draw(".whiteboard", element);
     });
   </script>
 </html>
