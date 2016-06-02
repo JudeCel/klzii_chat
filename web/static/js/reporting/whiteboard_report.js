@@ -1,4 +1,4 @@
-function draw(class_name, type, attr) {
+function draw(class_name, type, attr, image_path) {
   var wb = Snap('.' + class_name);
   var svg_el;
 
@@ -19,7 +19,7 @@ function draw(class_name, type, attr) {
       svg_el = wb.text(attr.x, attr.y, attr.textVal);
       break;
     case "image":
-      svg_el = wb.image(attr.href, attr.x, attr.y, attr.width, attr.height);  //TODO: correct full path to images upload folder
+      svg_el = wb.image(image_path + '/' + attr.href, attr.x, attr.y, attr.width, attr.height);  //TODO: correct full path to images upload folder
       break;
     default:
       return;

@@ -13,10 +13,11 @@
   </body>
 
   <script>
-    var wb_events = [{"userName":"Facilitator - AccountManager","id":"lineSiovhiuqt2o","element":{"type":"line","attr":{"y2":"99.3125","y1":"267.3125","x2":"376.875","x1":"432.875","transform":"matrix(1,0.0017,-0.0017,1,0.173,-0.6567)","style":"stroke-width: 2;","stroke":"#e51e39","fill":"undefined"}},"action":"draw"},{"userName":"Facilitator - AccountManager","id":"ellipseSioxy861o64","element":{"type":"ellipse","attr":{"transform":"matrix(1,0.0017,-0.0017,1,0.6842,-1.2378)","style":"stroke-width: 2;","stroke":"#e51e39","ry":"40","rx":"5","fill":"#e51e39","cy":"391.4166564941406","cx":"709.5416564941406"}},"action":"draw"}]
+    var wb_events = [{"userName":"Facilitator - AccountManager","id":"polylineSioylgpvpbf","element":{"type":"polyline","attr":{"transform":"matrix(1,0.0017,-0.0017,1,0,0)","style":"stroke-width: 2;","stroke":"#ff0000","points":"785.5416564941406,234.41665649414062,789.5416564941406,241.41665649414062,790.5416564941406,253.41665649414062,795.5416564941406,261.4166564941406,798.5416564941406,270.4166564941406,807.5416564941406,282.4166564941406,809.5416564941406,294.4166564941406,815.5416564941406,305.4166564941406,818.5416564941406,313.4166564941406,825.5416564941406,323.4166564941406,826.5416564941406,329.4166564941406,827.5416564941406,334.4166564941406,829.5416564941406,335.4166564941406,830.5416564941406,338.4166564941406,835.5416564941406,342.4166564941406,835.5416564941406,346.4166564941406,837.5416564941406,349.4166564941406,839.5416564941406,349.4166564941406,839.5416564941406,349.4166564941406,839.5416564941406,350.4166564941406,843.5416564941406,350.4166564941406,843.5416564941406,353.4166564941406","fill":"#e51e39"}},"action":"draw"},{"userName":"Facilitator - AccountManager","id":"imageSioylgpvp46","element":{"type":"image","attr":{"y":"20","x":"10","width":"200","transform":"matrix(1,0.0017,-0.0017,1,0.1223,-0.1919)","preserveAspectRatio":"none","href":"/images/logo.png","height":"100"}},"action":"draw"}]
     wb_events.forEach(function(event) {
-      if(event.action == "draw")
-        draw("whiteboard", event.element.type, event.element.attr);
+      if(event.action == "draw") {
+        draw("whiteboard", event.element.type, event.element.attr, "/home/molly101/work/diatom/klzii_chat/web/static/assets");
+      }
     });
   </script>
 </html>

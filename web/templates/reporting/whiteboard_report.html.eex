@@ -15,8 +15,9 @@
   <script>
     var wb_events = <%= Poison.encode!(@wb_events) %>
     wb_events.forEach(function(event) {
-      if(event.action == "draw")
-        draw("whiteboard", event.element.type, event.element.attr);
+      if(event.action == "draw") {
+        draw("whiteboard", event.element.type, event.element.attr, "<%= Path.expand("./web/static/assets") %>");
+      }
     });
   </script>
 </html>
