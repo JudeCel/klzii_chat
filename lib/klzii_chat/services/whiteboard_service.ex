@@ -1,5 +1,6 @@
 defmodule KlziiChat.Services.WhiteboardService do
   alias KlziiChat.{Repo, Shape, ShapeView, SessionMember, SessionTopic}
+  alias KlziiChat.Services.Permissions.Whiteboard, as: WhiteboardPermissions
   import Ecto
   import Ecto.Query, only: [from: 1, from: 2]
 
@@ -34,22 +35,32 @@ defmodule KlziiChat.Services.WhiteboardService do
     end
   end
 
-  def update_object(_session_member_id, _, params) do
-    Repo.get_by!(Shape, uid: params["id"])
-    |> Ecto.Changeset.change(event: params)
-    |> update
+  def update_object(session_member_id, _, params) do
+    session_member = Repo.get!(SessionMember, session_member_id)
+    shape = Repo.get_by!(Shape, uid: params["id"])
+
+    if WhiteboardPermissions.can_edit(session_member, shape) do 
+      Ecto.Changeset.change(shape, event: params)
+      |> update
+    else
+      {:error, "Action not allowed!"}
+    end
   end
 
   def create_object(session_member_id, session_topic_id, params) do
     session_member = Repo.get!(SessionMember, session_member_id)
-    changeset = build_assoc(
-      session_member, :shapes,
-      sessionId: session_member.sessionId,
-      event: params,
-      uid: params["id"],
-      sessionTopicId: session_topic_id
-    )
-    create(changeset)
+    if WhiteboardPermissions.can_new_shape(session_member) do
+      changeset = build_assoc(
+        session_member, :shapes,
+        sessionId: session_member.sessionId,
+        event: params,
+        uid: params["id"],
+        sessionTopicId: session_topic_id
+      )
+      create(changeset)
+    else
+      {:error, "Action not allowed!"}
+    end
   end
 
   def deleteAll(session_topic_id) do
