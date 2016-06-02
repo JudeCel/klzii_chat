@@ -4,7 +4,7 @@ defmodule KlziiChat.Services.Resourecs do
   alias KlziiChat.{Repo}
   alias KlziiChat.Services.SessionResourcesService
 
-  setup %{account_user: account_user, session: session, member: member} do
+  setup %{account_user: account_user, session: session} do
     Ecto.build_assoc(
       account_user.account, :resources,
       accountUserId: account_user.id,
@@ -14,7 +14,7 @@ defmodule KlziiChat.Services.Resourecs do
     ) |> Repo.insert!
 
     base_query = QueriesResources.base_query(account_user)
-    {:ok, base_query: base_query, account_user: account_user, session_id: session.id, member_id: member.id,}
+    {:ok, base_query: base_query, account_user: account_user, session_id: session.id}
   end
 
   test "init base query ", %{account_user: account_user} do
@@ -69,7 +69,7 @@ defmodule KlziiChat.Services.Resourecs do
   end
 
   test "find by params and exclude 1 of 3 session resources by sesion id (2 left)",
-    %{account_user: account_user, member_id: member_id} do
+    %{account_user: account_user, facilitator: facilitator} do
       resource =
         Ecto.build_assoc(
           account_user.account, :resources,
@@ -87,8 +87,8 @@ defmodule KlziiChat.Services.Resourecs do
         scope: "zip"
       ) |> Repo.insert!
 
-      {:ok, _} = SessionResourcesService.add_session_resources(resource.id, member_id)
-      {:ok, session_resources} = SessionResourcesService.get_session_resources(member_id, %{})
+      {:ok, _} = SessionResourcesService.add_session_resources(resource.id, facilitator.id)
+      {:ok, session_resources} = SessionResourcesService.get_session_resources(facilitator.id, %{})
       count =
         QueriesResources.base_query(account_user)
         |> QueriesResources.find_by_params(%{})

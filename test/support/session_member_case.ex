@@ -71,7 +71,6 @@ defmodule KlziiChat.SessionMemberCase do
       accountUserId: 1
     } |> Repo.insert!
 
-    # TODO rename members by role to other tests
     {:ok,
       topic_1: topic_1,
       topic_2: topic_2,
@@ -79,8 +78,6 @@ defmodule KlziiChat.SessionMemberCase do
       session_topic_2: session_topic_2,
       facilitator: facilitator,
       participant: participant,
-      member: facilitator,
-      member2: participant,
       session: session,
       account_user: account_user,
     }
