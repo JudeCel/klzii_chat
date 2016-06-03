@@ -132,6 +132,10 @@
 			this.onFinishTransform = c;
 		}
 
+		Element.prototype.ftSetStartedTransformCallback = function(c) {
+			this.onStartTransform = c;
+		}
+
 		Element.prototype.ftCleanUp = function() {
 			var myClosureEl = this;
 			var myData = ["angle", "scale", "scaleFactor", "otx", "oty", "bb", "bbT", "initialTransformMatrix", "handlesGroup", "joinLine"];
@@ -346,6 +350,9 @@
 
 	    var myDragStartFunc = function(el) {
 	      activeShape.ftStoreInitialTransformMatrix();
+				if (activeShape.onStartTransform) {
+					activeShape.onStartTransform(activeShape);
+				}
 	    }
 
 	    // what we want to do when the slider changes. They could have separate funcs as the call back or just pick the right element
@@ -475,6 +482,10 @@
 		mainEl.ftStoreStartCenter();
 		mainEl.data("otx", mainEl.data("tx") || 0);
 		mainEl.data("oty", mainEl.data("ty") || 0);
+
+		if (mainEl.onStartTransform) {
+			mainEl.onStartTransform(mainEl);
+		}
 	};
 
 	function elementDragMove( mainEl, dx, dy, x, y ) {
@@ -503,6 +514,10 @@
 		this.ftInformSelected(mainElement, true);
 		this.ftStoreStartCenter();
 		mainElement.ftStoreInitialTransformMatrix();
+
+		if (mainElement.onStartTransform) {
+			mainElement.onStartTransform(mainElement);
+		}
 	};
 
 	function dragHandleRotateEnd( mainElement ) {

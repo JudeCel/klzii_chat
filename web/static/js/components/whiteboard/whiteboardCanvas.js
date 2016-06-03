@@ -95,8 +95,8 @@ const WhiteboardCanvas = React.createClass({
   },
   componentWillReceiveProps(nextProps, privProps) {
     if (nextProps.channel) {
-      if (nextProps.shapes != privProps.shapes) {
-        this.processWhiteboard(nextProps.shapes)
+      if (nextProps.shapes != this.shapes) {
+        this.processWhiteboard(nextProps.shapes);
       }
       this.activeColour = this.props.currentUser.colour;
       this.activeStrokeColour = this.activeColour;
@@ -201,6 +201,11 @@ const WhiteboardCanvas = React.createClass({
   shapeFinishedTransform(shape) {
     this.activeShape = shape;
     this.sendObjectData('update');
+  },
+  shapeStartedTransform(shape) {
+    this.activeShape = shape;
+    let message = this.prepareMessage(this.activeShape, 'update')
+    undoHistoryFactory.addStepToUndoHistory(message);
   },
   shapeTransformed(shape) {
     this.activeShape = shape;
@@ -314,6 +319,7 @@ const WhiteboardCanvas = React.createClass({
     el.ftSetSelectedCallback(this.shapeSelected);
     el.ftSetTransformedCallback(this.shapeTransformed);
     el.ftSetFinishedTransformCallback(this.shapeFinishedTransform);
+    el.ftSetStartedTransformCallback(this.shapeStartedTransform);
   },
   addInputControl(el) {
     el.ftSetupControls();
@@ -374,7 +380,6 @@ const WhiteboardCanvas = React.createClass({
   sendObjectData(action, mainAction) {
     let message = this.prepareMessage(this.activeShape, action, mainAction)
     this.sendMessage(message);
-    undoHistoryFactory.addStepToUndoHistory(message);
   },
   handleObjectCreated() {
     if (this.activeShape && !this.activeShape.created) {
