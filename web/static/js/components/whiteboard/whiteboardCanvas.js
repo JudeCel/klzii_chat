@@ -651,7 +651,7 @@ const WhiteboardCanvas = React.createClass({
       background: this.WHITEBOARD_BACKGROUND_COLOUR,
       borderColor: this.WHITEBOARD_BORDER_COLOUR,
       borderWidth: 1,
-      zIndex: 1050,
+      zIndex: 900,
       padding: 10 + 'px'
     };
 
