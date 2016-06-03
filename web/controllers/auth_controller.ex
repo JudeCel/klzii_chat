@@ -7,7 +7,8 @@ defmodule KlziiChat.AuthController do
   plug :if_current_member
 
   def token(conn, _, member, _) do
-    redirect_url = UrlHelper.auth_redirect_url(member.session_member.token)
+    { :ok, jwt, _encoded_claims } =  Guardian.encode_and_sign(member.session_member)
+    redirect_url = UrlHelper.auth_redirect_url(jwt) |> to_string
     json(conn, %{redirect_url: redirect_url})
   end
 
