@@ -12,7 +12,7 @@ const Avatar = React.createClass({
       return this.padToTwo(face);
     }
     else {
-      return 'offline';
+      return this.padToTwo(6);
     }
   },
   pickId() {
