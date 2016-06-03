@@ -8,6 +8,8 @@ $green: #4cb649
 $blue: #4cbfe9
 $input-size: 1.5em
 
+$scaled-chat-emotion-size: 44px
+
 // Fonts
 @import 'klzii_chatroom-ie7.css'
 @import 'klzii_chatroom.css'
@@ -95,27 +97,23 @@ body
       padding: 0
       ul
         left: -0.5px
-        height: 56px
+        height: $scaled-chat-emotion-size
         padding: 0
         @extend .no-border-radius
         li
           display: inline-block
-          padding: 0
           a
+            height: $scaled-chat-emotion-size
+            width: $scaled-chat-emotion-size
             padding: 0
+      .dropup
+        width: $scaled-chat-emotion-size
+        height: $scaled-chat-emotion-size
     #emotion-selector
       padding: 0
       border: 0
     textarea
       resize: none
-      min-height: 57px !important
-      line-height: 1.9
-    .form-control
-      height: 55px
-    .addon-invisible
-      background-color: white
-      border: none
-      font-size: 26px
   .chat-section
     padding-bottom: 20px
     margin-top: 20px
@@ -123,9 +121,6 @@ body
     max-height: 550px
     .message-section
       margin: 0
-      @for $i from $emotion-chat-min through $emotion-chat-max
-        .emotion-chat-#{$i}
-          transform: scale(0.7)
       .emotion-chat-section
         display: table-cell
       .push-image-down
