@@ -5,7 +5,7 @@ const initialState = {
   action: 'new', // 'new', 'edit', 'reply'
   id: null,
   replyId: null,
-  emotion: 1,
+  emotion: 5,
   inputPrefix: "Message:"
 };
 

@@ -1,0 +1,34 @@
+@mixin emotion-avatar($time, $steps)
+  -webkit-animation: play-avatar $time steps($steps) infinite
+  -moz-animation: play-avatar $time steps($steps) infinite
+  -ms-animation: play-avatar $time steps($steps) infinite
+  -o-animation: play-avatar $time steps($steps) infinite
+  animation: play-avatar $time steps($steps) infinite
+
+@mixin keyframe-avatar
+  from
+    transform: translate(0px, 0px)
+  to
+    transform: translate(-912px, 0px)
+
+$emotion-avatar-min: 0
+$emotion-avatar-max: 6
+
+@for $i from $emotion-avatar-min through $emotion-avatar-max
+  .emotion-avatar-#{$i}
+    @include emotion-avatar(2.5s, 6)
+
+@-webkit-keyframes play-avatar
+  @include keyframe-avatar
+
+@-moz-keyframes play-avatar
+  @include keyframe-avatar
+
+@-ms-keyframes play-avatar
+  @include keyframe-avatar
+
+@-o-keyframes play-avatar
+  @include keyframe-avatar
+
+@keyframes play-avatar
+  @include keyframe-avatar
