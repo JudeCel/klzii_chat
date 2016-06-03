@@ -12,7 +12,7 @@ const Avatar = React.createClass({
       return this.padToTwo(face);
     }
     else {
-      return 'offline';
+      return this.padToTwo(6);
     }
   },
   pickId() {
@@ -20,21 +20,37 @@ const Avatar = React.createClass({
     specificId = specificId || 'avatar';
     return `${specificId}-${member.id}`
   },
+  shouldAddToAvatar(avatar, type, index, face) {
+    if(index < 0) {
+      return;
+    }
+
+    if(face) {
+      const startPos = 6*152;
+      let image = avatar.image(`/images/avatar/${type}_${this.pickFace(index, this.props.member.online)}_anim.svg`, 0, 0, startPos, 140);
+      image.addClass(`emotion-avatar-${index}`)
+    }
+    else {
+      avatar.image(`/images/avatar/${type}_${this.padToTwo(index)}.svg`, 0, 0, 152, 140);
+    }
+  },
   componentDidMount() {
     const { id, username, avatarData, colour, online } = this.props.member;
-    const { base, face, body, hair, desk, head } = avatarData
+    const { base, face, body, hair, desk, head } = avatarData;
 
     let avatar = Snap('#' + this.pickId());
     if(this.shouldClearPrevious) {
       avatar.clear();
       this.shouldClearPrevious = false;
     }
-    avatar.image(`/images/avatar/base_${this.padToTwo(base)}.svg`, 0, 0, 152, 140);
-    avatar.image(`/images/avatar/face_${this.pickFace(face, online)}.svg`, 0, 0, 152, 140);
-    avatar.image(`/images/avatar/body_${this.padToTwo(body)}.svg`, 0, 0, 152, 140);
-    avatar.image(`/images/avatar/hair_${this.padToTwo(hair)}.svg`, 0, 0, 152, 140);
-    avatar.image(`/images/avatar/desk_${this.padToTwo(desk)}.svg`, 0, 0, 152, 140);
-    avatar.image(`/images/avatar/head_${this.padToTwo(head)}.svg`, 0, 0, 152, 140);
+
+    this.shouldAddToAvatar(avatar, 'base', base);
+    this.shouldAddToAvatar(avatar, 'face', face, true);
+    this.shouldAddToAvatar(avatar, 'body', body);
+    this.shouldAddToAvatar(avatar, 'hair', hair);
+    this.shouldAddToAvatar(avatar, 'desk', desk);
+    this.shouldAddToAvatar(avatar, 'head', head);
+
     avatar.rect(25, 125, 100, 20, 1, 1).attr({fill: colour});
     avatar.text(76, 138, username).attr({fill: '#fff', "font-size": "75%", "text-anchor": "middle"});
     avatar.rect(30, 130, 90, 3, 5, 5).attr({fill: '#ccc', opacity: 0.2});

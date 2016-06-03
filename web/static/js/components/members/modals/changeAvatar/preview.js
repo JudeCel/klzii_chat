@@ -8,10 +8,15 @@ const AvatarPreview = React.createClass({
   },
   elementsToload() {
     const { index, type } = this.props;
-    return [
-      '/images/avatar/base_00.svg',
-      `/images/avatar/${type}_${this.padToTwo(index)}.svg`
-    ];
+    if(index > -1) {
+      return [
+        '/images/avatar/base_00.svg',
+        `/images/avatar/${type}_${this.padToTwo(index)}.svg`
+      ];
+    }
+    else {
+      return ['/images/avatar/base_00.svg'];
+    }
   },
   render() {
     const elements = this.elementsToload();
