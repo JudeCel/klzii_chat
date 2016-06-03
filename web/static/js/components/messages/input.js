@@ -42,7 +42,7 @@ const Input = React.createClass({
           <div className='form-group'>
             <div className='input-group input-group-lg'>
               <div className='input-group-addon no-border-radius emotion-picker-section'><EmotionPicker /></div>
-              <div className='input-group-addon no-border-radius'>{ inputPrefix }</div>
+              <div className='input-group-addon no-border-radius input-prefix-section'>{ inputPrefix }</div>
               <TextareaAutosize { ...this.defaultProps() } />
               <div className='input-group-addon no-border-radius cursor-pointer' onClick={ this.sendMessage }>POST</div>
             </div>
