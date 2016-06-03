@@ -4,14 +4,18 @@ let currentIdx = 0;
 function copyObject(obj) {
   return JSON.parse(JSON.stringify(obj));
 }
-
+function areObjectsDifferent(a, b) {
+  return JSON.stringify(a) != JSON.stringify(b);
+}
 function addStepToUndoHistory(json) {
-  //if made a few undo steps, then delete next redo steps first
-  if (currentIdx > 0 && currentIdx < undoHistory.length - 1) {
-    undoHistory = undoHistory.slice(0, currentIdx + 1);
+  if (areObjectsDifferent(json, currentStepObject())) {
+    //if made a few undo steps, then delete next redo steps first
+    if (currentIdx > 0 && currentIdx < undoHistory.length - 1) {
+      undoHistory = undoHistory.slice(0, currentIdx + 1);
+    }
+    undoHistory.push(copyObject(json));
+    currentIdx = undoHistory.length - 1;
   }
-  undoHistory.push(copyObject(json));
-  currentIdx = undoHistory.length - 1;
 }
 
 function currentStepObject() {
