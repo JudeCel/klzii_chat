@@ -1,7 +1,9 @@
 defmodule KlziiChat.Services.ReportingService do
-  alias KlziiChat.Services.{MessageService, FileService}
+  alias KlziiChat.Repo
+  alias KlziiChat.Services.{FileService, MessageService}
   alias KlziiChat.Decorators.MessageDecorator
   alias KlziiChat.Helpers.HTMLReportingHelper
+  alias KlziiChat.Queries.Messages, as: QueriesMessages
   alias Ecto.DateTime
 
   @tmp_path Path.expand("/tmp/klzii_chat/reporting")
@@ -36,6 +38,15 @@ defmodule KlziiChat.Services.ReportingService do
         {:ok, pdf_report_file_path}
       {stdout, _} -> {:error, stdout}
     end
+  end
+
+  def get_messages(session_topic_id, star_only, exclude_facilitator) do
+    query = QueriesMessages.base_query(session_topic_id, star_only)
+    query = QueriesMessages.join_session_member(query)
+    if exclude_facilitator, do: query = QueriesMessages.exclude_facilitator(query)
+    query = QueriesMessages.sort_select(query)
+
+    Repo.all(query)
   end
 
 

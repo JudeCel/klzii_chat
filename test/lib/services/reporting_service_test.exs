@@ -1,6 +1,7 @@
 defmodule KlziiChat.Services.ReportingServiceTest do
   use KlziiChat.{ModelCase, SessionMemberCase}
-  alias KlziiChat.Services.{MessageService, ReportingService}
+  alias KlziiChat.Repo
+  alias KlziiChat.Services.{ReportingService, MessageService}
   alias KlziiChat.Decorators.MessageDecorator
   alias KlziiChat.Helpers.HTMLReportingHelper
   alias Ecto.DateTime
@@ -17,7 +18,9 @@ defmodule KlziiChat.Services.ReportingServiceTest do
       sessionMemberId: facilitator.id,
       body: "test message 1",
       emotion: 0,
-      createdAt: create_date1
+      star: true,
+      createdAt: create_date1,
+      updatedAt: create_date1
     ) |> Repo.insert!()
 
     Ecto.build_assoc(
@@ -26,13 +29,35 @@ defmodule KlziiChat.Services.ReportingServiceTest do
       sessionMemberId: participant.id,
       body: "test message 2",
       emotion: 1,
-      createdAt: create_date2
+      star: false,
+      createdAt: create_date2,
+      updatedAt: create_date2
     ) |> Repo.insert!()
 
     {:ok, topic_history} = MessageService.history(session_topic_1.id, participant)
 
-    {:ok, session: session, session_topic: session_topic_1, session_member: facilitator, topic_history: topic_history}
+    {:ok, session: session, session_topic: session_topic_1, session_member: facilitator, topic_history: topic_history, create_date1: create_date1, create_date2: create_date2}
   end
+
+  test "get all messages", %{session_topic: session_topic, create_date1: create_date1, create_date2: create_date2} do
+    [message1, message2] = ReportingService.get_messages(session_topic.id, false, false)
+
+    assert(message1.createdAt == create_date1)
+    assert(message2.createdAt == create_date2)
+  end
+
+  test "get star only messages", %{session_topic: session_topic} do
+    [%{star: true}] = ReportingService.get_messages(session_topic.id, true, false)
+  end
+
+  test "get messages exluding facilitator", %{session_topic: session_topic} do
+    [%{session_member: %{role: "participant"}}] = ReportingService.get_messages(session_topic.id, false, true)
+  end
+
+  test "get [] for star only messages exluding facilitator", %{session_topic: session_topic} do
+    [] = ReportingService.get_messages(session_topic.id, true, true)
+  end
+
 
   test "topic history filters", %{topic_history: [th1, th2]} do
     csv_history_string = "#{th1.session_member.username},#{th1.body},#{DateTime.to_string(th1.time)}," <>

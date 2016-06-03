@@ -55,8 +55,8 @@ defmodule KlziiChat.Services.FileServiceTest do
     :ok = File.touch(path_to_html)
     {:ok, ^path_to_pdf} = FileService.html_to_pdf(path_to_html)
 
-    assert(File.exists?(path_to_html) == false)
-    assert(File.exists?(path_to_pdf) == true)
+    refute(File.exists?(path_to_html))
+    assert(File.exists?(path_to_pdf))
 
     :ok = File.rm(path_to_pdf)
   end

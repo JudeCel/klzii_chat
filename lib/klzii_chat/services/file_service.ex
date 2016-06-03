@@ -20,7 +20,7 @@ defmodule KlziiChat.Services.FileService do
     File.close(file)
   end
 
-  @spec html_to_pdf(String.t) :: :ok | {:error, String.t}
+  @spec html_to_pdf(String.t) :: {:ok | :error, String.t}
   def html_to_pdf(path_to_html) do
     case File.exists?(path_to_html) and Path.extname(path_to_html) == ".html" do
       true -> wkhtmltopdf(path_to_html)

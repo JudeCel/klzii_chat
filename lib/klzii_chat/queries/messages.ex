@@ -1,7 +1,6 @@
 defmodule KlziiChat.Queries.Messages do
-  import Ecto.Query, only: [from: 2]
-
   alias KlziiChat.{Message, SessionMember}
+  import Ecto.Query, only: [from: 2]
 
   @spec base_query(integer, false) :: Ecto.Query
   def base_query(session_topic_id, false) do

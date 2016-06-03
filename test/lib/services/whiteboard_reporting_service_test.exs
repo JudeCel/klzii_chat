@@ -41,10 +41,17 @@ defmodule KlziiChat.Services.WhiteboardReportingServiceTest do
   end
 
   test "get all events", %{session_topic: session_topic, event1: event1} do
-    WhiteboardReportingService.save_report("test.html", :pdf, session_topic.id)
     events = WhiteboardReportingService.get_all_events(session_topic.id)
     assert(Enum.count(events) == 2)
     assert(List.first(events) == Poison.decode!(event1))
+  end
+
+  test "create PDF report", %{session_topic: session_topic} do
+    {:ok, path_to_pdf} = WhiteboardReportingService.save_report("WhiteboardReportingServiceTest", :pdf, session_topic.id)
+
+    assert(File.exists?(path_to_pdf))
+
+    :ok = File.rm(path_to_pdf)
   end
 
 end
