@@ -51,13 +51,17 @@ const WhiteboardCanvas = React.createClass({
     }
   },
   undoStep() {
-    let step = undoHistoryFactory.undoStepObject();
+    let step = undoHistoryFactory.currentStepObject();
+    let stepBack = undoHistoryFactory.undoStepObject();
+    if (step.eventType == 'update') step = stepBack;
     if (step) {
       this.handleHistoryObject(step, true);
     }
   },
   redoStep() {
-    let step = undoHistoryFactory.redoStepObject();
+    let step = undoHistoryFactory.currentStepObject();
+    let stepForward = undoHistoryFactory.redoStepObject();
+    if (step.eventType == 'update') step = stepForward;
     if (step) {
       this.handleHistoryObject(step, false);
     }
@@ -196,8 +200,8 @@ const WhiteboardCanvas = React.createClass({
       }
     });
   },
-  addShapeStateToHistory(shape) {
-    let message = this.prepareMessage(this.activeShape, 'update')
+  addShapeStateToHistory(shape, action) {
+    let message = this.prepareMessage(this.activeShape, action?action:'update');
     undoHistoryFactory.addStepToUndoHistory(message);
   },
   shapeFinishedTransform(shape) {
@@ -391,6 +395,7 @@ const WhiteboardCanvas = React.createClass({
       var temp = this.activeShape;
       this.sendObjectData('draw');
       this.shapes[this.activeShape.id] = this.activeShape;
+      this.addShapeStateToHistory(temp, 'draw');
     }
     this.coords = null;
   },
