@@ -1,0 +1,39 @@
+@mixin emotion-chat($image, $time, $steps)
+  width: 55px
+  height: 55px
+  background-image: url($image) !important
+  transform: scale(0.8) translate(-7px, -7px)
+
+  -webkit-animation: play-chat $time steps($steps) infinite
+  -moz-animation: play-chat $time steps($steps) infinite
+  -ms-animation: play-chat $time steps($steps) infinite
+  -o-animation: play-chat $time steps($steps) infinite
+  animation: play-chat $time steps($steps) infinite
+
+@mixin keyframe-chat
+  from
+    background-position: 0px
+  to
+    background-position: -330px
+
+$emotion-chat-min: 0
+$emotion-chat-max: 6
+
+@for $i from $emotion-chat-min through $emotion-chat-max
+  .emotion-chat-#{$i}
+    @include emotion-chat("/images/emotions/emoticon_#{$i}_sprite.svg", 1.5s, 6)
+
+@-webkit-keyframes play-chat
+  @include keyframe-chat
+
+@-moz-keyframes play-chat
+  @include keyframe-chat
+
+@-ms-keyframes play-chat
+  @include keyframe-chat
+
+@-o-keyframes play-chat
+  @include keyframe-chat
+
+@keyframes play-chat
+  @include keyframe-chat

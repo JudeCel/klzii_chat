@@ -52,10 +52,10 @@ const Message = React.createClass({
     const { message } = this.props;
 
     if(message.replies.length > 0) {
-      return 'media-left media-top push-image-down';
+      return 'emotion-chat-section media-top push-image-down';
     }
     else {
-      return 'media-left media-bottom push-image-up';
+      return 'emotion-chat-section media-bottom push-image-up';
     }
   },
   bodyClassname() {
@@ -81,7 +81,7 @@ const Message = React.createClass({
     return (
       <div className='message-section media'>
         <div className={ this.mediaImagePosition() }>
-          <div className={"emoticon-" + message.emotion} aria-hidden='true' style={{ color: message.session_member.colour }}/>
+          <div className={"emotion-chat-" + message.emotion} aria-hidden='true' style={{ backgroundColor: message.session_member.colour }}/>
         </div>
 
         <div className='media-body'>
