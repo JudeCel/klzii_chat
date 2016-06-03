@@ -1,5 +1,4 @@
 import React, {PropTypes} from 'react';
-import { connect }        from 'react-redux';
 import Snap               from 'snapsvg';
 import Member             from './member.js'
 
@@ -36,8 +35,8 @@ const Avatar = React.createClass({
     }
   },
   prepareAvatar(avatarData, sessionTopicContext){
-    if (sessionTopicContext && sessionTopicContext[this.props.sessionTopic.id]) {
-      let context = sessionTopicContext[this.props.sessionTopic.id]["avatarData"] || {}
+    if (sessionTopicContext && sessionTopicContext[this.props.sessionTopicId]) {
+      let context = sessionTopicContext[this.props.sessionTopicId]["avatarData"] || {}
       return {...avatarData, ...context};
     }
     return avatarData
@@ -87,10 +86,4 @@ const Avatar = React.createClass({
   }
 });
 
-const mapStateToProps = (state) => {
-  return {
-    sessionTopic: state.sessionTopic.current,
-  }
-};
-
-export default connect(mapStateToProps)(Avatar);
+export default Avatar;
