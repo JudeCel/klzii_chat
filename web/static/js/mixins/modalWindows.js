@@ -14,7 +14,7 @@ const modalWindows = {
     const { modalWindows, dispatch } = this.props;
 
     if(!modalWindows) {
-      console.error("No modalWindows from state: ", key, this.props);
+      console.error('No "modalWindows" state:', key, this.props);
     }
 
     for(let i in modalWindows) {
