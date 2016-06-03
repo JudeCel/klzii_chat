@@ -8,8 +8,6 @@ $green: #4cb649
 $blue: #4cbfe9
 $input-size: 1.5em
 
-$scaled-chat-emotion-size: 44px
-
 // Fonts
 @import 'klzii_chatroom-ie7.css'
 @import 'klzii_chatroom.css'
@@ -93,6 +91,11 @@ body
         &.active
           @extend .cursor-pointer
   .input-section
+    .input-group-addon
+      height: $scaled-chat-emotion-size
+      &.input-prefix-section
+        border-right: 0
+        border-left: 0
     .emotion-picker-section
       padding: 0
       ul
