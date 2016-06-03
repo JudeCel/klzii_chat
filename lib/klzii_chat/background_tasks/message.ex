@@ -1,9 +1,13 @@
 defmodule KlziiChat.BackgroundTasks.Message do
-  alias KlziiChat.Services.{UnreadMessageService}
+  alias KlziiChat.Services.{UnreadMessageService, SessionMembersServic}
   alias KlziiChat.{Endpoint}
 
   def new(message_id)  do
     run_task(fn -> process_new_message(message_id)end)
+  end
+
+  def delete(session_id, session_topic_id) do
+    run_task(fn -> process_delete_message(session_id, session_topic_id) end)
   end
 
   defp process_new_message(message_id) do
@@ -13,10 +17,6 @@ defmodule KlziiChat.BackgroundTasks.Message do
         _ ->
           :error
     end
-  end
-
-  def delete(session_id, session_topic_id) do
-    run_task(fn -> process_delete_message(session_id, session_topic_id) end)
   end
 
   defp process_delete_message(session_id, session_topic_id) do

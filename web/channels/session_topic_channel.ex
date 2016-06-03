@@ -1,7 +1,7 @@
 defmodule KlziiChat.SessionTopicChannel do
   use KlziiChat.Web, :channel
   alias KlziiChat.Services.{MessageService, UnreadMessageService, ConsoleService, SessionTopicService}
-  alias KlziiChat.{MessageView, Presence, Endpoint, ConsoleView, SessionTopicView}
+  alias KlziiChat.{MessageView, Presence, Endpoint, ConsoleView, SessionTopicView, SessionMembersView}
   import(KlziiChat.Authorisations.Channels.SessionTopic, only: [authorized?: 2])
   import(KlziiChat.Helpers.SocketHelper, only: [get_session_member: 1])
 
@@ -88,6 +88,7 @@ defmodule KlziiChat.SessionTopicChannel do
         {:ok, message} ->
           KlziiChat.BackgroundTasks.Message.new(message.id)
           broadcast!(socket, "new_message",  message)
+          Endpoint.broadcast!("sessions:#{message.session_member.sessionId}", "update_member", SessionMembersView.render("member.json", member: message.session_member))
           {:reply, :ok, socket}
         {:error, reason} ->
           {:error, %{reason: reason}}

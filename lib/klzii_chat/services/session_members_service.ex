@@ -19,7 +19,7 @@ defmodule KlziiChat.Services.SessionMembersService do
   @spec update_emotion(Integer) :: Map.t
   def update_emotion(message_id) do
     message =  Repo.get_by!(Message, id: message_id) |> Repo.preload([:session_member, :session_topic])
-    params = %{"avatar" => %{"emotion"=> message.emotion}}
+    params = %{"avatarData" => %{"face"=> message.emotion}}
     update_session_topic_context(message.session_member, message.session_topic.id, params)
   end
 

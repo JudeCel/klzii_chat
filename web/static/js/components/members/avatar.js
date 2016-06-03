@@ -1,4 +1,5 @@
 import React, {PropTypes} from 'react';
+import { connect }        from 'react-redux';
 import Snap               from 'snapsvg';
 import Member             from './member.js'
 
@@ -34,9 +35,16 @@ const Avatar = React.createClass({
       avatar.image(`/images/avatar/${type}_${this.padToTwo(index)}.svg`, 0, 0, 152, 140);
     }
   },
+  prepareAvatar(avatarData, sessionTopicContext){
+    if (sessionTopicContext && sessionTopicContext[this.props.sessionTopic.id]) {
+      let context = sessionTopicContext[this.props.sessionTopic.id]["avatarData"] || {}
+      return {...avatarData, ...context};
+    }
+    return avatarData
+  },
   componentDidMount() {
-    const { id, username, avatarData, colour, online } = this.props.member;
-    const { base, face, body, hair, desk, head } = avatarData;
+    const { id, username, colour, online, sessionTopicContext, avatarData } = this.props.member;
+    const { base, face, body, hair, desk, head } = this.prepareAvatar(avatarData, sessionTopicContext);
 
     let avatar = Snap('#' + this.pickId());
     if(this.shouldClearPrevious) {
@@ -79,4 +87,10 @@ const Avatar = React.createClass({
   }
 });
 
-export default Avatar;
+const mapStateToProps = (state) => {
+  return {
+    sessionTopic: state.sessionTopic.current,
+  }
+};
+
+export default connect(mapStateToProps)(Avatar);
