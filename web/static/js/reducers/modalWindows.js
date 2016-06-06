@@ -5,6 +5,7 @@ const initialState = {
   resources: false,
   avatar: false,
   facilitatorBoard: false,
+  reports: false
 };
 
 export default function reducer(state = initialState, action = {}) {
