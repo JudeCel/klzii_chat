@@ -30,7 +30,11 @@ const ChatView = React.createClass({
     };
   },
   componentDidUpdate() {
-    const { notifications, dispatch } = this.props;
+    const { notifications, dispatch, colours } = this.props;
+
+    document.body.style.backgroundColor = colours.browserBackground;
+    document.body.style.color = colours.font;
+
     if(this.refs.notification && notifications.type) {
       this.showNotification(this.refs.notification, notifications);
       Notifications.clearNotification(dispatch);
@@ -76,7 +80,6 @@ const ChatView = React.createClass({
                 <div className='col-md-8'>
                   <div className='row'>
                     <Facilitator openAvatarModal={ this.openAvatarModal } />
-                    <WhiteboardCanvas member={ this.props }/>
                   </div>
                   <div className='row'>
                     {<Participants openAvatarModal={ this.openAvatarModal } />}
@@ -86,6 +89,7 @@ const ChatView = React.createClass({
                 <div className='col-md-4'>
                   <Messages/>
                 </div>
+                <WhiteboardCanvas member={ this.props }/>
                 <div className='col-md-12'>
                   <Input/>
                 </div>

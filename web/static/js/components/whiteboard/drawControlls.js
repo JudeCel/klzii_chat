@@ -47,38 +47,52 @@
 			freetransEl.ftHighlightBB();
 			var splitParams = this.matrix.split();
 
-			var translateDragger = this.paper.image("/images/svgControls/move.png", bb.cx - ftOption.handleRadius, bb.cy - ftOption.handleRadius, ftOption.handleRadius*2, ftOption.handleRadius*2);
-			this.data("angle", splitParams.rotate);
-			this.translateDragger = translateDragger;
+			var setupEvents = false;
 
+			if (!this.translateDragger) {
+				var translateDragger = this.paper.image("/images/svgControls/move.png", bb.cx - ftOption.handleRadius, bb.cy - ftOption.handleRadius, ftOption.handleRadius*2, ftOption.handleRadius*2);
+				this.translateDragger = translateDragger;
+				setupEvents = true;
+			} else {
+				this.translateDragger.attr({"x": bb.cx - ftOption.handleRadius, "y": bb.cy - ftOption.handleRadius});
+			}
+
+			this.data("angle", splitParams.rotate);
 
 			this.ftUpdateRotateHandler();
 			var rotateDragger = this.rotateDragger;
 			this.initialWidth = bb.width/2;
 			this.initialHeight = bb.height/2;
-			var handlesGroup = this.paper.g( rotateDragger, translateDragger );
 
-			createScaleControl(this.paper, this);
-			this.setupDone = true;
-			freetransEl.data( "handlesGroup", handlesGroup );
+			if (setupEvents) {
+				var handlesGroup = this.paper.g( rotateDragger, this.translateDragger );
 
-			freetransEl.data( "scaleFactor", Snap.calcDistance( bb.cx, bb.cy, rotateDragger.attr('x'), rotateDragger.attr('y') ) );
-			translateDragger.drag( 	elementDragMove.bind(  translateDragger, freetransEl ),
-						elementDragStart.bind( translateDragger, freetransEl ),
-						elementDragEnd.bind( translateDragger, freetransEl ) );
+				if (!this.scaleXControl) {
+					createScaleControl(this.paper, this);
+				}
 
-			freetransEl.unclick();
-			freetransEl.data("click", freetransEl.click( function() {
-				this.ftRemoveHandles();
-				this.ftInformSelected(this, false);
-			} ) );
+				this.setupDone = true;
+				freetransEl.data( "handlesGroup", handlesGroup );
+
+				this.translateDragger.drag( 	elementDragMove.bind(  this.translateDragger, freetransEl ),
+							elementDragStart.bind( this.translateDragger, freetransEl ),
+							elementDragEnd.bind( this.translateDragger, freetransEl ) );
+
+				freetransEl.unclick();
+				freetransEl.data("click", freetransEl.click( function() {
+					this.ftRemoveHandles();
+					this.ftInformSelected(this, false);
+				} ) );
 
 
-			rotateDragger.drag(
-				dragHandleRotateMove.bind( rotateDragger, freetransEl ),
-				dragHandleRotateStart.bind( rotateDragger, freetransEl  ),
-				dragHandleRotateEnd.bind( rotateDragger, freetransEl  )
-			);
+				rotateDragger.drag(
+					dragHandleRotateMove.bind( rotateDragger, freetransEl ),
+					dragHandleRotateStart.bind( rotateDragger, freetransEl  ),
+					dragHandleRotateEnd.bind( rotateDragger, freetransEl  )
+				);
+			} else {
+				Snap.updateTransformControls(this);
+			}
 
 			this.ftInformSelected(this, true);
 			return this;
@@ -118,6 +132,10 @@
 			this.onFinishTransform = c;
 		}
 
+		Element.prototype.ftSetStartedTransformCallback = function(c) {
+			this.onStartTransform = c;
+		}
+
 		Element.prototype.ftCleanUp = function() {
 			var myClosureEl = this;
 			var myData = ["angle", "scale", "scaleFactor", "otx", "oty", "bb", "bbT", "initialTransformMatrix", "handlesGroup", "joinLine"];
@@ -148,6 +166,8 @@
 
 		Element.prototype.ftRemoveHandles = function() {
 			this.rotateDragger = null;
+			this.translateDragger = null;
+
 			this.unclick();
 			if (this.data( "handlesGroup"))	this.data( "handlesGroup").remove();
 			this.data( "bbT" ) && this.data("bbT").remove();
@@ -155,6 +175,8 @@
 			this.click( function() { this.ftCreateHandles() } ) ;
 			if (this.scaleXControl) this.scaleXControl.remove();
 			if (this.scaleYControl) this.scaleYControl.remove();
+			this.scaleXControl = null;
+			this.scaleYControl = null;
 			this.ftCleanUp();
 			return this;
 		};
@@ -191,7 +213,7 @@
 			var tstring = "t" + this.data("tx") + "," + this.data("ty") + matr.toTransformString();
 			this.attr({ transform: tstring });
 			this.ftHighlightBB();
-			this.updateTransformControls(this);
+			Snap.updateTransformControls(this);
 
 			return this;
 		};
@@ -301,7 +323,7 @@
 			var minPosX = +el.data("minPosX");
 
 			if( posX < minPosX ) { el.data("posX", minPosX ); };
-			el.data("fracX", 1/ ( (maxPosX - minPosX) / el.data("posX") ) );
+			el.data("fracX", el.data("posX")/maxPosX );
 		}
 
 		// Call the matrix checks above, and set any transformation
@@ -328,6 +350,9 @@
 
 	    var myDragStartFunc = function(el) {
 	      activeShape.ftStoreInitialTransformMatrix();
+				if (activeShape.onStartTransform) {
+					activeShape.onStartTransform(activeShape);
+				}
 	    }
 
 	    // what we want to do when the slider changes. They could have separate funcs as the call back or just pick the right element
@@ -353,7 +378,7 @@
 	              activeShape.scaleXControl = elX;
 	              activeShape.scaleYControl = elY;
 
-								activeShape.updateTransformControls(activeShape, true);
+								Snap.updateTransformControls(activeShape, true);
 	            });
 	      });
 	  }
@@ -392,7 +417,6 @@
 	        var elEttributes = shape.attr();
 	        var matr = shape.ftGetInitialTransformMatrix().clone();
 					var splitParams = matr.split();
-					var splitParams = shape.matrix.split();
 					var scX = 1;
 					var scY = 1;
 					if (params.scaleX) scX = params.scaleX;
@@ -404,7 +428,8 @@
 	    }
 	  }
 
-		Element.prototype.updateTransformControls = function(shape, resetControlValues) {
+		Snap.updateTransformControls = function(shape, resetControlValues) {
+			shape.ftHighlightBB();
 	    var angle = shape.data("angle");
 	    var transformStr = "";
 	    var attrs = shape.attr();
@@ -457,6 +482,10 @@
 		mainEl.ftStoreStartCenter();
 		mainEl.data("otx", mainEl.data("tx") || 0);
 		mainEl.data("oty", mainEl.data("ty") || 0);
+
+		if (mainEl.onStartTransform) {
+			mainEl.onStartTransform(mainEl);
+		}
 	};
 
 	function elementDragMove( mainEl, dx, dy, x, y ) {
@@ -485,6 +514,10 @@
 		this.ftInformSelected(mainElement, true);
 		this.ftStoreStartCenter();
 		mainElement.ftStoreInitialTransformMatrix();
+
+		if (mainElement.onStartTransform) {
+			mainElement.onStartTransform(mainElement);
+		}
 	};
 
 	function dragHandleRotateEnd( mainElement ) {
@@ -527,7 +560,7 @@
 		mainEl.transform( myMatrix.toTransformString());
 
 		mainEl.ftHighlightBB();
-		mainEl.updateTransformControls(mainEl);
+		Snap.updateTransformControls(mainEl);
 		mainEl.ftUpdateRotateHandler();
 
 		informTransformed(mainEl);
@@ -584,10 +617,19 @@
 			var intersectsVDown = Snap.path.intersection(transformedPath, intersectLineHDown);
 
 			// depending on shape size/angle and form vertical size up and down can vary a bit
+			var nxDown = intersectsVDown[0].x?intersectsVDown[0].x:0;
+			var nyDown = intersectsVDown[0].y?intersectsVDown[0].y:0;
+
+			var nx = intersects.length?intersects[0].x:0;
+			var ny = intersects.length?intersects[0].y:0;
+
+			var nxV = intersectsV.length?intersectsV[0].x:0;
+			var nyV = intersectsV.length?intersectsV[0].y:0;
+
 			mSize = {
-				height: Snap.calcDistance(mainDBB.cx, mainDBB.cy, intersects[0].x, intersects[0].y) * 2,
-				width: Snap.calcDistance(mainDBB.cx, mainDBB.cy, intersectsV[0].x, intersectsV[0].y) * 2,
-				heightDown: Snap.calcDistance(mainDBB.cx, mainDBB.cy, intersectsVDown[0].x, intersectsVDown[0].y) * 2,
+				height: Snap.calcDistance(mainDBB.cx, mainDBB.cy, nx, ny) * 2,
+				width: Snap.calcDistance(mainDBB.cx, mainDBB.cy, nxV, nyV) * 2,
+				heightDown: Snap.calcDistance(mainDBB.cx, mainDBB.cy, nxDown, nyDown) * 2,
 				posX: intersects[0].x,
 				posY: intersects[0].y
 			};

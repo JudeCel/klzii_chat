@@ -4,7 +4,7 @@ defmodule KlziiChat.Corsica.Router do
   use Corsica.Router,
     allow_headers: ~w(accept cache-control pragma authorization content-type)
 
-  resource "/uploads/*", origins: @origins
-  resource "/api/*", origins: @origins
-  resource "/*", origins: "*"
+  # resource "/uploads/*", origins: @origins
+  # resource "/api/*", origins: @origins
+  resource "/*", origins: @origins
 end

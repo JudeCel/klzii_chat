@@ -1,6 +1,5 @@
 defmodule KlziiChat.AuthControllerTest do
   use KlziiChat.{ConnCase, SessionMemberCase}
-  alias KlziiChat.Helpers.UrlHelper
 
   setup %{conn: conn, facilitator: facilitator} do
     { :ok, jwt, _encoded_claims } =  Guardian.encode_and_sign(facilitator)
@@ -10,6 +9,9 @@ defmodule KlziiChat.AuthControllerTest do
 
   test "get auth token", %{conn: conn, facilitator: facilitator} do
     conn = get(conn, "/api/auth/token")
-    assert(json_response(conn, 200)["redirect_url"] == UrlHelper.auth_redirect_url(facilitator.token))
+    assert(json_response(conn, 200))
+    current_resource = Guardian.Plug.current_resource(conn)
+    member = current_resource.session_member
+    assert(member.id == facilitator.id)
   end
 end

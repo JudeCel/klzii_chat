@@ -1,8 +1,10 @@
 import React, {PropTypes} from 'react';
 import Snap               from 'snapsvg';
 import Member             from './member.js'
+import mixins             from '../../mixins';
 
 const Avatar = React.createClass({
+  mixins: [mixins.helpers],
   padToTwo(number) {
     if (number<=99) { number = ("0"+number).slice(-2); }
     return number;
@@ -12,7 +14,7 @@ const Avatar = React.createClass({
       return this.padToTwo(face);
     }
     else {
-      return 'offline';
+      return this.padToTwo(6);
     }
   },
   pickId() {
@@ -35,8 +37,8 @@ const Avatar = React.createClass({
     }
   },
   componentDidMount() {
-    const { id, username, avatarData, colour, online } = this.props.member;
-    const { base, face, body, hair, desk, head } = avatarData;
+    const { id, username, colour, online, sessionTopicContext, avatarData } = this.props.member;
+    const { base, face, body, hair, desk, head } = this.avatarDataBySessionContext(avatarData, sessionTopicContext, this.props.sessionTopicId);
 
     let avatar = Snap('#' + this.pickId());
     if(this.shouldClearPrevious) {

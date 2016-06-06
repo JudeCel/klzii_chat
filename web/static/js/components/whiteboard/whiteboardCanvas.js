@@ -5,13 +5,12 @@ import { Modal }          from 'react-bootstrap'
 import whiteboardActions    from '../../actions/whiteboard'
 import { connect }          from 'react-redux';
 require("./drawControlls");
+import undoHistoryFactory  from './actionHistory';
 
 const WhiteboardCanvas = React.createClass({
   getInitialState:function() {
-    this.undoHistory = [];
-    this.undoHistoryIdx = 0;
-
     this.minimized = true;
+    this.shapes = [];
     this.scaling = false;
     this.MIN_WIDTH = 316;
     this.MIN_HEIGHT = 153;
@@ -39,31 +38,10 @@ const WhiteboardCanvas = React.createClass({
     this.strokeWidthArray = [2, 4, 6];
     this.strokeWidth = this.strokeWidthArray[0];
 
-    return {shapes: {}, content: '', addTextDisabled: true, addTextValue: ''};
+    return {content: '', addTextDisabled: true, addTextValue: ''};
   },
-  addStepToUndoHistory(json) {
-    var self = this;
-    //if made a few undo steps, then delete next redo steps first
-    if (self.undoHistoryIdx > 0 && self.undoHistoryIdx < self.undoHistory.length) {
-      self.undoHistory.slice(0, self.undoHistoryIdx );
-    }
-    self.undoHistory.push(json);
-    self.undoHistoryIdx = self.undoHistory.length;
-  },
-  addAllDeletedObjectsToHistory() {
+  handleHistoryObject(currentStep, reverse) {
     let self = this;
-    let objects = [];
-    Object.keys(this.state.shapes).forEach(function(key, index) {
-      let element = self.state.shapes[key]
-      if (element) {
-        objects.push(self.prepareMessage(element, "delete"));
-      }
-    });
-    this.addStepToUndoHistory(objects);
-  },
-  handleHistoryObject(idx, reverse) {
-    let self = this
-    let currentStep = self.undoHistory[this.undoHistoryIdx];
     if (currentStep instanceof Array) {
       currentStep.map(function(element) {
         self.processHistoryStep(element, reverse);
@@ -73,23 +51,25 @@ const WhiteboardCanvas = React.createClass({
     }
   },
   undoStep() {
-    this.undoHistoryIdx--;
-    if (this.undoHistoryIdx < 0) {
-      this.undoHistoryIdx = 0;
-      return;
+    let step = undoHistoryFactory.currentStepObject();
+    let stepBack = undoHistoryFactory.undoStepObject();
+    if (step.eventType == 'update') step = stepBack;
+    if (step) {
+      this.handleHistoryObject(step, true);
     }
-    this.handleHistoryObject(this.undoHistoryIdx, true);
   },
   redoStep() {
-    this.undoHistoryIdx++;
-    if (this.undoHistoryIdx > this.undoHistory.length - 1) {
-      this.undoHistoryIdx = this.undoHistory.length - 1;
-      return;
+    let step = undoHistoryFactory.currentStepObject();
+    let stepForward = undoHistoryFactory.redoStepObject();
+    if (step.eventType == 'update') step = stepForward;
+    if (step) {
+      this.handleHistoryObject(step, false);
     }
-    this.handleHistoryObject(this.undoHistoryIdx, false);
   },
-  processHistoryStep(currentStep, reverse) {
+  processHistoryStep(currentStepBase, reverse) {
+    let currentStep = {...currentStepBase};
     if (reverse) {
+
       if (currentStep.eventType == "delete") {
         currentStep.eventType = "draw";
       } else if (currentStep.eventType == "draw") {
@@ -97,13 +77,6 @@ const WhiteboardCanvas = React.createClass({
       }
     }
     this.sendMessage(currentStep);
-  },
-  processHistory(json){
-    if (json.eventType == "deleteAll") {
-      this.addAllDeletedObjectsToHistory();
-    } else {
-      this.addStepToUndoHistory(json);
-    }
   },
   sendMessage(json) {
     switch (json.eventType) {
@@ -124,23 +97,24 @@ const WhiteboardCanvas = React.createClass({
   },
   componentWillReceiveProps(nextProps, privProps) {
     if (nextProps.channel) {
-      if (nextProps.shapes != privProps.shapes) {
-        this.processWhiteboard(nextProps.shapes)
+      if (nextProps.shapes != this.shapes) {
+        this.processWhiteboard(nextProps.shapes);
       }
       this.activeColour = this.props.currentUser.colour;
       this.activeStrokeColour = this.activeColour;
     }
   },
-  isFacilitator() {
-    return this.props.currentUser.role == "facilitator";
-  },
   canEditShape(item) {
-    return (this.isFacilitator() || item.userName == this.props.currentUser.username);
+    return (item.permissions.can_edit);
   },
-  processShapeData(event) {
+  shouldCreateHandles(obj) {
+    return (obj.permissions.can_edit || obj.permissions.can_delete);
+  },
+  processShapeData(item) {
+    let event = item.event;
     var self = this;
-    var obj = self.state.shapes[event.id];
-    if (event.eventType != "delete" && !obj) {
+    var obj = self.shapes[event.id];
+    if (event.action != "delete" && !obj) {
       switch (event.element.type) {
         case "ellipse":
           obj = self.snap.ellipse(0, 0, 0, 0).transform('r0.1');
@@ -163,34 +137,38 @@ const WhiteboardCanvas = React.createClass({
         default:
           break;
       };
-      if (obj && !obj.created && self.canEditShape(event)) {
+    }
+
+    if (obj) {
+      obj.permissions = item.permissions;
+      if (!obj.created && self.shouldCreateHandles(obj)) {
         self.prepareNewElement(obj);
         obj.created = true;
       }
     }
 
-    if (obj){
-
-      if (event.eventType == "delete") {
+    if (obj) {
+      if (event.action == "delete") {
         obj.ftRemove();
-        let newShapes = {...self.state.shapes}
-        newShapes[event.id] = null
-        self.setState({shapes: newShapes})
+        self.shapes[event.id] = null;
       } else {
         var attrs = (event.element.attr instanceof Function)?event.element.attr():event.element.attr;
         obj.attr(attrs);
         obj.created = true;
-
-        if (!self.state.shapes[event.id]) {
+        if (!self.shapes[event.id]) {
           obj.id = event.id;
-          let newShapes = {...self.state.shapes}
+          let newShapes = {...self.shapes}
           newShapes[event.id] = obj;
-          self.setState({shapes: newShapes})
+          self.shapes = newShapes;
         }
 
         //check if arrow
         if (event.element.attr.style && event.element.attr.style.indexOf("marker") != -1) {
           obj.attr({markerStart: self.getArrowShape(event.element.attr.stroke)});
+        }
+
+        if (self.activeShape && obj.id == self.activeShape.id) {
+          self.activeShape.ftCreateHandles();
         }
       }
     }
@@ -199,34 +177,41 @@ const WhiteboardCanvas = React.createClass({
   processWhiteboard(data) {
     let self = this;
     var dataKeys = Object.keys(data);
-    var shapesKeys = Object.keys(self.state.shapes)
+    var shapesKeys = Object.keys(self.shapes)
 
     dataKeys.map((key) => {
       let item = data[key]
-      let event = item.event;
-      self.processShapeData(event);
+      self.processShapeData(item);
 
       let position = shapesKeys.indexOf(key)
       if (position >-1) {
         shapesKeys.splice(position, 1);
       }
     });
-
     let childrens = self.snap.paper.children();
     childrens.map(function(item) {
       let position = shapesKeys.indexOf(item.id)
       if (position > -1) {
-        item.remove();
+        if (self.activeShape && self.activeShape.id == item.id) {
+          self.activeShape = null;
+        }
+        self.shapes[item.id] = null;
+        item.ftRemove();
       }
     });
   },
-  deleteAllObjects() {
-    this.snap.clear();
-    this.setState({shapes: {}});
+  addShapeStateToHistory(shape, action) {
+    let message = this.prepareMessage(this.activeShape, action?action:'update');
+    undoHistoryFactory.addStepToUndoHistory(message);
   },
   shapeFinishedTransform(shape) {
     this.activeShape = shape;
     this.sendObjectData('update');
+    this.addShapeStateToHistory(shape);
+  },
+  shapeStartedTransform(shape) {
+    this.activeShape = shape;
+    this.addShapeStateToHistory(shape);
   },
   shapeTransformed(shape) {
     this.activeShape = shape;
@@ -340,6 +325,7 @@ const WhiteboardCanvas = React.createClass({
     el.ftSetSelectedCallback(this.shapeSelected);
     el.ftSetTransformedCallback(this.shapeTransformed);
     el.ftSetFinishedTransformCallback(this.shapeFinishedTransform);
+    el.ftSetStartedTransformCallback(this.shapeStartedTransform);
   },
   addInputControl(el) {
     el.ftSetupControls();
@@ -350,9 +336,9 @@ const WhiteboardCanvas = React.createClass({
   shapeSelected(el, selected) {
     let self = this;
     if (selected){
-      Object.keys(this.state.shapes).forEach(function(key, index) {
-        if (self.state.shapes[key] && self.state.shapes[key].id != el.id) {
-          self.state.shapes[key].ftUnselect();
+      Object.keys(this.shapes).forEach(function(key, index) {
+        if (self.shapes[key] && self.shapes[key].id != el.id) {
+          self.shapes[key].ftUnselect();
         }
       });
 
@@ -362,9 +348,10 @@ const WhiteboardCanvas = React.createClass({
     }
   },
   deleteActive() {
-    if (this.activeShape && this.canEditShape(this.activeShape)) {
+    if (this.activeShape && this.activeShape.permissions.can_delete) {
       this.sendObjectData('delete');
       this.activeShape.ftRemove();
+      this.shapes[this.activeShape.id] = null;
       this.activeShape = null;
     }
   },
@@ -377,36 +364,28 @@ const WhiteboardCanvas = React.createClass({
   		message: message
   	};
     this.sendMessage(messageJSON);
-    this.processHistory(messageJSON);
+    undoHistoryFactory.addStepToUndoHistory(this.addAllDeletedObjectsToHistory(this.shapes));
+  },
+  addAllDeletedObjectsToHistory(shapes) {
+    let objects = [];
+    let self = this;
+    Object.keys(shapes).forEach(function(key, index) {
+      let element = shapes[key];
+      if (element) {
+        objects.push(self.prepareMessage(element, "delete"));
+      }
+    });
+    return objects;
   },
   getName() {
     return 'Whiteboard_';
   },
-  shouldComponentUpdate(nextProps) {
-    return true;
-  },
-  componentDidUpdate() {
-  },
   eventCoords(e) {
     return({x: Number(e.clientX), y: Number(e.clientY)});
-  },
-  prepareMessage(shape, action, mainAction) {
-    var	message = {
-      id: shape.id,
-      action: (mainAction || "draw"),
-      userName: this.props.currentUser.username
-		};
-
-    message.element = shape;
-    return {
-      eventType: action,
-      message: message
-    }
   },
   sendObjectData(action, mainAction) {
     let message = this.prepareMessage(this.activeShape, action, mainAction)
     this.sendMessage(message);
-    this.processHistory(message);
   },
   handleObjectCreated() {
     if (this.activeShape && !this.activeShape.created) {
@@ -415,11 +394,13 @@ const WhiteboardCanvas = React.createClass({
       this.prepareNewElement(this.activeShape);
       var temp = this.activeShape;
       this.sendObjectData('draw');
-      this.state.shapes[this.activeShape.id] = this.activeShape;
+      this.shapes[this.activeShape.id] = this.activeShape;
+      this.addShapeStateToHistory(temp, 'draw');
     }
     this.coords = null;
   },
   handleMouseDown: function(e){
+    if (!this.props.currentUser.permissions.events.can_new_shape) return;
     if (!this.isValidButton(e)) return;
     if (this.minimized) return;
     if (this.scaling) return;
@@ -443,6 +424,7 @@ const WhiteboardCanvas = React.createClass({
     return arrow.marker(0,0, 10,10, 0,5);
   },
   handleMouseMove(e) {
+    if (!this.props.currentUser.permissions.events.can_new_shape) return;
     if (!this.isValidButton(e)) return;
     if (this.minimized) return;
     if (!this.coords) return;
@@ -523,8 +505,6 @@ const WhiteboardCanvas = React.createClass({
       if (this.activeShape.type == "line") {
         this.activeShape.attr({x1: coordsMove.x, y1: coordsMove.y});
       }
-
-      this.activeShape.ftHighlightBB();
     }
   },
   isValidButton(e) {
@@ -631,6 +611,18 @@ const WhiteboardCanvas = React.createClass({
     }
     return "btn " + (enabled?"btn-warning":"btn-default");
   },
+  prepareMessage(shape, action, mainAction) {
+    let	message = {
+      id: shape.id,
+      action: (mainAction || "draw")
+    };
+
+    message.element = shape;
+    return {
+      eventType: action,
+      message: message
+    }
+  },
   render() {
     const { show, onHide, boardContent, channel } = this.props;
     // not render if not set channel
@@ -639,14 +631,16 @@ const WhiteboardCanvas = React.createClass({
     var cornerRadius = 5;
     var speed = "0.3s";
     var scale = this.minimized?this.getMinimizedScale():1.0;
-    var scaleParam = 'width ' + speed +' ease-in-out, height ' + speed + ' ease-in-out';
+    var scaleParam = 'width ' + speed +' ease-in-out, height ' + speed + ' ease-in-out, 0.3s left ease-in-out';
+    let left = "calc(50% - " + this.getWidth()/2 + "px)";
+
     var divStyle = {
+      WebkitTransition: 'all',
+      WebkitTransitionProperty: "left",
+      msTransition: 'all',
       borderRadius: cornerRadius,
       position: "absolute",
-      top: '10px',
-      left: (window.innerWidth - this.getWidth()) / 3 + "px" ,
-      WebkitTransition: 'all',
-      msTransition: 'all',
+      left: left,
       width: this.getWidth()+'px',
       height: this.getHeight()+'px',
       'WebkitTransition': scaleParam,
@@ -657,7 +651,7 @@ const WhiteboardCanvas = React.createClass({
       background: this.WHITEBOARD_BACKGROUND_COLOUR,
       borderColor: this.WHITEBOARD_BORDER_COLOUR,
       borderWidth: 1,
-      zIndex: 1000,
+      zIndex: 900,
       padding: 10 + 'px'
     };
 
@@ -691,6 +685,7 @@ const WhiteboardCanvas = React.createClass({
       'marginRight': 'auto',
       display: this.isMinimized()?'none':'block'
     }
+
     return (
       <div style={divStyle} className="container">
         <svg id={ this.getName() }
@@ -758,8 +753,9 @@ const WhiteboardCanvas = React.createClass({
                 <Button bsStyle="default"><i className="fa fa-eraser" aria-hidden="true"></i></Button>
               </OverlayTrigger>
 
-              <Button bsStyle="default"><i className="fa fa-undo" aria-hidden="true" onClick={this.undoStep}></i></Button>
-              <Button bsStyle="default"><i className="fa fa-repeat" aria-hidden="true" onClick={this.redoStep}></i></Button>
+              <Button bsStyle="default" onClick={this.undoStep}><i className="fa fa-undo" aria-hidden="true"></i></Button>
+              <Button bsStyle="default" onClick={this.redoStep}><i className="fa fa-repeat" aria-hidden="true"></i></Button>
+
         </ButtonToolbar>
 
         <Modal dialogClassName='modal-section facilitator-board-modal' show={ this.mode == this.ModeEnum.text } onHide={ onHide } onEnter={ this.onOpen }>

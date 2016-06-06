@@ -8,12 +8,13 @@ defmodule KlziiChat.SessionTopic do
     has_many :shapes, KlziiChat.Shape, [foreign_key: :sessionTopicId]
     has_one :console, KlziiChat.Console,[foreign_key: :sessionTopicId]
     field :boardMessage, :string
+    field :order, :integer
     field :name, :string
     timestamps [inserted_at: :createdAt, updated_at: :updatedAt]
   end
 
   @required_fields ~w(boardMessage name sessionId topicId active)
-  @optional_fields ~w()
+  @optional_fields ~w(order)
 
   @doc """
   Creates a changeset based on the `model` and `params`.

@@ -49,15 +49,15 @@ defmodule KlziiChat.Services.SessionResourcesService do
   @spec delete_related_consoles(%Resource{}, Integer) :: :ok
   def delete_related_consoles(resource, session_member_id) do
     session_member = Repo.get!(SessionMember, session_member_id)
-    resourceId = resource.id
+    resource_id = resource.id
     session_topic_ids = from(st in SessionTopic, where: st.sessionId == ^session_member.sessionId, select: st.id) |> Repo.all
     from(c in Console,
       where: c.sessionTopicId in ^session_topic_ids,
       where:
-        c.audioId == ^resourceId or
-        c.videoId == ^resourceId or
-        c.imageId == ^resourceId or
-        c.fileId == ^resourceId
+        c.audioId == ^resource_id or
+        c.videoId == ^resource_id or
+        c.imageId == ^resource_id or
+        c.fileId == ^resource_id
       ) |> Repo.all
         |> Enum.each(fn console ->
           {:ok, new_console} = ConsoleService.remove_resource(session_member.id, console.sessionTopicId, resource.type)

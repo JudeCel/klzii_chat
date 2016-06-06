@@ -16,14 +16,14 @@ const Facilitator = React.createClass({
     return this.isOwner(id) ? className + ' cursor-pointer' : className;
   },
   render() {
-    const { facilitator, boardContent } = this.props;
+    const { facilitator, boardContent, sessionTopicId } = this.props;
     const hasPermissions = this.hasPermissions('events', 'can_board_message');
 
     return (
       <div className='facilitator-section'>
         <div className='div-inline-block'>
           <div className={ this.selectClass(facilitator.id) } onClick={ this.isOwner(facilitator.id) && this.openSpecificModal.bind(this, 'avatar') }>
-            <Member key={ facilitator.id } member={ facilitator } />
+            <Member key={ facilitator.id } member={ facilitator } sessionTopicId={sessionTopicId} />
           </div>
 
           <div className='say-section'>
@@ -46,6 +46,7 @@ const Facilitator = React.createClass({
 const mapStateToProps = (state) => {
   return {
     modalWindows: state.modalWindows,
+    sessionTopicId: state.sessionTopic.current.id,
     facilitator: state.members.facilitator,
     currentUser: state.members.currentUser,
     boardContent: state.sessionTopic.current.boardMessage

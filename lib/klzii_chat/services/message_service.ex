@@ -72,17 +72,14 @@ defmodule KlziiChat.Services.MessageService do
 
   @spec preload_dependencies(%Message{}) :: %Message{}
   def preload_dependencies(event) do
-    Repo.preload(event, [:session_member, :votes, replies: [:replies, :session_member, :votes] ])
+    {:ok, Repo.preload(event, [:session_member, :votes, replies: [:replies, :session_member, :votes] ])}
   end
 
   @spec create(%Message{}) :: %Message{}
   def create(changeset) do
-    case Repo.insert(changeset) do
-      {:ok, event} ->
-        {:ok, preload_dependencies(event)}
-      {:error, changeset} ->
-        {:error, changeset}
-    end
+    with {:ok, message} <- Repo.insert(changeset),
+         {:ok, _} <- KlziiChat.Services.SessionMembersService.update_emotion(message.id),
+    do: preload_dependencies(message)
   end
 
   @spec update_message(Integer.t, String.t, String.t, Map.t) :: %Message{} | {:error, String.t}
@@ -100,7 +97,7 @@ defmodule KlziiChat.Services.MessageService do
   def update_msg(changeset) do
     case Repo.update(changeset) do
       {:ok, message} ->
-        {:ok, preload_dependencies(message)}
+         preload_dependencies(message)
       {:error, changeset} ->
         {:error, changeset}
     end
@@ -120,13 +117,13 @@ defmodule KlziiChat.Services.MessageService do
   @spec thumbs_up(Integer.t, Map.t) :: Map.t | {:error, String.t}
   def thumbs_up(id, session_member) do
     if MessagePermissions.can_vote(session_member) do
-      event = Repo.get_by!(Message, id: id)
+      message = Repo.get_by!(Message, id: id)
       case Repo.get_by(Vote, messageId: id, sessionMemberId: session_member.id) do
         nil ->
           changeset = Vote.changeset(%Vote{}, %{sessionMemberId: session_member.id, messageId: id})
           case Repo.insert(changeset) do
             {:ok, _vote} ->
-              {:ok, preload_dependencies(event)}
+              preload_dependencies(message)
             {:error, changeset} ->
               {:error, changeset}
           end
@@ -135,7 +132,7 @@ defmodule KlziiChat.Services.MessageService do
             {:error, changeset} ->
               {:error, changeset}
             _ ->
-              {:ok, preload_dependencies(event)}
+              preload_dependencies(message)
           end
       end
     else

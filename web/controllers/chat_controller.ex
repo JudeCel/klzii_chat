@@ -8,11 +8,11 @@ defmodule KlziiChat.ChatController do
   """
   def index(conn, %{"token_dev" => token}) do
     case Mix.env do
-      env when env in [:dev, :test] ->
+      env when env in [:dev, :test, :prod] ->
         session_member = Repo.get_by!(KlziiChat.SessionMember, token: token)
         Guardian.Plug.sign_in(conn, session_member)
         |> render("index.html")
-      true ->
+      _ ->
         send_resp(conn, 401, Poison.encode!(%{error: "unauthorized, allow only dev"}))
         |> halt
     end

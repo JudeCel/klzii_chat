@@ -5,11 +5,12 @@ defmodule KlziiChat.SessionMembersView do
   alias KlziiChat.Services.Permissions.SessionTopic, as: SessionTopicPermissions
   alias KlziiChat.Services.Permissions.Whiteboard, as: WhiteboardcPermissions
 
-  def render("member.json", %{ member: member}) do
+  def render("member.json", %{member: member}) do
     %{id: member.id,
       username: member.username,
       colour: member.colour,
       avatarData: member.avatarData,
+      sessionTopicContext: member.sessionTopicContext,
       role: member.role
     }
   end

@@ -23,8 +23,9 @@ const Console = React.createClass({
   isConsoleActive(type) {
     return this.getConsoleResourceId(type);
   },
-  consoleButtonClassName(type) {
-    return this.isConsoleActive(type) ? 'cursor-pointer active' : '';
+  consoleButtonStyle(type) {
+    const color = this.props.colours.consoleButtonActive;
+    return this.isConsoleActive(type) ? { color: color, borderColor: color, opacity: 1, cursor: 'pointer' } : {};
   },
   render() {
     const { modalName } = this.state;
@@ -42,7 +43,7 @@ const Console = React.createClass({
           <ul className='icons'>
             {
               consoleButtons.map((button, index) =>
-                <li key={ index } onClick={ this.openModal.bind(this, button.type) } className={ this.consoleButtonClassName(button.type) }>
+                <li key={ index } onClick={ this.openModal.bind(this, button.type) } style={ this.consoleButtonStyle(button.type) } >
                   <i className={ button.className } />
                 </li>
               )
@@ -59,6 +60,7 @@ const Console = React.createClass({
 
 const mapStateToProps = (state) => {
   return {
+    colours: state.chat.session.colours,
     modalWindows: state.modalWindows,
     console: state.sessionTopic.console
   }

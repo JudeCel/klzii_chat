@@ -21,9 +21,9 @@ defmodule KlziiChat.Services.SessionMembersServiceTest do
   test "merge session topic context when context is empty" do
     emotion = 2
     session_topic_id = 2
-    new_context = %{"avatarData" => %{"emotion" => emotion}}
+    new_context = %{"avatarData" => %{"face" => emotion}}
     key = to_string(session_topic_id)
-    expect = %{key => %{"avatarData" => %{"emotion" => emotion}}}
+    expect = %{key => %{"avatarData" => %{"face" => emotion}}}
     result = SessionMembersService.merge_session_topic_context(%{}, new_context, session_topic_id)
     assert(result == expect)
   end
@@ -32,9 +32,9 @@ defmodule KlziiChat.Services.SessionMembersServiceTest do
     session_topic_id = 2
     emotion = 4
     key = to_string(session_topic_id)
-    new_context = %{"avatarData" => %{"emotion" => emotion}}
-    expect = %{key => %{"avatarData" => %{"emotion" => emotion}}}
-    current = %{key => %{"avatarData" => %{"emotion" => 34}}}
+    new_context = %{"avatarData" => %{"face" => emotion}}
+    expect = %{key => %{"avatarData" => %{"face" => emotion}}}
+    current = %{key => %{"avatarData" => %{"face" => 34}}}
     result = SessionMembersService.merge_session_topic_context(current, new_context, session_topic_id)
     assert(result == expect)
   end

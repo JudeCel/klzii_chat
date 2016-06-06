@@ -14,15 +14,14 @@ const Participants = React.createClass({
     return className + (even ? 'avatar-even' : 'avatar-odd');
   },
   render() {
-    const { participants, openAvatarModal } = this.props;
-
+    const { participants, openAvatarModal, sessionTopicId } = this.props;
     return (
       <div className='participants-section remove-side-margin'>
         {
           participants.map((participant, index) =>
             <div className='col-md-3' key={ participant.id }>
               <div className={ this.evenClasses(index % 2 == 0, participant.id) } onClick={ this.isOwner(participant.id) && this.openSpecificModal.bind(this, 'avatar') }>
-                <Member member={ participant } />
+                <Member member={ participant } sessionTopicId={sessionTopicId} />
               </div>
             </div>
           )
@@ -34,6 +33,7 @@ const Participants = React.createClass({
 
 const mapStateToProps = (state) => {
   return {
+    sessionTopicId: state.sessionTopic.current.id,
     modalWindows: state.modalWindows,
     currentUser: state.members.currentUser,
     participants: state.members.participants
