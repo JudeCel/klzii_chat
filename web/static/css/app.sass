@@ -190,16 +190,20 @@ body
             margin: 1em
 
 @media (min-width: 1500px)
-  .room-outerbox
+  .room-outerbox, .header-innerbox, .direct-message-modal
     width: 80%
+  .direct-message-modal
+    padding: 0 30px
+  .room-outerbox
     margin: 0 auto 30px auto
   .header-innerbox
-    width: 80%
     margin: 0 auto
 
 @media (min-width: 2000px)
-  .room-outerbox, .header-innerbox
+  .room-outerbox, .header-innerbox, .direct-message-modal
     width: 1600px
+  .direct-message-modal
+    padding: 0 15px
 
 .toast-top-right
   top: 130px
