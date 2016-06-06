@@ -60,6 +60,18 @@ defmodule KlziiChat.Router do
     get "/", BannersController, :index
   end
 
+  scope "/api/mini_surveies", KlziiChat do
+    pipe_through :api
+    # CORS Routes
+    options "/", MiniSurveiesController, :index
+    options "/", MiniSurveiesController, :create
+    options "/:id/answer/", MiniSurveiesController, :answer
+    # Generic routes for API be call from original domain
+    get "/", MiniSurveiesController, :index
+    post "/", MiniSurveiesController, :create
+    post "/:id/answer/", MiniSurveiesController, :answer
+  end
+
   scope "/api/auth", KlziiChat do
     pipe_through :api
     # CORS Routes
