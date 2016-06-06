@@ -53,16 +53,17 @@ const WhiteboardCanvas = React.createClass({
   undoStep() {
     let step = undoHistoryFactory.currentStepObject();
     let stepBack = undoHistoryFactory.undoStepObject();
-    if (step.eventType == 'update') step = stepBack;
+
     if (step) {
+      if (step.eventType == 'update') step = stepBack;
       this.handleHistoryObject(step, true);
     }
   },
   redoStep() {
     let step = undoHistoryFactory.currentStepObject();
     let stepForward = undoHistoryFactory.redoStepObject();
-    if (step.eventType == 'update') step = stepForward;
     if (step) {
+      if (step.eventType == 'update') step = stepForward;
       this.handleHistoryObject(step, false);
     }
   },
@@ -349,6 +350,9 @@ const WhiteboardCanvas = React.createClass({
   },
   deleteActive() {
     if (this.activeShape && this.activeShape.permissions.can_delete) {
+      let message = this.prepareMessage(this.activeShape, "delete");
+      undoHistoryFactory.addStepToUndoHistory(message);
+
       this.sendObjectData('delete');
       this.activeShape.ftRemove();
       this.shapes[this.activeShape.id] = null;
@@ -577,10 +581,14 @@ const WhiteboardCanvas = React.createClass({
   handleStrokeWidthChange(e) {
     this.strokeWidth = e.target.value;
     if (this.activeShape) {
+      //save initial state of a shape, if state is same as previous, will not affect
+      this.addShapeStateToHistory(this.activeShape);
       this.activeShape.attr({strokeWidth: this.strokeWidth});
       this.sendObjectData('update');
+
+      //save modified state of a shape
+      this.addShapeStateToHistory(this.activeShape);
     }
-    this.setState({});
   },
   toolStyle(toolType) {
     return "btn " + ((toolType == this.mode)?"btn-warning":"btn-default");
@@ -735,8 +743,8 @@ const WhiteboardCanvas = React.createClass({
               <OverlayTrigger trigger="focus" placement="top" overlay={
                   <Popover id="lineWidthShapes">
                     {this.strokeWidthArray.map(function(result) {
-                      return <div className="radio" key={"radio" + result} >
-                        <label className={self.isLineWidthActive(result)}><input type="radio" ref="strokeWidth" name="optradio" value={result} onClick={self.handleStrokeWidthChange}/>{result}/</label>
+                      return <div className="radio" key={"radio" + result} onClick={self.handleStrokeWidthChange}>
+                        <label className={self.isLineWidthActive(result)}><input type="radio" ref="strokeWidth" name="optradio" value={result}/>{result}/</label>
                       </div>
                     })}
                   </Popover>
@@ -746,8 +754,8 @@ const WhiteboardCanvas = React.createClass({
 
               <OverlayTrigger trigger="focus" placement="top" overlay={
                   <Popover id="eraserShapes">
-                    <i className="btn-sm fa fa-eraser" aria-hidden="true" onClick={this.deleteActive}>*</i>
-                    <i className="btn-sm fa fa-eraser" aria-hidden="true" onClick={this.deleteAll}></i>
+                    <i className="btn btn-default fa fa-eraser" aria-hidden="true" onClick={this.deleteActive}>*</i>
+                    <i className="btn btn-default fa fa-eraser" aria-hidden="true" onClick={this.deleteAll}></i>
                   </Popover>
                 }>
                 <Button bsStyle="default"><i className="fa fa-eraser" aria-hidden="true"></i></Button>
