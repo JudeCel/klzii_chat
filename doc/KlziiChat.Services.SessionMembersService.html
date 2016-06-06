@@ -91,7 +91,7 @@
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#find_by_token/1">find_by_token(token)</a>
+    <a href="#get_member_from_token/1">get_member_from_token(token)</a>
   </div>
   
 </div>
@@ -109,7 +109,7 @@
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#update_emotion/3">update_emotion(session_member_id, session_topic_id, emotion)</a>
+    <a href="#update_emotion/1">update_emotion(message_id)</a>
   </div>
   
 </div>
@@ -121,7 +121,7 @@
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#update_session_topic_context/3">update_session_topic_context(session_member_id, session_topic_id, params)</a>
+    <a href="#update_session_topic_context/3">update_session_topic_context(session_member, session_topic_id, params)</a>
   </div>
   
 </div>
@@ -168,12 +168,12 @@
     
   </section>
 </div>
-<div class="detail" id="find_by_token/1">
+<div class="detail" id="get_member_from_token/1">
   <div class="detail-header">
-    <a href="#find_by_token/1" class="detail-link" title="Link to this function">
+    <a href="#get_member_from_token/1" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">find_by_token(token)</span>
+    <span class="signature">get_member_from_token(token)</span>
       
   </div>
   
@@ -181,7 +181,9 @@
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">find_by_token(<a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>) :: nil | <a href="http://elixir-lang.org/docs/stable/elixir/Map.html#t:t/0">Map.t</a></code></pre>
+          <pre><code class="elixir">get_member_from_token(<a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>) ::
+  {:ok, %KlziiChat.AccountUser{AccountId: term, UserId: term, __meta__: term, account: term, createdAt: term, email: term, firstName: term, gender: term, id: term, lastName: term, role: term, updatedAt: term, user: term}} |
+  {:error, <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>}</code></pre>
         
       </div>
     </div>
@@ -234,12 +236,12 @@
     
   </section>
 </div>
-<div class="detail" id="update_emotion/3">
+<div class="detail" id="update_emotion/1">
   <div class="detail-header">
-    <a href="#update_emotion/3" class="detail-link" title="Link to this function">
+    <a href="#update_emotion/1" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">update_emotion(session_member_id, session_topic_id, emotion)</span>
+    <span class="signature">update_emotion(message_id)</span>
       
   </div>
   
@@ -247,7 +249,7 @@
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">update_emotion(Integer, Integer, Integer) :: <a href="http://elixir-lang.org/docs/stable/elixir/Map.html#t:t/0">Map.t</a></code></pre>
+          <pre><code class="elixir">update_emotion(Integer) :: <a href="http://elixir-lang.org/docs/stable/elixir/Map.html#t:t/0">Map.t</a></code></pre>
         
       </div>
     </div>
@@ -270,7 +272,7 @@
       <div class="specs-list">
         
           <pre><code class="elixir">update_member(<a href="http://elixir-lang.org/docs/stable/elixir/Integer.html#t:t/0">Integer.t</a>, <a href="http://elixir-lang.org/docs/stable/elixir/Map.html#t:t/0">Map.t</a>) ::
-  {:ok, %KlziiChat.SessionMember{__meta__: term, accountUserId: term, account_user: term, avatarData: term, colour: term, createdAt: term, id: term, messages: term, role: term, session: term, sessionId: term, sessionTopicContext: term, token: term, updatedAt: term, username: term, votes: term}} |
+  {:ok, %KlziiChat.SessionMember{__meta__: term, accountUserId: term, account_user: term, avatarData: term, colour: term, createdAt: term, id: term, messages: term, role: term, session: term, sessionId: term, sessionTopicContext: term, shapes: term, token: term, updatedAt: term, username: term, votes: term}} |
   {:error, Ecto.Changeset.t}</code></pre>
         
       </div>
@@ -285,7 +287,7 @@
     <a href="#update_session_topic_context/3" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">update_session_topic_context(session_member_id, session_topic_id, params)</span>
+    <span class="signature">update_session_topic_context(session_member, session_topic_id, params)</span>
       
   </div>
   
@@ -293,8 +295,8 @@
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">update_session_topic_context(Integer, Integer, <a href="http://elixir-lang.org/docs/stable/elixir/Map.html#t:t/0">Map.t</a>) ::
-  {:ok, %KlziiChat.SessionMember{__meta__: term, accountUserId: term, account_user: term, avatarData: term, colour: term, createdAt: term, id: term, messages: term, role: term, session: term, sessionId: term, sessionTopicContext: term, token: term, updatedAt: term, username: term, votes: term}} |
+          <pre><code class="elixir">update_session_topic_context(%KlziiChat.SessionMember{__meta__: term, accountUserId: term, account_user: term, avatarData: term, colour: term, createdAt: term, id: term, messages: term, role: term, session: term, sessionId: term, sessionTopicContext: term, shapes: term, token: term, updatedAt: term, username: term, votes: term}, Integer, <a href="http://elixir-lang.org/docs/stable/elixir/Map.html#t:t/0">Map.t</a>) ::
+  {:ok, %KlziiChat.SessionMember{__meta__: term, accountUserId: term, account_user: term, avatarData: term, colour: term, createdAt: term, id: term, messages: term, role: term, session: term, sessionId: term, sessionTopicContext: term, shapes: term, token: term, updatedAt: term, username: term, votes: term}} |
   {:error, Ecto.Changeset.t}</code></pre>
         
       </div>

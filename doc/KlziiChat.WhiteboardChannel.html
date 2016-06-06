@@ -5,7 +5,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.11.5">
-    <title>KlziiChat.SessionChannel – klzii_chat v0.0.1</title>
+    <title>KlziiChat.WhiteboardChannel – klzii_chat v0.0.1</title>
     <link rel="stylesheet" href="dist/app-ddd9717ad9.css" />
     
     <script src="dist/sidebar_items.js"></script>
@@ -61,16 +61,15 @@
 
       <h1>
         <small class="visible-xs">klzii_chat v0.0.1</small>
-        KlziiChat.SessionChannel
+        KlziiChat.WhiteboardChannel
         
         
       </h1>
 
       
         <section id="moduledoc" class="docstring">
-          <p>  This Channel is only for session context
-  Session Member information
-  Global messages for session</p>
+          <pre><code class="elixir">This channel is for whiteboard events.
+whiteboard id is session topic id.</code></pre>
 
         </section>
       
@@ -101,7 +100,7 @@
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#handle_in/3">handle_in(arg1, params, socket)</a>
+    <a href="#handle_in/3">handle_in(arg1, payload, socket)</a>
   </div>
   
     <div class="summary-synopsis"><p>Callback implementation for <code class="inline">c:Phoenix.Channel.handle_in/3</code></p>
@@ -110,7 +109,7 @@
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#handle_info/2">handle_info(arg1, socket)</a>
+    <a href="#handle_info/2">handle_info(message, socket)</a>
   </div>
   
     <div class="summary-synopsis"><p>Callback implementation for <code class="inline">c:Phoenix.Channel.handle_info/2</code></p>
@@ -119,13 +118,13 @@
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#handle_out/3">handle_out(binary, payload, socket)</a>
+    <a href="#handle_out/3">handle_out(message, payload, socket)</a>
   </div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#join/3">join(arg, , socket)</a>
+    <a href="#join/3">join(arg, payload, socket)</a>
   </div>
   
     <div class="summary-synopsis"><p>Callback implementation for <code class="inline">c:Phoenix.Channel.join/3</code></p>
@@ -181,7 +180,7 @@
     <a href="#handle_in/3" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">handle_in(arg1, params, socket)</span>
+    <span class="signature">handle_in(arg1, payload, socket)</span>
       
   </div>
   
@@ -195,7 +194,7 @@
     <a href="#handle_info/2" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">handle_info(arg1, socket)</span>
+    <span class="signature">handle_info(message, socket)</span>
       
   </div>
   
@@ -209,7 +208,7 @@
     <a href="#handle_out/3" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">handle_out(binary, payload, socket)</span>
+    <span class="signature">handle_out(message, payload, socket)</span>
       
   </div>
   
@@ -222,7 +221,7 @@
     <a href="#join/3" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">join(arg, , socket)</span>
+    <span class="signature">join(arg, payload, socket)</span>
       
   </div>
   

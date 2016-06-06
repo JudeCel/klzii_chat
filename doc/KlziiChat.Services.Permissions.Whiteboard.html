@@ -5,7 +5,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.11.5">
-    <title>KlziiChat.Files.UrlHelpers – klzii_chat v0.0.1</title>
+    <title>KlziiChat.Services.Permissions.Whiteboard – klzii_chat v0.0.1</title>
     <link rel="stylesheet" href="dist/app-ddd9717ad9.css" />
     
     <script src="dist/sidebar_items.js"></script>
@@ -61,7 +61,7 @@
 
       <h1>
         <small class="visible-xs">klzii_chat v0.0.1</small>
-        KlziiChat.Files.UrlHelpers
+        KlziiChat.Services.Permissions.Whiteboard
         
         
       </h1>
@@ -85,19 +85,19 @@
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#add_asset_path/2">add_asset_path(base_url, path)</a>
+    <a href="#can_delete/2">can_delete(member, object)</a>
   </div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#add_domain/1">add_domain(url)</a>
+    <a href="#can_edit/2">can_edit(member, object)</a>
   </div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#youtube_id/1">youtube_id(url)</a>
+    <a href="#can_new_shape/1">can_new_shape(member)</a>
   </div>
   
 </div>
@@ -122,12 +122,12 @@
             </a>
             Functions
           </h1>
-          <div class="detail" id="add_asset_path/2">
+          <div class="detail" id="can_delete/2">
   <div class="detail-header">
-    <a href="#add_asset_path/2" class="detail-link" title="Link to this function">
+    <a href="#can_delete/2" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">add_asset_path(base_url, path)</span>
+    <span class="signature">can_delete(member, object)</span>
       
   </div>
   
@@ -135,7 +135,7 @@
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">add_asset_path(String, String) :: String</code></pre>
+          <pre><code class="elixir">can_delete(<a href="http://elixir-lang.org/docs/stable/elixir/Map.html#t:t/0">Map.t</a>, <a href="http://elixir-lang.org/docs/stable/elixir/Map.html#t:t/0">Map.t</a>) :: Boolean.t</code></pre>
         
       </div>
     </div>
@@ -144,12 +144,12 @@
     
   </section>
 </div>
-<div class="detail" id="add_domain/1">
+<div class="detail" id="can_edit/2">
   <div class="detail-header">
-    <a href="#add_domain/1" class="detail-link" title="Link to this function">
+    <a href="#can_edit/2" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">add_domain(url)</span>
+    <span class="signature">can_edit(member, object)</span>
       
   </div>
   
@@ -157,7 +157,7 @@
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">add_domain(String) :: String</code></pre>
+          <pre><code class="elixir">can_edit(<a href="http://elixir-lang.org/docs/stable/elixir/Map.html#t:t/0">Map.t</a>, <a href="http://elixir-lang.org/docs/stable/elixir/Map.html#t:t/0">Map.t</a>) :: Boolean.t</code></pre>
         
       </div>
     </div>
@@ -166,12 +166,12 @@
     
   </section>
 </div>
-<div class="detail" id="youtube_id/1">
+<div class="detail" id="can_new_shape/1">
   <div class="detail-header">
-    <a href="#youtube_id/1" class="detail-link" title="Link to this function">
+    <a href="#can_new_shape/1" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">youtube_id(url)</span>
+    <span class="signature">can_new_shape(member)</span>
       
   </div>
   
@@ -179,7 +179,7 @@
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">youtube_id(String) :: String</code></pre>
+          <pre><code class="elixir">can_new_shape(<a href="http://elixir-lang.org/docs/stable/elixir/Map.html#t:t/0">Map.t</a>) :: Boolean.t</code></pre>
         
       </div>
     </div>

@@ -5,7 +5,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.11.5">
-    <title>KlziiChat.Files.UrlHelpers – klzii_chat v0.0.1</title>
+    <title>KlziiChat.Queries.Sessions – klzii_chat v0.0.1</title>
     <link rel="stylesheet" href="dist/app-ddd9717ad9.css" />
     
     <script src="dist/sidebar_items.js"></script>
@@ -61,7 +61,7 @@
 
       <h1>
         <small class="visible-xs">klzii_chat v0.0.1</small>
-        KlziiChat.Files.UrlHelpers
+        KlziiChat.Queries.Sessions
         
         
       </h1>
@@ -85,19 +85,7 @@
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#add_asset_path/2">add_asset_path(base_url, path)</a>
-  </div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#add_domain/1">add_domain(url)</a>
-  </div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#youtube_id/1">youtube_id(url)</a>
+    <a href="#find/1">find(session_id)</a>
   </div>
   
 </div>
@@ -122,12 +110,12 @@
             </a>
             Functions
           </h1>
-          <div class="detail" id="add_asset_path/2">
+          <div class="detail" id="find/1">
   <div class="detail-header">
-    <a href="#add_asset_path/2" class="detail-link" title="Link to this function">
+    <a href="#find/1" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">add_asset_path(base_url, path)</span>
+    <span class="signature">find(session_id)</span>
       
   </div>
   
@@ -135,51 +123,7 @@
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">add_asset_path(String, String) :: String</code></pre>
-        
-      </div>
-    </div>
-  
-  <section class="docstring">
-    
-  </section>
-</div>
-<div class="detail" id="add_domain/1">
-  <div class="detail-header">
-    <a href="#add_domain/1" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">add_domain(url)</span>
-      
-  </div>
-  
-    <div class="specs">
-      <h4 class="specs-title">Specs</h4>
-      <div class="specs-list">
-        
-          <pre><code class="elixir">add_domain(String) :: String</code></pre>
-        
-      </div>
-    </div>
-  
-  <section class="docstring">
-    
-  </section>
-</div>
-<div class="detail" id="youtube_id/1">
-  <div class="detail-header">
-    <a href="#youtube_id/1" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">youtube_id(url)</span>
-      
-  </div>
-  
-    <div class="specs">
-      <h4 class="specs-title">Specs</h4>
-      <div class="specs-list">
-        
-          <pre><code class="elixir">youtube_id(String) :: String</code></pre>
+          <pre><code class="elixir">find(Integer) :: Ecto.Query.t</code></pre>
         
       </div>
     </div>
