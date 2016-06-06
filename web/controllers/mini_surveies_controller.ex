@@ -28,7 +28,16 @@ defmodule KlziiChat.MiniSurveiesController do
   def answer(conn, %{"id" => id, "answer" => answer}, member, _) do
     case MiniSurveiesService.create_answer(member.session_member.id, id, answer) do
       {:ok, mini_survey} ->
-        json(conn, %{status: :ok})
+        json(conn, Phoenix.View.render_one(mini_survey, MiniSurveyView, "show_with_answer.json", as: :mini_survey))
+      {:error, reason} ->
+        json(conn, %{status: :error, reason: reason})
+    end
+  end
+
+  def console(conn, %{"id" => id, "sessionTopicId" => session_topic_id}, member, _) do
+    case MiniSurveiesService.get_for_console(member.session_member.id, id, session_topic_id) do
+      {:ok, mini_survey} ->
+        json(conn, Phoenix.View.render_one(mini_survey, MiniSurveyView, "show_with_answer.json", as: :mini_survey))
       {:error, reason} ->
         json(conn, %{status: :error, reason: reason})
     end

@@ -25,4 +25,23 @@ defmodule KlziiChat.MiniSurveiesControllerTsest do
     conn = post(conn, "/api/mini_surveies/#{resp_survey["id"]}/answer/", answer_params)
       assert(json_response(conn, 200))
   end
+
+  test "#MiniSurveiesController get qestion for session member by session topic", %{conn: conn, session_topic_1: session_topic_1} do
+    params = %{"sessionTopicId" => session_topic_1.id, "type" => "yesNoMaybe", "question" => "cool question", "title" => "cool title"}
+    resp_survey = post(conn, "/api/mini_surveies/", params) |> json_response(200)
+
+    answer_params = %{"answer" => %{"type" => "yesNoMaybe", "value" => "yes"} }
+    post(conn, "/api/mini_surveies/#{resp_survey["id"]}/answer/", answer_params) |> json_response(200)
+
+    console_params = %{"sessionTopicId" => session_topic_1.id}
+    get(conn, "/api/mini_surveies/#{resp_survey["id"]}/console/", console_params) |> json_response(200)
+  end
+
+  test "#MiniSurveiesController get qestion for console when no answere", %{conn: conn, session_topic_1: session_topic_1} do
+    params = %{"sessionTopicId" => session_topic_1.id, "type" => "yesNoMaybe", "question" => "cool question", "title" => "cool title"}
+    resp_survey = post(conn, "/api/mini_surveies/", params) |> json_response(200)
+
+    console_params = %{"sessionTopicId" => session_topic_1.id}
+    get(conn, "/api/mini_surveies/#{resp_survey["id"]}/console/", console_params) |> json_response(200)
+  end
 end

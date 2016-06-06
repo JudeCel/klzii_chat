@@ -66,10 +66,12 @@ defmodule KlziiChat.Router do
     options "/", MiniSurveiesController, :index
     options "/", MiniSurveiesController, :create
     options "/:id/answer/", MiniSurveiesController, :answer
+    options "/:id/console/", MiniSurveiesController, :console
     # Generic routes for API be call from original domain
     get "/", MiniSurveiesController, :index
     post "/", MiniSurveiesController, :create
     post "/:id/answer/", MiniSurveiesController, :answer
+    get "/:id/console/", MiniSurveiesController, :console
   end
 
   scope "/api/auth", KlziiChat do
