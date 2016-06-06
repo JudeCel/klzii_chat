@@ -5,8 +5,36 @@ function copyObject(obj) {
   return JSON.parse(JSON.stringify(obj));
 }
 function areObjectsDifferent(a, b) {
-  return JSON.stringify(a) != JSON.stringify(b);
+  return !areObjectsEqual(a, b);
 }
+
+function areObjectsEqual(a, b) {
+  if (!a || !b) {
+    return false;
+  }
+  let x = JSON.parse(JSON.stringify(a));
+  let y = JSON.parse(JSON.stringify(b));
+  let p;
+  for(p in y) {
+    if(typeof(x[p])=='undefined') {return false;}
+  }
+
+  for(p in y) {
+    if (y[p]) {
+      switch(typeof(y[p])) {
+        case 'object':
+          if (!areObjectsEqual(y[p], x[p])) { return false; } break;
+        default:
+          if (y[p] != x[p]) { return false; }
+      }
+    } else {
+      if (x[p])
+        return false;
+    }
+  }
+  return true;
+}
+
 function addStepToUndoHistory(json) {
   if (areObjectsDifferent(json, currentStepObject())) {
     //if made a few undo steps, then delete next redo steps first

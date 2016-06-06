@@ -53,7 +53,8 @@ const WhiteboardCanvas = React.createClass({
   undoStep() {
     let step = undoHistoryFactory.currentStepObject();
     let stepBack = undoHistoryFactory.undoStepObject();
-    if (step.eventType == 'update') step = stepBack;
+
+    if (step && step.eventType == 'update') step = stepBack;
     if (step) {
       this.handleHistoryObject(step, true);
     }
@@ -61,7 +62,7 @@ const WhiteboardCanvas = React.createClass({
   redoStep() {
     let step = undoHistoryFactory.currentStepObject();
     let stepForward = undoHistoryFactory.redoStepObject();
-    if (step.eventType == 'update') step = stepForward;
+    if (step && step.eventType == 'update') step = stepForward;
     if (step) {
       this.handleHistoryObject(step, false);
     }
@@ -577,10 +578,14 @@ const WhiteboardCanvas = React.createClass({
   handleStrokeWidthChange(e) {
     this.strokeWidth = e.target.value;
     if (this.activeShape) {
+      //save initial state of a shape, if state is same as previous, will not affect
+      this.addShapeStateToHistory(this.activeShape);
       this.activeShape.attr({strokeWidth: this.strokeWidth});
       this.sendObjectData('update');
+
+      //save modified state of a shape
+      this.addShapeStateToHistory(this.activeShape);
     }
-    this.setState({});
   },
   toolStyle(toolType) {
     return "btn " + ((toolType == this.mode)?"btn-warning":"btn-default");
