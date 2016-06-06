@@ -735,8 +735,8 @@ const WhiteboardCanvas = React.createClass({
               <OverlayTrigger trigger="focus" placement="top" overlay={
                   <Popover id="lineWidthShapes">
                     {this.strokeWidthArray.map(function(result) {
-                      return <div className="radio" key={"radio" + result} >
-                        <label className={self.isLineWidthActive(result)}><input type="radio" ref="strokeWidth" name="optradio" value={result} onClick={self.handleStrokeWidthChange}/>{result}/</label>
+                      return <div className="radio" key={"radio" + result} onClick={self.handleStrokeWidthChange}>
+                        <label className={self.isLineWidthActive(result)}><input type="radio" ref="strokeWidth" name="optradio" value={result}/>{result}/</label>
                       </div>
                     })}
                   </Popover>
@@ -746,8 +746,8 @@ const WhiteboardCanvas = React.createClass({
 
               <OverlayTrigger trigger="focus" placement="top" overlay={
                   <Popover id="eraserShapes">
-                    <i className="btn-sm fa fa-eraser" aria-hidden="true" onClick={this.deleteActive}>*</i>
-                    <i className="btn-sm fa fa-eraser" aria-hidden="true" onClick={this.deleteAll}></i>
+                    <i className="btn btn-default fa fa-eraser" aria-hidden="true" onClick={this.deleteActive}>*</i>
+                    <i className="btn btn-default fa fa-eraser" aria-hidden="true" onClick={this.deleteAll}></i>
                   </Popover>
                 }>
                 <Button bsStyle="default"><i className="fa fa-eraser" aria-hidden="true"></i></Button>
