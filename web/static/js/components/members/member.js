@@ -3,9 +3,8 @@ import Avatar             from './avatar.js';
 
 const Member = React.createClass({
   render() {
-    const { member, sessionTopicId } = this.props;
     return (
-      <Avatar member={ member } sessionTopicId={sessionTopicId}/>
+      <Avatar member={ this.props.member } />
     )
   }
 });
