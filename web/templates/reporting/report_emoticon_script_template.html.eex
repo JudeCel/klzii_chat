@@ -1,11 +1,11 @@
-<% %{emoticons_qnt: emoticons_qnt, sprites_qnt: sprites_qnt, emoticon_size: [emoticon_width, emoticon_height]} = @emoticon_parameters %>
+<% %{emoticons_qnt: emoticons_qnt, sprites_qnt: sprites_qnt, emoticon_size: [emoticon_width, emoticon_height], selected_emoticon: selected_emoticon} = @emoticon_parameters %>
 
 <script type="text/javascript">
   var emoticon_qnt = <%= emoticons_qnt %>;
   var sprites_qnt = <%= sprites_qnt %>;
   var emoticon_width = <%= emoticon_width %>;
   var emoticon_height = <%= emoticon_height %>;
-  var fourth_emotion_x = 3 * <%= emoticon_width %>;
+  var selected_emoticon_x = <%= selected_emoticon %> * <%= emoticon_width %>;
 
   for(var i = 0; i < emoticon_qnt; i++) {
     var svg_class = ".svg-" + i;
@@ -14,7 +14,7 @@
     if(emotionSvg) {
       emotionSvg.image(svg_path, 0, 0, sprites_qnt * emoticon_width, emoticon_height);
       // viewBox coordinates: "start x, start y, width, heigh"});
-      emotionSvg.attr({viewBox: fourth_emotion_x + ", 0, " + emoticon_width + ", " + emoticon_height});
+      emotionSvg.attr({viewBox: selected_emoticon_x + ", 0, " + emoticon_width + ", " + emoticon_height});
     }
   }
 </script>

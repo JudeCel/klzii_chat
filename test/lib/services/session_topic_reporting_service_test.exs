@@ -3,7 +3,7 @@ defmodule KlziiChat.Services.SessionTopicReportingServiceTest do
   alias KlziiChat.Services.{SessionTopicReportingService, SessionTopicService, FileService}
   alias KlziiChat.Helpers.HTMLSessionTopcReportHelper
 
-  @emoticon_parameters %{emoticons_qnt: 7, sprites_qnt: 6, emoticon_size: [55, 55]}
+  @emoticon_parameters %{emoticons_qnt: 7, sprites_qnt: 6, emoticon_size: [55, 55], selected_emoticon: 3}
 
   setup %{session: session, session_topic_1: session_topic_1, facilitator: facilitator, participant: participant} do
     {:ok, create_date1} = Ecto.DateTime.cast("2016-05-20T09:50:00Z")
@@ -121,6 +121,6 @@ defmodule KlziiChat.Services.SessionTopicReportingServiceTest do
     assert(pdf_report_path == FileService.get_tmp_path() <> "/SessionTopicReportingServiceTest_test_report.pdf")
     refute(File.exists?(html_report_path))
     assert(File.exists?(pdf_report_path))
-    :ok = File.rm(pdf_report_path)
+    #:ok = File.rm(pdf_report_path)
   end
 end

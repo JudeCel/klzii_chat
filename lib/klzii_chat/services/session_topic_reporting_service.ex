@@ -4,7 +4,7 @@ defmodule KlziiChat.Services.SessionTopicReportingService do
   alias KlziiChat.Helpers.HTMLSessionTopcReportHelper
   alias Ecto.DateTime
 
-  @emoticon_parameters %{emoticons_qnt: 7, sprites_qnt: 6, emoticon_size: [55, 55]}
+  @emoticon_parameters %{emoticons_qnt: 7, sprites_qnt: 6, emoticon_size: [55, 55], selected_emoticon: 3}
 
   @spec save_report(String.t, atom, integer, boolean, boolean) :: {:ok, String.t}
   def save_report(report_name, report_format, session_topic_id, star_only, exclude_facilitator) when report_format in [:txt, :csv, :pdf] do
