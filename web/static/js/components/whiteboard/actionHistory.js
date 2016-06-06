@@ -4,9 +4,6 @@ let currentIdx = 0;
 function copyObject(obj) {
   return JSON.parse(JSON.stringify(obj));
 }
-function areObjectsDifferent(a, b) {
-  return !areObjectsEqual(a, b);
-}
 
 function areObjectsEqual(a, b) {
   if (!a || !b) {
@@ -36,7 +33,7 @@ function areObjectsEqual(a, b) {
 }
 
 function addStepToUndoHistory(json) {
-  if (areObjectsDifferent(json, currentStepObject())) {
+  if (!areObjectsEqual(json, currentStepObject())) {
     //if made a few undo steps, then delete next redo steps first
     if (currentIdx > 0 && currentIdx < undoHistory.length - 1) {
       undoHistory = undoHistory.slice(0, currentIdx + 1);
