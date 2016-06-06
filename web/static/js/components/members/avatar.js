@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
+import { connect }        from 'react-redux';
 import Snap               from 'snapsvg';
-import Member             from './member.js'
 import mixins             from '../../mixins';
 
 const Avatar = React.createClass({
@@ -20,7 +20,7 @@ const Avatar = React.createClass({
   pickId() {
     let { specificId, member } = this.props;
     specificId = specificId || 'avatar';
-    return `${specificId}-${member.id}`
+    return `${specificId}-${member.id}`;
   },
   shouldAddToAvatar(avatar, type, index, face) {
     if(index < 0) {
@@ -30,45 +30,61 @@ const Avatar = React.createClass({
     if(face) {
       const startPos = 6*152;
       let image = avatar.image(`/images/avatar/${type}_${this.pickFace(index, this.props.member.online)}_anim.svg`, 0, 0, startPos, 140);
-      image.addClass(`emotion-avatar-${index}`)
+      image.addClass(`emotion-avatar-${index}`);
     }
     else {
       avatar.image(`/images/avatar/${type}_${this.padToTwo(index)}.svg`, 0, 0, 152, 140);
     }
   },
-  componentDidMount() {
-    const { id, username, colour, online, sessionTopicContext, avatarData } = this.props.member;
-    const { base, face, body, hair, desk, head } = this.avatarDataBySessionContext(avatarData, sessionTopicContext, this.props.sessionTopicId);
-
-    let avatar = Snap('#' + this.pickId());
+  findAvatar() {
+    return Snap('#' + this.pickId());
+  },
+  clearAvatar(avatar) {
     if(this.shouldClearPrevious) {
       avatar.clear();
       this.shouldClearPrevious = false;
     }
-
+  },
+  drawAvatar(avatar) {
+    const { sessionTopicId, member } = this.props;
+    const { base, face, body, hair, desk, head } = this.avatarDataBySessionContext(member.avatarData, member.sessionTopicContext, sessionTopicId);
     this.shouldAddToAvatar(avatar, 'base', base);
     this.shouldAddToAvatar(avatar, 'face', face, true);
     this.shouldAddToAvatar(avatar, 'body', body);
     this.shouldAddToAvatar(avatar, 'hair', hair);
     this.shouldAddToAvatar(avatar, 'desk', desk);
     this.shouldAddToAvatar(avatar, 'head', head);
-
+  },
+  drawLabelAndText(avatar) {
+    const { username, colour } = this.props.member;
     avatar.rect(25, 125, 100, 20, 1, 1).attr({fill: colour});
-    avatar.text(76, 138, username).attr({fill: '#fff', "font-size": "75%", "text-anchor": "middle"});
+    avatar.text(76, 138, username).attr({fill: '#fff', 'font-size': '75%', 'text-anchor': 'middle'});
     avatar.rect(30, 130, 90, 3, 5, 5).attr({fill: '#ccc', opacity: 0.2});
-    this.previousData = {avatarData, username}
+  },
+  componentDidMount() {
+    const { avatarData, username, sessionTopicContext } = this.props.member;
+
+    let avatar = this.findAvatar();
+    this.clearAvatar(avatar);
+    this.drawAvatar(avatar);
+    this.drawLabelAndText(avatar);
+
+    this.previousData = { avatarData, username, sessionTopicContext };
   },
   shouldComponentUpdate(nextProps) {
-    if (this.previousData) {
-      let AvatarData = JSON.stringify(this.previousData.avatarData) != JSON.stringify(nextProps.member.avatarData);
+    if(this.previousData) {
+      let avatarData = JSON.stringify(this.previousData.avatarData) != JSON.stringify(nextProps.member.avatarData);
+      let sessionTopicContext = JSON.stringify(this.previousData.sessionTopicContext) != JSON.stringify(nextProps.member.sessionTopicContext);
       let username = this.previousData.username != nextProps.member.username;
-      return(!(username && AvatarData))
-    }else {
-      return true
+      return(!(username && avatarData && sessionTopicContext));
+    }
+    else {
+      return true;
     }
   },
   componentDidUpdate() {
-    let avatar = Snap('#' + this.pickId());
+    let avatar = this.findAvatar();
+
     if(avatar) {
       this.shouldClearPrevious = true;
       this.componentDidMount();
@@ -81,4 +97,10 @@ const Avatar = React.createClass({
   }
 });
 
-export default Avatar;
+const mapStateToProps = (state) => {
+  return {
+    sessionTopicId: state.sessionTopic.current.id
+  }
+};
+
+export default connect(mapStateToProps, null, null, { pure: false })(Avatar);

@@ -1,5 +1,5 @@
 import React, {PropTypes} from 'react';
-import Member             from './member.js'
+import Member             from './member.js';
 import { connect }        from 'react-redux';
 import Console            from '../console/index';
 import BoardModal         from './modals/facilitatorBoard';
@@ -23,7 +23,7 @@ const Facilitator = React.createClass({
       <div className='facilitator-section'>
         <div className='div-inline-block'>
           <div className={ this.selectClass(facilitator.id) } onClick={ this.isOwner(facilitator.id) && this.openSpecificModal.bind(this, 'avatar') }>
-            <Member key={ facilitator.id } member={ facilitator } sessionTopicId={sessionTopicId} />
+            <Member key={ facilitator.id } member={ facilitator } />
           </div>
 
           <div className='say-section'>
