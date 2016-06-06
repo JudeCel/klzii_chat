@@ -104,23 +104,32 @@ defmodule KlziiChat.Services.SessionTopicReportingServiceTest do
 
     {:ok, report_path} = SessionTopicReportingService.write_report(report_name, :txt, txt_message_stream)
 
-    assert(report_path == FileService.get_tmp_path() <> "/SessionTopicReportingServiceTest_test_report.txt")
+    assert(report_path == FileService.get_tmp_path() <> "/#{report_name}.txt")
     assert(File.exists?(report_path))
     :ok = File.rm(report_path)
   end
 
   test "write pdf report", %{messages: messages, session: session, session_topic: session_topic} do
     report_name = "SessionTopicReportingServiceTest_test_report"
-    html_report_path = FileService.get_tmp_path() <> "/SessionTopicReportingServiceTest_test_report.html"
+    html_report_path = FileService.get_tmp_path() <> "/#{report_name}.html"
 
     html_text =
       SessionTopicReportingService.get_html(messages, session.name, session_topic.name)
 
     {:ok, pdf_report_path} = SessionTopicReportingService.write_report(report_name, :pdf, html_text)
 
-    assert(pdf_report_path == FileService.get_tmp_path() <> "/SessionTopicReportingServiceTest_test_report.pdf")
+    assert(pdf_report_path == FileService.get_tmp_path() <> "/#{report_name}.pdf")
     refute(File.exists?(html_report_path))
     assert(File.exists?(pdf_report_path))
-    #:ok = File.rm(pdf_report_path)
+    :ok = File.rm(pdf_report_path)
+  end
+
+  test "save csv report", %{session_topic: session_topic} do
+    report_name = "SessionTopicReportingServiceTest_test_report"
+    {:ok, report_file_path} = SessionTopicReportingService.save_report(report_name, :csv, session_topic.id, false, false)
+
+    assert(report_file_path == FileService.get_tmp_path() <> "/#{report_name}.csv")
+    assert(File.exists?(report_file_path))
+    :ok = File.rm(report_file_path)
   end
 end
