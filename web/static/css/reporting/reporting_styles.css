@@ -18,3 +18,8 @@ td.time {
 .body.facilitator {
   color: red;
 }
+
+.shadow {
+  -webkit-filter:	drop-shadow(1px 1px 1px rgba(0,0,0,0.25));
+	filter:	drop-shadow(1px 1px 1px rgba(0,0,0,0.25));
+}

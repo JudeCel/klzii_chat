@@ -9,7 +9,7 @@
       <td class="bottom_border" colspan="2"></td>
     </tr>
     <tr>
-      <td class="svg_holder" rowspan="2"><svg class="svg-#{emotion}" width="#{emoticon_width}" height="#{emoticon_height}"></svg></td>
+      <td class="svg_holder" rowspan="2"><svg class="svg-#{emotion} shadow" width="#{emoticon_width}" height="#{emoticon_height}"></svg></td>
       <td class="name #{role}">#{username}</td>
       <td class="time #{role}">#{Ecto.DateTime.to_string(createdAt)}</td>
     </tr>
