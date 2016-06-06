@@ -21,7 +21,7 @@ const Participants = React.createClass({
           participants.map((participant, index) =>
             <div className='col-md-3' key={ participant.id }>
               <div className={ this.evenClasses(index % 2 == 0, participant.id) } onClick={ this.isOwner(participant.id) && this.openSpecificModal.bind(this, 'avatar') }>
-                <Member member={ participant } sessionTopicId={sessionTopicId} />
+                <Member member={ participant } />
               </div>
             </div>
           )
