@@ -11,11 +11,11 @@
     <h3><%= @header %></h3>
 
     <%=
-      html_table_from_template(%{topic_history: @topic_history, emoticon: @emoticon})
+      html_table_from_template(%{messages: @messages, emoticon_parameters: @emoticon_parameters})
     %>
 
     <%=
-      html_emoticon_script_from_template(%{emoticon: @emoticon})
+      html_emoticon_script_from_template(%{emoticon_parameters: @emoticon_parameters})
     %>
 
   </body>

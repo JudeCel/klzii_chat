@@ -1,4 +1,4 @@
-<% %{emoticons_qnt: emoticons_qnt, sprites_qnt: sprites_qnt, emoticon_size: [emoticon_width, emoticon_height]} = @emoticon %>
+<% %{emoticons_qnt: emoticons_qnt, sprites_qnt: sprites_qnt, emoticon_size: [emoticon_width, emoticon_height]} = @emoticon_parameters %>
 
 <script type="text/javascript">
   var emoticon_qnt = <%= emoticons_qnt %>;

@@ -1,4 +1,4 @@
-defmodule KlziiChat.Helpers.HTMLReportingHelper do
+defmodule KlziiChat.Helpers.HTMLSessionTopcReportHelper do
   require EEx
 
   EEx.function_from_file(

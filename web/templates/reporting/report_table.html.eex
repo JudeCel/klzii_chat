@@ -1,16 +1,17 @@
-<% %{emoticon_size: [emoticon_width, emoticon_height]} = @emoticon %>
+<% %{emoticon_size: [emoticon_width, emoticon_height]} = @emoticon_parameters %>
 
 <table>
-  <%= Enum.map(@topic_history, fn(%{body: body, emotion: emotion_id, session_member: %{username: name, role: role}, time: time}) ->
+  <%= Enum.map(@messages, fn(%{session_member: %{username: username, role: role}, body: body,
+    createdAt: createdAt, emotion: emotion}) ->
     """
     <tr>
       <td></td>
       <td class="bottom_border" colspan="2"></td>
     </tr>
     <tr>
-      <td class="svg_holder" rowspan="2"><svg class="svg-#{emotion_id}" width="#{emoticon_width}" height="#{emoticon_height}"></svg></td>
-      <td class="name #{role}">#{name}</td>
-      <td class="time #{role}">#{Ecto.DateTime.to_string(time)}</td>
+      <td class="svg_holder" rowspan="2"><svg class="svg-#{emotion}" width="#{emoticon_width}" height="#{emoticon_height}"></svg></td>
+      <td class="name #{role}">#{username}</td>
+      <td class="time #{role}">#{Ecto.DateTime.to_string(createdAt)}</td>
     </tr>
     <tr>
       <td class="body #{role}" colspan="3">"#{body}"</td>

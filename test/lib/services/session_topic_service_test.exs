@@ -2,7 +2,7 @@ defmodule KlziiChat.Services.SessionTopicServiceTest do
   use KlziiChat.{ModelCase, SessionMemberCase}
   alias KlziiChat.Services.SessionTopicService
 
-  setup %{session_topic_1: session_topic_1, facilitator: facilitator, participant: participant} do
+  setup %{session: session, session_topic_1: session_topic_1, facilitator: facilitator, participant: participant} do
     {:ok, create_date1} = Ecto.DateTime.cast("2016-05-20T09:50:00Z")
     {:ok, create_date2} = Ecto.DateTime.cast("2016-05-20T09:55:00Z")
 
@@ -13,7 +13,8 @@ defmodule KlziiChat.Services.SessionTopicServiceTest do
       body: "test message 1",
       emotion: 0,
       star: true,
-      createdAt: create_date1
+      createdAt: create_date1,
+      updatedAt: create_date1
     ) |> Repo.insert!()
 
     Ecto.build_assoc(
@@ -23,31 +24,37 @@ defmodule KlziiChat.Services.SessionTopicServiceTest do
       body: "test message 2",
       emotion: 1,
       star: false,
-      createdAt: create_date2
+      createdAt: create_date2,
+      updatedAt: create_date2
     ) |> Repo.insert!()
 
-    {:ok, session_topic: session_topic_1, participant: participant, create_date1: create_date1, create_date2: create_date2}
+    {:ok, session_topic_id: session_topic_1.id, participant: participant, create_date1: create_date1,
+      create_date2: create_date2, session_name: session.name, session_topic_name: session_topic_1.name}
   end
 
-  test "get all sesion topic messages", %{session_topic: session_topic, create_date1: create_date1, create_date2: create_date2} do
-    {:ok, [first_mes, second_mes]} = SessionTopicService.message_history(session_topic.id, false, false)
-    assert(first_mes.createdAt == create_date1)
-    assert(second_mes.createdAt == create_date2)
+  test "get all messages", %{session_topic_id: session_topic_id, create_date1: create_date1, create_date2: create_date2} do
+    [message1, message2] = SessionTopicService.get_messages(session_topic_id, false, false)
+
+    assert(message1.createdAt == create_date1)
+    assert(message2.createdAt == create_date2)
   end
 
-  test "get stars only topic messages", %{session_topic: session_topic} do
-    {:ok, [message]} = SessionTopicService.message_history(session_topic.id, true, false)
-    assert(message.star == true)
-    assert(message.body == "test message 1")
+  test "get star only messages", %{session_topic_id: session_topic_id} do
+    [%{star: true}] = SessionTopicService.get_messages(session_topic_id, true, false)
   end
 
-  test "get topic messages excluding facilitator", %{session_topic: session_topic, participant: participant} do
-    {:ok, [%{session_member: session_member}]} = SessionTopicService.message_history(session_topic.id, false, true)
-    assert(session_member.role == participant.role)
-    assert(session_member.username == participant.username)
+  test "get messages exluding facilitator", %{session_topic_id: session_topic_id} do
+    [%{session_member: %{role: "participant"}}] = SessionTopicService.get_messages(session_topic_id, false, true)
   end
 
-  test "get empty result for stars only topic messages excluding facilitator", %{session_topic: session_topic} do
-    {:ok, []} = SessionTopicService.message_history(session_topic.id, true, true)
+  test "get [] for star only messages exluding facilitator", %{session_topic_id: session_topic_id} do
+    [] = SessionTopicService.get_messages(session_topic_id, true, true)
   end
+
+  test "get session and session topic names", %{session_topic_id: session_topic_id, session_name: session_name,
+    session_topic_name: session_topic_name} do
+
+    {^session_name, ^session_topic_name} = SessionTopicService.get_session_and_topic_names(session_topic_id)
+  end
+
 end
