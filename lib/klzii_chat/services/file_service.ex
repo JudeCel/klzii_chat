@@ -1,5 +1,13 @@
 defmodule KlziiChat.Services.FileService do
 
+  @tmp_path "/tmp/klzii_chat/reporting"
+
+  @spec get_tmp_path() :: String.t
+  def get_tmp_path() do
+    if not File.exists?(@tmp_path), do: :ok = File.mkdir_p(@tmp_path)
+    @tmp_path
+  end
+
   @spec compose_path(String.t, String.t, String.t) :: String.t
   def compose_path(path_to_dir, file_name, file_extension) do
     Path.join(path_to_dir, file_name) <> "." <> file_extension
@@ -39,5 +47,4 @@ defmodule KlziiChat.Services.FileService do
       {stdout, _} -> {:error, stdout}
     end
   end
-
 end

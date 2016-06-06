@@ -1,6 +1,5 @@
 defmodule KlziiChat.Services.WhiteboardReportingServiceTest do
   use KlziiChat.{ModelCase, SessionMemberCase}
-  alias KlziiChat.Services.WhiteboardService
   alias KlziiChat.Services.WhiteboardReportingService
 
   setup %{session_topic_1: session_topic_1, facilitator: facilitator, participant: participant} do

@@ -1,10 +1,8 @@
 defmodule KlziiChat.Services.SessionTopicReportingServiceTest do
   use KlziiChat.{ModelCase, SessionMemberCase}
-  alias KlziiChat.Services.{SessionTopicReportingService, SessionTopicService}
+  alias KlziiChat.Services.{SessionTopicReportingService, SessionTopicService, FileService}
   alias KlziiChat.Helpers.HTMLSessionTopcReportHelper
 
-
-  @tmp_path Path.expand("/tmp/klzii_chat/reporting")
   @emoticon_parameters %{emoticons_qnt: 7, sprites_qnt: 6, emoticon_size: [55, 55]}
 
   setup %{session: session, session_topic_1: session_topic_1, facilitator: facilitator, participant: participant} do
@@ -106,21 +104,21 @@ defmodule KlziiChat.Services.SessionTopicReportingServiceTest do
 
     {:ok, report_path} = SessionTopicReportingService.write_report(report_name, :txt, txt_message_stream)
 
-    assert(report_path == @tmp_path <> "/SessionTopicReportingServiceTest_test_report.txt")
+    assert(report_path == FileService.get_tmp_path() <> "/SessionTopicReportingServiceTest_test_report.txt")
     assert(File.exists?(report_path))
     :ok = File.rm(report_path)
   end
 
   test "write pdf report", %{messages: messages, session: session, session_topic: session_topic} do
     report_name = "SessionTopicReportingServiceTest_test_report"
-    html_report_path = @tmp_path <> "/SessionTopicReportingServiceTest_test_report.html"
+    html_report_path = FileService.get_tmp_path() <> "/SessionTopicReportingServiceTest_test_report.html"
 
     html_text =
       SessionTopicReportingService.get_html(messages, session.name, session_topic.name)
 
     {:ok, pdf_report_path} = SessionTopicReportingService.write_report(report_name, :pdf, html_text)
 
-    assert(pdf_report_path == @tmp_path <> "/SessionTopicReportingServiceTest_test_report.pdf")
+    assert(pdf_report_path == FileService.get_tmp_path() <> "/SessionTopicReportingServiceTest_test_report.pdf")
     refute(File.exists?(html_report_path))
     assert(File.exists?(pdf_report_path))
     :ok = File.rm(pdf_report_path)

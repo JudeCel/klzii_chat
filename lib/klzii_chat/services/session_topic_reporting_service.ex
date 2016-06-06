@@ -4,7 +4,6 @@ defmodule KlziiChat.Services.SessionTopicReportingService do
   alias KlziiChat.Helpers.HTMLSessionTopcReportHelper
   alias Ecto.DateTime
 
-  @tmp_path Path.expand("/tmp/klzii_chat/reporting")
   @emoticon_parameters %{emoticons_qnt: 7, sprites_qnt: 6, emoticon_size: [55, 55]}
 
   @spec save_report(String.t, atom, integer, boolean, boolean) :: {:ok, String.t}
@@ -61,14 +60,18 @@ defmodule KlziiChat.Services.SessionTopicReportingService do
 
   @spec write_report(String.t, :pdf, String.t | Stream.t) :: {:ok, String.t}
   def write_report(report_name, :pdf, report_data) do
-    tmp_html_file_path = FileService.compose_path(@tmp_path, report_name, "html")
+    tmp_html_file_path =
+        FileService.get_tmp_path()
+        |> FileService.compose_path(report_name, "html")
     :ok = FileService.write_data(tmp_html_file_path, report_data)
     FileService.html_to_pdf(tmp_html_file_path)
   end
 
   @spec write_report(String.t, atom, String.t | Stream.t) :: {:ok, String.t}
   def write_report(report_name, report_format, report_data) when report_format in [:txt, :csv]  do
-    report_file_path = FileService.compose_path(@tmp_path, report_name, to_string(report_format))
+    report_file_path =
+      FileService.get_tmp_path()
+      |> FileService.compose_path(report_name, to_string(report_format))
     :ok = FileService.write_data(report_file_path, report_data)
     {:ok, report_file_path}
   end

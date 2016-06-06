@@ -2,16 +2,18 @@ defmodule KlziiChat.Services.FileServiceTest do
   use ExUnit.Case, async: true
   alias KlziiChat.Services.FileService
 
-  @tmp_path Path.expand("/tmp/klzii_chat/reporting")
   @report_name "file_service_test_report"
 
   test "get full path from dir, file name and extension" do
-    assert(FileService.compose_path(@tmp_path, @report_name, "ext") ==
-      Path.join(@tmp_path, @report_name) <> ".ext")
+    tmp_path = FileService.get_tmp_path()
+    assert(FileService.compose_path(tmp_path, @report_name, "ext") ==
+      Path.join(tmp_path, @report_name) <> ".ext")
   end
 
   test "write stream data to file" do
-    path_to_file = FileService.compose_path(@tmp_path, @report_name, "stream")
+    path_to_file =
+      FileService.get_tmp_path()
+      |> FileService.compose_path(@report_name, "stream")
     data_string =
       """
       12356 abcDEF  !@~^|
@@ -29,7 +31,9 @@ defmodule KlziiChat.Services.FileServiceTest do
   end
 
   test "write string data to file" do
-    path_to_file = FileService.compose_path(@tmp_path, @report_name, "string")
+    path_to_file =
+      FileService.get_tmp_path()
+      |> FileService.compose_path(@report_name, "string")
     data_string =
       """
       12356 abcDEF  !@~^|
@@ -49,8 +53,9 @@ defmodule KlziiChat.Services.FileServiceTest do
   end
 
   test "convet HTML to PDF" do
-    path_to_html = FileService.compose_path(@tmp_path, @report_name, "html")
-    path_to_pdf = FileService.compose_path(@tmp_path, @report_name, "pdf")
+    tmp_path = FileService.get_tmp_path()
+    path_to_html = FileService.compose_path(tmp_path, @report_name, "html")
+    path_to_pdf = FileService.compose_path(tmp_path, @report_name, "pdf")
 
     :ok = File.touch(path_to_html)
     {:ok, ^path_to_pdf} = FileService.html_to_pdf(path_to_html)
