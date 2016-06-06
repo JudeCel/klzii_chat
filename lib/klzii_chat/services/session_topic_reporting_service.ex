@@ -60,7 +60,7 @@ defmodule KlziiChat.Services.SessionTopicReportingService do
   end
 
   @spec write_report(String.t, :pdf, String.t | Stream.t) :: {:ok, String.t}
-  def write_report(report_name, report_format, report_data) when report_format in [:txt, :csv]  do
+  def write_report(report_name, :pdf, report_data) do
     tmp_html_file_path = FileService.compose_path(@tmp_path, report_name, "html")
     :ok = FileService.write_data(tmp_html_file_path, report_data)
     FileService.html_to_pdf(tmp_html_file_path)
@@ -69,6 +69,7 @@ defmodule KlziiChat.Services.SessionTopicReportingService do
   @spec write_report(String.t, atom, String.t | Stream.t) :: {:ok, String.t}
   def write_report(report_name, report_format, report_data) when report_format in [:txt, :csv]  do
     report_file_path = FileService.compose_path(@tmp_path, report_name, to_string(report_format))
-    FileService.write_data(report_file_path, report_data)
+    :ok = FileService.write_data(report_file_path, report_data)
+    {:ok, report_file_path}
   end
 end

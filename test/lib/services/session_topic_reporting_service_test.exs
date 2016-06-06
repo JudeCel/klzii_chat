@@ -98,5 +98,31 @@ defmodule KlziiChat.Services.SessionTopicReportingServiceTest do
       == SessionTopicReportingService.get_report(:incorrect_type, session_topic.id, false, false))
   end
 
-  
+  test "write text report", %{messages: messages, session: session, session_topic: session_topic} do
+    report_name = "SessionTopicReportingServiceTest_test_report"
+
+    txt_message_stream =
+      SessionTopicReportingService.get_stream(:txt, messages, session.name, session_topic.name)
+
+    {:ok, report_path} = SessionTopicReportingService.write_report(report_name, :txt, txt_message_stream)
+
+    assert(report_path == @tmp_path <> "/SessionTopicReportingServiceTest_test_report.txt")
+    assert(File.exists?(report_path))
+    :ok = File.rm(report_path)
+  end
+
+  test "write pdf report", %{messages: messages, session: session, session_topic: session_topic} do
+    report_name = "SessionTopicReportingServiceTest_test_report"
+    html_report_path = @tmp_path <> "/SessionTopicReportingServiceTest_test_report.html"
+
+    html_text =
+      SessionTopicReportingService.get_html(messages, session.name, session_topic.name)
+
+    {:ok, pdf_report_path} = SessionTopicReportingService.write_report(report_name, :pdf, html_text)
+
+    assert(pdf_report_path == @tmp_path <> "/SessionTopicReportingServiceTest_test_report.pdf")
+    refute(File.exists?(html_report_path))
+    assert(File.exists?(pdf_report_path))
+    :ok = File.rm(pdf_report_path)
+  end
 end
