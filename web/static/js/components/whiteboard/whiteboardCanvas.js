@@ -54,16 +54,16 @@ const WhiteboardCanvas = React.createClass({
     let step = undoHistoryFactory.currentStepObject();
     let stepBack = undoHistoryFactory.undoStepObject();
 
-    if (step && step.eventType == 'update') step = stepBack;
     if (step) {
+      if (step.eventType == 'update') step = stepBack;
       this.handleHistoryObject(step, true);
     }
   },
   redoStep() {
     let step = undoHistoryFactory.currentStepObject();
     let stepForward = undoHistoryFactory.redoStepObject();
-    if (step && step.eventType == 'update') step = stepForward;
     if (step) {
+      if (step.eventType == 'update') step = stepForward;
       this.handleHistoryObject(step, false);
     }
   },
