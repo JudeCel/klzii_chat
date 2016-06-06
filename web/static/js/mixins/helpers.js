@@ -18,6 +18,13 @@ const helpers = {
         type
     }
     return type
+  },
+  avatarDataBySessionContext(avatarData, sessionTopicContext, sessionTopicId){
+    if (sessionTopicId && sessionTopicContext && sessionTopicContext[sessionTopicId]) {
+      let context = sessionTopicContext[sessionTopicId]["avatarData"] || {}
+      return {...avatarData, ...context};
+    }
+    return avatarData
   }
 };
 
