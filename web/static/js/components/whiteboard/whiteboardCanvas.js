@@ -350,6 +350,9 @@ const WhiteboardCanvas = React.createClass({
   },
   deleteActive() {
     if (this.activeShape && this.activeShape.permissions.can_delete) {
+      let message = this.prepareMessage(this.activeShape, "delete");
+      undoHistoryFactory.addStepToUndoHistory(message);
+
       this.sendObjectData('delete');
       this.activeShape.ftRemove();
       this.shapes[this.activeShape.id] = null;
