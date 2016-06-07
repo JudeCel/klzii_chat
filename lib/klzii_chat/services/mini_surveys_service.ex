@@ -1,7 +1,8 @@
 defmodule KlziiChat.Services.MiniSurveysService do
-  alias KlziiChat.{Repo, MiniSurvey, MiniSurveyAnswer, SessionTopic, SessionMember}
+  alias KlziiChat.{Repo, MiniSurvey, MiniSurveyAnswer, SessionTopic, SessionMember, Console}
+  alias KlziiChat.Services.{ConsoleService}
   import Ecto
-  import Ecto.Query, only: [from: 2]
+  import Ecto.Query, only: [from: 2, from: 1]
 
   def get(_session_member_id, session_topic_id) do
     # session_member = Repo.get!(SessionMember, session_member_id)
@@ -24,6 +25,18 @@ defmodule KlziiChat.Services.MiniSurveysService do
 
   def delete(session_member_id, id) do
     Repo.get_by!(MiniSurvey, id: id) |> Repo.delete
+  end
+
+  @spec delete_related_consoles(Integer, Integer) :: :ok
+  def delete_related_consoles(id, session_member_id) do
+    session_member = Repo.get!(SessionMember, session_member_id)
+    session_topic_ids = from(st in SessionTopic, where: st.sessionId == ^session_member.sessionId, select: st.id) |> Repo.all
+    from(c in Console,
+      where: c.sessionTopicId in ^session_topic_ids,
+      where: c.miniSurveyId == ^id
+    ) |> Repo.all
+      |> ConsoleService.tidy_up("miniSurvey", session_member.id)
+    :ok
   end
 
   def create_answer(session_member_id, mini_survey_id, answer) do
