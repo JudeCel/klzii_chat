@@ -21,7 +21,15 @@ defmodule KlziiChat.Services.ConsoleServiceTest do
       scope: "collage"
     ) |> Repo.insert!
 
-    {:ok, session_id: session.id, youtube_resource: youtube_resource, resource: resource, session_topic_1: session_topic_1.id}
+     mini_survey = Ecto.build_assoc(
+      session, :mini_surveys,
+      sessionTopicId: session_topic_1.id,
+      type: "yesNoMaybe",
+      question: "cool question",
+      title: "cool title"
+    ) |> Repo.insert!
+
+    {:ok, session_id: session.id, youtube_resource: youtube_resource, resource: resource, session_topic_1: session_topic_1.id, mini_survey: mini_survey}
   end
 
   test "get console", %{session_id: session_id, session_topic_1: session_topic_1} do
@@ -29,6 +37,20 @@ defmodule KlziiChat.Services.ConsoleServiceTest do
     {:ok, same_console} = ConsoleService.get(session_id, session_topic_1)
     assert(first_console === same_console )
     assert(%Console{} = same_console )
+  end
+
+  test "add mini_survey", %{facilitator: facilitator, session_topic_1: session_topic_1, mini_survey: mini_survey} do
+    {:ok, console} = ConsoleService.set_mini_survey(facilitator.id, session_topic_1, mini_survey.id)
+    mini_survey_id = Map.get(console, String.to_atom("miniSurvey" <> "Id"))
+    assert(mini_survey_id == mini_survey.id)
+    assert(%Console{} = console )
+  end
+
+  test "remove mini_survey ", %{facilitator: facilitator, session_topic_1: session_topic_1, mini_survey: mini_survey} do
+    {:ok, _} = ConsoleService.set_mini_survey(facilitator.id, session_topic_1, mini_survey.id)
+    {:ok, console} = ConsoleService.remove(facilitator.id, session_topic_1, "miniSurvey")
+    Map.get(console, String.to_atom("miniSurvey" <> "Id"))
+    |> is_nil |> assert
   end
 
   test "add resource", %{facilitator: facilitator, session_topic_1: session_topic_1, resource: resource} do
@@ -40,7 +62,7 @@ defmodule KlziiChat.Services.ConsoleServiceTest do
 
   test "remove resource ", %{facilitator: facilitator, session_topic_1: session_topic_1, resource: resource} do
     {:ok, _} = ConsoleService.set_resource(facilitator.id, session_topic_1, resource.id)
-    {:ok, console} = ConsoleService.remove_resource(facilitator.id, session_topic_1, "image")
+    {:ok, console} = ConsoleService.remove(facilitator.id, session_topic_1, "image")
     Map.get(console, String.to_atom(resource.type <> "Id"))
     |> is_nil |> assert
   end
@@ -54,7 +76,7 @@ defmodule KlziiChat.Services.ConsoleServiceTest do
 
   test "remove resource #youtube", %{facilitator: facilitator, session_topic_1: session_topic_1, youtube_resource: resource} do
     {:ok, _} = ConsoleService.set_resource(facilitator.id, session_topic_1, resource.id)
-    {:ok, console} = ConsoleService.remove_resource(facilitator.id, session_topic_1, "video")
+    {:ok, console} = ConsoleService.remove(facilitator.id, session_topic_1, "video")
     Map.get(console, String.to_atom(resource.type <> "Id"))
     |> is_nil |> assert
   end

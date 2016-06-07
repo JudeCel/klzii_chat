@@ -60,7 +60,7 @@ defmodule KlziiChat.Services.SessionResourcesService do
         c.fileId == ^resource_id
       ) |> Repo.all
         |> Enum.each(fn console ->
-          {:ok, new_console} = ConsoleService.remove_resource(session_member.id, console.sessionTopicId, resource.type)
+          {:ok, new_console} = ConsoleService.remove(session_member.id, console.sessionTopicId, resource.type)
           data = ConsoleView.render("show.json", %{console: new_console})
           Endpoint.broadcast!( "session_topic:#{console.sessionTopicId}", "console", data)
       end)

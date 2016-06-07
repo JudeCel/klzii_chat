@@ -50,7 +50,7 @@ defmodule KlziiChat.SessionTopicChannelTest do
     ) |> Repo.insert
 
     {:ok, _, socket} = subscribe_and_join(socket, SessionTopicChannel, session_topic_1_name)
-    ref = push socket, "remove_console_resource", %{"type" => resource.type}
+    ref = push socket, "remove_console_element", %{"type" => resource.type}
     assert_reply ref, :ok
     assert_push("console", %{})
   end
