@@ -8,15 +8,15 @@ const SurveyListItem = React.createClass({
     return { id, question, title, type };
   },
   getInitialState() {
-    let survey = this.props.survey || {};
-    return this.getValuesFromObject(survey);
+    return this.getValuesFromObject(this.props.survey || {});
   },
   onChange() {
     const { dispatch, channel } = this.props;
     dispatch(MiniSurveyActions.addToConsole(channel, this.state.id));
   },
   onDelete() {
-    console.log("delete ", this.state);
+    const { dispatch, channel } = this.props;
+    dispatch(MiniSurveyActions.delete(channel, this.state.id));
   },
   onResult() {
     this.props.onView(this.getValuesFromObject(this.state));

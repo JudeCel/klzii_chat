@@ -15,21 +15,28 @@ const SurveyConsole = React.createClass({
     this.setState({ value: value });
   },
   answer() {
-    const { dispatch, currentUserJwt, survey } = this.props;
+    const { dispatch, channel, survey } = this.props;
     let hasMissing = this.hasFieldsMissing(this.state, ['value']);
 
     if(hasMissing) {
       NotificationActions.showNotification(dispatch, { message: 'Please select answer', type: 'error' });
     }
     else {
-      dispatch(MiniSurveyActions.answer(currentUserJwt, { ...survey, value: this.state.value }, this.closeAllModals));
+      let params = {
+        id: survey.id,
+        answer: {
+          value: this.state.value,
+          type: survey.type
+        }
+      };
+      dispatch(MiniSurveyActions.answer(channel, params, this.closeAllModals));
     }
   },
   onShow(e) {
-    const { dispatch, currentUserJwt, topicConsole, sessionTopicId } = this.props;
+    const { dispatch, channel, topicConsole } = this.props;
 
     this.onEnterModal(e);
-    dispatch(MiniSurveyActions.getConsole(currentUserJwt, topicConsole.mini_survey_id, sessionTopicId));
+    dispatch(MiniSurveyActions.getConsole(channel, topicConsole.mini_survey_id));
   },
   render() {
     const { survey, show } = this.props;
@@ -70,8 +77,7 @@ const mapStateToProps = (state) => {
     modalWindows: state.modalWindows,
     colours: state.chat.session.colours,
     survey: state.miniSurveys.console,
-    currentUserJwt: state.members.currentUser.jwt,
-    sessionTopicId: state.sessionTopic.current.id,
+    channel: state.sessionTopic.channel,
     topicConsole: state.sessionTopic.console
   }
 };
