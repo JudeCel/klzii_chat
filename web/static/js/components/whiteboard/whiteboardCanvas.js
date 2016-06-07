@@ -743,8 +743,8 @@ const WhiteboardCanvas = React.createClass({
               <OverlayTrigger trigger="focus" placement="top" overlay={
                   <Popover id="lineWidthShapes">
                     {this.strokeWidthArray.map(function(result) {
-                      return <div className="radio" key={"radio" + result} onClick={self.handleStrokeWidthChange}>
-                        <label className={self.isLineWidthActive(result)}><input type="radio" ref="strokeWidth" name="optradio" value={result}/>{result}/</label>
+                      return <div className={self.isLineWidthActive(result)} key={"radio" + result} value={result} onClick={self.handleStrokeWidthChange}>
+                        {result}/
                       </div>
                     })}
                   </Popover>
