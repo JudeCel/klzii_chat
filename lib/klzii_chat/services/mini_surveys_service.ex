@@ -26,7 +26,7 @@ defmodule KlziiChat.Services.MiniSurveysService do
     session_member = Repo.get!(SessionMember, session_member_id)
     mini_survey = Repo.get!(MiniSurvey, mini_survey_id)
 
-    mini_survey_answere = Repo.one(from msa in MiniSurveyAnswer,
+    Repo.one(from msa in MiniSurveyAnswer,
       where: msa.sessionMemberId == ^session_member.id,
       where: msa.miniSurveyId == ^mini_survey.id
     )|> case  do
@@ -36,9 +36,9 @@ defmodule KlziiChat.Services.MiniSurveysService do
               answer: answer
             })
           mini_survey_answere ->
-            Ecto.Changeset.change(mini_survey_answere, answer: answer)
+            mini_survey_answere
         end
-      |> Ecto.Changeset.change
+      |> Ecto.Changeset.change([answer: answer])
       |> Repo.insert_or_update
       |> case do
         {:ok, answer } ->
@@ -48,7 +48,7 @@ defmodule KlziiChat.Services.MiniSurveysService do
       end
   end
 
-  def get_for_console(session_member_id, mini_survey_id, session_topic_id) do
+  def get_for_console(session_member_id, mini_survey_id) do
     session_member = Repo.get!(SessionMember, session_member_id)
     mini_survey = Repo.get!(MiniSurvey, mini_survey_id)
     |> Repo.preload([mini_survey_answers: from(msa in MiniSurveyAnswer, where: msa.sessionMemberId == ^session_member.id)])
