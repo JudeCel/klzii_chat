@@ -70,8 +70,18 @@ defmodule KlziiChat.SessionTopicChannel do
     end
   end
 
-  def handle_in("remove_console_resource", %{"type" => type}, socket) do
-    case ConsoleService.remove_resource(get_session_member(socket).id, socket.assigns.session_topic_id, type) do
+  def handle_in("set_console_mini_survey", %{"id" => id}, socket) do
+    case ConsoleService.set_mini_survey(get_session_member(socket).id, socket.assigns.session_topic_id, id) do
+      {:ok, console} ->
+        broadcast! socket, "console",  ConsoleView.render("show.json", %{console: console})
+        {:reply, :ok, socket}
+      {:error, reason} ->
+        {:error, %{reason: reason}}
+    end
+  end
+
+  def handle_in("remove_console_element", %{"type" => type}, socket) do
+    case ConsoleService.remove(get_session_member(socket).id, socket.assigns.session_topic_id, type) do
       {:ok, console} ->
         broadcast! socket, "console",  ConsoleView.render("show.json", %{console: console})
         {:reply, :ok, socket}

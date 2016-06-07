@@ -21,10 +21,7 @@ const SurveyList = React.createClass({
 
 const mapStateToProps = (state) => {
   return {
-    surveys: state.resources.surveys || [
-      { id: 1, title: 'Survey', question: 'Do you like?', type: 'yesNoMaybe', active: true },
-      { id: 2, title: 'Survey', question: 'Do you like?', type: '5starRating', active: false }
-    ]
+    surveys: state.miniSurveys.data
   }
 };
 

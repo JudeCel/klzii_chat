@@ -8,7 +8,7 @@ defmodule KlziiChat.BannerView do
       id: banner.id,
       page: banner.page,
       link: banner.link,
-      resource: render_one(banner.resource, ResourceView, "resource.json"),
+      resource: render_one(banner.resource, ResourceView, "resource.json")
     }
   end
 end

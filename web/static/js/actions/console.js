@@ -12,7 +12,7 @@ const Actions = {
   },
   removeFromConsole: (channel, type) => {
     return dispatch => {
-      channel.push('remove_console_resource', { type: type });
+      channel.push('remove_console_element', { type: type });
     };
   },
   addToConsole: (channel, id) => {

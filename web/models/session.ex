@@ -11,6 +11,7 @@ defmodule KlziiChat.Session do
     field :active, :boolean
     field :colours_used, :string
     has_many :session_members, KlziiChat.SessionMember, [foreign_key: :sessionId]
+    has_many :mini_surveys, KlziiChat.MiniSurvey, [foreign_key: :sessionId]
     belongs_to :brand_project_preference, KlziiChat.BrandProjectPreference, [foreign_key: :brandProjectPreferenceId]
     has_many :session_topics, KlziiChat.SessionTopic, [foreign_key: :sessionId]
     has_many :topics, through: [:session_topics, :topic]
