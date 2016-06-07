@@ -25,6 +25,46 @@ defmodule KlziiChat.SessionTopicChannelTest do
     assert_push("console", %{})
   end
 
+  test "create mini survey", %{socket: socket, session_topic_1_name: session_topic_1_name} do
+    params = %{"type" => "yesNoMaybe", "question" => "cool question", "title" => "cool title"}
+    {:ok, _, socket} = subscribe_and_join(socket, SessionTopicChannel, session_topic_1_name)
+    ref = push socket, "create_mini_survey", params
+    assert_reply ref, :ok, mini_survey
+    assert(mini_survey.question == params["question"])
+    assert(mini_survey.type == params["type"])
+  end
+
+  test "get mini surveys", %{socket: socket, session_topic_1_name: session_topic_1_name} do
+    params = %{"type" => "yesNoMaybe", "question" => "cool question", "title" => "cool title"}
+    {:ok, _, socket} = subscribe_and_join(socket, SessionTopicChannel, session_topic_1_name)
+    ref = push socket, "create_mini_survey", params
+    assert_reply ref, :ok, mini_survey
+    get_ref = push socket, "mini_surveys", %{}
+    assert_reply get_ref, :ok, %{mini_surveys: [mini_survey]}
+  end
+
+  test "answere mini surveys", %{socket: socket, session_topic_1_name: session_topic_1_name} do
+    params = %{"type" => "yesNoMaybe", "question" => "cool question", "title" => "cool title"}
+    {:ok, _, socket} = subscribe_and_join(socket, SessionTopicChannel, session_topic_1_name)
+    ref = push socket, "create_mini_survey", params
+    assert_reply ref, :ok, mini_survey
+    answer_params = %{"id"=> mini_survey.id, "answer" => %{"type" => "yesNoMaybe", "value" => "yes"} }
+    get_ref = push socket, "answer_mini_survey", answer_params
+    assert_reply get_ref, :ok, mini_survey_with_answer
+    assert(mini_survey_with_answer.mini_survey_answer.answer == answer_params["answer"])
+  end
+
+  test "console mini survey", %{socket: socket, session_topic_1_name: session_topic_1_name} do
+    params = %{"type" => "yesNoMaybe", "question" => "cool question", "title" => "cool title"}
+    {:ok, _, socket} = subscribe_and_join(socket, SessionTopicChannel, session_topic_1_name)
+    ref = push socket, "create_mini_survey", params
+    assert_reply ref, :ok, mini_survey
+
+    get_ref = push socket, "console_mini_survey",  %{"id"=> mini_survey.id}
+    assert_reply get_ref, :ok, console_mini_survey
+    assert(console_mini_survey.id == mini_survey.id)
+  end
+
   test "set mini survey to console", %{session: session, socket: socket, session_topic_1: session_topic_1, session_topic_1_name: session_topic_1_name} do
     mini_survey = Ecto.build_assoc(
      session, :mini_surveys,

@@ -3,14 +3,14 @@ defmodule KlziiChat.Services.MiniSurveysService do
   import Ecto
   import Ecto.Query, only: [from: 2]
 
-  def get(_session_member_id, %{"sessionTopicId" => session_topic_id}) do
+  def get(_session_member_id, session_topic_id) do
     # session_member = Repo.get!(SessionMember, session_member_id)
     mini_surveys = from(ms in MiniSurvey, where: ms.sessionTopicId == ^session_topic_id)
     |> Repo.all
     {:ok, mini_surveys}
   end
 
-  def create(session_member_id, %{"sessionTopicId" => session_topic_id, "type" => type, "question" => question, "title" => title} ) do
+  def create(session_member_id, session_topic_id, %{"type" => type, "question" => question, "title" => title} ) do
     _session_member = Repo.get!(SessionMember, session_member_id)
     session_topic = Repo.get!(SessionTopic, session_topic_id)
     build_assoc(session_topic, :mini_surveys, %{
