@@ -2,7 +2,8 @@ import Constants from '../constants';
 
 const initialState = {
   data: [],
-  console: {}
+  console: {},
+  view: { answers: [] }
 };
 
 export default function reducer(state = initialState, action = {}) {
@@ -11,6 +12,8 @@ export default function reducer(state = initialState, action = {}) {
       return { ...state, data: action.data };
     case Constants.SET_CONSOLE_SURVEY:
       return { ...state, console: action.data };
+    case Constants.SET_VIEW_SURVEY:
+      return { ...state, view: action.data };
     default:
       return state;
   }

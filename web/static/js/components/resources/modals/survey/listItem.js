@@ -42,7 +42,7 @@ const SurveyListItem = React.createClass({
         <li className='list-group-item'>
           <div className='row'>
             <div className='col-md-6'>
-              <span onClick={ this.onResult }>{ title }</span>
+              <strong className='cursor-pointer' onClick={ this.onResult }>{ title }</strong>
               <br />
               { question }
             </div>

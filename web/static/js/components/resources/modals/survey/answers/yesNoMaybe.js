@@ -3,12 +3,13 @@ import { connect }        from 'react-redux';
 
 const SurveyViewYesNoMaybe = React.createClass({
   render() {
-    const { answers } = this.props;
+    const { survey } = this.props;
     const staticAnswers = ['Yes', 'No', 'Maybe'];
+
     return (
       <ul className='list-group'>
         {
-          answers.map((answer, index) => {
+          survey.answers.map((answer, index) => {
             return (
               <li key={ index } className='list-group-item'>
                 <div className='row'>
@@ -26,10 +27,7 @@ const SurveyViewYesNoMaybe = React.createClass({
 
 const mapStateToProps = (state) => {
   return {
-    answers: /*state.resources.survey.answers || */ [
-      { id: 1, sessionMemberId: 1, value: 1, sessionMember: { username: 'Random 1' } },
-      { id: 2, sessionMemberId: 2, value: 2, sessionMember: { username: 'Random 2' } }
-    ]
+    survey: state.miniSurveys.view
   }
 };
 

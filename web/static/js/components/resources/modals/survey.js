@@ -55,8 +55,10 @@ const Survey = React.createClass({
     }
   },
   onView(survey) {
-    const { rendering } = this.state;
-    if(rendering != 'view') {
+    if(this.state.rendering != 'view') {
+      const { dispatch, currentUserJwt, sessionTopicId } = this.props;
+
+      dispatch(MiniSurveyActions.view(currentUserJwt, survey.id, sessionTopicId));
       this.setState({ rendering: 'view' });
     }
   },
