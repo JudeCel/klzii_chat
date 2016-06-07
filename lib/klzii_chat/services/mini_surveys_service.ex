@@ -22,6 +22,10 @@ defmodule KlziiChat.Services.MiniSurveysService do
       |> Repo.insert
   end
 
+  def delete(session_member_id, id) do
+    Repo.get_by!(MiniSurvey, id: id) |> Repo.delete
+  end
+
   def create_answer(session_member_id, mini_survey_id, answer) do
     session_member = Repo.get!(SessionMember, session_member_id)
     mini_survey = Repo.get!(MiniSurvey, mini_survey_id)

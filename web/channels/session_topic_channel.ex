@@ -69,6 +69,15 @@ defmodule KlziiChat.SessionTopicChannel do
     end
   end
 
+  def handle_in("delete_mini_survey", %{"id" => id}, socket) do
+    case MiniSurveysService.delete(get_session_member(socket).id, id) do
+      {:ok, mini_survey} ->
+        {:reply, {:ok, %{id: mini_survey.id}}, socket}
+      {:error, reason} ->
+        {:error, %{reason: reason}}
+    end
+  end
+
   def handle_in("answer_mini_survey", %{"id" => id, "answer" => answer}, socket) do
     case MiniSurveysService.create_answer(get_session_member(socket).id, id, answer) do
       {:ok, mini_survey} ->

@@ -34,6 +34,16 @@ defmodule KlziiChat.SessionTopicChannelTest do
     assert(mini_survey.type == params["type"])
   end
 
+  test "delete mini survey", %{socket: socket, session_topic_1_name: session_topic_1_name} do
+    params = %{"type" => "yesNoMaybe", "question" => "cool question", "title" => "cool title"}
+    {:ok, _, socket} = subscribe_and_join(socket, SessionTopicChannel, session_topic_1_name)
+    ref = push socket, "create_mini_survey", params
+    assert_reply ref, :ok, mini_survey
+    get_ref = push socket, "delete_mini_survey", %{id: mini_survey.id}
+    assert_reply get_ref, :ok, delete_resp
+    assert(delete_resp == %{id: mini_survey.id})
+  end
+
   test "get mini surveys", %{socket: socket, session_topic_1_name: session_topic_1_name} do
     params = %{"type" => "yesNoMaybe", "question" => "cool question", "title" => "cool title"}
     {:ok, _, socket} = subscribe_and_join(socket, SessionTopicChannel, session_topic_1_name)
