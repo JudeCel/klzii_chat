@@ -10,6 +10,16 @@ function _returnPermission(permissions, parent, child) {
 }
 
 const validations = {
+  hasFieldsMissing(object, fields) {
+    let missing = [];
+    fields.map((field) => {
+      if(!object[field]) {
+        missing.push(field);
+      }
+    });
+
+    return missing.length > 0 ? missing : false;
+  },
   isOwner(givenId) {
     return(this.props.currentUser.id == givenId)
   },

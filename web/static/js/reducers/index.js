@@ -8,6 +8,7 @@ import messages            from './messages';
 import resources           from './resources';
 import notifications       from './notifications';
 import modalWindows        from './modalWindows';
+import miniSurveys         from './miniSurveys';
 
 export default combineReducers({
   chat: chat,
@@ -18,5 +19,6 @@ export default combineReducers({
   messages: messages,
   resources: resources,
   notifications: notifications,
-  modalWindows: modalWindows
+  modalWindows: modalWindows,
+  miniSurveys: miniSurveys
 });

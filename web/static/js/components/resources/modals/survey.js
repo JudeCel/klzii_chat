@@ -1,11 +1,13 @@
-import React, {PropTypes} from 'react';
-import { connect }        from 'react-redux';
-import { Modal }          from 'react-bootstrap'
-import SurveyIndex        from './survey/index.js';
-import mixins             from '../../../mixins';
+import React, {PropTypes}  from 'react';
+import { connect }         from 'react-redux';
+import { Modal }           from 'react-bootstrap';
+import SurveyIndex         from './survey/index.js';
+import mixins              from '../../../mixins';
+import MiniSurveyActions   from '../../../actions/miniSurvey';
+import NotificationActions from '../../../actions/notifications';
 
 const Survey = React.createClass({
-  mixins: [mixins.modalWindows],
+  mixins: [mixins.modalWindows, mixins.validations],
   getInitialState() {
     return { rendering: 'index', survey: {} };
   },
@@ -25,14 +27,28 @@ const Survey = React.createClass({
     }
   },
   onShow(e) {
-    this.setState(this.getInitialState());
-    this.onEnterModal(e);
+    if(e) {
+      this.onEnterModal(e);
+    }
+
+    this.setState(this.getInitialState(), function() {
+      const { sessionTopicId, currentUserJwt, dispatch } = this.props;
+      dispatch(MiniSurveyActions.index(currentUserJwt, sessionTopicId));
+    });
   },
   onNew() {
     const { rendering, survey } = this.state;
+
     if(rendering == 'new') {
-      //call save
-      console.log(survey);
+      const { sessionTopicId, currentUserJwt, dispatch } = this.props;
+      let hasMissing = this.hasFieldsMissing(survey, ['title', 'question', 'type']);
+
+      if(hasMissing) {
+        NotificationActions.showNotification(dispatch, { message: 'Please fill all fields', type: 'error' });
+      }
+      else {
+        dispatch(MiniSurveyActions.create(currentUserJwt, { ...survey, sessionTopicId }, this.onShow));
+      }
     }
     else {
       this.setState({ rendering: 'new' });
@@ -94,6 +110,8 @@ const Survey = React.createClass({
 
 const mapStateToProps = (state) => {
   return {
+    currentUserJwt: state.members.currentUser.jwt,
+    sessionTopicId: state.sessionTopic.current.id,
     modalWindows: state.modalWindows,
     colours: state.chat.session.colours,
   }
