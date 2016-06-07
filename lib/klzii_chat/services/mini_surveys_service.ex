@@ -5,7 +5,7 @@ defmodule KlziiChat.Services.MiniSurveysService do
 
   def get(_session_member_id, %{"sessionTopicId" => session_topic_id}) do
     # session_member = Repo.get!(SessionMember, session_member_id)
-    mini_surveys = from(ms in MiniSurvey, where: ms.sessionTopicId == ^session_topic_id, preload: :resource)
+    mini_surveys = from(ms in MiniSurvey, where: ms.sessionTopicId == ^session_topic_id)
     |> Repo.all
     {:ok, mini_surveys}
   end

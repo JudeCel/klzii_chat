@@ -8,6 +8,9 @@ defmodule KlziiChat.MiniSurveysControllerTsest do
   end
 
   test "#MiniSurveysController get mini surveies for session", %{conn: conn, session_topic_1: session_topic_1} do
+    params = %{"sessionTopicId" => session_topic_1.id, "type" => "yesNoMaybe", "question" => "cool question", "title" => "cool title"}
+    resp_survey = post(conn, "/api/mini_surveys/", params) |> json_response(200)
+
     conn = get(conn, "/api/mini_surveys/", %{"sessionTopicId" => session_topic_1.id})
     assert(json_response(conn, 200))
   end
