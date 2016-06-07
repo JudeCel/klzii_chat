@@ -1,4 +1,4 @@
-defmodule KlziiChat.Services.MiniSurveiesService do
+defmodule KlziiChat.Services.MiniSurveysService do
   alias KlziiChat.{Repo, MiniSurvey, MiniSurveyAnswer, SessionTopic, SessionMember}
   import Ecto
   import Ecto.Query, only: [from: 2]
