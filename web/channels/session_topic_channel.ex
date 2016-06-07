@@ -96,6 +96,15 @@ defmodule KlziiChat.SessionTopicChannel do
     end
   end
 
+  def handle_in("show_mini_survey_answers", %{"id" => id}, socket) do
+    case MiniSurveysService.get_with_answers(get_session_member(socket).id, id) do
+      {:ok, mini_survey} ->
+        {:reply, {:ok, Phoenix.View.render_one(mini_survey, MiniSurveyView, "show_with_answers.json", as: :mini_survey)}, socket}
+      {:error, reason} ->
+        {:error, %{reason: reason}}
+    end
+  end
+
   def handle_in("mini_surveys", _, socket) do
     case MiniSurveysService.get(get_session_member(socket).id, socket.assigns.session_topic_id) do
       {:ok, mini_surveys} ->

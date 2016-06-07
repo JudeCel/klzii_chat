@@ -58,4 +58,11 @@ defmodule KlziiChat.Services.MiniSurveysService do
     |> Repo.preload([mini_survey_answers: from(msa in MiniSurveyAnswer, where: msa.sessionMemberId == ^session_member.id)])
     {:ok, mini_survey}
   end
+
+  def get_with_answers(session_member_id, mini_survey_id) do
+    session_member = Repo.get!(SessionMember, session_member_id)
+    mini_survey = Repo.get!(MiniSurvey, mini_survey_id)
+    |> Repo.preload([:mini_survey_answers])
+    {:ok, mini_survey}
+  end
 end

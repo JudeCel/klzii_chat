@@ -64,7 +64,7 @@ defmodule KlziiChat.SessionTopicChannelTest do
     assert(mini_survey_with_answer.mini_survey_answer.answer == answer_params["answer"])
   end
 
-  test "console mini survey", %{socket: socket, session_topic_1_name: session_topic_1_name} do
+  test "show mini survey in console", %{socket: socket, session_topic_1_name: session_topic_1_name} do
     params = %{"type" => "yesNoMaybe", "question" => "cool question", "title" => "cool title"}
     {:ok, _, socket} = subscribe_and_join(socket, SessionTopicChannel, session_topic_1_name)
     ref = push socket, "create_mini_survey", params
@@ -73,6 +73,18 @@ defmodule KlziiChat.SessionTopicChannelTest do
     get_ref = push socket, "show_mini_survey",  %{"id"=> mini_survey.id}
     assert_reply get_ref, :ok, console_mini_survey
     assert(console_mini_survey.id == mini_survey.id)
+  end
+
+  test "show mini surveys with answeres", %{socket: socket, session_topic_1_name: session_topic_1_name} do
+    params = %{"type" => "yesNoMaybe", "question" => "cool question", "title" => "cool title"}
+    {:ok, _, socket} = subscribe_and_join(socket, SessionTopicChannel, session_topic_1_name)
+    ref = push socket, "create_mini_survey", params
+    assert_reply ref, :ok, mini_survey
+    answer_params = %{"id"=> mini_survey.id, "answer" => %{"type" => "yesNoMaybe", "value" => "yes"} }
+    get_ref = push socket, "show_mini_survey_answers", answer_params
+    assert_reply get_ref, :ok, mini_survey_with_answers
+
+    assert(mini_survey_with_answers.mini_survey_answers |> is_list)
   end
 
   test "set mini survey to console", %{session: session, socket: socket, session_topic_1: session_topic_1, session_topic_1_name: session_topic_1_name} do
