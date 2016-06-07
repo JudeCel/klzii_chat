@@ -27,6 +27,20 @@ defmodule KlziiChat.MiniSurveysControllerTsest do
       assert(json_response(conn, 200))
   end
 
+  test "#MiniSurveysController can update answer for qestion", %{conn: conn, session_topic_1: session_topic_1} do
+    params = %{"sessionTopicId" => session_topic_1.id, "type" => "yesNoMaybe", "question" => "cool question", "title" => "cool title"}
+    resp_survey = post(conn, "/api/mini_surveys/", params) |> json_response(200)
+
+    answer_params = %{"answer" => %{"type" => "yesNoMaybe", "value" => "yes"} }
+    first_resp = post(conn, "/api/mini_surveys/#{resp_survey["id"]}/answer/", answer_params) |> json_response(200)
+
+    answer_params = %{"answer" => %{"type" => "yesNoMaybe", "value" => "NO"} }
+    second_resp = post(conn, "/api/mini_surveys/#{resp_survey["id"]}/answer/", answer_params) |> json_response(200)
+
+    assert(second_resp["mini_survey_answer"]["answer"] == answer_params["answer"])
+    assert(first_resp["mini_survey_answer"]["answer"]["id"] == second_resp["mini_survey_answer"]["answer"]["id"])
+  end
+
   test "#MiniSurveysController get qestion for session member by session topic", %{conn: conn, session_topic_1: session_topic_1} do
     params = %{"sessionTopicId" => session_topic_1.id, "type" => "yesNoMaybe", "question" => "cool question", "title" => "cool title"}
     resp_survey = post(conn, "/api/mini_surveys/", params) |> json_response(200)
