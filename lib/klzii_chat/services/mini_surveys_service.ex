@@ -59,7 +59,7 @@ defmodule KlziiChat.Services.MiniSurveysService do
       |> Repo.insert_or_update
       |> case do
         {:ok, answer } ->
-          {:ok, Repo.preload(mini_survey ,[mini_survey_answers: from(msa in MiniSurveyAnswer, where: msa.id == ^answer.id)])}
+          {:ok, Repo.preload(mini_survey ,[mini_survey_answers: from(msa in MiniSurveyAnswer, where: msa.id == ^answer.id, preload: [:session_member])])}
         {:error, reason} ->
           {:error, reason}
       end
@@ -68,14 +68,14 @@ defmodule KlziiChat.Services.MiniSurveysService do
   def get_for_console(session_member_id, mini_survey_id) do
     session_member = Repo.get!(SessionMember, session_member_id)
     mini_survey = Repo.get!(MiniSurvey, mini_survey_id)
-    |> Repo.preload([mini_survey_answers: from(msa in MiniSurveyAnswer, where: msa.sessionMemberId == ^session_member.id)])
+    |> Repo.preload([mini_survey_answers: from(msa in MiniSurveyAnswer, where: msa.sessionMemberId == ^session_member.id, preload: [:session_member])])
     {:ok, mini_survey}
   end
 
   def get_with_answers(session_member_id, mini_survey_id) do
     session_member = Repo.get!(SessionMember, session_member_id)
     mini_survey = Repo.get!(MiniSurvey, mini_survey_id)
-    |> Repo.preload([:mini_survey_answers])
+    |> Repo.preload([mini_survey_answers: :session_member])
     {:ok, mini_survey}
   end
 end
