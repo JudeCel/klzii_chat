@@ -7,12 +7,12 @@ defmodule KlziiChat.Console do
     belongs_to :video, KlziiChat.Resource, [foreign_key: :videoId]
     belongs_to :image, KlziiChat.Resource, [foreign_key: :imageId]
     belongs_to :file, KlziiChat.Resource, [foreign_key: :fileId]
-    belongs_to :survey, KlziiChat.Survey, [foreign_key: :surveyId]
+    belongs_to :mini_survey, KlziiChat.Survey, [foreign_key: :miniSurveyId]
     timestamps [inserted_at: :createdAt, updated_at: :updatedAt]
   end
 
   @required_fields ~w(sessionTopicId)
-  @optional_fields ~w(audioId videoId imageId fileId surveyId )
+  @optional_fields ~w(audioId videoId imageId fileId miniSurveyId )
 
   @doc """
   Creates a changeset based on the `model` and `params`.

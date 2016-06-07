@@ -75,7 +75,7 @@ defmodule KlziiChat.SessionTopicChannelTest do
 
     {:ok, _} = SessionResourcesService.delete(socket.assigns.session_member.id, session_resource.id)
 
-    assert_push("console", %{audio_id: nil, file_id: nil, image_id: nil, survey_id: nil, video_id: nil})
+    assert_push("console", %{audio_id: nil, file_id: nil, image_id: nil, mini_survey_id: nil, video_id: nil})
   end
 
   test "presents register is enable for topics", %{socket: socket, session_topic_1_name: session_topic_1_name} do
