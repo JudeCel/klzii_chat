@@ -25,17 +25,27 @@ defmodule KlziiChat.Services.MiniSurveysService do
   def create_answer(session_member_id, mini_survey_id, answer) do
     session_member = Repo.get!(SessionMember, session_member_id)
     mini_survey = Repo.get!(MiniSurvey, mini_survey_id)
-    build_assoc(mini_survey, :mini_survey_answers, %{
-      sessionMemberId: session_member.id,
-      answer: answer
-    })
-    |> Repo.insert
-    |> case do
-      {:ok, answer } ->
-        {:ok, Repo.preload(mini_survey ,[mini_survey_answers: from(msa in MiniSurveyAnswer, where: msa.id == ^answer.id)])}
-      {:error, reason} ->
-        {:error, reason}
-    end
+
+    mini_survey_answere = Repo.one(from msa in MiniSurveyAnswer,
+      where: msa.sessionMemberId == ^session_member.id,
+      where: msa.miniSurveyId == ^mini_survey.id
+    )|> case  do
+          nil ->
+            build_assoc(mini_survey, :mini_survey_answers, %{
+              sessionMemberId: session_member.id,
+              answer: answer
+            })
+          mini_survey_answere ->
+            Ecto.Changeset.change(mini_survey_answere, answer: answer)
+        end
+      |> Ecto.Changeset.change
+      |> Repo.insert_or_update
+      |> case do
+        {:ok, answer } ->
+          {:ok, Repo.preload(mini_survey ,[mini_survey_answers: from(msa in MiniSurveyAnswer, where: msa.id == ^answer.id)])}
+        {:error, reason} ->
+          {:error, reason}
+      end
   end
 
   def get_for_console(session_member_id, mini_survey_id, session_topic_id) do
