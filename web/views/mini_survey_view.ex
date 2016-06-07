@@ -5,7 +5,10 @@ defmodule KlziiChat.MiniSurveyView do
   @spec render(String.t, Map.t) :: Map.t
   def render("show.json", %{mini_survey: mini_survey}) do
     %{
-      id: mini_survey.id
+      id: mini_survey.id,
+      title: mini_survey.title,
+      question: mini_survey.question,
+      type: mini_survey.type
     }
   end
 
