@@ -35,6 +35,14 @@ const WhiteboardCanvas = React.createClass({
     };
     this.mode = this.ModeEnum.none;
 
+    this.historyStep = {
+      none: 0,
+      next: 1,
+      previous: 2
+    };
+
+    this.lastStep = this.historyStep.none;
+
     this.strokeWidthArray = [2, 4, 6];
     this.strokeWidth = this.strokeWidthArray[0];
 
@@ -42,35 +50,46 @@ const WhiteboardCanvas = React.createClass({
   },
   handleHistoryObject(currentStep, reverse) {
     let self = this;
-    if (currentStep instanceof Array) {
-      currentStep.map(function(element) {
-        self.processHistoryStep(element, reverse);
-      });
+    if (currentStep) {
+      if (currentStep instanceof Array) {
+        currentStep.map(function(element) {
+          self.processHistoryStep(element, reverse);
+        });
+      } else {
+        self.processHistoryStep(currentStep, reverse);
+      }
+    }
+  },
+  isUpdateEvent(step) {
+    if (step) {
+      let isUpdate = step.eventType == "update";
+      if (isUpdate == false) {
+        this.lastStep = this.historyStep.none;
+      }
+      return isUpdate;
     } else {
-      self.processHistoryStep(currentStep, reverse);
+      return false;
     }
   },
   undoStep() {
-    let step = undoHistoryFactory.currentStepObject();
-    let stepBack = undoHistoryFactory.undoStepObject();
-
-    if (step) {
-      if (step.eventType == 'update') step = stepBack;
-      this.handleHistoryObject(step, true);
+    let step = undoHistoryFactory.undoStepObject();
+    if (this.isUpdateEvent(step) && this.lastStep != this.historyStep.previous) {
+      this.lastStep = this.historyStep.previous;
+      step = undoHistoryFactory.undoStepObject();
     }
+    this.handleHistoryObject(step, true);
   },
   redoStep() {
-    let step = undoHistoryFactory.currentStepObject();
-    let stepForward = undoHistoryFactory.redoStepObject();
-    if (step) {
-      if (step.eventType == 'update') step = stepForward;
-      this.handleHistoryObject(step, false);
+    let step = undoHistoryFactory.redoStepObject();
+    if (this.isUpdateEvent(step) && this.lastStep != this.historyStep.next) {
+      this.lastStep = this.historyStep.next;
+      step = undoHistoryFactory.redoStepObject();
     }
+    this.handleHistoryObject(step, false);
   },
   processHistoryStep(currentStepBase, reverse) {
-    let currentStep = {...currentStepBase};
+    let currentStep = JSON.parse(JSON.stringify(currentStepBase));
     if (reverse) {
-
       if (currentStep.eventType == "delete") {
         currentStep.eventType = "draw";
       } else if (currentStep.eventType == "draw") {
