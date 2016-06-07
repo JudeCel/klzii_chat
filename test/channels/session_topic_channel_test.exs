@@ -70,7 +70,7 @@ defmodule KlziiChat.SessionTopicChannelTest do
     ref = push socket, "create_mini_survey", params
     assert_reply ref, :ok, mini_survey
 
-    get_ref = push socket, "console_mini_survey",  %{"id"=> mini_survey.id}
+    get_ref = push socket, "show_mini_survey",  %{"id"=> mini_survey.id}
     assert_reply get_ref, :ok, console_mini_survey
     assert(console_mini_survey.id == mini_survey.id)
   end
