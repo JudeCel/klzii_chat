@@ -37,6 +37,11 @@ const Actions = {
           }
         });
     }
+  },
+  addToConsole(channel, surveyId) {
+    return dispatch => {
+      channel.push('set_console_mini_survey', { id: surveyId });
+    }
   }
 }
 

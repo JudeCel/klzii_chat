@@ -17,9 +17,9 @@ const SurveyConsole = React.createClass({
   },
   render() {
     const show = this.showSpecificModal('console');
-    const { survey, shouldRender } = this.props;
+    const { survey } = this.props;
 
-    if(show && shouldRender) {
+    if(show) {
       return (
         <Modal dialogClassName='modal-section' show={ show } onHide={ this.closeAllModals } onEnter={ this.onEnterModal }>
           <Modal.Header>

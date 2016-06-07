@@ -1,16 +1,19 @@
 import React, {PropTypes}  from 'react';
+import { connect }         from 'react-redux';
+import MiniSurveyActions   from '../../../../actions/miniSurvey';
 
 const SurveyListItem = React.createClass({
   getValuesFromObject(object) {
-    let { id, active, question, title, type } = object;
-    return { id, active, question, title, type };
+    let { id, question, title, type } = object;
+    return { id, question, title, type };
   },
   getInitialState() {
     let survey = this.props.survey || {};
     return this.getValuesFromObject(survey);
   },
   onChange() {
-    this.setState({ active: true });
+    const { dispatch, channel } = this.props;
+    dispatch(MiniSurveyActions.addToConsole(channel, this.state.id));
   },
   onDelete() {
     console.log("delete ", this.state);
@@ -19,8 +22,8 @@ const SurveyListItem = React.createClass({
     this.props.onView(this.getValuesFromObject(this.state));
   },
   render() {
-    const { justInput } = this.props;
-    const { id, active, question, title, type } = this.state;
+    const { justInput, topicConsole } = this.props;
+    const { id, question, title, type } = this.state;
 
     if(justInput) {
       return (
@@ -45,7 +48,7 @@ const SurveyListItem = React.createClass({
             </div>
 
             <div className='col-md-6 text-right'>
-              <input id={ 'question' + id } name='active' type='radio' className='with-font' onChange={ this.onChange } defaultChecked={ active } />
+              <input id={ 'question' + id } name='active' type='radio' className='with-font' onChange={ this.onChange } defaultChecked={ id == topicConsole.mini_survey_id } />
               <label htmlFor={ 'question' + id }></label>
               <span className='fa fa-times' onClick={ this.onDelete }></span>
             </div>
@@ -56,4 +59,11 @@ const SurveyListItem = React.createClass({
   }
 });
 
-export default SurveyListItem;
+const mapStateToProps = (state) => {
+  return {
+    topicConsole: state.sessionTopic.console,
+    channel: state.sessionTopic.channel
+  }
+};
+
+export default connect(mapStateToProps)(SurveyListItem);
