@@ -9,8 +9,8 @@ defmodule KlziiChat.MiniSurveysController do
 
   def index(conn, params, member, _) do
     case MiniSurveysService.get(member.session_member.id, params) do
-      {:ok, mini_surveies} ->
-        json(conn, %{mini_surveies: Phoenix.View.render_many(mini_surveies, MiniSurveyView, "show.json", as: :mini_survey)})
+      {:ok, mini_surveys} ->
+        json(conn, %{mini_surveys: Phoenix.View.render_many(mini_surveys, MiniSurveyView, "show.json", as: :mini_survey)})
       {:error, reason} ->
         json(conn, %{status: :error, reason: reason})
     end

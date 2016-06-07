@@ -5,15 +5,15 @@ defmodule KlziiChat.Services.MiniSurveysService do
 
   def get(_session_member_id, %{"sessionTopicId" => session_topic_id}) do
     # session_member = Repo.get!(SessionMember, session_member_id)
-    mini_surveies = from(ms in MiniSurvey, where: ms.sessionTopicId == ^session_topic_id, preload: :resource)
+    mini_surveys = from(ms in MiniSurvey, where: ms.sessionTopicId == ^session_topic_id, preload: :resource)
     |> Repo.all
-    {:ok, mini_surveies}
+    {:ok, mini_surveys}
   end
 
   def create(session_member_id, %{"sessionTopicId" => session_topic_id, "type" => type, "question" => question, "title" => title} ) do
     _session_member = Repo.get!(SessionMember, session_member_id)
     session_topic = Repo.get!(SessionTopic, session_topic_id)
-    build_assoc(session_topic, :mini_surveies, %{
+    build_assoc(session_topic, :mini_surveys, %{
       sessionId: session_topic.sessionId,
       type: type,
       question: question,
