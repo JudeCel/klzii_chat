@@ -206,8 +206,8 @@ defmodule KlziiChat.SessionTopicChannel do
   end
 
   def handle_in("create_message_report", %{"report_format" => report_format, "star_only" => star_only, "exclude_facilitator" => exclude_facilitator}, socket) do
-    case ReportingService.create_st_message_report(socket.assigns.session_topic_id, report_format, star_only, exclude_facilitator) do
-    :ok ->
+    case ReportingService.create_session_topic_report(:messages, socket.assigns.session_topic_id, String.to_atom(report_format), star_only, exclude_facilitator) do
+    {:ok, _} ->
       {:reply, :ok, socket}
     {:error, reason} ->
       {:error, %{reason: reason}}
@@ -215,8 +215,8 @@ defmodule KlziiChat.SessionTopicChannel do
   end
 
   def handle_in("create_whiteboard_report", _, socket) do
-    case ReportingService.create_st_whiteboard_report(socket.assigns.session_topic_id) do
-    :ok ->
+    case ReportingService.create_session_topic_report(:whiteboard, socket.assigns.session_topic_id, :pdf) do
+    {:ok, _} ->
       {:reply, :ok, socket}
     {:error, reason} ->
       {:error, %{reason: reason}}
