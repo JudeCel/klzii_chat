@@ -44,12 +44,6 @@ defmodule KlziiChat.SessionTopicChannel do
     {:noreply, socket}
   end
 
-  def handle_info({:delete_mini_survey, mini_survey_id}, socket) do
-    session_member = get_session_member(socket)
-    MiniSurveysService.delete_related_consoles(mini_survey_id, session_member.id)
-    {:noreply, socket}
-  end
-
   def handle_in("board_message", payload, socket) do
     session_topic_id = socket.assigns.session_topic_id
     session_member = get_session_member(socket)
@@ -76,9 +70,9 @@ defmodule KlziiChat.SessionTopicChannel do
   end
 
   def handle_in("delete_mini_survey", %{"id" => id}, socket) do
-    case MiniSurveysService.delete(get_session_member(socket).id, id) do
+    session_member = get_session_member(socket)
+    case MiniSurveysService.delete(session_member.id, id) do
       {:ok, mini_survey} ->
-        send(self, {:delete_mini_survey, mini_survey.id})
         {:reply, {:ok, %{id: mini_survey.id}}, socket}
       {:error, reason} ->
         {:error, %{reason: reason}}

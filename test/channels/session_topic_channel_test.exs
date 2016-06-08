@@ -102,7 +102,7 @@ defmodule KlziiChat.SessionTopicChannelTest do
     delete_ref = push socket, "delete_mini_survey", %{id: mini_survey.id}
     assert_reply delete_ref, :ok, delete_resp
     assert(delete_resp == %{id: mini_survey.id})
-    # assert_broadcast("console", %{mini_survey_id: nil})
+    assert_broadcast("console", %{mini_survey_id: nil})
   end
 
   test "remove mini survey from console ", %{mini_survey: mini_survey, socket: socket,session_topic_1_name: session_topic_1_name} do

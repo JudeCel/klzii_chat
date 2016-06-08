@@ -35,7 +35,7 @@ defmodule KlziiChat.Mixfile do
      {:phoenix_ecto, github: "phoenixframework/phoenix_ecto"},
      {:phoenix_html, "~> 2.5"},
      {:phoenix_live_reload, "~> 1.0.5", only: :dev},
-     {:timex_ecto, github: "bitwalker/timex_ecto"},
+     {:timex_ecto, "~> 1.1"},
      {:poison, "~> 2.1", override: true},
      {:arc_ecto, "~> 0.4.1"},
      {:arc, "~> 0.5.2"},

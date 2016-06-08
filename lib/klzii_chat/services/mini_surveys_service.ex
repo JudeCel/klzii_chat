@@ -4,6 +4,7 @@ defmodule KlziiChat.Services.MiniSurveysService do
   import Ecto
   import Ecto.Query, only: [from: 2, from: 1]
 
+  @spec get(Integer, Integer) :: {:ok, List}
   def get(_session_member_id, session_topic_id) do
     # session_member = Repo.get!(SessionMember, session_member_id)
     mini_surveys = from(ms in MiniSurvey, where: ms.sessionTopicId == ^session_topic_id)
@@ -11,6 +12,7 @@ defmodule KlziiChat.Services.MiniSurveysService do
     {:ok, mini_surveys}
   end
 
+  @spec create(Integer, Integer, Map.t) :: {:ok, %MiniSurvey{}} | {:error, Ecto.Changeset.t}
   def create(session_member_id, session_topic_id, %{"type" => type, "question" => question, "title" => title} ) do
     _session_member = Repo.get!(SessionMember, session_member_id)
     session_topic = Repo.get!(SessionTopic, session_topic_id)
@@ -23,22 +25,21 @@ defmodule KlziiChat.Services.MiniSurveysService do
       |> Repo.insert
   end
 
+  @spec delete(Integer, Integer) :: {:ok, %MiniSurvey{}}
   def delete(session_member_id, id) do
-    Repo.get_by!(MiniSurvey, id: id) |> Repo.delete
+    mini_survey = Repo.get!(MiniSurvey, id) |> Repo.preload([:consoles])
+    :ok = delete_related_consoles(mini_survey.consoles, session_member_id)
+    Repo.delete(mini_survey)
   end
 
-  @spec delete_related_consoles(Integer, Integer) :: :ok
-  def delete_related_consoles(id, session_member_id) do
+  @spec delete_related_consoles(List, Integer) :: :ok
+  def delete_related_consoles(consoles, session_member_id) do
     session_member = Repo.get!(SessionMember, session_member_id)
-    session_topic_ids = from(st in SessionTopic, where: st.sessionId == ^session_member.sessionId, select: st.id) |> Repo.all
-    from(c in Console,
-      where: c.sessionTopicId in ^session_topic_ids,
-      where: c.miniSurveyId == ^id
-    ) |> Repo.all
-      |> ConsoleService.tidy_up("miniSurvey", session_member.id)
+    ConsoleService.tidy_up(consoles, "miniSurvey", session_member.id)
     :ok
   end
 
+  @spec create_answer(Integer, Integer, Map.t) :: {:ok, %MiniSurvey{}} | {:error, Ecto.Changeset.t}
   def create_answer(session_member_id, mini_survey_id, answer) do
     session_member = Repo.get!(SessionMember, session_member_id)
     mini_survey = Repo.get!(MiniSurvey, mini_survey_id)
@@ -65,6 +66,7 @@ defmodule KlziiChat.Services.MiniSurveysService do
       end
   end
 
+  @spec get_for_console(Integer, Integer) :: {:ok, %MiniSurvey{}}
   def get_for_console(session_member_id, mini_survey_id) do
     session_member = Repo.get!(SessionMember, session_member_id)
     mini_survey = Repo.get!(MiniSurvey, mini_survey_id)
@@ -72,6 +74,7 @@ defmodule KlziiChat.Services.MiniSurveysService do
     {:ok, mini_survey}
   end
 
+  @spec get_with_answers(Integer, Integer) :: {:ok, %MiniSurvey{}}
   def get_with_answers(session_member_id, mini_survey_id) do
     session_member = Repo.get!(SessionMember, session_member_id)
     mini_survey = Repo.get!(MiniSurvey, mini_survey_id)

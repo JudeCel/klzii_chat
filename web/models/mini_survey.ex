@@ -5,6 +5,7 @@ defmodule KlziiChat.MiniSurvey do
     belongs_to :session, KlziiChat.Session, [foreign_key: :sessionId]
     belongs_to :session_topic, KlziiChat.SessionTopic, [foreign_key: :sessionTopicId]
     has_many :mini_survey_answers, KlziiChat.MiniSurveyAnswer, [foreign_key: :miniSurveyId]
+    has_many :consoles, KlziiChat.Console, [foreign_key: :miniSurveyId]
     field :title, :string
     field :question, :string
     field :type, :string

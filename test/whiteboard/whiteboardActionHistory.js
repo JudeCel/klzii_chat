@@ -6,7 +6,7 @@ describe("testWhiteboard", ()=> {
   let step1Object = "one";
   let step2Object = "two";
   let step3Object = "three";
-  let step4Object = ["four1", "four2", "four3"];
+  let step4Object = "four1, four2, four3";
 
   let step5RedoObject = "five_redo";
   let step6RedoObject = "six_redo";
@@ -23,8 +23,10 @@ describe("testWhiteboard", ()=> {
     undoHistoryFactory.addStepToUndoHistory(step4Object);
     //at this point we should have 4 steps in history
     assert.equal(4, undoHistoryFactory.getActionCount());
+
+    assert.equal(step4Object, undoHistoryFactory.undoStepObject());
+
     assert.equal(step3Object, undoHistoryFactory.undoStepObject());
-    assert.equal(step2Object, undoHistoryFactory.undoStepObject());
     //we didn't remove any object, still needs to be 4
     assert.equal(4, undoHistoryFactory.getActionCount());
 
@@ -34,12 +36,12 @@ describe("testWhiteboard", ()=> {
     assert.equal(3, undoHistoryFactory.getActionCount());
     undoHistoryFactory.addStepToUndoHistory(step6RedoObject);
     undoHistoryFactory.addStepToUndoHistory(step7RedoObject);
-    assert.equal(step6RedoObject, undoHistoryFactory.undoStepObject());
+    assert.equal(step7RedoObject, undoHistoryFactory.undoStepObject());
     assert.equal(step7RedoObject, undoHistoryFactory.redoStepObject());
     //reached end of history, next object should be null
     assert.equal(null, undoHistoryFactory.redoStepObject());
     assert.equal(null, undoHistoryFactory.redoStepObject());
-    assert.equal(step6RedoObject, undoHistoryFactory.undoStepObject());
+    assert.equal(step7RedoObject, undoHistoryFactory.undoStepObject());
     assert.equal(step7RedoObject, undoHistoryFactory.redoStepObject());
   });
 
