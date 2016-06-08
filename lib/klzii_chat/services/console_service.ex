@@ -1,5 +1,5 @@
 defmodule KlziiChat.Services.ConsoleService do
-  alias KlziiChat.{Repo, Console, Console, SessionTopic, Resource, SessionMember}
+  alias KlziiChat.{Repo, Console, Console, SessionTopic, Resource, MiniSurvey, SessionMember, ConsoleView, Endpoint}
   alias KlziiChat.Services.Permissions.Console, as: ConsolePermissions
   import Ecto
 
@@ -19,15 +19,35 @@ defmodule KlziiChat.Services.ConsoleService do
     session_member = Repo.get!(SessionMember, member_id)
     if ConsolePermissions.can_set_resource(session_member) do
       {:ok, console} = get(session_member.sessionId, session_topic_id)
-      set_id_by_type(resource_id)
+      set_id_by_type(resource_id, :resource)
       |> update_console(console)
     else
       {:error, "Action not allowed!"}
     end
   end
 
-  @spec remove_resource(Integer, Integer, String.t) ::  {:ok, %Console{}} | {:error, String.t}
-  def remove_resource(member_id, session_topic_id, type) do
+  def tidy_up(consoles, type, session_member_id) do
+    Enum.each(consoles, fn console ->
+      {:ok, new_console} = remove(session_member_id, console.sessionTopicId, type)
+      data = ConsoleView.render("show.json", %{console: new_console})
+      Endpoint.broadcast!( "session_topic:#{console.sessionTopicId}", "console", data)
+    end)
+  end
+
+  @spec set_mini_survey(Integer, Integer, Integer) :: {:ok, %Console{}} | {:error, String.t}
+  def set_mini_survey(member_id, session_topic_id, mini_survey_id) do
+    session_member = Repo.get!(SessionMember, member_id)
+    if ConsolePermissions.can_set_resource(session_member) do
+      {:ok, console} = get(session_member.sessionId, session_topic_id)
+      set_id_by_type(mini_survey_id, :mini_survey)
+      |> update_console(console)
+    else
+      {:error, "Action not allowed!"}
+    end
+  end
+
+  @spec remove(Integer, Integer, String.t) ::  {:ok, %Console{}} | {:error, String.t}
+  def remove(member_id, session_topic_id, type) do
     session_member = Repo.get!(SessionMember, member_id)
     if ConsolePermissions.can_remove_resource(session_member) do
       {:ok, console} = get(session_member.sessionId, session_topic_id)
@@ -43,8 +63,14 @@ defmodule KlziiChat.Services.ConsoleService do
     Console.changeset(console, changeset) |> Repo.update
   end
 
-  @spec set_id_by_type(Integer) :: Map
-  defp set_id_by_type(resource_id) when is_integer(resource_id) do
+  @spec set_id_by_type(Integer, Atom) :: Map
+  defp set_id_by_type(mini_survey_id, :mini_survey) when is_integer(mini_survey_id) do
+    mini_survey = Repo.get!(MiniSurvey, mini_survey_id)
+    Map.put(%{},get_field_from_type("miniSurvey"), mini_survey.id)
+  end
+
+  @spec set_id_by_type(Integer, Atom) :: Map
+  defp set_id_by_type(resource_id, :resource) when is_integer(resource_id) do
     resource = Repo.get!(Resource, resource_id)
     Map.put(%{},get_field_from_type(resource.type), resource.id)
   end

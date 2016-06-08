@@ -7,6 +7,7 @@ defmodule KlziiChat.SessionTopic do
     has_many :messages, KlziiChat.Message, [foreign_key: :sessionTopicId]
     has_many :shapes, KlziiChat.Shape, [foreign_key: :sessionTopicId]
     has_one :console, KlziiChat.Console,[foreign_key: :sessionTopicId]
+    has_many :mini_surveys, KlziiChat.MiniSurvey, [foreign_key: :sessionTopicId]
     field :boardMessage, :string
     field :order, :integer
     field :name, :string

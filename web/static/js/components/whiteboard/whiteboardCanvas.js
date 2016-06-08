@@ -35,6 +35,14 @@ const WhiteboardCanvas = React.createClass({
     };
     this.mode = this.ModeEnum.none;
 
+    this.historyStep = {
+      none: 0,
+      next: 1,
+      previous: 2
+    };
+
+    this.lastStep = this.historyStep.none;
+
     this.strokeWidthArray = [2, 4, 6];
     this.strokeWidth = this.strokeWidthArray[0];
 
@@ -42,38 +50,55 @@ const WhiteboardCanvas = React.createClass({
   },
   handleHistoryObject(currentStep, reverse) {
     let self = this;
-    if (currentStep instanceof Array) {
-      currentStep.map(function(element) {
-        self.processHistoryStep(element, reverse);
-      });
+    if (currentStep) {
+      //case when deleting/recreating shapes
+      if (currentStep instanceof Array) {
+        currentStep.map(function(element) {
+          self.processHistoryStep(element, reverse);
+        });
+      } else {
+        self.processHistoryStep(currentStep, reverse);
+      }
+    }
+  },
+  isUpdateEvent(step) {
+    if (step) {
+      let isUpdate = step.eventType == "update";
+      if (isUpdate == false) {
+        this.lastStep = this.historyStep.none;
+      }
+      return isUpdate;
     } else {
-      self.processHistoryStep(currentStep, reverse);
+      return false;
     }
   },
   undoStep() {
-    let step = undoHistoryFactory.currentStepObject();
-    let stepBack = undoHistoryFactory.undoStepObject();
-    if (step.eventType == 'update') step = stepBack;
-    if (step) {
-      this.handleHistoryObject(step, true);
-    }
+    let step = undoHistoryFactory.undoStepObject();
+    this.handleHistoryObject(step, true);
   },
   redoStep() {
-    let step = undoHistoryFactory.currentStepObject();
-    let stepForward = undoHistoryFactory.redoStepObject();
-    if (step.eventType == 'update') step = stepForward;
-    if (step) {
-      this.handleHistoryObject(step, false);
-    }
+    let step = undoHistoryFactory.redoStepObject();
+    this.handleHistoryObject(step, false);
   },
   processHistoryStep(currentStepBase, reverse) {
-    let currentStep = {...currentStepBase};
+    let currentHistoryStep = JSON.parse(JSON.stringify(currentStepBase));
+    let currentStep;
     if (reverse) {
-
+      if (currentHistoryStep.oldState) {
+        currentStep = currentHistoryStep.oldState;
+      } else {
+        currentStep = currentHistoryStep;
+      }
       if (currentStep.eventType == "delete") {
         currentStep.eventType = "draw";
       } else if (currentStep.eventType == "draw") {
         currentStep.eventType = "delete";
+      }
+    } else {
+      if (currentHistoryStep.newState) {
+        currentStep = currentHistoryStep.newState;
+      } else {
+        currentStep = currentHistoryStep;
       }
     }
     this.sendMessage(currentStep);
@@ -207,11 +232,15 @@ const WhiteboardCanvas = React.createClass({
   shapeFinishedTransform(shape) {
     this.activeShape = shape;
     this.sendObjectData('update');
-    this.addShapeStateToHistory(shape);
+    let message = this.prepareMessage(this.activeShape, 'update');
+    //get step created in shapeStartedTransform() below
+    let currentStep = undoHistoryFactory.currentStepObject();
+    currentStep.newState = JSON.parse(JSON.stringify(message));
   },
   shapeStartedTransform(shape) {
     this.activeShape = shape;
-    this.addShapeStateToHistory(shape);
+    let message = this.prepareMessage(this.activeShape, 'update');
+    undoHistoryFactory.addStepToUndoHistory({oldState: message});
   },
   shapeTransformed(shape) {
     this.activeShape = shape;
@@ -349,6 +378,9 @@ const WhiteboardCanvas = React.createClass({
   },
   deleteActive() {
     if (this.activeShape && this.activeShape.permissions.can_delete) {
+      let message = this.prepareMessage(this.activeShape, "delete");
+      undoHistoryFactory.addStepToUndoHistory(message);
+
       this.sendObjectData('delete');
       this.activeShape.ftRemove();
       this.shapes[this.activeShape.id] = null;
@@ -577,10 +609,18 @@ const WhiteboardCanvas = React.createClass({
   handleStrokeWidthChange(e) {
     this.strokeWidth = e.target.value;
     if (this.activeShape) {
+      let oldState = this.prepareMessage(this.activeShape, 'update');
+      undoHistoryFactory.addStepToUndoHistory({oldState: oldState});
+
       this.activeShape.attr({strokeWidth: this.strokeWidth});
       this.sendObjectData('update');
+
+      //save modified state of a shape
+      let newState = this.prepareMessage(this.activeShape, 'update');
+      //get step created in shapeStartedTransform() below
+      let stepToUpdate = undoHistoryFactory.currentStepObject();
+      stepToUpdate.newState = JSON.parse(JSON.stringify(newState));
     }
-    this.setState({});
   },
   toolStyle(toolType) {
     return "btn " + ((toolType == this.mode)?"btn-warning":"btn-default");
@@ -735,9 +775,9 @@ const WhiteboardCanvas = React.createClass({
               <OverlayTrigger trigger="focus" placement="top" overlay={
                   <Popover id="lineWidthShapes">
                     {this.strokeWidthArray.map(function(result) {
-                      return <div className="radio" key={"radio" + result} >
-                        <label className={self.isLineWidthActive(result)}><input type="radio" ref="strokeWidth" name="optradio" value={result} onClick={self.handleStrokeWidthChange}/>{result}/</label>
-                      </div>
+                      return <div className={self.isLineWidthActive(result)} key={"radio" + result} onClick={self.handleStrokeWidthChange} value={result}>
+                          {result + "/"}
+                        </div>
                     })}
                   </Popover>
                 }>
@@ -746,8 +786,8 @@ const WhiteboardCanvas = React.createClass({
 
               <OverlayTrigger trigger="focus" placement="top" overlay={
                   <Popover id="eraserShapes">
-                    <i className="btn-sm fa fa-eraser" aria-hidden="true" onClick={this.deleteActive}>*</i>
-                    <i className="btn-sm fa fa-eraser" aria-hidden="true" onClick={this.deleteAll}></i>
+                    <i className="btn btn-default fa fa-eraser" aria-hidden="true" onClick={this.deleteActive}>*</i>
+                    <i className="btn btn-default fa fa-eraser" aria-hidden="true" onClick={this.deleteAll}></i>
                   </Popover>
                 }>
                 <Button bsStyle="default"><i className="fa fa-eraser" aria-hidden="true"></i></Button>

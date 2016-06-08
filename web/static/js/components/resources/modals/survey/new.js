@@ -1,8 +1,8 @@
 import React, {PropTypes}  from 'react';
 
-const SurveyManage = React.createClass({
+const SurveyNew = React.createClass({
   getInitialState() {
-    return { survey: {} };
+    return { type: 'yesNoMaybe' };
   },
   onChange(e) {
     const data = { [e.target.id]: e.target.value };
@@ -13,17 +13,17 @@ const SurveyManage = React.createClass({
     });
   },
   render() {
-    const { survey } = this.state;
+    const { title, question, type } = this.state;
 
     return (
       <div className='col-md-12'>
         <div className='form-group'>
           <label htmlFor='title'>Title</label>
-          <input type='text' className='form-control no-border-radius' defaultValue={ survey.title } id='title' placeholder='Title' onChange={ this.onChange } />
+          <input type='text' className='form-control no-border-radius' id='title' placeholder='Title' onChange={ this.onChange } />
         </div>
         <div className='form-group'>
           <label htmlFor='question'>Question</label>
-          <input type='text' className='form-control no-border-radius' defaultValue={ survey.question } id='question' placeholder='Question' onChange={ this.onChange } />
+          <input type='text' className='form-control no-border-radius' id='question' placeholder='Question' onChange={ this.onChange } />
         </div>
         <div className='form-group'>
           <label htmlFor='type'>Type</label>
@@ -37,4 +37,4 @@ const SurveyManage = React.createClass({
   }
 });
 
-export default SurveyManage;
+export default SurveyNew;

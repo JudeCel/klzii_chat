@@ -11,7 +11,7 @@ const SurveyList = React.createClass({
         <SurveyListItem key={ -1 } justInput={ true } />
         {
           surveys.map((survey, index) =>
-            <SurveyListItem key={ index } survey={ survey } onView={ onView } />
+            <SurveyListItem key={ survey.id } survey={ survey } onView={ onView } />
           )
         }
       </ul>
@@ -21,10 +21,7 @@ const SurveyList = React.createClass({
 
 const mapStateToProps = (state) => {
   return {
-    surveys: state.resources.surveys || [
-      { id: 1, title: 'Survey', question: 'Do you like?', type: 'yesNoMaybe', active: true },
-      { id: 2, title: 'Survey', question: 'Do you like?', type: '5starRating', active: false }
-    ]
+    surveys: state.miniSurveys.list
   }
 };
 
