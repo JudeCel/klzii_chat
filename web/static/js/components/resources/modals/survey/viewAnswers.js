@@ -13,7 +13,7 @@ const SurveyViewAnswers = React.createClass({
       return (<SurveyView5StarRating />)
     }
     else {
-      return (<div>Not found</div>)
+      return (<div className='text-center'>Not found</div>)
     }
   }
 });

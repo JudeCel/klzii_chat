@@ -35,6 +35,14 @@ const WhiteboardCanvas = React.createClass({
     };
     this.mode = this.ModeEnum.none;
 
+    this.historyStep = {
+      none: 0,
+      next: 1,
+      previous: 2
+    };
+
+    this.lastStep = this.historyStep.none;
+
     this.strokeWidthArray = [2, 4, 6];
     this.strokeWidth = this.strokeWidthArray[0];
 
@@ -42,39 +50,55 @@ const WhiteboardCanvas = React.createClass({
   },
   handleHistoryObject(currentStep, reverse) {
     let self = this;
-    if (currentStep instanceof Array) {
-      currentStep.map(function(element) {
-        self.processHistoryStep(element, reverse);
-      });
+    if (currentStep) {
+      //case when deleting/recreating shapes
+      if (currentStep instanceof Array) {
+        currentStep.map(function(element) {
+          self.processHistoryStep(element, reverse);
+        });
+      } else {
+        self.processHistoryStep(currentStep, reverse);
+      }
+    }
+  },
+  isUpdateEvent(step) {
+    if (step) {
+      let isUpdate = step.eventType == "update";
+      if (isUpdate == false) {
+        this.lastStep = this.historyStep.none;
+      }
+      return isUpdate;
     } else {
-      self.processHistoryStep(currentStep, reverse);
+      return false;
     }
   },
   undoStep() {
-    let step = undoHistoryFactory.currentStepObject();
-    let stepBack = undoHistoryFactory.undoStepObject();
-
-    if (step) {
-      if (step.eventType == 'update') step = stepBack;
-      this.handleHistoryObject(step, true);
-    }
+    let step = undoHistoryFactory.undoStepObject();
+    this.handleHistoryObject(step, true);
   },
   redoStep() {
-    let step = undoHistoryFactory.currentStepObject();
-    let stepForward = undoHistoryFactory.redoStepObject();
-    if (step) {
-      if (step.eventType == 'update') step = stepForward;
-      this.handleHistoryObject(step, false);
-    }
+    let step = undoHistoryFactory.redoStepObject();
+    this.handleHistoryObject(step, false);
   },
   processHistoryStep(currentStepBase, reverse) {
-    let currentStep = {...currentStepBase};
+    let currentHistoryStep = JSON.parse(JSON.stringify(currentStepBase));
+    let currentStep;
     if (reverse) {
-
+      if (currentHistoryStep.oldState) {
+        currentStep = currentHistoryStep.oldState;
+      } else {
+        currentStep = currentHistoryStep;
+      }
       if (currentStep.eventType == "delete") {
         currentStep.eventType = "draw";
       } else if (currentStep.eventType == "draw") {
         currentStep.eventType = "delete";
+      }
+    } else {
+      if (currentHistoryStep.newState) {
+        currentStep = currentHistoryStep.newState;
+      } else {
+        currentStep = currentHistoryStep;
       }
     }
     this.sendMessage(currentStep);
@@ -208,11 +232,15 @@ const WhiteboardCanvas = React.createClass({
   shapeFinishedTransform(shape) {
     this.activeShape = shape;
     this.sendObjectData('update');
-    this.addShapeStateToHistory(shape);
+    let message = this.prepareMessage(this.activeShape, 'update');
+    //get step created in shapeStartedTransform() below
+    let currentStep = undoHistoryFactory.currentStepObject();
+    currentStep.newState = JSON.parse(JSON.stringify(message));
   },
   shapeStartedTransform(shape) {
     this.activeShape = shape;
-    this.addShapeStateToHistory(shape);
+    let message = this.prepareMessage(this.activeShape, 'update');
+    undoHistoryFactory.addStepToUndoHistory({oldState: message});
   },
   shapeTransformed(shape) {
     this.activeShape = shape;
@@ -581,13 +609,17 @@ const WhiteboardCanvas = React.createClass({
   handleStrokeWidthChange(e) {
     this.strokeWidth = e.target.value;
     if (this.activeShape) {
-      //save initial state of a shape, if state is same as previous, will not affect
-      this.addShapeStateToHistory(this.activeShape);
+      let oldState = this.prepareMessage(this.activeShape, 'update');
+      undoHistoryFactory.addStepToUndoHistory({oldState: oldState});
+
       this.activeShape.attr({strokeWidth: this.strokeWidth});
       this.sendObjectData('update');
 
       //save modified state of a shape
-      this.addShapeStateToHistory(this.activeShape);
+      let newState = this.prepareMessage(this.activeShape, 'update');
+      //get step created in shapeStartedTransform() below
+      let stepToUpdate = undoHistoryFactory.currentStepObject();
+      stepToUpdate.newState = JSON.parse(JSON.stringify(newState));
     }
   },
   toolStyle(toolType) {
@@ -743,9 +775,9 @@ const WhiteboardCanvas = React.createClass({
               <OverlayTrigger trigger="focus" placement="top" overlay={
                   <Popover id="lineWidthShapes">
                     {this.strokeWidthArray.map(function(result) {
-                      return <div className="radio" key={"radio" + result} onClick={self.handleStrokeWidthChange}>
-                        <label className={self.isLineWidthActive(result)}><input type="radio" ref="strokeWidth" name="optradio" value={result}/>{result}/</label>
-                      </div>
+                      return <div className={self.isLineWidthActive(result)} key={"radio" + result} onClick={self.handleStrokeWidthChange} value={result}>
+                          {result + "/"}
+                        </div>
                     })}
                   </Popover>
                 }>

@@ -4,7 +4,7 @@ defmodule KlziiChat.SessionTopicChannelTest do
   alias KlziiChat.{Repo, Presence, UserSocket, SessionTopicChannel}
   alias KlziiChat.Services.{SessionResourcesService}
 
-  setup %{session_topic_1: session_topic_1, facilitator: facilitator, participant: participant} do
+  setup %{session: session, session_topic_1: session_topic_1, facilitator: facilitator, participant: participant} do
     Ecto.Adapters.SQL.Sandbox.mode(Repo, {:shared, self()})
     session_topic_1_name =  "session_topic:" <> Integer.to_string(session_topic_1.id)
     { :ok, jwt1, _encoded_claims } =  Guardian.encode_and_sign(facilitator)
@@ -13,7 +13,16 @@ defmodule KlziiChat.SessionTopicChannelTest do
     {:ok, socket} = connect(UserSocket, %{"token" => jwt1})
     {:ok, socket2} = connect(UserSocket, %{"token" => jwt2})
 
-    {:ok, socket: socket, socket2: socket2, session_topic_1_name: session_topic_1_name}
+    mini_survey = Ecto.build_assoc(
+     session, :mini_surveys,
+     sessionTopicId: session_topic_1.id,
+     type: "yesNoMaybe",
+     question: "cool question",
+     title: "cool title"
+   ) |> Repo.insert!
+
+
+    {:ok, socket: socket, socket2: socket2, session_topic_1_name: session_topic_1_name, mini_survey: mini_survey}
   end
 
   test "when unauthorized", %{socket: socket, session_topic_1_name: session_topic_1_name} do
@@ -25,31 +34,78 @@ defmodule KlziiChat.SessionTopicChannelTest do
     assert_push("console", %{})
   end
 
-  test "set mini survey to console", %{session: session, socket: socket, session_topic_1: session_topic_1, session_topic_1_name: session_topic_1_name} do
-    mini_survey = Ecto.build_assoc(
-     session, :mini_surveys,
-     sessionTopicId: session_topic_1.id,
-     type: "yesNoMaybe",
-     question: "cool question",
-     title: "cool title"
-   ) |> Repo.insert!
-
+  test "create mini survey", %{socket: socket, session_topic_1_name: session_topic_1_name} do
     {:ok, _, socket} = subscribe_and_join(socket, SessionTopicChannel, session_topic_1_name)
+
+    params = %{"type" => "yesNoMaybe", "question" => "cool question", "title" => "cool title"}
+    ref = push socket, "create_mini_survey", params
+    assert_reply ref, :ok, mini_survey
+    assert(mini_survey.question == params["question"])
+    assert(mini_survey.type == params["type"])
+  end
+
+  test "delete mini survey", %{socket: socket, session_topic_1_name: session_topic_1_name, mini_survey: mini_survey} do
+    {:ok, _, socket} = subscribe_and_join(socket, SessionTopicChannel, session_topic_1_name)
+    delete_resp = push socket, "delete_mini_survey", %{id: mini_survey.id}
+    assert_reply delete_resp, :ok, delete_resp
+    assert(delete_resp == %{id: mini_survey.id})
+  end
+
+  test "get mini surveys", %{socket: socket, session_topic_1_name: session_topic_1_name, mini_survey: mini_survey} do
+    {:ok, _, socket} = subscribe_and_join(socket, SessionTopicChannel, session_topic_1_name)
+    get_ref = push socket, "mini_surveys", %{}
+    assert_reply get_ref, :ok, %{mini_surveys: [resp_mini_survey]}
+    assert(resp_mini_survey.id == mini_survey.id)
+  end
+
+  test "answere mini surveys", %{socket: socket, session_topic_1_name: session_topic_1_name, mini_survey: mini_survey} do
+    {:ok, _, socket} = subscribe_and_join(socket, SessionTopicChannel, session_topic_1_name)
+    answer_params = %{"id"=> mini_survey.id, "answer" => %{"type" => "yesNoMaybe", "value" => "yes"} }
+    get_ref = push socket, "answer_mini_survey", answer_params
+    assert_reply get_ref, :ok, mini_survey_with_answer
+    assert(mini_survey_with_answer.mini_survey_answer.answer == answer_params["answer"])
+  end
+
+  test "show mini survey in console", %{socket: socket, session_topic_1_name: session_topic_1_name, mini_survey: mini_survey} do
+    {:ok, _, socket} = subscribe_and_join(socket, SessionTopicChannel, session_topic_1_name)
+    get_ref = push socket, "show_mini_survey",  %{"id"=> mini_survey.id}
+    assert_reply get_ref, :ok, console_mini_survey
+    assert(console_mini_survey.id == mini_survey.id)
+  end
+
+  test "show mini surveys with answeres", %{socket: socket, session_topic_1_name: session_topic_1_name, mini_survey: mini_survey} do
+    {:ok, _, socket} = subscribe_and_join(socket, SessionTopicChannel, session_topic_1_name)
+    answer_params = %{"id"=> mini_survey.id, "answer" => %{"type" => "yesNoMaybe", "value" => "yes"} }
+    get_ref = push socket, "show_mini_survey_answers", answer_params
+    assert_reply get_ref, :ok, mini_survey_with_answers
+
+    assert(mini_survey_with_answers.mini_survey_answers |> is_list)
+  end
+
+  test "set mini survey to console", %{mini_survey: mini_survey, socket: socket,session_topic_1_name: session_topic_1_name} do
+    {:ok, _, socket} = subscribe_and_join(socket, SessionTopicChannel, session_topic_1_name)
+
     ref = push socket, "set_console_mini_survey", %{"id" => mini_survey.id}
     assert_reply ref, :ok
     mini_survey_id = mini_survey.id
     assert_push("console", %{mini_survey_id: ^mini_survey_id})
   end
 
-  test "remove mini survey from console ", %{session: session, socket: socket, session_topic_1: session_topic_1,session_topic_1_name: session_topic_1_name} do
-    mini_survey = Ecto.build_assoc(
-     session, :mini_surveys,
-     sessionTopicId: session_topic_1.id,
-     type: "yesNoMaybe",
-     question: "cool question",
-     title: "cool title"
-    ) |> Repo.insert!
+  test "delete mini survey when enable in console", %{mini_survey: mini_survey, socket: socket, session_topic_1_name: session_topic_1_name} do
+    {:ok, _, socket} = subscribe_and_join(socket, SessionTopicChannel, session_topic_1_name)
 
+    ref = push socket, "set_console_mini_survey", %{"id" => mini_survey.id}
+    assert_reply ref, :ok
+    mini_survey_id = mini_survey.id
+    assert_push("console", %{mini_survey_id: ^mini_survey_id})
+
+    delete_ref = push socket, "delete_mini_survey", %{id: mini_survey.id}
+    assert_reply delete_ref, :ok, delete_resp
+    assert(delete_resp == %{id: mini_survey.id})
+    # assert_broadcast("console", %{mini_survey_id: nil})
+  end
+
+  test "remove mini survey from console ", %{mini_survey: mini_survey, socket: socket,session_topic_1_name: session_topic_1_name} do
     {:ok, _, socket} = subscribe_and_join(socket, SessionTopicChannel, session_topic_1_name)
     ref = push socket, "set_console_mini_survey", %{"id" => mini_survey.id}
     assert_reply ref, :ok
@@ -60,8 +116,6 @@ defmodule KlziiChat.SessionTopicChannelTest do
     assert_reply ref, :ok
     assert_push("console", %{mini_survey_id: nil})
   end
-
-
 
   test "set resource to console", %{account_user: account_user, socket: socket, session_topic_1_name: session_topic_1_name} do
     {:ok, resource} = Ecto.build_assoc(
@@ -78,17 +132,9 @@ defmodule KlziiChat.SessionTopicChannelTest do
     assert_push("console", %{})
   end
 
-  test "remove resource from console ", %{account_user: account_user, socket: socket, session_topic_1_name: session_topic_1_name} do
-    {:ok, resource} = Ecto.build_assoc(
-      account_user.account, :resources,
-      accountUserId: account_user.id,
-      name: "test image 1",
-      type: "image",
-      scope: "collage"
-    ) |> Repo.insert
-
+  test "remove resource from console ", %{socket: socket, session_topic_1_name: session_topic_1_name} do
     {:ok, _, socket} = subscribe_and_join(socket, SessionTopicChannel, session_topic_1_name)
-    ref = push socket, "remove_console_element", %{"type" => resource.type}
+    ref = push socket, "remove_console_element", %{"type" => "image"}
     assert_reply ref, :ok
     assert_push("console", %{})
   end

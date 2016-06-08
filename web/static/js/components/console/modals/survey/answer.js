@@ -13,7 +13,7 @@ const SurveyAnswer = React.createClass({
       return (<Answer5StarRating afterChange={ afterChange } />)
     }
     else {
-      return (<div>Not found</div>)
+      return (<div className='text-center'>Not found</div>)
     }
   }
 });

@@ -5,6 +5,7 @@ const SurveyViewYesNoMaybe = React.createClass({
   render() {
     const { answers } = this.props;
     const staticAnswers = ['Yes', 'No', 'Maybe'];
+
     return (
       <ul className='list-group'>
         {
@@ -12,8 +13,8 @@ const SurveyViewYesNoMaybe = React.createClass({
             return (
               <li key={ index } className='list-group-item'>
                 <div className='row'>
-                  <div className='col-md-3'>{ answer.sessionMember.username }</div>
-                  <div className='col-md-9'>{ staticAnswers[answer.value - 1] }</div>
+                  <div className='col-md-6'>{ answer.session_member.username }</div>
+                  <div className='col-md-6 text-right'>{ staticAnswers[answer.answer.value - 1] }</div>
                 </div>
               </li>
             )
@@ -26,10 +27,7 @@ const SurveyViewYesNoMaybe = React.createClass({
 
 const mapStateToProps = (state) => {
   return {
-    answers: /*state.resources.survey.answers || */ [
-      { id: 1, sessionMemberId: 1, value: 1, sessionMember: { username: 'Random 1' } },
-      { id: 2, sessionMemberId: 2, value: 2, sessionMember: { username: 'Random 2' } }
-    ]
+    answers: state.miniSurveys.view.mini_survey_answers
   }
 };
 

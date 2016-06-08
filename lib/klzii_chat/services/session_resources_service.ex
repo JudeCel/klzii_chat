@@ -1,5 +1,5 @@
 defmodule KlziiChat.Services.SessionResourcesService do
-  alias KlziiChat.{Endpoint, Repo, Resource, SessionResource, SessionMember, Console, ConsoleView, SessionTopic}
+  alias KlziiChat.{Repo, Resource, SessionResource, SessionMember, Console, SessionTopic}
   alias KlziiChat.Services.{ConsoleService}
   alias KlziiChat.Services.Permissions.SessionResources, as: SessionResourcesPermissions
   alias KlziiChat.Helpers.ListHelper
@@ -59,12 +59,8 @@ defmodule KlziiChat.Services.SessionResourcesService do
         c.imageId == ^resource_id or
         c.fileId == ^resource_id
       ) |> Repo.all
-        |> Enum.each(fn console ->
-          {:ok, new_console} = ConsoleService.remove(session_member.id, console.sessionTopicId, resource.type)
-          data = ConsoleView.render("show.json", %{console: new_console})
-          Endpoint.broadcast!( "session_topic:#{console.sessionTopicId}", "console", data)
-      end)
-      :ok
+        |> ConsoleService.tidy_up(resource.type, session_member.id)
+    :ok
   end
 
   def find(session_member_id, id) do

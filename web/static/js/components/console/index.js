@@ -30,11 +30,11 @@ const Console = React.createClass({
   render() {
     const { modalName } = this.state;
     const consoleButtons = [
-      { type: 'video',  className: 'icon-video-1'    },
-      { type: 'audio',  className: 'icon-volume-up'  },
-      { type: 'image',  className: 'icon-camera'     },
-      { type: 'survey', className: 'icon-ok-squared' },
-      { type: 'pdf',    className: 'icon-pdf'        },
+      { type: 'video',       className: 'icon-video-1'    },
+      { type: 'audio',       className: 'icon-volume-up'  },
+      { type: 'image',       className: 'icon-camera'     },
+      { type: 'mini_survey', className: 'icon-ok-squared' },
+      { type: 'pdf',         className: 'icon-pdf'        },
     ];
 
     return (
@@ -51,7 +51,7 @@ const Console = React.createClass({
           </ul>
         </div>
 
-        <SurveyModal show={ this.shouldShow(['survey']) } />
+        <SurveyModal show={ this.shouldShow(['mini_survey']) } />
         <UploadsModal show={ this.shouldShow(['video', 'audio', 'image']) } modalName={ modalName } />
       </div>
     )

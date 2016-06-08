@@ -1,5 +1,5 @@
 defmodule KlziiChat.Services.ConsoleService do
-  alias KlziiChat.{Repo, Console, Console, SessionTopic, Resource, MiniSurvey, SessionMember}
+  alias KlziiChat.{Repo, Console, Console, SessionTopic, Resource, MiniSurvey, SessionMember, ConsoleView, Endpoint}
   alias KlziiChat.Services.Permissions.Console, as: ConsolePermissions
   import Ecto
 
@@ -24,6 +24,14 @@ defmodule KlziiChat.Services.ConsoleService do
     else
       {:error, "Action not allowed!"}
     end
+  end
+
+  def tidy_up(consoles, type, session_member_id) do
+    Enum.each(consoles, fn console ->
+      {:ok, new_console} = remove(session_member_id, console.sessionTopicId, type)
+      data = ConsoleView.render("show.json", %{console: new_console})
+      Endpoint.broadcast!( "session_topic:#{console.sessionTopicId}", "console", data)
+    end)
   end
 
   @spec set_mini_survey(Integer, Integer, Integer) :: {:ok, %Console{}} | {:error, String.t}

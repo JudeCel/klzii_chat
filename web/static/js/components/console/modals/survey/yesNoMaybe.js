@@ -2,16 +2,16 @@ import React, {PropTypes} from 'react';
 import { connect }        from 'react-redux';
 
 const AnswerYesNoMaybe = React.createClass({
-  getInitialState() {
-    return { checked: 0 };
-  },
-  onChange(e) {
-    let value = e.target.value;
-    this.setState({ checked: value });
+  onChange(value) {
     this.props.afterChange(value);
+  },
+  shouldBeChecked(value) {
+    let survey = this.props.survey.mini_survey_answer;
+    return survey ? survey.answer.value == value : false;
   },
   render() {
     const { survey } = this.props;
+    const answers = ['Yes', 'No', 'Maybe'];
 
     return (
       <div className='col-md-12'>
@@ -20,18 +20,17 @@ const AnswerYesNoMaybe = React.createClass({
         </div>
 
         <ul className='list-group'>
-          <li className='list-group-item'>
-            <input id='yesNoMaybe1' name='answer' value='1' type='radio' className='with-font' onChange={ this.onChange } />
-            <label htmlFor='yesNoMaybe1'>Yes</label>
-          </li>
-          <li className='list-group-item'>
-            <input id='yesNoMaybe2' name='answer' value='2' type='radio' className='with-font' onChange={ this.onChange } />
-            <label htmlFor='yesNoMaybe2'>No</label>
-          </li>
-          <li className='list-group-item'>
-            <input id='yesNoMaybe3' name='answer' value='3' type='radio' className='with-font' onChange={ this.onChange } />
-            <label htmlFor='yesNoMaybe3'>Maybe</label>
-          </li>
+          {
+            answers.map((answer, index) =>
+              <li key={ index + 1 } className='list-group-item'>
+                <input id={ 'yesNoMaybe' + index + 1 } name='answer' type='radio' className='with-font'
+                  defaultChecked={ this.shouldBeChecked(index + 1) }
+                  onChange={ this.onChange.bind(this, index + 1) }
+                />
+                <label htmlFor={ 'yesNoMaybe' + index + 1 }>{ answer }</label>
+              </li>
+            )
+          }
         </ul>
       </div>
     )
@@ -40,7 +39,7 @@ const AnswerYesNoMaybe = React.createClass({
 
 const mapStateToProps = (state) => {
   return {
-    survey: state.resources.survey || {id: 1, title: 'Survey', question: 'Do you like?', type: 'yesNoMaybe', active: true}
+    survey: state.miniSurveys.console
   }
 };
 

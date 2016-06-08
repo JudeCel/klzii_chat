@@ -1,7 +1,7 @@
 defmodule KlziiChat.SessionTopicChannel do
   use KlziiChat.Web, :channel
-  alias KlziiChat.Services.{MessageService, UnreadMessageService, ConsoleService, SessionTopicService}
-  alias KlziiChat.{MessageView, Presence, Endpoint, ConsoleView, SessionTopicView, SessionMembersView}
+  alias KlziiChat.Services.{MessageService, UnreadMessageService, ConsoleService, SessionTopicService, MiniSurveysService}
+  alias KlziiChat.{MessageView, Presence, Endpoint, ConsoleView, SessionTopicView, SessionMembersView, MiniSurveyView}
   import(KlziiChat.Authorisations.Channels.SessionTopic, only: [authorized?: 2])
   import(KlziiChat.Helpers.SocketHelper, only: [get_session_member: 1])
 
@@ -44,6 +44,12 @@ defmodule KlziiChat.SessionTopicChannel do
     {:noreply, socket}
   end
 
+  def handle_info({:delete_mini_survey, mini_survey_id}, socket) do
+    session_member = get_session_member(socket)
+    MiniSurveysService.delete_related_consoles(mini_survey_id, session_member.id)
+    {:noreply, socket}
+  end
+
   def handle_in("board_message", payload, socket) do
     session_topic_id = socket.assigns.session_topic_id
     session_member = get_session_member(socket)
@@ -57,6 +63,61 @@ defmodule KlziiChat.SessionTopicChannel do
       end
     else
       {:error, %{reason: "Message too short"}}
+    end
+  end
+
+  def handle_in("create_mini_survey", payload, socket) do
+    case MiniSurveysService.create(get_session_member(socket).id, socket.assigns.session_topic_id, payload) do
+      {:ok, mini_survey} ->
+        {:reply, {:ok, Phoenix.View.render_one(mini_survey, MiniSurveyView, "show.json", as: :mini_survey)}, socket}
+      {:error, reason} ->
+        {:error, %{reason: reason}}
+    end
+  end
+
+  def handle_in("delete_mini_survey", %{"id" => id}, socket) do
+    case MiniSurveysService.delete(get_session_member(socket).id, id) do
+      {:ok, mini_survey} ->
+        send(self, {:delete_mini_survey, mini_survey.id})
+        {:reply, {:ok, %{id: mini_survey.id}}, socket}
+      {:error, reason} ->
+        {:error, %{reason: reason}}
+    end
+  end
+
+  def handle_in("answer_mini_survey", %{"id" => id, "answer" => answer}, socket) do
+    case MiniSurveysService.create_answer(get_session_member(socket).id, id, answer) do
+      {:ok, mini_survey} ->
+        {:reply, {:ok, Phoenix.View.render_one(mini_survey, MiniSurveyView, "show_with_answer.json", as: :mini_survey)}, socket}
+      {:error, reason} ->
+        {:error, %{reason: reason}}
+    end
+  end
+
+  def handle_in("show_mini_survey", %{"id" => id}, socket) do
+    case MiniSurveysService.get_for_console(get_session_member(socket).id, id) do
+      {:ok, mini_survey} ->
+        {:reply, {:ok, Phoenix.View.render_one(mini_survey, MiniSurveyView, "show_with_answer.json", as: :mini_survey)}, socket}
+      {:error, reason} ->
+        {:error, %{reason: reason}}
+    end
+  end
+
+  def handle_in("show_mini_survey_answers", %{"id" => id}, socket) do
+    case MiniSurveysService.get_with_answers(get_session_member(socket).id, id) do
+      {:ok, mini_survey} ->
+        {:reply, {:ok, Phoenix.View.render_one(mini_survey, MiniSurveyView, "show_with_answers.json", as: :mini_survey)}, socket}
+      {:error, reason} ->
+        {:error, %{reason: reason}}
+    end
+  end
+
+  def handle_in("mini_surveys", _, socket) do
+    case MiniSurveysService.get(get_session_member(socket).id, socket.assigns.session_topic_id) do
+      {:ok, mini_surveys} ->
+        {:reply, {:ok, %{mini_surveys: Phoenix.View.render_many(mini_surveys, MiniSurveyView, "show.json", as: :mini_survey)}}, socket}
+      {:error, reason} ->
+        {:error, %{reason: reason}}
     end
   end
 
