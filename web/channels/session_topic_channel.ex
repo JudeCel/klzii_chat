@@ -1,6 +1,6 @@
 defmodule KlziiChat.SessionTopicChannel do
   use KlziiChat.Web, :channel
-  alias KlziiChat.Services.{MessageService, UnreadMessageService, ConsoleService, SessionTopicService, MiniSurveysService}
+  alias KlziiChat.Services.{MessageService, UnreadMessageService, ConsoleService, SessionTopicService, MiniSurveysService, ReportingService}
   alias KlziiChat.{MessageView, Presence, Endpoint, ConsoleView, SessionTopicView, SessionMembersView, MiniSurveyView}
   import(KlziiChat.Authorisations.Channels.SessionTopic, only: [authorized?: 2])
   import(KlziiChat.Helpers.SocketHelper, only: [get_session_member: 1])
@@ -208,6 +208,24 @@ defmodule KlziiChat.SessionTopicChannel do
         {:reply, :ok, socket}
       {:error, reason} ->
         {:error, %{reason: reason}}
+    end
+  end
+
+  def handle_in("create_message_report", %{"report_format" => report_format, "star_only" => star_only, "exclude_facilitator" => exclude_facilitator}, socket) do
+    case ReportingService.create_st_message_report(socket.assigns.session_topic_id, report_format, star_only, exclude_facilitator) do
+    :ok ->
+      {:reply, :ok, socket}
+    {:error, reason} ->
+      {:error, %{reason: reason}}
+    end
+  end
+
+  def handle_in("create_whiteboard_report", _, socket) do
+    case ReportingService.create_st_whiteboard_report(socket.assigns.session_topic_id) do
+    :ok ->
+      {:reply, :ok, socket}
+    {:error, reason} ->
+      {:error, %{reason: reason}}
     end
   end
 
