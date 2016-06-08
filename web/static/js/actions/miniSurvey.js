@@ -17,6 +17,11 @@ const Actions = {
       channel.push('set_console_mini_survey', { id: surveyId });
     }
   },
+  removeFromConsole:(channel) => {
+    return dispatch => {
+      channel.push('remove_console_element', { type: 'miniSurvey' });
+    };
+  },
   create:(channel, params, callback) => {
     return dispatch => {
       channel.push('create_mini_survey', params)
