@@ -7,7 +7,7 @@ defmodule KlziiChat.Console do
     belongs_to :video, KlziiChat.Resource, [foreign_key: :videoId]
     belongs_to :image, KlziiChat.Resource, [foreign_key: :imageId]
     belongs_to :file, KlziiChat.Resource, [foreign_key: :fileId]
-    belongs_to :mini_survey, KlziiChat.Survey, [foreign_key: :miniSurveyId]
+    belongs_to :mini_survey, KlziiChat.MiniSurvey, [foreign_key: :miniSurveyId]
     timestamps [inserted_at: :createdAt, updated_at: :updatedAt]
   end
 

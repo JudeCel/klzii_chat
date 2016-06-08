@@ -3,11 +3,11 @@ defmodule KlziiChat.MiniSurveyAnswer do
 
   schema "MiniSurveyAnswers" do
     belongs_to :session_member, KlziiChat.SessionMember, [foreign_key: :sessionMemberId]
-    belongs_to :mini_survey, KlziiChat.MiniSurve, [foreign_key: :miniSurveyId]
+    belongs_to :mini_survey, KlziiChat.MiniSurvey, [foreign_key: :miniSurveyId]
     field :answer, :map
     timestamps [inserted_at: :createdAt, updated_at: :updatedAt]
   end
-  
+
   @required_fields ~w(messageId sessionMemberId)
   @optional_fields ~w()
 
