@@ -1,41 +1,77 @@
 import React, {PropTypes} from 'react';
 import { connect }        from 'react-redux';
-import Avatar             from './../../avatar.js';
+import ReactDOM           from 'react-dom';
+import moment             from 'moment';
+import TextareaAutosize   from 'react-autosize-textarea';
+import Message            from './message';
+import mixins             from '../../../../mixins';
 
-const MessageBox = React.createClass({
+const Messages = React.createClass({
+  mixins: [mixins.helpers],
+  borderColor() {
+    return { borderColor: this.props.colours.mainBorder };
+  },
+  onChange(e) {
+    this.setState({ text: e.target.value });
+  },
+  onKeyDown(e) {
+    if((e.keyCode == 10 || e.keyCode == 13) && (e.ctrlKey || e.metaKey)) {
+      this.sendMessage();
+    }
+  },
+  sendMessage() {
+    console.error(this.state.text);
+  },
+  getInitialState() {
+    return { text: '' };
+  },
+  componentDidMount() {
+    // temp while no real messages
+    this.shouldScrollBottom = true;
+    this.componentDidUpdate();
+  },
+  componentWillUpdate() {
+    let messages = ReactDOM.findDOMNode(this);
+    let chatBoxHeight = messages.scrollTop + messages.offsetHeight;
+    this.shouldScrollBottom = (chatBoxHeight === messages.scrollHeight);
+  },
+  componentDidUpdate(props, state) {
+    // Needs check when actually changed data
+    let messages = ReactDOM.findDOMNode(this);
+    this.addOrRemoveScrollbarY(messages, this);
+  },
+  shouldComponentUpdate(props, state) {
+    return state.text == this.state.text;
+  },
   render() {
-    const { member, messages, currentUser, colours } = this.props;
+    const { member, messages, currentUser } = this.props;
 
     return (
-      <div className='messages-section' style={{ borderColor: colours.mainBorder }}>
+      <div className='col-md-12 messages-section' style={ this.borderColor() }>
         {
-          messages.read.map((message, index) =>
-            <div key={ index } className='media'>
-              <div className='media-left media-top'>
-                <Avatar member={ member } specificId={ 'direct-message-sender' + index } />
-              </div>
-
-              <div className='media-body'>
-                {/*<h4 className='media-heading'>{ message.createdAt }</h4>*/}
-                { message.text }
-              </div>
-            </div>
+          messages.read.map((message) =>
+            <Message key={ message.id } message={ message } member={ member } type='read' />
           )
         }
-        {
-          messages.unread.map((message, index) =>
-            <div key={ index } className='media'>
-              <div className='media-left media-top'>
-                <Avatar member={ currentUser } specificId={ 'direct-message-reciever' + index } />
-              </div>
 
-              <div className='media-body'>
-                {/*<h4 className='media-heading'>{ message.createdAt }</h4>*/}
-                { message.text }
-              </div>
-            </div>
+        <div className='unread-separator text-center'>
+          <hr className='pull-left' style={ this.borderColor() } />
+          <span className='date'>{ this.formatDate(moment, messages.unread[0].createdAt) }</span>
+          <hr className='pull-right' style={ this.borderColor() } />
+        </div>
+
+        {
+          messages.unread.map((message) =>
+            <Message key={ message.id } message={ message } member={ currentUser } type='unread' />
           )
         }
+
+        <div className='form-group'>
+          <div className='input-group input-group-lg'>
+            <TextareaAutosize type='text' className='form-control no-border-radius' placeholder='Message' onChange={ this.onChange } onKeyDown={ this.onKeyDown } />
+            <div className='input-group-addon no-border-radius cursor-pointer' onClick={ this.sendMessage }>POST</div>
+          </div>
+        </div>
       </div>
     )
   }
@@ -45,11 +81,11 @@ const mapStateToProps = (state) => {
   return {
     colours: state.chat.session.colours,
     currentUser: state.members.currentUser,
-    messages: state.chat.session.directMessages || _fakeSeedData(3)
+    messages: state.chat.session.directMessages || _fakeSeedData(10)
   }
 };
 
-export default connect(mapStateToProps)(MessageBox);
+export default connect(mapStateToProps, null, null, { pure: false })(Messages);
 
 function _fakeSeedData(count) {
   let unreadCount = 2;
@@ -58,10 +94,11 @@ function _fakeSeedData(count) {
   let read = [];
   for(var i = 0; i < readCount; i++) {
     read.push({
+      id: i,
       senderId: 1,
       recieverId: 2,
-      read: true,
       createdAt: new Date(),
+      readAt: new Date(),
       text: "Random text " + i
     });
   }
@@ -69,10 +106,11 @@ function _fakeSeedData(count) {
   let unread = [];
   for(var i = 0; i < unreadCount; i++) {
     unread.push({
+      id: i,
       senderId: 1,
       recieverId: 2,
-      read: true,
       createdAt: new Date(),
+      readAt: null,
       text: "Random text " + i
     });
   }

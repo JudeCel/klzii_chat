@@ -2,7 +2,7 @@ import React, {PropTypes} from 'react';
 import { Modal }          from 'react-bootstrap';
 import { connect }        from 'react-redux';
 import mixins             from '../../../../mixins';
-import MessageBox         from './messageBox';
+import MessageBox         from './box';
 
 const DirectMessage = React.createClass({
   mixins: [mixins.modalWindows],

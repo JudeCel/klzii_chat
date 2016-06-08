@@ -1,11 +1,11 @@
 import React, {PropTypes} from 'react';
 import { connect }        from 'react-redux';
 import mixins             from '../../../../mixins';
-import Avatar             from './../../avatar';
 import Messages           from './messages';
+import Participants       from './participants';
 
 const MessageBox = React.createClass({
-  mixins: [mixins.validations],
+  mixins: [mixins.validations, mixins.helpers],
   getInitialState() {
     return { member: this.props.modalData.member };
   },
@@ -14,21 +14,13 @@ const MessageBox = React.createClass({
   },
   render() {
     const { member } = this.state;
-    const { colours, participants, currentUser } = this.props;
+    const { colours, currentUser } = this.props;
 
     if(this.isFacilitator(currentUser)) {
       return (
         <div className='row direct-message-section'>
           <div className='col-md-4'>
-            <div className='list-group no-border-radius' style={{ borderColor: colours.mainBorder }}>
-              {
-                participants.map((participant, index) =>
-                  <button type='button' key={ index } className='list-group-item no-border-radius' onClick={ this.selectParticipant.bind(this, participant) }>
-                    <Avatar member={ participant } specificId='direct-message-left' />
-                  </button>
-                )
-              }
-            </div>
+            <Participants selectParticipant={ this.selectParticipant } memberId={ member.id } />
           </div>
 
           <div className='col-md-8'>
@@ -52,8 +44,6 @@ const MessageBox = React.createClass({
 const mapStateToProps = (state) => {
   return {
     modalData: state.modalWindows.data,
-    colours: state.chat.session.colours,
-    participants: state.members.participants,
     currentUser: state.members.currentUser
   }
 };

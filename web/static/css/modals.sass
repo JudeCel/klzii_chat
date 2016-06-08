@@ -1,4 +1,5 @@
 .direct-message-modal
+  $max-height-box: 600px
   width: 100%
   margin-top: 130px !important
   padding: 0 15px
@@ -6,25 +7,53 @@
     .svg-avatar-label
       display: none
     .messages-section
+      max-height: $max-height-box + 4
       border: 2px solid
-      .media
-        height: 100px
-        padding-top: 15px
-        padding-left: 15px
-        .media-left.media-top
-          transform: scale(0.5) translate(-80px, -80px)
+      .unread-separator
+        hr
+          width: 40%
+          border: 1px solid
+        .date
+          line-height: 3
+      textarea
+        resize: none
     .list-group
       border: 2px solid
+      max-height: $max-height-box + 4
       .list-group-item
+        padding: 0
         border-right: 0
         border-left: 0
-        height: 80px
-        &:first-child
-          border-top: 0
+        border-top: 0
+        margin-bottom: 0
+        height: $scaled-avatar-emotion-size
         &:last-child
           border-bottom: 0
-        .svg-avatar
-          transform: scale(0.5) translate(-100px, -85px)
+        &.selected
+          color: #555
+          text-decoration: none
+          background-color: #f5f5f5
+    .messages-section > .message, .list-group > .list-group-item
+      .svg-avatar
+        transform: scale($avatar-emotion-half-scale) translate(-$scaled-avatar-emotion-size, -$scaled-avatar-emotion-size)
+      .avatar
+        float: left
+        width: $scaled-avatar-emotion-size
+        height: $scaled-avatar-emotion-size
+      .info
+        padding: 5px
+        margin-left: $scaled-avatar-emotion-size
+        height: $scaled-avatar-emotion-size
+        .header
+          float: left
+          width: 100%
+          padding-bottom: 10px
+        div
+          padding: 0
+      .message-state-read
+        color: #ccc
+      .message-state-unread
+        font-weight: bold
 .facilitator-board-modal
   .facilitator-board-section
     .input-box
