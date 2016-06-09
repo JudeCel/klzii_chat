@@ -27,13 +27,7 @@ defmodule KlziiChat.Services.ReportingServiceTest do
     {:ok, session: session, session_topic: session_topic_1, facilitator: facilitator}
   end
 
-  test "Get random string" do
-    refute(ReportingService.get_random_str() == ReportingService.get_random_str())
-  end
-
   test "Get report name", %{session: session, session_topic: session_topic, facilitator: facilitator} do
-    ReportingService.create_session_topic_report(:messages, session_topic.id, facilitator.id, :pdf, false, false)
-    |> IO.inspect()
   end
 
 end
