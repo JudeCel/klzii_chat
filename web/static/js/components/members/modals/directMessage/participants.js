@@ -16,15 +16,10 @@ const Participants = React.createClass({
   render() {
     const { participants, colours } = this.props;
 
-    let array = [ ...participants ];
-    // for(var i = 0; i < 6; i++) {
-    //   array.push({ ...participants[0], id: i+2 });
-    // }
-
     return (
       <div className='list-group no-border-radius' style={{ borderColor: colours.mainBorder }}>
         {
-          array.map((participant, index) =>
+          participants.map((participant, index) =>
             <button type='button' key={ participant.id } className={ this.selectClassname(participant.id) } onClick={ this.selectParticipant.bind(this, participant) }>
               <div className='avatar'>
                 <Avatar member={ participant } specificId='direct-message-left' />
