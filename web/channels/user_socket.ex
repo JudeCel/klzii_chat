@@ -1,7 +1,7 @@
 defmodule KlziiChat.UserSocket do
   use Phoenix.Socket
   import Guardian.Phoenix.Socket
-  alias KlziiChat.Permissions.Builder, as: PermissionsBuilder
+  alias KlziiChat.Services.Permissions.Builder, as: PermissionsBuilder
   ## Channels
   channel "sessions:*", KlziiChat.SessionChannel
   channel "session_topic:*", KlziiChat.SessionTopicChannel

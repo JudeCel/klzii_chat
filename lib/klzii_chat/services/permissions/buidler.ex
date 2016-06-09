@@ -1,4 +1,4 @@
-defmodule KlziiChat.Permissions.Builder do
+defmodule KlziiChat.Services.Permissions.Builder do
   alias KlziiChat.Queries.SessionMember, as: SessionMemberQueries
   alias KlziiChat.{Repo, SessionMember}
   alias KlziiChat.Services.Permissions.Messages, as: MessagePermissions
@@ -14,7 +14,7 @@ defmodule KlziiChat.Permissions.Builder do
     buid_map(session_member, preference)
   end
 
-  defp buid_map(session_member, preference) do
+  def buid_map(session_member, preference) do
     %{
       messages: %{
         can_new_message: MessagePermissions.can_new_message(session_member),
