@@ -1,6 +1,7 @@
 defmodule KlziiChat.Services.MiniSurveysService do
-  alias KlziiChat.{Repo, MiniSurvey, MiniSurveyAnswer, SessionTopic, SessionMember, Console}
+  alias KlziiChat.{Repo, MiniSurvey, MiniSurveyAnswer, SessionTopic, SessionMember}
   alias KlziiChat.Services.{ConsoleService}
+  alias KlziiChat.Queries.SessionMemeber, as: SessionMemeberQueries
   import Ecto
   import Ecto.Query, only: [from: 2, from: 1]
 

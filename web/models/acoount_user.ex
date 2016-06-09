@@ -4,6 +4,7 @@ defmodule KlziiChat.AccountUser do
   schema "AccountUsers" do
     belongs_to :user, KlziiChat.User, [foreign_key: :UserId]
     belongs_to :account, KlziiChat.Account, [foreign_key: :AccountId]
+    has_many :session_members, KlziiChat.SessionMember, [foreign_key: :accountUserId]
     field :firstName, :string
     field :lastName, :string
     field :gender, :string
