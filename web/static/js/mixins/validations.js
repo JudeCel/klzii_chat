@@ -25,6 +25,12 @@ const validations = {
   },
   hasPermissions(parent, child) {
     return _returnPermission(this.props.currentUser.permissions, parent, child) || false;
+  },
+  isFacilitator(member) {
+    return member.role == 'facilitator';
+  },
+  isParticipant(member) {
+    return member.role == 'participant';
   }
 }
 

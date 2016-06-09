@@ -3,9 +3,11 @@ import ReactDOM             from 'react-dom';
 import Message              from './message.js';
 import Constants            from '../../constants';
 import MessagesActions      from '../../actions/messages';
+import mixins               from '../../mixins';
 import { connect }          from 'react-redux';
 
 const Messages =  React.createClass({
+  mixins: [mixins.helpers],
   initialState() {
     return {
       previousPosition: 0
@@ -53,27 +55,7 @@ const Messages =  React.createClass({
   },
   componentDidUpdate() {
     let chatMessages = ReactDOM.findDOMNode(this);
-    let scrollClass = ' add-overflow-y';
-    let hasScroll = chatMessages.className.includes(scrollClass);
-
-    if(chatMessages.scrollHeight > chatMessages.offsetHeight) {
-      if(!hasScroll) {
-        chatMessages.className += scrollClass;
-      }
-    }
-    else {
-      if(hasScroll) {
-        chatMessages.className = chatMessages.className.replace(scrollClass, '');
-      }
-    }
-
-    this.scrollToBottomOfChat();
-  },
-  scrollToBottomOfChat() {
-    if(this.shouldScrollBottom) {
-      let chatMessages = ReactDOM.findDOMNode(this);
-      chatMessages.scrollTop = chatMessages.scrollHeight;
-    }
+    this.addOrRemoveScrollbarY(chatMessages, this);
   },
   render() {
     return (
