@@ -14,6 +14,9 @@
 $emotion-avatar-min: 0
 $emotion-avatar-max: 6
 
+$avatar-emotion-half-scale: 0.5
+$scaled-avatar-emotion-size: 150px * $avatar-emotion-half-scale
+
 @for $i from $emotion-avatar-min through $emotion-avatar-max
   .emotion-avatar-#{$i}
     @include emotion-avatar(2.5s, 6)

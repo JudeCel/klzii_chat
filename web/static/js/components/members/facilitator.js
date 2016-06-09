@@ -1,8 +1,8 @@
 import React, {PropTypes} from 'react';
-import Member             from './member.js';
 import { connect }        from 'react-redux';
-import Console            from '../console/index';
+import Member             from './member.js';
 import BoardModal         from './modals/facilitatorBoard';
+import Console            from '../console/index';
 import mixins             from '../../mixins';
 
 const Facilitator = React.createClass({
@@ -11,18 +11,14 @@ const Facilitator = React.createClass({
     const className = 'innerbox';
     return hasPermissions ? className + ' cursor-pointer' : className;
   },
-  selectClass(id) {
-    const className = 'div-inline-block';
-    return this.isOwner(id) ? className + ' cursor-pointer' : className;
-  },
   render() {
-    const { facilitator, boardContent, sessionTopicId } = this.props;
+    const { facilitator, boardContent } = this.props;
     const hasPermissions = this.hasPermissions('events', 'can_board_message');
 
     return (
       <div className='facilitator-section'>
         <div className='div-inline-block'>
-          <div className={ this.selectClass(facilitator.id) } onClick={ this.isOwner(facilitator.id) && this.openSpecificModal.bind(this, 'avatar') }>
+          <div className='div-inline-block'>
             <Member key={ facilitator.id } member={ facilitator } />
           </div>
 
@@ -46,7 +42,6 @@ const Facilitator = React.createClass({
 const mapStateToProps = (state) => {
   return {
     modalWindows: state.modalWindows,
-    sessionTopicId: state.sessionTopic.current.id,
     facilitator: state.members.facilitator,
     currentUser: state.members.currentUser,
     boardContent: state.sessionTopic.current.boardMessage

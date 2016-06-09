@@ -28,12 +28,19 @@ const Avatar = React.createClass({
     }
 
     if(face) {
-      const startPos = 6*152;
-      let image = avatar.image(`/images/avatar/${type}_${this.pickFace(index, this.props.member.online)}_anim.svg`, 0, 0, startPos, 140);
-      image.addClass(`emotion-avatar-${index}`);
+      if(this.props.removeAnim) {
+        let image = avatar.image(`/images/avatar/${type}_${this.pickFace(index, this.props.member.online)}.svg`, 0, 0, 152, 140);
+        image.addClass('svg-avatar-element');
+      }
+      else {
+        const startPos = 6*152;
+        let image = avatar.image(`/images/avatar/${type}_${this.pickFace(index, this.props.member.online)}_anim.svg`, 0, 0, startPos, 140);
+        image.addClass(`svg-avatar-element emotion-avatar-${index}`);
+      }
     }
     else {
-      avatar.image(`/images/avatar/${type}_${this.padToTwo(index)}.svg`, 0, 0, 152, 140);
+      let image = avatar.image(`/images/avatar/${type}_${this.padToTwo(index)}.svg`, 0, 0, 152, 140);
+      image.addClass('svg-avatar-element');
     }
   },
   findAvatar() {
@@ -57,9 +64,9 @@ const Avatar = React.createClass({
   },
   drawLabelAndText(avatar) {
     const { username, colour } = this.props.member;
-    avatar.rect(25, 125, 100, 20, 1, 1).attr({fill: colour});
-    avatar.text(76, 138, username).attr({fill: '#fff', 'font-size': '75%', 'text-anchor': 'middle'});
-    avatar.rect(30, 130, 90, 3, 5, 5).attr({fill: '#ccc', opacity: 0.2});
+    avatar.rect(25, 125, 100, 20, 1, 1).attr({fill: colour}).addClass('svg-avatar-label');
+    avatar.text(76, 138, username).attr({fill: '#fff', 'font-size': '75%', 'text-anchor': 'middle'}).addClass('svg-avatar-label');
+    avatar.rect(30, 130, 90, 3, 5, 5).attr({fill: '#ccc', opacity: 0.2}).addClass('svg-avatar-label');
   },
   componentDidMount() {
     const { avatarData, username, sessionTopicContext } = this.props.member;
@@ -92,7 +99,7 @@ const Avatar = React.createClass({
   },
   render() {
     return (
-      <svg id={ this.pickId() } width='150px' />
+      <svg id={ this.pickId() } className='svg-avatar' width='150px' />
     )
   }
 });

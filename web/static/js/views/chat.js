@@ -7,7 +7,8 @@ import Input                from '../components/messages/input.js';
 import Facilitator          from '../components/members/facilitator.js';
 import Participants         from '../components/members/participants.js';
 import ChangeAvatarModal    from '../components/members/modals/changeAvatar/index.js';
-import SessionTopicSelect          from '../components/sessionTopics/select.js';
+import DirectMessageModal   from '../components/members/modals/directMessage/index.js';
+import SessionTopicSelect   from '../components/sessionTopics/select.js';
 import Resources            from '../components/resources/resources.js';
 import HeaderLinks          from '../components/header/links.js';
 
@@ -19,9 +20,6 @@ var ToastMessageFactory     = React.createFactory(ToastMessage.animation);
 
 const ChatView = React.createClass({
   mixins: [notificationMixin],
-  getInitialState() {
-    return {};
-  },
   styles() {
     const { colours } = this.props;
     return {
@@ -48,12 +46,6 @@ const ChatView = React.createClass({
       this.props.dispatch(sessionTopicActions.selectCurrent(nextProps.socket, nextProps.session_topics));
     }
   },
-  openAvatarModal() {
-    this.setState({ openAvatarModal: true });
-  },
-  closeAvatarModal() {
-    this.setState({ openAvatarModal: false });
-  },
   render() {
     const { error, sessionReady, sessionTopicReady } = this.props;
 
@@ -75,14 +67,17 @@ const ChatView = React.createClass({
 
           <div className='row room-outerbox'>
             <div className='col-md-12 room-section' style={ this.styles() }>
-              <ChangeAvatarModal show={ this.state.openAvatarModal } onHide={ this.closeAvatarModal } />
+              <ChangeAvatarModal />
+              <DirectMessageModal />
+
               <div className='row'>
                 <div className='col-md-8'>
                   <div className='row'>
-                    <Facilitator openAvatarModal={ this.openAvatarModal } />
+                    <Facilitator />
                   </div>
+
                   <div className='row'>
-                    {<Participants openAvatarModal={ this.openAvatarModal } />}
+                    <Participants />
                   </div>
                 </div>
 
