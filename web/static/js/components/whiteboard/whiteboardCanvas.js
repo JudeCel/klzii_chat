@@ -472,7 +472,7 @@ const WhiteboardCanvas = React.createClass({
     var dx = coordsMove.x - this.coords.x;
     var dy = coordsMove.y - this.coords.y;
 
-    if(!this.activeShape && this.moveDistance(dx, dy) > 5) {
+    if(!this.activeShape && this.moveDistance(dx, dy) > 10) {
       if (this.mode == this.ModeEnum.scribble) {
         this.activeShape = this.snap.polyline([]).transform('r0.1');
         this.setStyle(this.activeShape, this.fillNone, this.strokeWidth, this.strokeColour);
