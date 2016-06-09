@@ -11,7 +11,7 @@ const BoardModal = React.createClass({
     return { content: this.props.boardContent };
   },
   shouldComponentUpdate(nextProps, nextState) {
-    return this.state.content === nextState.content && nextProps.hasPermissions;
+    return this.state.content === nextState.content && nextProps.permission;
   },
   onOpen(e) {
     this.onEnterModal(e);
