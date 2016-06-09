@@ -1,7 +1,7 @@
 defmodule KlziiChat.SessionChannel do
   use KlziiChat.Web, :channel
   alias KlziiChat.Services.{SessionService, SessionMembersService}
-  alias KlziiChat.Permissions.Builder, as: PermissionsBuilder
+  alias KlziiChat.Services.Permissions.Builder, as: PermissionsBuilder
   alias KlziiChat.{Presence, SessionMembersView}
   import(KlziiChat.Authorisations.Channels.Session, only: [authorized?: 2])
   import(KlziiChat.Helpers.SocketHelper, only: [get_session_member: 1])
