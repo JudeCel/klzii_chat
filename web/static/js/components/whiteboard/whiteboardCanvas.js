@@ -350,11 +350,14 @@ const WhiteboardCanvas = React.createClass({
     this.activeStrokeColour = 'red';
   },
   prepareNewElement(el) {
-    el.ftSetupControls();
-    el.ftSetSelectedCallback(this.shapeSelected);
-    el.ftSetTransformedCallback(this.shapeTransformed);
-    el.ftSetFinishedTransformCallback(this.shapeFinishedTransform);
-    el.ftSetStartedTransformCallback(this.shapeStartedTransform);
+    if (this.shouldCreateHandles(el)) {
+      el.canEdit = true;
+      el.ftSetupControls();
+      el.ftSetSelectedCallback(this.shapeSelected);
+      el.ftSetTransformedCallback(this.shapeTransformed);
+      el.ftSetFinishedTransformCallback(this.shapeFinishedTransform);
+      el.ftSetStartedTransformCallback(this.shapeStartedTransform);
+    }
   },
   addInputControl(el) {
     el.ftSetupControls();
@@ -422,7 +425,10 @@ const WhiteboardCanvas = React.createClass({
   handleObjectCreated() {
     if (this.activeShape && !this.activeShape.created) {
       this.activeShape.created = true;
-
+      //created shape locally
+      if (!this.activeShape.permissions) {
+        this.activeShape.permissions = {can_edit: true, can_delete: true};
+      }
       this.prepareNewElement(this.activeShape);
       var temp = this.activeShape;
       this.sendObjectData('draw');
