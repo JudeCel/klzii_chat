@@ -1,13 +1,13 @@
-import Reply      from './reply';
-import Delete     from './delete';
-import Edit       from './edit';
-import ThumbsUp   from './thumbsUp';
-import Star       from './star';
+import ReplyMessage  from './reply';
+import DeleteMessage from './delete';
+import EditMessage   from './edit';
+import RateMessage   from './rate';
+import StarMessage   from './star';
 
 export default {
-  Reply,
-  Delete,
-  Edit,
-  ThumbsUp,
-  Star
+  ReplyMessage,
+  DeleteMessage,
+  EditMessage,
+  RateMessage,
+  StarMessage
 };

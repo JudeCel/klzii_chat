@@ -3,21 +3,23 @@ import { connect }          from 'react-redux';
 import Constants            from '../../../constants';
 import MessagesActions      from '../../../actions/messages';
 
-const StarMessage = React.createClass({
-  starMessage() {
+const RateMessage = React.createClass({
+  rateMessage() {
     const { dispatch, channel, message } = this.props;
-    dispatch(MessagesActions.messageStar(channel, { id: message.id }));
+    dispatch(MessagesActions.thumbsUp(channel, { id: message.id }));
   },
   setClass() {
-    const className = 'icon-star';
-    return this.props.message.star ? className : className + '-empty';
+    const className = 'icon-thumbs-up';
+    return this.props.message.has_voted ? className + ' active' : className;
   },
   render() {
-    const { permission } = this.props;
+    const { message, permission } = this.props;
 
     if(permission) {
       return(
-        <i className={ this.setClass() } onClick={ this.starMessage } />
+        <i className={ this.setClass() } onClick={ this.rateMessage } >
+          <small>{ message.votes_count }</small>
+        </i>
       )
     }
     else {
@@ -32,4 +34,4 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps)(StarMessage);
+export default connect(mapStateToProps)(RateMessage);

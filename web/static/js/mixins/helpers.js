@@ -25,6 +25,28 @@ const helpers = {
       return {...avatarData, ...context};
     }
     return avatarData
+  },
+  formatDate(moment, date) {
+    return moment(new Date(date)).format('ddd h:mm D/YY');
+  },
+  addOrRemoveScrollbarY(element, _this) {
+    let scrollClass = ' add-overflow-y';
+    let hasScroll = element.className.includes(scrollClass);
+
+    if(element.scrollHeight > element.offsetHeight) {
+      if(!hasScroll) {
+        element.className += scrollClass;
+      }
+    }
+    else {
+      if(hasScroll) {
+        element.className = element.className.replace(scrollClass, '');
+      }
+    }
+
+    if(_this.shouldScrollBottom) {
+      element.scrollTop = element.scrollHeight;
+    }
   }
 };
 

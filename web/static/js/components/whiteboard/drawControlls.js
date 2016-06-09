@@ -28,7 +28,6 @@
 		}
 
 		Element.prototype.ftUpdateRotateHandler = function() {
-			var box = this.getBBox();
 			var bb = getShapeSize(this);
 			if (!this.rotateDragger) {
 				this.rotateDragger = this.paper.image("/images/svgControls/rotate.png", bb.posX, bb.posY, ftOption.handleRadius*2, ftOption.handleRadius*2);
@@ -172,7 +171,9 @@
 			if (this.data( "handlesGroup"))	this.data( "handlesGroup").remove();
 			this.data( "bbT" ) && this.data("bbT").remove();
 			this.data( "bb" ) && this.data("bb").remove();
-			this.click( function() { this.ftCreateHandles() } ) ;
+			if (this.canEdit) {
+				this.click( function() { this.ftCreateHandles() } ) ;
+			}
 			if (this.scaleXControl) this.scaleXControl.remove();
 			if (this.scaleYControl) this.scaleYControl.remove();
 			this.scaleXControl = null;
@@ -593,23 +594,24 @@
 		var splitParams = matr.split();
 
 		var mainDBB = shape.translateDragger.getBBox();
+		var box = shape.getBBox();
 
 		var rVector = rotateVector(1000, 0, splitParams.rotate + 90);
-		var pHorizontal = "M" + mainDBB.cx + " " + mainDBB.cy + " L" + (mainDBB.cx + rVector[0]) + " " + (mainDBB.cy + rVector[1]);
+		var pHorizontal = "M" + box.cx + " " + box.cy + " L" + (box.cx + rVector[0]) + " " + (box.cy + rVector[1]);
 		var intersectLine = shape.paper.path(pHorizontal, 0, 0)
-			.attr({ fill: "none", stroke: ftOption.handleFill, strokeDasharray: ftOption.handleStrokeDash });
+			.attr({ fill: "none", stroke: ftOption.handleFill});
 
 		var rVectorH = rotateVector(0, 1000, splitParams.rotate + 90);
-		var pVertical = "M" + mainDBB.cx + " " + mainDBB.cy + " L" + (mainDBB.cx + rVectorH[0]) + " " + (mainDBB.cy + rVectorH[1]);
+		var pVertical = "M" + box.cx + " " + box.cy + " L" + (box.cx + rVectorH[0]) + " " + (box.cy + rVectorH[1]);
 		var intersectLineH = shape.paper.path(pVertical, 0, 0)
-			.attr({ fill: "none", stroke: ftOption.handleFill, strokeDasharray: ftOption.handleStrokeDash });
+			.attr({ fill: "none", stroke: ftOption.handleFill });
 
 		var rVectorHDown = rotateVector(0, 1000, splitParams.rotate);
-		var pVerticalDown = "M" + mainDBB.cx + " " + mainDBB.cy + " L" + (mainDBB.cx + rVectorHDown[0]) + " " + (mainDBB.cy + rVectorHDown[1]);
+		var pVerticalDown = "M" + box.cx + " " + box.cy + " L" + (box.cx + rVectorHDown[0]) + " " + (box.cy + rVectorHDown[1]);
 		var intersectLineHDown = shape.paper.path(pVerticalDown, 0, 0)
-			.attr({ fill: "none", stroke: ftOption.handleFill, strokeDasharray: ftOption.handleStrokeDash });
+			.attr({ fill: "none", stroke: ftOption.handleFill });
 
-		var mSize = {};
+		var mSize;
 		if (shape.data("bbT")) {
 			var transformedPath = Snap.path.map(shape.data("bbT"), shape.data("bbT").transform().localMatrix);
 			var intersects = Snap.path.intersection(transformedPath, intersectLine);
@@ -617,25 +619,31 @@
 			var intersectsVDown = Snap.path.intersection(transformedPath, intersectLineHDown);
 
 			// depending on shape size/angle and form vertical size up and down can vary a bit
-			var nxDown = intersectsVDown[0].x?intersectsVDown[0].x:0;
-			var nyDown = intersectsVDown[0].y?intersectsVDown[0].y:0;
+			var minimalSize = 5;
+			var nxDown = intersectsVDown.length ? intersectsVDown[0].x : 0;
+			var nyDown = intersectsVDown.length ? intersectsVDown[0].y : minimalSize;
 
-			var nx = intersects.length?intersects[0].x:0;
-			var ny = intersects.length?intersects[0].y:0;
+			var nx = intersects.length ? intersects[0].x : 0;
+			var ny = intersects.length ? intersects[0].y : 0;
 
-			var nxV = intersectsV.length?intersectsV[0].x:0;
-			var nyV = intersectsV.length?intersectsV[0].y:0;
+			var nxV = intersectsV.length ? intersectsV[0].x : 0;
+			var nyV = intersectsV.length ? intersectsV[0].y : 0;
+
+			var nHeight = Snap.calcDistance(mainDBB.cx, mainDBB.cy, nx, ny) * 2;
+			var nWidth = Snap.calcDistance(mainDBB.cx, mainDBB.cy, nxV, nyV) * 2;
+			var nHeightDown = Snap.calcDistance(mainDBB.cx, mainDBB.cy, nxDown, nyDown) * 2;
 
 			mSize = {
-				height: Snap.calcDistance(mainDBB.cx, mainDBB.cy, nx, ny) * 2,
-				width: Snap.calcDistance(mainDBB.cx, mainDBB.cy, nxV, nyV) * 2,
-				heightDown: Snap.calcDistance(mainDBB.cx, mainDBB.cy, nxDown, nyDown) * 2,
-				posX: intersects[0].x,
-				posY: intersects[0].y
+				height: nHeight,
+				width: nWidth,
+				heightDown: nHeightDown,
+				posX: nx,
+				posY: ny
 			};
-		} else {
-			var box = shape.getBBox();
-			mSize = {width: box.width, height: box.height};
+		}
+
+		if (!mSize) {
+			mSize = {width: box.width, height: box.height, posX: mainDBB.cx, posY: mainDBB.cy - box.height/2};
 		}
 
 		intersectLine.remove();
