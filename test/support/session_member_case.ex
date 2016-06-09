@@ -6,22 +6,7 @@ defmodule KlziiChat.SessionMemberCase do
     user = User.seedChangeset(%User{}, %{ email: "dainsi@gmail.com", encryptedPassword: "jee" }) |> Repo.insert!
     account = Account.changeset(%Account{}, %{name: "cool account"}) |> Repo.insert!
 
-    subscription_preference_data = %{
-      additionalContactListCount: 1,
-      surveyCount: 1,
-      sessionCount: 2,
-      contactListCount: 2,
-      contactListMemberCount: 5,
-      participantCount: 2,
-      observerCount: 2,
-      paidSmsCount: 10,
-      priority: 2,
-      chargebeePlanId: "senior_yearly",
-      related: "senior_yearly"
-    }
-
-
-    subscription_preference_last_version =%{
+    subscription_preference_data =%{
       sessionCount: 8,
       contactListCount: 4,
       recruiterContactListCount: 4,
@@ -34,7 +19,8 @@ defmodule KlziiChat.SessionMemberCase do
       accessKlzziForum: true,
       accessKlzziFocus: true,
       canInviteObserversToSession: true,
-      paiedSmsCount: 75,
+      paidSmsCount: 75,
+      surveyCount: 20,
       discussionGuideTips: true,
       whiteboardFunctionality: true,
       uploadToGallery: true,
@@ -43,22 +29,22 @@ defmodule KlziiChat.SessionMemberCase do
       customEmailInvitationAndReminderMessages: true,
       topicCount: -1,
       priority: 1,
-      related: 'senior_yearly'
+      chargebeePlanId: "senior_yearly"
     }
 
     subscription_plan = SubscriptionPlan.changeset(%SubscriptionPlan{},
       subscription_preference_data
     ) |> Repo.insert!
 
-   subscription_preference = Ecto.build_assoc(account, :subscription,
+   {:ok, _} = Ecto.build_assoc(account, :subscription,
       accountId: account.id,
       subscriptionPlanId: subscription_plan.id,
       planId: "some plan id",
       customerId: "some ID",
       subscriptionId: "some ID"
     ) |> Repo.insert!
-      |> Ecto.build_assoc(:subscription_preference, data: subscription_preference_last_version)
-      |> Repo.insert!
+      |> Ecto.build_assoc(:subscription_preference, data: subscription_preference_data)
+      |> Repo.insert
 
     account_user = Ecto.build_assoc(account, :account_users, user: user,
       firstName: "Dainis",

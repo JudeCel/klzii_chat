@@ -20,7 +20,10 @@ defmodule KlziiChat.Services.Permissions.Builder do
       messages: %{
         can_new_message: MessagePermissions.can_new_message(session_member),
         can_board_message: SessionTopicPermissions.can_board_message(session_member),
-        can_new_shape: WhiteboardPermissions.can_new_shape(session_member),
+      },
+      whiteboard: %{
+        can_create: Validations.has_allowed(preference, :whiteboardFunctionality),
+        can_new_shape: WhiteboardPermissions.can_new_shape(session_member)
       },
       resources: %{
         can_upload: ResourcePermissions.can_upload(session_member, preference)
