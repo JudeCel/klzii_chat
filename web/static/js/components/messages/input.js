@@ -1,14 +1,14 @@
 import React, {PropTypes} from 'react';
 import { connect }        from 'react-redux';
-import Actions            from '../../actions/currentInput';
-import MessagesActions    from '../../actions/messages';
 import TextareaAutosize   from 'react-autosize-textarea';
 import EmotionPicker      from './emotionPicker';
+import InputActions       from '../../actions/currentInput';
+import MessagesActions    from '../../actions/messages';
 
 const Input = React.createClass({
   handleChange(e) {
     const { dispatch } = this.props;
-    dispatch(Actions.changeValue(e.target.value));
+    dispatch(InputActions.changeValue(e.target.value));
   },
   onKeyDown(e) {
     if((e.keyCode == 10 || e.keyCode == 13) && (e.ctrlKey || e.metaKey)) {
@@ -22,10 +22,11 @@ const Input = React.createClass({
     }
   },
   defaultProps() {
-    const { value } = this.props;
+    const { currentInput } = this.props;
+
     return {
       onKeyDown: this.onKeyDown,
-      value: value,
+      value: currentInput.value,
       type: 'text',
       onChange: this.handleChange,
       className: 'form-control',
@@ -34,7 +35,7 @@ const Input = React.createClass({
     };
   },
   render() {
-    const { permissions, inputPrefix } = this.props;
+    const { permissions, currentInput } = this.props;
 
     if(permissions && permissions.events.can_new_message) {
       return (
@@ -42,7 +43,7 @@ const Input = React.createClass({
           <div className='form-group'>
             <div className='input-group input-group-lg'>
               <div className='input-group-addon no-border-radius emotion-picker-section'><EmotionPicker /></div>
-              <div className='input-group-addon no-border-radius input-prefix-section'>{ inputPrefix }</div>
+            <div className='input-group-addon no-border-radius input-prefix-section'>{ currentInput.inputPrefix }</div>
               <TextareaAutosize { ...this.defaultProps() } />
               <div className='input-group-addon no-border-radius cursor-pointer' onClick={ this.sendMessage }>POST</div>
             </div>
@@ -58,8 +59,6 @@ const Input = React.createClass({
 
 const mapStateToProps = (state) => {
   return {
-    value: state.currentInput.value,
-    inputPrefix: state.currentInput.inputPrefix,
     permissions: state.members.currentUser.permissions,
     currentInput: state.currentInput,
     topicChannel: state.sessionTopic.channel

@@ -350,11 +350,14 @@ const WhiteboardCanvas = React.createClass({
     this.activeStrokeColour = 'red';
   },
   prepareNewElement(el) {
-    el.ftSetupControls();
-    el.ftSetSelectedCallback(this.shapeSelected);
-    el.ftSetTransformedCallback(this.shapeTransformed);
-    el.ftSetFinishedTransformCallback(this.shapeFinishedTransform);
-    el.ftSetStartedTransformCallback(this.shapeStartedTransform);
+    if (this.shouldCreateHandles(el)) {
+      el.canEdit = true;
+      el.ftSetupControls();
+      el.ftSetSelectedCallback(this.shapeSelected);
+      el.ftSetTransformedCallback(this.shapeTransformed);
+      el.ftSetFinishedTransformCallback(this.shapeFinishedTransform);
+      el.ftSetStartedTransformCallback(this.shapeStartedTransform);
+    }
   },
   addInputControl(el) {
     el.ftSetupControls();
@@ -422,7 +425,10 @@ const WhiteboardCanvas = React.createClass({
   handleObjectCreated() {
     if (this.activeShape && !this.activeShape.created) {
       this.activeShape.created = true;
-
+      //created shape locally
+      if (!this.activeShape.permissions) {
+        this.activeShape.permissions = {can_edit: true, can_delete: true};
+      }
       this.prepareNewElement(this.activeShape);
       var temp = this.activeShape;
       this.sendObjectData('draw');
@@ -466,7 +472,7 @@ const WhiteboardCanvas = React.createClass({
     var dx = coordsMove.x - this.coords.x;
     var dy = coordsMove.y - this.coords.y;
 
-    if(!this.activeShape && this.moveDistance(dx, dy) > 5) {
+    if(!this.activeShape && this.moveDistance(dx, dy) > 10) {
       if (this.mode == this.ModeEnum.scribble) {
         this.activeShape = this.snap.polyline([]).transform('r0.1');
         this.setStyle(this.activeShape, this.fillNone, this.strokeWidth, this.strokeColour);

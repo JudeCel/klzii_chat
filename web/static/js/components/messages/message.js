@@ -1,87 +1,43 @@
-import React, { PropTypes }       from 'react';
-import moment                     from 'moment';
-import MessageActions             from './actions';
-import Avatar                     from '../members/avatar.js';
+import React, { PropTypes } from 'react';
+import moment               from 'moment';
+import MessageActions       from './actions';
+import mixins               from '../../mixins';
 
-const { Edit, Delete, Star, ThumbsUp, Reply } = MessageActions
+const { EditMessage, DeleteMessage, StarMessage, RateMessage, ReplyMessage } = MessageActions;
 
 const Message = React.createClass({
-  formattedTime(message) {
-    return moment(new Date(message.time)).format('ddd h:mm D/YY');
+  mixins: [mixins.helpers],
+  mediaImagePosition(message) {
+    const className = 'emotion-chat-section push-image ';
+    return className + (message.replies.length > 0 ? 'media-top' : 'media-bottom');
   },
-  thumbsUpDate() {
-    const { message } = this.props;
-
-    return {
-      id: message.id,
-      votes_count: message.votes_count,
-      has_voted: message.has_voted
-    };
+  bodyClassname(message) {
+    const className = 'body-section col-md-12';
+    return className + (message.session_member.role == 'facilitator' ? ' facilitator' : ' participant');
   },
-  editData() {
-    const { message } = this.props;
-    return {
-      id: message.id,
-      body: message.body,
-      emotion: message.emotion
-    };
-  },
-  replyData() {
-    const { message } = this.props;
-
-    return {
-      id: message.id
-    };
-  },
-  deleteData() {
-    const { message } = this.props;
-
-    return {
-      id: message.id
-    };
-  },
-  starData() {
-    const { message } = this.props;
-
-    return {
-      id: message.id,
-      star: message.star
-    };
-  },
-  mediaImagePosition() {
-    const { message } = this.props;
-
-    if(message.replies.length > 0) {
-      return 'emotion-chat-section media-top push-image-down';
-    }
-    else {
-      return 'emotion-chat-section media-bottom push-image-up';
-    }
-  },
-  bodyClassname() {
-    let className = 'body-section col-md-12';
-    const { message } = this.props;
-
-    if(message.session_member.role == 'facilitator') {
-      className += ' facilitator';
-    }
-    else {
-      className += ' participant';
+  shouldShowRepliedMessages(message) {
+    if(message.replyId) {
+      return;
     }
 
-    return className;
-  },
-  isRepliedMessage() {
-    return this.props.message.replyId ? true : false;
+    return (
+      <div className='col-md-12 remove-side-margin pull-right'>
+        {
+          message.replies.map((reply) =>
+            <Message key={ reply.id } message={ reply } />
+          )
+        }
+      </div>
+    )
   },
   render() {
-    const { replyMessage, messageStar, message, deleteMessage, editMessage, thumbsUp } = this.props;
+    const { message } = this.props;
     const { can_edit, can_delete, can_star, can_vote, can_reply } = message.permissions;
 
     return (
       <div className='message-section media'>
-        <div className={ this.mediaImagePosition() }>
-          <div className={"emotion-chat-" + message.emotion} aria-hidden='true' style={{ backgroundColor: message.session_member.colour }}/>
+        <div className={ this.mediaImagePosition(message) }>
+          <div className={ 'emotion-chat-' + message.emotion } aria-hidden='true' style={{ backgroundColor: message.session_member.colour }}/>
         </div>
 
         <div className='media-body'>
@@ -89,49 +45,25 @@ const Message = React.createClass({
             <span className='pull-left' style={{ color: message.session_member.colour }}>
               { message.session_member.username }
             </span>
+
             <span className='pull-right'>
-              <small>{ this.formattedTime(message) }</small>
+              <small>{ this.formatDate(moment, message.time) }</small>
             </span>
           </div>
 
-          <div className={ this.bodyClassname() }>
-            <p className='text-break-all' dangerouslySetInnerHTML={{ __html: message.body }}/>
+          <div className={ this.bodyClassname(message) }>
+            <p className='text-break-all'>{ message.body }</p>
           </div>
 
           <div className='action-section col-md-12 text-right'>
-            <Star data={ this.starData() } can={ can_star} onClick={ messageStar } />
-            <Reply data={ this.replyData() } can={ can_reply } onClick={ replyMessage } />
-            <ThumbsUp data={ this.thumbsUpDate() } can={ can_vote } onClick={ thumbsUp } />
-            <Edit data={ this.editData() } can={ can_edit } onClick={ editMessage } />
-            <Delete data={ this.deleteData() } can={ can_delete } onClick={ deleteMessage } />
+            <StarMessage    permission={ can_star }   message={ message } />
+            <ReplyMessage   permission={ can_reply }  message={ message } />
+            <RateMessage    permission={ can_vote }   message={ message } />
+            <EditMessage    permission={ can_edit }   message={ message } />
+            <DeleteMessage  permission={ can_delete } message={ message } />
           </div>
 
-          {
-            (() => {
-              if(!this.isRepliedMessage()) {
-                return (
-                  <div className='col-md-12 remove-side-margin pull-right'>
-                    {
-                      message.replies.map((reply) => {
-                        return (
-                          <Message
-                            message={ reply }
-                            deleteMessage={ deleteMessage }
-                            messageStar={ messageStar }
-                            editMessage={ editMessage }
-                            replyMessage={ replyMessage }
-                            thumbsUp={ thumbsUp }
-                            isReply= { false }
-                            key={ reply.id }
-                          />
-                        )
-                      })
-                    }
-                  </div>
-                )
-              }
-            })()
-          }
+          { this.shouldShowRepliedMessages(message) }
         </div>
       </div>
     )

@@ -5,14 +5,13 @@ const initialState = {
   resources: false,
   avatar: false,
   facilitatorBoard: false,
-  reports: false
+  data: {}
 };
 
 export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
     case Constants.OPEN_MODAL_WINDOW:
-      let newState = {};
-      newState[action.modal] = true;
+      let newState = { [action.modal]: true, data: action.data || {} };
       return { ...state, ...newState };
     case Constants.CLOSE_ALL_MODAL_WINDOWS:
       return initialState;
