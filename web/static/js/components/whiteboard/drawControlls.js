@@ -172,7 +172,9 @@
 			if (this.data( "handlesGroup"))	this.data( "handlesGroup").remove();
 			this.data( "bbT" ) && this.data("bbT").remove();
 			this.data( "bb" ) && this.data("bb").remove();
-			this.click( function() { this.ftCreateHandles() } ) ;
+			if (this.canEdit) {
+				this.click( function() { this.ftCreateHandles() } ) ;
+			}
 			if (this.scaleXControl) this.scaleXControl.remove();
 			if (this.scaleYControl) this.scaleYControl.remove();
 			this.scaleXControl = null;
