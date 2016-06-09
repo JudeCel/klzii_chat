@@ -10,7 +10,7 @@ const modalWindows = {
   showSpecificModal(key) {
     return this.props.modalWindows[key];
   },
-  openSpecificModal(key) {
+  openSpecificModal(key, data) {
     const { modalWindows, dispatch } = this.props;
 
     if(!modalWindows) {
@@ -26,7 +26,7 @@ const modalWindows = {
       }
     }
 
-    dispatch({ type: Constants.OPEN_MODAL_WINDOW, modal: key });
+    dispatch({ type: Constants.OPEN_MODAL_WINDOW, modal: key, data: data });
   },
   closeAllModals() {
     this.props.dispatch({ type: Constants.CLOSE_ALL_MODAL_WINDOWS });
