@@ -14,6 +14,7 @@ defmodule KlziiChat.Services.Permissions.Builder do
     buid_map(session_member, preference)
   end
 
+  @spec buid_map(Map.t, Map.t) :: Map.t
   def buid_map(session_member, preference) do
     %{
       messages: %{
@@ -30,6 +31,7 @@ defmodule KlziiChat.Services.Permissions.Builder do
     }
   end
 
+  @spec get_subscription_preference(Integer.t) :: Map.t
   defp get_subscription_preference(session_member_id) do
     SessionMemberQueries.get_subscription_preference(session_member_id)
       |> Repo.one
