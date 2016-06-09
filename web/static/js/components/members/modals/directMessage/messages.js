@@ -22,6 +22,17 @@ const Messages = React.createClass({
   sendMessage() {
     console.error(this.state.text);
   },
+  addSeperator(messages) {
+    if(messages.length > 0) {
+      return (
+        <div className='unread-separator text-center'>
+          <hr className='pull-left' style={ this.borderColor() } />
+          <span className='date'>{ this.formatDate(moment, messages[0].createdAt) }</span>
+          <hr className='pull-right' style={ this.borderColor() } />
+        </div>
+      )
+    }
+  },
   getInitialState() {
     return { text: '' };
   },
@@ -54,11 +65,7 @@ const Messages = React.createClass({
           )
         }
 
-        <div className='unread-separator text-center'>
-          <hr className='pull-left' style={ this.borderColor() } />
-          <span className='date'>{ this.formatDate(moment, messages.unread[0].createdAt) }</span>
-          <hr className='pull-right' style={ this.borderColor() } />
-        </div>
+        { this.addSeperator(messages.unread) }
 
         {
           messages.unread.map((message) =>
