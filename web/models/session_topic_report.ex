@@ -4,7 +4,7 @@ defmodule KlziiChat.SessionTopicReport do
   schema "SessionTopicsReports" do
     belongs_to :session_member, KlziiChat.SessionMember, [foreign_key: :sessionMemberId]
     belongs_to :session_topic, KlziiChat.SessionTopic, [foreign_key: :sessionTopicId]
-    has_one :resource, KlziiChat.Resource, [foreign_key: :resourceId]
+    belongs_to :resource, KlziiChat.Resource, [foreign_key: :resourceId]
     field :status, :string, default: "progress"
     field :message, :string
     timestamps [inserted_at: :createdAt, updated_at: :updatedAt]
