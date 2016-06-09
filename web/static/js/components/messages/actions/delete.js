@@ -1,19 +1,33 @@
-import React, { PropTypes, Component } from 'react';
+import React, { PropTypes } from 'react';
+import { connect }          from 'react-redux';
+import Constants            from '../../../constants';
+import MessagesActions      from '../../../actions/messages';
 
-class Delete extends Component {
+const DeleteMessage = React.createClass({
+  deleteMessage() {
+    const { message, dispatch, channel } = this.props;
+
+    dispatch(MessagesActions.deleteMessage(channel, { id: message.id, replyId: message.replyId }));
+    dispatch({ type: Constants.SET_INPUT_DEFAULT_STATE });
+  },
   render() {
-    const { id } = this.props.data;
-    const { can, onClick } = this.props;
+    const { permission } = this.props;
 
-    if(can) {
+    if(permission) {
       return(
-        <i className='icon-cancel-empty' onClick={ onClick } data-id={ id } />
+        <i className='icon-cancel-empty' onClick={ this.deleteMessage } />
       )
     }
     else {
       return(false)
     }
   }
-}
+});
 
-export default Delete;
+const mapStateToProps = (state) => {
+  return {
+    channel: state.sessionTopic.channel
+  };
+};
+
+export default connect(mapStateToProps)(DeleteMessage);
