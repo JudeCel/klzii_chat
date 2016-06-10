@@ -4,8 +4,10 @@ import TextareaAutosize   from 'react-autosize-textarea';
 import EmotionPicker      from './emotionPicker';
 import InputActions       from '../../actions/currentInput';
 import MessagesActions    from '../../actions/messages';
+import mixins             from '../../mixins';
 
 const Input = React.createClass({
+  mixins: [mixins.validations],
   handleChange(e) {
     const { dispatch } = this.props;
     dispatch(InputActions.changeValue(e.target.value));
@@ -35,9 +37,9 @@ const Input = React.createClass({
     };
   },
   render() {
-    const { permissions, currentInput } = this.props;
+    const { currentInput } = this.props;
 
-    if(permissions && permissions.events.can_new_message) {
+    if(this.hasPermission(['messages', 'can_new_message'])) {
       return (
         <div className='input-section'>
           <div className='form-group'>
@@ -59,7 +61,7 @@ const Input = React.createClass({
 
 const mapStateToProps = (state) => {
   return {
-    permissions: state.members.currentUser.permissions,
+    currentUser: state.members.currentUser,
     currentInput: state.currentInput,
     topicChannel: state.sessionTopic.channel
   }

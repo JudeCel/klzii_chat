@@ -7,11 +7,9 @@ defmodule KlziiChat.Account do
     has_many :users, through: [:account_users, :user]
     has_many :resources, KlziiChat.Resource, [foreign_key: :accountId]
     has_many :topics, KlziiChat.Topic, [foreign_key: :accountId]
+    has_one :subscription, KlziiChat.Subscription, [foreign_key: :accountId]
     timestamps [inserted_at: :createdAt, updated_at: :updatedAt]
   end
-
-  @required_fields ~w(name)
-  @optional_fields ~w()
 
   @doc """
   Creates a changeset based on the `model` and `params`.
@@ -21,7 +19,7 @@ defmodule KlziiChat.Account do
   """
   def changeset(model, params \\ %{}) do
     model
-      |> cast(params, (@required_fields ++  @optional_fields))
+      |> cast(params, [:name])
       |> unique_constraint(:name, name: :unique_name)
   end
 end

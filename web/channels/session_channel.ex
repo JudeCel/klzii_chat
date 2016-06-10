@@ -1,6 +1,11 @@
 defmodule KlziiChat.SessionChannel do
   use KlziiChat.Web, :channel
+<<<<<<< HEAD
   alias KlziiChat.Services.{SessionService, SessionMembersService, ReportingService}
+=======
+  alias KlziiChat.Services.{SessionService, SessionMembersService}
+  alias KlziiChat.Services.Permissions.Builder, as: PermissionsBuilder
+>>>>>>> 79457fda83593fc8cf1d77d6afa1088e9a93735c
   alias KlziiChat.{Presence, SessionMembersView}
   import(KlziiChat.Authorisations.Channels.Session, only: [authorized?: 2])
   import(KlziiChat.Helpers.SocketHelper, only: [get_session_member: 1])
@@ -50,7 +55,8 @@ defmodule KlziiChat.SessionChannel do
     case SessionMembersService.update_member(get_session_member(socket).id, params) do
       {:ok, session_member} ->
         broadcast(socket, "update_member", SessionMembersView.render("member.json", member: session_member))
-        push(socket, "self_info", SessionMembersView.render("current_member.json", member: session_member))
+        permissions = PermissionsBuilder.member_permissions(session_member.id)
+        push(socket, "self_info", SessionMembersView.render("current_member.json", member: session_member, permissions_map: permissions))
       {:error, reason} ->
         {:error, %{reason: reason}}
     end
