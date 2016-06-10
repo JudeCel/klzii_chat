@@ -1,48 +1,27 @@
 import React, {PropTypes} from 'react';
 import { connect }        from 'react-redux';
+import ReportIcon         from './icon';
 import ReportsActions     from '../../actions/reports';
 
 const ReportsIndex = React.createClass({
   getInitialState() {
-    return { format: 'pdf', facilitator: true }
+    return { format: 'pdf', facilitator: true };
   },
   onChange(key, value) {
     this.setState({ [key]: value });
   },
-  shouldShowLoading(color, className) {
-    // Needs correct check
-    if(this.props.loading) {
-      return `${ color } fa fa-spinner fa-pulse fa-2x fa-fw`;
-    }
-    else {
-      return `${ color } ${ className }`;
-    }
-  },
-  selectCorrectTypeIcon() {
-    switch (this.state.format) {
-      case 'pdf':
-        return this.shouldShowLoading('font-color-red', 'cursor-pointer fa fa-file-pdf-o fa-2x');
-        break;
-      case 'csv':
-        return this.shouldShowLoading('font-color-green', 'cursor-pointer fa fa-file-excel-o fa-2x');
-        break;
-      case 'txt':
-        return this.shouldShowLoading('font-color-blue', 'cursor-pointer fa fa-file-code-o fa-2x');
-        break;
-      default:
-
-    }
-  },
-  createReport(type, sessionTopicId) {
+  createReport(params) {
     const { channel, dispatch } = this.props;
-    const { format, facilitator } = this.state;
-    dispatch(ReportsActions.create(channel, { format, type, sessionTopicId, facilitator }));
+    const { sessionTopicId, format, type, facilitator } = params;
+
+    dispatch(ReportsActions.create(channel, { sessionTopicId, format, type, facilitator }));
   },
   render() {
-    const { sessionTopics } = this.props;
+    const { sessionTopics, reports } = this.props;
     const { format, facilitator } = this.state;
     const reportFormats = ['pdf', 'csv', 'txt'];
     const reportTypes = ['all', 'star', 'whiteboard', 'votes'];
+    const colMdSizes = [2, 3, 3, 1];
 
     return (
       <div>
@@ -66,7 +45,7 @@ const ReportsIndex = React.createClass({
           defaultChecked={ facilitator } />
         <label htmlFor={ 'report-type-00' }>Include Facilitator Interaction</label>
 
-        <table className='table table-hover'>
+        <table className={ 'table table-hover view-' + format }>
           <thead>
             <tr>
               <th>Topics</th>
@@ -80,11 +59,15 @@ const ReportsIndex = React.createClass({
             {
               sessionTopics.map((topic, tIndex) =>
                 <tr key={ topic.id }>
-                  <td>{ topic.name }</td>
+                  <td className='col-md-3'>{ topic.name }</td>
                   {
                     reportTypes.map((type, fIndex) =>
-                      <td key={ fIndex }>
-                        <i className={ this.selectCorrectTypeIcon() } onClick={ this.createReport.bind(this, type, topic.id) } />
+                      <td className={ 'col-md-' + colMdSizes[fIndex] } key={ fIndex }>
+                        <ReportIcon
+                          //remove reports
+                          { ...{ format, type, facilitator, reports, sessionTopicId: topic.id } }
+                          { ...{ createReport: this.createReport } }
+                        />
                       </td>
                     )
                   }
@@ -101,8 +84,34 @@ const ReportsIndex = React.createClass({
 const mapStateToProps = (state) => {
   return {
     sessionTopics: state.chat.session.session_topics,
-    channel: state.chat.session.channel
+    channel: state.chat.channel,
+    reports: state.chat.session.reports || _fakeSeedData(2)
   }
 };
 
 export default connect(mapStateToProps)(ReportsIndex);
+
+function _fakeSeedData(count) {
+  const reportFormats = ['pdf', 'csv', 'txt'];
+  const reportTypes = ['all', 'star', 'whiteboard', 'votes'];
+  const reportStatuses = [null, 'progress', 'completed', 'failed'];
+
+  let object = {};
+  for(let topicId = 1; topicId < count + 1; topicId++) {
+    object[topicId] = {};
+    reportFormats.map((format) => {
+      object[topicId][format] = {};
+
+      reportTypes.map((type, index) => {
+        let status = reportStatuses[Math.floor(Math.random() * reportStatuses.length)];
+        object[topicId][format][type] = {
+          id: topicId * 100 + index,
+          status: status,
+          resource: status == 'completed' ? {} : null
+        }
+      });
+    });
+  }
+
+  return object;
+}
