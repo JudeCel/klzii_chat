@@ -27,19 +27,19 @@ const ReportIcon = React.createClass({
         return this.selectCorrectClassName(status, 'fa fa-file-code-o');
     }
   },
-  onClick(status) {
-    switch (status) {
+  onClick(report) {
+    switch (report.status) {
       case 'progress':
         return;
       case 'completed':
-        return;
+        return this.props.changePage('download', report);
       case 'failed':
-        return;
+        return this.props.changePage('failed', report);
       default:
-        return this.props.createReport(this.props);
+        return this.props.createReport(report);
     }
   },
-  getReportStatus() {
+  getReport() {
     const { sessionTopicId, format, type, reports } = this.props;
     const flow = [sessionTopicId, format, type];
 
@@ -49,18 +49,18 @@ const ReportIcon = React.createClass({
       if(!object) break;
     }
 
-    return object && object.status;
+    return object || {};
   },
   render() {
-    const status = this.getReportStatus();
+    const report = this.getReport();
     const { type, format } = this.props;
 
-    if(type == 'whiteboard' && format != 'pdf') {
+    if(report.type == 'whiteboard' && report.format != 'pdf') {
       return (false);
     }
     else {
       return (
-        <i className={ this.selectCorrectFormat(status) } onClick={ this.onClick.bind(this, status) } />
+        <i className={ this.selectCorrectFormat(report.status) } onClick={ this.onClick.bind(this, report) } />
       )
     }
   }

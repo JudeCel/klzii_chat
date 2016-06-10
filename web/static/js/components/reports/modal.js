@@ -1,8 +1,8 @@
 import React, {PropTypes} from 'react';
 import { connect }        from 'react-redux';
 import { Modal }          from 'react-bootstrap';
+import ReportsPages       from './pages';
 import mixins             from '../../mixins';
-import ReportView         from './view';
 
 const ReportsModal = React.createClass({
   mixins: [mixins.modalWindows],
@@ -25,8 +25,11 @@ const ReportsModal = React.createClass({
     this.setState(this.getInitialState());
     this.onEnterModal(e);
   },
+  changePage(rendering, report) {
+    this.setState({ rendering, report });
+  },
   render() {
-    const { rendering } = this.state;
+    const { rendering, report } = this.state;
     const { show } = this.props;
 
     if(show) {
@@ -43,9 +46,9 @@ const ReportsModal = React.createClass({
           </Modal.Header>
 
           <Modal.Body>
-            <div className='row reports-section'>
+            <div className='row'>
               <div className='col-md-12'>
-                <ReportView rendering={ rendering } />
+                <ReportsPages rendering={ rendering } changePage={ this.changePage } report={ report } />
               </div>
             </div>
           </Modal.Body>

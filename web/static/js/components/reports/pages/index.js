@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import { connect }        from 'react-redux';
-import ReportIcon         from './icon';
-import ReportsActions     from '../../actions/reports';
+import ReportIcon         from './../helpers/icon';
+import ReportsActions     from '../../../actions/reports';
 
 const ReportsIndex = React.createClass({
   getInitialState() {
@@ -17,14 +17,14 @@ const ReportsIndex = React.createClass({
     dispatch(ReportsActions.create(channel, { sessionTopicId, format, type, facilitator }));
   },
   render() {
-    const { sessionTopics, reports } = this.props;
+    const { sessionTopics, reports, changePage } = this.props;
     const { format, facilitator } = this.state;
     const reportFormats = ['pdf', 'csv', 'txt'];
     const reportTypes = ['all', 'star', 'whiteboard', 'votes'];
     const colMdSizes = [2, 3, 3, 1];
 
     return (
-      <div>
+      <div className='reports-section'>
         <ul className='list-inline'>
           {
             reportFormats.map((reportFormat, index) =>
@@ -66,7 +66,7 @@ const ReportsIndex = React.createClass({
                         <ReportIcon
                           //remove reports
                           { ...{ format, type, facilitator, reports, sessionTopicId: topic.id } }
-                          { ...{ createReport: this.createReport } }
+                          { ...{ createReport: this.createReport, changePage: changePage } }
                         />
                       </td>
                     )
@@ -107,7 +107,7 @@ function _fakeSeedData(count) {
         object[topicId][format][type] = {
           id: topicId * 100 + index,
           status: status,
-          resource: status == 'completed' ? {} : null
+          resource: status == 'completed' ? { name: 'Hey!', url: { full: 'some url' } } : null
         }
       });
     });
