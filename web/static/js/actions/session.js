@@ -1,5 +1,6 @@
 import Constants  from '../constants';
 import { Socket } from 'phoenix';
+import NotificationsActions from './notifications';
 
 export function joinChannal(dispatch) {
   const socket = new Socket('/socket', {
@@ -17,6 +18,7 @@ export function joinChannal(dispatch) {
       channel
     });
     dispatch(Actions.subscribeToSeesionEvents(channel));
+    dispatch(NotificationsActions.subscribeNotificationsEvents(channel));
 
     channel.join()
     .receive('ok', (session) => {
