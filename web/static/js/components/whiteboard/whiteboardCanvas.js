@@ -210,17 +210,11 @@ const WhiteboardCanvas = React.createClass({
       let item = data[key]
       self.processShapeData(item);
       keysToDelete.push(key);
-      //
-      // let position = shapesKeys.indexOf(key)
-      // if (position >-1) {
-      //   shapesKeys.splice(position, 1);
-      // }
     });
 
     while (keysToDelete.length) {
       let position = shapesKeys.indexOf(keysToDelete[0]);
       if (position >-1) {
-        console.log("_____ :)", position, keysToDelete[0]);
         shapesKeys.splice(position, 1);
       }
       keysToDelete.splice(0, 1);
