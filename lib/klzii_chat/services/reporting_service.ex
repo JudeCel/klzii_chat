@@ -12,7 +12,7 @@ defmodule KlziiChat.Services.ReportingService do
   def get_report_name(report_type, session_topics_reports_id) when report_type in [:all, :star, :votes] do
     {:ok, "Session_topic_messages_report_" <> to_string(session_topics_reports_id)}
   end
-  def get_report_name(:whiteboard, session_topics_reports_id), do: {:ok, "Session_whiteboard_messages_report_" <> to_string(session_topics_reports_id)}
+  def get_report_name(:whiteboard, session_topics_reports_id), do: {:ok, "Session_topic_whiteboard_report_" <> to_string(session_topics_reports_id)}
   def get_report_name(_, _), do: {:error, "incorrect report type"}
 
   def create_session_topics_reports_record(session_topic_id, session_member_id) do

@@ -27,7 +27,11 @@ defmodule KlziiChat.Services.ReportingServiceTest do
     {:ok, session: session, session_topic: session_topic_1, facilitator: facilitator}
   end
 
-  test "Get report name", %{session: session, session_topic: session_topic, facilitator: facilitator} do
+  test "Get report name for a given type" do
+    {:ok, "Session_topic_messages_report_1"} = ReportingService.get_report_name(:all, 1)
+    {:ok, "Session_topic_messages_report_2"} = ReportingService.get_report_name(:all, 2)
+    {:ok, "Session_topic_messages_report_3"} = ReportingService.get_report_name(:all, 3)
+    {:ok, "Session_topic_whiteboard_report_4"} =  ReportingService.get_report_name(:whiteboard, 4)
   end
 
 end
