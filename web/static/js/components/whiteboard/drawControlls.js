@@ -224,11 +224,17 @@
 		}
 
 		Element.prototype.ftHighlightBB = function() {
+			var box = this.getBBox(1);
+			var nScalex = 1;
+			var nScaley = 1;
+			var treshold = 10;
+			if (box.width < treshold) nScalex = treshold/box.width;
+			if (box.height < treshold) nScaley = treshold/box.height;
 			this.data("bbT") && this.data("bbT").remove();
 			this.data("bb") && this.data("bb").remove();
-			 this.data("bbT", this.paper.path( pathFromObj( this.getBBox(1) ), 0, 0 )
+			 this.data("bbT", this.paper.path( pathFromObj( box ), 0, 0 )
 				.attr({ fill: "none", stroke: ftOption.handleFill, strokeDasharray: ftOption.handleStrokeDash })
-				.transform( this.transform().global.toString() ) );
+				.transform( this.transform().global.toString() + "s"+ nScalex + "," + nScaley) );
 			return this;
 		};
 
