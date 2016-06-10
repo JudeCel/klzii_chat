@@ -7,13 +7,13 @@ import mixins             from '../../mixins';
 
 const Facilitator = React.createClass({
   mixins: [mixins.validations, mixins.modalWindows],
-  innerboxClassname(hasPermissions) {
+  innerboxClassname(permission) {
     const className = 'innerbox';
-    return hasPermissions ? className + ' cursor-pointer' : className;
+    return permission ? className + ' cursor-pointer' : className;
   },
   render() {
     const { facilitator, boardContent } = this.props;
-    const hasPermissions = this.hasPermissions('events', 'can_board_message');
+    const permission = this.hasPermission(['messages', 'can_board_message']);
 
     return (
       <div className='facilitator-section'>
@@ -25,13 +25,13 @@ const Facilitator = React.createClass({
           <div className='say-section'>
             <div className='outerbox'>
               <div className='triangle' />
-              <div className={ this.innerboxClassname(hasPermissions) } onClick={ this.openSpecificModal.bind(this, 'facilitatorBoard') }>
+              <div className={ this.innerboxClassname(permission) } onClick={ this.openSpecificModal.bind(this, 'facilitatorBoard') }>
                 <p className='text-break-all' dangerouslySetInnerHTML={{ __html: boardContent }} />
               </div>
             </div>
           </div>
 
-          <BoardModal { ...{ hasPermissions, boardContent } } />
+          <BoardModal { ...{ permission, boardContent } } />
           <Console />
         </div>
       </div>

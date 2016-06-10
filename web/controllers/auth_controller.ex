@@ -18,5 +18,5 @@ defmodule KlziiChat.AuthController do
     else
       KlziiChat.Guardian.AuthErrorHandler.unauthenticated(conn, opts)
     end
- end
+  end
 end

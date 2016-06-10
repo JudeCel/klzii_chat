@@ -6,8 +6,10 @@ import whiteboardActions    from '../../actions/whiteboard'
 import { connect }          from 'react-redux';
 require("./drawControlls");
 import undoHistoryFactory  from './actionHistory';
+import mixins             from '../../mixins';
 
 const WhiteboardCanvas = React.createClass({
+  mixins: [mixins.validations],
   getInitialState:function() {
     this.minimized = true;
     this.shapes = [];
@@ -403,13 +405,13 @@ const WhiteboardCanvas = React.createClass({
     }
   },
   deleteAll() {
-  	var message = {
-  		action: "deleteAll"
-  	};
-  	var messageJSON = {
-  		eventType: 'deleteAll',
-  		message: message
-  	};
+    var message = {
+      action: "deleteAll"
+    };
+    var messageJSON = {
+      eventType: 'deleteAll',
+      message: message
+    };
     this.sendMessage(messageJSON);
     undoHistoryFactory.addStepToUndoHistory(this.addAllDeletedObjectsToHistory(this.shapes));
   },
@@ -450,7 +452,7 @@ const WhiteboardCanvas = React.createClass({
     this.coords = null;
   },
   handleMouseDown: function(e){
-    if (!this.props.currentUser.permissions.events.can_new_shape) return;
+    if (!this.hasPermission(['whiteboard', 'can_new_shape'])) return;
     if (!this.isValidButton(e)) return;
     if (this.minimized) return;
     if (this.scaling) return;
@@ -474,7 +476,7 @@ const WhiteboardCanvas = React.createClass({
     return arrow.marker(0,0, 10,10, 0,5);
   },
   handleMouseMove(e) {
-    if (!this.props.currentUser.permissions.events.can_new_shape) return;
+    if (!this.hasPermission(['whiteboard', 'can_new_shape'])) return;
     if (!this.isValidButton(e)) return;
     if (this.minimized) return;
     if (!this.coords) return;

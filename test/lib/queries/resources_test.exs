@@ -1,4 +1,4 @@
-defmodule KlziiChat.Services.Resourecs do
+defmodule KlziiChat.Services.ResourecsTest do
   use KlziiChat.{ModelCase, SessionMemberCase}
   alias KlziiChat.Queries.Resources, as: QueriesResources
   alias KlziiChat.{Repo}
