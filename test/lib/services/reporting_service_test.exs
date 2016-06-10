@@ -27,6 +27,11 @@ defmodule KlziiChat.Services.ReportingServiceTest do
     {:ok, session: session, session_topic: session_topic_1, facilitator: facilitator}
   end
 
+  test "Try to create incorrect report format and type" do
+    assert({:error, "incorrect report format"} == ReportingService.create_session_topic_report(1, 2, :incorrect, :all, true))
+    assert({:error, "incorrect report type"} == ReportingService.create_session_topic_report(1, 2, :pdf, :incorrect, true))
+  end
+
   test "Get report name for a given type" do
     {:ok, "Session_topic_messages_report_1"} = ReportingService.get_report_name(:all, 1)
     {:ok, "Session_topic_messages_report_2"} = ReportingService.get_report_name(:star, 2)
