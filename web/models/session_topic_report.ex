@@ -5,12 +5,15 @@ defmodule KlziiChat.SessionTopicReport do
     belongs_to :session_member, KlziiChat.SessionMember, [foreign_key: :sessionMemberId]
     belongs_to :session_topic, KlziiChat.SessionTopic, [foreign_key: :sessionTopicId]
     belongs_to :resource, KlziiChat.Resource, [foreign_key: :resourceId]
+    field :type, :string
+    field :facilitator, :boolean
+    field :format, :string
     field :status, :string, default: "progress"
     field :message, :string
     timestamps [inserted_at: :createdAt, updated_at: :updatedAt]
   end
 
-  @required_fields ~w(session_member session_topic status)
+  @required_fields ~w(session_member session_topic type facilitator format status)
   @optional_fields ~w(resource message)
 
   @doc """

@@ -60,13 +60,13 @@ defmodule KlziiChat.SessionChannel do
   end
 
   def handle_in("create_session_topic_report", %{"sessionTopicId" => session_topic_id, "format" => report_format, "type" => report_type, "facilitator" => include_facilitator}, socket) do
-    session_member = get_session_member(socket)
-    case ReportingService.create_session_topic_report(session_topic_id, session_member.id, String.to_atom(report_format), String.to_atom(report_type), include_facilitator) do
-    {:ok, session_topics_reports_id} ->
-      {:reply, {:ok, session_topics_reports_id}, socket}
-    {:error, reason} ->
-      {:error, %{reason: reason}}
-    end
+      session_member = get_session_member(socket)
+      case ReportingService.create_session_topic_report(session_member.id, session_topic_id, String.to_atom(report_format), String.to_atom(report_type), include_facilitator) do
+      {:ok, session_topics_reports_id} ->
+        {:reply, {:ok, session_topics_reports_id}, socket}
+      {:error, reason} ->
+        {:error, %{reason: reason}}
+      end
   end
 
   def handle_out("unread_messages", payload, socket) do
@@ -79,4 +79,5 @@ defmodule KlziiChat.SessionChannel do
     end
     {:noreply, socket}
   end
+
 end
