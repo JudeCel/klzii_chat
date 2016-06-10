@@ -28,7 +28,7 @@ const Resources = React.createClass({
       { type: 'survey', className: 'icon-ok-squared' },
     ]
 
-    if(this.hasPermissions('resources', 'can_upload')) {
+    if(this.hasPermission(['resources', 'can_upload'])) {
       return (
         <div className='resources-section col-md-4'>
           <ul className='icons'>

@@ -31,27 +31,28 @@ defmodule KlziiChat.Mixfile do
   # Type `mix help deps` for examples and options.
   defp deps do
     [{:phoenix, "~> 1.2.0-rc.1"},
-     {:phoenix_pubsub, "~> 1.0.0-rc"},
+     {:phoenix_pubsub, "~> 1.0.0-rc.0"},
      {:phoenix_ecto, github: "phoenixframework/phoenix_ecto"},
      {:phoenix_html, "~> 2.5"},
-     {:phoenix_live_reload, "~> 1.0.5", only: :dev},
+     {:phoenix_live_reload, "~> 1.0", only: :dev},
      {:timex_ecto, "~> 1.1"},
      {:poison, "~> 2.1", override: true},
      {:arc_ecto, "~> 0.4.1"},
      {:arc, "~> 0.5.2"},
-     {:ex_aws, "~> 0.4.18"},
-     {:httpotion, "~> 2.2.2"},
-     {:postgrex,  "~> 0.11.1"},
-     {:gettext, "~> 0.11"},
+     {:ex_aws, "~> 0.4.19"},
+     {:httpotion, "~> 3.0", override: true},
+     {:postgrex, "~> 0.11.1"},
+     {:gettext, "~> 0.11.0"},
      {:guardian, "~> 0.12.0"},
-     {:cowboy, "~> 1.0.4"},
-     {:corsica, "~> 0.4"},
+     {:cowboy, "~> 1.0"},
+     {:corsica, "~> 0.4.2"},
      {:timex, "~> 2.1"},
      {:quantum, "~> 1.7"},
-     {:httpoison, "~> 0.8"},
-     {:earmark, "~> 0.1", only: :dev},
-     {:ex_doc, "~> 0.11", only: :dev},
-     {:credo, "~> 0.4.0-beta1", only: :dev}]
+     {:httpoison, "~> 0.8.3"},
+     {:earmark, "~> 0.2.1", only: :dev},
+     {:ex_doc, "~> 0.11.5", only: :dev},
+     {:credo, "~> 0.4.1", only: :dev}
+    ]
   end
 
   # Aliases are shortcut or tasks specific to the current project.
