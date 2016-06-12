@@ -70,6 +70,9 @@ defmodule KlziiChat.SessionChannelTest do
     push socket, "update_member", %{avatarData: %{ base: 2, face: 3, body: 1, desk: 2, head: 0 }}
     push socket, "update_member", %{avatarData: %{ base: 1, desk: 2}, username: "new cool name"}
 
+    assert_push "self_info", session_member
+    assert_push "self_info", session_member2
+
     assert_push "update_member", session_member
     assert_push "update_member", session_member2
   end
