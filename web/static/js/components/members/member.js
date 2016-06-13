@@ -37,6 +37,8 @@ const Member = React.createClass({
 
 const mapStateToProps = (state) => {
   return {
+    // participants needed for automatic update when online state changes, do not remove.
+    participants: state.members.participants,
     currentUser: state.members.currentUser,
     modalWindows: state.modalWindows
   }
