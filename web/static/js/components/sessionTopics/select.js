@@ -6,8 +6,8 @@ import Badge                                        from './badge';
 
 const Select = React.createClass({
   changeSessionTopic(id) {
-    const { dispatch, channel } = this.props;
-    dispatch(Actions.changeSessionTopic(channel, id));
+    const { dispatch, channel, whiteboardChannel } = this.props;
+    dispatch(Actions.changeSessionTopic(channel, whiteboardChannel, id));
   },
   render() {
     const { current, sessionTopics, session, unread_messages } = this.props;
@@ -69,6 +69,7 @@ const mapStateToProps = (state) => {
     channel: state.sessionTopic.channel,
     current: state.sessionTopic.current,
     sessionTopics: state.sessionTopic.all,
+    whiteboardChannel: state.whiteboard.channel
   };
 };
 
