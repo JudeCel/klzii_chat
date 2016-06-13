@@ -20,10 +20,15 @@ const Select = React.createClass({
           </div>
 
           <Dropdown id='topic-selector' bsSize='medium'>
-            <Button className='no-border-radius'>
-              { current.name }
-            </Button>
-            <Dropdown.Toggle className='no-border-radius' />
+            <Dropdown.Toggle className='no-border-radius' noCaret>
+              <Button className='no-border-radius'>
+                { current.name }
+              </Button>
+              <Button className='no-border-radius'>
+                <span className='caret'></span>
+              </Button>
+            </Dropdown.Toggle>
+
             <Dropdown.Menu className='no-border-radius'>
               {
                 sessionTopics.map((sessionTopic) => {
