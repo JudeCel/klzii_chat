@@ -14,26 +14,26 @@ defmodule KlziiChat.Services.Permissions.ValidationsPermissionsTest do
   }
 
   test "brandLogoAndCustomColors" do
-    Validations.has_allowed(@subscription_keys, :brandLogoAndCustomColors) |> assert
+    Validations.has_allowed_from_subscription(@subscription_keys, :brandLogoAndCustomColors) |> assert
   end
 
   test "accessKlzziForum" do
-    Validations.has_allowed(@subscription_keys, :accessKlzziForum) |> assert
+    Validations.has_allowed_from_subscription(@subscription_keys, :accessKlzziForum) |> assert
   end
 
   test "accessKlzziFocus" do
-    Validations.has_allowed(@subscription_keys, :accessKlzziFocus) |> assert
+    Validations.has_allowed_from_subscription(@subscription_keys, :accessKlzziFocus) |> assert
   end
 
   test "uploadToGallery" do
-    Validations.has_allowed(@subscription_keys, :uploadToGallery) |> assert
+    Validations.has_allowed_from_subscription(@subscription_keys, :uploadToGallery) |> assert
   end
 
   test "discussionGuideTips" do
-    Validations.has_allowed(@subscription_keys, :discussionGuideTips) |> assert
+    Validations.has_allowed_from_subscription(@subscription_keys, :discussionGuideTips) |> assert
   end
 
   test "reportingFunctions" do
-    Validations.has_allowed(@subscription_keys, :reportingFunctions) |> assert
+    Validations.has_allowed_from_subscription(@subscription_keys, :reportingFunctions) |> assert
   end
 end

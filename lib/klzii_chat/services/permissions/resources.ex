@@ -24,6 +24,6 @@ defmodule KlziiChat.Services.Permissions.Resources do
   @spec can_upload(Map.t, Map.t) :: Boolean.t
   def can_upload(member, preference) do
     roles =  ~w(facilitator accountManager admin)
-    has_role(member.role, roles)
+    has_role(member.role, roles) && has_allowed_from_subscription(preference, :uploadToGallery)
   end
 end
