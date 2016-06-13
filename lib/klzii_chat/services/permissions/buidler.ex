@@ -22,14 +22,14 @@ defmodule KlziiChat.Services.Permissions.Builder do
         can_board_message: SessionTopicPermissions.can_board_message(session_member),
       },
       whiteboard: %{
-        can_create: Validations.has_allowed(preference, :whiteboardFunctionality),
+        can_create: Validations.has_allowed_from_subscription(preference, :whiteboardFunctionality),
         can_new_shape: WhiteboardPermissions.can_new_shape(session_member)
       },
       resources: %{
         can_upload: ResourcePermissions.can_upload(session_member, preference)
       },
       reports: %{
-        can_report: Validations.has_allowed(preference, :reportingFunctions)
+        can_report: Validations.has_allowed_from_subscription(preference, :reportingFunctions)
       }
     }
   end

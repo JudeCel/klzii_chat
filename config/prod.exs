@@ -13,7 +13,8 @@ use Mix.Config
 # which you typically run after static files are built.
 config :klzii_chat, KlziiChat.Endpoint,
   http: [port: {:system, "PORT"}],
-  url: [host: System.get_env("SERVER_HOST") || "localhost", port: 80],
+  url: [host:  {:system, "SERVER_HOST"}, port: {:system, "PORT"}],
+  check_origin: [{:system, "SERVER_HOST_WITH_PORT"}],
   cache_static_manifest: "priv/static/manifest.json"
 
 # Do not print debug messages in production
