@@ -14,7 +14,7 @@ use Mix.Config
 config :klzii_chat, KlziiChat.Endpoint,
   http: [port: {:system, "PORT"}],
   url: [host:  {:system, "SERVER_HOST"}, port: {:system, "PORT"}],
-  check_origin: [{:system, "SERVER_HOST_WITH_PORT"}],
+  check_origin: ["${System.get_env("SERVER_HOST")}:${System.get_env("PORT")}" ],
   cache_static_manifest: "priv/static/manifest.json"
 
 # Do not print debug messages in production
