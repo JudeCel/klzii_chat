@@ -13,6 +13,7 @@ defmodule KlziiChat.SessionChannel do
   """
 
   intercept ["unread_messages"]
+  intercept ["session_topics_report_updated"]
 
   def join("sessions:" <> session_id, _, socket) do
     {session_id, _} = Integer.parse(session_id)
@@ -65,12 +66,16 @@ defmodule KlziiChat.SessionChannel do
 
   def handle_in("create_session_topic_report", %{"sessionTopicId" => session_topic_id, "format" => report_format, "type" => report_type, "facilitator" => include_facilitator}, socket) do
       session_member = get_session_member(socket)
-      case SessionReportingService.create_session_topic_report(session_member.id, session_topic_id, String.to_atom(report_format), String.to_atom(report_type), include_facilitator) do
-      {:ok, session_topics_reports_id} ->
-        {:reply, {:ok, session_topics_reports_id}, socket}
+      case SessionReportingService.create_session_topic_report(socket.assigns.session_id, session_member.id, session_topic_id, String.to_atom(report_format), String.to_atom(report_type), include_facilitator) do
+      {:ok, session_topics_report} ->
+        {:reply, {:ok, session_topics_report}, socket}
       {:error, reason} ->
         {:error, %{reason: reason}}
       end
+  end
+
+  def handle_in("remove_session_topic_report", %{"sessionTopicReportId" => session_topic_report_id}, socket) do
+
   end
 
   def handle_in("get_session_topics_reports", _params, socket) do
@@ -91,6 +96,14 @@ defmodule KlziiChat.SessionChannel do
         push socket, "unread_messages", map
       nil ->
         nil
+    end
+    {:noreply, socket}
+  end
+
+  def handle_out("session_topics_report_updated", payload, socket) do
+    case get_session_member(socket).role do
+      "faciltator" -> push socket, "session_topics_report_updated", payload
+      _ -> nil
     end
     {:noreply, socket}
   end

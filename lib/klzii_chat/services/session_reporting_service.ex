@@ -1,25 +1,25 @@
 defmodule KlziiChat.Services.SessionReportingService do
   alias KlziiChat.Services.{SessionTopicReportingService, SessionTopicService, ResourceService}
-  alias KlziiChat.{Repo, SessionTopicReport, SessionMember}
+  alias KlziiChat.{Repo, SessionTopicReport, SessionMember, Endpoint}
 
   import Ecto.Query, only: [from: 2]
 
   @upload_report_timeout 60_000
 
-  def create_session_topic_report(_, _, report_format, :whiteboard, _) when report_format != :pdf, do: {:error, "pdf is the only format that is acceptable for whiteboard report"}
+  def create_session_topic_report(_, _, _, report_format, :whiteboard, _) when report_format != :pdf, do: {:error, "pdf is the only format that is acceptable for whiteboard report"}
 
-  def create_session_topic_report(session_member_id, session_topic_id, report_format, report_type, include_facilitator)
+  def create_session_topic_report(session_id, session_member_id, session_topic_id, report_format, report_type, include_facilitator)
     when report_type in [:all, :star, :whiteboard] and report_format in [:txt, :csv, :pdf]    # TODO: :votes
   do
-    with {:ok, %{id: session_topics_reports_id}} <-  create_session_topics_reports_record(session_topic_id, session_member_id, report_type, include_facilitator, report_format),
+    with {:ok, %{id: session_topics_reports_id} = session_topics_report} <-  create_session_topics_reports_record(session_topic_id, session_member_id, report_type, include_facilitator, report_format),
          {:ok, report_name} <- get_report_name(report_type, session_topics_reports_id),
-         create_report_params = [session_member_id, session_topics_reports_id, session_topic_id, report_name, report_format, report_type, include_facilitator],
+         create_report_params = [session_id, session_member_id, session_topics_reports_id, session_topic_id, report_name, report_format, report_type, include_facilitator],
          {:ok, _}  <- Task.start(__MODULE__, :create_report_asyc, create_report_params),
-     do: {:ok, session_topics_reports_id}
+     do: {:ok, session_topics_report}
   end
 
-  def create_session_topic_report(_, _, report_format, _, _) when report_format in [:txt, :csv, :pdf], do: {:error, "incorrect report type"}
-  def create_session_topic_report(_, _, _, _, _), do: {:error, "incorrect report format"}
+  def create_session_topic_report(_, _, _, report_format, _, _) when report_format in [:txt, :csv, :pdf], do: {:error, "incorrect report type"}
+  def create_session_topic_report(_, _, _, _, _, _), do: {:error, "incorrect report format"}
 
   def create_session_topics_reports_record(session_topic_id, session_member_id, :whiteboard, include_facilitator, :pdf) do
     Repo.insert(%SessionTopicReport{
@@ -41,11 +41,12 @@ defmodule KlziiChat.Services.SessionReportingService do
     })
   end
 
+
   def get_report_name(:whiteboard, session_topics_reports_id), do: {:ok, "Session_topic_whiteboard_report_" <> to_string(session_topics_reports_id)}
   def get_report_name(report_type, session_topics_reports_id), do: {:ok, "Session_topic_messages_report_" <> to_string(session_topics_reports_id)}
 
 
-  def create_report_asyc(session_member_id, session_topics_reports_id, session_topic_id, report_name, report_format, report_type, include_facilitator) do
+  def create_report_asyc(session_id, session_member_id, session_topics_reports_id, session_topic_id, report_name, report_format, report_type, include_facilitator) do
     star_only = if report_type == :star, do: true, else: false
 
     account_user_id = Repo.one(
@@ -68,9 +69,9 @@ defmodule KlziiChat.Services.SessionReportingService do
       |> Task.yield(@upload_report_timeout)
       |> update_session_topics_reports_record(session_topics_reports_id)
 
-    if File.exists?(report_file_path), do: File.rm(report_file_path)
+    Endpoint.broadcast!( "sessions:#{session_id}", "session_topics_report_updated", session_topics_report)
 
-     # TODO: front-end notification on upload (:ok, :failed)
+    if File.exists?(report_file_path), do: File.rm(report_file_path)
   end
 
 
@@ -98,17 +99,15 @@ defmodule KlziiChat.Services.SessionReportingService do
 
 
   def get_session_topics_reports(session_member_id) do
-    reports =
-      Repo.all(
-        from str in SessionTopicReport,
-        where: str.sessionMemberId == ^session_member_id,
-        preload: [:resource]
-      )
-      |> group_session_topics_reports()
-
-    reports
+    Repo.all(
+      from str in SessionTopicReport,
+      where: str.sessionMemberId == ^session_member_id,
+      preload: [:resource]
+    )
+    |> group_session_topics_reports()
   end
 
+  # sessionTopicId => format => type
   def group_session_topics_reports(reports) do
     Enum.reduce(reports, Map.new, fn (%{sessionTopicId: sessionTopicId, type: type, format: format} = report, resulting_map) ->
       Map.update(resulting_map, sessionTopicId, %{format => %{type => report}}, fn value ->
@@ -116,6 +115,4 @@ defmodule KlziiChat.Services.SessionReportingService do
       end)
     end)
   end
-
-
 end

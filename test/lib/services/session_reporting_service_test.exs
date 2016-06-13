@@ -28,9 +28,9 @@ defmodule KlziiChat.Services.SessionReportingServiceTest do
   end
 
   test "Try to create incorrect report format and type" do
-    assert({:error, "incorrect report format"} == SessionReportingService.create_session_topic_report(1, 2, :incorrect, :all, true))
-    assert({:error, "incorrect report type"} == SessionReportingService.create_session_topic_report(1, 2, :pdf, :incorrect, true))
-    assert({:error, "pdf is the only format that is acceptable for whiteboard report"} == SessionReportingService.create_session_topic_report(1, 2, :txt, :whiteboard, true))
+    assert({:error, "incorrect report format"} == SessionReportingService.create_session_topic_report(0, 1, 2, :incorrect, :all, true))
+    assert({:error, "incorrect report type"} == SessionReportingService.create_session_topic_report(0, 1, 2, :pdf, :incorrect, true))
+    assert({:error, "pdf is the only format that is acceptable for whiteboard report"} == SessionReportingService.create_session_topic_report(0, 1, 2, :txt, :whiteboard, true))
   end
 
   test "Get report name for a given type" do
@@ -45,13 +45,25 @@ defmodule KlziiChat.Services.SessionReportingServiceTest do
 
     SessionReportingService.create_session_topics_reports_record(session_topic_1.id, facilitator.id, :whiteboard, true, :pdf)
     SessionReportingService.create_session_topics_reports_record(session_topic_1.id, facilitator.id, :all, true, :pdf)
-    SessionReportingService.create_session_topics_reports_record(session_topic_1.id, facilitator.id, :star, false, :pdf)
+    SessionReportingService.create_session_topics_reports_record(session_topic_1.id, facilitator.id, :star, true, :pdf)
+    SessionReportingService.create_session_topics_reports_record(session_topic_1.id, facilitator.id, :all, true, :txt)
     SessionReportingService.create_session_topics_reports_record(session_topic_1.id, facilitator.id, :star, true, :txt)
-    SessionReportingService.create_session_topics_reports_record(session_topic_1.id, facilitator.id, :star, false, :txt)
 
     reports = SessionReportingService.get_session_topics_reports(facilitator.id)
 
 
-    %{^session_topic_id => %{"pdf" => %{"whiteboard" => %{}, "all" => %{}, "star" => %{}}}} = reports
+    %{^session_topic_id =>
+      %{
+        "pdf" => %{
+          "whiteboard" => %{},
+          "all" => %{},
+          "star" => %{}
+        },
+        "txt" => %{
+          "all" => %{},
+          "star" => %{}
+        }
+      }
+    } = reports
   end
 end
