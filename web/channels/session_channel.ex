@@ -1,6 +1,6 @@
 defmodule KlziiChat.SessionChannel do
   use KlziiChat.Web, :channel
-  alias KlziiChat.Services.{SessionService, SessionMembersService, ReportingService}
+  alias KlziiChat.Services.{SessionService, SessionMembersService, SessionReportingService}
   alias KlziiChat.Services.Permissions.Builder, as: PermissionsBuilder
   alias KlziiChat.{Presence, SessionMembersView}
   import(KlziiChat.Authorisations.Channels.Session, only: [authorized?: 2])
@@ -61,7 +61,7 @@ defmodule KlziiChat.SessionChannel do
 
   def handle_in("create_session_topic_report", %{"sessionTopicId" => session_topic_id, "format" => report_format, "type" => report_type, "facilitator" => include_facilitator}, socket) do
       session_member = get_session_member(socket)
-      case ReportingService.create_session_topic_report(session_member.id, session_topic_id, String.to_atom(report_format), String.to_atom(report_type), include_facilitator) do
+      case SessionReportingService.create_session_topic_report(session_member.id, session_topic_id, String.to_atom(report_format), String.to_atom(report_type), include_facilitator) do
       {:ok, session_topics_reports_id} ->
         {:reply, {:ok, session_topics_reports_id}, socket}
       {:error, reason} ->
