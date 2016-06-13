@@ -3,7 +3,6 @@ defmodule KlziiChat.Services.SessionReportingServiceTest do
   alias KlziiChat.Services.SessionReportingService
 
   @report_prefix "ReportingService_test_report"
-  @date_time_format "{YYYY}_{0M}_{0D}_{h24}_{0m}"
 
   setup %{session: session, session_topic_1: session_topic_1, facilitator: facilitator, participant: participant} do
     Ecto.build_assoc(
@@ -65,5 +64,10 @@ defmodule KlziiChat.Services.SessionReportingServiceTest do
         }
       }
     } = reports
+  end
+
+  test "create report", %{session: session, session_topic: session_topic, facilitator: facilitator} do
+    SessionReportingService.create_session_topic_report(session.id, facilitator.id, session_topic.id, :csv, :all, :true)
+    |> IO.inspect()
   end
 end

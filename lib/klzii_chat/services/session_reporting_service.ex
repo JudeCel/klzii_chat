@@ -56,18 +56,15 @@ defmodule KlziiChat.Services.SessionReportingService do
     )
 
     {:ok, report_file_path} = SessionTopicReportingService.save_report(report_name, report_format, session_topic_id, star_only, !include_facilitator)
-    upload_params = [
-      %{"type" => "file",
+    upload_params = %{"type" => "file",
         "scope" => to_string(report_format),
         "file" => report_file_path,
-        "name" => report_name},
-      account_user_id
-    ]
+        "name" => report_name}
 
-    {:ok, session_topics_report} =
-      Task.async(ResourceService, :upload, upload_params)
-      |> Task.yield(@upload_report_timeout)
-      |> update_session_topics_reports_record(session_topics_reports_id)
+    upload_task = Task.async(fn -> ResourceService.upload(upload_params, account_user_id) end)
+    upload_result = Task.yield(upload_task, @upload_report_timeout)
+
+    {:ok, session_topics_report} = update_session_topics_reports_record(upload_result, session_topics_reports_id)
 
     Endpoint.broadcast!( "sessions:#{session_id}", "session_topics_report_updated", session_topics_report)
 
@@ -76,8 +73,8 @@ defmodule KlziiChat.Services.SessionReportingService do
 
 
   def update_session_topics_reports_record({:ok, resource}, session_topics_reports_id) do
-    session_topics_reports = Repo.get!(SessionTopicReport, session_topics_reports_id)
-    session_topics_reports = Ecto.Changeset.change(session_topics_reports, status: "completed", resourceId: resource.id)
+    session_topics_report = Repo.one(SessionTopicReport, session_topics_reports_id)
+    session_topics_report = Ecto.Changeset.change(session_topics_reports, status: "completed", resourceId: resource.id)
 
     Repo.update(session_topics_reports)
   end
