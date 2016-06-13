@@ -6,24 +6,29 @@ import Badge                                        from './badge';
 
 const Select = React.createClass({
   changeSessionTopic(id) {
-    const { dispatch, channel } = this.props;
-    dispatch(Actions.changeSessionTopic(channel, id));
+    const { dispatch, channel, whiteboardChannel } = this.props;
+    dispatch(Actions.changeSessionTopic(channel, whiteboardChannel, id));
   },
   render() {
     const { current, sessionTopics, session, unread_messages } = this.props;
 
     return (
-      <div className='col-md-2 topic-select-section'>
+      <div className='col-md-3 topic-select-section'>
         <div className='topic-select-box'>
           <div>
             { session.name }
           </div>
 
           <Dropdown id='topic-selector' bsSize='medium'>
-            <Button className='no-border-radius'>
-              { current.name }
-            </Button>
-            <Dropdown.Toggle className='no-border-radius' />
+            <Dropdown.Toggle className='no-border-radius' noCaret>
+              <Button className='no-border-radius'>
+                { current.name }
+              </Button>
+              <Button className='no-border-radius'>
+                <span className='caret'></span>
+              </Button>
+            </Dropdown.Toggle>
+
             <Dropdown.Menu className='no-border-radius'>
               {
                 sessionTopics.map((sessionTopic) => {
@@ -64,6 +69,7 @@ const mapStateToProps = (state) => {
     channel: state.sessionTopic.channel,
     current: state.sessionTopic.current,
     sessionTopics: state.sessionTopic.all,
+    whiteboardChannel: state.whiteboard.channel
   };
 };
 

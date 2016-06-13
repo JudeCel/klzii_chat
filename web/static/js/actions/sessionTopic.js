@@ -70,8 +70,9 @@ const Actions = {
       joinChannal(dispatch, socket, sessionTopicId);
     }
   },
-  changeSessionTopic: (currentChannal, sessionTopicId) =>{
+  changeSessionTopic: (currentChannal, whiteboardChannel, sessionTopicId) =>{
     return dispatch => {
+      whiteboardChannel.leave();
       leave_chanal(dispatch, currentChannal);
       joinChannal(dispatch, currentChannal.socket, sessionTopicId);
     }

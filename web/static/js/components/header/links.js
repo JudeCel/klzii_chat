@@ -29,8 +29,8 @@ const Links = React.createClass({
             </li>
           </ul>
         </div>
-        <div className='col-md-2 logo-section'>
-          <img width='100%' src='/images/logo.png' />
+        <div className='col-md-1 logo-section'>
+          <img width='150%' src='/images/logo.png' />
         </div>
       </div>
     )

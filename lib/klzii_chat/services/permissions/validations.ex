@@ -9,4 +9,9 @@ defmodule KlziiChat.Services.Permissions.Validations do
   def has_role(role, roles) do
     Enum.any?(roles, &(&1 == role))
   end
+
+  @spec has_allowed_from_subscription(Map.t, Atom.t) :: Boolean.t
+  def has_allowed_from_subscription(subscription_preference, key) do
+    Map.get(subscription_preference, key, false)
+  end
 end

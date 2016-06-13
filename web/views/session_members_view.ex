@@ -1,9 +1,6 @@
 defmodule KlziiChat.SessionMembersView do
   use KlziiChat.Web, :view
-  alias KlziiChat.Services.Permissions.Messages, as: MessagePermissions
-  alias KlziiChat.Services.Permissions.Resources, as: ResourcePermissions
-  alias KlziiChat.Services.Permissions.SessionTopic, as: SessionTopicPermissions
-  alias KlziiChat.Services.Permissions.Whiteboard, as: WhiteboardcPermissions
+  alias KlziiChat.Permissions.Builder, as: PermissionsBuilder
 
   def render("member.json", %{member: member}) do
     %{id: member.id,
@@ -22,24 +19,15 @@ defmodule KlziiChat.SessionMembersView do
     }
   end
 
-  def render("current_member.json", %{ member: member}) do
+  def render("current_member.json", %{ member: member, permissions_map: permissions_map}) do
     member_map = render("member.json", %{ member: member})
-    permissions = %{
+    current_member_info = %{
       jwt: buildJWT(member),
       account_user_id: member.accountUserId,
       session_id: member.sessionId,
-      permissions: %{
-        events: %{
-          can_new_message: MessagePermissions.can_new_message(member),
-          can_board_message: SessionTopicPermissions.can_board_message(member),
-          can_new_shape: WhiteboardcPermissions.can_new_shape(member),
-        },
-        resources: %{
-          can_upload: ResourcePermissions.can_upload(member)
-        }
-      }
+      permissions: permissions_map
     }
-    Map.merge(member_map, permissions)
+    Map.merge(member_map, current_member_info)
   end
 
   def render("group_by_role.json", %{ members: members}) do
