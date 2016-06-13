@@ -53,14 +53,14 @@ const ReportIcon = React.createClass({
   },
   render() {
     const report = this.getReport();
-    const { type, format } = this.props;
+    const { type, format, sessionTopicId, facilitator } = this.props;
 
     if(report.type == 'whiteboard' && report.format != 'pdf') {
       return (false);
     }
     else {
       return (
-        <i className={ this.selectCorrectFormat(report.status) } onClick={ this.onClick.bind(this, report) } />
+        <i className={ this.selectCorrectFormat(report.status) } onClick={ this.onClick.bind(this, { ...report, type, format, sessionTopicId, facilitator }) } />
       )
     }
   }
