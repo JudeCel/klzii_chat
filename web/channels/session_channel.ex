@@ -12,8 +12,7 @@ defmodule KlziiChat.SessionChannel do
     Global messages for session
   """
 
-  intercept ["unread_messages"]
-  intercept ["session_topics_report_updated"]
+  intercept ["unread_messages", "session_topics_report_updated"]
 
   def join("sessions:" <> session_id, _, socket) do
     {session_id, _} = Integer.parse(session_id)
