@@ -73,6 +73,17 @@ defmodule KlziiChat.SessionChannel do
       end
   end
 
+  def handle_in("get_session_topics_reports", _params, socket) do
+    session_member_id = get_session_member(socket).id
+
+    case SessionReportingService.get_session_topics_reports(session_member_id) do
+      {:ok, session_topics_reports} ->
+        {:reply, {:ok, session_topics_reports}, socket}
+      {:error, reason} ->
+        {:error, %{reason: reason}}
+    end
+  end
+
   def handle_out("unread_messages", payload, socket) do
     id = get_session_member(socket).id |> to_string
     case Map.get(payload, id, nil) do
