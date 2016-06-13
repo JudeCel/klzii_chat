@@ -205,16 +205,22 @@ const WhiteboardCanvas = React.createClass({
     let self = this;
     var dataKeys = Object.keys(data);
     var shapesKeys = Object.keys(self.shapes)
-
+    let keysToDelete = [];
     dataKeys.map((key) => {
       let item = data[key]
       self.processShapeData(item);
+      keysToDelete.push(key);
+    });
 
-      let position = shapesKeys.indexOf(key)
+    while (keysToDelete.length) {
+      let position = shapesKeys.indexOf(keysToDelete[0]);
       if (position >-1) {
         shapesKeys.splice(position, 1);
       }
-    });
+      keysToDelete.splice(0, 1);
+    };
+
+
     let childrens = self.snap.paper.children();
     childrens.map(function(item) {
       let position = shapesKeys.indexOf(item.id)

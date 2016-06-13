@@ -40,6 +40,17 @@ const Actions = {
       });
     }
   },
+  recreate:(channel, reportId, callback) => {
+    return dispatch => {
+      channel.push('recreate_session_topic_report', { id: reportId })
+      .receive('ok', (data) => {
+        dispatch({ type: Constants.RECREATE_REPORT, data: data });
+        if(callback) callback();
+      }).receive('error', (data) => {
+        dispatch(_errorData(data));
+      });
+    }
+  },
   delete:(channel, reportId, callback) => {
     return dispatch => {
       channel.push('delete_session_topic_report', { id: reportId })
