@@ -1,5 +1,8 @@
-/node_modules
-/priv
+node_modules
+priv
+_build
 cid.txt
 stop_container_by_sid.sh
-/deploy
+deploy
+erl_crash.dump
+deps
