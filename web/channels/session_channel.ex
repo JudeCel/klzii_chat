@@ -2,7 +2,7 @@ defmodule KlziiChat.SessionChannel do
   use KlziiChat.Web, :channel
   alias KlziiChat.Services.{SessionService, SessionMembersService, SessionReportingService}
   alias KlziiChat.Services.Permissions.Builder, as: PermissionsBuilder
-  alias KlziiChat.{Presence, SessionMembersView}
+  alias KlziiChat.{Presence, SessionMembersView, SessionTopicReportView}
   import(KlziiChat.Authorisations.Channels.Session, only: [authorized?: 2])
   import(KlziiChat.Helpers.SocketHelper, only: [get_session_member: 1])
 
@@ -67,7 +67,7 @@ defmodule KlziiChat.SessionChannel do
       session_member = get_session_member(socket)
       case SessionReportingService.create_session_topic_report(socket.assigns.session_id, session_member.id, session_topic_id, String.to_atom(report_format), String.to_atom(report_type), include_facilitator) do
       {:ok, session_topics_report} ->
-        {:reply, {:ok, session_topics_report}, socket}
+        {:reply, {:ok, SessionTopicReportView.render("show.json", %{ report: session_topics_report })}, socket}
       {:error, reason} ->
         {:error, %{reason: reason}}
       end
@@ -101,7 +101,8 @@ defmodule KlziiChat.SessionChannel do
 
   def handle_out("session_topics_report_updated", payload, socket) do
     case get_session_member(socket).role do
-      "facilitator" -> push socket, "session_topics_report_updated", payload
+      "facilitator" ->
+        push socket, "session_topics_report_updated", SessionTopicReportView.render("show.json", %{ report: payload })
       _ -> nil
     end
     {:noreply, socket}
