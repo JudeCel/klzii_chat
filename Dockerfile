@@ -1,12 +1,12 @@
-FROM dainisl/phoenix-docker
+FROM janjiss/phoenix-rc
 
-ENV MIX_ENV=prod
-ENV NODE_ENV=production
+ENV MIX_ENV=prod \ 
+    NODE_ENV=production \
+    PORT=3000
 
-RUN mkdir -p /var/www/klzii_chat
+COPY . /var/www/klzii_chat
 
 WORKDIR /var/www/klzii_chat
-COPY . /var/www/klzii_chat
 
 RUN mix local.hex --force && \
 	    mix local.rebar --force && \
@@ -14,11 +14,7 @@ RUN mix local.hex --force && \
 	    npm install --production --quiet && \
 	    node node_modules/.bin/webpack -p && \
 	    mix phoenix.digest && \
-	    mix compile.protocols
-
-RUN cd /var/www/klzii_chat
-
-ENV PORT=3000
+	    mix compile.protocols 
 
 EXPOSE 3000
 
