@@ -45,15 +45,16 @@ defmodule KlziiChat.Services.SessionReportingService do
   def get_report_name(:whiteboard, session_topics_reports_id), do: {:ok, "Session_topic_whiteboard_report_" <> to_string(session_topics_reports_id)}
   def get_report_name(report_type, session_topics_reports_id), do: {:ok, "Session_topic_messages_report_" <> to_string(session_topics_reports_id)}
 
-
-  def create_report_asyc(session_id, session_member_id, session_topics_reports_id, session_topic_id, report_name, report_format, report_type, include_facilitator) do
-    star_only = if report_type == :star, do: true, else: false
-
-    account_user_id = Repo.one(
+  def get_account_user_id(session_member_id) do
+    Repo.one(
       from sm in SessionMember,
       where: sm.id == ^session_member_id,
       select: sm.accountUserId
     )
+  end
+
+  def create_report_asyc(session_id, session_member_id, session_topics_reports_id, session_topic_id, report_name, report_format, report_type, include_facilitator) do
+    star_only = if report_type == :star, do: true, else: false
 
     {:ok, report_file_path} = SessionTopicReportingService.save_report(report_name, report_format, session_topic_id, star_only, !include_facilitator)
     upload_params = %{"type" => "file",
@@ -62,7 +63,7 @@ defmodule KlziiChat.Services.SessionReportingService do
         "name" => report_name}
 
     {:ok, session_topics_report} =
-      Task.async(fn -> ResourceService.upload(upload_params, account_user_id) end)
+      Task.async(fn -> ResourceService.upload(upload_params, get_account_user_id(session_member_id)) end)
       |> Task.yield(@upload_report_timeout)
       |> update_session_topics_reports_record(session_topics_reports_id)
 
@@ -116,4 +117,19 @@ defmodule KlziiChat.Services.SessionReportingService do
       end)
     end)
   end
+
+  def delete_session_topic_report(session_topic_report_id, session_member_id) do
+    case Repo.get(SessionTopicReport, session_topic_report_id) do
+      nil ->
+        {:error, "Session Topic Report not found"}
+      session_topic_report ->
+        resource_id = session_topic_report.resourceId
+        if resource_id != nil do
+          account_user_id = get_account_user_id(session_member_id)
+          Task.start(fn -> ResourceService.deleteByIds(account_user_id, [resource_id]) end)
+        end
+        Repo.delete(session_topic_report)
+    end
+  end
+
 end

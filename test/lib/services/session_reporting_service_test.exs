@@ -72,4 +72,14 @@ defmodule KlziiChat.Services.SessionReportingServiceTest do
     #:timer.sleep(500)
     #IO.inspect(r)
   end
+
+  test "Delete session topics report", %{session: session, session_topic: session_topic,facilitator: facilitator} do
+    {:ok, report} = SessionReportingService.create_session_topics_reports_record(session.id, session_topic.id, :all, true, :pdf)
+
+    #IO.inspect(SessionReportingService.get_session_topics_reports(session.id))
+
+    SessionReportingService.delete_session_topic_report(report.id, facilitator.id)
+
+    #IO.inspect(SessionReportingService.get_session_topics_reports(session.id))
+  end
 end
