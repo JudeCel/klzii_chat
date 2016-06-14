@@ -21,12 +21,12 @@ const Select = React.createClass({
 
           <Dropdown id='topic-selector' bsSize='medium'>
             <Dropdown.Toggle className='no-border-radius' noCaret>
-              <Button className='no-border-radius'>
+              <div className='no-border-radius btn btn-default'>
                 { current.name }
-              </Button>
-              <Button className='no-border-radius'>
+              </div>
+              <div className='no-border-radius btn btn-default'>
                 <span className='caret'></span>
-              </Button>
+              </div>
             </Dropdown.Toggle>
 
             <Dropdown.Menu className='no-border-radius'>
