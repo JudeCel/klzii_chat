@@ -109,7 +109,7 @@ defmodule KlziiChat.Services.SessionReportingService do
   def group_session_topics_reports(reports) do
     Enum.reduce(reports, Map.new, fn (%{sessionTopicId: sessionTopicId, type: type, format: format} = report, resulting_map) ->
       Map.update(resulting_map, sessionTopicId, %{format => %{type => report}}, fn value ->
-        Map.update(value, format, %{type => report}, &Map.put(&1, type, report))
+        Map.update(value, format, %{type => Map.delete(report, :__meta__)}, &Map.put(&1, type, Map.delete(report, :__meta__)))
       end)
     end)
   end

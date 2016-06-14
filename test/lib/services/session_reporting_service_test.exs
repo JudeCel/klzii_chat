@@ -39,16 +39,17 @@ defmodule KlziiChat.Services.SessionReportingServiceTest do
   end
 
 
-  test "Get all session topics reports", %{session_topic: session_topic_1, facilitator: facilitator} do
-    session_topic_id = session_topic_1.id
+  test "Get all session topics reports", %{session: session, session_topic: session_topic,facilitator: facilitator} do
+    session_id = session.id
+    session_topic_id = session_topic.id
 
-    SessionReportingService.create_session_topics_reports_record(session_topic_1.id, facilitator.id, :whiteboard, true, :pdf)
-    SessionReportingService.create_session_topics_reports_record(session_topic_1.id, facilitator.id, :all, true, :pdf)
-    SessionReportingService.create_session_topics_reports_record(session_topic_1.id, facilitator.id, :star, true, :pdf)
-    SessionReportingService.create_session_topics_reports_record(session_topic_1.id, facilitator.id, :all, true, :txt)
-    SessionReportingService.create_session_topics_reports_record(session_topic_1.id, facilitator.id, :star, true, :txt)
+    SessionReportingService.create_session_topics_reports_record(session_id, session_topic_id, :whiteboard, true, :pdf)
+    SessionReportingService.create_session_topics_reports_record(session_id, session_topic_id, :all, true, :pdf)
+    SessionReportingService.create_session_topics_reports_record(session_id, session_topic_id, :star, true, :pdf)
+    SessionReportingService.create_session_topics_reports_record(session_id, session_topic_id, :all, true, :txt)
+    SessionReportingService.create_session_topics_reports_record(session_id, session_topic_id, :star, true, :txt)
 
-    reports = SessionReportingService.get_session_topics_reports(facilitator.id)
+    reports = SessionReportingService.get_session_topics_reports(session_id)
 
 
     %{^session_topic_id =>

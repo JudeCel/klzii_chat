@@ -17,8 +17,4 @@ defmodule KlziiChat.SessionTopicsReportView do
     }
   end
 
-  def render("reports.json", %{reports: reports})
-    %{
-      
-    }
 end
