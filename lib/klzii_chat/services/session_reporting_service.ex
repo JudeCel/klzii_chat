@@ -61,11 +61,12 @@ defmodule KlziiChat.Services.SessionReportingService do
         "file" => report_file_path,
         "name" => report_name}
 
-    upload_task = Task.async(fn -> ResourceService.upload(upload_params, account_user_id) end)
-    upload_result = Task.yield(upload_task, @upload_report_timeout)
+    {:ok, session_topics_report} =
+      Task.async(fn -> ResourceService.upload(upload_params, account_user_id) end)
+      |> Task.yield(@upload_report_timeout)
+      |> update_session_topics_reports_record(session_topics_reports_id)
 
-    {:ok, session_topics_report} = update_session_topics_reports_record(upload_result, session_topics_reports_id)
-
+    session_topics_report = Repo.preload(session_topics_report, :resource)
     Endpoint.broadcast!( "sessions:#{session_id}", "session_topics_report_updated", session_topics_report)
 
     if File.exists?(report_file_path), do: File.rm(report_file_path)
