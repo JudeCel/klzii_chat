@@ -67,7 +67,8 @@ defmodule KlziiChat.Services.SessionReportingServiceTest do
   end
 
   test "create report", %{session: session, session_topic: session_topic, facilitator: facilitator} do
-    SessionReportingService.create_session_topic_report(session.id, facilitator.id, session_topic.id, :csv, :all, :true)
-    |> IO.inspect()
+    #r = SessionReportingService.create_session_topic_report(session.id, facilitator.id, session_topic.id, :pdf, :all, :true)
+    #:timer.sleep(500)
+    #IO.inspect(r)
   end
 end

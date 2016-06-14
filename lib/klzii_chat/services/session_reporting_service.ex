@@ -72,11 +72,11 @@ defmodule KlziiChat.Services.SessionReportingService do
   end
 
 
-  def update_session_topics_reports_record({:ok, resource}, session_topics_reports_id) do
-    session_topics_report = Repo.one(SessionTopicReport, session_topics_reports_id)
-    session_topics_report = Ecto.Changeset.change(session_topics_reports, status: "completed", resourceId: resource.id)
+  def update_session_topics_reports_record({:ok, {:ok, resource}}, session_topics_reports_id) do
+    session_topics_report = Repo.get(SessionTopicReport, session_topics_reports_id)
+    session_topics_report = Ecto.Changeset.change(session_topics_report, status: "completed", resourceId: resource.id)
 
-    Repo.update(session_topics_reports)
+    Repo.update(session_topics_report)
   end
 
   def update_session_topics_reports_record(nil, session_topics_reports_id) do
