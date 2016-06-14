@@ -97,19 +97,22 @@ defmodule KlziiChat.Services.SessionReportingService do
 
 
   def get_session_topics_reports(session_id) do
-    Repo.all(
-      from str in SessionTopicReport,
-      where: str.sessionId == ^session_id,
-      preload: [:resource]
-    )
-    |> group_session_topics_reports()
+    session_topics_reports =
+      Repo.all(
+        from str in SessionTopicReport,
+        where: str.sessionId == ^session_id,
+        preload: [:resource]
+      )
+      |> group_session_topics_reports()
+
+    {:ok, session_topics_reports}
   end
 
   # sessionTopicId => format => type
   def group_session_topics_reports(reports) do
     Enum.reduce(reports, Map.new, fn (%{sessionTopicId: sessionTopicId, type: type, format: format} = report, resulting_map) ->
       Map.update(resulting_map, sessionTopicId, %{format => %{type => report}}, fn value ->
-        Map.update(value, format, %{type => Map.delete(report, :__meta__)}, &Map.put(&1, type, Map.delete(report, :__meta__)))
+        Map.update(value, format, %{type => report}, &Map.put(&1, type, report))
       end)
     end)
   end

@@ -76,10 +76,10 @@ defmodule KlziiChat.SessionChannel do
 
   end
 
-  def handle_in("get_session_topics_reports", _params, socket) do
-    case SessionReportingService.get_session_topics_reports(socket.assigns.session_id) do
+  def handle_in("get_session_topics_reports", _, socket) do
+  case SessionReportingService.get_session_topics_reports(socket.assigns.session_id) do
       {:ok, session_topics_reports} ->
-        {:reply, {:ok, Poison.encode(session_topics_reports)}, socket}
+        {:reply, {:ok, SessionTopicsReportView.render("reports.json", %{reports: session_topics_reports})}, socket}
       {:error, reason} ->
         {:error, %{reason: reason}}
     end

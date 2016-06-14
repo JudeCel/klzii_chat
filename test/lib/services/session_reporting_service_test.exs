@@ -49,7 +49,7 @@ defmodule KlziiChat.Services.SessionReportingServiceTest do
     SessionReportingService.create_session_topics_reports_record(session_id, session_topic_id, :all, true, :txt)
     SessionReportingService.create_session_topics_reports_record(session_id, session_topic_id, :star, true, :txt)
 
-    reports = SessionReportingService.get_session_topics_reports(session_id)
+    {:ok, reports} = SessionReportingService.get_session_topics_reports(session_id)
 
 
     %{^session_topic_id =>
