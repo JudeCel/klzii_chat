@@ -2,7 +2,7 @@ defmodule KlziiChat.SessionTopicReport do
   use KlziiChat.Web, :model
 
   schema "SessionTopicsReports" do
-    belongs_to :session_member, KlziiChat.SessionMember, [foreign_key: :sessionMemberId]
+    belongs_to :session, KlziiChat.Session, [foreign_key: :sessionId]
     belongs_to :session_topic, KlziiChat.SessionTopic, [foreign_key: :sessionTopicId]
     belongs_to :resource, KlziiChat.Resource, [foreign_key: :resourceId]
     field :type, :string
@@ -13,7 +13,7 @@ defmodule KlziiChat.SessionTopicReport do
     timestamps [inserted_at: :createdAt, updated_at: :updatedAt]
   end
 
-  @required_fields ~w(session_member session_topic type facilitator format status)
+  @required_fields ~w(session session_topic type facilitator format status)
   @optional_fields ~w(resource message)
 
   @doc """
