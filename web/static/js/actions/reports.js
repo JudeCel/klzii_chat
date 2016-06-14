@@ -20,7 +20,7 @@ const Actions = {
   },
   index:(channel, callback) => {
     return dispatch => {
-      channel.push('get_session_reports')
+      channel.push('get_session_topics_reports')
       .receive('ok', (data) => {
         dispatch({ type: Constants.SET_REPORTS, data: data.reports });
         if(callback) callback();
