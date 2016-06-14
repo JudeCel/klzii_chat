@@ -2,15 +2,15 @@ defmodule KlziiChat.Services.Permissions.BuilderPermissionsTest do
   use ExUnit.Case, async: true
   alias KlziiChat.Services.Permissions.Builder
   @subscription_keys %{
-    importDatabase: true,
-    brandLogoAndCustomColors: true,
-    accessKlzziForum: true,
-    accessKlzziFocus: true,
-    discussionGuideTips: true,
-    whiteboardFunctionality: true,
-    uploadToGallery: true,
-    reportingFunctions: true,
-    availableOnTabletAndMobilePlatforms: true
+    "importDatabase" =>  true,
+    "brandLogoAndCustomColors" =>  true,
+    "accessKlzziForum" =>  true,
+    "accessKlzziFocus" =>  true,
+    "discussionGuideTips" =>  true,
+    "whiteboardFunctionality" =>  true,
+    "uploadToGallery" =>  true,
+    "reportingFunctions" =>  true,
+    "availableOnTabletAndMobilePlatforms" =>  true
   }
   @basic_map %{
     messages: %{},
