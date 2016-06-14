@@ -8,22 +8,22 @@ defmodule KlziiChat.Services.SessionReportingService do
 
   def create_session_topic_report(_, _, _, report_format, :whiteboard, _) when report_format != :pdf, do: {:error, "pdf is the only format that is acceptable for whiteboard report"}
 
-  def create_session_topic_report(session_id, session_member_id, session_topic_id, report_format, report_type, include_facilitator)
+  def create_session_topic_report(session_id, session_member, session_topic_id, report_format, report_type, include_facilitator)
     when report_type in [:all, :star, :whiteboard] and report_format in [:txt, :csv, :pdf]    # TODO: :votes
   do
-    with {:ok, %{id: session_topics_reports_id} = session_topics_report} <-  create_session_topics_reports_record(session_topic_id, session_member_id, report_type, include_facilitator, report_format),
+    with {:ok, %{id: session_topics_reports_id} = session_topics_report} <-  create_session_topics_reports_record(session_id, session_topic_id, report_type, include_facilitator, report_format),
          {:ok, report_name} <- get_report_name(report_type, session_topics_reports_id),
-         create_report_params = [session_id, session_member_id, session_topics_reports_id, session_topic_id, report_name, report_format, report_type, include_facilitator],
+         create_report_params = [session_id, session_member.id, session_topics_reports_id, session_topic_id, report_name, report_format, report_type, include_facilitator],
          {:ok, _}  <- Task.start(__MODULE__, :create_report_asyc, create_report_params),
-     do: {:ok, session_topics_report}
+     do: {:ok, Repo.preload(session_topics_report, :resource)}
   end
 
   def create_session_topic_report(_, _, _, report_format, _, _) when report_format in [:txt, :csv, :pdf], do: {:error, "incorrect report type"}
   def create_session_topic_report(_, _, _, _, _, _), do: {:error, "incorrect report format"}
 
-  def create_session_topics_reports_record(session_topic_id, session_member_id, :whiteboard, include_facilitator, :pdf) do
+  def create_session_topics_reports_record(session_id, session_topic_id, :whiteboard, _, :pdf) do
     Repo.insert(%SessionTopicReport{
-      sessionMemberId: session_member_id,
+      sessionId: session_id,
       sessionTopicId: session_topic_id,
       type: "whiteboard",
       facilitator: true,
@@ -31,9 +31,9 @@ defmodule KlziiChat.Services.SessionReportingService do
     })
   end
 
-  def create_session_topics_reports_record(session_topic_id, session_member_id, report_type, include_facilitator, report_format) do
+  def create_session_topics_reports_record(session_id, session_topic_id, report_type, include_facilitator, report_format) do
     Repo.insert(%SessionTopicReport{
-      sessionMemberId: session_member_id,
+      sessionId: session_id,
       sessionTopicId: session_topic_id,
       type: to_string(report_type),
       facilitator: include_facilitator,
@@ -96,10 +96,10 @@ defmodule KlziiChat.Services.SessionReportingService do
   end
 
 
-  def get_session_topics_reports(session_member_id) do
+  def get_session_topics_reports(session_id) do
     Repo.all(
       from str in SessionTopicReport,
-      where: str.sessionMemberId == ^session_member_id,
+      where: str.sessionId == ^session_id,
       preload: [:resource]
     )
     |> group_session_topics_reports()
