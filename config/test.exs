@@ -14,7 +14,7 @@ config :klzii_chat, KlziiChat.Repo,
   adapter: Ecto.Adapters.Postgres,
   username: "postgres",
   password: "postgres",
-  database: "kliiko_development",
+  database: "kliiko_test",
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox,
   sql_sandbox: true
