@@ -16,6 +16,10 @@ const ReportsIndex = React.createClass({
 
     dispatch(ReportsActions.create(channel, { sessionTopicId, format, type, facilitator }));
   },
+  componentDidMount() {
+    const { channel, dispatch } = this.props;
+    dispatch(ReportsActions.index(channel));
+  },
   render() {
     const { sessionTopics, reports, changePage } = this.props;
     const { format, facilitator } = this.state;
