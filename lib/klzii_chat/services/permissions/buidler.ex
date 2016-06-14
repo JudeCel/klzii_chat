@@ -42,7 +42,6 @@ defmodule KlziiChat.Services.Permissions.Builder do
         nil ->
           %{data: %{}}
         preference ->
-          IO.inspect(preference)
           Map.get(preference, :data, %{})
       end
   end
