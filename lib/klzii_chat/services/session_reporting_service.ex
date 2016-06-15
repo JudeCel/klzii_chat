@@ -132,7 +132,7 @@ defmodule KlziiChat.Services.SessionReportingService do
     end
   end
 
-  def retry_session_topic_report(session_topic_report_id, session_member_id) do
+  def recreate_session_topic_report(session_topic_report_id, session_member_id) do
     case Repo.get(session_topic_report_id) do
       nil -> {:error, "no report found"}
       %{sessionId: session_id, sessionTopicId: session_topic_id, report_name: report_name, report_format: report_format, report_type: report_type, include_facilitator: include_facilitator} = session_topics_report ->
