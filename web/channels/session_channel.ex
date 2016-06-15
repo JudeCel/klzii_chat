@@ -18,7 +18,7 @@ defmodule KlziiChat.SessionChannel do
     {session_id, _} = Integer.parse(session_id)
     if authorized?(socket, session_id) do
       send(self, :after_join)
-      case SessionService.find(session_id) do
+      case SessionService.find_active(session_id) do
         {:ok, session} ->
           {:ok, session, assign(socket, :session_id, session_id)}
         {:error, reason} ->
@@ -51,8 +51,8 @@ defmodule KlziiChat.SessionChannel do
     case SessionMembersService.update_member(get_session_member(socket).id, params) do
       {:ok, session_member} ->
         permision_task = Task.async(fn ->
-          permissions = PermissionsBuilder.member_permissions(session_member.id)
-          push(socket, "self_info", SessionMembersView.render("current_member.json", member: session_member, permissions_map: permissions))
+          {:ok, permissions_map} = PermissionsBuilder.subscription_permissions(session_member.id)
+          push(socket, "self_info", SessionMembersView.render("current_member.json", member: session_member, permissions_map: permissions_map))
         end)
 
         broadcast(socket, "update_member", SessionMembersView.render("member.json", member: session_member))
