@@ -7,11 +7,21 @@ defmodule KlziiChat.Services.Permissions.Builder do
   alias KlziiChat.Services.Permissions.Whiteboard, as: WhiteboardPermissions
   alias KlziiChat.Services.Permissions.Validations
 
-  @spec member_permissions(Integer) :: Map.t
-  def member_permissions(session_member_id) do
-    session_member = Repo.get!(SessionMember, session_member_id)
-    preference = get_subscription_preference(session_member.id)
-    buid_map(session_member, preference)
+  def error_messages do
+    %{
+      subscription_not_found: "Subscription not found"
+    }
+  end
+
+  @spec subscription_permissions(Integer) :: Map.t
+  def subscription_permissions(session_member_id) do
+    case get_subscription_preference(session_member_id) do
+      {:ok, preference} ->
+        session_member = Repo.get!(SessionMember, session_member_id)
+        {:ok, buid_map(session_member, preference)}
+      {:error, reason} ->
+        {:error, reason}
+    end
   end
 
   @spec buid_map(Map.t, Map.t) :: Map.t
@@ -38,11 +48,11 @@ defmodule KlziiChat.Services.Permissions.Builder do
   defp get_subscription_preference(session_member_id) do
     SessionMemberQueries.get_subscription_preference(session_member_id)
       |> Repo.one
-      |> case  do
+      |> case do
         nil ->
-          %{data: %{}}
+          {:error, error_messages.subscription_not_found}
         preference ->
-          Map.get(preference, :data, %{})
+          {:ok, Map.get(preference, :data, %{})}
       end
   end
 end
