@@ -1,5 +1,5 @@
 defmodule KlziiChat.Services.SessionReportingService do
-  alias KlziiChat.Services.{SessionTopicReportingService, SessionTopicService, ResourceService}
+  alias KlziiChat.Services.{SessionTopicReportingService, SessionTopicService, ResourceService, WhiteboardReportingService}
   alias KlziiChat.{Repo, SessionTopicReport, SessionMember, Endpoint}
 
   import Ecto.Query, only: [from: 2]
@@ -56,7 +56,13 @@ defmodule KlziiChat.Services.SessionReportingService do
   def create_report_asyc(session_id, session_member_id, session_topics_reports_id, session_topic_id, report_name, report_format, report_type, include_facilitator) do
     star_only = if report_type == :star, do: true, else: false
 
-    {:ok, report_file_path} = SessionTopicReportingService.save_report(report_name, report_format, session_topic_id, star_only, !include_facilitator)
+    {:ok, report_file_path} =
+      if report_type == :whiteboard do
+        WhiteboardReportingService.save_report(report_name, :pdf, session_topic_id)
+      else
+        SessionTopicReportingService.save_report(report_name, report_format, session_topic_id, star_only, !include_facilitator)
+      end
+
     upload_params = %{"type" => "file",
         "scope" => to_string(report_format),
         "file" => report_file_path,
@@ -70,7 +76,7 @@ defmodule KlziiChat.Services.SessionReportingService do
     session_topics_report = Repo.preload(session_topics_report, :resource)
     Endpoint.broadcast!( "sessions:#{session_id}", "session_topics_report_updated", session_topics_report)
 
-    if File.exists?(report_file_path), do: File.rm(report_file_path)
+    #if File.exists?(report_file_path), do: File.rm(report_file_path)
   end
 
 
