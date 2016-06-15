@@ -81,6 +81,15 @@ defmodule KlziiChat.SessionChannel do
     end
   end
 
+  def handle_in("retry_session_topic_report", %{"id" => session_topic_report_id}, socket) do
+    case SessionReportingService.retry_session_topic_report(session_topic_report_id, get_session_member(socket).id) do
+      {:ok, session_topics_report} ->
+        {:reply, {:ok, SessionTopicsReportView.render("show.json", %{report: session_topics_report})}, socket}
+      {:error, reason} ->
+        {:error, %{reason: reason}}
+    end
+  end
+
   def handle_in("get_session_topics_reports", _, socket) do
   case SessionReportingService.get_session_topics_reports(socket.assigns.session_id) do
       {:ok, session_topics_reports} ->
