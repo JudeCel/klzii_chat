@@ -55,7 +55,7 @@ const ReportIcon = React.createClass({
     const report = this.getReport();
     const { type, format, sessionTopicId, facilitator } = this.props;
 
-    if(report.type == 'whiteboard' && report.format != 'pdf') {
+    if(type == 'whiteboard' && format != 'pdf') {
       return (false);
     }
     else {
@@ -68,8 +68,7 @@ const ReportIcon = React.createClass({
 
 const mapStateToProps = (state) => {
   return {
-    // enable later
-    // reports: state.chat.session.reports
+    reports: state.reports.data
   }
 };
 

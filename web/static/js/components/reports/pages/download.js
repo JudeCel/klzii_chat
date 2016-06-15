@@ -4,8 +4,9 @@ import ReportsActions     from '../../../actions/reports';
 
 const ReportsDownload = React.createClass({
   deleteReport(reportId) {
-    const { channel, dispatch } = this.props;
+    const { channel, dispatch, changePage } = this.props;
     dispatch(ReportsActions.delete(channel, reportId));
+    changePage('index');
   },
   render() {
     const { report } = this.props;

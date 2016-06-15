@@ -13,7 +13,7 @@ function _errorData(data) {
 const Actions = {
   subscribeReportsEvents:(channel) => {
     return dispatch => {
-      channel.on('report_updated', (data) => {
+      channel.on('session_topics_report_updated', (data) => {
         return dispatch({ type: Constants.UPDATE_REPORT, data: data });
       });
     }
@@ -22,7 +22,7 @@ const Actions = {
     return dispatch => {
       channel.push('get_session_topics_reports')
       .receive('ok', (data) => {
-        dispatch({ type: Constants.SET_REPORTS, data: data.reports });
+        dispatch({ type: Constants.SET_REPORTS, data: data });
         if(callback) callback();
       }).receive('error', (data) => {
         dispatch(_errorData(data));
