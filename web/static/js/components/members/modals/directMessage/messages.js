@@ -5,6 +5,7 @@ import moment             from 'moment';
 import TextareaAutosize   from 'react-autosize-textarea';
 import Message            from './message';
 import mixins             from '../../../../mixins';
+import DirectMessageActions from '../../../../actions/directMessage';
 
 const Messages = React.createClass({
   mixins: [mixins.helpers],
@@ -20,7 +21,8 @@ const Messages = React.createClass({
     }
   },
   sendMessage() {
-    console.error(this.state.text);
+    const { dispatch, channel, reciever } = this.props;
+    dispatch(DirectMessageActions.send(channel, { recieverId: reciever.id, text: this.state.text }));
   },
   addSeperator(messages) {
     if(messages.length > 0) {
@@ -36,11 +38,6 @@ const Messages = React.createClass({
   getInitialState() {
     return { text: '' };
   },
-  componentDidMount() {
-    // temp while no real messages
-    this.shouldScrollBottom = true;
-    this.componentDidUpdate();
-  },
   componentWillUpdate() {
     let messages = ReactDOM.findDOMNode(this);
     let chatBoxHeight = messages.scrollTop + messages.offsetHeight;
@@ -55,13 +52,13 @@ const Messages = React.createClass({
     return state.text == this.state.text;
   },
   render() {
-    const { member, messages, currentUser } = this.props;
+    const { messages } = this.props;
 
     return (
       <div className='col-md-12 messages-section' style={ this.borderColor() }>
         {
           messages.read.map((message) =>
-            <Message key={ message.id } message={ message } member={ member } type='read' />
+            <Message key={ message.id } message={ message } sender={ this.getSessionMemberById(message.senderId) } type='read' />
           )
         }
 
@@ -69,7 +66,7 @@ const Messages = React.createClass({
 
         {
           messages.unread.map((message) =>
-            <Message key={ message.id } message={ message } member={ currentUser } type='unread' />
+            <Message key={ message.id } message={ message } sender={ this.getSessionMemberById(message.senderId) } type='unread' />
           )
         }
 
@@ -86,41 +83,12 @@ const Messages = React.createClass({
 
 const mapStateToProps = (state) => {
   return {
+    facilitator: state.members.facilitator,
+    participants: state.members.participants,
     colours: state.chat.session.colours,
-    currentUser: state.members.currentUser,
-    messages: state.chat.session.directMessages || _fakeSeedData(10)
+    channel: state.chat.channel,
+    messages: state.directMessages
   }
 };
 
 export default connect(mapStateToProps, null, null, { pure: false })(Messages);
-
-function _fakeSeedData(count) {
-  let unreadCount = 2;
-  let readCount = count - unreadCount;
-
-  let read = [];
-  for(var i = 0; i < readCount; i++) {
-    read.push({
-      id: i,
-      senderId: 1,
-      recieverId: 2,
-      createdAt: new Date(),
-      readAt: new Date(),
-      text: "Random text " + i
-    });
-  }
-
-  let unread = [];
-  for(var i = 0; i < unreadCount; i++) {
-    unread.push({
-      id: i,
-      senderId: 1,
-      recieverId: 2,
-      createdAt: new Date(),
-      readAt: null,
-      text: "Random text " + i
-    });
-  }
-
-  return { read: read, unread: unread };
-}

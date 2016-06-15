@@ -1,8 +1,8 @@
 defmodule KlziiChat.SessionChannel do
   use KlziiChat.Web, :channel
-  alias KlziiChat.Services.{SessionService, SessionMembersService}
+  alias KlziiChat.Services.{SessionService, SessionMembersService, DirectMessageService}
   alias KlziiChat.Services.Permissions.Builder, as: PermissionsBuilder
-  alias KlziiChat.{Presence, SessionMembersView}
+  alias KlziiChat.{Presence, SessionMembersView, DirectMessageView}
   import(KlziiChat.Authorisations.Channels.Session, only: [authorized?: 2])
   import(KlziiChat.Helpers.SocketHelper, only: [get_session_member: 1])
 
@@ -61,6 +61,27 @@ defmodule KlziiChat.SessionChannel do
         {:error, %{reason: reason}}
     end
     {:noreply, socket}
+  end
+
+  def handle_in("get_all_direct_messages", %{ "recieverId" => recieverId }, socket) do
+    senderId = get_session_member(socket).id
+
+    messages = DirectMessageService.get_all_direct_messages(recieverId, senderId)
+    {:reply, {:ok, %{ messages: DirectMessageView.render("messages.json", messages: messages) }}, socket}
+  end
+
+  def handle_in("create_direct_message", %{ "recieverId" => recieverId, "text" => text }, socket) do
+    sender_member = get_session_member(socket)
+
+    { :ok, message } = DirectMessageService.create_message(sender_member.session_id, %{ "recieverId" => recieverId, "text" => text, "senderId" => sender_member.id })
+    {:reply, { :ok, %{ message: DirectMessageView.render("show.json", message: message) } }, socket}
+  end
+
+  def handle_in("set_read_direct_messages", %{ "senderId" => senderId }, socket) do
+    reciever_member = get_session_member(socket)
+
+    DirectMessageService.set_all_messages_read(reciever_member.id, senderId)
+    {:reply, :ok, socket}
   end
 
   def handle_out("unread_messages", payload, socket) do

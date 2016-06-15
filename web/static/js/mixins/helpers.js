@@ -47,6 +47,18 @@ const helpers = {
     if(_this.shouldScrollBottom) {
       element.scrollTop = element.scrollHeight;
     }
+  },
+  getSessionMemberById(memberId, list) {
+    if(this.props.facilitator.id == memberId) {
+      return this.props.facilitator;
+    }
+
+    let array = list || this.props.participants;
+    for(let i = 0; i < array.length; i++) {
+      if(array[i].id == memberId) return array[i];
+    }
+
+    return {};
   }
 };
 
