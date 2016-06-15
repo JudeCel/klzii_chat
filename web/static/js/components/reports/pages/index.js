@@ -68,8 +68,7 @@ const ReportsIndex = React.createClass({
                     reportTypes.map((type, fIndex) =>
                       <td className={ 'col-md-' + colMdSizes[fIndex] } key={ fIndex }>
                         <ReportIcon
-                          //remove reports
-                          { ...{ format, type, facilitator, reports, sessionTopicId: topic.id } }
+                          { ...{ format, type, facilitator, sessionTopicId: topic.id } }
                           { ...{ createReport: this.createReport, changePage: changePage } }
                         />
                       </td>
@@ -89,33 +88,8 @@ const mapStateToProps = (state) => {
   return {
     sessionTopics: state.chat.session.session_topics,
     channel: state.chat.channel,
-    reports: state.chat.session.reports || _fakeSeedData(2)
+    reports: state.reports.data
   }
 };
 
 export default connect(mapStateToProps)(ReportsIndex);
-
-function _fakeSeedData(count) {
-  const reportFormats = ['pdf', 'csv', 'txt'];
-  const reportTypes = ['all', 'star', 'whiteboard', 'votes'];
-  const reportStatuses = [null, 'progress', 'completed', 'failed'];
-
-  let object = {};
-  for(let topicId = 1; topicId < count + 1; topicId++) {
-    object[topicId] = {};
-    reportFormats.map((format) => {
-      object[topicId][format] = {};
-
-      reportTypes.map((type, index) => {
-        let status = reportStatuses[Math.floor(Math.random() * reportStatuses.length)];
-        object[topicId][format][type] = {
-          id: topicId * 100 + index,
-          status: status,
-          resource: status == 'completed' ? { name: 'Hey!', url: { full: 'some url' } } : null
-        }
-      });
-    });
-  }
-
-  return object;
-}

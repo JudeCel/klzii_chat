@@ -1,7 +1,6 @@
 import Constants        from '../constants';
 import MessagesActions  from './messages';
 import ConsoleActions   from './console';
-import ReportsActions   from './reports';
 import WhiteboardActions   from './whiteboard';
 
 export function joinChannal(dispatch, socket, sessionTopicId) {
@@ -15,7 +14,6 @@ export function joinChannal(dispatch, socket, sessionTopicId) {
     });
     dispatch(MessagesActions.subscribeMessageEvents(channel));
     dispatch(ConsoleActions.subscribeConsoleEvents(channel));
-    dispatch(ReportsActions.subscribeReportsEvents(channel));
     dispatch(WhiteboardActions.connectToChannel(socket, sessionTopicId));
     dispatch(Actions.subscribeEvents(channel));
 

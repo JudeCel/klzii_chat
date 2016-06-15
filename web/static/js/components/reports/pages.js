@@ -11,9 +11,9 @@ const ReportsPages = React.createClass({
       case 'index':
         return <SelectReport changePage={ changePage } />
       case 'download':
-        return <DownloadReport report={ report } />
+        return <DownloadReport changePage={ changePage } report={ report } />
       case 'failed':
-        return <FailedReport report={ report } />
+        return <FailedReport changePage={ changePage } report={ report } />
     }
   }
 });
