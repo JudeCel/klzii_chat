@@ -1,5 +1,5 @@
 defmodule KlziiChat.Services.SessionReportingService do
-  alias KlziiChat.Services.{SessionTopicReportingService, SessionTopicService, ResourceService, WhiteboardReportingService}
+  alias KlziiChat.Services.{SessionTopicReportingService, ResourceService, WhiteboardReportingService}
   alias KlziiChat.{Repo, SessionTopicReport, SessionMember, Endpoint}
 
   import Ecto.Query, only: [from: 2]
