@@ -1,4 +1,4 @@
-FROM janjiss/phoenix-rc
+FROM dainisl/phoenix-docker
 
 ENV MIX_ENV=prod \ 
     NODE_ENV=production \
