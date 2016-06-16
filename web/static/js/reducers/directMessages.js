@@ -2,16 +2,60 @@ import Constants from '../constants';
 
 const initialState = {
   read: [],
-  unread: []
+  unread: [],
+  unreadCount: {},
+  current: null
 };
 
 export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
+    case Constants.UNREAD_DIRECT_MESSAGES:
+      return { ...state, unreadCount: action.data };
+    case Constants.SET_DIRECT_MESSAGE_USER:
+      return { ...state, current: action.id };
     case Constants.SET_DIRECT_MESSAGES:
       return { ...state, ...action.data };
     case Constants.CREATE_DIRECT_MESSAGE:
-      return { ...state, read: [...state.read, action.data] };
+      return { ...state, ...createDirectMessage(state, action.data) };
+    case Constants.NEW_DIRECT_MESSAGE:
+      return { ...state, ...newDirectMessage(state, action.data) };
+    case Constants.READ_DIRECT_MESSAGES:
+      return { ...state, ...readDirectMessages(state, action.data) };
     default:
       return state;
   }
+}
+
+function createDirectMessage(state, message) {
+  let object = { unread: state.unread, read: state.read };
+  object.read = [...object.read, ...object.unread, message];
+  object.unread = [];
+  return object;
+}
+
+function newDirectMessage(state, message) {
+  let object = {};
+
+  if(state.current && state.current == message.senderId) {
+    object = { unread: [...state.unread, message] };
+  }
+  else {
+    object = { unreadCount: { ...state.unreadCount } };
+    if(object.unreadCount[message.senderId]) {
+      object.unreadCount[message.senderId]++;
+    }
+    else {
+      object.unreadCount[message.senderId] = 1;
+    }
+  }
+
+  return object;
+}
+
+function readDirectMessages(state, message) {
+  let object = { ...state.unreadCount };
+  if(object[message.senderId]) {
+    delete object[message.senderId];
+  }
+  return object;
 }

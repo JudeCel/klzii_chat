@@ -42,6 +42,21 @@ defmodule KlziiChat.Services.DirectMessageService do
     |> Repo.update_all(set: [readAt: Timex.DateTime.now])
   end
 
+  @spec get_unread_count(Integer.t) :: {:ok, Map.t} | {:error, Ecto.Changeset.t}
+  def get_unread_count(current_member_id) do
+    current_member = Repo.get!(SessionMember, current_member_id)
+
+    from(from dm in DirectMessage,
+      where: dm.recieverId == ^current_member.id and is_nil(dm.readAt),
+      group_by: dm.senderId,
+      select: { dm.senderId, count(dm.id) }
+    )
+    |> Repo.all
+    |> Enum.reduce(%{}, fn { key, value }, acc ->
+      Map.put(acc, to_string(key), value)
+    end)
+  end
+
   def group_by_read(messages, current_member_id) do
     Enum.group_by(messages, &(is_message_read(&1, current_member_id)))
   end

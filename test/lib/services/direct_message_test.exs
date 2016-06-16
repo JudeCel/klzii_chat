@@ -44,4 +44,16 @@ defmodule KlziiChat.Services.DirectMessageTest do
     assert(unread_list == [message3])
     # assert(read_list == [message2, message1])
   end
+
+  test "DirectMessage - get unread message count", %{ facilitator: facilitator, participant: participant, session: session } do
+    DirectMessageService.create_message(session.id, %{ "senderId" => facilitator.id, "recieverId" => participant.id, "text" => "Aaa" })
+    DirectMessageService.create_message(session.id, %{ "senderId" => facilitator.id, "recieverId" => participant.id, "text" => "Bbb" })
+
+    count = DirectMessageService.get_unread_count(participant.id)
+    |> Map.get(to_string(facilitator.id))
+    assert(count == 2)
+
+    resp = DirectMessageService.get_unread_count(facilitator.id)
+    assert(resp == %{})
+  end
 end

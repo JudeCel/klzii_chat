@@ -12,7 +12,7 @@ defmodule KlziiChat.SessionChannel do
     Global messages for session
   """
 
-  intercept ["unread_messages"]
+  intercept ["unread_messages", "new_direct_message"]
 
   def join("sessions:" <> session_id, _, socket) do
     {session_id, _} = Integer.parse(session_id)
@@ -74,7 +74,11 @@ defmodule KlziiChat.SessionChannel do
     current_member = get_session_member(socket)
 
     { :ok, message } = DirectMessageService.create_message(current_member.session_id, %{ "recieverId" => other_member_id, "text" => text, "senderId" => current_member.id })
-    {:reply, { :ok, %{ message: DirectMessageView.render("show.json", message: message) } }, socket}
+    encoded = DirectMessageView.render("show.json", message: message);
+
+    key = message.recieverId |> to_string
+    broadcast(socket, "new_direct_message", %{ key => encoded })
+    {:reply, { :ok, %{ message: encoded } }, socket}
   end
 
   def handle_in("set_read_direct_messages", %{ "senderId" => other_member_id }, socket) do
@@ -82,6 +86,23 @@ defmodule KlziiChat.SessionChannel do
 
     DirectMessageService.set_all_messages_read(current_member.id, other_member_id)
     {:reply, :ok, socket}
+  end
+
+  def handle_in("get_unread_count", _, socket) do
+    current_member = get_session_member(socket)
+    count = DirectMessageService.get_unread_count(current_member.id)
+    {:reply, { :ok, %{ count: count } }, socket}
+  end
+
+  def handle_out("new_direct_message", payload, socket) do
+    id = get_session_member(socket).id |> to_string
+    case Map.get(payload, id, nil) do
+      map when is_map(map) ->
+        push socket, "new_direct_message", map
+      nil ->
+        nil
+    end
+    {:noreply, socket}
   end
 
   def handle_out("unread_messages", payload, socket) do
