@@ -63,24 +63,24 @@ defmodule KlziiChat.SessionChannel do
     {:noreply, socket}
   end
 
-  def handle_in("get_all_direct_messages", %{ "recieverId" => recieverId }, socket) do
-    senderId = get_session_member(socket).id
+  def handle_in("get_all_direct_messages", %{ "recieverId" => other_member_id }, socket) do
+    current_member_id = get_session_member(socket).id
 
-    messages = DirectMessageService.get_all_direct_messages(recieverId, senderId)
+    messages = DirectMessageService.get_all_direct_messages(current_member_id, other_member_id)
     {:reply, {:ok, %{ messages: DirectMessageView.render("messages.json", messages: messages) }}, socket}
   end
 
-  def handle_in("create_direct_message", %{ "recieverId" => recieverId, "text" => text }, socket) do
-    sender_member = get_session_member(socket)
+  def handle_in("create_direct_message", %{ "recieverId" => other_member_id, "text" => text }, socket) do
+    current_member = get_session_member(socket)
 
-    { :ok, message } = DirectMessageService.create_message(sender_member.session_id, %{ "recieverId" => recieverId, "text" => text, "senderId" => sender_member.id })
+    { :ok, message } = DirectMessageService.create_message(current_member.session_id, %{ "recieverId" => other_member_id, "text" => text, "senderId" => current_member.id })
     {:reply, { :ok, %{ message: DirectMessageView.render("show.json", message: message) } }, socket}
   end
 
-  def handle_in("set_read_direct_messages", %{ "senderId" => senderId }, socket) do
-    reciever_member = get_session_member(socket)
+  def handle_in("set_read_direct_messages", %{ "senderId" => other_member_id }, socket) do
+    current_member = get_session_member(socket)
 
-    DirectMessageService.set_all_messages_read(reciever_member.id, senderId)
+    DirectMessageService.set_all_messages_read(current_member.id, other_member_id)
     {:reply, :ok, socket}
   end
 

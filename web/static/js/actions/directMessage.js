@@ -37,6 +37,7 @@ const Actions = {
     return dispatch => {
       channel.push('set_read_direct_messages', { senderId })
       .receive('ok', (data) => {
+        dispatch({ type: Constants.READ_DIRECT_MESSAGES });
         if(callback) callback();
       }).receive('error', (data) => {
         dispatch(_errorData(data));

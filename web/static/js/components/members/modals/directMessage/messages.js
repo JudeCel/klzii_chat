@@ -23,6 +23,11 @@ const Messages = React.createClass({
   sendMessage() {
     const { dispatch, channel, reciever } = this.props;
     dispatch(DirectMessageActions.send(channel, { recieverId: reciever.id, text: this.state.text }));
+
+    this.setState(this.getInitialState(), function() {
+      let textarea = ReactDOM.findDOMNode(this).querySelector('#direct-message-textarea');
+      textarea.value = this.state.text;
+    });
   },
   addSeperator(messages) {
     if(messages.length > 0) {
@@ -72,7 +77,7 @@ const Messages = React.createClass({
 
         <div className='form-group'>
           <div className='input-group input-group-lg'>
-            <TextareaAutosize type='text' className='form-control no-border-radius' placeholder='Message' onChange={ this.onChange } onKeyDown={ this.onKeyDown } />
+            <TextareaAutosize id='direct-message-textarea' type='text' className='form-control no-border-radius' placeholder='Message' onChange={ this.onChange } onKeyDown={ this.onKeyDown } />
             <div className='input-group-addon no-border-radius cursor-pointer' onClick={ this.sendMessage }>POST</div>
           </div>
         </div>

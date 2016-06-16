@@ -18,36 +18,37 @@ defmodule KlziiChat.Services.DirectMessageService do
   end
 
   @spec get_all_direct_messages(Integer.t, Integer.t) :: List.t
-  def get_all_direct_messages(recieverId, senderId) do
-    reciever_member = Repo.get!(SessionMember, recieverId)
-    sender_member = Repo.get!(SessionMember, senderId)
+  def get_all_direct_messages(current_member_id, other_member_id) do
+    current_member = Repo.get!(SessionMember, current_member_id)
+    other_member = Repo.get!(SessionMember, other_member_id)
 
     Repo.all(from dm in DirectMessage,
       where:
-        (dm.senderId == ^reciever_member.id and dm.recieverId == ^sender_member.id) or
-        (dm.senderId == ^sender_member.id and dm.recieverId == ^reciever_member.id),
+        (dm.senderId == ^current_member.id and dm.recieverId == ^other_member.id) or
+        (dm.senderId == ^other_member.id and dm.recieverId == ^current_member.id),
       order_by: [desc: dm.createdAt]
     )
-    |> group_by_read(recieverId)
+    |> group_by_read(current_member_id)
   end
 
   @spec set_all_messages_read(Integer.t, Integer.t) :: {:ok, Map.t} | {:error, Ecto.Changeset.t}
-  def set_all_messages_read(recieverId, senderId) do
-    sender_member = Repo.get!(SessionMember, senderId)
-    reciever_member = Repo.get!(SessionMember, recieverId)
+  def set_all_messages_read(current_member_id, other_member_id) do
+    current_member = Repo.get!(SessionMember, current_member_id)
+    other_member = Repo.get!(SessionMember, other_member_id)
 
     from(from dm in DirectMessage,
-      where: dm.recieverId == ^reciever_member.id and dm.senderId == ^sender_member.id and is_nil(dm.readAt)
+      where: dm.recieverId == ^current_member.id and dm.senderId == ^other_member.id and is_nil(dm.readAt)
     )
     |> Repo.update_all(set: [readAt: Timex.DateTime.now])
   end
 
-  def group_by_read(messages, member_id) do
-    Enum.group_by(messages, &(is_message_read(&1, member_id)))
+  def group_by_read(messages, current_member_id) do
+    Enum.group_by(messages, &(is_message_read(&1, current_member_id)))
   end
 
-  def is_message_read(message, member_id) do
-    (message.recieverId == member_id && !is_nil(message.readAt))
+  def is_message_read(message, current_member_id) do
+    (message.senderId == current_member_id ||
+      (message.recieverId == current_member_id && !is_nil(message.readAt)))
     |> select_key
   end
 
