@@ -1,6 +1,6 @@
 defmodule KlziiChat.Services.SessionReportingService do
   alias KlziiChat.Services.{SessionTopicReportingService, ResourceService, WhiteboardReportingService}
-  alias KlziiChat.{Repo, SessionTopicReport, SessionMember, Endpoint}
+  alias KlziiChat.{Repo, SessionTopicReport, Endpoint}
   alias KlziiChat.Services.Permissions.SessionReporting, as: SessionReportingPermissions
 
   import Ecto.Query, only: [from: 2]
@@ -66,18 +66,22 @@ defmodule KlziiChat.Services.SessionReportingService do
   end
 
   def save_report_async(report_type, report_name, report_format, session_topic_id, include_facilitator) do
-    task =
+    parent = self()
+    pid =
       if report_type == :whiteboard do
-        Task.async(fn -> WhiteboardReportingService.save_report(report_name, :pdf, session_topic_id) end)
+        spawn(fn -> send parent, {self(), WhiteboardReportingService.save_report(report_name, :pdf, session_topic_id)} end)
       else
         star_only = if report_type == :star, do: true, else: false
-        Task.async(fn -> SessionTopicReportingService.save_report(report_name, report_format, session_topic_id, star_only, !include_facilitator) end)
+        spawn(fn -> send parent, {self(), SessionTopicReportingService.save_report(report_name, report_format, session_topic_id, star_only, !include_facilitator)} end)
       end
 
-    case Task.yield(task, @save_report_timeout) do
-      {:ok, {:ok, report_file_path}} -> {:ok, report_file_path}
-      nil -> {:error, "Report creating timeout"}
-      {:exit, err} -> {:error, err}
+    Process.monitor(pid)
+    receive do
+      {^pid, {:ok, report_file_path}} -> {:ok, report_file_path}
+      {^pid, {:error, reason}} -> {:error, reason}
+      {:DOWN, _, :process, ^pid, reason} when reason != :normal -> {:error, "Error saving report (process terminated)"}
+     after
+      @save_report_timeout -> {:error, "Report creating timeout " <> to_string(@save_report_timeout)}
     end
   end
 
@@ -87,18 +91,22 @@ defmodule KlziiChat.Services.SessionReportingService do
       "file" => report_file_path,
       "name" => report_name }
 
-    task = Task.async(fn -> ResourceService.upload(upload_params, session_member.accountUserId) end)
-    case Task.yield(task, @upload_report_timeout) do
-      {:ok, {:ok, resource}} ->
-        if File.exists?(report_file_path), do: File.rm(report_file_path)
+    parent = self()
+    pid = spawn(fn -> send parent, {self(), ResourceService.upload(upload_params, session_member.accountUserId)} end)
+    Process.monitor(pid)
+
+    receive do
+      {^pid, {:ok, resource}} ->
+        File.rm(report_file_path)
         {:ok, resource}
-      nil ->
-        {:error, "Report upload timeout"}
-      {:exit, err} ->
-        {:error, err}
+      {^pid, {:error, reason}} ->
+        File.rm(report_file_path)
+        {:error, reason}
+      {:DOWN, _, :process, ^pid, reason} when reason != :normal -> {:error, "Error uploading report (process terminated)"}
+     after
+      @upload_report_timeout -> {:error, "Report uploading timeout: " <> to_string(@upload_report_timeout)}
     end
   end
-
 
   def update_session_topics_reports_record({:ok, resource}, report_id) do
     Repo.get(SessionTopicReport, report_id)
