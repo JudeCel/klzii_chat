@@ -7,10 +7,10 @@ defmodule KlziiChat.Services.SessionTopicReportingService do
   @emoticon_parameters %{emoticons_qnt: 7, sprites_qnt: 6, emoticon_size: [55, 55], selected_emoticon: 3}
 
   @spec save_report(String.t, atom, integer, boolean, boolean) :: {:ok, String.t}
-  def save_report(report_name, report_format, session_topic_id, star_only, exclude_facilitator) when report_format in [:txt, :csv, :pdf] do
-    {:ok, report_data} = get_report(report_format, session_topic_id, star_only, exclude_facilitator)
-    {:ok, report_file_path} = write_report(report_name, report_format, report_data)
-    {:ok, report_file_path}
+  def save_report(report_name, report_format, session_topic_id, star_only, exclude_facilitator) do
+    with {:ok, report_data} <- get_report(report_format, session_topic_id, star_only, exclude_facilitator),
+         {:ok, report_file_path} <- write_report(report_name, report_format, report_data),
+    do:  {:ok, report_file_path}
   end
 
   @spec get_report(atom, integer, boolean, boolean) :: {:ok, Stream | String.t} | {:error, String.t}
@@ -22,7 +22,7 @@ defmodule KlziiChat.Services.SessionTopicReportingService do
       :txt -> {:ok, get_stream(:txt, messages, session_name, session_topic_name)}
       :csv -> {:ok, get_stream(:csv, messages, session_name, session_topic_name)}
       :pdf -> {:ok, get_html(messages, session_name, session_topic_name)}
-      _ -> {:error, "incorrect report type"}
+      _ -> {:error, "Incorrect report format: " <> to_string(report_format)}
     end
   end
 

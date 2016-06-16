@@ -23,7 +23,7 @@ defmodule KlziiChat.Services.SessionReportingService do
          {:ok, report_name} <- get_report_name(report_type, report.id),
          create_report_params = [session_id, session_member, report.id, session_topic_id, report_name, report_format, report_type, include_facilitator],
          {:ok, _}  <- Task.start(__MODULE__, :create_report_async, create_report_params),
-     do: {:ok, Repo.preload(report, :resource)}
+    do:  {:ok, Repo.preload(report, :resource)}
   end
 
   def create_session_topic_report(_, _, _, report_format, _, _) when report_format in [:txt, :csv, :pdf], do: {:error, "incorrect report type"}
@@ -81,7 +81,9 @@ defmodule KlziiChat.Services.SessionReportingService do
       {^pid, {:error, reason}} -> {:error, reason}
       {:DOWN, _, :process, ^pid, reason} when reason != :normal -> {:error, "Error saving report (process terminated)"}
      after
-      @save_report_timeout -> {:error, "Report creating timeout " <> to_string(@save_report_timeout)}
+      @save_report_timeout ->
+        Process.exit(pid, "timeout")
+        {:error, "Report creation timeout " <> to_string(@save_report_timeout)}
     end
   end
 
@@ -104,7 +106,9 @@ defmodule KlziiChat.Services.SessionReportingService do
         {:error, reason}
       {:DOWN, _, :process, ^pid, reason} when reason != :normal -> {:error, "Error uploading report (process terminated)"}
      after
-      @upload_report_timeout -> {:error, "Report uploading timeout: " <> to_string(@upload_report_timeout)}
+      @upload_report_timeout ->
+        Process.exit(pid, "timeout")
+        {:error, "Report uploading timeout: " <> to_string(@upload_report_timeout)}
     end
   end
 

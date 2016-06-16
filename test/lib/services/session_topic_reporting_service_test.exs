@@ -91,9 +91,9 @@ defmodule KlziiChat.Services.SessionTopicReportingServiceTest do
     assert({:ok, ^html_text_excl_fac} = SessionTopicReportingService.get_report(:pdf, session_topic.id, false, true))
   end
 
-  test "Ger error for incorrect report type", %{session_topic: session_topic} do
-    assert({:error, "incorrect report type"}
-      == SessionTopicReportingService.get_report(:incorrect_type, session_topic.id, false, false))
+  test "Get error for incorrect report format", %{session_topic: session_topic} do
+    assert({:error, "Incorrect report format: incorrect_format"}
+      == SessionTopicReportingService.get_report(:incorrect_format, session_topic.id, false, false))
   end
 
   test "write text report", %{messages: messages, session: session, session_topic: session_topic} do
