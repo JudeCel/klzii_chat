@@ -3,7 +3,7 @@ defmodule KlziiChat.Services.Permissions.ResourcePermissionsTest do
   alias  KlziiChat.Services.Permissions.Resources
 
   test "can upload" do
-    preference = %{uploadToGallery: true}
+    preference = %{"uploadToGallery" =>  true}
     roles = ["facilitator"]
     Enum.map(roles, fn role ->
       member = %{role: role}

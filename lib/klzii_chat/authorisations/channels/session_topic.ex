@@ -14,11 +14,12 @@ defmodule KlziiChat.Authorisations.Channels.SessionTopic do
      join: st in assoc(s, :session_topics),
      where: sm.id == ^session_memeber_id,
      where: st.id == ^sesssion_topic_id,
+     where: s.active == true,
      select: count(sm.id, :distinct)
    ) |> Repo.one
   end
 
   defp valid?(result) do
-    result >= 1
+    result > 0
   end
 end

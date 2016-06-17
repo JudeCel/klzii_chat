@@ -32,8 +32,8 @@ defmodule KlziiChat.Mixfile do
   defp deps do
     [{:phoenix, "~> 1.2.0-rc.1"},
      {:phoenix_pubsub, "~> 1.0.0-rc.0"},
-     {:phoenix_ecto, github: "phoenixframework/phoenix_ecto"},
-     {:phoenix_html, "~> 2.5"},
+     {:phoenix_ecto, "~> 3.0"},
+     {:phoenix_html, "~> 2.6"},
      {:phoenix_live_reload, "~> 1.0", only: :dev},
      {:timex_ecto, "~> 1.1"},
      {:poison, "~> 2.1", override: true},
@@ -41,7 +41,7 @@ defmodule KlziiChat.Mixfile do
      {:arc, "~> 0.5.2"},
      {:ex_aws, "~> 0.4.19"},
      {:httpotion, "~> 3.0", override: true},
-     {:postgrex, "~> 0.11.1"},
+     {:postgrex, "~> 0.11.2"},
      {:gettext, "~> 0.11.0"},
      {:guardian, "~> 0.12.0"},
      {:cowboy, "~> 1.0"},
@@ -50,8 +50,8 @@ defmodule KlziiChat.Mixfile do
      {:quantum, "~> 1.7"},
      {:httpoison, "~> 0.8.3"},
      {:earmark, "~> 0.2.1", only: :dev},
-     {:ex_doc, "~> 0.11.5", only: :dev},
-     {:credo, "~> 0.4.1", only: :dev}
+     {:ex_doc, "~> 0.12.0", only: :dev},
+     {:credo, "~> 0.4.3", only: :dev}
     ]
   end
 
