@@ -8,7 +8,8 @@ export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
     case Constants.SET_REPORTS:
       return { ...state, data: action.data };
-    case Constants.CREATE_REPORT, Constants.UPDATE_REPORT:
+    case Constants.CREATE_REPORT:
+    case Constants.UPDATE_REPORT:
       return { ...state, data: { ...state.data, ...formatSingleReport(action.data) } };
     default:
       return state;

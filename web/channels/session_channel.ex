@@ -64,7 +64,7 @@ defmodule KlziiChat.SessionChannel do
   end
 
   def handle_in("create_session_topic_report", %{"sessionTopicId" => session_topic_id, "format" => report_format, "type" => report_type, "facilitator" => include_facilitator}, socket) do
-    case SessionReportingService.create_session_topic_report(socket.assigns.session_id, get_session_member(socket), session_topic_id, String.to_atom(report_format), String.to_atom(report_type), include_facilitator) do
+    case SessionReportingService.create_session_topic_report(socket.assigns.session_id, get_session_member(socket).id, session_topic_id, String.to_atom(report_format), String.to_atom(report_type), include_facilitator) do
       {:ok, session_topics_report} ->
         {:reply, {:ok, SessionTopicsReportView.render("show.json", %{report: session_topics_report})}, socket}
       {:error, reason} ->
@@ -73,7 +73,7 @@ defmodule KlziiChat.SessionChannel do
   end
 
   def handle_in("delete_session_topic_report", %{"id" => session_topic_report_id}, socket) do
-    case SessionReportingService.delete_session_topic_report(session_topic_report_id, get_session_member(socket)) do
+    case SessionReportingService.delete_session_topic_report(session_topic_report_id, get_session_member(socket).id) do
       {:ok, _} ->
         {:reply, :ok, socket}
       {:error, reason} ->
@@ -82,7 +82,7 @@ defmodule KlziiChat.SessionChannel do
   end
 
   def handle_in("recreate_session_topic_report", %{"id" => session_topic_report_id}, socket) do
-    case SessionReportingService.recreate_session_topic_report(session_topic_report_id, get_session_member(socket)) do
+    case SessionReportingService.recreate_session_topic_report(session_topic_report_id, get_session_member(socket).id) do
       {:ok, session_topics_report} ->
         {:reply, {:ok, SessionTopicsReportView.render("show.json", %{report: session_topics_report})}, socket}
       {:error, reason} ->
@@ -91,7 +91,7 @@ defmodule KlziiChat.SessionChannel do
   end
 
   def handle_in("get_session_topics_reports", _, socket) do
-  case SessionReportingService.get_session_topics_reports(socket.assigns.session_id, get_session_member(socket)) do
+  case SessionReportingService.get_session_topics_reports(socket.assigns.session_id, get_session_member(socket).id) do
       {:ok, session_topics_reports} ->
         {:reply, {:ok, SessionTopicsReportView.render("reports.json", %{reports: session_topics_reports})}, socket}
       {:error, reason} ->

@@ -18,16 +18,21 @@ defmodule KlziiChat.SessionTopicsReportView do
   end
 
   def render("reports.json", %{reports: reports}) do
-    Enum.reduce(reports, %{}, fn({session_topic_id, reports_by_format}, acc) ->
-      Map.put(acc, to_string(session_topic_id),
-        Enum.reduce(reports_by_format, %{}, fn({report_format, report_by_type}, acc2) ->
-          Map.put(acc2, report_format,
-            Enum.reduce(report_by_type, %{}, fn({type, report}, acc3) ->
-              Map.put(acc3, type, render("show.json", %{report: report}))
-            end)
-          )
-        end)
-      )
+    Enum.reduce(reports, %{}, fn(report, acc) ->
+      session_topic_id = to_string(report.sessionTopicId)
+      case Map.get(acc, session_topic_id) do
+        nil -> Map.put(
+          acc, session_topic_id, %{report.format => %{report.type => render("show.json", %{report: report})}}
+        )
+        reports_by_sessionTopicId ->
+          case Map.get(reports_by_sessionTopicId, report.format) do
+            nil -> put_in(acc[session_topic_id], %{report.format => %{report.type => render("show.json", %{report: report})}})
+            report_by_format ->
+              update_in(acc[session_topic_id][report.format], fn(val) ->
+                Map.put(val, report.type, render("show.json", %{report: report}))
+              end)
+          end
+      end
     end)
   end
 end

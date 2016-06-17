@@ -1,12 +1,19 @@
 defmodule KlziiChat.Services.SessionReportingService do
   alias KlziiChat.Services.{SessionTopicReportingService, ResourceService, WhiteboardReportingService}
-  alias KlziiChat.{Repo, SessionTopicReport, Endpoint}
+  alias KlziiChat.{Repo, SessionTopicReport, SessionMember, Endpoint}
   alias KlziiChat.Services.Permissions.SessionReporting, as: SessionReportingPermissions
 
   import Ecto.Query, only: [from: 2]
 
   @save_report_timeout 30 * 60_000
   @upload_report_timeout 30 * 60_000
+
+  def get_session_member(session_member_id) do
+    case Repo.get(SessionMember, session_member_id) do
+      nil -> {:error, "No session member found with id: " <> session_member_id}
+      session_member -> {:ok, session_member}
+    end
+  end
 
   def check_report_create_permision(session_member) do
     if SessionReportingPermissions.can_create_report(session_member), do: :ok, else: {:error, "Action not allowed!"}
@@ -15,13 +22,14 @@ defmodule KlziiChat.Services.SessionReportingService do
 
   def create_session_topic_report(_, _, _, report_format, :whiteboard, _) when report_format != :pdf, do: {:error, "pdf is the only format that is available for whiteboard report"}
 
-  def create_session_topic_report(session_id, session_member, session_topic_id, report_format, report_type, include_facilitator)
+  def create_session_topic_report(session_id, session_member_id, session_topic_id, report_format, report_type, include_facilitator)
   when report_type in [:all, :star, :whiteboard] and report_format in [:txt, :csv, :pdf]    # TODO: :votes
   do
-    with :ok <- check_report_create_permision(session_member),
+    with {:ok, session_member} <- get_session_member(session_member_id),
+         :ok <- check_report_create_permision(session_member),
          {:ok, report} <- create_session_topics_reports_record(session_id, session_topic_id, report_type, include_facilitator, report_format),
          {:ok, report_name} <- get_report_name(report_type, report.id),
-         create_report_params = [session_id, session_member, report.id, session_topic_id, report_name, report_format, report_type, include_facilitator],
+         create_report_params = [session_id, session_member.accountUserId, report.id, session_topic_id, report_name, report_format, report_type, include_facilitator],
          {:ok, _}  <- Task.start(__MODULE__, :create_report_async, create_report_params),
     do:  {:ok, Repo.preload(report, :resource)}
   end
@@ -45,10 +53,10 @@ defmodule KlziiChat.Services.SessionReportingService do
   def get_report_name(_, report_id), do: {:ok, "Session_topic_messages_report_" <> to_string(report_id)}
 
 
-  def create_report_async(session_id, session_member, report_id, session_topic_id, report_name, report_format, report_type, include_facilitator) do
+  def create_report_async(session_id, account_user_id, report_id, session_topic_id, report_name, report_format, report_type, include_facilitator) do
     report_processing_result =
       with {:ok, report_file_path} <- save_report_async(report_type, report_name, report_format, session_topic_id, include_facilitator),
-           {:ok, session_topics_report} <- upload_report_async(report_format, report_file_path, report_name, session_member),
+           {:ok, session_topics_report} <- upload_report_async(report_format, report_file_path, report_name, account_user_id),
        do: {:ok, session_topics_report}
 
     {:ok, report} = update_session_topics_reports_record(report_processing_result, report_id)
@@ -77,14 +85,14 @@ defmodule KlziiChat.Services.SessionReportingService do
     end
   end
 
-  def upload_report_async(report_format, report_file_path, report_name, session_member) do
+  def upload_report_async(report_format, report_file_path, report_name, account_user_id) do
     upload_params = %{ "type" => "file",
       "scope" => to_string(report_format),
       "file" => report_file_path,
       "name" => report_name }
 
     parent = self()
-    pid = spawn(fn -> send parent, {self(), ResourceService.upload(upload_params, session_member.accountUserId)} end)
+    pid = spawn(fn -> send parent, {self(), ResourceService.upload(upload_params, account_user_id)} end)
     reference = Process.monitor(pid)
 
     receive do
@@ -114,7 +122,8 @@ defmodule KlziiChat.Services.SessionReportingService do
     |> Repo.update()
   end
 
-  def get_session_topics_reports(session_id, session_member) do
+  def get_session_topics_reports(session_id, session_member_id) do
+    {:ok, session_member} = get_session_member(session_member_id)
     if SessionReportingPermissions.can_get_reports(session_member) do
       query = from(str in SessionTopicReport, where: str.sessionId == ^session_id, preload: [:resource])
       {:ok, Repo.all(query)}
@@ -123,7 +132,8 @@ defmodule KlziiChat.Services.SessionReportingService do
     end
   end
 
-  def delete_session_topic_report(session_topic_report_id, session_member) do
+  def delete_session_topic_report(session_topic_report_id, session_member_id) do
+    {:ok, session_member} = get_session_member(session_member_id)
     if SessionReportingPermissions.can_delete_report(session_member) do
       case Repo.get(SessionTopicReport, session_topic_report_id) do
         nil ->
@@ -138,11 +148,12 @@ defmodule KlziiChat.Services.SessionReportingService do
     end
   end
 
-  def recreate_session_topic_report(report_id, session_member) do
-    with :ok <- check_report_create_permision(session_member),
+  def recreate_session_topic_report(report_id, session_member_id) do
+    with  {:ok, session_member} <- get_session_member(session_member_id),
+         :ok <- check_report_create_permision(session_member),
          {:ok, report} <- recreate_session_topics_reports_record(report_id),
          {:ok, report_name} <- get_report_name(report.type, report.id),
-         create_report_params = [report.sessionId, session_member, report.id, report.sessionTopicId, report_name,
+         create_report_params = [report.sessionId, session_member.accountUserId, report.id, report.sessionTopicId, report_name,
           String.to_atom(report.format), String.to_atom(report.type), report.facilitator],
          {:ok, _}  <- Task.start(__MODULE__, :create_report_async, create_report_params),
     do:  {:ok, Repo.preload(report, :resource)}
