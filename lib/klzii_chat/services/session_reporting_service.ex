@@ -16,7 +16,7 @@ defmodule KlziiChat.Services.SessionReportingService do
   def create_session_topic_report(_, _, _, report_format, :whiteboard, _) when report_format != :pdf, do: {:error, "pdf is the only format that is available for whiteboard report"}
 
   def create_session_topic_report(session_id, session_member, session_topic_id, report_format, report_type, include_facilitator)
-    when report_type in [:all, :star, :whiteboard] and report_format in [:txt, :csv, :pdf]    # TODO: :votes
+  when report_type in [:all, :star, :whiteboard] and report_format in [:txt, :csv, :pdf]    # TODO: :votes
   do
     with :ok <- check_report_create_permision(session_member),
          {:ok, report} <- create_session_topics_reports_record(session_id, session_topic_id, report_type, include_facilitator, report_format),
@@ -29,16 +29,6 @@ defmodule KlziiChat.Services.SessionReportingService do
   def create_session_topic_report(_, _, _, report_format, _, _) when report_format in [:txt, :csv, :pdf], do: {:error, "incorrect report type"}
   def create_session_topic_report(_, _, _, _, _, _), do: {:error, "incorrect report format"}
 
-
-  def create_session_topics_reports_record(session_id, session_topic_id, :whiteboard, _, :pdf) do
-    Repo.insert(%SessionTopicReport{
-      sessionId: session_id,
-      sessionTopicId: session_topic_id,
-      type: "whiteboard",
-      facilitator: true,
-      format: "pdf"
-    })
-  end
 
   def create_session_topics_reports_record(session_id, session_topic_id, report_type, include_facilitator, report_format) do
     Repo.insert(%SessionTopicReport{
@@ -75,11 +65,11 @@ defmodule KlziiChat.Services.SessionReportingService do
         spawn(fn -> send parent, {self(), SessionTopicReportingService.save_report(report_name, report_format, session_topic_id, star_only, !include_facilitator)} end)
       end
 
-    Process.monitor(pid)
+    reference = Process.monitor(pid)
     receive do
       {^pid, {:ok, report_file_path}} -> {:ok, report_file_path}
       {^pid, {:error, reason}} -> {:error, reason}
-      {:DOWN, _, :process, ^pid, reason} when reason != :normal -> {:error, "Error saving report (process terminated)"}
+      {:DOWN, ^reference, :process, ^pid, reason} when reason != :normal -> {:error, "Error saving report (process terminated)"}
      after
       @save_report_timeout ->
         Process.exit(pid, "timeout")
@@ -95,7 +85,7 @@ defmodule KlziiChat.Services.SessionReportingService do
 
     parent = self()
     pid = spawn(fn -> send parent, {self(), ResourceService.upload(upload_params, session_member.accountUserId)} end)
-    Process.monitor(pid)
+    reference = Process.monitor(pid)
 
     receive do
       {^pid, {:ok, resource}} ->
@@ -104,7 +94,7 @@ defmodule KlziiChat.Services.SessionReportingService do
       {^pid, {:error, reason}} ->
         File.rm(report_file_path)
         {:error, reason}
-      {:DOWN, _, :process, ^pid, reason} when reason != :normal -> {:error, "Error uploading report (process terminated)"}
+      {:DOWN, ^reference, :process, ^pid, reason} when reason != :normal -> {:error, "Error uploading report (process terminated)"}
      after
       @upload_report_timeout ->
         Process.exit(pid, "timeout")
@@ -148,27 +138,23 @@ defmodule KlziiChat.Services.SessionReportingService do
     end
   end
 
-  def recreate_session_topic_report(session_topic_report_id, session_member) do
-    if SessionReportingPermissions.can_create_report(session_member) do
-      case Repo.get(SessionTopicReport, session_topic_report_id) do
-        nil -> {:error, "no report found"}
-        report ->
-          {:ok, report_name} = get_report_name(report.type, report.id)
-          create_report_params = [ report.sessionId,
-            session_member.id,
-            session_topic_report_id,
-            report.sessionTopicId,
-            report_name,
-            report.format,
-            report.type,
-            report.facilitator ]
-          report = Ecto.Changeset.change(report, status: "progress", message: nil)
-          {:ok, report} = Repo.update(report)
-          {:ok, _}  = Task.start(__MODULE__, :create_report_async, create_report_params)
-          {:ok, Repo.preload(report, :resource)}
-      end
-    else
-      {:error, "Action not allowed!"}
+  def recreate_session_topic_report(report_id, session_member) do
+    with :ok <- check_report_create_permision(session_member),
+         {:ok, report} <- recreate_session_topics_reports_record(report_id),
+         {:ok, report_name} <- get_report_name(report.type, report.id),
+         create_report_params = [report.sessionId, session_member, report.id, report.sessionTopicId, report_name,
+          String.to_atom(report.format), String.to_atom(report.type), report.facilitator],
+         {:ok, _}  <- Task.start(__MODULE__, :create_report_async, create_report_params),
+    do:  {:ok, Repo.preload(report, :resource)}
+  end
+
+  def recreate_session_topics_reports_record(report_id) do
+    case Repo.get(SessionTopicReport, report_id) do
+      nil -> {:error, "Report not found"}
+      report ->
+        message = if report.message != nil, do: ";Recreating, prev. message: " <> report.message, else: nil
+        Ecto.Changeset.change(report, status: "progress", message: message)
+        |> Repo.update()
     end
   end
 end

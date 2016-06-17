@@ -170,22 +170,22 @@ defmodule KlziiChat.Services.SessionReportingServiceTest do
     assert({:error, "Session Topic Report not found"} == SessionReportingService.delete_session_topic_report(123, facilitator))
   end
 
-  # test "Recreate session topic  report", %{session: session, session_topic: session_topic, facilitator: facilitator} do
-  #   {:ok, report} = SessionReportingService.create_session_topics_reports_record(session.id, session_topic.id, :all, true, :pdf)
-  #   {:ok, report} = SessionReportingService.update_session_topics_reports_record({:error, "some error message"}, report.id)
-  #   {:ok, new_report} = SessionReportingService.recreate_session_topic_report(report.id, facilitator)
-  #
-  #   assert(report.status == "failed")
-  #   assert(report.message == "some error message")
-  #   assert(new_report.status == "progress")
-  #   assert(new_report.message == nil)
-  #   assert(new_report.id == report.id)
-  #   :timer.sleep(500)
-  #
-  #   {:ok, [db_report]} = SessionReportingService.get_session_topics_reports(session.id, facilitator)
-  #   assert(db_report.id == new_report.id)
-  #   assert(db_report.status == "completed")
-  #   assert(db_report.resourceId != nil)
-  # end
+  test "Recreate session topic report", %{session: session, session_topic: session_topic, facilitator: facilitator} do
+    {:ok, report} = SessionReportingService.create_session_topics_reports_record(session.id, session_topic.id, :all, true, :pdf)
+    {:ok, report} = SessionReportingService.update_session_topics_reports_record({:error, "some error message"}, report.id)
+    {:ok, new_report} = SessionReportingService.recreate_session_topic_report(report.id, facilitator)
+
+    assert(report.status == "failed")
+    assert(report.message == "some error message")
+    assert(new_report.status == "progress")
+    assert(new_report.message == ";Recreating, prev. message: some error message")
+    assert(new_report.id == report.id)
+    :timer.sleep(1000)
+
+    {:ok, [db_report]} = SessionReportingService.get_session_topics_reports(session.id, facilitator)
+    assert(db_report.id == new_report.id)
+    assert(db_report.status == "completed")
+    assert(db_report.resourceId != nil)
+  end
 
 end
