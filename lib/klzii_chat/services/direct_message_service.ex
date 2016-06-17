@@ -58,6 +58,22 @@ defmodule KlziiChat.Services.DirectMessageService do
     end)
   end
 
+  @spec get_last_messages(Integer.t) :: {:ok, Map.t} | {:error, Ecto.Changeset.t}
+  def get_last_messages(current_member_id) do
+    current_member = Repo.get!(SessionMember, current_member_id)
+
+    Repo.all(from dm in DirectMessage,
+      where: dm.sessionId == ^current_member.sessionId and dm.senderId != ^current_member.id,
+      distinct: dm.senderId,
+      order_by: [desc: dm.id],
+      select: { dm.senderId, dm.text }
+    )
+    |> IO.inspect
+    |> Enum.reduce(%{}, fn { key, value }, acc ->
+      Map.put(acc, to_string(key), value)
+    end)
+  end
+
   def group_by_read(messages, current_member_id) do
     Enum.group_by(messages, &(is_message_read(&1, current_member_id)))
   end

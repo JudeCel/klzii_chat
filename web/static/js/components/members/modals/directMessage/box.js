@@ -21,6 +21,7 @@ const MessageBox = React.createClass({
     const { dispatch, channel } = this.props;
     dispatch(DirectMessageActions.index(channel, reciever.id));
     dispatch(DirectMessageActions.read(channel, reciever.id));
+    dispatch(DirectMessageActions.last(channel));
   },
   render() {
     const { reciever } = this.state;

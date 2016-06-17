@@ -4,6 +4,7 @@ const initialState = {
   read: [],
   unread: [],
   unreadCount: {},
+  last: {},
   current: null
 };
 
@@ -22,6 +23,8 @@ export default function reducer(state = initialState, action = {}) {
       return { ...state, ...newDirectMessage(state, action.data) };
     case Constants.CLEAR_DIRECT_MESSAGES:
       return { ...state, read: [], unread: [] };
+    case Constants.LAST_DIRECT_MESSAGES:
+      return { ...state, last: action.data };
     default:
       return state;
   }
@@ -49,6 +52,9 @@ function newDirectMessage(state, message) {
       object.unreadCount[message.senderId] = 1;
     }
   }
+
+  object.last = { ...state.last };
+  object.last[message.senderId] = message.text;
 
   return object;
 }

@@ -8,8 +8,8 @@ defmodule KlziiChat.SessionMember do
     has_many :messages, KlziiChat.Message, [foreign_key: :sessionMemberId]
     has_many :shapes, KlziiChat.Shape, [foreign_key: :sessionMemberId]
     has_many :votes, KlziiChat.Vote, [foreign_key: :sessionMemberId]
-    has_many :sentDirectMessages, KlziiChat.DirectMessage, [foreign_key: :senderId]
-    has_many :recievedDirectMessages, KlziiChat.DirectMessage, [foreign_key: :recieverId]
+    has_many :sent_direct_messages, KlziiChat.DirectMessage, [foreign_key: :senderId]
+    has_many :recieved_direct_messages, KlziiChat.DirectMessage, [foreign_key: :recieverId]
     field :colour, :string
     field :avatarData, :map, default: %{ base: 0, face: 3, body: 0, hair: 0, desk: 0, head: 0 }
     field :sessionTopicContext, :map, default: %{}

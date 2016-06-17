@@ -15,8 +15,6 @@
           border: 1px solid
         .date
           line-height: 3
-      textarea
-        resize: none
     .list-group
       border: 2px solid
       max-height: $max-height-box + 4
@@ -50,6 +48,8 @@
           .badge
             background-color: $header-red
             margin-right: 5px
+        .body
+          word-wrap: break-word
         div
           padding: 0
       .message-state-read
@@ -58,6 +58,9 @@
         font-weight: bold
     .messages-section + .input-section
       margin-top: 15px
+    .input-section
+      textarea
+        resize: none
 .facilitator-board-modal
   .facilitator-board-section
     .input-box

@@ -13,7 +13,7 @@ function _errorData(data) {
 const Actions = {
   subscribeDirectMessageEvents:(channel) => {
     return dispatch => {
-      channel.on("new_direct_message", (data) =>{
+      channel.on('new_direct_message', (data) =>{
         return dispatch({ type: Constants.NEW_DIRECT_MESSAGE, data: data });
       });
     }
@@ -62,12 +62,23 @@ const Actions = {
       });
     }
   },
+  last:(channel, callback) => {
+    return dispatch => {
+      channel.push('get_last_messages')
+      .receive('ok', (data) => {
+        dispatch({ type: Constants.LAST_DIRECT_MESSAGES, data: data.messages });
+        if(callback) callback();
+      }).receive('error', (data) => {
+        dispatch(_errorData(data));
+      });
+    }
+  },
   clearMessages:() => {
     return dispatch => {
       dispatch({ type: Constants.CLEAR_DIRECT_MESSAGES });
     }
   },
-  removeCurrentUser:(channel) => {
+  removeCurrentUser:() => {
     return dispatch => {
       dispatch({ type: Constants.SET_DIRECT_MESSAGE_USER, id: null });
     }

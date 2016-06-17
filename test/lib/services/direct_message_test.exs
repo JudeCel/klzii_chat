@@ -56,4 +56,16 @@ defmodule KlziiChat.Services.DirectMessageTest do
     resp = DirectMessageService.get_unread_count(facilitator.id)
     assert(resp == %{})
   end
+
+  test "DirectMessage - get last messages", %{ facilitator: facilitator, participant: participant, session: session, participant2: participant2 } do
+    DirectMessageService.create_message(session.id, %{ "senderId" => participant.id, "recieverId" => facilitator.id, "text" => "Aaa" })
+    DirectMessageService.create_message(session.id, %{ "senderId" => participant.id, "recieverId" => facilitator.id, "text" => "Bbb" })
+
+    DirectMessageService.create_message(session.id, %{ "senderId" => participant2.id, "recieverId" => facilitator.id, "text" => "Ccc" })
+    DirectMessageService.create_message(session.id, %{ "senderId" => participant2.id, "recieverId" => facilitator.id, "text" => "Ddd" })
+
+    messages = DirectMessageService.get_last_messages(facilitator.id)
+    assert(Map.get(messages, to_string(participant.id)) == "Bbb")
+    assert(Map.get(messages, to_string(participant2.id)) == "Ddd")
+  end
 end

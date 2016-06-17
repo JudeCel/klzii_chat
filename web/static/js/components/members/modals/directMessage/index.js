@@ -9,7 +9,7 @@ const DirectMessage = React.createClass({
   mixins: [mixins.modalWindows],
   onClose() {
     const { dispatch, channel } = this.props;
-    dispatch(DirectMessageActions.removeCurrentUser(channel));
+    dispatch(DirectMessageActions.removeCurrentUser());
     dispatch(DirectMessageActions.clearMessages());
     this.closeAllModals();
   },
