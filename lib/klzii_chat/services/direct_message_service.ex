@@ -1,17 +1,16 @@
 defmodule KlziiChat.Services.DirectMessageService do
-  alias KlziiChat.{Repo, Session, SessionMember, DirectMessage}
-  alias KlziiChat.Helpers.IntegerHelper
+  alias KlziiChat.{ Repo, Session, SessionMember, DirectMessage }
   import Ecto
   import Ecto.Query
 
-  @spec create_message(Integer.t, Map.t) :: {:ok, Map.t} | {:error, Ecto.Changeset.t}
-  def create_message(session_id, %{"senderId" => senderId, "recieverId" => recieverId, "text" => text}) do
+  @spec create_message(Integer.t, Map.t) :: { :ok, Map.t } | { :error, Ecto.Changeset.t }
+  def create_message(session_id, %{ "senderId" => senderId, "recieverId" => recieverId, "text" => text }) do
     session = Repo.get!(Session, session_id)
 
     build_assoc(
       session, :direct_messages,
-      senderId: IntegerHelper.get_num(senderId),
-      recieverId: IntegerHelper.get_num(recieverId),
+      senderId: senderId,
+      recieverId: recieverId,
       text: text
     )
     |> Repo.insert
@@ -31,34 +30,29 @@ defmodule KlziiChat.Services.DirectMessageService do
     |> group_by_read(current_member_id)
   end
 
-  @spec set_all_messages_read(Integer.t, Integer.t) :: {:ok, Map.t} | {:error, Ecto.Changeset.t}
+  @spec set_all_messages_read(Integer.t, Integer.t) :: { :ok, Map.t } | { :error, Ecto.Changeset.t }
   def set_all_messages_read(current_member_id, other_member_id) do
     current_member = Repo.get!(SessionMember, current_member_id)
     other_member = Repo.get!(SessionMember, other_member_id)
 
-    from(from dm in DirectMessage,
-      where: dm.recieverId == ^current_member.id and dm.senderId == ^other_member.id and is_nil(dm.readAt)
-    )
+    (from dm in DirectMessage, where: dm.recieverId == ^current_member.id and dm.senderId == ^other_member.id and is_nil(dm.readAt))
     |> Repo.update_all(set: [readAt: Timex.DateTime.now])
     :ok
   end
 
-  @spec get_unread_count(Integer.t) :: {:ok, Map.t} | {:error, Ecto.Changeset.t}
+  @spec get_unread_count(Integer.t) :: { :ok, Map.t } | { :error, Ecto.Changeset.t }
   def get_unread_count(current_member_id) do
     current_member = Repo.get!(SessionMember, current_member_id)
 
-    from(from dm in DirectMessage,
+    Repo.all(from dm in DirectMessage,
       where: dm.recieverId == ^current_member.id and is_nil(dm.readAt),
       group_by: dm.senderId,
       select: { dm.senderId, count(dm.id) }
     )
-    |> Repo.all
-    |> Enum.reduce(%{}, fn { key, value }, acc ->
-      Map.put(acc, to_string(key), value)
-    end)
+    |> map_key_to_string()
   end
 
-  @spec get_last_messages(Integer.t) :: {:ok, Map.t} | {:error, Ecto.Changeset.t}
+  @spec get_last_messages(Integer.t) :: { :ok, Map.t } | { :error, Ecto.Changeset.t }
   def get_last_messages(current_member_id) do
     current_member = Repo.get!(SessionMember, current_member_id)
 
@@ -68,7 +62,11 @@ defmodule KlziiChat.Services.DirectMessageService do
       order_by: [desc: dm.id],
       select: { dm.senderId, dm.text }
     )
-    |> Enum.reduce(%{}, fn { key, value }, acc ->
+    |> map_key_to_string()
+  end
+
+  def map_key_to_string(data) do
+    Enum.reduce(data, %{}, fn { key, value }, acc ->
       Map.put(acc, to_string(key), value)
     end)
   end
