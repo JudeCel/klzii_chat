@@ -25,7 +25,7 @@ const Message = React.createClass({
             </div>
           </div>
 
-          <div className={ `col-md-12 message-state-${ type }` }>
+          <div className={ `col-md-12 body message-state-${ type }` }>
             { message.text }
           </div>
         </div>

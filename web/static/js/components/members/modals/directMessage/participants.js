@@ -38,7 +38,7 @@ const Participants = React.createClass({
                 </div>
 
                 <div className='body col-md-12'>
-                  { lastDirectMessages[participant.id] }
+                  <p>{ lastDirectMessages[participant.id] }</p>
                 </div>
               </div>
             </button>

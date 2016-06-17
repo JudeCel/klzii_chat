@@ -68,7 +68,6 @@ defmodule KlziiChat.Services.DirectMessageService do
       order_by: [desc: dm.id],
       select: { dm.senderId, dm.text }
     )
-    |> IO.inspect
     |> Enum.reduce(%{}, fn { key, value }, acc ->
       Map.put(acc, to_string(key), value)
     end)
