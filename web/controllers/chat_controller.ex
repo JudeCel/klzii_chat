@@ -22,7 +22,7 @@ defmodule KlziiChat.ChatController do
     case get_member_from_token(token) do
       {:ok , member} ->
         conn = Guardian.Plug.sign_in(conn, member.session_member)
-        put_resp_cookie(conn, "chat_token", Guardian.Plug.current_token(conn))
+        put_resp_cookie(conn, "chat_token", Guardian.Plug.current_token(conn), max_age: get_cookie_espire_time())
         |> render("index.html")
       {:error, _reason } ->
         send_resp(conn, 401, Poison.encode!(%{error: "unauthorized"}))
@@ -32,10 +32,18 @@ defmodule KlziiChat.ChatController do
 
   def index(conn, _) do
     if chat_token = conn.cookies["chat_token"] do
-      render conn, "index.html" , token: chat_token
+      put_resp_cookie(conn, "chat_token", Guardian.Plug.current_token(conn), max_age: get_cookie_espire_time())
+      |> render("index.html", token: chat_token)
     else
       send_resp(conn, 401, Poison.encode!(%{error: "unauthorized"}))
       |> halt
     end
+  end
+
+# TODO Replace with elixir standard lib when migrated to 1.3
+  defp get_cookie_espire_time() do
+    use Timex
+    expire_date = Date.today |> Timex.shift(days: 7)
+    Date.now |> Date.diff(expire_date, :seconds)
   end
 end
