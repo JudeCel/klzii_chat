@@ -10,12 +10,14 @@ export default function reducer(state = initialState, action = {}) {
       return { ...state, data: action.data };
     case Constants.CREATE_REPORT:
     case Constants.UPDATE_REPORT:
-      return { ...state, data: { ...state.data, ...formatSingleReport(action.data) } };
+      return { ...state, data: { ...state.data, ...formatSingleReport(state, action.data) } };
     default:
       return state;
   }
 };
 
-function formatSingleReport(report) {
-  return { [report.sessionTopicId]: { [report.format]: { [report.type]: report } } };
+function formatSingleReport(state, report) {
+  let object = { ...state.data[report.sessionTopicId] };
+  object[report.format] = { ...object[report.format], [report.type]: report };
+  return { [report.sessionTopicId]: object };
 }
