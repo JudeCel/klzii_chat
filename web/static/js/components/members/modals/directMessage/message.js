@@ -21,7 +21,6 @@ const Message = React.createClass({
             </div>
 
             <div className='col-md-6 text-right'>
-              <span className='badge'>42</span>
               <span>{ this.formatDate(moment, message.createdAt) }</span>
             </div>
           </div>

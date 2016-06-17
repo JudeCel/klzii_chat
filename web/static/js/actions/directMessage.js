@@ -55,11 +55,16 @@ const Actions = {
     return dispatch => {
       channel.push('set_read_direct_messages', { senderId })
       .receive('ok', (data) => {
-        dispatch({ type: Constants.READ_DIRECT_MESSAGES, data: { senderId } });
+        dispatch({ type: Constants.READ_DIRECT_MESSAGES, data: data.count });
         if(callback) callback();
       }).receive('error', (data) => {
         dispatch(_errorData(data));
       });
+    }
+  },
+  clearMessages:() => {
+    return dispatch => {
+      dispatch({ type: Constants.CLEAR_DIRECT_MESSAGES });
     }
   },
   removeCurrentUser:(channel) => {

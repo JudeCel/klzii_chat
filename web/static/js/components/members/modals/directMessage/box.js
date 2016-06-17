@@ -1,8 +1,9 @@
 import React, {PropTypes} from 'react';
 import { connect }        from 'react-redux';
-import mixins             from '../../../../mixins';
 import Messages           from './messages';
 import Participants       from './participants';
+import MessageInput       from './input';
+import mixins             from '../../../../mixins';
 import DirectMessageActions from '../../../../actions/directMessage';
 
 const MessageBox = React.createClass({
@@ -34,6 +35,7 @@ const MessageBox = React.createClass({
 
           <div className='col-md-8'>
             <Messages reciever={ reciever } />
+            <MessageInput />
           </div>
         </div>
       )
@@ -43,6 +45,7 @@ const MessageBox = React.createClass({
         <div className='row direct-message-section'>
           <div className='col-md-12'>
             <Messages reciever={ reciever } />
+            <MessageInput />
           </div>
         </div>
       )

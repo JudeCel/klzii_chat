@@ -40,6 +40,7 @@ defmodule KlziiChat.Services.DirectMessageService do
       where: dm.recieverId == ^current_member.id and dm.senderId == ^other_member.id and is_nil(dm.readAt)
     )
     |> Repo.update_all(set: [readAt: Timex.DateTime.now])
+    :ok
   end
 
   @spec get_unread_count(Integer.t) :: {:ok, Map.t} | {:error, Ecto.Changeset.t}

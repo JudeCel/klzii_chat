@@ -10,6 +10,7 @@ const DirectMessage = React.createClass({
   onClose() {
     const { dispatch, channel } = this.props;
     dispatch(DirectMessageActions.removeCurrentUser(channel));
+    dispatch(DirectMessageActions.clearMessages());
     this.closeAllModals();
   },
   render() {

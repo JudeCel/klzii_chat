@@ -58,6 +58,7 @@ const Links = React.createClass({
 
 const mapStateToProps = (state) => {
   return {
+    modalWindows: state.modalWindows,
     unreadDirectMessages: state.directMessages.unreadCount,
     firstParticipant: state.members.participants[0],
     facilitator: state.members.facilitator,

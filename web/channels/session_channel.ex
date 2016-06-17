@@ -84,8 +84,9 @@ defmodule KlziiChat.SessionChannel do
   def handle_in("set_read_direct_messages", %{ "senderId" => other_member_id }, socket) do
     current_member = get_session_member(socket)
 
-    DirectMessageService.set_all_messages_read(current_member.id, other_member_id)
-    {:reply, :ok, socket}
+    :ok = DirectMessageService.set_all_messages_read(current_member.id, other_member_id)
+    count = DirectMessageService.get_unread_count(current_member.id)
+    {:reply, { :ok, %{ count: count } }, socket}
   end
 
   def handle_in("get_unread_count", _, socket) do

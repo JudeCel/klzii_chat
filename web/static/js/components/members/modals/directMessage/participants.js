@@ -14,7 +14,7 @@ const Participants = React.createClass({
     return memberId == this.props.memberId ? className + ' selected' : className;
   },
   render() {
-    const { participants, colours } = this.props;
+    const { participants, colours, unreadDirectMessages } = this.props;
 
     return (
       <div className='list-group no-border-radius' style={{ borderColor: colours.mainBorder }}>
@@ -32,7 +32,7 @@ const Participants = React.createClass({
                   </div>
 
                   <div className='col-md-6 text-right'>
-                    <span className='badge'>42</span>
+                    <span className='badge'>{ unreadDirectMessages[participant.id] }</span>
                     <span>{ this.formatDate(moment, new Date()) }</span>
                   </div>
                 </div>
@@ -51,6 +51,7 @@ const Participants = React.createClass({
 
 const mapStateToProps = (state) => {
   return {
+    unreadDirectMessages: state.directMessages.unreadCount,
     colours: state.chat.session.colours,
     participants: state.members.participants
   }

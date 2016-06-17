@@ -10,6 +10,7 @@ const initialState = {
 export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
     case Constants.UNREAD_DIRECT_MESSAGES:
+    case Constants.READ_DIRECT_MESSAGES:
       return { ...state, unreadCount: action.data };
     case Constants.SET_DIRECT_MESSAGE_USER:
       return { ...state, current: action.id };
@@ -19,8 +20,8 @@ export default function reducer(state = initialState, action = {}) {
       return { ...state, ...createDirectMessage(state, action.data) };
     case Constants.NEW_DIRECT_MESSAGE:
       return { ...state, ...newDirectMessage(state, action.data) };
-    case Constants.READ_DIRECT_MESSAGES:
-      return { ...state, ...readDirectMessages(state, action.data) };
+    case Constants.CLEAR_DIRECT_MESSAGES:
+      return { ...state, read: [], unread: [] };
     default:
       return state;
   }
@@ -49,13 +50,5 @@ function newDirectMessage(state, message) {
     }
   }
 
-  return object;
-}
-
-function readDirectMessages(state, message) {
-  let object = { ...state.unreadCount };
-  if(object[message.senderId]) {
-    delete object[message.senderId];
-  }
   return object;
 }
