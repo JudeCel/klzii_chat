@@ -3,7 +3,7 @@ defmodule KlziiChat.Services.ConsoleServiceTest do
   alias KlziiChat.Services.ConsoleService
   alias KlziiChat.Console
 
-  setup %{session_topic_1: session_topic_1, session: session, account_user: account_user} do
+  setup %{session_topic_1: session_topic_1, session: session, account_user_account_manager: account_user} do
 
      resource = Ecto.build_assoc(
       account_user.account, :resources,
