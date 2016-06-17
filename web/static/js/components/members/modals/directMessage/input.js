@@ -16,9 +16,13 @@ const MessageInput = React.createClass({
     }
   },
   sendMessage() {
-    const { dispatch, channel, currentRecieverId } = this.props;
-    dispatch(DirectMessageActions.send(channel, { recieverId: currentRecieverId, text: this.state.text }));
-    this.setState(this.getInitialState());
+    const { text } = this.state;
+
+    if(text.length > 0) {
+      const { dispatch, channel, currentRecieverId } = this.props;
+      dispatch(DirectMessageActions.send(channel, { recieverId: currentRecieverId, text: text }));
+      this.setState(this.getInitialState());
+    }
   },
   render() {
     return (
