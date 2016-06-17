@@ -3,7 +3,7 @@ defmodule KlziiChat.Files.IdefntegrationTest do
   alias KlziiChat.{Repo, Resource}
   alias KlziiChat.Files.Tasks, as: FileZipTask
 
-  setup %{account_user: account_user} do
+  setup %{account_user_account_manager: account_user} do
     image = Ecto.build_assoc(
       account_user.account, :resources,
       accountUserId: account_user.id,
