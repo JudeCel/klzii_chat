@@ -17,21 +17,23 @@ defmodule KlziiChat.SessionTopicsReportView do
     }
   end
 
+  # %{session_topic_id => %{format => %{type => report (w/resource)}}
   def render("reports.json", %{reports: reports}) do
-    Enum.reduce(reports, %{}, fn(report, acc) ->
+    Enum.reduce(reports, Map.new, fn(report, acc) ->
       session_topic_id = to_string(report.sessionTopicId)
-      case Map.get(acc, session_topic_id) do
-        nil -> Map.put(
-          acc, session_topic_id, %{report.format => %{report.type => render("show.json", %{report: report})}}
-        )
-        reports_by_sessionTopicId ->
-          case Map.get(reports_by_sessionTopicId, report.format) do
-            nil -> put_in(acc[session_topic_id], %{report.format => %{report.type => render("show.json", %{report: report})}})
-            report_by_format ->
-              update_in(acc[session_topic_id][report.format], fn(val) ->
-                Map.put(val, report.type, render("show.json", %{report: report}))
-              end)
-          end
+      format = report.format
+      type = report.type
+
+      if Map.has_key?(acc, session_topic_id) do
+        if Map.has_key?(acc[session_topic_id], format) do
+          {_, acc} = get_and_update_in(acc[session_topic_id][format], &{&1, Map.put(&1, type, render("show.json", %{report: report}))})
+          acc
+        else
+          {_, acc} = get_and_update_in(acc[session_topic_id], &{&1, Map.put(&1, format, %{type => render("show.json", %{report: report})})})
+          acc
+        end
+      else
+          Map.put(acc, session_topic_id, %{format => %{type => render("show.json", %{report: report})}})
       end
     end)
   end
