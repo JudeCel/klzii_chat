@@ -44,9 +44,10 @@ defmodule KlziiChat.Services.SessionTopicReportingService do
 
   def message_csv_filter(%{session_member: %{username: username}, body: body, createdAt: createdAt, star: star,
     replyId: replyId, emotion: emotion}) do
+    {:ok, emotion_name} = MessageDecorator.emotion_name(emotion)
 
     "#{username},#{body},#{DateTime.to_string(createdAt)},#{to_string(star)},#{to_string(replyId !== nil)}," <>
-      "#{MessageDecorator.emotion_name(emotion)}\r\n"
+      "#{emotion_name}\r\n"
   end
 
   @spec get_html(list, String.t, String.t) :: {String.t}

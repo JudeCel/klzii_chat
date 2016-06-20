@@ -18,12 +18,15 @@ defmodule KlziiChat.Decorators.MessageDecorator do
     Enum.any?(votes, &(&1.sessionMemberId == session_member_id))
   end
 
-  @spec emotion_name(integer) :: String.t
+  @spec emotion_name(integer) :: {:ok | :error, String.t}
   def emotion_name(emotion_id) when is_integer(emotion_id) do
-    Map.get(@emotion_names, emotion_id, {:error, "incorrect emotion id"})
+    case Map.get(@emotion_names, emotion_id) do
+      nil -> {:error, "incorrect emotion id"}
+      em_name -> {:ok, em_name}
+    end
   end
 
-  @spec emotion_name(String.t) :: String.t
+  @spec emotion_name(String.t) :: {:ok| :error, String.t}
   def emotion_name(emotion_id) when is_bitstring(emotion_id) do
     case Integer.parse(emotion_id) do
       {emotion_num_id, ""} -> emotion_name(emotion_num_id)

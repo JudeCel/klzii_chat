@@ -20,8 +20,8 @@ defmodule KlziiChat.Decorators.MessageDecoratorTest do
   end
 
   test "get emotion name" do
-    assert(MessageDecorator.emotion_name(0) == "sad")
-    assert(MessageDecorator.emotion_name(6) == "sleepy")
+    assert(MessageDecorator.emotion_name(0) == {:ok, "sad"})
+    assert(MessageDecorator.emotion_name(6) == {:ok, "sleepy"})
   end
 
   test "get emotion name error with incorrect id" do
@@ -30,8 +30,8 @@ defmodule KlziiChat.Decorators.MessageDecoratorTest do
   end
 
   test "get emotion name with correct string id" do
-    assert(MessageDecorator.emotion_name("0") == "sad")
-    assert(MessageDecorator.emotion_name("6") == "sleepy")
+    assert(MessageDecorator.emotion_name("0") == {:ok, "sad"})
+    assert(MessageDecorator.emotion_name("6") == {:ok, "sleepy"})
   end
 
   test "get emotion name error with incorrect string id" do
