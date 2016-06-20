@@ -1,5 +1,5 @@
 defmodule KlziiChat.Services.SessionTopicService do
-  alias KlziiChat.{Repo, SessionMember, SessionTopic, Sesion}
+  alias KlziiChat.{Repo, SessionMember, SessionTopic}
   alias KlziiChat.Services.Permissions.SessionTopic, as: SessionTopicPermissions
   alias KlziiChat.Queries.Messages, as: QueriesMessages
   import Ecto.Query, only: [from: 2]
