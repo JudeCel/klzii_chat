@@ -46,4 +46,24 @@ defmodule KlziiChat.Queries.Messages do
       }
     }
   end
+
+
+  @spec session_topic_messages(integer, List.t) :: Ecto.Query
+  def session_topic_messages(session_topic_id, [star: star, facilitator: true]) do
+    session_topic_id
+    |> base_query()
+    |> filter_star(star)
+    |> join_session_member()
+    |> sort_select()
+  end
+
+  @spec session_topic_messages(integer, List.t) :: Ecto.Query
+  def session_topic_messages(session_topic_id, [star: star, facilitator: false]) do
+    session_topic_id
+    |> base_query()
+    |> filter_star(star)
+    |> join_session_member()
+    |> exclude_by_role("facilitator")
+    |> sort_select()
+  end
 end

@@ -29,7 +29,8 @@ defmodule KlziiChat.Queries.MessagesTest  do
     base_query = QueriesMessages.base_query(session_topic_1.id)
     star_true_query = QueriesMessages.filter_star(base_query, true)
 
-    {:ok, base_query: base_query, star_true_query: star_true_query, facilitator: facilitator, participant: participant, create_date1: create_date1, create_date2: create_date2}
+    {:ok, base_query: base_query, star_true_query: star_true_query, facilitator: facilitator, participant: participant,
+      create_date1: create_date1, create_date2: create_date2, session_topic_id: session_topic_1.id}
   end
 
   test "base query - all messages unsorted", %{base_query: base_query} do
@@ -111,4 +112,22 @@ defmodule KlziiChat.Queries.MessagesTest  do
       |> QueriesMessages.sort_select()
       |> Repo.all
   end
+
+  test "Get session topic messages", %{session_topic_id: session_topic_id} do
+    [%{star: true, session_member: %{role: "facilitator"}}, %{star: false, session_member: %{role: "participant"}}] =
+      QueriesMessages.session_topic_messages(session_topic_id, star: false, facilitator: true)
+      |> Repo.all
+
+    [%{star: true, session_member: %{role: "facilitator"}}] =
+      QueriesMessages.session_topic_messages(session_topic_id, star: true, facilitator: true)
+      |> Repo.all
+
+    [%{star: false, session_member: %{role: "participant"}}] =
+      QueriesMessages.session_topic_messages(session_topic_id, star: false, facilitator: false)
+      |> Repo.all
+
+    [] =
+      QueriesMessages.session_topic_messages(session_topic_id, star: true, facilitator: false)
+      |> Repo.all
+    end
 end
