@@ -42,9 +42,9 @@ defmodule KlziiChat.Services.SessionReportingServiceTest do
   end
 
   test "Try to create incorrect report format and type" do
-    assert({:error, "incorrect report format"} == SessionReportingService.create_session_topic_report(0, 1, 2, :incorrect, :all, true))
-    assert({:error, "incorrect report type"} == SessionReportingService.create_session_topic_report(0, 1, 2, :pdf, :incorrect, true))
-    assert({:error, "pdf is the only format that is available for whiteboard report"} == SessionReportingService.create_session_topic_report(0, 1, 2, :txt, :whiteboard, true))
+    assert({:error, "incorrect report format or type"} == SessionReportingService.create_session_topic_report(0, 1, 2, :incorrect, :all, true))
+    assert({:error, "incorrect report format or type"} == SessionReportingService.create_session_topic_report(0, 1, 2, :pdf, :incorrect, true))
+    assert({:error, "pdf is the only format that is available for whiteboard reports"} == SessionReportingService.create_session_topic_report(0, 1, 2, :txt, :whiteboard, true))
   end
 
   test "Create session topics reports record", %{session: session, session_topic: session_topic,facilitator: facilitator} do

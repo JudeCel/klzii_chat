@@ -20,7 +20,7 @@ defmodule KlziiChat.Services.SessionReportingService do
   end
 
 
-  def create_session_topic_report(_, _, _, report_format, :whiteboard, _) when report_format != :pdf, do: {:error, "pdf is the only format that is available for whiteboard report"}
+  def create_session_topic_report(_, _, _, report_format, :whiteboard, _) when report_format != :pdf, do: {:error, "pdf is the only format that is available for whiteboard reports"}
 
   def create_session_topic_report(session_id, session_member_id, session_topic_id, report_format, report_type, include_facilitator)
   when report_type in [:all, :star, :whiteboard] and report_format in [:txt, :csv, :pdf]    # TODO: :votes
@@ -34,9 +34,7 @@ defmodule KlziiChat.Services.SessionReportingService do
     do:  {:ok, Repo.preload(report, :resource)}
   end
 
-  def create_session_topic_report(_, _, _, report_format, _, _) when report_format in [:txt, :csv, :pdf], do: {:error, "incorrect report type"}
-  def create_session_topic_report(_, _, _, _, _, _), do: {:error, "incorrect report format"}
-
+  def create_session_topic_report(_, _, _, _, _, _), do: {:error, "incorrect report format or type"}
 
   def create_session_topics_reports_record(session_id, session_topic_id, report_type, include_facilitator, report_format) do
     Repo.insert(%SessionTopicReport{
