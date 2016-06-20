@@ -17,7 +17,10 @@ defmodule KlziiChat.SessionTopicsReportView do
     }
   end
 
-  # %{session_topic_id => %{format => %{type => report (w/resource)}}
+  @doc """
+  Transforms ECTO query result (list of structs) into a map with a following structure:
+   %{session_topic_id => %{format => %{type => report (w/resource)}}
+  """
   def render("reports.json", %{reports: reports}) do
     Enum.reduce(reports, Map.new, fn(report, acc) ->
       session_topic_id = to_string(report.sessionTopicId)
