@@ -5,7 +5,10 @@ const initialState = {
   unread: [],
   unreadCount: {},
   last: {},
-  current: null
+  currentReciever: null,
+  currentPage: 0,
+  fetching: false,
+  canFetch: true
 };
 
 export default function reducer(state = initialState, action = {}) {
@@ -14,17 +17,21 @@ export default function reducer(state = initialState, action = {}) {
     case Constants.READ_DIRECT_MESSAGES:
       return { ...state, unreadCount: action.data };
     case Constants.SET_DIRECT_MESSAGE_USER:
-      return { ...state, current: action.id };
+      return { ...state, currentReciever: action.id, canFetch: true };
     case Constants.SET_DIRECT_MESSAGES:
-      return { ...state, ...action.data };
+      return { ...state, ...action.data, fetching: false };
+    case Constants.ADD_DIRECT_MESSAGES:
+      return { ...state, ...addDirectMessages(state, action.data) };
     case Constants.CREATE_DIRECT_MESSAGE:
       return { ...state, ...createDirectMessage(state, action.data) };
     case Constants.NEW_DIRECT_MESSAGE:
       return { ...state, ...newDirectMessage(state, action.data) };
     case Constants.CLEAR_DIRECT_MESSAGES:
-      return { ...state, read: [], unread: [] };
+      return { ...state, ...initialState };
     case Constants.LAST_DIRECT_MESSAGES:
       return { ...state, last: action.data };
+    case Constants.FETCHING_DIRECT_MESSAGES:
+      return { ...state, fetching: true };
     default:
       return state;
   }
@@ -40,7 +47,7 @@ function createDirectMessage(state, message) {
 function newDirectMessage(state, message) {
   let object = {};
 
-  if(state.current && state.current == message.senderId) {
+  if(state.currentReciever && state.currentReciever == message.senderId) {
     object = { unread: [...state.unread, message] };
   }
   else {
@@ -57,4 +64,16 @@ function newDirectMessage(state, message) {
   object.last[message.senderId] = message.text;
 
   return object;
+}
+
+function addDirectMessages(state, data) {
+  let object = { read: [...data.read, ...state.read], currentPage: data.currentPage, fetching: false };
+
+  if(data.read.length < 10) {
+    object.canFetch = false;
+    return object;
+  }
+  else {
+    return object;
+  }
 }

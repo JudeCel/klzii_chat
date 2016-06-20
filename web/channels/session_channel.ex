@@ -63,11 +63,11 @@ defmodule KlziiChat.SessionChannel do
     {:noreply, socket}
   end
 
-  def handle_in("get_all_direct_messages", %{ "recieverId" => other_member_id }, socket) do
+  def handle_in("get_all_direct_messages", %{ "recieverId" => other_member_id, "page" => page }, socket) do
     current_member_id = get_session_member(socket).id
 
-    messages = DirectMessageService.get_all_direct_messages(current_member_id, other_member_id)
-    {:reply, {:ok, %{ messages: DirectMessageView.render("messages.json", messages: messages) }}, socket}
+    messages = DirectMessageService.get_all_direct_messages(current_member_id, other_member_id, page)
+    {:reply, {:ok, %{ messages: DirectMessageView.render("messages.json", messages: messages, prevPage: page) }}, socket}
   end
 
   def handle_in("create_direct_message", %{ "recieverId" => other_member_id, "text" => text }, socket) do

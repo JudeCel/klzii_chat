@@ -13,10 +13,14 @@ defmodule KlziiChat.DirectMessageView do
     }
   end
 
-  def render("messages.json", %{ messages: messages }) do
+  def render("messages.json", %{ messages: messages, prevPage: prevPage }) do
+    read = messages["read"] || [];
+    unread = messages["unread"] || [];
+
     %{
-      read: render_many(messages["read"] || [], KlziiChat.DirectMessageView, "show.json", as: :message),
-      unread: render_many(messages["unread"] || [], KlziiChat.DirectMessageView, "show.json", as: :message)
+      read: render_many(read, KlziiChat.DirectMessageView, "show.json", as: :message),
+      unread: render_many(unread, KlziiChat.DirectMessageView, "show.json", as: :message),
+      currentPage: prevPage + div(length(read) + length(unread), 10)
     }
   end
 end

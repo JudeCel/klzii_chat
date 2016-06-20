@@ -43,7 +43,7 @@ const MessageInput = React.createClass({
 const mapStateToProps = (state) => {
   return {
     channel: state.chat.channel,
-    currentRecieverId: state.directMessages.current
+    currentRecieverId: state.directMessages.currentReciever
   }
 };
 

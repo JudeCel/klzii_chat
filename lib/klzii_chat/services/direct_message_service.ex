@@ -16,16 +16,20 @@ defmodule KlziiChat.Services.DirectMessageService do
     |> Repo.insert
   end
 
-  @spec get_all_direct_messages(Integer.t, Integer.t) :: List.t
-  def get_all_direct_messages(current_member_id, other_member_id) do
+  @spec get_all_direct_messages(Integer.t, Integer.t, Integer.t) :: List.t
+  def get_all_direct_messages(current_member_id, other_member_id, page) do
     current_member = Repo.get!(SessionMember, current_member_id)
     other_member = Repo.get!(SessionMember, other_member_id)
+    limit = 10
+    offset = page * limit
 
     Repo.all(from dm in DirectMessage,
       where:
         (dm.senderId == ^current_member.id and dm.recieverId == ^other_member.id) or
         (dm.senderId == ^other_member.id and dm.recieverId == ^current_member.id),
-      order_by: [desc: dm.createdAt]
+      order_by: [desc: dm.createdAt],
+      limit: ^limit,
+      offset: ^offset
     )
     |> group_by_read(current_member_id)
   end

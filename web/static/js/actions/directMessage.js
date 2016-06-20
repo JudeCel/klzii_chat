@@ -30,10 +30,22 @@ const Actions = {
   },
   index:(channel, recieverId, callback) => {
     return dispatch => {
-      channel.push('get_all_direct_messages', { recieverId })
+      channel.push('get_all_direct_messages', { recieverId, page: 0 })
       .receive('ok', (data) => {
         dispatch({ type: Constants.SET_DIRECT_MESSAGE_USER, id: recieverId });
         dispatch({ type: Constants.SET_DIRECT_MESSAGES, data: data.messages });
+        if(callback) callback();
+      }).receive('error', (data) => {
+        dispatch(_errorData(data));
+      });
+    }
+  },
+  nextPage:(channel, recieverId, page, callback) => {
+    return dispatch => {
+      dispatch({ type: Constants.FETCHING_DIRECT_MESSAGES });
+      channel.push('get_all_direct_messages', { recieverId, page })
+      .receive('ok', (data) => {
+        dispatch({ type: Constants.ADD_DIRECT_MESSAGES, data: data.messages });
         if(callback) callback();
       }).receive('error', (data) => {
         dispatch(_errorData(data));
