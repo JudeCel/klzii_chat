@@ -17,7 +17,7 @@ defmodule KlziiChat.Services.DirectMessageTest do
     { :ok, message2 } = DirectMessageService.create_message(session.id, %{ "senderId" => facilitator.id, "recieverId" => participant.id, "text" => "BBB" })
     { :ok, message3 } = DirectMessageService.create_message(session.id, %{ "senderId" => participant.id, "recieverId" => facilitator.id, "text" => "CCC" })
 
-    %{ "read" => read_list, "unread" => unread_list } = DirectMessageService.get_all_direct_messages(facilitator.id, participant.id)
+    %{ "read" => read_list, "unread" => unread_list } = DirectMessageService.get_all_direct_messages(facilitator.id, participant.id, 0)
 
     assert(read_list == [message2, message1])
     assert(unread_list == [message3])
@@ -28,12 +28,12 @@ defmodule KlziiChat.Services.DirectMessageTest do
     { :ok, message2 } = DirectMessageService.create_message(session.id, %{ "senderId" => facilitator.id, "recieverId" => participant.id, "text" => "BBB" })
     { :ok, message3 } = DirectMessageService.create_message(session.id, %{ "senderId" => participant.id, "recieverId" => facilitator.id, "text" => "CCC" })
 
-    %{ "unread" => unread_list, "read" => read_list } = DirectMessageService.get_all_direct_messages(participant.id, facilitator.id)
+    %{ "unread" => unread_list, "read" => read_list } = DirectMessageService.get_all_direct_messages(participant.id, facilitator.id, 0)
     assert(unread_list == [message2, message1])
     assert(read_list == [message3])
 
     :ok = DirectMessageService.set_all_messages_read(participant.id, facilitator.id)
-    %{ "read" => read_list } = DirectMessageService.get_all_direct_messages(participant.id, facilitator.id)
+    %{ "read" => read_list } = DirectMessageService.get_all_direct_messages(participant.id, facilitator.id, 0)
 
     message1 = Repo.get!(KlziiChat.DirectMessage, message1.id)
     message2 = Repo.get!(KlziiChat.DirectMessage, message2.id)

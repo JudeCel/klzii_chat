@@ -109,4 +109,43 @@ defmodule KlziiChat.SessionChannelTest do
     assert_broadcast("unread_messages", %{^session_member_id => %{"session_topics" =>  %{}, "summary" => %{"normal" => 0, "reply" => 0} }})
   end
 
+  test "create direct message", %{ socket2: socket2, socket: socket, channel_name: channel_name } do
+    {:ok, _, socket2} = join(socket2, SessionChannel, channel_name)
+    {:ok, _, socket} = subscribe_and_join(socket, SessionChannel, channel_name)
+    reciever_member_id = socket.assigns.session_member.id
+    sender_member_id = socket2.assigns.session_member.id
+
+    ref1 = push socket2, "create_direct_message", %{ "recieverId" => reciever_member_id, "text" => "AAA" }
+    assert_reply ref1, :ok, %{ message: message }
+
+    member_id = to_string(reciever_member_id)
+    assert_broadcast("new_direct_message", %{ ^member_id => new_message })
+    assert(message.id == new_message.id)
+    assert(message.recieverId == new_message.recieverId)
+    assert(message.senderId == new_message.senderId)
+    assert(message.text == new_message.text)
+  end
+
+  test "set all messages read", %{ socket2: socket2, socket: socket, channel_name: channel_name } do
+    {:ok, _, socket} = join(socket, SessionChannel, channel_name)
+    {:ok, _, socket2} = join(socket2, SessionChannel, channel_name)
+    sender_member_id = socket.assigns.session_member.id
+    reciever_member_id = socket2.assigns.session_member.id
+
+    ref1 = push socket2, "create_direct_message", %{ "recieverId" => reciever_member_id, "text" => "AAA" }
+    assert_reply ref1, :ok
+
+    member_id = to_string(reciever_member_id)
+    ref2 = push socket2, "set_read_direct_messages", %{ "senderId" => sender_member_id }
+    assert_reply ref2, :ok, %{ count: %{ ^member_id => 1 } }
+  end
+
+  test "get last messages for each user", %{ socket2: socket2, socket: socket, channel_name: channel_name } do
+    {:ok, _, socket} = join(socket, SessionChannel, channel_name)
+    {:ok, _, socket2} = join(socket2, SessionChannel, channel_name)
+    sender_member_id = socket.assigns.session_member.id
+
+    ref1 = push socket2, "get_last_messages", %{ "senderId" => sender_member_id }
+    assert_reply ref1, :ok, %{ messages: %{} }
+  end
 end
