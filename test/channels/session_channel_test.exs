@@ -26,19 +26,22 @@ defmodule KlziiChat.SessionChannelTest do
 
     assert(reply.name == session.name)
 
-    assert_push "self_info", _session_member
-    # assert_push "members", %{
-    #   "facilitator" => _session_member,
-    #   "observer" => [],
-    #   "participant" => participants
-    # }
-    # assert_push "presence_state", state
-    # IO.inspect(participants)
-    # id = Map.get(state, session_member.id |> to_string)
-    #   |> Map.get(:member)
-    #   |> Map.get(:id)
-    #
-    # assert(id == session_member.id)
+    assert_push "self_info", self_info
+
+    assert(self_info == session_member)
+
+    assert_push "members", %{
+      "facilitator" => facilitator,
+      "observer" => [observer],
+      "participant" => [participant, participant2]
+    }
+
+    assert_push "presence_state", state
+    id = Map.get(state, session_member.id |> to_string)
+      |> Map.get(:member)
+      |> Map.get(:id)
+
+    assert(id == session_member.id)
   end
 
   test "when join member broadcast others", %{socket: socket, socket2: socket2, channel_name: channel_name } do
