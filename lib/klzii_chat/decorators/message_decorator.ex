@@ -26,7 +26,7 @@ defmodule KlziiChat.Decorators.MessageDecorator do
     end
   end
 
-  @spec emotion_name(String.t) :: {:ok| :error, String.t}
+  @spec emotion_name(String.t) :: {:ok | :error, String.t}
   def emotion_name(emotion_id) when is_bitstring(emotion_id) do
     case Integer.parse(emotion_id) do
       {emotion_num_id, ""} -> emotion_name(emotion_num_id)

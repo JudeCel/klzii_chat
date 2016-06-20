@@ -16,10 +16,13 @@ defmodule KlziiChat.Services.SessionTopicService do
   end
 
   @spec get_messages(integer, boolean, boolean) :: Map
-  def get_messages(session_topic_id, stars_only, exclude_facilitator) do
-    query = QueriesMessages.base_query(session_topic_id, stars_only)
-    query = QueriesMessages.join_session_member(query)
-    if exclude_facilitator, do: query = QueriesMessages.exclude_facilitator(query)
+  def get_messages(session_topic_id, filter_star, include_facilitator) do
+    query =
+      QueriesMessages.base_query(session_topic_id)
+      |> QueriesMessages.filter_star(filter_star)
+      |> QueriesMessages.join_session_member()
+
+    if !include_facilitator, do: query = QueriesMessages.exclude_by_role(query, "facilitator")
     query = QueriesMessages.sort_select(query)
 
     Repo.all(query)

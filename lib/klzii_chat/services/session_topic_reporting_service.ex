@@ -7,15 +7,15 @@ defmodule KlziiChat.Services.SessionTopicReportingService do
   @emoticon_parameters %{emoticons_qnt: 7, sprites_qnt: 6, emoticon_size: [55, 55], selected_emoticon: 3}
 
   @spec save_report(String.t, atom, integer, boolean, boolean) :: {:ok, String.t}
-  def save_report(report_name, report_format, session_topic_id, star_only, exclude_facilitator) do
-    with {:ok, report_data} <- get_report(report_format, session_topic_id, star_only, exclude_facilitator),
+  def save_report(report_name, report_format, session_topic_id, filter_star, include_facilitator) do
+    with {:ok, report_data} <- get_report(report_format, session_topic_id, filter_star, include_facilitator),
          {:ok, report_file_path} <- write_report(report_name, report_format, report_data),
     do:  {:ok, report_file_path}
   end
 
   @spec get_report(atom, integer, boolean, boolean) :: {:ok, Stream | String.t} | {:error, String.t}
-  def get_report(report_format, session_topic_id, star_only, exclude_facilitator) do
-    messages = SessionTopicService.get_messages(session_topic_id, star_only, exclude_facilitator)
+  def get_report(report_format, session_topic_id, filter_star, include_facilitator) do
+    messages = SessionTopicService.get_messages(session_topic_id, filter_star, include_facilitator)
     {session_name, session_topic_name} = SessionTopicService.get_session_and_topic_names(session_topic_id)
 
     case report_format do

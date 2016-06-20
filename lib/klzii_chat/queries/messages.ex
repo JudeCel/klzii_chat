@@ -2,17 +2,20 @@ defmodule KlziiChat.Queries.Messages do
   alias KlziiChat.{Message, SessionMember}
   import Ecto.Query, only: [from: 2]
 
-  @spec base_query(integer, false) :: Ecto.Query
-  def base_query(session_topic_id, false) do
+  @spec base_query(integer) :: Ecto.Query
+  def base_query(session_topic_id) do
     from message in Message,
     where: message.sessionTopicId == ^session_topic_id
   end
 
-  @spec base_query(integer, true) :: Ecto.Query
-  def base_query(session_topic_id, true) do
-    from message in Message,
-    where: message.sessionTopicId == ^session_topic_id and message.star == true
+  @spec filter_star(Ecto.Query, true) :: Ecto.Query
+  def filter_star(query, true) do
+    from message in query,
+    where: message.star == true
   end
+
+  @spec filter_star(Ecto.Query, false) :: Ecto.Query
+  def filter_star(query, false), do: query
 
   @spec join_session_member(Ecto.Query) :: Ecto.Query
   def join_session_member(query) do
@@ -21,10 +24,10 @@ defmodule KlziiChat.Queries.Messages do
     on: session_member.id == message.sessionMemberId
   end
 
-  @spec exclude_facilitator(Ecto.Query) :: Ecto.Query
-  def exclude_facilitator(query) do
+  @spec exclude_by_role(Ecto.Query, String.t) :: Ecto.Query
+  def exclude_by_role(query, role) when is_bitstring(role) do
     from [message, session_member] in query,
-    where: session_member.role != "facilitator"
+    where: session_member.role != ^role
   end
 
   @spec sort_select(Ecto.Query) :: Ecto.Query

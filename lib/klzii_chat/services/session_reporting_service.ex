@@ -70,7 +70,7 @@ defmodule KlziiChat.Services.SessionReportingService do
         spawn(fn -> send parent, {self(), WhiteboardReportingService.save_report(report_name, :pdf, session_topic_id)} end)
       else
         star_only = if report_type == :star, do: true, else: false
-        spawn(fn -> send parent, {self(), SessionTopicReportingService.save_report(report_name, report_format, session_topic_id, star_only, !include_facilitator)} end)
+        spawn(fn -> send parent, {self(), SessionTopicReportingService.save_report(report_name, report_format, session_topic_id, star_only, include_facilitator)} end)
       end
 
     reference = Process.monitor(pid)
