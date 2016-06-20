@@ -62,24 +62,27 @@ defmodule KlziiChat.Services.SessionReportingService do
   end
 
   def save_report_async(report_type, report_name, report_format, session_topic_id, include_facilitator) do
-    parent = self()
-    pid =
+    async_func =
       if report_type == :whiteboard do
-        spawn(fn -> send parent, {self(), WhiteboardReportingService.save_report(report_name, :pdf, session_topic_id)} end)
+        fn -> WhiteboardReportingService.save_report(report_name, :pdf, session_topic_id) end
       else
-        star_only = if report_type == :star, do: true, else: false
-        spawn(fn -> send parent, {self(), SessionTopicReportingService.save_report(report_name, report_format, session_topic_id, star_only, include_facilitator)} end)
+        filter_star = if report_type == :star, do: true, else: false
+        fn -> SessionTopicReportingService.save_report(report_name, report_format, session_topic_id, filter_star, include_facilitator) end
       end
 
-    reference = Process.monitor(pid)
-    receive do
-      {^pid, {:ok, report_file_path}} -> {:ok, report_file_path}
-      {^pid, {:error, reason}} -> {:error, reason}
-      {:DOWN, ^reference, :process, ^pid, reason} when reason != :normal -> {:error, "Error saving report (process terminated)"}
-     after
-      @save_report_timeout ->
-        Process.exit(pid, "timeout")
-        {:error, "Report creation timeout " <> to_string(@save_report_timeout)}
+    async_task =
+      Task.async(fn ->
+        try do
+          async_func.()
+        catch
+          type, _ -> {:error, "Error creating report: #{to_string(type)}"}
+        end
+      end)
+
+    case Task.yield(async_task, @save_report_timeout) do
+      {:ok, {:ok, report_file_path}} -> {:ok, report_file_path}
+      {:ok, {:error, err}} -> {:error, err}
+      nil -> {:error, "Report creation timeout " <> to_string(@save_report_timeout)}
     end
   end
 
@@ -89,22 +92,20 @@ defmodule KlziiChat.Services.SessionReportingService do
       "file" => report_file_path,
       "name" => report_name }
 
-    parent = self()
-    pid = spawn(fn -> send parent, {self(), ResourceService.upload(upload_params, account_user_id)} end)
-    reference = Process.monitor(pid)
+    async_task = Task.async(fn ->
+      try do
+        ResourceService.upload(upload_params, account_user_id)
+      catch
+        type, _ -> {:error, "Error creating report: #{to_string(type)}"}
+      end
+    end)
 
-    receive do
-      {^pid, {:ok, resource}} ->
-        File.rm(report_file_path)
-        {:ok, resource}
-      {^pid, {:error, reason}} ->
-        File.rm(report_file_path)
-        {:error, reason}
-      {:DOWN, ^reference, :process, ^pid, reason} when reason != :normal -> {:error, "Error uploading report (process terminated)"}
-     after
-      @upload_report_timeout ->
-        Process.exit(pid, "timeout")
-        {:error, "Report uploading timeout: " <> to_string(@upload_report_timeout)}
+    result = Task.yield(async_task, @upload_report_timeout)
+    File.rm(report_file_path)
+    case result do
+      {:ok, {:ok, report_file_path}} -> {:ok, report_file_path}
+      {:ok, {:error, err}} -> {:error, err}
+      nil -> {:error, "Report upload timeout " <> to_string(@upload_report_timeout)}
     end
   end
 
