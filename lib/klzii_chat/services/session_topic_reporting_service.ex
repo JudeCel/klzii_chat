@@ -46,8 +46,11 @@ defmodule KlziiChat.Services.SessionTopicReportingService do
     replyId: replyId, emotion: emotion}) do
     {:ok, emotion_name} = MessageDecorator.emotion_name(emotion)
 
-    "#{username},#{body},#{DateTime.to_string(createdAt)},#{to_string(star)},#{to_string(replyId !== nil)}," <>
-      "#{emotion_name}\r\n"
+    ~s(#{double_quote(username)},#{double_quote(body)},#{double_quote(DateTime.to_string(createdAt))},#{to_string(star)},#{to_string(replyId != nil)},#{emotion_name}\r\n)
+  end
+
+  def double_quote(string) when is_bitstring(string) do
+    ~s("#{String.replace(string, ~s("), ~s(""))}")
   end
 
   @spec get_html(list, String.t, String.t) :: {String.t}
