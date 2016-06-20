@@ -18,8 +18,45 @@ defmodule KlziiChat.SessionTopicsReportView do
   end
 
   @doc """
-  Transforms ECTO query result (list of structs) into a map with a following structure:
-   %{session_topic_id => %{format => %{type => report (w/resource)}}
+  Transforms ECTO query result (list of structs) into a nested maps for a JSON encoding.
+
+  Returns: Map
+
+  ## Examples
+
+      ECTO Repo.all request result:
+
+        Ecto.Schema.Metadata<:loaded, "SessionTopicsReports">,
+          createdAt: #Ecto.DateTime<2016-06-20 18:26:08>, facilitator: true,
+          format: "pdf", id: 422, message: nil, resource: nil, resourceId: nil,
+          session: #Ecto.Association.NotLoaded<association :session is not loaded>,
+          sessionId: 4740, sessionTopicId: 9479,
+          session_topic: #Ecto.Association.NotLoaded<association :session_topic is not loaded>,
+          status: "progress", type: "whiteboard",
+          updatedAt: #Ecto.DateTime<2016-06-20 18:26:08>},
+         %KlziiChat.SessionTopicReport{__meta__: #Ecto.Schema.Metadata<:loaded, "SessionTopicsReports">,
+          createdAt: #Ecto.DateTime<2016-06-20 18:26:08>, facilitator: false,
+          format: "pdf", id: 423, message: nil, resource: nil, resourceId: nil,
+          session: #Ecto.Association.NotLoaded<association :session is not loaded>,
+          sessionId: 4740, sessionTopicId: 9479,
+          session_topic: #Ecto.Association.NotLoaded<association :session_topic is not loaded>,
+          status: "progress", type: "all",
+          updatedAt: #Ecto.DateTime<2016-06-20 18:26:08>}]
+
+      Function output:
+
+      %{
+        "9267" => %{
+          "pdf" => %{
+            "all" => %{facilitator: false, format: "pdf", id: 410,
+              message: nil, resource: nil, resourceId: nil, sessionId: 4634,
+              sessionTopicId: 9267, status: "progress", type: "all"},
+            "whiteboard" => %{facilitator: true, format: "pdf", id: 409, message: nil,
+              resource: nil, resourceId: nil, sessionId: 4634, sessionTopicId: 9267,
+              status: "progress", type: "whiteboard"}
+          }
+        }
+      }
   """
   def render("reports.json", %{reports: reports}) do
     Enum.reduce(reports, Map.new, fn(report, acc) ->
