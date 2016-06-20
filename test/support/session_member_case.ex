@@ -3,8 +3,45 @@ defmodule KlziiChat.SessionMemberCase do
   alias KlziiChat.{Repo, User, SubscriptionPlan, Session, Account, SessionMember, BrandProjectPreference}
 
   setup do
-    user = User.seedChangeset(%User{}, %{ email: "dainsi@gmail.com", encryptedPassword: "jee" }) |> Repo.insert!
+    user = User.seedChangeset(%User{}, %{ email: "dainis@gmail.com", encryptedPassword: "jee" }) |> Repo.insert!
+    user2 = User.seedChangeset(%User{}, %{ email: "dainis_2@gmail.com", encryptedPassword: "pfff" }) |> Repo.insert!
+    user3 = User.seedChangeset(%User{}, %{ email: "dainis_3@gmail.com", encryptedPassword: "pfff11" }) |> Repo.insert!
+    user4 = User.seedChangeset(%User{}, %{ email: "dainis_4@gmail.com", encryptedPassword: "11111" }) |> Repo.insert!
+
     account = Account.changeset(%Account{}, %{name: "cool account"}) |> Repo.insert!
+
+    account_user_account_manager = Ecto.build_assoc(account, :account_users, user: user,
+      firstName: "Dainis",
+      lastName: "Lapins",
+      gender: "male",
+      role: "accountManager",
+      email: user.email
+    ) |> Repo.insert! |>  Repo.preload(:account)
+
+    account_user_participant = Ecto.build_assoc(account, :account_users, user: user2,
+      firstName: "Dainis",
+      lastName: "Lapins",
+      gender: "male",
+      role: "participant",
+      email: user2.email
+    ) |> Repo.insert! |>  Repo.preload(:account)
+
+    account_user_participant_2 = Ecto.build_assoc(account, :account_users, user: user3,
+      firstName: "Dainis",
+      lastName: "Lapins",
+      gender: "male",
+      role: "participant",
+      email: user3.email
+    ) |> Repo.insert! |>  Repo.preload(:account)
+
+    account_user_observer = Ecto.build_assoc(account, :account_users, user: user4,
+      firstName: "Dainis",
+      lastName: "Lapins",
+      gender: "male",
+      role: "observer",
+      email: user4.email
+    ) |> Repo.insert! |>  Repo.preload(:account)
+
 
     subscription_preference_data =%{
       sessionCount: 8,
@@ -45,14 +82,6 @@ defmodule KlziiChat.SessionMemberCase do
     ) |> Repo.insert!
       |> Ecto.build_assoc(:subscription_preference, data: subscription_preference_data)
       |> Repo.insert
-
-    account_user = Ecto.build_assoc(account, :account_users, user: user,
-      firstName: "Dainis",
-      lastName: "Lapins",
-      gender: "male",
-      role: "accountManager",
-      email: user.email
-    ) |> Repo.insert! |>  Repo.preload(:account)
 
     brand_project_preference = BrandProjectPreference.changeset(
       %BrandProjectPreference{},
@@ -100,7 +129,7 @@ defmodule KlziiChat.SessionMemberCase do
       sessionId: session.id,
       role: "facilitator",
       colour: "00000",
-      accountUserId: account_user.id
+      accountUserId: account_user_account_manager.id
     } |> Repo.insert!
 
     participant = %SessionMember{
@@ -109,7 +138,25 @@ defmodule KlziiChat.SessionMemberCase do
       sessionId: session.id,
       colour: "00000",
       role: "participant",
-      accountUserId: account_user.id
+      accountUserId: account_user_participant.id
+    } |> Repo.insert!
+
+    participant2 = %SessionMember{
+      token: "==oasu8asnx",
+      username: "cool member",
+      sessionId: session.id,
+      colour: "00000",
+      role: "participant",
+      accountUserId: account_user_participant_2.id
+    } |> Repo.insert!
+
+    observer = %SessionMember{
+      token: "==oasu8asnx",
+      username: "cool member",
+      sessionId: session.id,
+      colour: "00000",
+      role: "observer",
+      accountUserId: account_user_observer.id
     } |> Repo.insert!
 
     {:ok,
@@ -119,8 +166,13 @@ defmodule KlziiChat.SessionMemberCase do
       session_topic_2: session_topic_2,
       facilitator: facilitator,
       participant: participant,
+      participant2: participant2,
+      observer: observer,
       session: session,
-      account_user: account_user,
+      account_user_account_manager: account_user_account_manager,
+      account_user_participant: account_user_participant,
+      account_user_participant_2: account_user_participant_2,
+      account_user_observer: account_user_observer,
       account: account
     }
   end

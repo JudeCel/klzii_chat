@@ -117,7 +117,7 @@ defmodule KlziiChat.SessionTopicChannelTest do
     assert_push("console", %{mini_survey_id: nil})
   end
 
-  test "set resource to console", %{account_user: account_user, socket: socket, session_topic_1_name: session_topic_1_name} do
+  test "set resource to console", %{account_user_account_manager: account_user, socket: socket, session_topic_1_name: session_topic_1_name} do
     {:ok, resource} = Ecto.build_assoc(
       account_user.account, :resources,
       accountUserId: account_user.id,
@@ -139,7 +139,7 @@ defmodule KlziiChat.SessionTopicChannelTest do
     assert_push("console", %{})
   end
 
-  test "remove resource from console when resource enable", %{account_user: account_user, socket: socket, session_topic_1_name: session_topic_1_name} do
+  test "remove resource from console when resource enable", %{account_user_account_manager: account_user, socket: socket, session_topic_1_name: session_topic_1_name} do
     {:ok, _, socket} = subscribe_and_join(socket, SessionTopicChannel, session_topic_1_name)
     assert_push("console", %{})
 
