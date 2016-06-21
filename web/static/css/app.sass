@@ -23,7 +23,6 @@ $input-size: 1.5em
 @import 'dependencies/toastr/toastr.min.css'
 
 #screen-too-small
-  display: none
   width: 50%
   border: 1px solid #ccc
   text-align: center
@@ -230,10 +229,8 @@ body
     padding: 0 15px
 
 @media (max-width: 992px)
-  #main_container
-    display: none
-  #screen-too-small
-    display: block
+  *[role="dialog"]
+    visibility: hidden
 
 .toast-top-right
   top: 130px
