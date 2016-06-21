@@ -16,10 +16,8 @@ export default function reducer(state = initialState, action = {}) {
     case Constants.UNREAD_DIRECT_MESSAGES:
     case Constants.READ_DIRECT_MESSAGES:
       return { ...state, unreadCount: action.data };
-    case Constants.SET_DIRECT_MESSAGE_USER:
-      return { ...state, currentReciever: action.id, canFetch: true };
     case Constants.SET_DIRECT_MESSAGES:
-      return { ...state, ...action.data, fetching: false };
+      return { ...state, ...action.data, fetching: false, canFetch: true };
     case Constants.ADD_DIRECT_MESSAGES:
       return { ...state, ...addDirectMessages(state, action.data) };
     case Constants.CREATE_DIRECT_MESSAGE:
@@ -71,9 +69,7 @@ function addDirectMessages(state, data) {
 
   if(data.read.length < 10) {
     object.canFetch = false;
-    return object;
   }
-  else {
-    return object;
-  }
+
+  return object;
 }
