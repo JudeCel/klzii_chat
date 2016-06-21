@@ -12,6 +12,12 @@ defmodule KlziiChat.Services.DirectMessageTest do
     assert(resp.sessionId == session.id)
   end
 
+  test "DirectMessage - cannot create message because sending to participant", %{ participant: participant, participant2: participant2, session: session } do
+    params = %{ "senderId" => participant2.id, "recieverId" => participant.id, "text" => "AAA" }
+    {:error, error } = DirectMessageService.create_message(session.id, params)
+    assert(error == "Action not allowed!")
+  end
+
   test "DirectMessage - should return all messages", %{ facilitator: facilitator, participant: participant, session: session } do
     { :ok, message1 } = DirectMessageService.create_message(session.id, %{ "senderId" => facilitator.id, "recieverId" => participant.id, "text" => "AAA" })
     { :ok, message2 } = DirectMessageService.create_message(session.id, %{ "senderId" => facilitator.id, "recieverId" => participant.id, "text" => "BBB" })
