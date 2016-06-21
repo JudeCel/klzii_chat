@@ -25,7 +25,7 @@ const ReportsIndex = React.createClass({
     const { format, facilitator } = this.state;
     const reportFormats = ['pdf', 'csv', 'txt'];
     const reportTypes = ['all', 'star', 'whiteboard', 'votes'];
-    const colMdSizes = [2, 3, 3, 1];
+    const colMdSizes = { all: 2, star: 3, whiteboard: 3,  votes: 1 };
 
     return (
       <div className='reports-section'>
@@ -66,7 +66,7 @@ const ReportsIndex = React.createClass({
                   <td className='col-md-3'>{ topic.name }</td>
                   {
                     reportTypes.map((type, fIndex) =>
-                      <td className={ 'col-md-' + colMdSizes[fIndex] } key={ fIndex }>
+                      <td className={ 'col-md-' + colMdSizes[type] } key={ fIndex }>
                         <ReportIcon
                           { ...{ format, type, facilitator, sessionTopicId: topic.id } }
                           { ...{ createReport: this.createReport, changePage: changePage } }

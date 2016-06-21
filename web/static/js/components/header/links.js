@@ -6,8 +6,7 @@ import ReportsModal       from './../reports/modal';
 const Links = React.createClass({
   mixins: [mixins.modalWindows, mixins.validations],
   reportsFunction(style) {
-    // temp
-    if(this.hasPermission(['reports', 'can_report']) || true) {
+    if(this.hasPermission(['reports', 'can_report'])) {
       return (
         <li style={ style } onClick={ this.openSpecificModal.bind(this, 'reports') }>
           <i className='icon-book-1' />
