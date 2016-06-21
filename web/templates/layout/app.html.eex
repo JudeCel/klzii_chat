@@ -21,7 +21,11 @@
     <div class="container-fluid">
       <header class="header"></header>
       <main role="main" id="main_container" ></main>
-    </div> <!-- /container -->
+    </div>
+
+    <div id="screen-too-small">
+      This site is not compatible with small window sizes.
+    </div>
 
     <script type="text/javascript">
       <%= if Guardian.Plug.current_token(@conn) do %>
