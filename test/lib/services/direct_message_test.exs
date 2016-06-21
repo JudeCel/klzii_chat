@@ -2,8 +2,13 @@ defmodule KlziiChat.Services.DirectMessageTest do
   use KlziiChat.{ ModelCase, SessionMemberCase }
   alias KlziiChat.Services.DirectMessageService
 
+  @message_text1 "AAA"
+  @message_text2 "BBB"
+  @message_text3 "CCC"
+  @message_text4 "DDD"
+
   test "DirectMessage - can create message", %{ facilitator: facilitator, participant: participant, session: session } do
-    params = %{ "senderId" => facilitator.id, "recieverId" => participant.id, "text" => "AAA" }
+    params = %{ "senderId" => facilitator.id, "recieverId" => participant.id, "text" => @message_text1 }
     {:ok, resp } = DirectMessageService.create_message(session.id, params)
 
     assert(resp.text == params["text"])
@@ -13,15 +18,15 @@ defmodule KlziiChat.Services.DirectMessageTest do
   end
 
   test "DirectMessage - cannot create message because sending to participant", %{ participant: participant, participant2: participant2, session: session } do
-    params = %{ "senderId" => participant2.id, "recieverId" => participant.id, "text" => "AAA" }
+    params = %{ "senderId" => participant2.id, "recieverId" => participant.id, "text" => @message_text1 }
     {:error, error } = DirectMessageService.create_message(session.id, params)
     assert(error == "Action not allowed!")
   end
 
   test "DirectMessage - should return all messages", %{ facilitator: facilitator, participant: participant, session: session } do
-    { :ok, message1 } = DirectMessageService.create_message(session.id, %{ "senderId" => facilitator.id, "recieverId" => participant.id, "text" => "AAA" })
-    { :ok, message2 } = DirectMessageService.create_message(session.id, %{ "senderId" => facilitator.id, "recieverId" => participant.id, "text" => "BBB" })
-    { :ok, message3 } = DirectMessageService.create_message(session.id, %{ "senderId" => participant.id, "recieverId" => facilitator.id, "text" => "CCC" })
+    { :ok, message1 } = DirectMessageService.create_message(session.id, %{ "senderId" => facilitator.id, "recieverId" => participant.id, "text" => @message_text1 })
+    { :ok, message2 } = DirectMessageService.create_message(session.id, %{ "senderId" => facilitator.id, "recieverId" => participant.id, "text" => @message_text2 })
+    { :ok, message3 } = DirectMessageService.create_message(session.id, %{ "senderId" => participant.id, "recieverId" => facilitator.id, "text" => @message_text3 })
 
     %{ "read" => read_list, "unread" => unread_list } = DirectMessageService.get_all_direct_messages(facilitator.id, participant.id, 0)
 
@@ -30,9 +35,9 @@ defmodule KlziiChat.Services.DirectMessageTest do
   end
 
   test "DirectMessage - set all messages as read", %{ facilitator: facilitator, participant: participant, session: session } do
-    { :ok, message1 } = DirectMessageService.create_message(session.id, %{ "senderId" => facilitator.id, "recieverId" => participant.id, "text" => "AAA" })
-    { :ok, message2 } = DirectMessageService.create_message(session.id, %{ "senderId" => facilitator.id, "recieverId" => participant.id, "text" => "BBB" })
-    { :ok, message3 } = DirectMessageService.create_message(session.id, %{ "senderId" => participant.id, "recieverId" => facilitator.id, "text" => "CCC" })
+    { :ok, message1 } = DirectMessageService.create_message(session.id, %{ "senderId" => facilitator.id, "recieverId" => participant.id, "text" => @message_text1 })
+    { :ok, message2 } = DirectMessageService.create_message(session.id, %{ "senderId" => facilitator.id, "recieverId" => participant.id, "text" => @message_text2 })
+    { :ok, message3 } = DirectMessageService.create_message(session.id, %{ "senderId" => participant.id, "recieverId" => facilitator.id, "text" => @message_text3 })
 
     %{ "unread" => unread_list, "read" => read_list } = DirectMessageService.get_all_direct_messages(participant.id, facilitator.id, 0)
     assert(unread_list == [message2, message1])
@@ -49,8 +54,8 @@ defmodule KlziiChat.Services.DirectMessageTest do
   end
 
   test "DirectMessage - get unread message count", %{ facilitator: facilitator, participant: participant, session: session } do
-    DirectMessageService.create_message(session.id, %{ "senderId" => facilitator.id, "recieverId" => participant.id, "text" => "AAA" })
-    DirectMessageService.create_message(session.id, %{ "senderId" => facilitator.id, "recieverId" => participant.id, "text" => "BBB" })
+    DirectMessageService.create_message(session.id, %{ "senderId" => facilitator.id, "recieverId" => participant.id, "text" => @message_text1 })
+    DirectMessageService.create_message(session.id, %{ "senderId" => facilitator.id, "recieverId" => participant.id, "text" => @message_text2 })
 
     count = DirectMessageService.get_unread_count(participant.id)
     |> Map.get(to_string(facilitator.id))
@@ -61,14 +66,14 @@ defmodule KlziiChat.Services.DirectMessageTest do
   end
 
   test "DirectMessage - get last messages", %{ facilitator: facilitator, participant: participant, session: session, participant2: participant2 } do
-    DirectMessageService.create_message(session.id, %{ "senderId" => participant.id, "recieverId" => facilitator.id, "text" => "AAA" })
-    DirectMessageService.create_message(session.id, %{ "senderId" => participant.id, "recieverId" => facilitator.id, "text" => "BBB" })
+    DirectMessageService.create_message(session.id, %{ "senderId" => participant.id, "recieverId" => facilitator.id, "text" => @message_text1 })
+    DirectMessageService.create_message(session.id, %{ "senderId" => participant.id, "recieverId" => facilitator.id, "text" => @message_text2 })
 
-    DirectMessageService.create_message(session.id, %{ "senderId" => participant2.id, "recieverId" => facilitator.id, "text" => "CCC" })
-    DirectMessageService.create_message(session.id, %{ "senderId" => participant2.id, "recieverId" => facilitator.id, "text" => "DDD" })
+    DirectMessageService.create_message(session.id, %{ "senderId" => participant2.id, "recieverId" => facilitator.id, "text" => @message_text3 })
+    DirectMessageService.create_message(session.id, %{ "senderId" => participant2.id, "recieverId" => facilitator.id, "text" => @message_text4 })
 
     messages = DirectMessageService.get_last_messages(facilitator.id)
-    assert(Map.get(messages, to_string(participant.id)) == "BBB")
-    assert(Map.get(messages, to_string(participant2.id)) == "DDD")
+    assert(Map.get(messages, to_string(participant.id)) == @message_text2)
+    assert(Map.get(messages, to_string(participant2.id)) == @message_text4)
   end
 end

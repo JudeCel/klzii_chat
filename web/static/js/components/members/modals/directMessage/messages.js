@@ -23,14 +23,14 @@ const Messages = React.createClass({
     }
   },
   addFetcher() {
-    const { fetching, canFetch, messages } = this.props;
+    const { fetching, canFetch, messages, perPage } = this.props;
 
     if(fetching) {
       return (
         <i className='fa fa-spinner fa-pulse fa-3x fa-fw' />
       )
     }
-    else if(canFetch && (messages.unread.length + messages.read.length) >= 10) {
+    else if(canFetch && (messages.unread.length + messages.read.length) >= perPage) {
       return (
         <div style={ this.borderColor() } onClick={ this.fetchNewData }>
           Fetch more messages
@@ -92,7 +92,8 @@ const mapStateToProps = (state) => {
     messages: state.directMessages,
     currentPage: state.directMessages.currentPage,
     canFetch: state.directMessages.canFetch,
-    fetching: state.directMessages.fetching
+    fetching: state.directMessages.fetching,
+    perPage: state.directMessages.perPage
   }
 };
 

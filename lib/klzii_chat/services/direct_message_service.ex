@@ -1,6 +1,7 @@
 defmodule KlziiChat.Services.DirectMessageService do
   alias KlziiChat.{ Repo, Session, SessionMember, DirectMessage }
   alias KlziiChat.Services.Permissions.DirectMessage, as: DirectMessagePermissions
+  alias KlziiChat.Helpers.MapHelper
   import Ecto
   import Ecto.Query
 
@@ -27,7 +28,7 @@ defmodule KlziiChat.Services.DirectMessageService do
   def get_all_direct_messages(current_member_id, other_member_id, page) do
     current_member = Repo.get!(SessionMember, current_member_id)
     other_member = Repo.get!(SessionMember, other_member_id)
-    limit = 10
+    limit = per_page()
     offset = page * limit
 
     Repo.all(from dm in DirectMessage,
@@ -60,7 +61,7 @@ defmodule KlziiChat.Services.DirectMessageService do
       group_by: dm.senderId,
       select: { dm.senderId, count(dm.id) }
     )
-    |> map_key_to_string()
+    |> MapHelper.key_to_string()
   end
 
   @spec get_last_messages(Integer.t) :: { :ok, Map.t } | { :error, Ecto.Changeset.t }
@@ -73,13 +74,7 @@ defmodule KlziiChat.Services.DirectMessageService do
       order_by: [desc: dm.id],
       select: { dm.senderId, dm.text }
     )
-    |> map_key_to_string()
-  end
-
-  def map_key_to_string(data) do
-    Enum.reduce(data, %{}, fn { key, value }, acc ->
-      Map.put(acc, to_string(key), value)
-    end)
+    |> MapHelper.key_to_string()
   end
 
   def group_by_read(messages, current_member_id) do
@@ -94,4 +89,5 @@ defmodule KlziiChat.Services.DirectMessageService do
 
   def select_key(true), do: "read"
   def select_key(false), do: "unread"
+  def per_page(), do: 10
 end

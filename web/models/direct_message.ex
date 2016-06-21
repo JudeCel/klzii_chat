@@ -10,7 +10,6 @@ defmodule KlziiChat.DirectMessage do
 
     timestamps [inserted_at: :createdAt, updated_at: :updatedAt]
   end
-
   @required_fields ~w(sessionId senderId recieverId text)
   @optional_fields ~w(readAt)
 
@@ -23,5 +22,6 @@ defmodule KlziiChat.DirectMessage do
   def changeset(model, params \\ %{}) do
     model
     |> cast(params, (@required_fields ++ @optional_fields))
+    |> validate_required(@required_fields)
   end
 end

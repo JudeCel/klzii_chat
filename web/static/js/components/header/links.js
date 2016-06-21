@@ -11,7 +11,8 @@ const Links = React.createClass({
     for(var i in unreadDirectMessages) {
       sum += unreadDirectMessages[i];
     }
-    return sum || null;
+
+    return sum;
   },
   showDirectMessages() {
     const { currentUser, firstParticipant, facilitator } = this.props;
@@ -21,7 +22,7 @@ const Links = React.createClass({
   },
   render() {
     const { colours } = this.props;
-    const count = this.countAllUnread();
+    const count = this.countAllUnread() || null;
     const style = {
       backgroundColor: colours.headerButton
     };

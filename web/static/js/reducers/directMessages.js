@@ -8,7 +8,8 @@ const initialState = {
   currentReciever: null,
   currentPage: 0,
   fetching: false,
-  canFetch: true
+  canFetch: true,
+  perPage: 10
 };
 
 export default function reducer(state = initialState, action = {}) {
@@ -37,6 +38,10 @@ export default function reducer(state = initialState, action = {}) {
 
 function createDirectMessage(state, message) {
   let object = { unread: state.unread, read: state.read };
+  if((object.unread.length + object.read.length) < state.perPage) {
+    object.canFetch = false;
+  }
+
   object.read = [...object.read, ...object.unread, message];
   object.unread = [];
   return object;
@@ -67,7 +72,7 @@ function newDirectMessage(state, message) {
 function addDirectMessages(state, data) {
   let object = { read: [...data.read, ...state.read], currentPage: data.currentPage, fetching: false };
 
-  if(data.read.length < 10) {
+  if(data.read.length < state.perPage) {
     object.canFetch = false;
   }
 

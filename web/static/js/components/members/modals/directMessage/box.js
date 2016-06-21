@@ -57,7 +57,7 @@ const MessageBox = React.createClass({
 const mapStateToProps = (state) => {
   return {
     channel: state.chat.channel,
-    modalData: state.modalWindows.data,
+    modalData: state.modalWindows.currentModalData,
     currentUser: state.members.currentUser
   }
 };
