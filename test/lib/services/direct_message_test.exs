@@ -1,6 +1,7 @@
 defmodule KlziiChat.Services.DirectMessageTest do
   use KlziiChat.{ ModelCase, SessionMemberCase }
   alias KlziiChat.Services.DirectMessageService
+  alias KlziiChat.{DirectMessage}
 
   @message_text1 "AAA"
   @message_text2 "BBB"
@@ -46,11 +47,11 @@ defmodule KlziiChat.Services.DirectMessageTest do
     :ok = DirectMessageService.set_all_messages_read(participant.id, facilitator.id)
     %{ "read" => read_list } = DirectMessageService.get_all_direct_messages(participant.id, facilitator.id, 0)
 
-    message1 = Repo.get!(KlziiChat.DirectMessage, message1.id)
-    message2 = Repo.get!(KlziiChat.DirectMessage, message2.id)
-    message3 = Repo.get!(KlziiChat.DirectMessage, message3.id)
+    message1 = Repo.get!(DirectMessage, message1.id)
+    message2 = Repo.get!(DirectMessage, message2.id)
+    message3 = Repo.get!(DirectMessage, message3.id)
 
-    assert(read_list == [message2, message1, message3])
+    assert(read_list == [message3, message2, message1])
   end
 
   test "DirectMessage - get unread message count", %{ facilitator: facilitator, participant: participant, session: session } do
