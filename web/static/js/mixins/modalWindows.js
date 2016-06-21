@@ -20,7 +20,7 @@ const modalWindows = {
     for(let i in modalWindows) {
       let modal = modalWindows[i];
 
-      if(modal && i != key) {
+      if(modal && i != key && i != 'data') {
         this.closeAllModals();
         break;
       }

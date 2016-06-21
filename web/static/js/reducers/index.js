@@ -9,6 +9,7 @@ import resources           from './resources';
 import notifications       from './notifications';
 import modalWindows        from './modalWindows';
 import miniSurveys         from './miniSurveys';
+import directMessages      from './directMessages';
 import reports             from './reports';
 
 export default combineReducers({
@@ -22,5 +23,6 @@ export default combineReducers({
   notifications: notifications,
   modalWindows: modalWindows,
   miniSurveys: miniSurveys,
-  reports: reports
+  reports: reports,
+  directMessages: directMessages
 });

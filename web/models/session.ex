@@ -15,6 +15,7 @@ defmodule KlziiChat.Session do
     belongs_to :brand_project_preference, KlziiChat.BrandProjectPreference, [foreign_key: :brandProjectPreferenceId]
     has_many :session_topics, KlziiChat.SessionTopic, [foreign_key: :sessionId]
     has_many :topics, through: [:session_topics, :topic]
+    has_many :direct_messages, KlziiChat.DirectMessage, [foreign_key: :sessionId]
     timestamps [inserted_at: :createdAt, updated_at: :updatedAt]
 
     # timestamps
