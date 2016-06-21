@@ -42,9 +42,9 @@ defmodule KlziiChat.Services.SessionReportingServiceTest do
   end
 
   test "Try to create incorrect report format and type" do
-    assert({:error, "incorrect report format"} == SessionReportingService.create_session_topic_report(0, 1, 2, :incorrect, :all, true))
-    assert({:error, "incorrect report type"} == SessionReportingService.create_session_topic_report(0, 1, 2, :pdf, :incorrect, true))
-    assert({:error, "pdf is the only format that is available for whiteboard report"} == SessionReportingService.create_session_topic_report(0, 1, 2, :txt, :whiteboard, true))
+    assert({:error, "incorrect report format or type"} == SessionReportingService.create_session_topic_report(0, 1, 2, :incorrect, :all, true))
+    assert({:error, "incorrect report format or type"} == SessionReportingService.create_session_topic_report(0, 1, 2, :pdf, :incorrect, true))
+    assert({:error, "pdf is the only format that is available for whiteboard reports"} == SessionReportingService.create_session_topic_report(0, 1, 2, :txt, :whiteboard, true))
   end
 
   test "Create session topics reports record", %{session: session, session_topic: session_topic,facilitator: facilitator} do
@@ -60,9 +60,9 @@ defmodule KlziiChat.Services.SessionReportingServiceTest do
   end
 
   test "Save report of a given type", %{session_topic: session_topic} do
-    {:ok, all_file_path} = SessionReportingService.save_report_async(:all, @report_prefix <> "all", :txt, session_topic.id, false)
-    {:ok, star_file_path} = SessionReportingService.save_report_async(:star, @report_prefix <> "star", :csv, session_topic.id, true)
-    {:ok, whiteboard_file_path} = SessionReportingService.save_report_async(:whiteboard, @report_prefix <> "wb", :pdf, session_topic.id, true)
+    {:ok, all_file_path} = SessionReportingService.save_report_async(:all, @report_prefix <> "all", :txt, session_topic.id, true)
+    {:ok, star_file_path} = SessionReportingService.save_report_async(:star, @report_prefix <> "star", :csv, session_topic.id, false)
+    {:ok, whiteboard_file_path} = SessionReportingService.save_report_async(:whiteboard, @report_prefix <> "wb", :pdf, session_topic.id, false)
 
     assert(File.exists?(all_file_path))
     assert(File.exists?(star_file_path))
@@ -167,6 +167,32 @@ defmodule KlziiChat.Services.SessionReportingServiceTest do
     assert({:error, "Action not allowed!"} = SessionReportingService.get_session_topics_reports(session.id, participant.id))
   end
 
+  test "Delete report with normal status - report deleted", %{session: session, session_topic: session_topic, facilitator: facilitator}  do
+    {:ok, report} = SessionReportingService.create_session_topics_reports_record(session.id, session_topic.id, :all, true, :pdf)
+    {:ok, deleted_report} = SessionReportingService.delete_report(report.id, facilitator.accountUserId)
+
+    assert(report.id == deleted_report.id)
+    assert({:ok, []} == SessionReportingService.get_session_topics_reports(session.id, facilitator.id))
+  end
+
+  test "Delete report with failed status - report is NOT deleted, deletedAt field set", %{session: session, session_topic: session_topic, facilitator: facilitator}  do
+    {:ok, report} = SessionReportingService.create_session_topics_reports_record(session.id, session_topic.id, :all, true, :pdf)
+    {:ok, report} = SessionReportingService.update_session_topics_reports_record({:error, "some error message"}, report.id)
+    {:ok, failed_report} = SessionReportingService.delete_report(report.id, facilitator.accountUserId)
+
+    {:ok, [db_report]} = SessionReportingService.get_session_topics_reports(session.id, facilitator.id)
+
+    assert(report.id == failed_report.id)
+    assert(failed_report.id == db_report.id)
+    assert(db_report.status == "failed")
+    assert(db_report.message == "some error message")
+    assert(db_report.deletedAt != nil)
+  end
+
+  test "Error deleting report with wrong id", %{facilitator: facilitator}  do
+    assert({:error, "Session Topic Report not found"} == SessionReportingService.delete_report(123, facilitator.accountUserId))
+  end
+
   test "Delete session topics report", %{session: session, session_topic: session_topic, facilitator: facilitator} do
     {:ok, report} = SessionReportingService.create_session_topics_reports_record(session.id, session_topic.id, :all, true, :pdf)
     {:ok, deleted_report} = SessionReportingService.delete_session_topic_report(report.id, facilitator.id)
@@ -184,30 +210,30 @@ defmodule KlziiChat.Services.SessionReportingServiceTest do
     assert({:error, "Session Topic Report not found"} == SessionReportingService.delete_session_topic_report(123, facilitator.id))
   end
 
-  test "Recreate session topic report", %{session: session, session_topic: session_topic, facilitator: facilitator} do
-    {:ok, report} = SessionReportingService.create_session_topics_reports_record(session.id, session_topic.id, :all, true, :pdf)
-    {:ok, report} = SessionReportingService.update_session_topics_reports_record({:error, "some error message"}, report.id)
-    {:ok, new_report} = SessionReportingService.recreate_session_topic_report(report.id, facilitator.id)
+   test "Recreate failed session topic report", %{session: session, session_topic: session_topic, facilitator: facilitator} do
+     {:ok, report} = SessionReportingService.create_session_topics_reports_record(session.id, session_topic.id, :all, true, :pdf)
+     {:ok, report} = SessionReportingService.update_session_topics_reports_record({:error, "some error message"}, report.id)
+     {:ok, new_report} = SessionReportingService.recreate_session_topic_report(report.id, facilitator.id)
 
-    assert(report.status == "failed")
-    assert(report.message == "some error message")
-    assert(new_report.status == "progress")
-    assert(new_report.message == ";Recreating, prev. message: some error message")
-    assert(new_report.id == report.id)
-    :timer.sleep(500)
+     report_id = report.id
+     new_report_id = new_report.id
+     assert(report.status == "failed")
+     assert(report.message == "some error message")
+     assert(new_report.status == "progress")
+     assert(new_report.message == nil)
+     assert(new_report_id != report_id)
+     :timer.sleep(500)
 
-    {:ok, [db_report]} = SessionReportingService.get_session_topics_reports(session.id, facilitator.id)
-    assert(db_report.id == new_report.id)
-    assert(db_report.status == "completed")
-    assert(db_report.resourceId != nil)
+     {:ok, [%{id: ^report_id, status: "failed"}, %{id: ^new_report_id, status: "completed"}]}
+      = SessionReportingService.get_session_topics_reports(session.id, facilitator.id)
   end
 
-  test "Error recreating session topic report if no previous report record present", %{facilitator: facilitator} do
-    assert({:error, "Report not found"} == SessionReportingService.recreate_session_topic_report(123, facilitator.id))
-  end
+   test "Error recreating session topic report if no previous report record present", %{facilitator: facilitator} do
+     assert({:error, "Session Topic Report not found"} == SessionReportingService.recreate_session_topic_report(123, facilitator.id))
+   end
 
-  test "Error recreating session topic report with worng permission", %{session: session, session_topic: session_topic, participant: participant} do
-    {:ok, report} = SessionReportingService.create_session_topics_reports_record(session.id, session_topic.id, :all, true, :pdf)
-    assert({:error, "Action not allowed!"} == SessionReportingService.recreate_session_topic_report(report.id, participant.id))
-  end
+   test "Error recreating session topic report with wrong permission", %{session: session, session_topic: session_topic, participant: participant} do
+     {:ok, report} = SessionReportingService.create_session_topics_reports_record(session.id, session_topic.id, :all, true, :pdf)
+     assert({:error, "Action not allowed!"} == SessionReportingService.recreate_session_topic_report(report.id, participant.id))
+   end
 end

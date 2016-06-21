@@ -26,10 +26,11 @@ defmodule KlziiChat.Queries.MessagesTest  do
       createdAt: create_date2
     ) |> Repo.insert!()
 
-    base_query = QueriesMessages.base_query(session_topic_1.id, false)
-    base_query_star_only = QueriesMessages.base_query(session_topic_1.id, true)
+    base_query = QueriesMessages.base_query(session_topic_1.id)
+    star_true_query = QueriesMessages.filter_star(base_query, true)
 
-    {:ok, base_query: base_query, base_query_star_only: base_query_star_only, facilitator: facilitator, participant: participant, create_date1: create_date1, create_date2: create_date2}
+    {:ok, base_query: base_query, star_true_query: star_true_query, facilitator: facilitator, participant: participant,
+      create_date1: create_date1, create_date2: create_date2, session_topic_id: session_topic_1.id}
   end
 
   test "base query - all messages unsorted", %{base_query: base_query} do
@@ -38,12 +39,17 @@ defmodule KlziiChat.Queries.MessagesTest  do
       |> Repo.all()
       |> Enum.count()
 
+    star_false_query =
+      base_query
+      |> QueriesMessages.filter_star(false)
+
+    assert(star_false_query == base_query)
     assert(message_count == 2)
   end
 
-  test "base query - star message", %{base_query_star_only: base_query_star_only} do
+  test "base query - filter star message", %{star_true_query: star_true_query} do
     [%{star: true}] =
-      base_query_star_only
+      star_true_query
       |> Repo.all()
   end
 
@@ -56,23 +62,35 @@ defmodule KlziiChat.Queries.MessagesTest  do
     assert(Map.get(message2, :session_member) != nil)
   end
 
-  test "base query stars only joins session member - 1 message", %{base_query_star_only: base_query_star_only} do
+  test "base query stars only joins session member - 1 message", %{star_true_query: star_true_query} do
     [%{star: true, session_member: %{}}] =
-      base_query_star_only
+      star_true_query
       |> QueriesMessages.join_session_member()
       |> Repo.all
   end
 
-  test "base query joins session member and excludes facilitator- 1 message", %{base_query: base_query} do
+  test "base query joins session member and excludes facilitator - 1 message", %{base_query: base_query} do
     query =
       base_query
       |> QueriesMessages.join_session_member()
-      |> QueriesMessages.exclude_facilitator()
+      |> QueriesMessages.exclude_by_role("facilitator")
 
     [%{session_member: %{role: "participant"}}] =
       from([message, session_member] in query, preload: [:session_member])
       |> Repo.all
   end
+
+  test "base query joins session member and excludes participant - 1 message", %{base_query: base_query} do
+    query =
+      base_query
+      |> QueriesMessages.join_session_member()
+      |> QueriesMessages.exclude_by_role("participant")
+
+    [%{session_member: %{role: "facilitator"}}] =
+      from([message, session_member] in query, preload: [:session_member])
+      |> Repo.all
+  end
+
 
   test "sort and select from all messages", %{base_query: base_query, create_date1: create_date1,
     create_date2: create_date2, facilitator: %{username: username1}, participant: %{username: username2}} do
@@ -86,12 +104,30 @@ defmodule KlziiChat.Queries.MessagesTest  do
       %{createdAt: ^create_date2, session_member: %{username: ^username2}} = message2
   end
 
-  test "empty result for stars only and exlude facilitator request", %{base_query_star_only: base_query_star_only} do
+  test "empty result for stars only and exlude facilitator request", %{star_true_query: star_true_query} do
     [] =
-      base_query_star_only
+      star_true_query
       |> QueriesMessages.join_session_member()
-      |> QueriesMessages.exclude_facilitator()
+      |> QueriesMessages.exclude_by_role("facilitator")
       |> QueriesMessages.sort_select()
       |> Repo.all
   end
+
+  test "Get session topic messages", %{session_topic_id: session_topic_id} do
+    [%{star: true, session_member: %{role: "facilitator"}}, %{star: false, session_member: %{role: "participant"}}] =
+      QueriesMessages.session_topic_messages(session_topic_id, star: false, facilitator: true)
+      |> Repo.all
+
+    [%{star: true, session_member: %{role: "facilitator"}}] =
+      QueriesMessages.session_topic_messages(session_topic_id, star: true, facilitator: true)
+      |> Repo.all
+
+    [%{star: false, session_member: %{role: "participant"}}] =
+      QueriesMessages.session_topic_messages(session_topic_id, star: false, facilitator: false)
+      |> Repo.all
+
+    [] =
+      QueriesMessages.session_topic_messages(session_topic_id, star: true, facilitator: false)
+      |> Repo.all
+    end
 end

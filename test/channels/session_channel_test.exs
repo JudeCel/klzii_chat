@@ -26,14 +26,17 @@ defmodule KlziiChat.SessionChannelTest do
 
     assert(reply.name == session.name)
 
-    assert_push "self_info", _session_member
-    assert_push "members", %{
-      "facilitator" => _session_member,
-      "observer" => [],
-      "participant" => [member2]
-    }
-    assert_push "presence_state", state
+    assert_push "self_info", self_info
 
+    assert(self_info == session_member)
+
+    assert_push "members", %{
+      "facilitator" => facilitator,
+      "observer" => [observer],
+      "participant" => [participant, participant2]
+    }
+
+    assert_push "presence_state", state
     id = Map.get(state, session_member.id |> to_string)
       |> Map.get(:member)
       |> Map.get(:id)

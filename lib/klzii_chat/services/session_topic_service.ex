@@ -1,5 +1,5 @@
 defmodule KlziiChat.Services.SessionTopicService do
-  alias KlziiChat.{Repo, SessionMember, SessionTopic, Sesion}
+  alias KlziiChat.{Repo, SessionMember, SessionTopic}
   alias KlziiChat.Services.Permissions.SessionTopic, as: SessionTopicPermissions
   alias KlziiChat.Queries.Messages, as: QueriesMessages
   import Ecto.Query, only: [from: 2]
@@ -16,19 +16,15 @@ defmodule KlziiChat.Services.SessionTopicService do
   end
 
   @spec get_messages(integer, boolean, boolean) :: Map
-  def get_messages(session_topic_id, stars_only, exclude_facilitator) do
-    query = QueriesMessages.base_query(session_topic_id, stars_only)
-    query = QueriesMessages.join_session_member(query)
-    if exclude_facilitator, do: query = QueriesMessages.exclude_facilitator(query)
-    query = QueriesMessages.sort_select(query)
-
-    Repo.all(query)
+  def get_messages(session_topic_id, filter_star, include_facilitator) do
+    QueriesMessages.session_topic_messages(session_topic_id, star: filter_star, facilitator: include_facilitator)
+    |> Repo.all()
   end
 
   @spec get_session_and_topic_names(integer) :: {String.t, String.t}
   def get_session_and_topic_names(session_topic_id) do
   %{name: session_topic_name, session: %{name: session_name}} =
-    Repo.one(
+    Repo.one!(
       from session_topic in SessionTopic,
       where: session_topic.id == ^session_topic_id,
       preload: [:session]

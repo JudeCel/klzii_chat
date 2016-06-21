@@ -9,12 +9,13 @@ defmodule KlziiChat.SessionTopicReport do
     field :facilitator, :boolean
     field :format, :string
     field :status, :string, default: "progress"
-    field :message, :string
+    field :message, :string, default: nil
+    field :deletedAt, Ecto.DateTime, default: nil
     timestamps [inserted_at: :createdAt, updated_at: :updatedAt]
   end
 
-  @required_fields ~w(session session_topic type facilitator format status)
-  @optional_fields ~w(resource message)
+  @required_fields ~w(session session_topic type facilitator format status message)
+  @optional_fields ~w(resource deletedAt)
 
   @doc """
   Creates a changeset based on the `model` and `params`.

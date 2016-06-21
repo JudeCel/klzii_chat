@@ -4,7 +4,7 @@ defmodule KlziiChat.SessionResourcesControllerTest do
   alias KlziiChat.{Repo}
   @image "test/fixtures/images/hamster.jpg"
 
-  setup %{conn: conn, facilitator: facilitator, account_user: account_user} do
+  setup %{conn: conn, facilitator: facilitator, account_user_account_manager: account_user} do
     { :ok, jwt, _encoded_claims } =  Guardian.encode_and_sign(facilitator)
     conn = put_req_header(conn, "authorization", jwt)
 

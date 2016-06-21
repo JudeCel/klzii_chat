@@ -13,7 +13,6 @@
     var emotionSvg = Snap(svg_class);
     if(emotionSvg) {
       emotionSvg.image(svg_path, 0, 0, sprites_qnt * emoticon_width, emoticon_height);
-      // viewBox coordinates: "start x, start y, width, heigh"});
       emotionSvg.attr({viewBox: selected_emoticon_x + ", 0, " + emoticon_width + ", " + emoticon_height});
     }
   }

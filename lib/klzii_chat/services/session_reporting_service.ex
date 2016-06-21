@@ -20,7 +20,7 @@ defmodule KlziiChat.Services.SessionReportingService do
   end
 
 
-  def create_session_topic_report(_, _, _, report_format, :whiteboard, _) when report_format != :pdf, do: {:error, "pdf is the only format that is available for whiteboard report"}
+  def create_session_topic_report(_, _, _, report_format, :whiteboard, _) when report_format != :pdf, do: {:error, "pdf is the only format that is available for whiteboard reports"}
 
   def create_session_topic_report(session_id, session_member_id, session_topic_id, report_format, report_type, include_facilitator)
   when report_type in [:all, :star, :whiteboard] and report_format in [:txt, :csv, :pdf]    # TODO: :votes
@@ -34,9 +34,7 @@ defmodule KlziiChat.Services.SessionReportingService do
     do:  {:ok, Repo.preload(report, :resource)}
   end
 
-  def create_session_topic_report(_, _, _, report_format, _, _) when report_format in [:txt, :csv, :pdf], do: {:error, "incorrect report type"}
-  def create_session_topic_report(_, _, _, _, _, _), do: {:error, "incorrect report format"}
-
+  def create_session_topic_report(_, _, _, _, _, _), do: {:error, "incorrect report format or type"}
 
   def create_session_topics_reports_record(session_id, session_topic_id, report_type, include_facilitator, report_format) do
     Repo.insert(%SessionTopicReport{
@@ -64,24 +62,27 @@ defmodule KlziiChat.Services.SessionReportingService do
   end
 
   def save_report_async(report_type, report_name, report_format, session_topic_id, include_facilitator) do
-    parent = self()
-    pid =
+    async_func =
       if report_type == :whiteboard do
-        spawn(fn -> send parent, {self(), WhiteboardReportingService.save_report(report_name, :pdf, session_topic_id)} end)
+        fn -> WhiteboardReportingService.save_report(report_name, :pdf, session_topic_id) end
       else
-        star_only = if report_type == :star, do: true, else: false
-        spawn(fn -> send parent, {self(), SessionTopicReportingService.save_report(report_name, report_format, session_topic_id, star_only, !include_facilitator)} end)
+        filter_star = if report_type == :star, do: true, else: false
+        fn -> SessionTopicReportingService.save_report(report_name, report_format, session_topic_id, filter_star, include_facilitator) end
       end
 
-    reference = Process.monitor(pid)
-    receive do
-      {^pid, {:ok, report_file_path}} -> {:ok, report_file_path}
-      {^pid, {:error, reason}} -> {:error, reason}
-      {:DOWN, ^reference, :process, ^pid, reason} when reason != :normal -> {:error, "Error saving report (process terminated)"}
-     after
-      @save_report_timeout ->
-        Process.exit(pid, "timeout")
-        {:error, "Report creation timeout " <> to_string(@save_report_timeout)}
+    async_task =
+      Task.async(fn ->
+        try do
+          async_func.()
+        catch
+          type, _ -> {:error, "Error creating report: #{to_string(type)}"}
+        end
+      end)
+
+    case Task.yield(async_task, @save_report_timeout) do
+      {:ok, {:ok, report_file_path}} -> {:ok, report_file_path}
+      {:ok, {:error, err}} -> {:error, err}
+      nil -> {:error, "Report creation timeout " <> to_string(@save_report_timeout)}
     end
   end
 
@@ -91,22 +92,20 @@ defmodule KlziiChat.Services.SessionReportingService do
       "file" => report_file_path,
       "name" => report_name }
 
-    parent = self()
-    pid = spawn(fn -> send parent, {self(), ResourceService.upload(upload_params, account_user_id)} end)
-    reference = Process.monitor(pid)
+    async_task = Task.async(fn ->
+      try do
+        ResourceService.upload(upload_params, account_user_id)
+      catch
+        type, _ -> {:error, "Error creating report: #{to_string(type)}"}
+      end
+    end)
 
-    receive do
-      {^pid, {:ok, resource}} ->
-        File.rm(report_file_path)
-        {:ok, resource}
-      {^pid, {:error, reason}} ->
-        File.rm(report_file_path)
-        {:error, reason}
-      {:DOWN, ^reference, :process, ^pid, reason} when reason != :normal -> {:error, "Error uploading report (process terminated)"}
-     after
-      @upload_report_timeout ->
-        Process.exit(pid, "timeout")
-        {:error, "Report uploading timeout: " <> to_string(@upload_report_timeout)}
+    result = Task.yield(async_task, @upload_report_timeout)
+    File.rm(report_file_path)
+    case result do
+      {:ok, {:ok, report_file_path}} -> {:ok, report_file_path}
+      {:ok, {:error, err}} -> {:error, err}
+      nil -> {:error, "Report upload timeout " <> to_string(@upload_report_timeout)}
     end
   end
 
@@ -132,40 +131,31 @@ defmodule KlziiChat.Services.SessionReportingService do
     end
   end
 
-  def delete_session_topic_report(session_topic_report_id, session_member_id) do
+  def delete_session_topic_report(report_id, session_member_id) do
     {:ok, session_member} = get_session_member(session_member_id)
     if SessionReportingPermissions.can_delete_report(session_member) do
-      case Repo.get(SessionTopicReport, session_topic_report_id) do
-        nil ->
-          {:error, "Session Topic Report not found"}
-        session_topic_report ->
-          resource_id = session_topic_report.resourceId
-          if resource_id != nil, do: Task.start(fn -> ResourceService.deleteByIds(session_member.accountUserId, [resource_id]) end)
-          Repo.delete(session_topic_report)
-      end
+      delete_report(report_id, session_member.accountUserId)
     else
       {:error, "Action not allowed!"}
     end
   end
 
-  def recreate_session_topic_report(report_id, session_member_id) do
-    with  {:ok, session_member} <- get_session_member(session_member_id),
-         :ok <- check_report_create_permision(session_member),
-         {:ok, report} <- recreate_session_topics_reports_record(report_id),
-         {:ok, report_name} <- get_report_name(report.type, report.id),
-         create_report_params = [report.sessionId, session_member.accountUserId, report.id, report.sessionTopicId, report_name,
-          String.to_atom(report.format), String.to_atom(report.type), report.facilitator],
-         {:ok, _}  <- Task.start(__MODULE__, :create_report_async, create_report_params),
-    do:  {:ok, Repo.preload(report, :resource)}
+  def delete_report(report_id, account_user_id) do
+    case Repo.get(SessionTopicReport, report_id) do
+      nil ->
+        {:error, "Session Topic Report not found"}
+      report ->
+        if report.resourceId != nil, do: Task.start(fn -> ResourceService.deleteByIds(account_user_id, [report.resourceId]) end)
+        case report.status do
+          "failed" -> Ecto.Changeset.change(report, deletedAt: Ecto.DateTime.utc(), resourceId: nil) |> Repo.update()
+          _ -> Repo.delete(report)
+        end
+    end
   end
 
-  def recreate_session_topics_reports_record(report_id) do
-    case Repo.get(SessionTopicReport, report_id) do
-      nil -> {:error, "Report not found"}
-      report ->
-        message = if report.message != nil, do: ";Recreating, prev. message: " <> report.message, else: nil
-        Ecto.Changeset.change(report, status: "progress", message: message)
-        |> Repo.update()
-    end
+  def recreate_session_topic_report(report_id, session_member_id) do
+    with {:ok, session_member} <- get_session_member(session_member_id),
+         {:ok, report} <- delete_report(report_id, session_member.accountUserId),
+    do:  create_session_topic_report(report.sessionId, session_member_id, report.sessionTopicId, String.to_atom(report.format), String.to_atom(report.type), report.facilitator)
   end
 end

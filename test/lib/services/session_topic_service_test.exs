@@ -33,22 +33,22 @@ defmodule KlziiChat.Services.SessionTopicServiceTest do
   end
 
   test "get all messages", %{session_topic_id: session_topic_id, create_date1: create_date1, create_date2: create_date2} do
-    [message1, message2] = SessionTopicService.get_messages(session_topic_id, false, false)
+    [message1, message2] = SessionTopicService.get_messages(session_topic_id, false, true)
 
     assert(message1.createdAt == create_date1)
     assert(message2.createdAt == create_date2)
   end
 
   test "get star only messages", %{session_topic_id: session_topic_id} do
-    [%{star: true}] = SessionTopicService.get_messages(session_topic_id, true, false)
+    [%{star: true}] = SessionTopicService.get_messages(session_topic_id, true, true)
   end
 
   test "get messages exluding facilitator", %{session_topic_id: session_topic_id} do
-    [%{session_member: %{role: "participant"}}] = SessionTopicService.get_messages(session_topic_id, false, true)
+    [%{session_member: %{role: "participant"}}] = SessionTopicService.get_messages(session_topic_id, false, false)
   end
 
   test "get [] for star only messages exluding facilitator", %{session_topic_id: session_topic_id} do
-    [] = SessionTopicService.get_messages(session_topic_id, true, true)
+    [] = SessionTopicService.get_messages(session_topic_id, true, false)
   end
 
   test "get session and session topic names", %{session_topic_id: session_topic_id, session_name: session_name,

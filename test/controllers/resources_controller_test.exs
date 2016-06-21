@@ -3,7 +3,7 @@ defmodule KlziiChat.ResourcesControllerTest do
   alias KlziiChat.{Repo}
   @image "test/fixtures/images/hamster.jpg"
 
-  setup %{conn: conn, account_user: account_user} do
+  setup %{conn: conn, account_user_account_manager: account_user} do
     { :ok, jwt, _encoded_claims } =  Guardian.encode_and_sign(account_user)
     conn = put_req_header(conn, "authorization", jwt)
 

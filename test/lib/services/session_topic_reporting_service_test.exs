@@ -31,7 +31,7 @@ defmodule KlziiChat.Services.SessionTopicReportingServiceTest do
       updatedAt: create_date2
     ) |> Repo.insert!()
 
-    messages = SessionTopicService.get_messages(session_topic_1.id, false, false)
+    messages = SessionTopicService.get_messages(session_topic_1.id, false, true)
 
     {:ok, messages: messages, session: session, session_topic: session_topic_1, facilitator: facilitator, create_date1: create_date1, create_date2: create_date2}
   end
@@ -78,22 +78,22 @@ defmodule KlziiChat.Services.SessionTopicReportingServiceTest do
     txt_message_stream =
       SessionTopicReportingService.get_stream(:txt, messages, session.name, session_topic.name)
 
-    messages_star = SessionTopicService.get_messages(session_topic.id, true, false)
+    messages_star = SessionTopicService.get_messages(session_topic.id, true, true)
     csv_message_star_stream =
       SessionTopicReportingService.get_stream(:csv, messages_star, session.name, session_topic.name)
 
-    messages_excl_fac = SessionTopicService.get_messages(session_topic.id, false, true)
+    messages_excl_fac = SessionTopicService.get_messages(session_topic.id, false, false)
     html_text_excl_fac =
       SessionTopicReportingService.get_html(messages_excl_fac, session.name, session_topic.name)
 
-    assert({:ok, ^txt_message_stream} = SessionTopicReportingService.get_report(:txt, session_topic.id, false, false))
-    assert({:ok, ^csv_message_star_stream} = SessionTopicReportingService.get_report(:csv, session_topic.id, true, false))
-    assert({:ok, ^html_text_excl_fac} = SessionTopicReportingService.get_report(:pdf, session_topic.id, false, true))
+    assert({:ok, ^txt_message_stream} = SessionTopicReportingService.get_report(:txt, session_topic.id, false, true))
+    assert({:ok, ^csv_message_star_stream} = SessionTopicReportingService.get_report(:csv, session_topic.id, true, true))
+    assert({:ok, ^html_text_excl_fac} = SessionTopicReportingService.get_report(:pdf, session_topic.id, false, false))
   end
 
   test "Get error for incorrect report format", %{session_topic: session_topic} do
     assert({:error, "Incorrect report format: incorrect_format"}
-      == SessionTopicReportingService.get_report(:incorrect_format, session_topic.id, false, false))
+      == SessionTopicReportingService.get_report(:incorrect_format, session_topic.id, false, true))
   end
 
   test "write text report", %{messages: messages, session: session, session_topic: session_topic} do
@@ -126,10 +126,15 @@ defmodule KlziiChat.Services.SessionTopicReportingServiceTest do
 
   test "save csv report", %{session_topic: session_topic} do
     report_name = "SessionTopicReportingServiceTest_test_report"
-    {:ok, report_file_path} = SessionTopicReportingService.save_report(report_name, :csv, session_topic.id, false, false)
+    {:ok, report_file_path} = SessionTopicReportingService.save_report(report_name, :csv, session_topic.id, false, true)
 
     assert(report_file_path == FileService.get_tmp_path() <> "/#{report_name}.csv")
     assert(File.exists?(report_file_path))
     :ok = File.rm(report_file_path)
+  end
+
+  test "Double quote string" do
+    assert(~s("test") == SessionTopicReportingService.double_quote("test"))
+    assert(~s("te""st") == SessionTopicReportingService.double_quote("te\"st"))
   end
 end
