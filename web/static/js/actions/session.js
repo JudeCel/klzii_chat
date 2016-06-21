@@ -1,5 +1,6 @@
 import Constants  from '../constants';
 import { Socket } from 'phoenix';
+import DirectMessageActions from './directMessage';
 
 export function joinChannal(dispatch) {
   const socket = new Socket('/socket', {
@@ -17,6 +18,7 @@ export function joinChannal(dispatch) {
       channel
     });
     dispatch(Actions.subscribeToSeesionEvents(channel));
+    dispatch(DirectMessageActions.subscribeDirectMessageEvents(channel));
 
     channel.join()
     .receive('ok', (session) => {
@@ -24,6 +26,7 @@ export function joinChannal(dispatch) {
         type: Constants.SET_SESSION,
         session
       });
+      dispatch(DirectMessageActions.getUnreadCount(channel));
     })
     .receive('error', (error) =>{
       dispatch({
