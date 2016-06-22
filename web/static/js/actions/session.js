@@ -2,6 +2,7 @@ import Constants  from '../constants';
 import { Socket } from 'phoenix';
 import NotificationsActions from './notifications';
 import ReportsActions   from './reports';
+import DirectMessageActions from './directMessage';
 
 export function joinChannal(dispatch) {
   const socket = new Socket('/socket', {
@@ -19,6 +20,7 @@ export function joinChannal(dispatch) {
       channel
     });
     dispatch(Actions.subscribeToSeesionEvents(channel));
+    dispatch(DirectMessageActions.subscribeDirectMessageEvents(channel));
     dispatch(NotificationsActions.subscribeNotificationsEvents(channel));
     dispatch(ReportsActions.subscribeReportsEvents(channel));
 
@@ -28,6 +30,7 @@ export function joinChannal(dispatch) {
         type: Constants.SET_SESSION,
         session
       });
+      dispatch(DirectMessageActions.getUnreadCount(channel));
     })
     .receive('error', (error) =>{
       dispatch({
