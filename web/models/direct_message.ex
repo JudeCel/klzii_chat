@@ -7,11 +7,8 @@ defmodule KlziiChat.DirectMessage do
     belongs_to :receiver, KlziiChat.SessionMember, [foreign_key: :recieverId]
     field :readAt, Timex.Ecto.DateTime
     field :text, :string
-
     timestamps [inserted_at: :createdAt, updated_at: :updatedAt]
   end
-  @required_fields ~w(sessionId senderId recieverId text)
-  @optional_fields ~w(readAt)
 
   @doc """
   Creates a changeset based on the `model` and `params`.
@@ -21,7 +18,8 @@ defmodule KlziiChat.DirectMessage do
   """
   def changeset(model, params \\ %{}) do
     model
-    |> cast(params, (@required_fields ++ @optional_fields))
-    |> validate_required(@required_fields)
+    |> cast(params, [:readAt, :sessionId, :senderId, :recieverId, :text])
+    |> validate_required([:sessionId, :senderId, :recieverId, :text])
+    |> validate_length(:text, min: 1)
   end
 end

@@ -16,7 +16,7 @@ defmodule KlziiChat.Services.SessionsTest do
     assert(session_topics |> Enum.count == 2)
     first = session_topics |> List.first
     last = session_topics |> List.last
-    assert(first.order > last.order)
+    assert(last.order > first.order)
   end
 
   test "is prelouded brand project preference", %{session: session} do

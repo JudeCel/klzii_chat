@@ -25,8 +25,10 @@ defmodule KlziiChat.Services.Permissions.BuilderPermissionsTest do
     {:ok, pemissions} =  Builder.subscription_permissions(facilitator.id)
     assert(is_map(pemissions))
   end
-  test "#KlziiChat.Services.Permissions.Builder, when can't find subscription_permissions", %{facilitator: facilitator} do
-    {:error, reason} =  Builder.subscription_permissions(facilitator.id + 999)
-    assert(reason == Map.get(Builder.error_messages, :subscription_not_found))
+
+  test "#KlziiChat.Services.Permissions.Builder, when can't find subscription_permissions raise error ", %{facilitator: facilitator} do
+    assert_raise(Ecto.NoResultsError, fn ->
+     Builder.subscription_permissions(facilitator.id + 999)
+   end)
   end
 end

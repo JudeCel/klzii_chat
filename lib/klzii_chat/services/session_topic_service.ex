@@ -4,6 +4,12 @@ defmodule KlziiChat.Services.SessionTopicService do
   alias KlziiChat.Queries.Messages, as: QueriesMessages
   import Ecto.Query, only: [from: 2]
 
+  def errors_messages do
+    %{
+      action_not_allowed:  "Action not allowed!"
+    }
+  end
+
   @spec board_message(Integer, Integer, Map) :: {:ok, Map } | {:error, String.t}
   def board_message(session_member_id, session_topic_id, %{"message" => message}) do
     session_member = Repo.get!(SessionMember, session_member_id)
@@ -11,7 +17,7 @@ defmodule KlziiChat.Services.SessionTopicService do
     if SessionTopicPermissions.can_board_message(session_member) do
       Ecto.Changeset.change(session_topic, boardMessage: message) |> Repo.update
     else
-      {:error, "Action not allowed!"}
+      {:error, errors_messages.action_not_allowed}
     end
   end
 

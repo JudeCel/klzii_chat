@@ -8,9 +8,6 @@ defmodule KlziiChat.Banner do
     timestamps [inserted_at: :createdAt, updated_at: :updatedAt]
   end
 
-  @required_fields ~w()
-  @optional_fields ~w()
-
   @doc """
   Creates a changeset based on the `model` and `params`.
 
@@ -19,6 +16,7 @@ defmodule KlziiChat.Banner do
   """
   def changeset(model, params \\ %{}) do
     model
-    |> cast(params, (@required_fields ++  @optional_fields))
+    |> cast(params, [])
+    |> validate_required([])
   end
 end
