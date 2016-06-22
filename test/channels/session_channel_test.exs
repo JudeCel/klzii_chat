@@ -77,11 +77,7 @@ defmodule KlziiChat.SessionChannelTest do
     assert_reply ref1, :ok, %{ message: message }
 
     member_id = to_string(reciever_member_id)
-    assert_broadcast("new_direct_message", %{ ^member_id => new_message })
-    assert(message.id == new_message.id)
-    assert(message.recieverId == new_message.recieverId)
-    assert(message.senderId == new_message.senderId)
-    assert(message.text == new_message.text)
+    assert_broadcast("new_direct_message", %{ ^member_id => %{} })
   end
 
   test "set all messages read", %{ socket2: socket2, socket: socket, channel_name: channel_name } do
@@ -98,20 +94,20 @@ defmodule KlziiChat.SessionChannelTest do
   end
 
   test "get last messages for each user", %{ socket2: socket2, socket: socket, channel_name: channel_name } do
-    {:ok, _, socket} = join(socket, SessionChannel, channel_name)
-    {:ok, _, socket2} = join(socket2, SessionChannel, channel_name)
     sender_member_id = socket.assigns.session_member.id
+
+    {:ok, _, socket2} = join(socket2, SessionChannel, channel_name)
 
     ref1 = push socket2, "get_last_messages", %{ "senderId" => sender_member_id }
     assert_reply ref1, :ok, %{ messages: %{} }
   end
 
   test "get all direct messages", %{ socket2: socket2, socket: socket, channel_name: channel_name } do
-    {:ok, _, socket} = join(socket, SessionChannel, channel_name)
     {:ok, _, socket2} = join(socket2, SessionChannel, channel_name)
     reciever_member_id = socket.assigns.session_member.id
+    push_data = %{ "recieverId" => reciever_member_id, "page" => 0 }
 
-    ref1 = push socket2, "get_all_direct_messages", %{ "recieverId" => reciever_member_id, "page" => 0 }
-    assert_reply ref1, :ok, %{ messages: %{ read: [], unread: [], currentPage: 0 } }
+    push(socket2, "get_all_direct_messages", push_data)
+    |> assert_reply(:ok, %{ messages: %{ read: _, unread: _, currentPage: _ } })
   end
 end
