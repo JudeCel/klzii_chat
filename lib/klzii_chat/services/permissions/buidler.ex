@@ -7,6 +7,7 @@ defmodule KlziiChat.Services.Permissions.Builder do
   alias KlziiChat.Services.Permissions.Whiteboard, as: WhiteboardPermissions
   alias KlziiChat.Services.Permissions.Validations
 
+  @spec error_messages() :: Map.t
   def error_messages do
     %{
       subscription_not_found: "Subscription not found"
