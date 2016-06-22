@@ -20,8 +20,12 @@
   <body>
     <div class="container-fluid">
       <header class="header"></header>
-      <main role="main" id="main_container" ></main>
-    </div> <!-- /container -->
+      <main role="main" id="main_container" class="hidden-xs hidden-sm"></main>
+    </div>
+
+    <div id="screen-too-small" class="visible-xs-block visible-sm-block">
+      This site is not compatible with small window sizes.
+    </div>
 
     <script type="text/javascript">
       <%= if Guardian.Plug.current_token(@conn) do %>

@@ -70,7 +70,7 @@ defmodule KlziiChat.WhiteboardChannelTest do
     body =  %{"type" => 23, "id" => "12"}
     ref = push(socket, "draw", body)
     assert_reply(ref, :ok)
-    assert_push "draw", shape
+    assert_push "draw", %{}
 
     delete_ref = push socket, "deleteAll", %{}
     assert_reply(delete_ref, :ok)
