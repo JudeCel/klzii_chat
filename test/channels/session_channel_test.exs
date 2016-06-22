@@ -1,6 +1,6 @@
 defmodule KlziiChat.SessionChannelTest do
   use KlziiChat.ChannelCase
-  alias KlziiChat.{Repo, UserSocket, SessionChannel, SessionTopicChannel}
+  alias KlziiChat.{Repo, UserSocket, SessionChannel}
   use KlziiChat.SessionMemberCase
 
   setup %{session_topic_1: session_topic_1, session: session, session: session, facilitator: facilitator, participant: participant} do
@@ -36,77 +36,36 @@ defmodule KlziiChat.SessionChannelTest do
       "participant" => [%{}, %{}]
     }
 
-    assert_push "presence_state", state
-    id = Map.get(state, session_member.id |> to_string)
-      |> Map.get(:member)
-      |> Map.get(:id)
-
-    assert(id == session_member.id)
+    assert_push "presence_state", %{}
   end
 
   test "when join member broadcast others", %{socket: socket, socket2: socket2, channel_name: channel_name } do
-    {:ok, _, socket} =
-      join(socket, SessionChannel, channel_name)
+    {:ok, _, socket} = join(socket, SessionChannel, channel_name)
 
-    {:ok, _, _socket2} =
-      join(socket2, SessionChannel, channel_name)
+    {:ok, _, _socket2} = join(socket2, SessionChannel, channel_name)
 
     session_member = socket.assigns.session_member
 
     assert_push "presence_diff", %{joins: joins}
-    id = Map.get(joins,session_member.id |> to_string)
+    id = Map.get(joins, session_member.id |> to_string)
       |> Map.get(:member)
       |> Map.get(:id)
       assert(id == session_member.id)
   end
 
   test "when update session member broadcast others", %{socket: socket, socket2: socket2, channel_name: channel_name } do
-    {:ok, _, socket} =
-      join(socket, SessionChannel, channel_name)
+    {:ok, _, socket} = join(socket, SessionChannel, channel_name)
 
-    {:ok, _, socket2} =
-      join(socket2, SessionChannel, channel_name)
-
-    _session_member = socket.assigns.session_member
-    _session_member2 = socket2.assigns.session_member
+    {:ok, _, _socket2} = join(socket2, SessionChannel, channel_name)
 
     push socket, "update_member", %{avatarData: %{ base: 2, face: 3, body: 1, desk: 2, head: 0 }}
     push socket, "update_member", %{avatarData: %{ base: 1, desk: 2}, username: "new cool name"}
 
     assert_push "self_info", %{}
-    assert_push "self_info", %{}
 
-    assert_push "update_member", %{}
-    assert_push "update_member", %{}
-  end
+    _session_member_id = socket.assigns.session_member.id
 
-  #  Offline messages from others session_topics
-  test "get unread messages notification when new message", %{socket2: socket2, socket: socket, channel_name: channel_name, session_topic_1_name: session_topic_1_name} do
-    {:ok, _, socket2} = join(socket2, SessionTopicChannel, session_topic_1_name)
-    {:ok, _, socket} = subscribe_and_join(socket, SessionChannel, channel_name)
-
-    ref1 = push socket2, "new_message", %{"emotion" => "1", "body" => "hey!!"}
-    assert_reply ref1, :ok
-    ref2 = push socket2, "new_message", %{"emotion" => "2", "body" => "hey hey!!"}
-    assert_reply ref2, :ok
-
-    session_member_id = "#{socket.assigns.session_member.id}"
-    "session_topic:" <> id = session_topic_1_name
-
-    assert_broadcast("unread_messages", %{^session_member_id => %{"session_topics" =>  %{^id => %{"normal" => 1} }, "summary" => %{"normal" => 1, "reply" => 0} }})
-  end
-
-  test "get unread messages notification when delete message", %{socket2: socket2, socket: socket, channel_name: channel_name, session_topic_1_name: session_topic_1_name} do
-    {:ok, _, socket2} = join(socket2, SessionTopicChannel, session_topic_1_name)
-    {:ok, _, socket} = subscribe_and_join(socket, SessionChannel, channel_name)
-
-    ref1 = push socket2, "new_message", %{"emotion" => "1", "body" => "hey!!"}
-    assert_reply ref1, :ok
-    assert_push "new_message", message
-    ref2 = push socket2, "delete_message", %{"id" => message.id}
-    assert_reply ref2, :ok
-    session_member_id = "#{socket.assigns.session_member.id}"
-    assert_broadcast("unread_messages", %{^session_member_id => %{"session_topics" =>  %{}, "summary" => %{"normal" => 0, "reply" => 0} }})
+    assert_push "update_member", %{id: _session_member_id}
   end
 
   test "create direct message", %{ socket2: socket2, socket: socket, channel_name: channel_name } do

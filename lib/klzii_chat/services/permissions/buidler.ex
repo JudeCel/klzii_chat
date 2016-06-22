@@ -15,9 +15,10 @@ defmodule KlziiChat.Services.Permissions.Builder do
 
   @spec subscription_permissions(Integer) :: Map.t
   def subscription_permissions(session_member_id) do
-    case get_subscription_preference(session_member_id) do
+    session_member = Repo.get!(SessionMember, session_member_id)
+
+    case get_subscription_preference(session_member.sessionId) do
       {:ok, preference} ->
-        session_member = Repo.get!(SessionMember, session_member_id)
         {:ok, buid_map(session_member, preference)}
       {:error, reason} ->
         {:error, reason}
