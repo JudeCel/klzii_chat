@@ -20,7 +20,7 @@ defmodule KlziiChat.Account do
   """
   def changeset(model, params \\ %{}) do
     model
-      |> cast(params, [:name])
-      |> unique_constraint(:name, name: :unique_name)
+      |> cast(params, [])
+      |> validate_required([])
   end
 end

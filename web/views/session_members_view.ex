@@ -1,6 +1,5 @@
 defmodule KlziiChat.SessionMembersView do
   use KlziiChat.Web, :view
-  alias KlziiChat.Permissions.Builder, as: PermissionsBuilder
 
   def render("member.json", %{member: member}) do
     %{id: member.id,

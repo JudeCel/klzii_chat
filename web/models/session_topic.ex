@@ -14,9 +14,6 @@ defmodule KlziiChat.SessionTopic do
     timestamps [inserted_at: :createdAt, updated_at: :updatedAt]
   end
 
-  @required_fields ~w(boardMessage name sessionId topicId active)
-  @optional_fields ~w(order)
-
   @doc """
   Creates a changeset based on the `model` and `params`.
 
@@ -25,6 +22,8 @@ defmodule KlziiChat.SessionTopic do
   """
   def changeset(model, params \\ %{}) do
     model
-    |> cast(params, (@required_fields ++  @optional_fields))
+    |> cast(params, [:boardMessage] )
+    |> validate_required([:boardMessage] )
+    |> validate_length(:boardMessage, min: 1)
   end
 end

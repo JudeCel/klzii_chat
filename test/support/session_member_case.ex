@@ -8,7 +8,7 @@ defmodule KlziiChat.SessionMemberCase do
     user3 = User.seedChangeset(%User{}, %{ email: "dainis_3@gmail.com", encryptedPassword: "pfff11" }) |> Repo.insert!
     user4 = User.seedChangeset(%User{}, %{ email: "dainis_4@gmail.com", encryptedPassword: "11111" }) |> Repo.insert!
 
-    account = Account.changeset(%Account{}, %{name: "cool account"}) |> Repo.insert!
+    account = Repo.insert!(%Account{name: "cool account"})
 
     account_user_account_manager = Ecto.build_assoc(account, :account_users, user: user,
       firstName: "Dainis",
@@ -83,15 +83,11 @@ defmodule KlziiChat.SessionMemberCase do
       |> Ecto.build_assoc(:subscription_preference, data: subscription_preference_data)
       |> Repo.insert
 
-    brand_project_preference = BrandProjectPreference.changeset(
-      %BrandProjectPreference{},
-        %{
-          name: "cool BrandProjectPreference",
-          colours: %{},
-          accountId:  account.id
-        }
-    )|> Repo.insert!
-
+    brand_project_preference =  Repo.insert!(%BrandProjectPreference{
+        name: "cool BrandProjectPreference",
+        colours: %{},
+        accountId:  account.id
+      })
 
     session = %Session{
       name: "cool session",
