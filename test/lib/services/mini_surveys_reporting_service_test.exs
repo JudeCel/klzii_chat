@@ -113,4 +113,22 @@ defmodule KlziiChat.Services.MiniSurveysReportingServiceTest do
     assert(List.first(csv_stream) == "Title,Question,Name,Answer,Date\n\r")
     assert(List.last(csv_stream) == MiniSurveysReportingService.format_survey_csv(mini_survey1, true))
   end
+
+  test "Format survey answers for HTML: list of maps", %{mini_survey1: mini_survey1, answer12: answer12} do
+    surveys = MiniSurveysReportingService.format_survey_html(mini_survey1, true)
+    first_answer = List.first(surveys.answers)
+
+    assert(surveys.title == mini_survey1.title)
+    assert(surveys.question == mini_survey1.question)
+    assert(first_answer.answer == "Yes")
+    assert(first_answer.date == answer12.createdAt)
+    assert(first_answer.session_member == answer12.session_member)
+  end
+
+  test "Get GTML", %{session_topic: session_topic} do
+    MiniSurveysReportingService.get_report(:pdf, session_topic.id, true)
+    |> IO.inspect()
+
+
+  end
 end

@@ -1,7 +1,7 @@
 defmodule KlziiChat.Services.SessionTopicReportingServiceTest do
   use KlziiChat.{ModelCase, SessionMemberCase}
   alias KlziiChat.Services.{SessionTopicReportingService, SessionTopicService, FileService}
-  alias KlziiChat.Helpers.HTMLSessionTopcReportHelper
+  alias KlziiChat.Helpers.HTMLSessionTopicReportHelper
 
   @emoticon_parameters %{emoticons_qnt: 7, sprites_qnt: 6, emoticon_size: [55, 55], selected_emoticon: 3}
 
@@ -65,7 +65,7 @@ defmodule KlziiChat.Services.SessionTopicReportingServiceTest do
     html_text =
       SessionTopicReportingService.get_html(messages, session.name, session_topic.name)
 
-    html_from_template = HTMLSessionTopcReportHelper.html_from_template(%{
+    html_from_template = HTMLSessionTopicReportHelper.html_from_template(%{
       header: "#{session.name} : #{session_topic.name}",
       messages: messages,
       emoticon_parameters: @emoticon_parameters

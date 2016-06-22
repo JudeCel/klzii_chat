@@ -1,7 +1,7 @@
 defmodule KlziiChat.Services.SessionTopicReportingService do
   alias KlziiChat.Services.{FileService, SessionTopicService}
   alias KlziiChat.Decorators.MessageDecorator
-  alias KlziiChat.Helpers.HTMLSessionTopcReportHelper
+  alias KlziiChat.Helpers.HTMLSessionTopicReportHelper
   alias Ecto.DateTime
 
   import KlziiChat.Helpers.StringHelper, only: [double_quote: 1]
@@ -18,7 +18,7 @@ defmodule KlziiChat.Services.SessionTopicReportingService do
   @spec get_report(atom, integer, boolean, boolean) :: {:ok, Stream | String.t} | {:error, String.t}
   def get_report(report_format, session_topic_id, filter_star, include_facilitator) do
     messages = SessionTopicService.get_messages(session_topic_id, filter_star, include_facilitator)
-    {session_name, session_topic_name} = SessionTopicService.get_session_and_topic_names(session_topic_id)
+    %{name: session_topic_name, session: %{name: session_name}} = SessionTopicService.get_session_topic_wsession(session_topic_id)
 
     case report_format do
       :txt -> {:ok, get_stream(:txt, messages, session_name, session_topic_name)}
@@ -53,7 +53,7 @@ defmodule KlziiChat.Services.SessionTopicReportingService do
 
   @spec get_html(list, String.t, String.t) :: {String.t}
   def get_html(messages, session_name, session_topic_name) do
-    HTMLSessionTopcReportHelper.html_from_template(%{
+    HTMLSessionTopicReportHelper.html_from_template(%{
       header: "#{session_name} : #{session_topic_name}",
       messages: messages,
       emoticon_parameters: @emoticon_parameters

@@ -21,14 +21,12 @@ defmodule KlziiChat.Services.SessionTopicService do
     |> Repo.all()
   end
 
-  @spec get_session_and_topic_names(integer) :: {String.t, String.t}
-  def get_session_and_topic_names(session_topic_id) do
-  %{name: session_topic_name, session: %{name: session_name}} =
+  @spec get_session_topic_wsession(integer) :: Map.t
+  def get_session_topic_wsession(session_topic_id) do
     Repo.one!(
       from session_topic in SessionTopic,
       where: session_topic.id == ^session_topic_id,
       preload: [:session]
     )
-  {session_name, session_topic_name}
   end
 end

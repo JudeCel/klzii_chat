@@ -54,7 +54,7 @@ defmodule KlziiChat.Services.SessionTopicServiceTest do
   test "get session and session topic names", %{session_topic_id: session_topic_id, session_name: session_name,
     session_topic_name: session_topic_name} do
 
-    {^session_name, ^session_topic_name} = SessionTopicService.get_session_and_topic_names(session_topic_id)
+    %{name: ^session_topic_name, session: %{name: ^session_name}} = SessionTopicService.get_session_topic_wsession(session_topic_id)
   end
 
 end
