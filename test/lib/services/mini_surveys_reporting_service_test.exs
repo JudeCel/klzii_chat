@@ -56,7 +56,7 @@ defmodule KlziiChat.Services.MiniSurveysReportingServiceTest do
 
     answer12 = Repo.preload(answer12, [:session_member])
 
-    {:ok, session_topic: session_topic_1, mini_survey1: mini_survey1, mini_survey2: mini_survey2, answer12: answer12}
+    {:ok, session: session, session_topic: session_topic_1, mini_survey1: mini_survey1, mini_survey2: mini_survey2, answer12: answer12}
   end
 
   test "Get all Mini Surveys", %{session_topic: session_topic, mini_survey2: mini_survey2} do
@@ -66,7 +66,7 @@ defmodule KlziiChat.Services.MiniSurveysReportingServiceTest do
     assert(List.first(mini_surveys) == mini_survey2)
   end
 
-  test "Get all Mini Survey answers - including Facilitator", %{mini_survey1: mini_survey1, mini_survey2: mini_survey2, answer12: answer12} do
+  test "Get Mini Survey answers - including Facilitator", %{mini_survey1: mini_survey1, mini_survey2: mini_survey2, answer12: answer12} do
     answers = MiniSurveysReportingService.get_mini_survey_answers(mini_survey1.id, true)
     answers2 = MiniSurveysReportingService.get_mini_survey_answers(mini_survey2.id, true)
 
@@ -75,28 +75,42 @@ defmodule KlziiChat.Services.MiniSurveysReportingServiceTest do
     assert(List.first(answers) == answer12)
   end
 
-  test "Get all Mini Survey answers - excluding Facilitator", %{mini_survey1: mini_survey1, mini_survey2: mini_survey2, answer12: answer12} do
+  test "Get Mini Survey answers - excluding Facilitator", %{mini_survey1: mini_survey1, mini_survey2: mini_survey2, answer12: answer12} do
     assert([answer12] == MiniSurveysReportingService.get_mini_survey_answers(mini_survey1.id, false))
     assert([] == MiniSurveysReportingService.get_mini_survey_answers(mini_survey2.id, false))
   end
 
-
   test "Format survey answers: txt stream", %{mini_survey1: mini_survey1} do
     mini_survey_txt =
       MiniSurveysReportingService.format_survey_txt(mini_survey1, false)
-      |> Enum.to_list()
 
     assert(String.contains?(List.first(mini_survey_txt), "Survey 1 / Question 1"))
     assert(String.contains?(List.last(mini_survey_txt), "Yes"))
   end
 
   test "Format survey answers: csv stream", %{mini_survey2: mini_survey2} do
-    mini_survey_csv =
+    [mini_survey_csv] =
       MiniSurveysReportingService.format_survey_csv(mini_survey2, true)
       |> Enum.to_list()
 
-    assert((List.first(mini_survey_csv) == "Title,Question,Name,Answer,Date\n\r"))
-    assert(List.last(mini_survey_csv) == ~s("Survey 2","Question 2","cool member",1 star,"2016-05-20 10:00:00"\r\n))
+    assert(mini_survey_csv == ~s("Survey 2","Question 2","cool member",1 star,"2016-05-20 10:00:00"\r\n))
   end
 
+  test "Get full TXT report stream", %{session: session, session_topic: session_topic, mini_survey1: mini_survey1} do
+    mini_surveys = MiniSurveysReportingService.get_mini_surveys(session_topic.id)
+    txt_stream = MiniSurveysReportingService.get_stream(:txt, mini_surveys, session.name, session_topic.name, true) |> Enum.to_list()
+
+    assert(Enum.count(txt_stream) == 3)
+    assert(List.first(txt_stream) == "cool session / cool session topic 1\r\n\r\n")
+    assert(List.last(txt_stream) == MiniSurveysReportingService.format_survey_txt(mini_survey1, true))
+  end
+
+  test "Get full CSV report stream", %{session: session, session_topic: session_topic, mini_survey1: mini_survey1} do
+    mini_surveys = MiniSurveysReportingService.get_mini_surveys(session_topic.id)
+    csv_stream = MiniSurveysReportingService.get_stream(:csv, mini_surveys, session.name, session_topic.name, true) |> Enum.to_list()
+
+    assert(Enum.count(csv_stream) == 3)
+    assert(List.first(csv_stream) == "Title,Question,Name,Answer,Date\n\r")
+    assert(List.last(csv_stream) == MiniSurveysReportingService.format_survey_csv(mini_survey1, true))
+  end
 end
