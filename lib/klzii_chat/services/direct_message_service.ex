@@ -35,7 +35,7 @@ defmodule KlziiChat.Services.DirectMessageService do
       where:
         (dm.senderId == ^current_member.id and dm.recieverId == ^other_member.id) or
         (dm.senderId == ^other_member.id and dm.recieverId == ^current_member.id),
-      order_by: [desc: dm.id],
+      order_by: [asc: dm.id],
       limit: ^limit,
       offset: ^offset
     )
