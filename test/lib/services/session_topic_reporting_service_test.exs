@@ -132,9 +132,4 @@ defmodule KlziiChat.Services.SessionTopicReportingServiceTest do
     assert(File.exists?(report_file_path))
     :ok = File.rm(report_file_path)
   end
-
-  test "Double quote string" do
-    assert(~s("test") == SessionTopicReportingService.double_quote("test"))
-    assert(~s("te""st") == SessionTopicReportingService.double_quote("te\"st"))
-  end
 end
