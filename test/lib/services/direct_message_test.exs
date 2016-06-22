@@ -31,7 +31,7 @@ defmodule KlziiChat.Services.DirectMessageTest do
 
     %{ "read" => read_list, "unread" => unread_list } = DirectMessageService.get_all_direct_messages(facilitator.id, participant.id, 0)
 
-    assert(read_list == [message2, message1])
+    assert(read_list == [message1, message2])
     assert(unread_list == [message3])
   end
 
@@ -41,7 +41,7 @@ defmodule KlziiChat.Services.DirectMessageTest do
     { :ok, message3 } = DirectMessageService.create_message(session.id, %{ "senderId" => participant.id, "recieverId" => facilitator.id, "text" => @message_text3 })
 
     %{ "unread" => unread_list, "read" => read_list } = DirectMessageService.get_all_direct_messages(participant.id, facilitator.id, 0)
-    assert(unread_list == [message2, message1])
+    assert(unread_list == [message1, message2])
     assert(read_list == [message3])
 
     :ok = DirectMessageService.set_all_messages_read(participant.id, facilitator.id)
@@ -51,7 +51,7 @@ defmodule KlziiChat.Services.DirectMessageTest do
     message2 = Repo.get!(DirectMessage, message2.id)
     message3 = Repo.get!(DirectMessage, message3.id)
 
-    assert(read_list == [message3, message2, message1])
+    assert(read_list == [message1, message2, message3])
   end
 
   test "DirectMessage - get unread message count", %{ facilitator: facilitator, participant: participant, session: session } do

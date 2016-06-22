@@ -34,16 +34,6 @@ export function joinChannal(dispatch, socket, sessionTopicId) {
   }
 };
 
-function selectActive(sessionTopics) {
-  let currentSessionTopicId = null;
-  topics.map((t) =>{
-    if (t.active) {
-      currentSessionTopicId = t.id;
-    }
-  })
-  return (currentSessionTopicId || sessionTopics[0].id)
-}
-
 function leave_chanal(dispatch, channal) {
   channal.leave();
   dispatch({ type: Constants.SET_SESSION_TOPIC });

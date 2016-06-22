@@ -4,7 +4,7 @@ defmodule KlziiChat.Queries.Sessions do
 
   @spec find(Integer) :: Ecto.Query.t
   def find(session_id) do
-    session_topic_query = from(st in SessionTopic, order_by: [ desc: st.order])
+    session_topic_query = from(st in SessionTopic, order_by: [ asc: st.order])
     from(s in Session,
       where: s.id == ^session_id,
       where: s.active == true,
