@@ -39,7 +39,7 @@ defmodule KlziiChat.Services.SessionTopicReportingService do
   @spec get_stream(:csv, list, String.t, String.t) :: Stream.t
   def get_stream(:csv, messages, _, _) do
     stream = Stream.map(messages, &message_csv_filter(&1))
-    header = "name,comment,date,is tagged,is reply,emotion\r\n"
+    header = "Name,Comment,Date,Is tagged,Is reply,Emotion\r\n"
 
     Stream.concat([header], stream)
   end
