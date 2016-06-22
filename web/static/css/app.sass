@@ -116,15 +116,14 @@ body
   .input-section
     .input-group-addon
       height: $scaled-chat-emotion-size
-      &.input-prefix-section
-        border-right: 0
-        border-left: 0
     .emotion-picker-section
+      border: 0
       padding: 0
+      background-color: inherit
       ul
         border: 1px solid #ccc
         left: -0.5px
-        height: $scaled-chat-emotion-size + 2px
+        height: $scaled-chat-emotion-size + 1.5px
         padding: 0
         @extend .no-border-radius
         li
@@ -136,9 +135,10 @@ body
       .dropup
         width: $scaled-chat-emotion-size
         height: $scaled-chat-emotion-size
-    #emotion-selector
-      padding: 0
-      border: 0
+        margin-right: 25px
+        #emotion-selector
+          padding: 0
+          border: 1px solid #ccc
     textarea
       resize: none
   .chat-section
