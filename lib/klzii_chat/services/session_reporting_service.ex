@@ -129,7 +129,10 @@ defmodule KlziiChat.Services.SessionReportingService do
   def get_session_topics_reports(session_id, session_member_id) do
     {:ok, session_member} = get_session_member(session_member_id)
     if SessionReportingPermissions.can_get_reports(session_member) do
-      query = from(str in SessionTopicReport, where: str.sessionId == ^session_id, preload: [:resource])
+      query =
+        from str in SessionTopicReport,
+        where: str.sessionId == ^session_id and is_nil(str.deletedAt),
+        preload: [:resource]
       {:ok, Repo.all(query)}
     else
       {:error, "Action not allowed!"}
