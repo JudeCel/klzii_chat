@@ -61,7 +61,7 @@ defmodule KlziiChat.Services.MiniSurveysReportingService do
         "#{answer_text}\r\n"
       end)
 
-    ["#{title} / #{question}\r\n" | answers]
+    ["#{title} / #{question}\r\n" | answers] ++ ["\r\n"]
   end
 
   @spec format_survey_csv(Map.t, boolean) :: List.t

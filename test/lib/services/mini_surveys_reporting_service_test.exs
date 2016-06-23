@@ -56,7 +56,7 @@ defmodule KlziiChat.Services.MiniSurveysReportingServiceTest do
 
     answer12 = Repo.preload(answer12, [:session_member])
 
-    {:ok, session: session, session_topic: session_topic_1, mini_survey1: mini_survey1, mini_survey2: mini_survey2, answer12: answer12}
+    {:ok, session: session, session_topic: session_topic_1, mini_survey1: mini_survey1, mini_survey2: mini_survey2, answer12: answer12, facilitator: facilitator}
   end
 
   test "Get all Mini Surveys", %{session_topic: session_topic, mini_survey2: mini_survey2} do
@@ -85,7 +85,8 @@ defmodule KlziiChat.Services.MiniSurveysReportingServiceTest do
       MiniSurveysReportingService.format_survey_txt(mini_survey1, false)
 
     assert(String.contains?(List.first(mini_survey_txt), "Survey 1 / Question 1"))
-    assert(String.contains?(List.last(mini_survey_txt), "Yes"))
+    assert(String.contains?(Enum.at(mini_survey_txt,1), "Yes"))
+    assert(List.last(mini_survey_txt) == "\r\n")
   end
 
   test "Format survey answers: csv stream", %{mini_survey2: mini_survey2} do
@@ -125,11 +126,30 @@ defmodule KlziiChat.Services.MiniSurveysReportingServiceTest do
     assert(first_answer.session_member == answer12.session_member)
   end
 
-  test "Get GTML", %{session_topic: session_topic} do
-    MiniSurveysReportingService.get_report(:pdf, session_topic.id, true)
+  test "Get HTML", %{session_topic: session_topic, facilitator: facilitator, answer12: answer12} do
+    {:ok, html} = MiniSurveysReportingService.get_report(:pdf, session_topic.id, true)
 
-    MiniSurveysReportingService.save_report("test", :pdf, session_topic.id, true)
+    assert(String.starts_with?(html, "<!DOCTYPE html>"))
+    assert(String.contains?(html, session_topic.name))
+    assert(String.contains?(html, answer12.answer["value"]))
+    assert(String.contains?(html, "svg#{facilitator.id}"))
+  end
 
+  test "Save report file", %{session_topic: session_topic} do
+    report_name = "mini_surveys_test_report"
+    {:ok, txt_report_path} = MiniSurveysReportingService.save_report(report_name, :txt, session_topic.id, true)
+    {:ok, csv_report_path} = MiniSurveysReportingService.save_report(report_name, :csv, session_topic.id, true)
+    {:ok, pdf_report_path} = MiniSurveysReportingService.save_report(report_name, :pdf, session_topic.id, true)
 
+    assert(File.exists?(txt_report_path))
+    assert(File.exists?(csv_report_path))
+    assert(File.exists?(pdf_report_path))
+
+    html_report_path = Path.rootname(pdf_report_path) <> ".html"
+    refute(File.exists?(html_report_path))
+
+    :ok = File.rm(txt_report_path)
+    :ok = File.rm(csv_report_path)
+    :ok = File.rm(pdf_report_path)
   end
 end
