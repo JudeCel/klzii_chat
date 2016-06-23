@@ -11,7 +11,7 @@ defmodule KlziiChat.Services.SessionTopicReportingService do
   @spec save_report(String.t, atom, integer, boolean, boolean) :: {:ok, String.t}
   def save_report(report_name, report_format, session_topic_id, filter_star, include_facilitator) do
     with {:ok, report_data} <- get_report(report_format, session_topic_id, filter_star, include_facilitator),
-         {:ok, report_file_path} <- write_report(report_name, report_format, report_data),
+         {:ok, report_file_path} <- FileService.write_report(report_name, report_format, report_data),
     do:  {:ok, report_file_path}
   end
 
@@ -58,23 +58,5 @@ defmodule KlziiChat.Services.SessionTopicReportingService do
       messages: messages,
       emoticon_parameters: @emoticon_parameters
     })
-  end
-
-  @spec write_report(String.t, :pdf, String.t | Stream.t) :: {:ok, String.t}
-  def write_report(report_name, :pdf, report_data) do
-    tmp_html_file_path =
-        FileService.get_tmp_path()
-        |> FileService.compose_path(report_name, "html")
-    :ok = FileService.write_data(tmp_html_file_path, report_data)
-    FileService.html_to_pdf(tmp_html_file_path)
-  end
-
-  @spec write_report(String.t, atom, String.t | Stream.t) :: {:ok, String.t}
-  def write_report(report_name, report_format, report_data) when report_format in [:txt, :csv]  do
-    report_file_path =
-      FileService.get_tmp_path()
-      |> FileService.compose_path(report_name, to_string(report_format))
-    :ok = FileService.write_data(report_file_path, report_data)
-    {:ok, report_file_path}
   end
 end

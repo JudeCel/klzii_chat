@@ -102,7 +102,6 @@ defmodule KlziiChat.Services.MiniSurveysReportingService do
     )
   end
 
-  @spec
 
   @spec get_mini_survey_answers(integer, boolean) :: Map
   def get_mini_survey_answers(survvey_id, false) do

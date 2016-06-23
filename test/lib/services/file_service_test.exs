@@ -70,4 +70,26 @@ defmodule KlziiChat.Services.FileServiceTest do
     {:error, _} = FileService.wkhtmltopdf("somethingwrong")
   end
 
+
+  test "write text report" do
+    report_name = "SessionTopicReportingServiceTest_test_report"
+    txt_message_stream = Stream.map(1..10, &to_string/1)
+    {:ok, report_path} = FileService.write_report(report_name, :txt, txt_message_stream)
+
+    assert(report_path == FileService.get_tmp_path() <> "/#{report_name}.txt")
+    assert({:ok, "12345678910"} == File.read(report_path))
+    :ok = File.rm(report_path)
+  end
+
+  test "write pdf report" do
+    report_name = "SessionTopicReportingServiceTest_test_report"
+    html_report_path = FileService.get_tmp_path() <> "/#{report_name}.html"
+    html_text = "<h1>TEST</h1>"
+    {:ok, pdf_report_path} = FileService.write_report(report_name, :pdf, html_text)
+
+    assert(pdf_report_path == FileService.get_tmp_path() <> "/#{report_name}.pdf")
+    refute(File.exists?(html_report_path))
+    assert(File.exists?(pdf_report_path))
+    :ok = File.rm(pdf_report_path)
+  end
 end

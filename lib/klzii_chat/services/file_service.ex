@@ -47,4 +47,23 @@ defmodule KlziiChat.Services.FileService do
       {stdout, _} -> {:error, stdout}
     end
   end
+
+
+  @spec write_report(String.t, :pdf, String.t | Stream.t) :: {:ok, String.t}
+  def write_report(report_name, :pdf, report_data) do
+    tmp_html_file_path =
+        get_tmp_path()
+        |> compose_path(report_name, "html")
+    :ok = write_data(tmp_html_file_path, report_data)
+    html_to_pdf(tmp_html_file_path)
+  end
+
+  @spec write_report(String.t, atom, String.t | Stream.t) :: {:ok, String.t}
+  def write_report(report_name, report_format, report_data) when report_format in [:txt, :csv]  do
+    report_file_path =
+      get_tmp_path()
+      |> compose_path(report_name, to_string(report_format))
+    :ok = write_data(report_file_path, report_data)
+    {:ok, report_file_path}
+  end
 end
