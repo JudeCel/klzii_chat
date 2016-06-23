@@ -1,5 +1,5 @@
 defmodule KlziiChat.BannerTest do
-  use KlziiChat.ModelCase
+  use KlziiChat.ModelCase, async: true
 
   alias KlziiChat.Banner
   @fields %{page: "string", link: "string"}

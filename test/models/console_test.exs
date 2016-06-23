@@ -1,5 +1,5 @@
 defmodule KlziiChat.ConsoleTest do
-  use KlziiChat.ModelCase
+  use KlziiChat.ModelCase, async: true
 
   alias KlziiChat.Console
   @fields %{sessionTopicId: 1, audioId: 1, videoId: 2, imageId: 3, fileId: 4, miniSurveyId: 4}

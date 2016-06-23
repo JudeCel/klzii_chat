@@ -1,5 +1,5 @@
 defmodule KlziiChat.AccountTest do
-  use KlziiChat.ModelCase
+  use KlziiChat.ModelCase, async: true
 
   alias KlziiChat.Account
 

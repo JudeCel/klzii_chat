@@ -1,5 +1,5 @@
 defmodule KlziiChat.BrandProjectPreferenceTest do
-  use KlziiChat.ModelCase
+  use KlziiChat.ModelCase, async: true
 
   alias KlziiChat.BrandProjectPreference
 
