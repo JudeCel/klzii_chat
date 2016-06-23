@@ -57,20 +57,24 @@ defmodule KlziiChat.Services.SessionReportingServiceTest do
     {:ok, "Session_topic_messages_report_1"} = SessionReportingService.get_report_name(:all, 1)
     {:ok, "Session_topic_messages_report_2"} = SessionReportingService.get_report_name(:star, 2)
     {:ok, "Session_topic_whiteboard_report_4"} = SessionReportingService.get_report_name(:whiteboard, 4)
+    {:ok, "Session_topic_mini_surveys_report_5"} = SessionReportingService.get_report_name(:votes, 5)
   end
 
   test "Save report of a given type", %{session_topic: session_topic} do
     {:ok, all_file_path} = SessionReportingService.save_report_async(:all, @report_prefix <> "all", :txt, session_topic.id, true)
     {:ok, star_file_path} = SessionReportingService.save_report_async(:star, @report_prefix <> "star", :csv, session_topic.id, false)
     {:ok, whiteboard_file_path} = SessionReportingService.save_report_async(:whiteboard, @report_prefix <> "wb", :pdf, session_topic.id, false)
+    {:ok, votes_file_path} = SessionReportingService.save_report_async(:votes, @report_prefix <> "votes", :pdf, session_topic.id, true)
 
     assert(File.exists?(all_file_path))
     assert(File.exists?(star_file_path))
     assert(File.exists?(whiteboard_file_path))
+    assert(File.exists?(votes_file_path))
 
-    File.rm(all_file_path)
-    File.rm(star_file_path)
-    File.rm(whiteboard_file_path)
+    :ok = File.rm(all_file_path)
+    :ok = File.rm(star_file_path)
+    :ok = File.rm(whiteboard_file_path)
+    :ok = File.rm(votes_file_path)
   end
 
   test "Upload report of a given type", %{session_topic: session_topic, facilitator: facilitator} do

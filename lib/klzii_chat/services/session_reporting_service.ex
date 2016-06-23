@@ -1,5 +1,5 @@
 defmodule KlziiChat.Services.SessionReportingService do
-  alias KlziiChat.Services.{SessionTopicReportingService, ResourceService, WhiteboardReportingService}
+  alias KlziiChat.Services.{SessionTopicReportingService, ResourceService, WhiteboardReportingService, MiniSurveysReportingService}
   alias KlziiChat.{Repo, SessionTopicReport, SessionMember, Endpoint}
   alias KlziiChat.Services.Permissions.SessionReporting, as: SessionReportingPermissions
 
@@ -23,7 +23,7 @@ defmodule KlziiChat.Services.SessionReportingService do
   def create_session_topic_report(_, _, _, report_format, :whiteboard, _) when report_format != :pdf, do: {:error, "pdf is the only format that is available for whiteboard reports"}
 
   def create_session_topic_report(session_id, session_member_id, session_topic_id, report_format, report_type, include_facilitator)
-  when report_type in [:all, :star, :whiteboard] and report_format in [:txt, :csv, :pdf]    # TODO: :votes
+  when report_type in [:all, :star, :whiteboard, :votes] and report_format in [:txt, :csv, :pdf]
   do
     with {:ok, session_member} <- get_session_member(session_member_id),
          :ok <- check_report_create_permision(session_member),
@@ -48,6 +48,7 @@ defmodule KlziiChat.Services.SessionReportingService do
 
 
   def get_report_name(:whiteboard, report_id), do: {:ok, "Session_topic_whiteboard_report_" <> to_string(report_id)}
+  def get_report_name(:votes, report_id), do: {:ok, "Session_topic_mini_surveys_report_" <> to_string(report_id)}
   def get_report_name(_, report_id), do: {:ok, "Session_topic_messages_report_" <> to_string(report_id)}
 
 
@@ -63,11 +64,15 @@ defmodule KlziiChat.Services.SessionReportingService do
 
   def save_report_async(report_type, report_name, report_format, session_topic_id, include_facilitator) do
     async_func =
-      if report_type == :whiteboard do
-        fn -> WhiteboardReportingService.save_report(report_name, :pdf, session_topic_id) end
-      else
-        filter_star = if report_type == :star, do: true, else: false
-        fn -> SessionTopicReportingService.save_report(report_name, report_format, session_topic_id, filter_star, include_facilitator) end
+      case report_type do
+        :all ->
+          fn -> SessionTopicReportingService.save_report(report_name, report_format, session_topic_id, false, include_facilitator) end
+        :star
+          fn -> SessionTopicReportingService.save_report(report_name, report_format, session_topic_id, true, include_facilitator) end
+        :whiteboard ->
+          fn -> WhiteboardReportingService.save_report(report_name, :pdf, session_topic_id) end
+        :votes ->
+          fn -> MiniSurveysReportingService.save_report(report_name, report_format, session_topic_id, include_facilitator) end
       end
 
     async_task =
