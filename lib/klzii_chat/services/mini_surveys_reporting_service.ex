@@ -10,7 +10,9 @@ defmodule KlziiChat.Services.MiniSurveysReportingService do
 
   @spec save_report(String.t, atom, integer, boolean) :: {:ok | :error, String.t}
   def save_report(report_name, report_format, session_topic_id, include_facilitator) do
-
+    with {:ok, report_data} <- get_report(report_format, session_topic_id, include_facilitator),
+         {:ok, report_file_path} <- FileService.write_report(report_name, report_format, report_data),
+    do:  {:ok, report_file_path}
   end
 
   @spec get_report(atom, integer, boolean) :: {:ok | :error, List.t | Stream.t}

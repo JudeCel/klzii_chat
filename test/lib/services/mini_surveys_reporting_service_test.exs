@@ -127,7 +127,8 @@ defmodule KlziiChat.Services.MiniSurveysReportingServiceTest do
 
   test "Get GTML", %{session_topic: session_topic} do
     MiniSurveysReportingService.get_report(:pdf, session_topic.id, true)
-    |> IO.inspect()
+
+    MiniSurveysReportingService.save_report("test", :pdf, session_topic.id, true)
 
 
   end

@@ -8,12 +8,13 @@
   var selected_emoticon_x = <%= selected_emoticon %> * <%= emoticon_width %>;
 
   for(var i = 0; i < emoticon_qnt; i++) {
-    var svg_class = ".svg-" + i;
     var svg_path = "<%= Path.expand("web/static/assets/images/emotions/emoticon_") %>" + i + "_sprite.svg";
-    var emotionSvg = Snap(svg_class);
-    if(emotionSvg) {
-      emotionSvg.image(svg_path, 0, 0, sprites_qnt * emoticon_width, emoticon_height);
-      emotionSvg.attr({viewBox: selected_emoticon_x + ", 0, " + emoticon_width + ", " + emoticon_height});
+    var emotions = document.getElementsByClassName("svg-" + i);
+
+    for(var j = 0; j < emotions.length; j++){
+    var emotionSvg = Snap(emotions[j]);
+    emotionSvg.image(svg_path, 0, 0, sprites_qnt * emoticon_width, emoticon_height);
+    emotionSvg.attr({viewBox: selected_emoticon_x + ", 0, " + emoticon_width + ", " + emoticon_height});
     }
   }
 </script>
