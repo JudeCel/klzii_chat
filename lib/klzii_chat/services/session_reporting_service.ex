@@ -67,7 +67,7 @@ defmodule KlziiChat.Services.SessionReportingService do
       case report_type do
         :all ->
           fn -> SessionTopicReportingService.save_report(report_name, report_format, session_topic_id, false, include_facilitator) end
-        :star
+        :star ->
           fn -> SessionTopicReportingService.save_report(report_name, report_format, session_topic_id, true, include_facilitator) end
         :whiteboard ->
           fn -> WhiteboardReportingService.save_report(report_name, :pdf, session_topic_id) end
