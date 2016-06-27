@@ -11,9 +11,6 @@ defmodule KlziiChat.Console do
     timestamps [inserted_at: :createdAt, updated_at: :updatedAt]
   end
 
-  @required_fields ~w(sessionTopicId)
-  @optional_fields ~w(audioId videoId imageId fileId miniSurveyId )
-
   @doc """
   Creates a changeset based on the `model` and `params`.
 
@@ -22,6 +19,7 @@ defmodule KlziiChat.Console do
   """
   def changeset(model, params \\ %{}) do
     model
-    |> cast(params, (@required_fields ++ @optional_fields))
+    |> cast(params, [:sessionTopicId, :audioId, :videoId, :imageId, :fileId, :miniSurveyId ])
+    |> validate_required([:sessionTopicId])
   end
 end

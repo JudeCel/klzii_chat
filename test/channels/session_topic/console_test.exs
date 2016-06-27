@@ -144,7 +144,7 @@ defmodule KlziiChat.Channels.SessionTopic.ConsoleTest do
     session_resource = List.first(session_resources)
 
     ref = push socket, "set_console_resource", %{"id" => session_resource.resourceId}
-    assert_reply ref, :ok
+    assert_reply ref, :ok, %{}
 
     {:ok, _} = SessionResourcesService.delete(socket.assigns.session_member.id, session_resource.id)
 
