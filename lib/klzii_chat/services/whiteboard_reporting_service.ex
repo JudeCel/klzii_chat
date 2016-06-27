@@ -11,6 +11,7 @@ defmodule KlziiChat.Services.WhiteboardReportingService do
     html_text = HTMLWhiteboardReportHelper.html_from_template(%{wb_events: wb_events})
 
     {:ok, html_file_path} = FileService.write_report(report_name, :pdf, html_text)
+    {:ok, html_file_path}
   end
 
   @spec get_all_events(integer) :: Map

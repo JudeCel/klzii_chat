@@ -12,7 +12,7 @@ defmodule KlziiChat.SessionChannelTest do
 
     {:ok, socket} = connect(UserSocket, %{"token" => jwt1})
     {:ok, socket2} = connect(UserSocket, %{"token" => jwt2})
-    {:ok, socket: socket, socket2: socket2, channel_name: channel_name, session_topic_1_name: session_topic_1_name}
+    {:ok, socket: socket, socket2: socket2, channel_name: channel_name, session_topic_1_name: session_topic_1_name, session_topic_1: session_topic_1}
   end
 
   test "when unauthorized", %{socket: socket, channel_name: channel_name} do
@@ -109,5 +109,22 @@ defmodule KlziiChat.SessionChannelTest do
 
     push(socket2, "get_all_direct_messages", push_data)
     |> assert_reply(:ok, %{ messages: %{ read: _, unread: _, currentPage: _ } })
+  end
+
+  test "create session topic report", %{socket: socket, channel_name: channel_name, session_topic_1: session_topic_1} do
+    session_topic_1_id = session_topic_1.id
+
+    {:ok, _, socket} = subscribe_and_join(socket, SessionChannel, channel_name)
+    session_member_id = socket.assigns.session_member.id
+
+    push(socket, "create_session_topic_report", %{"sessionTopicId" => session_topic_1_id, "format" => "pdf", "type" => "all", "facilitator" => true})
+    |> assert_reply(:ok, result, 1000)
+    assert(result.sessionTopicId == session_topic_1_id)
+    assert(result.status == "progress")
+
+    assert_broadcast("session_topics_report_updated", result, 1000)
+    assert(result.sessionTopicId == session_topic_1_id)
+    assert(result.status == "completed")
+    refute(is_nil(result.resourceId))
   end
 end
