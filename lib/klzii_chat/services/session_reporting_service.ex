@@ -53,14 +53,19 @@ defmodule KlziiChat.Services.SessionReportingService do
 
 
   def create_report_async(session_id, account_user_id, report_id, session_topic_id, report_name, report_format, report_type, include_facilitator) do
-    report_processing_result =
-      with {:ok, report_file_path} <- save_report_async(report_type, report_name, report_format, session_topic_id, include_facilitator),
-           {:ok, session_topics_report} <- upload_report_async(report_format, report_file_path, report_name, account_user_id),
-       do: {:ok, session_topics_report}
-
-    {:ok, report} = update_session_topics_reports_record(report_processing_result, report_id)
-    Endpoint.broadcast!("sessions:#{session_id}", "session_topics_report_updated", Repo.preload(report, :resource))
+    with  {:ok, report_file_path} <- save_report_async(report_type, report_name, report_format, session_topic_id, include_facilitator),
+          {:ok, session_topics_report} <- upload_report_async(report_format, report_file_path, report_name, account_user_id)
+    do
+          {:ok, report} = update_session_topics_reports_record({:ok, session_topics_report}, report_id)
+          broadcast_updated_report(session_id, report)
+    else
+          {:error, err} ->
+            {:ok, report} = update_session_topics_reports_record({:error, err}, report_id)
+            broadcast_updated_report(session_id, report)
+    end
   end
+
+  def broadcast_updated_report(session_id, report), do: Endpoint.broadcast!("sessions:#{session_id}", "session_topics_report_updated", Repo.preload(report, :resource))
 
   def save_report_async(report_type, report_name, report_format, session_topic_id, include_facilitator) do
     async_func =
