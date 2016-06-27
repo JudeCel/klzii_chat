@@ -1,6 +1,10 @@
 defmodule KlziiChat.SubscriptionPlan do
   use KlziiChat.Web, :model
 
+  @moduledoc """
+    This Mode is read only!
+    Not use for insert!
+  """
   schema "SubscriptionPlans" do
     field :sessionCount, :integer
     field :contactListCount, :integer

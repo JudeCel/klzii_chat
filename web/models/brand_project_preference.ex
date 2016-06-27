@@ -1,5 +1,9 @@
 defmodule KlziiChat.BrandProjectPreference do
   use KlziiChat.Web, :model
+  @moduledoc """
+    This Mode is read only!
+    Not use for insert!
+  """
 
   schema "BrandProjectPreferences" do
     field :name, :string
@@ -18,6 +22,5 @@ defmodule KlziiChat.BrandProjectPreference do
   def changeset(model, params \\ %{}) do
     model
       |> cast(params, [])
-      |> validate_required([])
   end
 end

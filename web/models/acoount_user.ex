@@ -1,6 +1,11 @@
 defmodule KlziiChat.AccountUser do
   use KlziiChat.Web, :model
 
+  @moduledoc """
+    This Mode is read only!
+    Not use for insert!
+  """
+
   schema "AccountUsers" do
     belongs_to :user, KlziiChat.User, [foreign_key: :UserId]
     belongs_to :account, KlziiChat.Account, [foreign_key: :AccountId]
@@ -22,6 +27,5 @@ defmodule KlziiChat.AccountUser do
   def changeset(model, params \\ %{}) do
     model
     |> cast(params, [])
-    |> validate_required([])
   end
 end

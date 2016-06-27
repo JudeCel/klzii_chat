@@ -1,6 +1,11 @@
 defmodule KlziiChat.User do
   use KlziiChat.Web, :model
 
+  @moduledoc """
+    This Mode is read only!
+    Not use for insert!
+  """
+
   schema "Users" do
     field :email, :string
     field :password, :string, virtual: true
@@ -18,6 +23,6 @@ defmodule KlziiChat.User do
   """
   def changeset(model, params \\ %{}) do
     model
-    |> cast(params, (@required_fields ++  @optional_fields))
+    |> cast(params, [])
   end
 end

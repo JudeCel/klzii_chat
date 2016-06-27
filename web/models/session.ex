@@ -1,5 +1,10 @@
 defmodule KlziiChat.Session do
   use KlziiChat.Web, :model
+  
+  @moduledoc """
+    This Mode is read only!
+    Not use for insert!
+  """
 
   schema "Sessions" do
     field :name, :string

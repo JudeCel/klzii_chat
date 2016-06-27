@@ -1,6 +1,10 @@
 defmodule KlziiChat.SessionMember do
   use KlziiChat.Web, :model
 
+  @moduledoc """
+    For this model allow insert only: username, avatarData, sessionTopicContext  fields
+  """
+
   schema "SessionMembers" do
     field :username, :string
     belongs_to :account_user, KlziiChat.AccountUser, [foreign_key: :accountUserId]

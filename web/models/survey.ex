@@ -1,6 +1,11 @@
 defmodule KlziiChat.Survey do
   use KlziiChat.Web, :model
 
+  @moduledoc """
+    This Mode is read only!
+    Not use for insert!
+  """
+  
   schema "Surveys" do
     belongs_to :resource, KlziiChat.Resource, [foreign_key: :resourceId]
     belongs_to :account, KlziiChat.Account, [foreign_key: :accountId]
