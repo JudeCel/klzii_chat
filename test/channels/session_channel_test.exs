@@ -74,7 +74,7 @@ defmodule KlziiChat.SessionChannelTest do
     reciever_member_id = socket.assigns.session_member.id
 
     ref1 = push socket2, "create_direct_message", %{ "recieverId" => reciever_member_id, "text" => "AAA" }
-    assert_reply ref1, :ok, %{ message: message }
+    assert_reply ref1, :ok, %{ message: %{} }
 
     member_id = to_string(reciever_member_id)
     assert_broadcast("new_direct_message", %{ ^member_id => %{} })
