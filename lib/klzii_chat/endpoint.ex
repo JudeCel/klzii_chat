@@ -31,7 +31,7 @@ defmodule KlziiChat.Endpoint do
     parsers: [:urlencoded, :multipart, :json],
     pass: ["*/*"],
     json_decoder: Poison,
-    length: 100_000_000
+    length: 5_000_000
 
   plug Plug.MethodOverride
   plug Plug.Head
@@ -41,6 +41,6 @@ defmodule KlziiChat.Endpoint do
     key: "_klzii_chat_key",
     signing_salt: "Rkjb13qZ",
     log: :debug
-    
+
   plug KlziiChat.Router
 end
