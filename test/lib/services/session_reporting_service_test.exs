@@ -145,13 +145,14 @@ defmodule KlziiChat.Services.SessionReportingServiceTest do
      SessionReportingService.create_session_topic_report(session.id, participant.id, session_topic.id, :csv, :all, :true))
   end
 
-  test "Get all session topics reports", %{session: session, session_topic: session_topic, facilitator: facilitator} do
+  test "Get all session topics reports when deletedAt is not set", %{session: session, session_topic: session_topic, facilitator: facilitator} do
     Repo.insert(%SessionTopicReport{
       sessionId: session.id,
       sessionTopicId: session_topic.id,
       type: "whiteboard",
       facilitator: true,
-      format: "pdf"
+      format: "pdf",
+      status: "progress"
     })
 
     Repo.insert(%SessionTopicReport{
@@ -159,13 +160,48 @@ defmodule KlziiChat.Services.SessionReportingServiceTest do
       sessionTopicId: session_topic.id,
       type: "all",
       facilitator: false,
-      format: "csv"
+      format: "csv",
+      status: "completed"
     })
+
+    Repo.insert(%SessionTopicReport{
+      sessionId: session.id,
+      sessionTopicId: session_topic.id,
+      type: "all",
+      facilitator: false,
+      format: "txt",
+      status: "failed"
+    })
+
 
     {:ok, reports} = SessionReportingService.get_session_topics_reports(session.id, facilitator.id)
     query = from(str in SessionTopicReport, where: str.sessionId == ^session.id, preload: [:resource])
     assert(reports == Repo.all(query))
   end
+
+  test "Get session topic reports excluding one with deletedAt set", %{session: session, session_topic: session_topic, facilitator: facilitator} do
+    Repo.insert(%SessionTopicReport{
+      sessionId: session.id,
+      sessionTopicId: session_topic.id,
+      type: "all",
+      facilitator: false,
+      format: "csv",
+      status: "completed"
+    })
+
+    Repo.insert(%SessionTopicReport{
+      sessionId: session.id,
+      sessionTopicId: session_topic.id,
+      type: "all",
+      facilitator: false,
+      format: "txt",
+      status: "failed",
+      deletedAt: Ecto.DateTime.utc()
+    })
+
+    assert({:ok, [%{status: "completed"}]} = SessionReportingService.get_session_topics_reports(session.id, facilitator.id))
+  end
+
 
   test "Error getting all session topics reports with incorrect permission", %{session: session, participant: participant} do
     assert({:error, "Action not allowed!"} = SessionReportingService.get_session_topics_reports(session.id, participant.id))
@@ -184,7 +220,8 @@ defmodule KlziiChat.Services.SessionReportingServiceTest do
     {:ok, report} = SessionReportingService.update_session_topics_reports_record({:error, "some error message"}, report.id)
     {:ok, failed_report} = SessionReportingService.delete_report(report.id, facilitator.accountUserId)
 
-    {:ok, [db_report]} = SessionReportingService.get_session_topics_reports(session.id, facilitator.id)
+    query = from(str in SessionTopicReport, where: str.sessionId == ^session.id)
+    [db_report] = Repo.all(query)
 
     assert(report.id == failed_report.id)
     assert(failed_report.id == db_report.id)
@@ -228,8 +265,9 @@ defmodule KlziiChat.Services.SessionReportingServiceTest do
      assert(new_report_id != report_id)
      :timer.sleep(500)
 
-     {:ok, [%{id: ^report_id, status: "failed"}, %{id: ^new_report_id, status: "completed"}]}
-      = SessionReportingService.get_session_topics_reports(session.id, facilitator.id)
+     query = from(str in SessionTopicReport, where: str.sessionId == ^session.id)
+     [%{id: ^report_id, status: "failed", deletedAt: deleted_at}, %{id: ^new_report_id, status: "completed"}] = Repo.all(query)
+     refute(is_nil(deleted_at))
   end
 
    test "Error recreating session topic report if no previous report record present", %{facilitator: facilitator} do
