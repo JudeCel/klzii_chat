@@ -3,10 +3,10 @@ defmodule KlziiChat.SessionMemberCase do
   alias KlziiChat.{Repo, User, SubscriptionPlan, Session, Account, SessionMember, BrandProjectPreference}
 
   setup do
-    user = User.seedChangeset(%User{}, %{ email: "dainis@gmail.com", encryptedPassword: "jee" }) |> Repo.insert!
-    user2 = User.seedChangeset(%User{}, %{ email: "dainis_2@gmail.com", encryptedPassword: "pfff" }) |> Repo.insert!
-    user3 = User.seedChangeset(%User{}, %{ email: "dainis_3@gmail.com", encryptedPassword: "pfff11" }) |> Repo.insert!
-    user4 = User.seedChangeset(%User{}, %{ email: "dainis_4@gmail.com", encryptedPassword: "11111" }) |> Repo.insert!
+    user = %User{ email: "dainis@gmail.com", encryptedPassword: "jee" } |> Repo.insert!
+    user2 = %User{ email: "dainis_2@gmail.com", encryptedPassword: "pfff" } |> Repo.insert!
+    user3 = %User{ email: "dainis_3@gmail.com", encryptedPassword: "pfff11" } |> Repo.insert!
+    user4 = %User{ email: "dainis_4@gmail.com", encryptedPassword: "11111" } |> Repo.insert!
 
     account = Repo.insert!(%Account{name: "cool account"})
 
@@ -43,7 +43,7 @@ defmodule KlziiChat.SessionMemberCase do
     ) |> Repo.insert! |>  Repo.preload(:account)
 
 
-    subscription_preference_data =%{
+    subscription_preference_data = %{
       sessionCount: 8,
       contactListCount: 4,
       recruiterContactListCount: 4,
@@ -69,9 +69,7 @@ defmodule KlziiChat.SessionMemberCase do
       chargebeePlanId: "senior_yearly"
     }
 
-    subscription_plan = SubscriptionPlan.changeset(%SubscriptionPlan{},
-      subscription_preference_data
-    ) |> Repo.insert!
+    subscription_plan = Map.merge(%SubscriptionPlan{}, subscription_preference_data) |> Repo.insert!
 
    {:ok, _} = Ecto.build_assoc(account, :subscription,
       accountId: account.id,

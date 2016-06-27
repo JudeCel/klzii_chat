@@ -15,18 +15,11 @@ defmodule KlziiChat.Resource do
     field :type, :string
     field :scope, :string
     field :name, :string
-    field :private, :boolean, default: false
     field :status, :string, default: "completed"
     field :properties, :map, default: %{}
     field :expiryDate, Timex.Ecto.DateTime
     timestamps [inserted_at: :createdAt, updated_at: :updatedAt]
   end
-
-  @required_fields ~w(status scope type accountUserId accountId name)
-  @optional_fields ~w(link properties private)
-
-  @required_file_fields ~w()
-  @optional_file_fields ~w(file image audio video)
 
   @doc """
   Creates a changeset based on the `model` and `params`.
@@ -36,15 +29,17 @@ defmodule KlziiChat.Resource do
   """
   def changeset(resource, params \\ %{}) do
     resource
-    |> cast(params, (@required_fields ++ @optional_fields))
-    |> cast_attachments(params,(@required_file_fields ++ @optional_file_fields))
+    |> cast(params, [:status, :scope, :type, :accountUserId, :accountId, :name, :link, :properties])
+    |> validate_required([:status, :scope, :type, :accountUserId, :accountId, :name])
+    |> cast_attachments(params,["file", "image", "audio", "video"])
     |> parse_link
   end
 
   def banner_changeset(model, params \\ %{}) do
     model
-    |> cast(params, (@required_fields ++ @optional_fields))
-    |> cast_attachments(params, (@required_file_fields ++ @optional_file_fields))
+    |> cast(params, [:status, :scope, :type, :accountUserId, :accountId, :name, :link, :properties])
+    |> validate_required([:status, :scope, :type, :accountUserId, :accountId, :name, :link])
+    |> cast_attachments(params, ["file", "image", "audio", "video"])
   end
 
   defp parse_link(base_changeset) do

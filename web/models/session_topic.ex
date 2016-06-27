@@ -1,6 +1,10 @@
 defmodule KlziiChat.SessionTopic do
   use KlziiChat.Web, :model
 
+  @moduledoc """
+    For this model allow insert only: boardMessage, field
+  """
+
   schema "SessionTopics" do
     belongs_to :session, KlziiChat.Session, [foreign_key: :sessionId]
     belongs_to :topic, KlziiChat.Topic, [foreign_key: :topicId]

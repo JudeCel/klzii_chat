@@ -1,6 +1,11 @@
 defmodule KlziiChat.Session do
   use KlziiChat.Web, :model
 
+  @moduledoc """
+    This Mode is read only!
+    Not use for insert!
+  """
+
   schema "Sessions" do
     field :name, :string
     field :brand_project_id,  :integer
@@ -17,21 +22,5 @@ defmodule KlziiChat.Session do
     has_many :topics, through: [:session_topics, :topic]
     has_many :direct_messages, KlziiChat.DirectMessage, [foreign_key: :sessionId]
     timestamps [inserted_at: :createdAt, updated_at: :updatedAt]
-
-    # timestamps
-  end
-
-  @required_fields ~w(name startTime endTime active )
-  @optional_fields ~w()
-
-  @doc """
-  Creates a changeset based on the `model` and `params`.
-
-  If no params are provided, an invalid changeset is returned
-  with no validation performed.
-  """
-  def changeset(model, params \\ %{}) do
-    model
-    |> cast(params, (@required_fields ++  @optional_fields))
   end
 end

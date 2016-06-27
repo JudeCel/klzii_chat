@@ -1,6 +1,11 @@
 defmodule KlziiChat.SubscriptionPlan do
   use KlziiChat.Web, :model
 
+  @moduledoc """
+    This Mode is read only!
+    Not use for insert!
+  """
+  
   schema "SubscriptionPlans" do
     field :sessionCount, :integer
     field :contactListCount, :integer
@@ -26,32 +31,5 @@ defmodule KlziiChat.SubscriptionPlan do
     field :surveyCount, :integer
     field :chargebeePlanId, :string
     timestamps [inserted_at: :createdAt, updated_at: :updatedAt]
-  end
-
-  def changeset(model, params \\ %{}) do
-    model
-    |> cast(params, [ :sessionCount,
-                      :contactListCount,
-                      :recruiterContactListCount,
-                      :importDatabase,
-                      :brandLogoAndCustomColors,
-                      :contactListMemberCount,
-                      :accountUserCount,
-                      :exportContactListAndParticipantHistory,
-                      :exportRecruiterSurveyData,
-                      :accessKlzziForum,
-                      :accessKlzziFocus,
-                      :canInviteObserversToSession,
-                      :paidSmsCount,
-                      :discussionGuideTips,
-                      :whiteboardFunctionality,
-                      :reportingFunctions,
-                      :uploadToGallery,
-                      :availableOnTabletAndMobilePlatforms,
-                      :customEmailInvitationAndReminderMessages,
-                      :topicCount,
-                      :priority,
-                      :chargebeePlanId,
-                      :surveyCount])
   end
 end

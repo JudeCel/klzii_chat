@@ -39,7 +39,7 @@ defmodule KlziiChat.ResourcesController do
         resp = Enum.map(resources, fn resource ->
           ResourceView.render("delete.json", %{resource: resource})
         end)
-        json(conn, %{ids: resp, message: "Success deleteed!"})
+        json(conn, %{ids: resp, message: "Success deleted!"})
       {:error, reason} ->
         json(conn, %{status: :error, reason: reason})
     end

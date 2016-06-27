@@ -1,6 +1,10 @@
 defmodule KlziiChat.SessionMember do
   use KlziiChat.Web, :model
 
+  @moduledoc """
+    For this model allow insert only: username, avatarData, sessionTopicContext  fields
+  """
+
   schema "SessionMembers" do
     field :username, :string
     belongs_to :account_user, KlziiChat.AccountUser, [foreign_key: :accountUserId]
@@ -19,9 +23,6 @@ defmodule KlziiChat.SessionMember do
 
   end
 
-  @required_fields ~w(username colour)
-  @optional_fields ~w(avatarData sessionTopicContext)
-
   @doc """
   Creates a changeset based on the `model` and `params`.
 
@@ -30,6 +31,7 @@ defmodule KlziiChat.SessionMember do
   """
   def changeset(model, params \\ %{}) do
     model
-    |> cast(params, (@required_fields ++  @optional_fields))
+    |> cast(params, [:username, :avatarData, :sessionTopicContext])
+    |> validate_length(:username, min: 1)
   end
 end

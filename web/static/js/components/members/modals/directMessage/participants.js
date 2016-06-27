@@ -13,8 +13,11 @@ const Participants = React.createClass({
     const className = 'list-group-item no-border-radius';
     return memberId == this.props.memberId ? className + ' selected' : className;
   },
+  getLastUnread(participantId) {
+    return this.props.lastDirectMessages[participantId] || {};
+  },
   render() {
-    const { participants, colours, unreadDirectMessages, lastDirectMessages } = this.props;
+    const { participants, colours, unreadDirectMessages } = this.props;
 
     return (
       <div className='list-group no-border-radius' style={{ borderColor: colours.mainBorder }}>
@@ -33,12 +36,12 @@ const Participants = React.createClass({
 
                   <div className='col-md-6 text-right'>
                     <span className='badge'>{ unreadDirectMessages[participant.id] }</span>
-                    <span>{ this.formatDate(moment, new Date()) }</span>
+                    <span>{ this.formatDate(moment, this.getLastUnread(participant.id).createdAt) }</span>
                   </div>
                 </div>
 
                 <div className='body col-md-12'>
-                  <p>{ lastDirectMessages[participant.id] }</p>
+                  <p>{ this.getLastUnread(participant.id).text }</p>
                 </div>
               </div>
             </button>

@@ -1,6 +1,11 @@
 defmodule KlziiChat.Subscription do
   use KlziiChat.Web, :model
 
+  @moduledoc """
+    This Mode is read only!
+    Not use for insert!
+  """
+
   schema "Subscriptions" do
     belongs_to :account, KlziiChat.Account, [foreign_key: :accountId]
     belongs_to :subscriptio_plan, KlziiChat.SubscriptionPlan, [foreign_key: :subscriptionPlanId]
@@ -9,10 +14,5 @@ defmodule KlziiChat.Subscription do
     field :customerId, :string
     field :subscriptionId, :string
     timestamps [inserted_at: :createdAt, updated_at: :updatedAt]
-  end
-
-  def changeset(model, params \\ %{}) do
-    model
-    |> cast(params, [:accountId, :subscriptionId, :subscriptionPlanId, :planId, :customerId, :subscriptionId])
   end
 end
