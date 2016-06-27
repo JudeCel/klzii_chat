@@ -149,12 +149,10 @@ defmodule KlziiChat.SessionChannel do
   end
 
   def handle_out("session_topics_report_updated", payload, socket) do
-    session_member = get_session_member(socket)
-    if SessionReportingPermissions.can_create_report(session_member) do
+    if SessionReportingPermissions.can_create_report(get_session_member(socket)) do
       push socket, "session_topics_report_updated", SessionTopicsReportView.render("show.json", %{report: payload})
-    else
-      {:noreply, socket}
     end
+    {:noreply, socket}
   end
 
   def handle_out("unread_messages", payload, socket) do

@@ -1,7 +1,9 @@
 defmodule KlziiChat.SessionChannelTest do
-  use KlziiChat.ChannelCase
+  use KlziiChat.{ChannelCase, SessionMemberCase}
   alias KlziiChat.{Repo, UserSocket, SessionChannel}
-  use KlziiChat.SessionMemberCase
+
+  @message_delay 500
+  @db_delay 300
 
   setup %{session_topic_1: session_topic_1, session: session, session: session, facilitator: facilitator, participant: participant} do
     Ecto.Adapters.SQL.Sandbox.mode(Repo, {:shared, self()})
@@ -113,18 +115,26 @@ defmodule KlziiChat.SessionChannelTest do
 
   test "create session topic report", %{socket: socket, channel_name: channel_name, session_topic_1: session_topic_1} do
     session_topic_1_id = session_topic_1.id
-
     {:ok, _, socket} = subscribe_and_join(socket, SessionChannel, channel_name)
-    session_member_id = socket.assigns.session_member.id
 
-    push(socket, "create_session_topic_report", %{"sessionTopicId" => session_topic_1_id, "format" => "pdf", "type" => "all", "facilitator" => true})
-    |> assert_reply(:ok, result, 1000)
-    assert(result.sessionTopicId == session_topic_1_id)
-    assert(result.status == "progress")
-
-    assert_broadcast("session_topics_report_updated", result, 1000)
-    assert(result.sessionTopicId == session_topic_1_id)
-    assert(result.status == "completed")
-    refute(is_nil(result.resourceId))
+    ref = push(socket, "create_session_topic_report", %{"sessionTopicId" => session_topic_1_id, "format" => "pdf", "type" => "all", "facilitator" => true})
+    assert_reply(ref, :ok, %{sessionTopicId: ^session_topic_1_id, status: "progress"}, @message_delay)
+    assert_broadcast("session_topics_report_updated", %{sessionTopicId: ^session_topic_1_id, status: "completed"}, @message_delay)
   end
+
+  test "delete session topic report", %{socket: socket, channel_name: channel_name, session_topic_1: session_topic_1} do
+     session_topic_1_id = session_topic_1.id
+     {:ok, _, socket} = subscribe_and_join(socket, SessionChannel, channel_name)
+
+     ref = push(socket, "create_session_topic_report", %{"sessionTopicId" => session_topic_1_id, "format" => "pdf", "type" => "all", "facilitator" => true})
+     assert_reply(ref, :ok, %{sessionTopicId: ^session_topic_1_id, status: "progress"}, @message_delay)
+     assert_broadcast("session_topics_report_updated", %{id: id, sessionTopicId: ^session_topic_1_id, status: "completed"}, @message_delay)
+     :timer.sleep(@db_delay)
+
+     del_ref = push(socket, "delete_session_topic_report", %{"id" => id})
+     assert_reply(del_ref, :ok, _, @message_delay)
+     :timer.sleep(@db_delay)
+  end
+
+
 end
