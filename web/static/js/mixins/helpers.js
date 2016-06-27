@@ -27,7 +27,9 @@ const helpers = {
     return avatarData
   },
   formatDate(moment, date) {
-    return moment(new Date(date)).format('ddd h:mm D/YY');
+    if(date) {
+      return moment(new Date(date)).format('ddd h:mm D/YY');
+    }
   },
   addOrRemoveScrollbarY(element, _this) {
     let scrollClass = ' add-overflow-y';
