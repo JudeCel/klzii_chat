@@ -1,9 +1,9 @@
 defmodule KlziiChat.SessionChannelTest do
   use KlziiChat.{ChannelCase, SessionMemberCase}
   alias KlziiChat.{Repo, UserSocket, SessionChannel}
+  alias KlziiChat.Services.SessionReportingService
 
-  @message_delay 500
-  @db_delay 300
+  @message_delay 1000
 
   setup %{session_topic_1: session_topic_1, session: session, session: session, facilitator: facilitator, participant: participant} do
     Ecto.Adapters.SQL.Sandbox.mode(Repo, {:shared, self()})
@@ -14,7 +14,7 @@ defmodule KlziiChat.SessionChannelTest do
 
     {:ok, socket} = connect(UserSocket, %{"token" => jwt1})
     {:ok, socket2} = connect(UserSocket, %{"token" => jwt2})
-    {:ok, socket: socket, socket2: socket2, channel_name: channel_name, session_topic_1_name: session_topic_1_name, session_topic_1: session_topic_1}
+    {:ok, socket: socket, socket2: socket2, channel_name: channel_name, session_topic_1_name: session_topic_1_name, session_topic_1: session_topic_1, session: session}
   end
 
   test "when unauthorized", %{socket: socket, channel_name: channel_name} do
@@ -41,7 +41,7 @@ defmodule KlziiChat.SessionChannelTest do
     assert_push "presence_state", %{}
   end
 
-  test "when join member broadcast others", %{socket: socket, socket2: socket2, channel_name: channel_name } do
+  test "when join member broadcast others", %{socket: socket, socket2: socket2, channel_name: channel_name} do
     {:ok, _, socket} = join(socket, SessionChannel, channel_name)
 
     {:ok, _, _socket2} = join(socket2, SessionChannel, channel_name)
@@ -55,13 +55,13 @@ defmodule KlziiChat.SessionChannelTest do
       assert(id == session_member.id)
   end
 
-  test "when update session member broadcast others", %{socket: socket, socket2: socket2, channel_name: channel_name } do
+  test "when update session member broadcast others", %{socket: socket, socket2: socket2, channel_name: channel_name} do
     {:ok, _, socket} = join(socket, SessionChannel, channel_name)
 
     {:ok, _, _socket2} = join(socket2, SessionChannel, channel_name)
 
-    push socket, "update_member", %{avatarData: %{ base: 2, face: 3, body: 1, desk: 2, head: 0 }}
-    push socket, "update_member", %{avatarData: %{ base: 1, desk: 2}, username: "new cool name"}
+    push socket, "update_member", %{avatarData: %{base: 2, face: 3, body: 1, desk: 2, head: 0}}
+    push socket, "update_member", %{avatarData: %{base: 1, desk: 2}, username: "new cool name"}
 
     assert_push "self_info", %{}
 
@@ -70,7 +70,7 @@ defmodule KlziiChat.SessionChannelTest do
     assert_push "update_member", %{id: _session_member_id}
   end
 
-  test "create direct message", %{ socket2: socket2, socket: socket, channel_name: channel_name } do
+  test "create direct message", %{socket2: socket2, socket: socket, channel_name: channel_name} do
     {:ok, _, socket2} = join(socket2, SessionChannel, channel_name)
     {:ok, _, socket} = subscribe_and_join(socket, SessionChannel, channel_name)
     reciever_member_id = socket.assigns.session_member.id
@@ -122,19 +122,32 @@ defmodule KlziiChat.SessionChannelTest do
     assert_broadcast("session_topics_report_updated", %{sessionTopicId: ^session_topic_1_id, status: "completed"}, @message_delay)
   end
 
-  test "delete session topic report", %{socket: socket, channel_name: channel_name, session_topic_1: session_topic_1} do
-     session_topic_1_id = session_topic_1.id
-     {:ok, _, socket} = subscribe_and_join(socket, SessionChannel, channel_name)
+  test "delete session topic report", %{socket: socket, channel_name: channel_name, session: session, session_topic_1: session_topic_1} do
+    {:ok, _, socket} = join(socket, SessionChannel, channel_name)
 
-     ref = push(socket, "create_session_topic_report", %{"sessionTopicId" => session_topic_1_id, "format" => "pdf", "type" => "all", "facilitator" => true})
-     assert_reply(ref, :ok, %{sessionTopicId: ^session_topic_1_id, status: "progress"}, @message_delay)
-     assert_broadcast("session_topics_report_updated", %{id: id, sessionTopicId: ^session_topic_1_id, status: "completed"}, @message_delay)
-     :timer.sleep(@db_delay)
+    {:ok, report} = SessionReportingService.create_session_topics_reports_record(session.id, session_topic_1.id, :all, true, :txt)
 
-     del_ref = push(socket, "delete_session_topic_report", %{"id" => id})
-     assert_reply(del_ref, :ok, _, @message_delay)
-     :timer.sleep(@db_delay)
+    del_ref = push(socket, "delete_session_topic_report", %{"id" => report.id})
+    assert_reply(del_ref, :ok, _, @message_delay)
   end
 
+  test "recreate session topic report", %{socket: socket, channel_name: channel_name, session: session, session_topic_1: session_topic_1} do
+    {:ok, _, socket} = subscribe_and_join(socket, SessionChannel, channel_name)
 
+    {:ok, report} = SessionReportingService.create_session_topics_reports_record(session.id, session_topic_1.id, :all, true, :txt)
+    {:ok, failed_report} = SessionReportingService.update_session_topics_reports_record({:error, "some error message"}, report.id)
+
+    ref = push(socket, "recreate_session_topic_report", %{"id" => failed_report.id})
+    assert_reply(ref, :ok, %{status: "progress"}, @message_delay)
+    assert_broadcast("session_topics_report_updated", %{status: "completed"}, @message_delay)
+  end
+
+  test "get session topics reports", %{socket: socket, channel_name: channel_name, session: session, session_topic_1: session_topic_1} do
+    {:ok, _, socket} = join(socket, SessionChannel, channel_name)
+
+    {:ok, report} = SessionReportingService.create_session_topics_reports_record(session.id, session_topic_1.id, :all, true, :txt)
+    ref = push(socket, "get_session_topics_reports", %{"id" => report.id})
+    session_topic_1_id = to_string(session_topic_1.id)
+    assert_reply(ref, :ok, %{^session_topic_1_id => %{"txt" => %{"all" => %{status: "progress"}}}}, @message_delay)
+  end
 end
