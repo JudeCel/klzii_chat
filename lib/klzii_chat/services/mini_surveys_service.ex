@@ -3,7 +3,7 @@ defmodule KlziiChat.Services.MiniSurveysService do
   alias KlziiChat.Services.{ConsoleService}
   alias KlziiChat.Services.Permissions.MiniSurveys, as: MiniSurveysPermissions
   import Ecto
-  import Ecto.Query, only: [from: 2, from: 1]
+  import Ecto.Query, only: [from: 2]
 
   @spec get(Integer) :: {:ok, List}
   def get(session_topic_id) do

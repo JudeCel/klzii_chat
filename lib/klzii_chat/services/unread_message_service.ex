@@ -1,7 +1,7 @@
 defmodule KlziiChat.Services.UnreadMessageService do
   alias KlziiChat.{Repo, Message, SessionMember, UnreadMessage, Presence}
   alias KlziiChat.Helpers.ListHelper
-  import Ecto.Query, only: [from: 1, from: 2]
+  import Ecto.Query, only: [from: 2]
 
   @default_summary %{"summary" => %{"normal" => 0, "reply" => 0 }}
 
