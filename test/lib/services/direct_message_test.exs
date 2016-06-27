@@ -74,7 +74,9 @@ defmodule KlziiChat.Services.DirectMessageTest do
     DirectMessageService.create_message(session.id, %{ "senderId" => participant2.id, "recieverId" => facilitator.id, "text" => @message_text4 })
 
     messages = DirectMessageService.get_last_messages(facilitator.id)
-    assert(Map.get(messages, to_string(participant.id)) == @message_text2)
-    assert(Map.get(messages, to_string(participant2.id)) == @message_text4)
+    message_1 = Map.get(messages, to_string(participant.id))
+    message_2 = Map.get(messages, to_string(participant2.id))
+    assert(message_1.text == @message_text2)
+    assert(message_2.text == @message_text4)
   end
 end
