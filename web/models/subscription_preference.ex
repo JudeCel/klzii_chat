@@ -9,6 +9,6 @@ defmodule KlziiChat.SubscriptionPreference do
 
   def changeset(model, params \\ %{}) do
     model
-    |> cast(params, [:data, :subscriptionId])
+    |> cast(params, [])
   end
 end

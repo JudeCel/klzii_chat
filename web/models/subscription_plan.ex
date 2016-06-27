@@ -30,28 +30,6 @@ defmodule KlziiChat.SubscriptionPlan do
 
   def changeset(model, params \\ %{}) do
     model
-    |> cast(params, [ :sessionCount,
-                      :contactListCount,
-                      :recruiterContactListCount,
-                      :importDatabase,
-                      :brandLogoAndCustomColors,
-                      :contactListMemberCount,
-                      :accountUserCount,
-                      :exportContactListAndParticipantHistory,
-                      :exportRecruiterSurveyData,
-                      :accessKlzziForum,
-                      :accessKlzziFocus,
-                      :canInviteObserversToSession,
-                      :paidSmsCount,
-                      :discussionGuideTips,
-                      :whiteboardFunctionality,
-                      :reportingFunctions,
-                      :uploadToGallery,
-                      :availableOnTabletAndMobilePlatforms,
-                      :customEmailInvitationAndReminderMessages,
-                      :topicCount,
-                      :priority,
-                      :chargebeePlanId,
-                      :surveyCount])
+    |> cast(params, [])
   end
 end

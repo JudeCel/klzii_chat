@@ -10,9 +10,6 @@ defmodule KlziiChat.UnreadMessage do
     field :updatedAt, Timex.Ecto.DateTime
   end
 
-  @required_fields ~w(sessionMemberId sessionTopicId messageId)
-  @optional_fields ~w(scope)
-
   @doc """
   Creates a changeset based on the `model` and `params`.
 
@@ -21,7 +18,9 @@ defmodule KlziiChat.UnreadMessage do
   """
   def changeset(model, params \\ %{}) do
     model
-    |> cast(params, (@required_fields ++ @optional_fields))
+    |> cast(params, [:sessionMemberId, :sessionTopicId, :messageId, :scope])
+    |> validate_required([:sessionMemberId, :sessionTopicId, :messageId, :scope])
+    |> validate_length(:body, min: 1)
   end
 
   # Allowed scopes for this model

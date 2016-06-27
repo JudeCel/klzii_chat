@@ -12,7 +12,6 @@ defmodule KlziiChat.MiniSurvey do
     timestamps [inserted_at: :createdAt, updated_at: :updatedAt]
   end
 
-
   @doc """
   Creates a changeset based on the `model` and `params`.
 
@@ -21,8 +20,8 @@ defmodule KlziiChat.MiniSurvey do
   """
   def changeset(model, params \\ %{}) do
     model
-    |> cast(params, ~w(title question type sessionId sessionTopicId))
-    |> validate_required(~w(title question type sessionId sessionTopicId))
+    |> cast(params, [:title, :question, :type, :sessionId, :sessionTopicId])
+    |> validate_required([:title, :question, :type, :sessionId, :sessionTopicId])
     |> validate_inclusion(:type, ["yesNoMaybe", "5starRating"])
   end
 end

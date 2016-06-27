@@ -13,9 +13,6 @@ defmodule KlziiChat.Topic do
 
   end
 
-  @required_fields ~w(accountId type name )
-  @optional_fields ~w(description active)
-
   @doc """
   Creates a changeset based on the `model` and `params`.
 
@@ -24,6 +21,6 @@ defmodule KlziiChat.Topic do
   """
   def changeset(model, params \\ %{}) do
     model
-    |> cast(params, (@required_fields ++  @optional_fields))
+    |> cast(params, [])
   end
 end

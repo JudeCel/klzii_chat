@@ -10,9 +10,6 @@ defmodule KlziiChat.User do
     timestamps [inserted_at: :createdAt, updated_at: :updatedAt]
   end
 
-  @required_fields ~w(email)
-  @optional_fields ~w()
-
   @doc """
   Creates a changeset based on the `model` and `params`.
 
@@ -22,10 +19,5 @@ defmodule KlziiChat.User do
   def changeset(model, params \\ %{}) do
     model
     |> cast(params, (@required_fields ++  @optional_fields))
-  end
-
-  def seedChangeset(model, params \\ %{}) do
-    model
-    |> cast(params, ~w(email encryptedPassword), @optional_fields)
   end
 end
