@@ -5,6 +5,7 @@ defmodule KlziiChat.SubscriptionPlan do
     This Mode is read only!
     Not use for insert!
   """
+  
   schema "SubscriptionPlans" do
     field :sessionCount, :integer
     field :contactListCount, :integer
@@ -30,10 +31,5 @@ defmodule KlziiChat.SubscriptionPlan do
     field :surveyCount, :integer
     field :chargebeePlanId, :string
     timestamps [inserted_at: :createdAt, updated_at: :updatedAt]
-  end
-
-  def changeset(model, params \\ %{}) do
-    model
-    |> cast(params, [])
   end
 end

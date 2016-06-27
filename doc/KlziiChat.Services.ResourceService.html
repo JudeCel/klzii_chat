@@ -4,9 +4,9 @@
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="generator" content="ExDoc v0.11.5">
+    <meta name="generator" content="ExDoc v0.12.0">
     <title>KlziiChat.Services.ResourceService – klzii_chat v0.0.1</title>
-    <link rel="stylesheet" href="dist/app-ddd9717ad9.css" />
+    <link rel="stylesheet" href="dist/app-88251e7c81.css" />
     
     <script src="dist/sidebar_items.js"></script>
   </head>
@@ -17,9 +17,6 @@
   <i class="icon-menu"></i>
 </button>
 <section class="sidebar">
-  <button class="sidebar-toggle">
-    <i class="icon-menu"></i>
-  </button>
 
   
   <a href="api-reference.html" class="sidebar-projectLink">
@@ -56,7 +53,8 @@
 </section>
 
 <section class="content">
-  <div id="content" class="content-inner">
+  <div class="content-outer">
+    <div id="content" class="content-inner">
 
 
       <h1>
@@ -152,7 +150,8 @@
       <i class="icon-link"></i>
     </a>
     <span class="signature">create_new_zip(account_user_id, name, ids)</span>
-      
+    
+    
   </div>
   
     <div class="specs">
@@ -160,7 +159,7 @@
       <div class="specs-list">
         
           <pre><code class="elixir">create_new_zip(<a href="http://elixir-lang.org/docs/stable/elixir/Integer.html#t:t/0">Integer.t</a>, <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>, <a href="http://elixir-lang.org/docs/stable/elixir/List.html#t:t/0">List.t</a>) ::
-  {:ok, %KlziiChat.Resource{__meta__: term, account: term, accountId: term, accountUserId: term, account_user: term, audio: term, createdAt: term, expiryDate: term, file: term, id: term, image: term, link: term, name: term, private: term, properties: term, scope: term, status: term, type: term, updatedAt: term, video: term}} |
+  {:ok, %KlziiChat.Resource{__meta__: term, account: term, accountId: term, accountUserId: term, account_user: term, audio: term, createdAt: term, expiryDate: term, file: term, id: term, image: term, link: term, name: term, properties: term, scope: term, status: term, type: term, updatedAt: term, video: term}} |
   %{status: :error, reason: <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>}</code></pre>
         
       </div>
@@ -176,7 +175,8 @@
       <i class="icon-link"></i>
     </a>
     <span class="signature">daily_cleanup()</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
@@ -189,7 +189,8 @@
       <i class="icon-link"></i>
     </a>
     <span class="signature">deleteByIds(account_user_id, ids)</span>
-      
+    
+    
   </div>
   
     <div class="specs">
@@ -197,7 +198,7 @@
       <div class="specs-list">
         
           <pre><code class="elixir">deleteByIds(<a href="http://elixir-lang.org/docs/stable/elixir/Integer.html#t:t/0">Integer.t</a>, <a href="http://elixir-lang.org/docs/stable/elixir/List.html#t:t/0">List.t</a>) ::
-  {:ok, %KlziiChat.Resource{__meta__: term, account: term, accountId: term, accountUserId: term, account_user: term, audio: term, createdAt: term, expiryDate: term, file: term, id: term, image: term, link: term, name: term, private: term, properties: term, scope: term, status: term, type: term, updatedAt: term, video: term}} |
+  {:ok, %KlziiChat.Resource{__meta__: term, account: term, accountId: term, accountUserId: term, account_user: term, audio: term, createdAt: term, expiryDate: term, file: term, id: term, image: term, link: term, name: term, properties: term, scope: term, status: term, type: term, updatedAt: term, video: term}} |
   {:error, <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>}</code></pre>
         
       </div>
@@ -213,7 +214,8 @@
       <i class="icon-link"></i>
     </a>
     <span class="signature">find(account_user_id, id)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
@@ -226,7 +228,8 @@
       <i class="icon-link"></i>
     </a>
     <span class="signature">get(account_user_id, type)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
@@ -239,7 +242,8 @@
       <i class="icon-link"></i>
     </a>
     <span class="signature">save_resource(map, account_user)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
@@ -252,7 +256,8 @@
       <i class="icon-link"></i>
     </a>
     <span class="signature">upload(params, account_user_id)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
@@ -266,23 +271,24 @@
       
 
       
-        <footer class="footer">
-      <p>
-        <span class="line">
-          Built using
-          <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" rel="help" target="_blank">ExDoc</a> (v0.11.5),
-        </span>
-        <span class="line">
-          designed by
-          <a href="https://twitter.com/dignifiedquire" target="_blank" title="@dignifiedquire">Friedel Ziegelmayer</a>.
+          <footer class="footer">
+        <p>
+          <span class="line">
+            Built using
+            <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" rel="help" target="_blank">ExDoc</a> (v0.12.0),
           </span>
-      </p>
-      <button class="night-mode-toggle" />
-    </footer>
+          <span class="line">
+            designed by
+            <a href="https://twitter.com/dignifiedquire" target="_blank" title="@dignifiedquire">Friedel Ziegelmayer</a>.
+            </span>
+        </p>
+        <button class="night-mode-toggle" />
+      </footer>
+    </div>
   </div>
 </section>
 </div>
-  <script src="dist/app-918614602f.js"></script>
+  <script src="dist/app-21f1a20b9e.js"></script>
   </body>
 </html>
 

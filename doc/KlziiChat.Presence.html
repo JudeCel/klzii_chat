@@ -4,9 +4,9 @@
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="generator" content="ExDoc v0.11.5">
+    <meta name="generator" content="ExDoc v0.12.0">
     <title>KlziiChat.Presence – klzii_chat v0.0.1</title>
-    <link rel="stylesheet" href="dist/app-ddd9717ad9.css" />
+    <link rel="stylesheet" href="dist/app-88251e7c81.css" />
     
     <script src="dist/sidebar_items.js"></script>
   </head>
@@ -17,9 +17,6 @@
   <i class="icon-menu"></i>
 </button>
 <section class="sidebar">
-  <button class="sidebar-toggle">
-    <i class="icon-menu"></i>
-  </button>
 
   
   <a href="api-reference.html" class="sidebar-projectLink">
@@ -56,7 +53,8 @@
 </section>
 
 <section class="content">
-  <div id="content" class="content-inner">
+  <div class="content-outer">
+    <div id="content" class="content-inner">
 
 
       <h1>
@@ -88,17 +86,11 @@
     <a href="#fetch/2">fetch(topic, presences)</a>
   </div>
   
-    <div class="summary-synopsis"><p>Callback implementation for <code class="inline">c:Phoenix.Presence.fetch/2</code></p>
-</div>
-  
 </div>
 <div class="summary-row">
   <div class="summary-signature">
     <a href="#handle_diff/2">handle_diff(diff, state)</a>
   </div>
-  
-    <div class="summary-synopsis"><p>Callback implementation for <code class="inline">c:Phoenix.Presence.handle_diff/2</code></p>
-</div>
   
 </div>
 <div class="summary-row">
@@ -106,17 +98,11 @@
     <a href="#init/1">init(opts)</a>
   </div>
   
-    <div class="summary-synopsis"><p>Callback implementation for <code class="inline">c:Phoenix.Presence.init/1</code></p>
-</div>
-  
 </div>
 <div class="summary-row">
   <div class="summary-signature">
     <a href="#list/1">list(topic)</a>
   </div>
-  
-    <div class="summary-synopsis"><p>Callback implementation for <code class="inline">c:Phoenix.Presence.list/1</code></p>
-</div>
   
 </div>
 <div class="summary-row">
@@ -124,17 +110,11 @@
     <a href="#start_link/1">start_link(opts \\ [])</a>
   </div>
   
-    <div class="summary-synopsis"><p>Callback implementation for <code class="inline">c:Phoenix.Presence.start_link/1</code></p>
-</div>
-  
 </div>
 <div class="summary-row">
   <div class="summary-signature">
     <a href="#track/3">track(socket, key, meta)</a>
   </div>
-  
-    <div class="summary-synopsis"><p>Callback implementation for <code class="inline">c:Phoenix.Presence.track/3</code></p>
-</div>
   
 </div>
 <div class="summary-row">
@@ -142,17 +122,11 @@
     <a href="#track/4">track(pid, topic, key, meta)</a>
   </div>
   
-    <div class="summary-synopsis"><p>Callback implementation for <code class="inline">c:Phoenix.Presence.track/4</code></p>
-</div>
-  
 </div>
 <div class="summary-row">
   <div class="summary-signature">
     <a href="#untrack/2">untrack(socket, key)</a>
   </div>
-  
-    <div class="summary-synopsis"><p>Callback implementation for <code class="inline">c:Phoenix.Presence.untrack/2</code></p>
-</div>
   
 </div>
 <div class="summary-row">
@@ -160,26 +134,17 @@
     <a href="#untrack/3">untrack(pid, topic, key)</a>
   </div>
   
-    <div class="summary-synopsis"><p>Callback implementation for <code class="inline">c:Phoenix.Presence.untrack/3</code></p>
-</div>
-  
 </div>
 <div class="summary-row">
   <div class="summary-signature">
     <a href="#update/3">update(socket, key, meta)</a>
   </div>
   
-    <div class="summary-synopsis"><p>Callback implementation for <code class="inline">c:Phoenix.Presence.update/3</code></p>
-</div>
-  
 </div>
 <div class="summary-row">
   <div class="summary-signature">
     <a href="#update/4">update(pid, topic, key, meta)</a>
   </div>
-  
-    <div class="summary-synopsis"><p>Callback implementation for <code class="inline">c:Phoenix.Presence.update/4</code></p>
-</div>
   
 </div>
 
@@ -209,12 +174,12 @@
       <i class="icon-link"></i>
     </a>
     <span class="signature">fetch(topic, presences)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
-    <p>Callback implementation for <code class="inline">c:Phoenix.Presence.fetch/2</code>.</p>
-
+    
   </section>
 </div>
 <div class="detail" id="handle_diff/2">
@@ -223,12 +188,12 @@
       <i class="icon-link"></i>
     </a>
     <span class="signature">handle_diff(diff, state)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
-    <p>Callback implementation for <code class="inline">c:Phoenix.Presence.handle_diff/2</code>.</p>
-
+    
   </section>
 </div>
 <div class="detail" id="init/1">
@@ -237,12 +202,12 @@
       <i class="icon-link"></i>
     </a>
     <span class="signature">init(opts)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
-    <p>Callback implementation for <code class="inline">c:Phoenix.Presence.init/1</code>.</p>
-
+    
   </section>
 </div>
 <div class="detail" id="list/1">
@@ -251,12 +216,12 @@
       <i class="icon-link"></i>
     </a>
     <span class="signature">list(topic)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
-    <p>Callback implementation for <code class="inline">c:Phoenix.Presence.list/1</code>.</p>
-
+    
   </section>
 </div>
 <div class="detail" id="start_link/1">
@@ -265,12 +230,12 @@
       <i class="icon-link"></i>
     </a>
     <span class="signature">start_link(opts \\ [])</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
-    <p>Callback implementation for <code class="inline">c:Phoenix.Presence.start_link/1</code>.</p>
-
+    
   </section>
 </div>
 <div class="detail" id="track/3">
@@ -279,12 +244,12 @@
       <i class="icon-link"></i>
     </a>
     <span class="signature">track(socket, key, meta)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
-    <p>Callback implementation for <code class="inline">c:Phoenix.Presence.track/3</code>.</p>
-
+    
   </section>
 </div>
 <div class="detail" id="track/4">
@@ -293,12 +258,12 @@
       <i class="icon-link"></i>
     </a>
     <span class="signature">track(pid, topic, key, meta)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
-    <p>Callback implementation for <code class="inline">c:Phoenix.Presence.track/4</code>.</p>
-
+    
   </section>
 </div>
 <div class="detail" id="untrack/2">
@@ -307,12 +272,12 @@
       <i class="icon-link"></i>
     </a>
     <span class="signature">untrack(socket, key)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
-    <p>Callback implementation for <code class="inline">c:Phoenix.Presence.untrack/2</code>.</p>
-
+    
   </section>
 </div>
 <div class="detail" id="untrack/3">
@@ -321,12 +286,12 @@
       <i class="icon-link"></i>
     </a>
     <span class="signature">untrack(pid, topic, key)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
-    <p>Callback implementation for <code class="inline">c:Phoenix.Presence.untrack/3</code>.</p>
-
+    
   </section>
 </div>
 <div class="detail" id="update/3">
@@ -335,12 +300,12 @@
       <i class="icon-link"></i>
     </a>
     <span class="signature">update(socket, key, meta)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
-    <p>Callback implementation for <code class="inline">c:Phoenix.Presence.update/3</code>.</p>
-
+    
   </section>
 </div>
 <div class="detail" id="update/4">
@@ -349,12 +314,12 @@
       <i class="icon-link"></i>
     </a>
     <span class="signature">update(pid, topic, key, meta)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
-    <p>Callback implementation for <code class="inline">c:Phoenix.Presence.update/4</code>.</p>
-
+    
   </section>
 </div>
 
@@ -364,23 +329,24 @@
       
 
       
-        <footer class="footer">
-      <p>
-        <span class="line">
-          Built using
-          <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" rel="help" target="_blank">ExDoc</a> (v0.11.5),
-        </span>
-        <span class="line">
-          designed by
-          <a href="https://twitter.com/dignifiedquire" target="_blank" title="@dignifiedquire">Friedel Ziegelmayer</a>.
+          <footer class="footer">
+        <p>
+          <span class="line">
+            Built using
+            <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" rel="help" target="_blank">ExDoc</a> (v0.12.0),
           </span>
-      </p>
-      <button class="night-mode-toggle" />
-    </footer>
+          <span class="line">
+            designed by
+            <a href="https://twitter.com/dignifiedquire" target="_blank" title="@dignifiedquire">Friedel Ziegelmayer</a>.
+            </span>
+        </p>
+        <button class="night-mode-toggle" />
+      </footer>
+    </div>
   </div>
 </section>
 </div>
-  <script src="dist/app-918614602f.js"></script>
+  <script src="dist/app-21f1a20b9e.js"></script>
   </body>
 </html>
 

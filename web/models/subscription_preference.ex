@@ -9,9 +9,4 @@ defmodule KlziiChat.SubscriptionPreference do
     field :data, :map
     timestamps [inserted_at: :createdAt, updated_at: :updatedAt]
   end
-
-  def changeset(model, params \\ %{}) do
-    model
-    |> cast(params, [])
-  end
 end
