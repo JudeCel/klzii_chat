@@ -131,6 +131,7 @@ defmodule KlziiChat.Services.SessionReportingService do
     |> Repo.update()
   end
 
+
   def get_session_topics_reports(session_id, session_member_id) do
     {:ok, session_member} = get_session_member(session_member_id)
     if SessionReportingPermissions.can_get_reports(session_member) do
@@ -144,31 +145,41 @@ defmodule KlziiChat.Services.SessionReportingService do
     end
   end
 
-  def delete_session_topic_report(report_id, session_member_id) do
-    {:ok, session_member} = get_session_member(session_member_id)
-    if SessionReportingPermissions.can_delete_report(session_member) do
-      delete_report(report_id, session_member.accountUserId)
-    else
-      {:error, "Action not allowed!"}
-    end
+
+  def check_report_delete_permision(session_member) do
+    if SessionReportingPermissions.can_delete_report(session_member), do: :ok, else: {:error, "Action not allowed!"}
   end
 
-  def delete_report(report_id, account_user_id) do
-    case Repo.get(SessionTopicReport, report_id) do
-      nil ->
-        {:error, "Session Topic Report not found"}
-      report ->
-        if report.resourceId != nil, do: Task.start(fn -> ResourceService.deleteByIds(account_user_id, [report.resourceId]) end)
-        case report.status do
-          "failed" -> Ecto.Changeset.change(report, deletedAt: Ecto.DateTime.utc(), resourceId: nil) |> Repo.update()
-          _ -> Repo.delete(report)
-        end
+  def delete_session_topic_report(report_id, session_member_id) do
+    with  {:ok, session_member} <- get_session_member(session_member_id),
+          :ok <- check_report_delete_permision(session_member),
+          report = Repo.get(SessionTopicReport, report_id),
+          {ok, deleted_report} <- check_delete_session_topic_report(report, session_member.accountUserId),
+    do:   {ok, deleted_report}
+  end
+
+  def check_delete_session_topic_report(nil, _), do: {:error, "Session Topic Report not found"}
+
+  def check_delete_session_topic_report(report, account_user_id) do
+    delete_resource_async(account_user_id, report.resourceId)
+    delete_report(report)
+  end
+
+  def delete_resource_async(account_user_id, resource_id) do
+    unless is_nil(resource_id), do: Task.start(fn -> ResourceService.deleteByIds(account_user_id, [resource_id]) end)
+  end
+
+  def delete_report(report) do
+    case report.status do
+      "failed" -> Ecto.Changeset.change(report, deletedAt: Ecto.DateTime.utc(), resourceId: nil) |> Repo.update()
+      _ -> Repo.delete(report)
     end
   end
+  
 
   def recreate_session_topic_report(report_id, session_member_id) do
-    with {:ok, session_member} <- get_session_member(session_member_id),
-         {:ok, report} <- delete_report(report_id, session_member.accountUserId),
-    do:  create_session_topic_report(report.sessionId, session_member_id, report.sessionTopicId, String.to_atom(report.format), String.to_atom(report.type), report.facilitator)
+    with  {:ok, report} <- delete_session_topic_report(report_id, session_member_id),
+          {:ok, new_report} <- create_session_topic_report(report.sessionId, session_member_id, report.sessionTopicId, String.to_atom(report.format), String.to_atom(report.type), report.facilitator),
+    do:   {:ok, new_report}
   end
 end

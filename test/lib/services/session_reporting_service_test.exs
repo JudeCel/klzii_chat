@@ -4,6 +4,7 @@ defmodule KlziiChat.Services.SessionReportingServiceTest do
   alias KlziiChat.Services.SessionReportingService
 
   @report_prefix "ReportingService_test_report"
+  @db_wait 500
 
   setup %{session: session, session_topic_1: session_topic_1, facilitator: facilitator, participant: participant} do
     Ecto.build_assoc(
@@ -114,7 +115,7 @@ defmodule KlziiChat.Services.SessionReportingServiceTest do
     {:ok, [db_report]} = SessionReportingService.get_session_topics_reports(session.id, facilitator.id)
     assert(db_report.id == report.id)
     assert(db_report.status == "completed")
-    assert(db_report.resourceId != nil)
+    refute(is_nil(db_report.resourceId))
   end
 
   test "Create Report Async is updating session topics reports record with failed status", %{session: session, session_topic: session_topic, facilitator: facilitator} do
@@ -131,13 +132,13 @@ defmodule KlziiChat.Services.SessionReportingServiceTest do
     {:ok, report} = SessionReportingService.create_session_topic_report(session.id, facilitator.id, session_topic.id, :csv, :all, :true)
 
     assert(report.status == "progress")
-    assert(report.resourceId == nil)
-    :timer.sleep(500)
+    assert(is_nil(report.resourceId))
+    :timer.sleep(@db_wait)
 
     {:ok, [db_report]} = SessionReportingService.get_session_topics_reports(session.id, facilitator.id)
     assert(db_report.id == report.id)
     assert(db_report.status == "completed")
-    assert(db_report.resourceId != nil)
+    refute(is_nil(db_report.resourceId))
   end
 
   test "Error Creating session topic report with wrong permission", %{session: session, session_topic: session_topic, participant: participant} do
@@ -202,23 +203,36 @@ defmodule KlziiChat.Services.SessionReportingServiceTest do
     assert({:ok, [%{status: "completed"}]} = SessionReportingService.get_session_topics_reports(session.id, facilitator.id))
   end
 
-
   test "Error getting all session topics reports with incorrect permission", %{session: session, participant: participant} do
     assert({:error, "Action not allowed!"} = SessionReportingService.get_session_topics_reports(session.id, participant.id))
   end
 
-  test "Delete report with normal status - report deleted", %{session: session, session_topic: session_topic, facilitator: facilitator}  do
+  test "Check report delete permision", %{facilitator: facilitator, participant: participant} do
+    assert(:ok == SessionReportingService.check_report_delete_permision(facilitator))
+    assert({:error, "Action not allowed!"} == SessionReportingService.check_report_delete_permision(participant))
+  end
+
+  test "Delete resource async", %{session: session, session_topic: session_topic, facilitator: facilitator} do
+    {:ok, _} = SessionReportingService.create_session_topic_report(session.id, facilitator.id, session_topic.id, :txt, :all, true)
+    :timer.sleep(@db_wait)
+    {:ok, [%{resourceId: resource_id}]} = SessionReportingService.get_session_topics_reports(session.id, facilitator.id)
+    SessionReportingService.delete_resource_async(facilitator.accountUserId, resource_id)
+    :timer.sleep(@db_wait)
+    {:ok, [%{resourceId: nil}]} = SessionReportingService.get_session_topics_reports(session.id, facilitator.id)
+  end
+
+  test "Delete report with completed status - report record is actually deleted", %{session: session, session_topic: session_topic, facilitator: facilitator} do
     {:ok, report} = SessionReportingService.create_session_topics_reports_record(session.id, session_topic.id, :all, true, :pdf)
-    {:ok, deleted_report} = SessionReportingService.delete_report(report.id, facilitator.accountUserId)
+    {:ok, deleted_report} = SessionReportingService.delete_report(report)
 
     assert(report.id == deleted_report.id)
     assert({:ok, []} == SessionReportingService.get_session_topics_reports(session.id, facilitator.id))
   end
 
-  test "Delete report with failed status - report is NOT deleted, deletedAt field set", %{session: session, session_topic: session_topic, facilitator: facilitator}  do
+  test "Delete report with failed status - report record is NOT deleted, deletedAt field set", %{session: session, session_topic: session_topic}  do
     {:ok, report} = SessionReportingService.create_session_topics_reports_record(session.id, session_topic.id, :all, true, :pdf)
     {:ok, report} = SessionReportingService.update_session_topics_reports_record({:error, "some error message"}, report.id)
-    {:ok, failed_report} = SessionReportingService.delete_report(report.id, facilitator.accountUserId)
+    {:ok, failed_report} = SessionReportingService.delete_report(report)
 
     query = from(str in SessionTopicReport, where: str.sessionId == ^session.id)
     [db_report] = Repo.all(query)
@@ -227,11 +241,21 @@ defmodule KlziiChat.Services.SessionReportingServiceTest do
     assert(failed_report.id == db_report.id)
     assert(db_report.status == "failed")
     assert(db_report.message == "some error message")
-    assert(db_report.deletedAt != nil)
+    refute(is_nil(db_report.deletedAt))
   end
 
-  test "Error deleting report with wrong id", %{facilitator: facilitator}  do
-    assert({:error, "Session Topic Report not found"} == SessionReportingService.delete_report(123, facilitator.accountUserId))
+  test "Can't delete non-existent report", %{facilitator: facilitator} do
+    SessionReportingService.check_delete_session_topic_report(nil, facilitator.accountUserId)
+  end
+
+  test "Can delete report with resource", %{session: session, session_topic: session_topic, facilitator: facilitator} do
+    {:ok, report} = SessionReportingService.create_session_topic_report(session.id, facilitator.id, session_topic.id, :txt, :all, true)
+    :timer.sleep(@db_wait)
+
+    SessionReportingService.check_delete_session_topic_report(report, facilitator.accountUserId)
+    :timer.sleep(@db_wait)
+
+    assert({:ok, []} == SessionReportingService.get_session_topics_reports(session.id, facilitator.id))
   end
 
   test "Delete session topics report", %{session: session, session_topic: session_topic, facilitator: facilitator} do
@@ -263,7 +287,7 @@ defmodule KlziiChat.Services.SessionReportingServiceTest do
      assert(new_report.status == "progress")
      assert(new_report.message == nil)
      assert(new_report_id != report_id)
-     :timer.sleep(500)
+     :timer.sleep(@db_wait)
 
      query = from(str in SessionTopicReport, where: str.sessionId == ^session.id)
      [%{id: ^report_id, status: "failed", deletedAt: deleted_at}, %{id: ^new_report_id, status: "completed"}] = Repo.all(query)
