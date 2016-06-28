@@ -6,7 +6,8 @@ td.bottom_border{
   border-bottom: 2pt solid gray;
 }
 
-td.svg_holder {
+td.img_holder {
+  vertical-align: top;
   width: 1%;
   white-space: nowrap;
 }
@@ -19,7 +20,7 @@ td.time {
   color: red;
 }
 
-.shadow {
-  -webkit-filter:	drop-shadow(1px 1px 1px rgba(0,0,0,0.25));
-	filter:	drop-shadow(1px 1px 1px rgba(0,0,0,0.25));
+img.emoticon {
+  height: auto;
+  width: 80px;
 }

@@ -1,4 +1,4 @@
-<% %{emoticon_size: [emoticon_width, emoticon_height]} = @emoticon_parameters %>
+<% img_path = @emoticons.path%>
 
 <table>
   <%= Enum.map(@messages, fn(%{session_member: %{username: username, role: role}, body: body,
@@ -9,7 +9,7 @@
       <td class="bottom_border" colspan="2"></td>
     </tr>
     <tr>
-      <td class="svg_holder" rowspan="2"><svg class="svg-#{emotion} shadow" width="#{emoticon_width}" height="#{emoticon_height}"></svg></td>
+      <td class="img_holder" rowspan="2"><img class="emoticon" src="#{img_path}/#{@emoticons[emotion]}"></td>
       <td class="name #{role}">#{username}</td>
       <td class="time #{role}">#{Ecto.DateTime.to_string(createdAt)}</td>
     </tr>

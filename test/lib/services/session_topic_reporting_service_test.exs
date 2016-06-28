@@ -3,7 +3,14 @@ defmodule KlziiChat.Services.SessionTopicReportingServiceTest do
   alias KlziiChat.Services.{SessionTopicReportingService, SessionTopicService, FileService}
   alias KlziiChat.Helpers.HTMLSessionTopicReportHelper
 
-  @emoticon_parameters %{emoticons_qnt: 7, sprites_qnt: 6, emoticon_size: [55, 55], selected_emoticon: 3}
+  @emoticons %{0 => "0_sprite_04.jpg",
+               1 => "1_sprite_04.jpg",
+               2 => "2_sprite_01.jpg",
+               3 => "3_sprite_03.jpg",
+               4 => "4_sprite_03.jpg",
+               5 => "5_sprite_01.jpg",
+               6 => "6_sprite_06.jpg",
+               path: Path.expand("./web/static/assets/images/emotions_static")}
 
   setup %{session: session, session_topic_1: session_topic_1, facilitator: facilitator, participant: participant} do
     {:ok, create_date1} = Ecto.DateTime.cast("2016-05-20T09:50:00Z")
@@ -68,7 +75,7 @@ defmodule KlziiChat.Services.SessionTopicReportingServiceTest do
     html_from_template = HTMLSessionTopicReportHelper.html_from_template(%{
       header: "#{session.name} : #{session_topic.name}",
       messages: messages,
-      emoticon_parameters: @emoticon_parameters
+      emoticons: @emoticons
     })
 
     assert(html_text == html_from_template)

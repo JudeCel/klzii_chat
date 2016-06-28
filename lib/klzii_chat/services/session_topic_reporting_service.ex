@@ -6,7 +6,14 @@ defmodule KlziiChat.Services.SessionTopicReportingService do
 
   import KlziiChat.Helpers.StringHelper, only: [double_quote: 1]
 
-  @emoticon_parameters %{emoticons_qnt: 7, sprites_qnt: 6, emoticon_size: [55, 55], selected_emoticon: 3}
+  @emoticons %{0 => "0_sprite_04.jpg",
+               1 => "1_sprite_04.jpg",
+               2 => "2_sprite_01.jpg",
+               3 => "3_sprite_03.jpg",
+               4 => "4_sprite_03.jpg",
+               5 => "5_sprite_01.jpg",
+               6 => "6_sprite_06.jpg",
+               path: Path.expand("./web/static/assets/images/emotions_static")}
 
   @spec save_report(String.t, atom, integer, boolean, boolean) :: {:ok, String.t}
   def save_report(report_name, report_format, session_topic_id, filter_star, include_facilitator) do
@@ -56,7 +63,7 @@ defmodule KlziiChat.Services.SessionTopicReportingService do
     HTMLSessionTopicReportHelper.html_from_template(%{
       header: "#{session_name} : #{session_topic_name}",
       messages: messages,
-      emoticon_parameters: @emoticon_parameters
+      emoticons: @emoticons
     })
   end
 end

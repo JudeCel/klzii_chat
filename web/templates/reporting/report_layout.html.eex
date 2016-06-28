@@ -11,12 +11,7 @@
     <h3><%= @header %></h3>
 
     <%=
-      html_table_from_template(%{messages: @messages, emoticon_parameters: @emoticon_parameters})
+      html_table_from_template(%{messages: @messages, emoticons: @emoticons})
     %>
-
-    <%=
-      html_emoticon_script_from_template(%{emoticon_parameters: @emoticon_parameters})
-    %>
-
   </body>
 </html>
