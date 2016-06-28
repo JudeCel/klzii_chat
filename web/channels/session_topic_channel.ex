@@ -125,6 +125,16 @@ defmodule KlziiChat.SessionTopicChannel do
     end
   end
 
+  def handle_in("enable_pinboard", _, socket) do
+    case ConsoleService.enable_pinboard(get_session_member(socket).id, socket.assigns.session_topic_id) do
+      {:ok, console} ->
+        broadcast! socket, "console",  ConsoleView.render("show.json", %{console: console})
+        {:reply, :ok, socket}
+      {:error, reason} ->
+        {:error, %{reason: reason}}
+    end
+  end
+
   def handle_in("set_console_mini_survey", %{"id" => id}, socket) do
     case ConsoleService.set_mini_survey(get_session_member(socket).id, socket.assigns.session_topic_id, id) do
       {:ok, console} ->

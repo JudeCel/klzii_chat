@@ -26,6 +26,18 @@ defmodule KlziiChat.Services.ConsoleService do
     end
   end
 
+  @spec enable_pinboard(Integer, Integer) :: {:ok, %Console{}} | {:error, String.t}
+  def set_resource(member_id, session_topic_id) do
+    session_member = Repo.get!(SessionMember, member_id)
+    if ConsolePermissions.can_enable_pinboard(session_member) do
+      {:ok, console} = get(session_member.sessionId, session_topic_id)
+      set_id_by_type(resource_id, :resource)
+      |> update_console(console)
+    else
+      {:error, "Action not allowed!"}
+    end
+  end
+
   def tidy_up(consoles, type, session_member_id) do
     Enum.each(consoles, fn console ->
       {:ok, new_console} = remove(session_member_id, console.sessionTopicId, type)

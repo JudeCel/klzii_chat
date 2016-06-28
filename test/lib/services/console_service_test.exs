@@ -9,7 +9,7 @@ defmodule KlziiChat.Services.ConsoleServiceTest do
       account_user.account, :resources,
       accountUserId: account_user.id,
       name: "test image 1",
-      type: "image",
+      type: "video",
       scope: "collage"
     ) |> Repo.insert!
 
@@ -58,13 +58,6 @@ defmodule KlziiChat.Services.ConsoleServiceTest do
     image_id = Map.get(console, String.to_atom(resource.type <> "Id"))
     assert(image_id == resource.id)
     assert(%Console{} = console )
-  end
-
-  test "remove resource ", %{facilitator: facilitator, session_topic_1: session_topic_1, resource: resource} do
-    {:ok, _} = ConsoleService.set_resource(facilitator.id, session_topic_1, resource.id)
-    {:ok, console} = ConsoleService.remove(facilitator.id, session_topic_1, "image")
-    Map.get(console, String.to_atom(resource.type <> "Id"))
-    |> is_nil |> assert
   end
 
   test "add resource #youtube", %{facilitator: facilitator, session_topic_1: session_topic_1, youtube_resource: resource} do

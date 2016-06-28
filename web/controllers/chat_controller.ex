@@ -32,8 +32,8 @@ defmodule KlziiChat.ChatController do
 
   def index(conn, _) do
     if chat_token = conn.cookies["chat_token"] do
-      put_resp_cookie(conn, "chat_token", Guardian.Plug.current_token(conn), max_age: get_cookie_espire_time())
-      |> render("index.html", token: chat_token)
+      put_resp_cookie(conn, "chat_token", chat_token, max_age: get_cookie_espire_time())
+      |> render("index.html")
     else
       send_resp(conn, 401, Poison.encode!(%{error: "unauthorized"}))
       |> halt
