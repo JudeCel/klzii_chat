@@ -3,6 +3,14 @@ defmodule KlziiChat.Services.ConsoleService do
   alias KlziiChat.Services.Permissions.Console, as: ConsolePermissions
   import Ecto
 
+  @spec error_messages :: Map.t
+  def error_messages do
+    %{
+      action_not_allowed:  "Action not allowed!"
+    }
+  end
+
+
   @spec get(Integer, Integer) ::  {:ok, %Console{}}
   def get(_, session_topic_id) do
     session_topic = Repo.get!(SessionTopic, session_topic_id) |> Repo.preload([:console])
@@ -22,19 +30,19 @@ defmodule KlziiChat.Services.ConsoleService do
       set_id_by_type(resource_id, :resource)
       |> update_console(console)
     else
-      {:error, "Action not allowed!"}
+      {:error, errors_messages.action_not_allowed}
     end
   end
 
   @spec enable_pinboard(Integer, Integer) :: {:ok, %Console{}} | {:error, String.t}
-  def set_resource(member_id, session_topic_id) do
+  def enable_pinboard(member_id, session_topic_id) do
     session_member = Repo.get!(SessionMember, member_id)
     if ConsolePermissions.can_enable_pinboard(session_member) do
       {:ok, console} = get(session_member.sessionId, session_topic_id)
       set_id_by_type(resource_id, :resource)
       |> update_console(console)
     else
-      {:error, "Action not allowed!"}
+      {:error, errors_messages.action_not_allowed}
     end
   end
 
@@ -54,7 +62,7 @@ defmodule KlziiChat.Services.ConsoleService do
       set_id_by_type(mini_survey_id, :mini_survey)
       |> update_console(console)
     else
-      {:error, "Action not allowed!"}
+      {:error, errors_messages.action_not_allowed}
     end
   end
 
@@ -66,7 +74,7 @@ defmodule KlziiChat.Services.ConsoleService do
       remove_id_by_type(type)
       |> update_console(console)
     else
-      {:error, "Action not allowed!"}
+      {:error, errors_messages.action_not_allowed}
     end
   end
 
