@@ -72,8 +72,9 @@ const ChatView = React.createClass({
 
               <div className='row'>
                 <div className='col-md-8'>
-                  <div className='row'>
+                  <div className='row top-row'>
                     <Facilitator />
+                    <WhiteboardCanvas member={ this.props }/>
                   </div>
 
                   <div className='row'>
@@ -84,7 +85,7 @@ const ChatView = React.createClass({
                 <div className='col-md-4'>
                   <Messages/>
                 </div>
-                <WhiteboardCanvas member={ this.props }/>
+
                 <div className='col-md-12'>
                   <Input/>
                 </div>

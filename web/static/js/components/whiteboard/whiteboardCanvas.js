@@ -7,6 +7,7 @@ import { connect }          from 'react-redux';
 require("./drawControlls");
 import undoHistoryFactory  from './actionHistory';
 import mixins             from '../../mixins';
+import ReactDOM                 from 'react-dom';
 
 const WhiteboardCanvas = React.createClass({
   mixins: [mixins.validations],
@@ -18,9 +19,6 @@ const WhiteboardCanvas = React.createClass({
     this.MIN_HEIGHT = 153;
     this.MAX_WIDTH = 950;
     this.MAX_HEIGHT = 460;
-    this.WHITEBOARD_BORDER_COLOUR = '#a4918b';
-    this.WHITEBOARD_BACKGROUND_COLOUR = '#e1d8d8';
-    this.WHITEBOARD_CANVAS_BORDER_COLOUR = '#ffc973';
     this.ModeEnum = {
       none: 0,
       rectangle: 1,
@@ -681,47 +679,22 @@ const WhiteboardCanvas = React.createClass({
     const { show, onHide, boardContent, channel } = this.props;
     // not render if not set channel
     if (!channel) { return false }
+    let whiteboard = ReactDOM.findDOMNode(this);
+    let newScale = this.minimized && whiteboard ? (whiteboard.scrollHeight)/(this.MAX_HEIGHT+50) : 1.0;
+    let newScale2 = this.minimized && whiteboard ? (whiteboard.scrollWidth)/(this.MAX_WIDTH+50) : 1.0;
+    let scaleString = `scale(${newScale2}, ${newScale})`;
+    if(whiteboard) {
+      let inlineBox = whiteboard.firstChild;
+      inlineBox.setAttribute("transform", scaleString);
+      console.error(scaleString);
+    }
+
     var self = this;
     var cornerRadius = 5;
     var speed = "0.3s";
     var scale = this.minimized?this.getMinimizedScale():1.0;
     var scaleParam = 'width ' + speed +' ease-in-out, height ' + speed + ' ease-in-out, 0.3s left ease-in-out';
     let left = "calc(50% - " + this.getWidth()/2 + "px)";
-
-    var divStyle = {
-      WebkitTransition: 'all',
-      WebkitTransitionProperty: "left",
-      msTransition: 'all',
-      borderRadius: cornerRadius,
-      position: "absolute",
-      left: left,
-      width: this.getWidth()+'px',
-      height: this.getHeight()+'px',
-      'WebkitTransition': scaleParam,
-      'MozTransition': scaleParam,
-      'OTransition': scaleParam,
-      transition: scaleParam,
-      border: "solid",
-      background: this.WHITEBOARD_BACKGROUND_COLOUR,
-      borderColor: this.WHITEBOARD_BORDER_COLOUR,
-      borderWidth: 1,
-      zIndex: 900,
-      padding: 10 + 'px'
-    };
-
-    var scaleSVGStyle = {
-      'transformOrigin': '0 0',
-      transform: 'scale('+scale+')',
-      transition: 'transform ' + speed + ' ease-in-out',
-      borderRadius: cornerRadius,
-      borderWidth: 1,
-      background: 'white',
-      border: "solid",
-      borderColor: this.WHITEBOARD_CANVAS_BORDER_COLOUR,
-      width: this.MAX_WIDTH - 20/scale + 'px',
-      height: this.MAX_HEIGHT - 20/scale + 'px',
-
-    }
 
     var panelStyle = {
       position: 'absolute',
@@ -741,9 +714,8 @@ const WhiteboardCanvas = React.createClass({
     }
 
     return (
-      <div style={divStyle} className="container">
-        <svg id={ this.getName() }
-          style={scaleSVGStyle}
+      <div id='whiteboard-box' className={ 'whiteboard-section' + (this.minimized ? ' minimized' : ' maximized') }>
+        <svg id={ this.getName() } className='inline-board-section'
           onMouseDown={ this.handleMouseDown }
           onMouseUp={ this.handleMouseUp }
           onMouseMove={ this.handleMouseMove }
