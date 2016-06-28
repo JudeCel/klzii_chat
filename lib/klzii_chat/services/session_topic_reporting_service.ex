@@ -35,7 +35,7 @@ defmodule KlziiChat.Services.SessionTopicReportingService do
     end
   end
 
-  @spec get_stream(:txt, list, String.t, String.t) :: Stream.t
+  @spec get_stream(:txt, List.t, String.t, String.t) :: Stream.t
   def get_stream(:txt, messages, session_name, session_topic_name) do
     stream = Stream.map(messages, fn (%{body: body}) -> "#{body}\r\n\r\n" end)
     header = "#{session_name} / #{session_topic_name}\r\n\r\n"
@@ -43,7 +43,7 @@ defmodule KlziiChat.Services.SessionTopicReportingService do
     Stream.concat([header], stream)
   end
 
-  @spec get_stream(:csv, list, String.t, String.t) :: Stream.t
+  @spec get_stream(:csv, List.t, String.t, String.t) :: Stream.t
   def get_stream(:csv, messages, _, _) do
     stream = Stream.map(messages, &message_csv_filter(&1))
     header = "Name,Comment,Date,Is tagged,Is reply,Emotion\r\n"
@@ -51,6 +51,7 @@ defmodule KlziiChat.Services.SessionTopicReportingService do
     Stream.concat([header], stream)
   end
 
+  @spec message_csv_filter(Map.t) :: String.t
   def message_csv_filter(%{session_member: %{username: username}, body: body, createdAt: createdAt, star: star,
     replyId: replyId, emotion: emotion}) do
     {:ok, emotion_name} = MessageDecorator.emotion_name(emotion)
@@ -58,7 +59,7 @@ defmodule KlziiChat.Services.SessionTopicReportingService do
     ~s(#{double_quote(username)},#{double_quote(body)},#{double_quote(DateTime.to_string(createdAt))},#{to_string(star)},#{to_string(replyId != nil)},#{emotion_name}\r\n)
   end
 
-  @spec get_html(list, String.t, String.t) :: {String.t}
+  @spec get_html(List.t, String.t, String.t) :: {String.t}
   def get_html(messages, session_name, session_topic_name) do
     HTMLSessionTopicReportHelper.html_from_template(%{
       header: "#{session_name} : #{session_topic_name}",

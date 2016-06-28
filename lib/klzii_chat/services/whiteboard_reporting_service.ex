@@ -14,7 +14,7 @@ defmodule KlziiChat.Services.WhiteboardReportingService do
     {:ok, html_file_path}
   end
 
-  @spec get_all_events(integer) :: Map
+  @spec get_all_events(integer) :: List.t
   def get_all_events(session_topic_id) do
     Repo.all(
       from shape in Shape,
