@@ -186,10 +186,17 @@ defmodule KlziiChat.Services.SessionReportingService do
     delete_report(report)
   end
 
-  @spec delete_resource_async(integer, integer) :: {:ok, pid} | no_return
-  def delete_resource_async(account_user_id, resource_id) do
-    unless is_nil(resource_id), do: Task.start(fn -> ResourceService.deleteByIds(account_user_id, [resource_id]) end)
+
+  @spec delete_resource_async(integer, nil) :: no_return
+  def delete_resource_async(_, nil) do
+    nil
   end
+
+  @spec delete_resource_async(integer, integer) :: {:ok, pid}
+  def delete_resource_async(account_user_id, resource_id) do
+    Task.start(fn -> ResourceService.deleteByIds(account_user_id, [resource_id]) end)
+  end
+
 
   @spec delete_report(Map.t) :: {atom, Map.t}
   def delete_report(report) do

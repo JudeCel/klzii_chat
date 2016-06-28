@@ -212,13 +212,17 @@ defmodule KlziiChat.Services.SessionReportingServiceTest do
     assert({:error, "Action not allowed!"} == SessionReportingService.check_report_delete_permision(participant))
   end
 
-  test "Delete resource async", %{session: session, session_topic: session_topic, facilitator: facilitator} do
+  test "Delete resource async - deletes resource if resource_id is not nil", %{session: session, session_topic: session_topic, facilitator: facilitator} do
     {:ok, _} = SessionReportingService.create_session_topic_report(session.id, facilitator.id, session_topic.id, :txt, :all, true)
     :timer.sleep(@db_wait)
     {:ok, [%{resourceId: resource_id}]} = SessionReportingService.get_session_topics_reports(session.id, facilitator.id)
     SessionReportingService.delete_resource_async(facilitator.accountUserId, resource_id)
     :timer.sleep(@db_wait)
     {:ok, [%{resourceId: nil}]} = SessionReportingService.get_session_topics_reports(session.id, facilitator.id)
+  end
+
+  test "Delete resource async - do nothing if resource_id is nil", %{facilitator: facilitator} do
+    assert(is_nil(SessionReportingService.delete_resource_async(facilitator.accountUserId, nil)))
   end
 
   test "Delete report with completed status - report record is actually deleted", %{session: session, session_topic: session_topic, facilitator: facilitator} do
