@@ -1,5 +1,5 @@
 defmodule KlziiChat.Services.MiniSurveysReportingService do
-  alias KlziiChat.{Repo, MiniSurvey, MiniSurveyAnswer, SessionMember, SessionMembersView}
+  alias KlziiChat.{Repo, MiniSurvey, MiniSurveyAnswer, SessionMembersView}
   alias KlziiChat.Helpers.HTMLMiniSurveysReportHelper
   alias KlziiChat.Services.{FileService, SessionTopicService}
   alias KlziiChat.Decorators.MiniSurveyAnswersDecorator
@@ -82,7 +82,7 @@ defmodule KlziiChat.Services.MiniSurveysReportingService do
    })
   end
 
-  @spec format_survey_html(Map.t, boolean) :: List.t
+  @spec format_survey_html(Map.t, boolean) :: Map.t
   def format_survey_html(%{id: id, title: title, question: question}, facilitator) do
     answers =
       Enum.map(get_mini_survey_answers(id, facilitator), fn %{answer: answer, session_member: session_member, createdAt: date} ->
@@ -93,7 +93,7 @@ defmodule KlziiChat.Services.MiniSurveysReportingService do
     %{title: title, question: question, answers: answers}
   end
 
-  @spec get_mini_survey_answers(integer, boolean) :: Map
+  @spec get_mini_survey_answers(integer, boolean) :: List.t
   def get_mini_survey_answers(survvey_id, true) do
     Repo.all(
       from msa in MiniSurveyAnswer,
@@ -105,7 +105,7 @@ defmodule KlziiChat.Services.MiniSurveysReportingService do
   end
 
 
-  @spec get_mini_survey_answers(integer, boolean) :: Map
+  @spec get_mini_survey_answers(integer, boolean) :: List.t
   def get_mini_survey_answers(survvey_id, false) do
     Repo.all(
       from msa in MiniSurveyAnswer,

@@ -8,6 +8,7 @@ defmodule KlziiChat.Services.SessionReportingService do
   @save_report_timeout 30 * 60_000
   @upload_report_timeout 30 * 60_000
 
+  @spec get_session_member(integer) :: {atom, String.t}
   def get_session_member(session_member_id) do
     case Repo.get(SessionMember, session_member_id) do
       nil -> {:error, "No session member found with id: " <> session_member_id}
@@ -15,13 +16,15 @@ defmodule KlziiChat.Services.SessionReportingService do
     end
   end
 
+  @spec check_report_create_permision(integer) :: :ok | {:error, String.t}
   def check_report_create_permision(session_member) do
     if SessionReportingPermissions.can_create_report(session_member), do: :ok, else: {:error, "Action not allowed!"}
   end
 
-
+  @spec create_session_topic_report(integer, integer, integer, atom, atom, boolean) :: {:ok, Map.t} | {:error, String.t}
   def create_session_topic_report(_, _, _, report_format, :whiteboard, _) when report_format != :pdf, do: {:error, "pdf is the only format that is available for whiteboard reports"}
 
+  @spec create_session_topic_report(integer, integer, integer, atom, atom, boolean) :: {:ok, Map.t} | {:error, String.t}
   def create_session_topic_report(session_id, session_member_id, session_topic_id, report_format, report_type, include_facilitator)
   when report_type in [:all, :star, :whiteboard, :votes] and report_format in [:txt, :csv, :pdf]
   do
@@ -34,8 +37,10 @@ defmodule KlziiChat.Services.SessionReportingService do
     do:  {:ok, Repo.preload(report, :resource)}
   end
 
+  @spec create_session_topic_report(integer, integer, integer, atom, atom, boolean) :: {:ok, Map.t} | {:error, String.t}
   def create_session_topic_report(_, _, _, _, _, _), do: {:error, "incorrect report format or type"}
 
+  @spec create_session_topics_reports_record(integer, integer, atom, boolean, atom) :: {atom, Map.t}
   def create_session_topics_reports_record(session_id, session_topic_id, report_type, include_facilitator, report_format) do
     Repo.insert(%SessionTopicReport{
       sessionId: session_id,
@@ -47,11 +52,17 @@ defmodule KlziiChat.Services.SessionReportingService do
   end
 
 
+  @spec get_report_name(atom, integer) :: {:ok, String.t}
   def get_report_name(:whiteboard, report_id), do: {:ok, "Session_topic_whiteboard_report_" <> to_string(report_id)}
+
+  @spec get_report_name(atom, integer) :: {:ok, String.t}
   def get_report_name(:votes, report_id), do: {:ok, "Session_topic_mini_surveys_report_" <> to_string(report_id)}
+
+  @spec get_report_name(atom, integer) :: {:ok, String.t}
   def get_report_name(_, report_id), do: {:ok, "Session_topic_messages_report_" <> to_string(report_id)}
 
 
+  @spec create_report_async(integer, integer, integer, integer, String.t, atom, atom, boolean) :: {:ok, pid} | {:error, String.t}
   def create_report_async(session_id, account_user_id, report_id, session_topic_id, report_name, report_format, report_type, include_facilitator) do
     with  {:ok, report_file_path} <- save_report_async(report_type, report_name, report_format, session_topic_id, include_facilitator),
           {:ok, session_topics_report} <- upload_report_async(report_format, report_file_path, report_name, account_user_id)
@@ -65,8 +76,10 @@ defmodule KlziiChat.Services.SessionReportingService do
     end
   end
 
+  @spec broadcast_updated_report(integer, Map.t) :: no_return
   def broadcast_updated_report(session_id, report), do: Endpoint.broadcast!("sessions:#{session_id}", "session_topics_report_updated", Repo.preload(report, :resource))
 
+  @spec save_report_async(integer, Strig.t, atom, integer, boolean) :: {:ok | :error, String.t}
   def save_report_async(report_type, report_name, report_format, session_topic_id, include_facilitator) do
     async_func =
       case report_type do
@@ -96,6 +109,7 @@ defmodule KlziiChat.Services.SessionReportingService do
     end
   end
 
+  @spec upload_report_async(atom, String.t, String.t, integer) :: {:ok | :error, String.t}
   def upload_report_async(report_format, report_file_path, report_name, account_user_id) do
     upload_params = %{ "type" => "file",
       "scope" => to_string(report_format),
@@ -119,12 +133,15 @@ defmodule KlziiChat.Services.SessionReportingService do
     end
   end
 
+
+  @spec update_session_topics_reports_record({:ok, Map.t}, integer) :: {atom, Map.t}
   def update_session_topics_reports_record({:ok, resource}, report_id) do
     Repo.get(SessionTopicReport, report_id)
     |> Ecto.Changeset.change(status: "completed", resourceId: resource.id, message: nil)
     |> Repo.update()
   end
 
+  @spec update_session_topics_reports_record({:error, String.t}, integer) :: {atom, Map.t}
   def update_session_topics_reports_record({:error, err}, report_id) do
     Repo.get!(SessionTopicReport, report_id)
     |> Ecto.Changeset.change(status: "failed", message: err)
@@ -132,6 +149,7 @@ defmodule KlziiChat.Services.SessionReportingService do
   end
 
 
+  @spec get_session_topics_reports(integer, integer) :: {:ok, List.t} | {:error, String.t}
   def get_session_topics_reports(session_id, session_member_id) do
     {:ok, session_member} = get_session_member(session_member_id)
     if SessionReportingPermissions.can_get_reports(session_member) do
@@ -145,11 +163,12 @@ defmodule KlziiChat.Services.SessionReportingService do
     end
   end
 
-
+  @spec check_report_delete_permision(integer) :: :ok | {:error, String.t}
   def check_report_delete_permision(session_member) do
     if SessionReportingPermissions.can_delete_report(session_member), do: :ok, else: {:error, "Action not allowed!"}
   end
 
+  @spec delete_session_topic_report(integer, integer) :: {:ok, Map.t} | {:error, String.t}
   def delete_session_topic_report(report_id, session_member_id) do
     with  {:ok, session_member} <- get_session_member(session_member_id),
           :ok <- check_report_delete_permision(session_member),
@@ -158,25 +177,29 @@ defmodule KlziiChat.Services.SessionReportingService do
     do:   {ok, deleted_report}
   end
 
+  @spec check_delete_session_topic_report(nil, integer) :: {:error, String.t}
   def check_delete_session_topic_report(nil, _), do: {:error, "Session Topic Report not found"}
 
+  @spec check_delete_session_topic_report(Map.t, integer) :: {atom, String.t}
   def check_delete_session_topic_report(report, account_user_id) do
     delete_resource_async(account_user_id, report.resourceId)
     delete_report(report)
   end
 
+  @spec delete_resource_async(integer, integer) :: {:ok, pid} | no_return
   def delete_resource_async(account_user_id, resource_id) do
     unless is_nil(resource_id), do: Task.start(fn -> ResourceService.deleteByIds(account_user_id, [resource_id]) end)
   end
 
+  @spec delete_report(Map.t) :: {atom, Map.t}
   def delete_report(report) do
     case report.status do
       "failed" -> Ecto.Changeset.change(report, deletedAt: Ecto.DateTime.utc(), resourceId: nil) |> Repo.update()
       _ -> Repo.delete(report)
     end
   end
-  
 
+  @spec recreate_session_topic_report(integer, integer) :: {:ok, Map.t} | {:error, String.t}
   def recreate_session_topic_report(report_id, session_member_id) do
     with  {:ok, report} <- delete_session_topic_report(report_id, session_member_id),
           {:ok, new_report} <- create_session_topic_report(report.sessionId, session_member_id, report.sessionTopicId, String.to_atom(report.format), String.to_atom(report.type), report.facilitator),
