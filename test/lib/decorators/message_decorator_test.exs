@@ -18,4 +18,25 @@ defmodule KlziiChat.Decorators.MessageDecoratorTest do
     list = [%{sessionMemberId: 3}, %{sessionMemberId: 4}]
     MessageDecorator.has_voted(list, id) |> refute
   end
+
+  test "get emotion name" do
+    assert(MessageDecorator.emotion_name(0) == {:ok, "sad"})
+    assert(MessageDecorator.emotion_name(6) == {:ok, "sleepy"})
+  end
+
+  test "get emotion name error with incorrect id" do
+    assert(MessageDecorator.emotion_name(-1) == {:error, "incorrect emotion id"})
+    assert(MessageDecorator.emotion_name(7) == {:error, "incorrect emotion id"})
+  end
+
+  test "get emotion name with correct string id" do
+    assert(MessageDecorator.emotion_name("0") == {:ok, "sad"})
+    assert(MessageDecorator.emotion_name("6") == {:ok, "sleepy"})
+  end
+
+  test "get emotion name error with incorrect string id" do
+    assert(MessageDecorator.emotion_name("-1") == {:error, "incorrect emotion id"})
+    assert(MessageDecorator.emotion_name("6a") == {:error, "incorrect emotion id"})
+    assert(MessageDecorator.emotion_name("abc") == {:error, "incorrect emotion id"})
+  end
 end

@@ -1,3 +1,23 @@
+.reports-modal
+  .download-section
+    a, a:focus
+      text-decoration: none
+      color: inherit
+      outline: none
+    .fa
+      font-size: 50px
+  .reports-section
+    .fa-exclamation
+      padding-left: 8px
+    .view-pdf
+      .fa
+        @extend .font-color-red
+    .view-csv
+      .fa
+        @extend .font-color-green
+    .view-txt
+      .fa
+        @extend .font-color-blue
 .direct-message-modal
   $max-height-box: 600px
   width: 100%
@@ -180,3 +200,7 @@
       @extend .no-border-radius
       @extend .cursor-pointer
       padding: 0 10px
+
+@media screen and (min-width: 768px)
+  .reports-modal
+    width: 900px

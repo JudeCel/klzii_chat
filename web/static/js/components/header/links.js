@@ -1,9 +1,19 @@
 import React, {PropTypes} from 'react';
 import { connect }        from 'react-redux';
 import mixins             from '../../mixins';
+import ReportsModal       from './../reports/modal';
 
 const Links = React.createClass({
   mixins: [mixins.modalWindows, mixins.validations],
+  reportsFunction(style) {
+    if(this.hasPermission(['reports', 'can_report'])) {
+      return (
+        <li style={ style } onClick={ this.openSpecificModal.bind(this, 'reports') }>
+          <i className='icon-book-1' />
+        </li>
+      )
+    }
+  },
   countAllUnread() {
     const { unreadDirectMessages } = this.props;
 
@@ -34,9 +44,7 @@ const Links = React.createClass({
             <li style={ style }>
               <i className='icon-trash' />
             </li>
-            <li style={ style }>
-              <i className='icon-book-1' />
-            </li>
+            { this.reportsFunction(style) }
             <li style={ style } onClick={ this.showDirectMessages }>
               <i className={ 'icon-message' + (count ? ' with-badge' : '') }/>
               <i className='badge'>{ count }</i>
@@ -52,6 +60,8 @@ const Links = React.createClass({
         <div className='col-md-1 logo-section'>
           <img width='150%' src='/images/logo.png' />
         </div>
+
+        <ReportsModal show={ this.showSpecificModal('reports') } />
       </div>
     )
   }
