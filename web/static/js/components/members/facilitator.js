@@ -2,7 +2,6 @@ import React, {PropTypes} from 'react';
 import { connect }        from 'react-redux';
 import Member             from './member.js';
 import BoardModal         from './modals/facilitatorBoard';
-import Console            from '../console/index';
 import mixins             from '../../mixins';
 
 const Facilitator = React.createClass({
@@ -32,7 +31,6 @@ const Facilitator = React.createClass({
           </div>
 
           <BoardModal { ...{ permission, boardContent } } />
-          <Console />
         </div>
       </div>
     )

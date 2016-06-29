@@ -68,15 +68,39 @@ const Avatar = React.createClass({
     avatar.text(76, 138, username).attr({fill: '#fff', 'font-size': '75%', 'text-anchor': 'middle'}).addClass('svg-avatar-label');
     avatar.rect(30, 130, 90, 3, 5, 5).attr({fill: '#ccc', opacity: 0.2}).addClass('svg-avatar-label');
   },
-  componentDidMount() {
+  scaleAvatar(e, avatar) {
+    avatar = avatar || this.findAvatar();
+
+    if(avatar) {
+      let minWidth = 1200;
+      let w = window.outerWidth;
+      if(w  < minWidth) {
+        avatar.transform(`scale(${w / minWidth})`);
+      }
+      else {
+        avatar.transform(`scale(1)`);
+      }
+    }
+  },
+  createAvatar() {
     const { avatarData, username, sessionTopicContext } = this.props.member;
 
     let avatar = this.findAvatar();
     this.clearAvatar(avatar);
     this.drawAvatar(avatar);
     this.drawLabelAndText(avatar);
+    if(!this.props.specificId) {
+      this.scaleAvatar({}, avatar);
+    }
 
     this.previousData = { avatarData, username, sessionTopicContext };
+  },
+  componentDidMount() {
+    if(!this.props.specificId) {
+      window.addEventListener('resize', this.scaleAvatar);
+    }
+
+    this.createAvatar();
   },
   shouldComponentUpdate(nextProps) {
     if(this.previousData) {
@@ -94,7 +118,7 @@ const Avatar = React.createClass({
 
     if(avatar) {
       this.shouldClearPrevious = true;
-      this.componentDidMount();
+      this.createAvatar();
     }
   },
   render() {

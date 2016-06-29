@@ -11,6 +11,7 @@ import DirectMessageModal   from '../components/members/modals/directMessage/ind
 import SessionTopicSelect   from '../components/sessionTopics/select.js';
 import Resources            from '../components/resources/resources.js';
 import HeaderLinks          from '../components/header/links.js';
+import Console              from '../components/console/index';
 
 import WhiteboardCanvas     from '../components/whiteboard/whiteboardCanvas';
 import Notifications        from '../actions/notifications';
@@ -75,6 +76,10 @@ const ChatView = React.createClass({
                   <div className='row top-row'>
                     <Facilitator />
                     <WhiteboardCanvas member={ this.props }/>
+                  </div>
+
+                  <div className='row'>
+                    <Console />
                   </div>
 
                   <div className='row'>

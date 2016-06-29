@@ -105,12 +105,12 @@ body
   padding-top: 1%
   .console-section
     @extend .lineup-icons
+    margin-top: 10px
+    margin-left: 20px
     ul.icons
-      padding: 0
       width: 100%
       li
         cursor: default
-        width: 19%
         &.active
           @extend .cursor-pointer
   .input-section
@@ -188,12 +188,13 @@ body
     .facilitator-section
       flex: 1
       display: inline-block
-      margin-left: 20px
       .say-section
         vertical-align: top
         display: inline-block
         .outerbox
+          margin-left: -20px
           .triangle
+            margin-top: -10px
             vertical-align: top
             position: relative
             top: 2em
@@ -209,12 +210,12 @@ body
           .innerbox
             display: inline-block
             background-color: $message-facilitator
-            margin-top: 1em
             min-height: 4em
-            max-height: 10em
-            width: 250px
+            max-height: 17em
+            width: 240px
             p
-              margin: 1em
+              margin: 2px 5px
+              font-size: 18px
 
 @media (min-width: 1500px)
   .room-outerbox, .header-innerbox, .direct-message-modal
@@ -235,6 +236,14 @@ body
 @media (max-width: 992px)
   *[role="dialog"]
     visibility: hidden
+
+@media (max-width: 1200px)
+  .outerbox
+    margin-left: -30px !important
+    .innerbox
+      width: 190px !important
+      p
+        font-size: 14px !important
 
 .toast-top-right
   top: 130px
