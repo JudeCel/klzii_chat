@@ -6,7 +6,8 @@ defmodule KlziiChat.Services.ConsoleService do
   @spec error_messages :: Map.t
   def error_messages do
     %{
-      action_not_allowed:  "Action not allowed!"
+      action_not_allowed:  "Action not allowed!",
+      pinboard_is_enable: "Can't add new resource Pinboard is enable"
     }
   end
 
@@ -27,10 +28,14 @@ defmodule KlziiChat.Services.ConsoleService do
     session_member = Repo.get!(SessionMember, member_id)
     if ConsolePermissions.can_set_resource(session_member) do
       {:ok, console} = get(session_member.sessionId, session_topic_id)
-      set_id_by_type(resource_id, :resource)
-      |> update_console(console)
+      if console.pinboard do
+        {:error, error_messages.pinboard_is_enable}
+      else
+        set_id_by_type(resource_id, :resource)
+        |> update_console(console)
+      end
     else
-      {:error, errors_messages.action_not_allowed}
+      {:error, error_messages.action_not_allowed}
     end
   end
 
@@ -39,11 +44,13 @@ defmodule KlziiChat.Services.ConsoleService do
     session_member = Repo.get!(SessionMember, member_id)
     if ConsolePermissions.can_enable_pinboard(session_member) do
       {:ok, console} = get(session_member.sessionId, session_topic_id)
-      set_id_by_type(resource_id, :resource)
-      |> update_console(console)
+      update_console(%{ audioId: nil, videoId: nil,  fileId: nil, pinboard: true }, console)
     else
-      {:error, errors_messages.action_not_allowed}
     end
+  end
+  @spec set_pinboard() :: Map
+  defp set_pinboard() do
+    %{ audioId: nil, videoId: nil,  fileId: nil, pinboard: true }
   end
 
   def tidy_up(consoles, type, session_member_id) do
@@ -62,7 +69,7 @@ defmodule KlziiChat.Services.ConsoleService do
       set_id_by_type(mini_survey_id, :mini_survey)
       |> update_console(console)
     else
-      {:error, errors_messages.action_not_allowed}
+      {:error, error_messages.action_not_allowed}
     end
   end
 
@@ -74,13 +81,14 @@ defmodule KlziiChat.Services.ConsoleService do
       remove_id_by_type(type)
       |> update_console(console)
     else
-      {:error, errors_messages.action_not_allowed}
+      {:error, error_messages.action_not_allowed}
     end
   end
 
   @spec update_console(Map, %Console{}) :: {:ok, %Console{}}
   defp update_console(changeset, console) do
-    Console.changeset(console, changeset) |> Repo.update
+    Console.changeset(console, changeset)
+    |> Repo.update
   end
 
   @spec set_id_by_type(Integer, Atom) :: Map
@@ -92,7 +100,7 @@ defmodule KlziiChat.Services.ConsoleService do
   @spec set_id_by_type(Integer, Atom) :: Map
   defp set_id_by_type(resource_id, :resource) when is_integer(resource_id) do
     resource = Repo.get!(Resource, resource_id)
-    Map.put(%{},get_field_from_type(resource.type), resource.id)
+    Map.put(%{}, get_field_from_type(resource.type), resource.id)
   end
 
   @spec remove_id_by_type(String.t) :: Map

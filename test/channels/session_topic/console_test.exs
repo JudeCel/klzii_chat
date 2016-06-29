@@ -34,6 +34,15 @@ defmodule KlziiChat.Channels.SessionTopic.ConsoleTest do
     assert_push("console", %{})
   end
 
+  test "enable pinboard", %{socket: socket, session_topic_1_name: session_topic_1_name} do
+    {:ok, _, socket} = subscribe_and_join(socket, SessionTopicChannel, session_topic_1_name)
+
+    ref = push socket, "enable_pinboard", %{}
+    assert_reply ref, :ok, %{}
+    
+    assert_push("console", %{})
+  end
+
   test "create mini survey", %{socket: socket, session_topic_1_name: session_topic_1_name} do
     {:ok, _, socket} = subscribe_and_join(socket, SessionTopicChannel, session_topic_1_name)
 
@@ -109,8 +118,8 @@ defmodule KlziiChat.Channels.SessionTopic.ConsoleTest do
     resource = Ecto.build_assoc(
       account_user.account, :resources,
       accountUserId: account_user.id,
-      name: "test image 1",
-      type: "image",
+      name: "test video 1",
+      type: "video",
       scope: "collage"
     ) |> Repo.insert!
 
@@ -118,7 +127,7 @@ defmodule KlziiChat.Channels.SessionTopic.ConsoleTest do
     {:ok, _, socket} = subscribe_and_join(socket, SessionTopicChannel, session_topic_1_name)
     ref = push socket, "set_console_resource", %{"id" => resource_id}
     assert_reply ref, :ok
-    assert_push("console", %{ image_id: ^resource_id })
+    assert_push("console", %{ video_id: ^resource_id })
   end
 
   test "remove resource from console ", %{socket: socket, session_topic_1_name: session_topic_1_name} do
@@ -135,8 +144,8 @@ defmodule KlziiChat.Channels.SessionTopic.ConsoleTest do
     resource = Ecto.build_assoc(
       account_user.account, :resources,
       accountUserId: account_user.id,
-      name: "test image 1",
-      type: "image",
+      name: "test video 1",
+      type: "video",
       scope: "collage"
     ) |> Repo.insert!
 
@@ -148,6 +157,6 @@ defmodule KlziiChat.Channels.SessionTopic.ConsoleTest do
 
     {:ok, _} = SessionResourcesService.delete(socket.assigns.session_member.id, session_resource.id)
 
-    assert_push("console", %{audio_id: nil, file_id: nil, image_id: nil, mini_survey_id: nil, video_id: nil})
+    assert_push("console", %{audio_id: nil, file_id: nil, pinboard: false, mini_survey_id: nil, video_id: nil})
   end
 end

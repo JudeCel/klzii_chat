@@ -2,7 +2,7 @@ defmodule KlziiChat.Console do
   use KlziiChat.Web, :model
 
   schema "Consoles" do
-    field :pinboard, :boolean
+    field :pinboard, :boolean, default: false
     belongs_to :sessionTopic, KlziiChat.SessionTopic, [foreign_key: :sessionTopicId]
     belongs_to :audio, KlziiChat.Resource, [foreign_key: :audioId]
     belongs_to :video, KlziiChat.Resource, [foreign_key: :videoId]
@@ -21,5 +21,6 @@ defmodule KlziiChat.Console do
     model
     |> cast(params, [:sessionTopicId, :audioId, :videoId, :pinboard, :fileId, :miniSurveyId ])
     |> validate_required([:sessionTopicId])
+    |> validate_inclusion(:pinboard, [true, false])
   end
 end

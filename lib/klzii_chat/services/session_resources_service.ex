@@ -56,7 +56,6 @@ defmodule KlziiChat.Services.SessionResourcesService do
       where:
         c.audioId == ^resource_id or
         c.videoId == ^resource_id or
-        c.imageId == ^resource_id or
         c.fileId == ^resource_id
       ) |> Repo.all
         |> ConsoleService.tidy_up(resource.type, session_member.id)

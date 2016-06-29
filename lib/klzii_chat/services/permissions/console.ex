@@ -6,9 +6,9 @@ defmodule KlziiChat.Services.Permissions.Console do
     roles = ~w(facilitator)
     has_role(member.role, roles)
   end
-  
+
   @spec can_enable_pinboard(Map.t) :: Boolean.t
-  def can_set_resource(member) do
+  def can_enable_pinboard(member) do
     roles = ~w(facilitator)
     has_role(member.role, roles)
   end
