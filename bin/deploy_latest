@@ -1,0 +1,4 @@
+#!/bin/bash
+# Deletes old admin deployment and recreates it
+echo "Deploying latest klzii_chat image from docker hub"
+kubectl delete deployment chat && kubectl apply -f deploy/staging/chat.yml
