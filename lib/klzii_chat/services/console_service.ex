@@ -6,11 +6,9 @@ defmodule KlziiChat.Services.ConsoleService do
   @spec error_messages :: Map.t
   def error_messages do
     %{
-      action_not_allowed:  "Action not allowed!",
       pinboard_is_enable: "Can't add new resource Pinboard is enable"
     }
   end
-
 
   @spec get(Integer, Integer) ::  {:ok, %Console{}}
   def get(_, session_topic_id) do
@@ -23,65 +21,84 @@ defmodule KlziiChat.Services.ConsoleService do
     end
   end
 
+  @spec resource_validations(boolean, %Console{}) :: {:ok} | {:error, String.t}
+  def resource_validations(has_permission, console) do
+    with {:ok} <- is_pinboard_enable?(console, :resource),
+         {:ok} <- has_permission,
+    do:  {:ok}
+  end
+
+  @spec is_pinboard_enable?(%Console{}, Atom) :: {:ok} | {:error, String.t}
+  defp is_pinboard_enable?(console, :resource) do
+    if console.pinboard, do: {:error, error_messages.pinboard_is_enable}, else: {:ok}
+  end
+
   @spec set_resource(Integer, Integer, Integer) :: {:ok, %Console{}} | {:error, String.t}
   def set_resource(member_id, session_topic_id, resource_id) do
     session_member = Repo.get!(SessionMember, member_id)
-    if ConsolePermissions.can_set_resource(session_member) do
-      {:ok, console} = get(session_member.sessionId, session_topic_id)
-      if console.pinboard do
-        {:error, error_messages.pinboard_is_enable}
-      else
-        set_id_by_type(resource_id, :resource)
-        |> update_console(console)
+    {:ok, console} = get(session_member.sessionId, session_topic_id)
+
+    ConsolePermissions.can_set_resource(session_member)
+    |> resource_validations(console)
+    |> case do
+        {:ok} ->
+          set_id_by_type(resource_id, :resource)
+          |> update_console(console)
+        {:error, reason} ->
+          {:error, reason}
       end
-    else
-      {:error, error_messages.action_not_allowed}
-    end
   end
 
   @spec enable_pinboard(Integer, Integer) :: {:ok, %Console{}} | {:error, String.t}
   def enable_pinboard(member_id, session_topic_id) do
     session_member = Repo.get!(SessionMember, member_id)
-    if ConsolePermissions.can_enable_pinboard(session_member) do
-      {:ok, console} = get(session_member.sessionId, session_topic_id)
-      update_console(%{ audioId: nil, videoId: nil,  fileId: nil, pinboard: true }, console)
-    else
+    case ConsolePermissions.can_enable_pinboard(session_member) do
+      {:ok} ->
+        {:ok, console} = get(session_member.sessionId, session_topic_id)
+        update_console(pinboard_setings, console)
+      {:error, reason} ->
+        {:error, reason}
     end
   end
-  @spec set_pinboard() :: Map
-  defp set_pinboard() do
+
+  @spec pinboard_setings() :: Map.t
+  defp pinboard_setings do
     %{ audioId: nil, videoId: nil,  fileId: nil, pinboard: true }
   end
 
+  @spec tidy_up(list, String.t, integer) :: :ok
   def tidy_up(consoles, type, session_member_id) do
     Enum.each(consoles, fn console ->
       {:ok, new_console} = remove(session_member_id, console.sessionTopicId, type)
       data = ConsoleView.render("show.json", %{console: new_console})
       Endpoint.broadcast!( "session_topic:#{console.sessionTopicId}", "console", data)
     end)
+    :ok
   end
 
   @spec set_mini_survey(Integer, Integer, Integer) :: {:ok, %Console{}} | {:error, String.t}
   def set_mini_survey(member_id, session_topic_id, mini_survey_id) do
     session_member = Repo.get!(SessionMember, member_id)
-    if ConsolePermissions.can_set_resource(session_member) do
-      {:ok, console} = get(session_member.sessionId, session_topic_id)
-      set_id_by_type(mini_survey_id, :mini_survey)
-      |> update_console(console)
-    else
-      {:error, error_messages.action_not_allowed}
+    case ConsolePermissions.can_enable_pinboard(session_member) do
+      {:ok} ->
+        {:ok, console} = get(session_member.sessionId, session_topic_id)
+        set_id_by_type(mini_survey_id, :mini_survey)
+        |> update_console(console)
+      {:error, reason} ->
+        {:error, reason}
     end
   end
 
   @spec remove(Integer, Integer, String.t) ::  {:ok, %Console{}} | {:error, String.t}
   def remove(member_id, session_topic_id, type) do
     session_member = Repo.get!(SessionMember, member_id)
-    if ConsolePermissions.can_remove_resource(session_member) do
-      {:ok, console} = get(session_member.sessionId, session_topic_id)
-      remove_id_by_type(type)
-      |> update_console(console)
-    else
-      {:error, error_messages.action_not_allowed}
+    case ConsolePermissions.can_remove_resource(session_member) do
+      {:ok} ->
+        {:ok, console} = get(session_member.sessionId, session_topic_id)
+        remove_id_by_type(type)
+        |> update_console(console)
+      {:error, reason} ->
+        {:error, reason}
     end
   end
 
