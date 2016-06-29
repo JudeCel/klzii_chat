@@ -12,7 +12,7 @@ export function joinChannal(dispatch) {
     // logger: (kind, msg, data) => { console.log(`${kind}: ${msg}`, data); },
   });
 
-  const channel = socket.channel(`sessions:${1}`);
+  const channel = socket.channel(`sessions:${localStorage.getItem("sessionId")}`);
   if (channel.state != 'joined') {
     dispatch({
       type: Constants.SET_SESSION_CHANNEL,
