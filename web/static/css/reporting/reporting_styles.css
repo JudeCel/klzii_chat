@@ -1,0 +1,26 @@
+table {
+ width: 100%;
+}
+
+td.bottom_border{
+  border-bottom: 2pt solid gray;
+}
+
+td.img_holder {
+  vertical-align: top;
+  width: 1%;
+  white-space: nowrap;
+}
+
+td.time {
+  text-align: right;
+}
+
+.body.facilitator {
+  color: red;
+}
+
+img.emoticon {
+  height: auto;
+  width: 80px;
+}

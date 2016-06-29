@@ -1,0 +1,7 @@
+<script type="text/javascript">
+  var sessionMembers = <%= Poison.encode!(@session_members) %>
+
+  sessionMembers.forEach(function(member){
+    setAvatar(member, '<%= Path.expand("./web/static/assets/images/avatar") %>');
+  });
+</script>

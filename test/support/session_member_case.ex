@@ -128,7 +128,7 @@ defmodule KlziiChat.SessionMemberCase do
 
     participant = %SessionMember{
       token: "==oasu8asnx",
-      username: "cool member",
+      username: "cool member 2",
       sessionId: session.id,
       colour: "00000",
       role: "participant",

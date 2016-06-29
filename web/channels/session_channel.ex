@@ -1,8 +1,9 @@
 defmodule KlziiChat.SessionChannel do
   use KlziiChat.Web, :channel
-  alias KlziiChat.Services.{SessionService, SessionMembersService, DirectMessageService}
+  alias KlziiChat.Services.{SessionService, SessionMembersService, SessionReportingService, DirectMessageService}
   alias KlziiChat.Services.Permissions.Builder, as: PermissionsBuilder
-  alias KlziiChat.{Presence, SessionMembersView, DirectMessageView}
+  alias KlziiChat.Services.Permissions.SessionReporting, as: SessionReportingPermissions
+  alias KlziiChat.{Presence, SessionMembersView, SessionTopicsReportView, DirectMessageView}
   import(KlziiChat.Authorisations.Channels.Session, only: [authorized?: 2])
   import(KlziiChat.Helpers.SocketHelper, only: [get_session_member: 1])
 
@@ -12,7 +13,7 @@ defmodule KlziiChat.SessionChannel do
     Global messages for session
   """
 
-  intercept ["unread_messages", "new_direct_message"]
+  intercept ["unread_messages", "session_topics_report_updated", "new_direct_message"]
 
   def join("sessions:" <> session_id, _, socket) do
     {session_id, _} = Integer.parse(session_id)
@@ -63,6 +64,42 @@ defmodule KlziiChat.SessionChannel do
     {:noreply, socket}
   end
 
+  def handle_in("create_session_topic_report", %{"sessionTopicId" => session_topic_id, "format" => report_format, "type" => report_type, "facilitator" => include_facilitator}, socket) do
+    case SessionReportingService.create_session_topic_report(socket.assigns.session_id, get_session_member(socket).id, session_topic_id, String.to_atom(report_format), String.to_atom(report_type), include_facilitator) do
+      {:ok, session_topics_report} ->
+        {:reply, {:ok, SessionTopicsReportView.render("show.json", %{report: session_topics_report})}, socket}
+      {:error, reason} ->
+        {:error, %{reason: reason}}
+    end
+  end
+
+  def handle_in("delete_session_topic_report", %{"id" => session_topic_report_id}, socket) do
+    case SessionReportingService.delete_session_topic_report(session_topic_report_id, get_session_member(socket).id) do
+      {:ok, _} ->
+        {:reply, :ok, socket}
+      {:error, reason} ->
+        {:error, %{reason: reason}}
+    end
+  end
+
+  def handle_in("recreate_session_topic_report", %{"id" => session_topic_report_id}, socket) do
+    case SessionReportingService.recreate_session_topic_report(session_topic_report_id, get_session_member(socket).id) do
+      {:ok, session_topics_report} ->
+        {:reply, {:ok, SessionTopicsReportView.render("show.json", %{report: session_topics_report})}, socket}
+      {:error, reason} ->
+        {:error, %{reason: reason}}
+    end
+  end
+
+  def handle_in("get_session_topics_reports", _, socket) do
+  case SessionReportingService.get_session_topics_reports(socket.assigns.session_id, get_session_member(socket).id) do
+      {:ok, session_topics_reports} ->
+        {:reply, {:ok, SessionTopicsReportView.render("reports.json", %{reports: session_topics_reports})}, socket}
+      {:error, reason} ->
+        {:error, %{reason: reason}}
+    end
+  end
+
   def handle_in("get_all_direct_messages", %{ "recieverId" => other_member_id, "page" => page }, socket) do
     current_member_id = get_session_member(socket).id
 
@@ -107,6 +144,13 @@ defmodule KlziiChat.SessionChannel do
         push socket, "new_direct_message", map
       nil ->
         nil
+    end
+    {:noreply, socket}
+  end
+
+  def handle_out("session_topics_report_updated", payload, socket) do
+    if SessionReportingPermissions.can_create_report(get_session_member(socket)) do
+      push socket, "session_topics_report_updated", SessionTopicsReportView.render("show.json", %{report: payload})
     end
     {:noreply, socket}
   end

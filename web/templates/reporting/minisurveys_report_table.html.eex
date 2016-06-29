@@ -1,0 +1,22 @@
+<% %{title: title, question: question, answers: answers} = @survey %>
+
+<h4><%= title %> / <%= question %></h4>
+
+<table>
+  <%= Enum.map(answers, fn(%{session_member: %{id: id, username: username, role: role}, answer: answer, date: date}) ->
+    """
+    <tr>
+      <td></td>
+      <td class="bottom_border" colspan="2"></td>
+    </tr>
+    <tr>
+      <td class="svg_holder" rowspan="2"><svg class="svg#{id}" width="76" height="70" ></svg></td>
+      <td class="name #{role}">#{username}</td>
+      <td class="time #{role}">#{Ecto.DateTime.to_string(date)}</td>
+    </tr>
+    <tr>
+      <td class="answer #{role}" colspan="3">"#{answer}"</td>
+    </tr>
+    """
+  end) %>
+</table>
