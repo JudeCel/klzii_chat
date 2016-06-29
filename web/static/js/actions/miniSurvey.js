@@ -1,5 +1,4 @@
 import Constants from '../constants';
-import request   from 'superagent';
 
 function _errorData(data) {
   return {

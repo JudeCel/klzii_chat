@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Klzii Chat Mini Surveys History</title>
+    <script type="text/javascript" src="<%= Path.expand("./web/static/js/reporting/snap.svg-min.js") %>"></script>
+    <script type="text/javascript" src="<%= Path.expand("./web/static/js/reporting/avatars.js") %>"></script>
+    <link rel="stylesheet" type = "text/css" href="<%= Path.expand("./web/static/css/reporting/surveys_styles.css") %>">
+  </head>
+
+  <body>
+    <h3><%= @header %></h3>
+
+    <%= Enum.map(@surveys, fn(survey) -> html_survey_table_from_template(%{survey: survey}) end) %>
+
+    <%= html_avatars_script_from_template(%{session_members: @session_members}) %>
+  </body>
+</html>
