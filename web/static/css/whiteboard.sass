@@ -27,10 +27,7 @@
         padding: 0
         margin: 0
         padding-top: 5px
-        .div-inline-block
-          margin: 0 auto
-          .btn
-            float: none
+        @extend #circleShapes
       &.maximized
         padding-bottom: 45px
         max-width: 100%
@@ -47,8 +44,20 @@
       .whiteboard-expand
         right: 3px
 
-
-
+#circleShapes, #scribleShapes, #lineWidthShapes, #eraserShapes
+  .btn.btn-default
+    border-radius: 0
+    margin-right: 5px
+    &:last-child
+      margin-right: 0px
+    &.set-active
+      background-color: orange
+      border-color: #bbb
+    &:not(.normal):focus
+      outline: none
+      @extend .set-active
+    &.normal:focus
+      outline: none
 .whiteboard
   position: absolute
   width: 950px

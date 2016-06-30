@@ -3,7 +3,7 @@ import React, {PropTypes} from 'react';
 const LineButton = React.createClass({
   onClick() {
     const { changeButton, width } = this.props;
-    changeButton({ strokeWidth: width });
+    changeButton({ data: { width: width, mode: 'strokeWidth' } });
   },
   render() {
     return (

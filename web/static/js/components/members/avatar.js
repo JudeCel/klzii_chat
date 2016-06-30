@@ -68,25 +68,20 @@ const Avatar = React.createClass({
     avatar.text(76, 138, username).attr({fill: '#fff', 'font-size': '75%', 'text-anchor': 'middle'}).addClass('svg-avatar-label');
     avatar.rect(30, 130, 90, 3, 5, 5).attr({fill: '#ccc', opacity: 0.2}).addClass('svg-avatar-label');
   },
-  scaleAvatar(e, group) {
+  scaleAvatar(group) {
     if(group) {
       let minWidth = 1200;
-      let w = window.innerWidth;
-      if(w  < minWidth) {
-        group.transform(`scale(${w / minWidth})`);
+      const { width } = this.props.utilityWindow;
+
+      if(width  < minWidth) {
+        group.transform(`scale(${width / minWidth})`);
       }
       else {
         group.transform(`scale(1)`);
       }
     }
-    else {
-      let avatar = this.findAvatar();
-      if(avatar) {
-        this.scaleAvatar({}, avatar.select('g'));
-      }
-    }
   },
-  createAvatar() {
+  componentDidMount() {
     const { avatarData, username, sessionTopicContext } = this.props.member;
 
     let avatar = this.findAvatar();
@@ -97,24 +92,18 @@ const Avatar = React.createClass({
     let array = [...avatar.selectAll('image'), ...avatar.selectAll('rect'), ...avatar.selectAll('text')]
     let group = avatar.group(...array);
     if(!this.props.specificId) {
-      this.scaleAvatar({}, group);
+      this.scaleAvatar(group);
     }
 
     this.previousData = { avatarData, username, sessionTopicContext };
   },
-  componentDidMount() {
-    if(!this.props.specificId) {
-      window.addEventListener('resize', this.scaleAvatar);
-    }
-
-    this.createAvatar();
-  },
   shouldComponentUpdate(nextProps) {
     if(this.previousData) {
-      let avatarData = JSON.stringify(this.previousData.avatarData) != JSON.stringify(nextProps.member.avatarData);
-      let sessionTopicContext = JSON.stringify(this.previousData.sessionTopicContext) != JSON.stringify(nextProps.member.sessionTopicContext);
-      let username = this.previousData.username != nextProps.member.username;
-      return(!(username && avatarData && sessionTopicContext));
+      let avatarData = JSON.stringify(this.previousData.avatarData) == JSON.stringify(nextProps.member.avatarData);
+      let sessionTopicContext = JSON.stringify(this.previousData.sessionTopicContext) == JSON.stringify(nextProps.member.sessionTopicContext);
+      let username = this.previousData.username == nextProps.member.username;
+      let screenChange = JSON.stringify(nextProps.utilityWindow) != JSON.stringify(this.props.utilityWindow);
+      return(!(username && avatarData && sessionTopicContext) || screenChange);
     }
     else {
       return true;
@@ -125,7 +114,7 @@ const Avatar = React.createClass({
 
     if(avatar) {
       this.shouldClearPrevious = true;
-      this.createAvatar();
+      this.componentDidMount();
     }
   },
   render() {
@@ -137,7 +126,8 @@ const Avatar = React.createClass({
 
 const mapStateToProps = (state) => {
   return {
-    sessionTopicId: state.sessionTopic.current.id
+    sessionTopicId: state.sessionTopic.current.id,
+    utilityWindow: state.utility.window
   }
 };
 

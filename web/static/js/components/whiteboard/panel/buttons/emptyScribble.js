@@ -2,11 +2,12 @@ import React, {PropTypes} from 'react';
 
 const EmptyScribbleButton = React.createClass({
   onClick() {
-    this.props.changeButton({ fill: false, mode: 'emptyScribble' });
+    this.props.changeButton({ mode: 'emptyScribble' });
+    this.props.setActiveParent();
   },
   render() {
     return (
-      <i className='btn btn-default fa fa fa-scribd' aria-hidden='true' onClick={ this.onClick } />
+      <i className={ this.props.activeClass('emptyScribble') + 'btn btn-default fa fa fa-scribd' } aria-hidden='true' onClick={ this.onClick } />
     )
   }
 });

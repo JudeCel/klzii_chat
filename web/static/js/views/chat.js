@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react';
 import { connect }          from 'react-redux';
+import Constants            from './../constants';
 import sessionActions       from '../actions/session';
 import sessionTopicActions  from '../actions/sessionTopic';
 import Messages             from '../components/messages/messages.js';
@@ -46,6 +47,11 @@ const ChatView = React.createClass({
     if(nextProps.sessionReady && !nextProps.sessionTopicReady) {
       this.props.dispatch(sessionTopicActions.selectCurrent(nextProps.socket, nextProps.session_topics));
     }
+  },
+  componentDidMount() {
+    window.addEventListener('resize', (e) => {
+      this.props.dispatch({ type: Constants.SCREEN_SIZE_CHANGED, window: { width: e.target.innerWidth, height: e.target.innerHeight } });
+    });
   },
   render() {
     const { error, sessionReady, sessionTopicReady } = this.props;

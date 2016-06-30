@@ -14,7 +14,7 @@ const WhiteboardCanvas = React.createClass({
   mixins: [mixins.validations],
   getInitialState:function() {
     this.minimized = true;
-    this.shapes = [];
+    this.shapes = {};
     this.scaling = false;
     this.MIN_WIDTH = 316;
     this.MIN_HEIGHT = 153;
@@ -47,7 +47,30 @@ const WhiteboardCanvas = React.createClass({
     this.strokeWidthArray = [2, 4, 6];
     this.strokeWidth = this.strokeWidthArray[0];
 
-    return {content: '', addTextDisabled: true, addTextValue: ''};
+    return { minimized: true };
+  },
+  componentDidMount() {
+    this.snap = Snap("#" + this.getName());
+    this.snapGroup = this.snap.group();
+
+    this.activeShape = null;
+    this.initUnselectCallback();
+    this.scaleWhiteboard();
+  },
+  componentDidUpdate(nextProps, nextState) {
+    let screenChange = JSON.stringify(nextProps.utilityWindow) != JSON.stringify(this.props.utilityWindow);
+    if(this.state.minimized != nextState.minimized || screenChange) {
+      this.scaleWhiteboard();
+    }
+  },
+  componentWillReceiveProps(nextProps, privProps) {
+    if (nextProps.channel) {
+      if (nextProps.shapes != this.shapes) {
+        this.processWhiteboard(nextProps.shapes);
+      }
+      this.activeColour = this.props.currentUser.colour;
+      this.activeStrokeColour = this.activeColour;
+    }
   },
   handleHistoryObject(currentStep, reverse) {
     let self = this;
@@ -119,16 +142,6 @@ const WhiteboardCanvas = React.createClass({
         this.props.dispatch(whiteboardActions.delete(this.props.channel, json.message.id));
         break;
       default:
-    }
-  },
-  componentWillReceiveProps(nextProps, privProps) {
-    if (nextProps.channel) {
-      if (nextProps.shapes != this.shapes) {
-        this.processWhiteboard(nextProps.shapes);
-      }
-      console.error(this.props.currentUser);
-      this.activeColour = this.props.currentUser.colour;
-      this.activeStrokeColour = this.activeColour;
     }
   },
   canEditShape(item) {
@@ -227,7 +240,7 @@ const WhiteboardCanvas = React.createClass({
     };
 
 
-    let childrens = self.snap.paper.children();
+    let childrens = self.snapGroup.paper.children();
     childrens.map(function(item) {
       let position = shapesKeys.indexOf(item.id)
       if (position > -1) {
@@ -272,19 +285,6 @@ const WhiteboardCanvas = React.createClass({
       }
     }, function(x, y, mEl) {
     } );
-  },
-  componentDidMount() {
-    this.snap = Snap("#" + this.getName());
-    this.snapGroup = this.snap.group();
-
-    this.activeShape = null;
-    this.initUnselectCallback();
-    this.scaleWhiteboard();
-  },
-  componentDidUpdate(nextProps, nextState) {
-    if(this.state.minimized != nextState.minimized) {
-      this.scaleWhiteboard();
-    }
   },
   scaleWhiteboard() {
     let whiteboard = ReactDOM.findDOMNode(this);
@@ -403,12 +403,12 @@ const WhiteboardCanvas = React.createClass({
     var dy = coordsMove.y - this.coords.y;
 
     if(!this.activeShape && this.moveDistance(dx, dy) > 10) {
-      if (this.mode == this.ModeEnum.filledScribble) {
+      if (this.mode == this.ModeEnum.emptyScribble) {
         this.activeShape = this.snap.polyline([]).transform('r0.1');
         this.setStyle(this.activeShape, this.fillNone, this.strokeWidth, this.strokeColour);
       }
 
-      if (this.mode == this.ModeEnum.emptyScribble) {
+      if (this.mode == this.ModeEnum.filledScribble) {
         this.activeShape = this.snap.polyline([]).transform('r0.1');
         this.setStyle(this.activeShape, this.fillColour, this.strokeWidth, this.strokeColour);
       }
@@ -433,6 +433,9 @@ const WhiteboardCanvas = React.createClass({
         this.setStyle(this.activeShape, this.fillColour, this.strokeWidth, this.strokeColour);
       }
 
+      if(this.activeShape) {
+        this.snapGroup.add(this.activeShape);
+      }
     }
 
     if (this.activeShape && !this.activeShape.created) {
@@ -489,8 +492,7 @@ const WhiteboardCanvas = React.createClass({
       return "/images/icon_whiteboard_shrink.png";
     }
   },
-  handleStrokeWidthChange(e) {
-    this.strokeWidth = e.target.value;
+  handleStrokeWidthChange() {
     if (this.activeShape) {
       let oldState = this.prepareMessage(this.activeShape, 'update');
       undoHistoryFactory.addStepToUndoHistory({oldState: oldState});
@@ -517,16 +519,87 @@ const WhiteboardCanvas = React.createClass({
       message: message
     }
   },
-  changeButton(params) {
-    const { fill, mode } = params;
-    this.mode = this.ModeEnum[mode];
-    if(fill) {
-      this.activeFillColour = this.activeColour;
-      this.activeStrokeColour = this.activeColour;
+  deleteActive() {
+    if (this.activeShape && this.activeShape.permissions.can_delete) {
+      let message = this.prepareMessage(this.activeShape, "delete");
+      undoHistoryFactory.addStepToUndoHistory(message);
+
+      this.sendObjectData('delete');
+      this.activeShape.ftRemove();
+      this.shapes[this.activeShape.id] = null;
+      this.activeShape = null;
     }
-    else {
-      this.activeFillColour = 'none';
-      this.activeStrokeColour = 'none';
+  },
+  deleteAll() {
+    var messageJSON = {
+      eventType: 'deleteAll',
+      message: { action: 'deleteAll' }
+    };
+    this.sendMessage(messageJSON);
+    undoHistoryFactory.addStepToUndoHistory(this.addAllDeletedObjectsToHistory(this.shapes));
+  },
+  addAllDeletedObjectsToHistory(shapes) {
+    let objects = [];
+    let self = this;
+    Object.keys(shapes).forEach(function(key, index) {
+      let element = shapes[key];
+      if (element) {
+        objects.push(self.prepareMessage(element, "delete"));
+        element.ftRemove();
+      }
+    });
+    return objects;
+  },
+  changeButton(params) {
+    const { mode, data } = params;
+    this.mode = mode ? this.ModeEnum[mode] : this.mode;
+    this.setState({ mode: mode });
+
+    switch(this.mode) {
+      case this.ModeEnum.none:
+        break;
+      case this.ModeEnum.emptyRect:
+      case this.ModeEnum.emptyCircle:
+      case this.ModeEnum.emptyScribble:
+        this.activeFillColour = 'none';
+        this.activeStrokeColour = this.activeColour;
+        break;
+      case this.ModeEnum.filledRect:
+      case this.ModeEnum.filledCircle:
+      case this.ModeEnum.filledScribble:
+        this.activeFillColour = this.activeColour;
+        this.activeStrokeColour = this.activeColour;
+        break;
+      case this.ModeEnum.line:
+      case this.ModeEnum.arrow:
+      case this.ModeEnum.text:
+        this.activeFillColour = this.activeColour;
+        this.activeStrokeColour = this.activeColour;
+        break;
+      default:
+    }
+
+    if(!data) return;
+
+    if(data.mode == 'strokeWidth') {
+      this.strokeWidth = data.width;
+      this.handleStrokeWidthChange();
+    }
+
+    if(data.mode == 'deleteActive') {
+      this.deleteActive();
+    }
+
+    if(data.mode == 'deleteAll') {
+      this.deleteAll();
+    }
+
+    if(data.mode == 'stepRedo') {
+      this.redoStep();
+    }
+
+    if(data.mode == 'stepUndo') {
+      this.undoStep();
     }
   },
   render() {
@@ -545,7 +618,7 @@ const WhiteboardCanvas = React.createClass({
           onMouseMove={ this.handleMouseMove }
         />
 
-        <ButtonPanel changeButton={ this.changeButton } />
+        <ButtonPanel changeButton={ this.changeButton } mode={ this.mode } enum={ this.ModeEnum } />
 
 
         {/*<Modal dialogClassName='modal-section facilitator-board-modal' show={ this.mode == this.ModeEnum.text } onHide={ onHide } onEnter={ this.onOpen }>
@@ -578,6 +651,7 @@ const mapStateToProps = (state) => {
     shapes: state.whiteboard.shapes,
     channel: state.whiteboard.channel,
     currentUser: state.members.currentUser,
+    utilityWindow: state.utility.window,
     resourceImages: state.resources.images
   }
 };
