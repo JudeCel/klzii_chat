@@ -484,6 +484,9 @@ const WhiteboardCanvas = React.createClass({
   expand() {
     this.minimized = !this.minimized;
     this.setState({minimized: this.minimized});
+    if(this.minimized && this.activeShape) {
+      this.activeShape.ftUnselect();
+    }
   },
   getExpandButtonImage() {
     if (this.minimized) {
