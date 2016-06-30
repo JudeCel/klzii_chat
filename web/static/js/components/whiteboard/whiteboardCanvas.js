@@ -145,21 +145,27 @@ const WhiteboardCanvas = React.createClass({
       switch (event.element.type) {
         case "ellipse":
           obj = self.snap.ellipse(0, 0, 0, 0).transform('r0.1');
+          this.snapGroup.add(obj);
           break;
         case "rect":
           obj = self.snap.rect(0, 0, 0, 0).transform('r0.1');
+          this.snapGroup.add(obj);
           break;
         case "polyline":
           obj = self.snap.polyline([]).transform('r0.1');
+          this.snapGroup.add(obj);
           break;
         case "line":
           obj = self.snap.line(0, 0, 0, 0).transform('r0.1');
+          this.snapGroup.add(obj);
           break;
         case "text":
           obj = self.snap.text(0, 0, event.element.attr.textVal).transform('r0.1');
+          this.snapGroup.add(obj);
           break;
         case "image":
           obj = self.snap.image(event.element.attr.href, 0, 0, 0, 0).transform('r0.1');
+          this.snapGroup.add(obj);
           break;
         default:
           break;
@@ -269,9 +275,23 @@ const WhiteboardCanvas = React.createClass({
   },
   componentDidMount() {
     this.snap = Snap("#" + this.getName());
+    this.snapGroup = this.snap.group();
 
     this.activeShape = null;
     this.initUnselectCallback();
+    this.scaleWhiteboard();
+  },
+  componentDidUpdate(nextProps, nextState) {
+    if(this.state.minimized != nextState.minimized) {
+      this.scaleWhiteboard();
+    }
+  },
+  scaleWhiteboard() {
+    let whiteboard = ReactDOM.findDOMNode(this);
+    let scaleX = this.minimized ? (whiteboard.scrollWidth)/(this.MAX_WIDTH) : 1.0;
+    let scaleY = this.minimized ? (whiteboard.scrollHeight)/(this.MAX_HEIGHT) : 1.0;
+    this.snapGroup.transform(`S${scaleX},${scaleY},0,0`);
+    this.snapGroup.attr({ pointerEvents: this.minimized ? 'none' : 'all' });
   },
   addText(text) {
     // Recheck
@@ -513,15 +533,6 @@ const WhiteboardCanvas = React.createClass({
     const { show, onHide, boardContent, channel } = this.props;
     // not render if not set channel
     if (!channel) { return false }
-    let whiteboard = ReactDOM.findDOMNode(this);
-    if(whiteboard) {
-      let scaleX = this.minimized ? (whiteboard.scrollWidth)/(this.MAX_WIDTH+50) : 1.0;
-      let scaleY = this.minimized ? (whiteboard.scrollHeight)/(this.MAX_HEIGHT+50) : 1.0;
-      let inlineBox = whiteboard.querySelector('.inline-board-section');
-      inlineBox.setAttribute('transform', `scale(${scaleX}, ${scaleY})`);
-    }
-
-
 
     return (
       <div id='whiteboard-box' className={ 'whiteboard-section' + (this.minimized ? ' minimized' : ' maximized') }>
