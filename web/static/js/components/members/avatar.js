@@ -68,17 +68,21 @@ const Avatar = React.createClass({
     avatar.text(76, 138, username).attr({fill: '#fff', 'font-size': '75%', 'text-anchor': 'middle'}).addClass('svg-avatar-label');
     avatar.rect(30, 130, 90, 3, 5, 5).attr({fill: '#ccc', opacity: 0.2}).addClass('svg-avatar-label');
   },
-  scaleAvatar(e, avatar) {
-    avatar = avatar || this.findAvatar();
-
-    if(avatar) {
+  scaleAvatar(e, group) {
+    if(group) {
       let minWidth = 1200;
-      let w = window.outerWidth;
+      let w = window.innerWidth;
       if(w  < minWidth) {
-        avatar.transform(`scale(${w / minWidth})`);
+        group.transform(`scale(${w / minWidth})`);
       }
       else {
-        avatar.transform(`scale(1)`);
+        group.transform(`scale(1)`);
+      }
+    }
+    else {
+      let avatar = this.findAvatar();
+      if(avatar) {
+        this.scaleAvatar({}, avatar.select('g'));
       }
     }
   },
@@ -89,8 +93,11 @@ const Avatar = React.createClass({
     this.clearAvatar(avatar);
     this.drawAvatar(avatar);
     this.drawLabelAndText(avatar);
+
+    let array = [...avatar.selectAll('image'), ...avatar.selectAll('rect'), ...avatar.selectAll('text')]
+    let group = avatar.group(...array);
     if(!this.props.specificId) {
-      this.scaleAvatar({}, avatar);
+      this.scaleAvatar({}, group);
     }
 
     this.previousData = { avatarData, username, sessionTopicContext };
