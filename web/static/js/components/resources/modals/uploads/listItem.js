@@ -34,11 +34,21 @@ const UploadListItem = React.createClass({
       modalData.select(url);
     }
   },
+  showRadio(id, modal, active) {
+    if(modal != 'image') {
+      return (
+        <span>
+          <input id={ 'question' + id } name='active' type='radio' className='with-font' onClick={ this.onActivate } defaultChecked={ active } />
+          <label htmlFor={ 'question' + id } />
+        </span>
+      )
+    }
+  },
   render() {
     const { justInput, modalName } = this.props;
     const { sessionResourceId, id, active, name, type, url, scope } = this.state;
 
-    if(justInput) {
+    if(justInput && modalName != 'image') {
       return (
         <li className='list-group-item'>
           <div className='row'>
@@ -51,32 +61,22 @@ const UploadListItem = React.createClass({
       )
     }
     else {
-      if(modalName == 'image') {
-        return (
-          <div className='col-md-6' onClick={ this.onSelect.bind(this, url) }>
-            <UploadTypes modalName={ modalName } url={ url } youtube={ scope == 'youtube' }/>
-          </div>
-        )
-      }
-      else {
-        return (
-          <li className='list-group-item'>
-            <div className='row'>
-              <div className='col-md-6'>
-                { name }
-                <br />
-                <UploadTypes modalName={ modalName } url={ url } youtube={ scope == 'youtube' }/>
-              </div>
-
-              <div className='col-md-6 text-right'>
-                <input id={ 'question' + id } name='active' type='radio' className='with-font' onClick={ this.onActivate } defaultChecked={ active } />
-                <label htmlFor={ 'question' + id } />
-                <span className='fa fa-times' onClick={ this.onDelete.bind(this, sessionResourceId) } />
-              </div>
+      return (
+        <li className='list-group-item'>
+          <div className='row'>
+            <div className='col-md-6' onClick={ this.onSelect.bind(this, url) }>
+              { name }
+              <br />
+              <UploadTypes modalName={ modalName } url={ url } youtube={ scope == 'youtube' }/>
             </div>
-          </li>
-        )
-      }
+
+            <div className='col-md-6 text-right'>
+              { this.showRadio(id, modalName, active) }
+              <span className='fa fa-times' onClick={ this.onDelete.bind(this, sessionResourceId) } />
+            </div>
+          </div>
+        </li>
+      )
     }
   }
 });
