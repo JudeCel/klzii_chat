@@ -27,6 +27,13 @@ const UploadListItem = React.createClass({
       dispatch(ConsoleActions.removeFromConsole(channel, this.props.modalName));
     }
   },
+  onSelect(url) {
+    const { modalData } = this.props;
+
+    if(modalData.select) {
+      modalData.select(url);
+    }
+  },
   render() {
     const { justInput, modalName } = this.props;
     const { sessionResourceId, id, active, name, type, url, scope } = this.state;
@@ -44,23 +51,32 @@ const UploadListItem = React.createClass({
       )
     }
     else {
-      return (
-        <li className='list-group-item'>
-          <div className='row'>
-            <div className='col-md-6'>
-              { name }
-              <br />
-              <UploadTypes modalName={ modalName } url={ url } youtube={ scope == 'youtube' }/>
-            </div>
-
-            <div className='col-md-6 text-right'>
-              <input id={ 'question' + id } name='active' type='radio' className='with-font' onClick={ this.onActivate } defaultChecked={ active } />
-              <label htmlFor={ 'question' + id } />
-              <span className='fa fa-times' onClick={ this.onDelete.bind(this, sessionResourceId) } />
-            </div>
+      if(modalName == 'image') {
+        return (
+          <div className='col-md-6' onClick={ this.onSelect.bind(this, url) }>
+            <UploadTypes modalName={ modalName } url={ url } youtube={ scope == 'youtube' }/>
           </div>
-        </li>
-      )
+        )
+      }
+      else {
+        return (
+          <li className='list-group-item'>
+            <div className='row'>
+              <div className='col-md-6'>
+                { name }
+                <br />
+                <UploadTypes modalName={ modalName } url={ url } youtube={ scope == 'youtube' }/>
+              </div>
+
+              <div className='col-md-6 text-right'>
+                <input id={ 'question' + id } name='active' type='radio' className='with-font' onClick={ this.onActivate } defaultChecked={ active } />
+                <label htmlFor={ 'question' + id } />
+                <span className='fa fa-times' onClick={ this.onDelete.bind(this, sessionResourceId) } />
+              </div>
+            </div>
+          </li>
+        )
+      }
     }
   }
 });
@@ -69,7 +85,8 @@ const mapStateToProps = (state) => {
   return {
     channel: state.sessionTopic.channel,
     tConsole: state.sessionTopic.console,
-    jwt: state.members.currentUser.jwt
+    jwt: state.members.currentUser.jwt,
+    modalData: state.modalWindows.currentModalData
   }
 };
 

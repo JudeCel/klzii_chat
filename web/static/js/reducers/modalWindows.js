@@ -7,6 +7,7 @@ const initialState = {
   facilitatorBoard: false,
   reports: false,
   whiteboardText: false,
+  whiteboardImage: false,
   currentModalData: {}
 };
 

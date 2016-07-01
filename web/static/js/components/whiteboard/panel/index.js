@@ -42,8 +42,7 @@ const ButtonPanel = React.createClass({
                 <PopoverButtons.FilledCircle { ...params.circle } />
                 <PopoverButtons.EmptyRect { ...params.circle } />
                 <PopoverButtons.FilledRect { ...params.circle } />
-
-                {/*<i className={this.toolStyle(this.ModeEnum.image)+" fa fa-file-image-o"} aria-hidden="true" onClick={this.prepareImage}></i>*/}
+                <PopoverButtons.Image { ...params.circle } />
               </Popover>
             }>
 

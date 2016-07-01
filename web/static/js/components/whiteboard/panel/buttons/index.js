@@ -7,6 +7,7 @@ import FilledRect     from './filledRect';
 import FilledScribble from './filledScribble';
 import Line           from './line';
 import Arrow          from './arrow';
+import Image          from './image';
 import Text           from './text';
 import TextModal      from './textModal';
 import StrokeWidth    from './strokeWidth';
@@ -25,6 +26,7 @@ export default {
   FilledScribble,
   Line,
   Arrow,
+  Image,
   Text,
   TextModal,
   StrokeWidth,

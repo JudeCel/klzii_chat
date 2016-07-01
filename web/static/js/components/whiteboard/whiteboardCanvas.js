@@ -295,18 +295,13 @@ const WhiteboardCanvas = React.createClass({
   addText(text) {
     this.activeShape = this.snap.text(this.MAX_WIDTH/2, this.MAX_HEIGHT/2, text).transform('r0.1');
     this.setStyle(this.activeShape, this.activeFillColour, this.strokeWidth, this.activeStrokeColour);
-    this.activeShape.textValue = text;
-    this.activeShape.attr({'font-size': '40px', textVal: text});
+    this.activeShape.attr({ 'font-size': '40px' });
     this.snapGroup.add(this.activeShape);
-    return this.activeShape;
+    this.handleObjectCreated();
   },
-  prepareImage() {
-    this.addImage("/images/logo.png", 10, 20, 200, 100);
-  },
-  addImage(url, x, y, width, height) {
-    this.mode = this.ModeEnum.image;
-    this.setState({});
-    this.activeShape = this.snap.image(url , x, y, width, height).transform('r0.1');
+  addImage(url) {
+    this.activeShape = this.snap.image(url, 10, 20, 200, 100).transform('r0.1');
+    this.snapGroup.add(this.activeShape);
     this.handleObjectCreated();
   },
   prepareNewElement(el) {
@@ -586,8 +581,11 @@ const WhiteboardCanvas = React.createClass({
     }
 
     if(data.mode == 'text') {
-      this.activeShape = this.addText(data.text);
-      this.handleObjectCreated();
+      this.addText(data.text);
+    }
+
+    if(data.mode == 'image') {
+      this.addImage(data.url);
     }
   },
   render() {
