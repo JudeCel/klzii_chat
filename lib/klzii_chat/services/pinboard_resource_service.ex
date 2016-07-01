@@ -12,6 +12,14 @@ defmodule KlziiChat.Services.PinboardResourceService do
     }
   end
 
+  @spec find(integer, integer) :: %Ecto.Query{}
+  def find(session_member_id, session_topic_id) do
+    from(pr in PinboardResource,
+      where: pr.sessionMemberId == ^session_member_id and pr.sessionTopicId == ^session_topic_id,
+      preload: [:resource]
+    )
+  end
+
   @spec validations(boolean, integer, integer) :: {:ok} | {:error, String.t}
   def validations(has_permission, session_topic_id, resource_id) do
     with {:ok} <- is_pinboard_enable?(session_topic_id),
@@ -62,14 +70,25 @@ defmodule KlziiChat.Services.PinboardResourceService do
 
   @spec add_resource(integer, integer, integer) :: {:ok} | {:error, String.t}
   def add_resource(session_member, session_topic_id, resource_id) do
-    pinboard_resource = from(pr in PinboardResource,
-      where: pr.sessionMemberId == ^session_member.id and pr.sessionTopicId == ^session_topic_id
-    ) |> Repo.one
-      |> case do
-          nil ->
-            build_assoc(session_member, :pinboard_resources, %{sessionTopicId: session_topic_id, resourceId: resource_id}) |> Repo.insert
-          pinboard_resource ->
-            PinboardResource.changeset(pinboard_resource, %{resourceId: resource_id}) |> Repo.update
-         end
+    find(session_member.id, session_topic_id)
+    |> Repo.one
+    |> case do
+        nil ->
+          build_assoc(session_member, :pinboard_resources, %{sessionTopicId: session_topic_id, resourceId: resource_id}) |> Repo.insert
+        pinboard_resource ->
+          PinboardResource.changeset(pinboard_resource, %{resourceId: resource_id}) |> Repo.update
+       end
+  end
+
+  @spec delete(integer, integer) :: {:ok, } | {:error, String.t}
+  def delete(session_member_id, session_topic_id) do
+    session_member = Repo.get!(SessionMember, session_member_id)
+    PinboardResourcePermissions.can_add_resource(session_member)
+    |> case do
+        {:ok} ->
+          find(session_member_id, session_topic_id) |> Repo.one |> Repo.delete
+        {:error, reason} ->
+          {:error, reason}
+      end
   end
 end
