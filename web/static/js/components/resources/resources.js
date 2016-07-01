@@ -11,12 +11,22 @@ const Resources = React.createClass({
     return { currentModal: null };
   },
   shouldShow(modals) {
-    return modals.includes(this.state.currentModal) && this.showSpecificModal('resources');
+    const { currentModal } = this.state;
+
+    let includes = (modals.includes(currentModal) && this.showSpecificModal('resources'));
+    let whiteboardImage = (modals.includes(currentModal) && currentModal == 'image' && this.showSpecificModal('whiteboardImage'));
+
+    return includes || whiteboardImage;
   },
   openModal(modal) {
     this.setState({ currentModal: modal }, function() {
       this.openSpecificModal('resources');
     });
+  },
+  componentDidUpdate(prevProps) {
+    if(this.props.whiteboardImage && this.props.whiteboardImage != prevProps.whiteboardImage) {
+      this.setState({ currentModal: 'image' });
+    }
   },
   render() {
     const { currentModal } = this.state;
@@ -56,6 +66,7 @@ const mapStateToProps = (state) => {
   return {
     currentUser: state.members.currentUser,
     modalWindows: state.modalWindows,
+    whiteboardImage: state.modalWindows.whiteboardImage,
   }
 };
 

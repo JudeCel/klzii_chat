@@ -1,32 +1,57 @@
-.whiteboard
-  position: absolute
-  width: 950px
-  height: 460px
-  z-index: 1000
-  margin-right: 0
-  margin-left: auto
-  margin-top: 0
-  border: solid 1px #ccc
-.box
-  border: 1px solid black;
-  text-align: center;
-  padding: 10px;
-  box-sizing: border-box;
-  margin-bottom: 10px;
-  overflow: hidden;
-  position: relative;
-.react-resizable
-  position: relative;
-.react-resizable-handle
-  position: absolute;
-  width: 20px;
-  height: 20px;
-  bottom: 0;
-  right: 0;
-  background: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBzdGFuZGFsb25lPSJubyI/Pg08IS0tIEdlbmVyYXRvcjogQWRvYmUgRmlyZXdvcmtzIENTNiwgRXhwb3J0IFNWRyBFeHRlbnNpb24gYnkgQWFyb24gQmVhbGwgKGh0dHA6Ly9maXJld29ya3MuYWJlYWxsLmNvbSkgLiBWZXJzaW9uOiAwLjYuMSAgLS0+DTwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+DTxzdmcgaWQ9IlVudGl0bGVkLVBhZ2UlMjAxIiB2aWV3Qm94PSIwIDAgNiA2IiBzdHlsZT0iYmFja2dyb3VuZC1jb2xvcjojZmZmZmZmMDAiIHZlcnNpb249IjEuMSINCXhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHhtbDpzcGFjZT0icHJlc2VydmUiDQl4PSIwcHgiIHk9IjBweCIgd2lkdGg9IjZweCIgaGVpZ2h0PSI2cHgiDT4NCTxnIG9wYWNpdHk9IjAuMzAyIj4NCQk8cGF0aCBkPSJNIDYgNiBMIDAgNiBMIDAgNC4yIEwgNCA0LjIgTCA0LjIgNC4yIEwgNC4yIDAgTCA2IDAgTCA2IDYgTCA2IDYgWiIgZmlsbD0iIzAwMDAwMCIvPg0JPC9nPg08L3N2Zz4=');
-  background-position: bottom right;
-  padding: 0 3px 3px 0;
-  background-repeat: no-repeat;
-  background-origin: content-box;
-  box-sizing: border-box;
-  cursor: se-resize;
+.room-section
+  .top-row
+    .whiteboard-section
+      flex: 1
+      max-width: 50%
+      width: 950px
+      height: 460px
+      z-index: 5
+      position: absolute
+      background-color: #e1d8d8
+      border: 1px solid #a4918b
+      border-radius: 5px
+      padding: 10px
+      .inline-board-section
+        width: 100%
+        height: 100%
+        background-color: white
+        border: 1px solid #ffc973
+        border-radius: 5px
+        display: block
+        -webkit-transition: transform 0.3s ease-in-out
+        -moz-transition: transform 0.3s ease-in-out
+        -ms-transition: transform 0.3s ease-in-out
+        -o-transition: transform 0.3s ease-in-out
+        transition: transform 0.3s ease-in-out
+      .panel-buttons-section
+        padding: 0
+        margin: 0
+        padding-top: 5px
+        @extend #circleShapes
+      &.maximized
+        padding-bottom: 45px
+        max-width: 100%
+        transform: translateX(-75%)
+      &.minimized
+        height: 100%
+        position: inherit
+        .panel-buttons-section
+          display: none
+      .whiteboard-title, .whiteboard-expand
+        position: absolute
+        top: 0px
+        z-index: 1
+      .whiteboard-expand
+        right: 3px
+
+#circleShapes, #scribleShapes, #lineWidthShapes, #eraserShapes
+  .btn.btn-default
+    border-radius: 0
+    margin-right: 5px
+    &:last-child
+      margin-right: 0px
+    &.set-active
+      background-color: orange
+      border-color: #bbb
+    &:focus
+      outline: none

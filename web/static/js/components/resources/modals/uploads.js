@@ -14,7 +14,7 @@ const Uploads = React.createClass({
     return { ...this.getInitialState(), title: `Add ${props.modalName}` }
   },
   componentWillReceiveProps(nextProps) {
-    if(nextProps.show && nextProps.modalWindows != this.props.modalWindows) {
+    if(nextProps.show) {
       this.setState(this.initialWithTitle(nextProps), function() {
         const { dispatch, currentUserJwt, modalName } = this.props;
         dispatch(Actions.index(currentUserJwt, { type: this.get_session_resource_types(modalName) }));
