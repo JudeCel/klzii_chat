@@ -591,33 +591,35 @@ const WhiteboardCanvas = React.createClass({
     }
   },
   render() {
-    const { show, onHide, boardContent, channel } = this.props;
-    // not render if not set channel
-    if (!channel) { return false }
+    if(this.props.channel) {
+      return (
+        <div id='whiteboard-box' className={ 'whiteboard-section' + (this.minimized ? ' minimized' : ' maximized') }>
+          <img className='whiteboard-title' src='/images/title_whiteboard.png' />
+          <img className='whiteboard-expand' src={ this.getExpandButtonImage() } onClick={ this.expand } />
 
-    return (
-      <div id='whiteboard-box' className={ 'whiteboard-section' + (this.minimized ? ' minimized' : ' maximized') }>
-        <img className='whiteboard-title' src='/images/title_whiteboard.png' />
-        <img className='whiteboard-expand' src={ this.getExpandButtonImage() } onClick={ this.expand } />
+          <svg id={ this.getName() } className='inline-board-section'
+            onMouseDown={ this.handleMouseDown }
+            onMouseUp={ this.handleMouseUp }
+            onMouseMove={ this.handleMouseMove }
+          />
 
-        <svg id={ this.getName() } className='inline-board-section'
-          onMouseDown={ this.handleMouseDown }
-          onMouseUp={ this.handleMouseUp }
-          onMouseMove={ this.handleMouseMove }
-        />
-
-        <ButtonPanel changeButton={ this.changeButton } mode={ this.mode } enum={ this.ModeEnum } />
-      </div>
-    )
+          <ButtonPanel changeButton={ this.changeButton } mode={ this.mode } enum={ this.ModeEnum } />
+        </div>
+      )
+    }
+    else {
+      return (false);
+    }
   }
 });
+
 const mapStateToProps = (state) => {
   return {
     shapes: state.whiteboard.shapes,
     channel: state.whiteboard.channel,
     currentUser: state.members.currentUser,
-    utilityWindow: state.utility.window,
-    resourceImages: state.resources.images
+    utilityWindow: state.utility.window
   }
 };
+
 export default connect(mapStateToProps)(WhiteboardCanvas);
