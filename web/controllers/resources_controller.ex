@@ -60,7 +60,7 @@ defmodule KlziiChat.ResourcesController do
         json(conn, %{
         type: resource.type,
         resource: ResourceView.render("resource.json", %{resource: resource}),
-        message: "Success uploaded!" })
+        message: "File successfully uploaded" })
       {:error, reason} ->
         json(conn, %{status: :error, reason: reason})
     end

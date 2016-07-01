@@ -30,6 +30,7 @@
     <script type="text/javascript">
       <%= if Guardian.Plug.current_token(@conn) do %>
           localStorage.setItem('sessionMemberToken', "<%= Guardian.Plug.current_token(@conn) %>");
+          localStorage.setItem('sessionId', "<%= @conn.assigns.session_id %>");
       <% end %>
       localStorage.setItem('csrf_token', "<%= get_csrf_token %>");
     </script>
