@@ -86,6 +86,7 @@ const ButtonPanel = React.createClass({
 
           <PopoverButtons.StepUndo { ...this.paramsForChild() } />
           <PopoverButtons.StepRedo { ...this.paramsForChild() } />
+          <PopoverButtons.TextModal { ...this.paramsForChild() } />
         </div>
       </ButtonToolbar>
     )

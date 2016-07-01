@@ -1,7 +1,6 @@
 import React, {PropTypes} from 'react';
 import Snap               from 'snapsvg';
 import { OverlayTrigger, Button, Popover, ButtonToolbar, Input}    from 'react-bootstrap'
-import { Modal }          from 'react-bootstrap'
 import whiteboardActions    from '../../actions/whiteboard'
 import { connect }          from 'react-redux';
 require("./drawControlls");
@@ -294,16 +293,11 @@ const WhiteboardCanvas = React.createClass({
     this.snapGroup.attr({ pointerEvents: this.minimized ? 'none' : 'all' });
   },
   addText(text) {
-    // Recheck
     this.activeShape = this.snap.text(this.MAX_WIDTH/2, this.MAX_HEIGHT/2, text).transform('r0.1');
-    this.mode = this.ModeEnum.none;
-    this.setState({});
-    this.fillColour = this.activeColour;
-    this.activeFillColour = this.activeColour;
-    this.setStyle(this.activeShape, this.fillColour, this.strokeWidth, this.strokeColour);
+    this.setStyle(this.activeShape, this.activeFillColour, this.strokeWidth, this.activeStrokeColour);
     this.activeShape.textValue = text;
-    this.activeShape.attr({"font-size": "40px", textVal: text});
-
+    this.activeShape.attr({'font-size': '40px', textVal: text});
+    this.snapGroup.add(this.activeShape);
     return this.activeShape;
   },
   prepareImage() {
@@ -556,27 +550,14 @@ const WhiteboardCanvas = React.createClass({
     const { mode, data } = params;
     this.mode = mode ? this.ModeEnum[mode] : this.mode;
     this.setState({ mode: mode });
+    this.activeFillColour = this.activeColour;
+    this.activeStrokeColour = this.activeColour;
 
     switch(this.mode) {
-      case this.ModeEnum.none:
-        break;
       case this.ModeEnum.emptyRect:
       case this.ModeEnum.emptyCircle:
       case this.ModeEnum.emptyScribble:
         this.activeFillColour = 'none';
-        this.activeStrokeColour = this.activeColour;
-        break;
-      case this.ModeEnum.filledRect:
-      case this.ModeEnum.filledCircle:
-      case this.ModeEnum.filledScribble:
-        this.activeFillColour = this.activeColour;
-        this.activeStrokeColour = this.activeColour;
-        break;
-      case this.ModeEnum.line:
-      case this.ModeEnum.arrow:
-      case this.ModeEnum.text:
-        this.activeFillColour = this.activeColour;
-        this.activeStrokeColour = this.activeColour;
         break;
       default:
     }
@@ -603,6 +584,11 @@ const WhiteboardCanvas = React.createClass({
     if(data.mode == 'stepUndo') {
       this.undoStep();
     }
+
+    if(data.mode == 'text') {
+      this.activeShape = this.addText(data.text);
+      this.handleObjectCreated();
+    }
   },
   render() {
     const { show, onHide, boardContent, channel } = this.props;
@@ -621,29 +607,6 @@ const WhiteboardCanvas = React.createClass({
         />
 
         <ButtonPanel changeButton={ this.changeButton } mode={ this.mode } enum={ this.ModeEnum } />
-
-
-        {/*<Modal dialogClassName='modal-section facilitator-board-modal' show={ this.mode == this.ModeEnum.text } onHide={ onHide } onEnter={ this.onOpen }>
-          <Modal.Header>
-            <div className='col-md-2'>
-              <span className='pull-left fa icon-reply' onClick={ this.onClose }></span>
-            </div>
-
-            <div className='col-md-8 modal-title'>
-              <h4>Enter Text</h4>
-            </div>
-
-            <div className='col-md-2' onClick={ this.onAcceptText } disabled={this.state.addTextDisabled}>
-              <span className='pull-right fa fa-check'></span>
-            </div>
-          </Modal.Header>
-
-          <Modal.Body>
-            <div className='row facilitator-board-section'>
-              <Input type="text" ref="input" onChange={this.handleTextChange} />
-            </div>
-          </Modal.Body>
-        </Modal>*/}
       </div>
     )
   }

@@ -1,9 +1,12 @@
 import React, {PropTypes} from 'react';
+import { connect }        from 'react-redux';
+import mixins             from '../../../../mixins';
 
-const ArrowButton = React.createClass({
+const TextButton = React.createClass({
+  mixins: [mixins.modalWindows],
   onClick() {
-    this.props.changeButton({ mode: 'text', textValue: 'aaa' });
     this.props.setActiveParent();
+    this.openSpecificModal('whiteboardText');
   },
   render() {
     return (
@@ -12,4 +15,10 @@ const ArrowButton = React.createClass({
   }
 });
 
-export default ArrowButton;
+const mapStateToProps = (state) => {
+  return {
+    modalWindows: state.modalWindows
+  }
+};
+
+export default connect(mapStateToProps)(TextButton);

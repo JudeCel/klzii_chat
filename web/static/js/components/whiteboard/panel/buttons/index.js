@@ -7,6 +7,7 @@ import FilledScribble from './filledScribble';
 import Line           from './line';
 import Arrow          from './arrow';
 import Text           from './text';
+import TextModal      from './textModal';
 import StrokeWidth    from './strokeWidth';
 import DeleteActive   from './deleteActive';
 import DeleteAll      from './deleteAll';
@@ -23,6 +24,7 @@ export default {
   Line,
   Arrow,
   Text,
+  TextModal,
   StrokeWidth,
   DeleteActive,
   DeleteAll,
