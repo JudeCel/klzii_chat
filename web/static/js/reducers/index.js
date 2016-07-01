@@ -11,6 +11,7 @@ import modalWindows        from './modalWindows';
 import miniSurveys         from './miniSurveys';
 import directMessages      from './directMessages';
 import reports             from './reports';
+import utility             from './utility';
 
 export default combineReducers({
   chat: chat,
@@ -24,5 +25,6 @@ export default combineReducers({
   modalWindows: modalWindows,
   miniSurveys: miniSurveys,
   reports: reports,
-  directMessages: directMessages
+  directMessages: directMessages,
+  utility: utility,
 });

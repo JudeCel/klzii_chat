@@ -6,6 +6,8 @@ const initialState = {
   avatar: false,
   facilitatorBoard: false,
   reports: false,
+  whiteboardText: false,
+  whiteboardImage: false,
   currentModalData: {}
 };
 

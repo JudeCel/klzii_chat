@@ -1,5 +1,6 @@
 import React, { PropTypes } from 'react';
 import { connect }          from 'react-redux';
+import Constants            from './../constants';
 import sessionActions       from '../actions/session';
 import sessionTopicActions  from '../actions/sessionTopic';
 import Messages             from '../components/messages/messages.js';
@@ -11,6 +12,7 @@ import DirectMessageModal   from '../components/members/modals/directMessage/ind
 import SessionTopicSelect   from '../components/sessionTopics/select.js';
 import Resources            from '../components/resources/resources.js';
 import HeaderLinks          from '../components/header/links.js';
+import Console              from '../components/console/index';
 
 import WhiteboardCanvas     from '../components/whiteboard/whiteboardCanvas';
 import Notifications        from '../actions/notifications';
@@ -46,6 +48,11 @@ const ChatView = React.createClass({
       this.props.dispatch(sessionTopicActions.selectCurrent(nextProps.socket, nextProps.session_topics));
     }
   },
+  componentDidMount() {
+    window.addEventListener('resize', (e) => {
+      this.props.dispatch({ type: Constants.SCREEN_SIZE_CHANGED, window: { width: e.target.innerWidth, height: e.target.innerHeight } });
+    });
+  },
   render() {
     const { error, sessionReady, sessionTopicReady } = this.props;
 
@@ -72,8 +79,13 @@ const ChatView = React.createClass({
 
               <div className='row'>
                 <div className='col-md-8'>
-                  <div className='row'>
+                  <div className='row top-row'>
                     <Facilitator />
+                    <WhiteboardCanvas member={ this.props }/>
+                  </div>
+
+                  <div className='row'>
+                    <Console />
                   </div>
 
                   <div className='row'>
@@ -84,7 +96,7 @@ const ChatView = React.createClass({
                 <div className='col-md-4'>
                   <Messages/>
                 </div>
-                <WhiteboardCanvas member={ this.props }/>
+
                 <div className='col-md-12'>
                   <Input/>
                 </div>
