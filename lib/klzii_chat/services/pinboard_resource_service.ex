@@ -20,11 +20,12 @@ defmodule KlziiChat.Services.PinboardResourceService do
     )
   end
 
-  def all(session_member_id, session_topi_id) do
-    from(pr in PinboardResource,
-      where: pr.sessionTopicId == ^session_topic_id,
+  def all(session_topi_id) do
+    result = from(pr in PinboardResource,
+      where: pr.sessionTopicId == ^session_topi_id,
       preload: [:resource]
-    )
+    ) |> Repo.all
+    {:ok, result}
   end
 
   @spec validations(boolean, integer, integer) :: {:ok} | {:error, String.t}
