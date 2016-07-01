@@ -20,6 +20,13 @@ defmodule KlziiChat.Services.PinboardResourceService do
     )
   end
 
+  def all(session_member_id, session_topi_id) do
+    from(pr in PinboardResource,
+      where: pr.sessionTopicId == ^session_topic_id,
+      preload: [:resource]
+    )
+  end
+
   @spec validations(boolean, integer, integer) :: {:ok} | {:error, String.t}
   def validations(has_permission, session_topic_id, resource_id) do
     with {:ok} <- is_pinboard_enable?(session_topic_id),

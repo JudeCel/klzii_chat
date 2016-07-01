@@ -44,6 +44,15 @@ defmodule KlziiChat.Router do
     get "/:id", ResourcesController, :show
   end
 
+  scope("/api", KlziiChat) do
+    pipe_through :api
+
+    scope("/pinboard_resource") do
+      options "/", PinboardResourceController, :index
+      get "/", PinboardResourceController, :index
+    end
+  end
+
   scope "/api/surveys", KlziiChat do
     pipe_through :api
     # CORS Routes
