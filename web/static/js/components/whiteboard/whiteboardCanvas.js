@@ -240,7 +240,7 @@ const WhiteboardCanvas = React.createClass({
     };
 
 
-    let childrens = self.snapGroup.paper.children();
+    let childrens = self.snapGroup.children();
     childrens.map(function(item) {
       let position = shapesKeys.indexOf(item.id)
       if (position > -1) {
@@ -548,7 +548,6 @@ const WhiteboardCanvas = React.createClass({
       let element = shapes[key];
       if (element) {
         objects.push(self.prepareMessage(element, "delete"));
-        element.ftRemove();
       }
     });
     return objects;
