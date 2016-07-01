@@ -1,3 +1,4 @@
+import None           from './none';
 import EmptyCircle    from './emptyCircle';
 import EmptyRect      from './emptyRect';
 import EmptyScribble  from './emptyScribble';
@@ -15,6 +16,7 @@ import StepUndo       from './stepUndo';
 import StepRedo       from './stepRedo';
 
 export default {
+  None,
   EmptyCircle,
   EmptyRect,
   EmptyScribble,

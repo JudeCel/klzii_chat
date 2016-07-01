@@ -19,7 +19,8 @@ const ButtonPanel = React.createClass({
     return {
       changeButton: this.props.changeButton,
       activeClass: this.popoverActiveClass,
-      setActiveParent: this.setActive.bind(this, parent)
+      setActiveParent: this.setActive.bind(this, parent),
+      parent: this.refs[parent]
     };
   },
   render() {
@@ -34,7 +35,8 @@ const ButtonPanel = React.createClass({
     return (
       <ButtonToolbar className='row panel-buttons-section'>
         <div className='col-md-offset-4'>
-          <OverlayTrigger trigger='click' rootClose placement='top' overlay={
+          <PopoverButtons.None { ...this.paramsForChild('none') } />
+          <OverlayTrigger ref='circleShapes' trigger='click' rootClose placement='top' overlay={
               <Popover id='circleShapes'>
                 <PopoverButtons.EmptyCircle { ...params.circle } />
                 <PopoverButtons.FilledCircle { ...params.circle } />
@@ -48,7 +50,7 @@ const ButtonPanel = React.createClass({
             <Button className={ this.parentActiveClass('circleShapes') }><i className='fa fa-star' aria-hidden='true' /></Button>
           </OverlayTrigger>
 
-          <OverlayTrigger trigger='click' rootClose placement='top' overlay={
+          <OverlayTrigger ref='scribleShapes' trigger='click' rootClose placement='top' overlay={
               <Popover id='scribleShapes'>
                 <PopoverButtons.EmptyScribble { ...params.scribble } />
                 <PopoverButtons.FilledScribble { ...params.scribble } />
@@ -61,7 +63,7 @@ const ButtonPanel = React.createClass({
             <Button className={ this.parentActiveClass('scribleShapes') }><i className='fa fa-pencil' aria-hidden='true' /></Button>
           </OverlayTrigger>
 
-          <OverlayTrigger trigger='click' rootClose placement='top' overlay={
+          <OverlayTrigger ref='lineWidthShapes' trigger='click' rootClose placement='top' overlay={
               <Popover id='lineWidthShapes'>
                 {
                   strokeWidthArray.map((value) =>
@@ -74,7 +76,7 @@ const ButtonPanel = React.createClass({
             <Button className='normal'><i className='fa fa-cog' aria-hidden='true' /></Button>
           </OverlayTrigger>
 
-          <OverlayTrigger trigger='click' rootClose placement='top' overlay={
+          <OverlayTrigger ref='eraserShapes' trigger='click' rootClose placement='top' overlay={
               <Popover id='eraserShapes'>
                 <PopoverButtons.DeleteActive { ...params.eraser } />
                 <PopoverButtons.DeleteAll { ...params.eraser } />

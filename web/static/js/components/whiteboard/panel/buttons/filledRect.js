@@ -2,8 +2,11 @@ import React, {PropTypes} from 'react';
 
 const FilledRectButton = React.createClass({
   onClick() {
-    this.props.changeButton({ mode: 'filledRect' });
-    this.props.setActiveParent();
+    const { changeButton, setActiveParent, parent } = this.props;
+
+    parent.hide();
+    changeButton({ mode: 'filledRect' });
+    setActiveParent();
   },
   render() {
     return (

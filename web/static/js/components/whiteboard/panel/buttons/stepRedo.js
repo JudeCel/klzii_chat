@@ -6,7 +6,7 @@ const StepRedoButton = React.createClass({
   },
   render() {
     return (
-      <button className='normal btn btn-default' onClick={ this.onClick }>
+      <button className='btn btn-default' onClick={ this.onClick }>
         <i className='fa fa-repeat' aria-hidden='true' />
       </button>
     )

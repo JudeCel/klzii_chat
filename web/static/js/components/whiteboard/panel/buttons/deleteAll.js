@@ -2,7 +2,10 @@ import React, {PropTypes} from 'react';
 
 const DeleteAllButton = React.createClass({
   onClick() {
-    this.props.changeButton({ data: { mode: 'deleteAll' } });
+    const { changeButton, parent } = this.props;
+
+    parent.hide();
+    changeButton({ data: { mode: 'deleteAll' } });
   },
   render() {
     return (

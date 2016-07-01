@@ -2,8 +2,11 @@ import React, {PropTypes} from 'react';
 
 const FilledScribbleButton = React.createClass({
   onClick() {
-    this.props.changeButton({ mode: 'filledScribble' });
-    this.props.setActiveParent();
+    const { changeButton, setActiveParent, parent } = this.props;
+
+    parent.hide();
+    changeButton({ mode: 'filledScribble' });
+    setActiveParent();
   },
   render() {
     return (

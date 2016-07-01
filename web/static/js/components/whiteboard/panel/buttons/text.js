@@ -5,8 +5,8 @@ import mixins             from '../../../../mixins';
 const TextButton = React.createClass({
   mixins: [mixins.modalWindows],
   onClick() {
-    this.props.setActiveParent();
     this.openSpecificModal('whiteboardText');
+    this.props.parent.hide();
   },
   render() {
     return (

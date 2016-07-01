@@ -2,8 +2,11 @@ import React, {PropTypes} from 'react';
 
 const LineButton = React.createClass({
   onClick() {
-    this.props.changeButton({ mode: 'line' });
-    this.props.setActiveParent();
+    const { changeButton, setActiveParent, parent } = this.props;
+
+    parent.hide();
+    changeButton({ mode: 'line' });
+    setActiveParent();
   },
   render() {
     return (

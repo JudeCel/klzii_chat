@@ -2,8 +2,11 @@ import React, {PropTypes} from 'react';
 
 const EmptyRectButton = React.createClass({
   onClick() {
-    this.props.changeButton({ mode: 'emptyRect' });
-    this.props.setActiveParent();
+    const { changeButton, setActiveParent, parent } = this.props;
+
+    parent.hide();
+    changeButton({ mode: 'emptyRect' });
+    setActiveParent();
   },
   render() {
     return (

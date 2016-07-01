@@ -2,8 +2,11 @@ import React, {PropTypes} from 'react';
 
 const FilledCircleButton = React.createClass({
   onClick() {
-    this.props.changeButton({ mode: 'filledCircle' });
-    this.props.setActiveParent();
+    const { changeButton, setActiveParent, parent } = this.props;
+
+    parent.hide();
+    changeButton({ mode: 'filledCircle' });
+    setActiveParent();
   },
   render() {
     return (

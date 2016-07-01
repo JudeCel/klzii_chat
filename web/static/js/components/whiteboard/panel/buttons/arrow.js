@@ -2,8 +2,11 @@ import React, {PropTypes} from 'react';
 
 const ArrowButton = React.createClass({
   onClick() {
-    this.props.changeButton({ mode: 'arrow' });
-    this.props.setActiveParent();
+    const { changeButton, setActiveParent, parent } = this.props;
+
+    parent.hide();
+    changeButton({ mode: 'arrow' });
+    setActiveParent();
   },
   render() {
     return (
