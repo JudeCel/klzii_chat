@@ -17,12 +17,12 @@ defmodule KlziiChat.SessionView do
   defp brand_project_preference(brand_project_preference) when is_map(brand_project_preference), do: brand_project_preference.colours
   defp brand_project_preference(_) do
     %{
-       browserBackground: '#EFEFEF',
-       mainBackground: '#FFFFFF',
-       mainBorder: '#F0E935',
-       font: '#58595B',
-       headerButton: '#4CBFE9',
-       consoleButtonActive: '#4CB649',
+       browserBackground: "#EFEFEF",
+       mainBackground: "#FFFFFF",
+       mainBorder: "#F0E935",
+       font: "#58595B",
+       headerButton: "#4CBFE9",
+       consoleButtonActive: "#4CB649",
     }
   end
 end
