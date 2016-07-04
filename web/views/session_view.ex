@@ -13,4 +13,17 @@ defmodule KlziiChat.SessionView do
       end)
     }
   end
+
+  defp brand_project_preference(nil) do
+    %{
+       browserBackground: '#EFEFEF ',
+       mainBackground: '#FFFFFF ',
+       mainBorder: '#F0E935 ',
+       font: '#58595B ',
+       headerButton: '#4CBFE9 ',
+       consoleButtonActive: '#4CB649 ',
+    }
+  end
+
+  defp brand_project_preference(brand_project_preference), do: brand_project_preference.colours
 end
