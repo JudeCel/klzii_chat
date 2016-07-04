@@ -49,9 +49,11 @@ defmodule KlziiChat.Router do
 
     scope("/pinboard_resource") do
       options "/", PinboardResourceController, :index
+      options "/", PinboardResourceController, :delete
       options "/upload", PinboardResourceController, :upload
 
       get "/", PinboardResourceController, :index
+      delete "/", PinboardResourceController, :delete
       post "/upload", PinboardResourceController, :upload
     end
   end

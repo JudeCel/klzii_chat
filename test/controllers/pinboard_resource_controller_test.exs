@@ -36,6 +36,19 @@ defmodule KlziiChat.PinboardResourceControllerTest do
     file = %Plug.Upload{ content_type: "image/jpg", path: @image, filename: "hamster.jpg"}
     resp = post(conn, "api/pinboard_resource/upload", %{sessionTopicId: session_topic_1.id, name: "hamster", type: "image", scope: "collage", file: file })
       |> json_response(200)
-    assert(%{"status" => "ok"} == resp)
+    assert(%{"status" => "ok", "pinboard_resource" => _} = resp)
+  end
+
+  test "remove", %{conn: conn, session_topic_1: session_topic_1} do
+    Ecto.build_assoc(
+      session_topic_1, :console,
+      pinboard: true
+    ) |> Repo.insert!
+
+    file = %Plug.Upload{ content_type: "image/jpg", path: @image, filename: "hamster.jpg"}
+    %{"status" => "ok", "pinboard_resource" => pinboard_resource} = post(conn, "api/pinboard_resource/upload", %{sessionTopicId: session_topic_1.id, name: "hamster", type: "image", scope: "collage", file: file })
+      |> json_response(200)
+  
+    delete(conn, "api/pinboard_resource/", %{id: pinboard_resource["id"]}) |> json_response(200)
   end
 end

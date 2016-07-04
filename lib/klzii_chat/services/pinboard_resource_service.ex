@@ -89,12 +89,14 @@ defmodule KlziiChat.Services.PinboardResourceService do
   end
 
   @spec delete(integer, integer) :: {:ok, } | {:error, String.t}
-  def delete(session_member_id, session_topic_id) do
+  def delete(session_member_id, id) do
     session_member = Repo.get!(SessionMember, session_member_id)
-    PinboardResourcePermissions.can_add_resource(session_member)
+    pinboard_resource = from(pr in PinboardResource, where: pr.id == ^id) |> Repo.one
+
+    PinboardResourcePermissions.can_remove_resource(session_member, pinboard_resource)
     |> case do
         {:ok} ->
-          find(session_member_id, session_topic_id) |> Repo.one |> Repo.delete
+          Repo.delete(pinboard_resource)
         {:error, reason} ->
           {:error, reason}
       end

@@ -1,6 +1,6 @@
 defmodule KlziiChat.PinboardResourceController do
   use KlziiChat.Web, :controller
-  alias KlziiChat.{PinboardResourceView, ResourceView, Endpoint}
+  alias KlziiChat.{PinboardResourceView, Endpoint}
   alias KlziiChat.Services.{ PinboardResourceService, ResourceService}
   use Guardian.Phoenix.Controller
 
@@ -26,7 +26,7 @@ defmodule KlziiChat.PinboardResourceController do
                 Repo.preload(pinboard_resource, [:resource])
                 |> Phoenix.View.render_one(PinboardResourceView, "show.json", as: :pinboard_resource)
             Endpoint.broadcast!("sessions:#{member.session_member.sessionId}", "new_pinboard_resource", pinboard_resource)
-            json(conn, %{status: :ok})
+            json(conn, %{status: :ok, pinboard_resource: pinboard_resource})
           {:error, reason} ->
             json(conn, %{status: :error, error: reason})
         end
@@ -36,9 +36,9 @@ defmodule KlziiChat.PinboardResourceController do
   end
 
   def delete(conn, %{"id" => id}, member, _) do
-    case PinboardResource.delete(member.session_member.id, id) do
-      {:ok, session_resource} ->
-        json(conn, KlziiChat.SessionResourcesView.render("delete.json", %{session_resource: session_resource}))
+    case PinboardResourceService.delete(member.session_member.id, id) do
+      {:ok, pinboard_resource} ->
+        json(conn, Phoenix.View.render_one(pinboard_resource, PinboardResourceView, "delete.json", as: :pinboard_resource))
       {:error, reason} ->
         json(conn, %{status: :error, reason: reason})
     end
