@@ -14,8 +14,15 @@ defmodule KlziiChat.Services.Permissions.Builder do
     }
   end
 
-  @spec subscription_permissions(Integer) :: Map.t
-  def subscription_permissions(session_member_id) do
+
+  def pinboard_resource(session_member, pinboard_resource) do
+    %{
+
+    }
+  end
+
+  @spec session_member_permissions(Integer) :: Map.t
+  def session_member_permissions(session_member_id) do
     session_member = Repo.get!(SessionMember, session_member_id)
 
     case get_subscription_preference(session_member.sessionId) do
