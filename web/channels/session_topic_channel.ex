@@ -11,7 +11,7 @@ defmodule KlziiChat.SessionTopicChannel do
     History for specific session topic
   """
 
-  intercept ["new_message", "update_message", "update_message", "thumbs_up"]
+  intercept ["new_message", "update_message", "update_message", "thumbs_up", "delete_pinboard_resource"]
 
   def join("session_topic:" <> session_topic_id, _payload, socket) do
     if authorized?(socket, session_topic_id) do
@@ -147,7 +147,7 @@ defmodule KlziiChat.SessionTopicChannel do
   def handle_in("delete_pinboard_resource", _, socket) do
       case PinboardResourceService.delete(get_session_member(socket).id, socket.assigns.session_topic_id) do
         {:ok, pinboard_resource} ->
-          broadcast! socket, "delete_pinboard_resource", Phoenix.View.render_one(pinboard_resource, PinboardResourceView, "delete.json", as: :pinboard_resource)
+          broadcast! socket, "delete_pinboard_resource", Phoenix.View.render_one(pinboard_resource, PinboardResourceView, "show.json", as: :pinboard_resource)
           {:reply, :ok, socket}
         {:error, reason} ->
           {:error, %{reason: reason}}
@@ -232,6 +232,13 @@ defmodule KlziiChat.SessionTopicChannel do
       {:error, reason} ->
         {:error, %{reason: reason}}
     end
+  end
+
+  def handle_out("delete_pinboard_resource", payload, socket) do
+    session_member = get_session_member(socket)
+    payload = Map.put(payload, "colour", session_member.colour)
+    push socket, "delete_pinboard_resource", payload
+    {:noreply, socket}
   end
 
   def handle_out(message, payload, socket) do

@@ -23,6 +23,7 @@ defmodule KlziiChat.Services.PinboardResourceService do
   def all(session_topi_id) do
     result = from(pr in PinboardResource,
       where: pr.sessionTopicId == ^session_topi_id,
+      order_by: [asc: pr.createdAt],
       preload: [:resource]
     ) |> Repo.all
     {:ok, result}
@@ -53,6 +54,7 @@ defmodule KlziiChat.Services.PinboardResourceService do
   def is_pinboard_enable?(session_topic_id) do
     from(st in SessionTopic,
       join: c in assoc(st, :console),
+      where: st.id == ^session_topic_id,
       where: c.pinboard == true
     ) |> Repo.one
       |> case do
