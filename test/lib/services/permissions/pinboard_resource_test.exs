@@ -9,6 +9,11 @@ defmodule KlziiChat.Services.Permissions.PinboardResourceTest do
       assert({:error, _} = PinboardResource.can_add_resource(member))
     end
 
+    test "can_enable" do
+      member = %{id: 1, role: "facilitator"}
+      assert({:ok} = PinboardResource.can_enable(member))
+    end
+
     test "can remove resource" do
       member = %{id: 1, role: "facilitator"}
       object = %{id: 1, sessionMemberId: (member.id + 1)}
@@ -20,6 +25,11 @@ defmodule KlziiChat.Services.Permissions.PinboardResourceTest do
     test "can_add_resource" do
       member = %{id: 1, role: "participant"}
       assert({:ok} = PinboardResource.can_add_resource(member))
+    end
+
+    test "can_enable" do
+      member = %{id: 1, role: "participant"}
+      assert({:error, _} = PinboardResource.can_enable(member))
     end
 
     test "can remove resource when owner" do
@@ -39,6 +49,11 @@ defmodule KlziiChat.Services.Permissions.PinboardResourceTest do
     test "can set resource" do
       member = %{id: 1, role: "observer"}
       assert({:error, _} = PinboardResource.can_add_resource(member))
+    end
+
+    test "can_enable" do
+      member = %{id: 1, role: "observer"}
+      assert({:error, _} = PinboardResource.can_enable(member))
     end
 
     test "can remove resource" do

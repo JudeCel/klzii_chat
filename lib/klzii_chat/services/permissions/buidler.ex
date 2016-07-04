@@ -5,6 +5,7 @@ defmodule KlziiChat.Services.Permissions.Builder do
   alias KlziiChat.Services.Permissions.Resources, as: ResourcePermissions
   alias KlziiChat.Services.Permissions.SessionTopic, as: SessionTopicPermissions
   alias KlziiChat.Services.Permissions.Whiteboard, as: WhiteboardPermissions
+  alias KlziiChat.Services.Permissions.PinboardResource, as: PinboardResourcePermissions
   alias KlziiChat.Services.Permissions.Validations
 
   @spec error_messages() :: Map.t
@@ -14,8 +15,15 @@ defmodule KlziiChat.Services.Permissions.Builder do
     }
   end
 
-  @spec subscription_permissions(Integer) :: Map.t
-  def subscription_permissions(session_member_id) do
+
+  def pinboard_resource(session_member, pinboard_resource) do
+    %{
+      can_delete: PinboardResourcePermissions.can_remove_resource(session_member, pinboard_resource) |> to_boolean
+    }
+  end
+
+  @spec session_member_permissions(Integer) :: Map.t
+  def session_member_permissions(session_member_id) do
     session_member = Repo.get!(SessionMember, session_member_id)
 
     case get_subscription_preference(session_member.sessionId) do
@@ -42,6 +50,10 @@ defmodule KlziiChat.Services.Permissions.Builder do
       },
       reports: %{
         can_report: Validations.has_allowed_from_subscription(preference, "reportingFunctions")
+      },
+      pinboard: %{
+        can_enable: PinboardResourcePermissions.can_enable(session_member) |> to_boolean,
+        can_add_resource: PinboardResourcePermissions.can_add_resource(session_member) |> to_boolean
       }
     }
   end
@@ -57,4 +69,7 @@ defmodule KlziiChat.Services.Permissions.Builder do
           {:ok, Map.get(preference, :data, %{})}
       end
   end
+
+  def to_boolean({:ok}), do: true
+  def to_boolean({:error, _}), do: false
 end

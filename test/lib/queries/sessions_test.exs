@@ -1,7 +1,7 @@
 defmodule KlziiChat.Services.SessionsTest do
   use KlziiChat.{ModelCase, SessionMemberCase}
   alias KlziiChat.Queries.Sessions, as: SessionsQueries
-  alias KlziiChat.{Repo, BrandProjectPreference}
+  alias KlziiChat.{Repo}
 
   test "can find session", %{session: session} do
     found_session = SessionsQueries.find(session.id)
@@ -17,12 +17,6 @@ defmodule KlziiChat.Services.SessionsTest do
     first = session_topics |> List.first
     last = session_topics |> List.last
     assert(last.order > first.order)
-  end
-
-  test "is prelouded brand project preference", %{session: session} do
-      %BrandProjectPreference{} = SessionsQueries.find(session.id)
-      |> Repo.one
-      |> Map.get(:brand_project_preference)
   end
 
   test "can't find session", %{session: session} do
