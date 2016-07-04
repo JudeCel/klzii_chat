@@ -121,7 +121,7 @@ defmodule KlziiChat.SessionTopicChannel do
         broadcast! socket, "console",  ConsoleView.render("show.json", %{console: console})
         {:reply, :ok, socket}
       {:error, reason} ->
-        {:error, %{reason: reason}}
+        {:reply, { :error, %{reason: reason} }, socket }
     end
   end
 

@@ -6,7 +6,7 @@ defmodule KlziiChat.Services.ConsoleService do
   @spec error_messages :: Map.t
   def error_messages do
     %{
-      pinboard_is_enable: "Can't add new resource Pinboard is enable"
+      pinboard_is_enable: "Can't activate resource because pinboard is enabled"
     }
   end
 
