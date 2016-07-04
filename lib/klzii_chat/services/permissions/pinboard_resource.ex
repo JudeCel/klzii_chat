@@ -8,6 +8,13 @@ defmodule KlziiChat.Services.Permissions.PinboardResource do
     }
   end
 
+  @spec can_enable(Map.t) :: {:ok} | {:error, String.t}
+  def can_enable(member) do
+    roles = ~w(facilitator)
+    has_role(member.role, roles)
+    |> add_response
+  end
+
   @spec can_add_resource(Map.t) :: {:ok} | {:error, String.t}
   def can_add_resource(member) do
     roles = ~w(participant)
