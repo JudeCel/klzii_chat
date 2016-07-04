@@ -21,14 +21,14 @@ defmodule KlziiChat.Services.Permissions.BuilderPermissionsTest do
     assert(is_map(reports))
   end
 
-  test "#KlziiChat.Services.Permissions.Builder, when can find subscription_permissions", %{facilitator: facilitator} do
-    {:ok, pemissions} =  Builder.subscription_permissions(facilitator.id)
+  test "#KlziiChat.Services.Permissions.Builder, when can find session_member_permissions", %{facilitator: facilitator} do
+    {:ok, pemissions} =  Builder.session_member_permissions(facilitator.id)
     assert(is_map(pemissions))
   end
 
-  test "#KlziiChat.Services.Permissions.Builder, when can't find subscription_permissions raise error ", %{facilitator: facilitator} do
+  test "#KlziiChat.Services.Permissions.Builder, when can't find session_member_permissions raise error ", %{facilitator: facilitator} do
     assert_raise(Ecto.NoResultsError, fn ->
-     Builder.subscription_permissions(facilitator.id + 999)
+     Builder.session_member_permissions(facilitator.id + 999)
    end)
   end
 end

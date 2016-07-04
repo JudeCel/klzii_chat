@@ -1,5 +1,6 @@
 defmodule KlziiChat.SessionTopicChannel do
   use KlziiChat.Web, :channel
+  alias KlziiChat.Services.Permissions.Builder, as: PermissionsBuilder
   alias KlziiChat.Services.{MessageService, UnreadMessageService, ConsoleService, SessionTopicService, MiniSurveysService, PinboardResourceService}
   alias KlziiChat.{MessageView, Presence, Endpoint, ConsoleView, SessionTopicView, SessionMembersView, MiniSurveyView, PinboardResourceView}
   import(KlziiChat.Authorisations.Channels.SessionTopic, only: [authorized?: 2])
@@ -11,7 +12,7 @@ defmodule KlziiChat.SessionTopicChannel do
     History for specific session topic
   """
 
-  intercept ["new_message", "update_message", "update_message", "thumbs_up", "delete_pinboard_resource"]
+  intercept ["new_message", "update_message", "update_message", "thumbs_up"]
 
   def join("session_topic:" <> session_topic_id, _payload, socket) do
     if authorized?(socket, session_topic_id) do
@@ -135,19 +136,21 @@ defmodule KlziiChat.SessionTopicChannel do
     end
   end
 
+  intercept ["get_pinboard_resources"]
   def handle_in("get_pinboard_resources", _, socket) do
       case PinboardResourceService.all(socket.assigns.session_topic_id) do
         {:ok, pinboard_resources} ->
-          {:reply, {:ok, %{list: Phoenix.View.render_many(pinboard_resources, PinboardResourceView, "show.json", as: :pinboard_resource)}}, socket}
+          {:reply, {:ok, %{list: pinboard_resources}}, socket}
         {:error, reason} ->
           {:error, %{reason: reason}}
       end
   end
 
+  intercept ["delete_pinboard_resource"]
   def handle_in("delete_pinboard_resource", _, socket) do
       case PinboardResourceService.delete(get_session_member(socket).id, socket.assigns.session_topic_id) do
         {:ok, pinboard_resource} ->
-          broadcast! socket, "delete_pinboard_resource", Phoenix.View.render_one(pinboard_resource, PinboardResourceView, "show.json", as: :pinboard_resource)
+          broadcast! socket, "delete_pinboard_resource", pinboard_resource
           {:reply, :ok, socket}
         {:error, reason} ->
           {:error, %{reason: reason}}
@@ -237,7 +240,10 @@ defmodule KlziiChat.SessionTopicChannel do
   def handle_out("delete_pinboard_resource", payload, socket) do
     # TODO add permissions for pinboard_resource
     session_member = get_session_member(socket)
-    push socket, "delete_pinboard_resource", payload
+    view = Phoenix.View.render_one(payload, PinboardResourceView, "show.json", as: :pinboard_resource)
+    permissions = PermissionsBuilder.pinboard_resource(session_member, payload)
+
+    push socket, "delete_pinboard_resource", Map.put(view, :permissions, permissions)
     {:noreply, socket}
   end
 
