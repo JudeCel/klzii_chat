@@ -16,7 +16,7 @@ defmodule KlziiChat.Services.PinboardResourceService do
   def find(session_member_id, session_topic_id) do
     from(pr in PinboardResource,
       where: pr.sessionMemberId == ^session_member_id and pr.sessionTopicId == ^session_topic_id,
-      preload: [:resource]
+      preload: [:resource, :session_member]
     )
   end
 
@@ -24,7 +24,7 @@ defmodule KlziiChat.Services.PinboardResourceService do
     result = from(pr in PinboardResource,
       where: pr.sessionTopicId == ^session_topi_id,
       order_by: [asc: pr.createdAt],
-      preload: [:resource]
+      preload: [:resource, :session_member]
     ) |> Repo.all
     {:ok, result}
   end
@@ -103,7 +103,8 @@ defmodule KlziiChat.Services.PinboardResourceService do
               {:ok, pinboard_resource}
             resource ->
               {:ok, resource} = Repo.delete(resource)
-              {:ok, Repo.get!(PinboardResource, pinboard_resource.id)}
+              pinboard_resource = find(session_member.id, session_topic_id) |> Repo.one!
+              {:ok, pinboard_resource}
           end
         {:error, reason} ->
           {:error, reason}

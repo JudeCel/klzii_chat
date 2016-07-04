@@ -235,8 +235,8 @@ defmodule KlziiChat.SessionTopicChannel do
   end
 
   def handle_out("delete_pinboard_resource", payload, socket) do
+    # TODO add permissions for pinboard_resource
     session_member = get_session_member(socket)
-    payload = Map.put(payload, "colour", session_member.colour)
     push socket, "delete_pinboard_resource", payload
     {:noreply, socket}
   end
