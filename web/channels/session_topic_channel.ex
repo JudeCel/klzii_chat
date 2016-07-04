@@ -12,7 +12,7 @@ defmodule KlziiChat.SessionTopicChannel do
     History for specific session topic
   """
 
-  intercept ["new_message", "update_message", "update_message", "thumbs_up"]
+  intercept ["new_message", "update_message", "update_message", "thumbs_up", "get_pinboard_resources","delete_pinboard_resource"]
 
   def join("session_topic:" <> session_topic_id, _payload, socket) do
     if authorized?(socket, session_topic_id) do
@@ -136,7 +136,6 @@ defmodule KlziiChat.SessionTopicChannel do
     end
   end
 
-  intercept ["get_pinboard_resources"]
   def handle_in("get_pinboard_resources", _, socket) do
       case PinboardResourceService.all(socket.assigns.session_topic_id) do
         {:ok, pinboard_resources} ->
@@ -146,7 +145,6 @@ defmodule KlziiChat.SessionTopicChannel do
       end
   end
 
-  intercept ["delete_pinboard_resource"]
   def handle_in("delete_pinboard_resource", _, socket) do
       case PinboardResourceService.delete(get_session_member(socket).id, socket.assigns.session_topic_id) do
         {:ok, pinboard_resource} ->
@@ -238,7 +236,6 @@ defmodule KlziiChat.SessionTopicChannel do
   end
 
   def handle_out("delete_pinboard_resource", payload, socket) do
-    # TODO add permissions for pinboard_resource
     session_member = get_session_member(socket)
     view = Phoenix.View.render_one(payload, PinboardResourceView, "show.json", as: :pinboard_resource)
     permissions = PermissionsBuilder.pinboard_resource(session_member, payload)
