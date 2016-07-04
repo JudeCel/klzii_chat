@@ -1,7 +1,7 @@
 defmodule KlziiChat.SessionTopicChannel do
   use KlziiChat.Web, :channel
-  alias KlziiChat.Services.{MessageService, UnreadMessageService, ConsoleService, SessionTopicService, MiniSurveysService}
-  alias KlziiChat.{MessageView, Presence, Endpoint, ConsoleView, SessionTopicView, SessionMembersView, MiniSurveyView}
+  alias KlziiChat.Services.{MessageService, UnreadMessageService, ConsoleService, SessionTopicService, MiniSurveysService, PinboardResourceService}
+  alias KlziiChat.{MessageView, Presence, Endpoint, ConsoleView, SessionTopicView, SessionMembersView, MiniSurveyView, PinboardResourceView}
   import(KlziiChat.Authorisations.Channels.SessionTopic, only: [authorized?: 2])
   import(KlziiChat.Helpers.SocketHelper, only: [get_session_member: 1])
 
@@ -133,6 +133,25 @@ defmodule KlziiChat.SessionTopicChannel do
       {:error, reason} ->
         {:error, %{reason: reason}}
     end
+  end
+
+  def handle_in("get_pinboard_resources", _, socket) do
+      case PinboardResourceService.all(socket.assigns.session_topic_id) do
+        {:ok, pinboard_resources} ->
+          {:reply, {:ok, %{list: Phoenix.View.render_many(pinboard_resources, PinboardResourceView, "show.json", as: :pinboard_resource)}}, socket}
+        {:error, reason} ->
+          {:error, %{reason: reason}}
+      end
+  end
+
+  def handle_in("delete_pinboard_resource", _, socket) do
+      case PinboardResourceService.delete(get_session_member(socket).id, socket.assigns.session_topic_id) do
+        {:ok, pinboard_resource} ->
+          broadcast! socket, "delete_pinboard_resource", Phoenix.View.render_one(pinboard_resource, PinboardResourceView, "delete.json", as: :pinboard_resource)
+          {:reply, :ok, socket}
+        {:error, reason} ->
+          {:error, %{reason: reason}}
+      end
   end
 
   def handle_in("set_console_mini_survey", %{"id" => id}, socket) do

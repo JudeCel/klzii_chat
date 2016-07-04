@@ -17,6 +17,6 @@ defmodule KlziiChat.PinboardResource do
   def changeset(model, params \\ %{}) do
     model
     |> cast(params, [:sessionTopicId, :sessionMemberId, :resourceId ])
-    |> validate_required([:sessionTopicId, :sessionMemberId, :resourceId])
+    |> validate_required([:sessionTopicId, :sessionMemberId])
   end
 end

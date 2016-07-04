@@ -7,15 +7,6 @@ defmodule KlziiChat.PinboardResourceController do
   plug Guardian.Plug.EnsureAuthenticated, handler: KlziiChat.Guardian.AuthErrorHandler
   plug :if_current_member
 
-  def index(conn, %{"sessionTopicId" => session_topic_id}, _member, _) do
-    case PinboardResourceService.all(session_topic_id) do
-      {:ok, pinboard_resources} ->
-        json(conn, %{list: Phoenix.View.render_many(pinboard_resources, PinboardResourceView, "show.json", as: :pinboard_resource)})
-      {:error, reason} ->
-        json(conn, %{status: :error, reason: reason})
-    end
-  end
-
   def upload(conn, params, member, _) do
     %{"sessionTopicId" => session_topic_id} = params
     case ResourceService.upload(params, member.account_user.id) do
@@ -25,20 +16,11 @@ defmodule KlziiChat.PinboardResourceController do
               pinboard_resource =
                 Repo.preload(pinboard_resource, [:resource])
                 |> Phoenix.View.render_one(PinboardResourceView, "show.json", as: :pinboard_resource)
-            Endpoint.broadcast!("sessions:#{member.session_member.sessionId}", "new_pinboard_resource", pinboard_resource)
+            Endpoint.broadcast!("session_topic:#{member.session_member.sessionId}", "new_pinboard_resource", pinboard_resource)
             json(conn, %{status: :ok, pinboard_resource: pinboard_resource})
           {:error, reason} ->
             json(conn, %{status: :error, error: reason})
         end
-      {:error, reason} ->
-        json(conn, %{status: :error, reason: reason})
-    end
-  end
-
-  def delete(conn, %{"id" => id}, member, _) do
-    case PinboardResourceService.delete(member.session_member.id, id) do
-      {:ok, pinboard_resource} ->
-        json(conn, Phoenix.View.render_one(pinboard_resource, PinboardResourceView, "delete.json", as: :pinboard_resource))
       {:error, reason} ->
         json(conn, %{status: :error, reason: reason})
     end
