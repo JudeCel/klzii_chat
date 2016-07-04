@@ -1,6 +1,6 @@
 .room-section
   .top-row
-    .whiteboard-section
+    .whiteboard-section, .pinboard-section
       flex: 1
       max-width: 50%
       width: 950px
@@ -37,12 +37,15 @@
         position: inherit
         .panel-buttons-section
           display: none
-      .whiteboard-title, .whiteboard-expand
+      .whiteboard-title, .whiteboard-expand, .pinboard-title, .pinboard-expand
         position: absolute
         top: 0px
         z-index: 1
-      .whiteboard-expand
+      .whiteboard-expand, .pinboard-expand
         right: 3px
+      #pinboard-svg
+        background-image: url('/images/corkboard960x460.png')
+        background-size: 100% auto;
 
 #circleShapes, #scribleShapes, #lineWidthShapes, #eraserShapes
   .btn.btn-default

@@ -3,6 +3,8 @@ const helpers = {
     switch (type) {
       case "link":
         return this.props.console['video_id'];
+      case "pinboard":
+        return this.props.console[type];
       default:
         return this.props.console[type + '_id'];
     }
@@ -18,6 +20,17 @@ const helpers = {
         type
     }
     return type
+  },
+  isOtherItemsActive(except) {
+    const { tConsole } = this.props;
+
+    for(var i in tConsole) {
+      if(tConsole[i] && i != except) {
+        return true;
+      }
+    }
+
+    return false;
   },
   avatarDataBySessionContext(avatarData, sessionTopicContext, sessionTopicId){
     if (sessionTopicId && sessionTopicContext && sessionTopicContext[sessionTopicId]) {

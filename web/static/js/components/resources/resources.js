@@ -2,11 +2,12 @@ import React, {PropTypes} from 'react';
 import { connect }        from 'react-redux';
 import mixins             from '../../mixins';
 import Modals             from './modals';
+import PinboardActions    from './../../actions/pinboard';
 
 const { UploadsModal, SurveyModal } = Modals;
 
 const Resources = React.createClass({
-  mixins: [mixins.modalWindows, mixins.validations],
+  mixins: [mixins.modalWindows, mixins.validations, mixins.helpers],
   getInitialState() {
     return { currentModal: null };
   },
@@ -20,8 +21,27 @@ const Resources = React.createClass({
   },
   openModal(modal) {
     this.setState({ currentModal: modal }, function() {
-      this.openSpecificModal('resources');
+      if(this.state.currentModal == 'pinboard') {
+        this.activatePinboard();
+      }
+      else {
+        this.openSpecificModal('resources');
+      }
     });
+  },
+  activatePinboard() {
+    const { tConsole, channel, dispatch } = this.props;
+
+    if(!tConsole.pinboard) {
+      let confirmed = true;
+      if(this.isOtherItemsActive('pinboard')) {
+        confirmed = confirm('Enabling pinboard will remove other active console items, are you sure?');
+      }
+
+      if(confirmed) {
+        dispatch(PinboardActions.enablePinboard(channel));
+      }
+    }
   },
   componentDidUpdate(prevProps) {
     if(this.props.whiteboardImage && this.props.whiteboardImage != prevProps.whiteboardImage) {
@@ -31,12 +51,12 @@ const Resources = React.createClass({
   render() {
     const { currentModal } = this.state;
     const resourceButtons = [
-      { type: 'video', className: 'icon-video-1' },
-      { type: 'audio', className: 'icon-volume-up' },
-      { type: 'image', className: 'icon-picture' },
-      { type: 'video', className: 'icon-camera' },
-      { type: 'survey', className: 'icon-ok-squared' },
-    ]
+      { type: 'video',    className: 'icon-video-1'    },
+      { type: 'audio',    className: 'icon-volume-up'  },
+      { type: 'image',    className: 'icon-picture'    },
+      { type: 'pinboard', className: 'icon-camera'     },
+      { type: 'survey',   className: 'icon-ok-squared' },
+    ];
 
     if(this.hasPermission(['resources', 'can_upload'])) {
       return (
@@ -64,6 +84,8 @@ const Resources = React.createClass({
 
 const mapStateToProps = (state) => {
   return {
+    channel: state.sessionTopic.channel,
+    tConsole: state.sessionTopic.console,
     currentUser: state.members.currentUser,
     modalWindows: state.modalWindows,
     whiteboardImage: state.modalWindows.whiteboardImage,

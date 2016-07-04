@@ -32,7 +32,7 @@ const Console = React.createClass({
     const consoleButtons = [
       { type: 'video',       className: 'icon-video-1'    },
       { type: 'audio',       className: 'icon-volume-up'  },
-      { type: 'image',       className: 'icon-camera'     },
+      { type: 'pinboard',    className: 'icon-camera'     },
       { type: 'mini_survey', className: 'icon-ok-squared' },
       { type: 'pdf',         className: 'icon-pdf'        },
     ];
@@ -52,7 +52,7 @@ const Console = React.createClass({
         </div>
 
         <SurveyModal show={ this.shouldShow(['mini_survey']) } />
-        <UploadsModal show={ this.shouldShow(['video', 'audio', 'image']) } modalName={ modalName } />
+        <UploadsModal show={ this.shouldShow(['video', 'audio']) } modalName={ modalName } />
       </div>
     )
   }

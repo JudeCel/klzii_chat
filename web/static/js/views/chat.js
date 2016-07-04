@@ -14,6 +14,7 @@ import Resources            from '../components/resources/resources.js';
 import HeaderLinks          from '../components/header/links.js';
 import Console              from '../components/console/index';
 
+import Pinboard             from '../components/pinboard/index.js';
 import WhiteboardCanvas     from '../components/whiteboard/whiteboardCanvas';
 import Notifications        from '../actions/notifications';
 import notificationMixin    from '../mixins/notification';
@@ -28,6 +29,14 @@ const ChatView = React.createClass({
       backgroundColor: colours.mainBackground,
       borderColor: colours.mainBorder
     };
+  },
+  renderWhiteboard() {
+    if(this.props.pinboardActive) {
+      return <Pinboard />;
+    }
+    else {
+      return <WhiteboardCanvas member={ this.props }/>;
+    }
   },
   componentDidUpdate() {
     const { notifications, dispatch, colours } = this.props;
@@ -81,7 +90,7 @@ const ChatView = React.createClass({
                 <div className='col-md-8'>
                   <div className='row top-row'>
                     <Facilitator />
-                    <WhiteboardCanvas member={ this.props }/>
+                    { this.renderWhiteboard() }
                   </div>
 
                   <div className='row'>
@@ -115,6 +124,7 @@ const ChatView = React.createClass({
 
 const mapStateToProps = (state) => {
   return {
+    pinboardActive: state.sessionTopic.console.pinboard,
     colours: state.chat.session.colours,
     sessionReady: state.chat.ready,
     error: state.chat.error,
