@@ -14,7 +14,7 @@ defmodule KlziiChat.Services.SessionResourcesService do
     if(SessionResourcesPermissions.can_add_resources(session_member)) do
       do_add(session_member.sessionId, resource_ids)
     else
-      {:error, "Action not allowed!"}
+      {:error, %{permissions: "Action not allowed!"}}
     end
   end
 
@@ -41,7 +41,7 @@ defmodule KlziiChat.Services.SessionResourcesService do
       :ok = delete_related_consoles(session_resource.resource, session_member.id)
       {:ok, session_resource}
     else
-      {:error, "Action not allowed!"}
+      {:error, %{permissions: "Action not allowed!"}}
     end
   end
 
@@ -72,7 +72,7 @@ defmodule KlziiChat.Services.SessionResourcesService do
       |> Repo.one
       {:ok, session_resource}
     else
-      {:error, "Action not allowed!"}
+      {:error, %{permissions: "Action not allowed!"}}
     end
   end
 
@@ -87,7 +87,7 @@ defmodule KlziiChat.Services.SessionResourcesService do
           |> Repo.all
         {:ok, session_resources}
     else
-      {:error, "Action not allowed!"}
+      {:error, %{permissions: "Action not allowed!"}}
     end
   end
 

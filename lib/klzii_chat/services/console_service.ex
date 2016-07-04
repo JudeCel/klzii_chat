@@ -22,7 +22,7 @@ defmodule KlziiChat.Services.ConsoleService do
       set_id_by_type(resource_id, :resource)
       |> update_console(console)
     else
-      {:error, "Action not allowed!"}
+      {:error, %{permissions: "Action not allowed!"}}
     end
   end
 
@@ -42,7 +42,7 @@ defmodule KlziiChat.Services.ConsoleService do
       set_id_by_type(mini_survey_id, :mini_survey)
       |> update_console(console)
     else
-      {:error, "Action not allowed!"}
+      {:error, %{permissions: "Action not allowed!"}}
     end
   end
 
@@ -54,7 +54,7 @@ defmodule KlziiChat.Services.ConsoleService do
       remove_id_by_type(type)
       |> update_console(console)
     else
-      {:error, "Action not allowed!"}
+      {:error, %{permissions: "Action not allowed!"}}
     end
   end
 

@@ -39,7 +39,7 @@ defmodule KlziiChat.Services.SessionReportingServiceTest do
 
   test "Report create permissions", %{facilitator: facilitator, participant: participant} do
     assert(:ok == SessionReportingService.check_report_create_permision(facilitator))
-    assert({:error, "Action not allowed!"} == SessionReportingService.check_report_create_permision(participant))
+    assert({:error, %{permissions: "Action not allowed!"}} == SessionReportingService.check_report_create_permision(participant))
   end
 
   test "Try to create incorrect report format and type" do
@@ -142,7 +142,7 @@ defmodule KlziiChat.Services.SessionReportingServiceTest do
   end
 
   test "Error Creating session topic report with wrong permission", %{session: session, session_topic: session_topic, participant: participant} do
-    assert({:error, "Action not allowed!"} ==
+    assert({:error, %{permissions: "Action not allowed!"}} ==
      SessionReportingService.create_session_topic_report(session.id, participant.id, session_topic.id, :csv, :all, :true))
   end
 
@@ -204,12 +204,12 @@ defmodule KlziiChat.Services.SessionReportingServiceTest do
   end
 
   test "Error getting all session topics reports with incorrect permission", %{session: session, participant: participant} do
-    assert({:error, "Action not allowed!"} = SessionReportingService.get_session_topics_reports(session.id, participant.id))
+    assert({:error, %{permissions: "Action not allowed!"}} = SessionReportingService.get_session_topics_reports(session.id, participant.id))
   end
 
   test "Check report delete permision", %{facilitator: facilitator, participant: participant} do
     assert(:ok == SessionReportingService.check_report_delete_permision(facilitator))
-    assert({:error, "Action not allowed!"} == SessionReportingService.check_report_delete_permision(participant))
+    assert({:error, %{permissions: "Action not allowed!"}} == SessionReportingService.check_report_delete_permision(participant))
   end
 
   test "Delete resource async - deletes resource if resource_id is not nil", %{session: session, session_topic: session_topic, facilitator: facilitator} do
@@ -272,7 +272,7 @@ defmodule KlziiChat.Services.SessionReportingServiceTest do
 
   test "Error deleting session topics report with incorrect permission", %{session: session, session_topic: session_topic, participant: participant} do
     {:ok, report} = SessionReportingService.create_session_topics_reports_record(session.id, session_topic.id, :all, true, :pdf)
-    assert({:error, "Action not allowed!"} == SessionReportingService.delete_session_topic_report(report.id, participant.id))
+    assert({:error, %{permissions: "Action not allowed!"}} == SessionReportingService.delete_session_topic_report(report.id, participant.id))
   end
 
   test "Error deleting non-existend session topics report", %{facilitator: facilitator} do
@@ -304,6 +304,6 @@ defmodule KlziiChat.Services.SessionReportingServiceTest do
 
    test "Error recreating session topic report with wrong permission", %{session: session, session_topic: session_topic, participant: participant} do
      {:ok, report} = SessionReportingService.create_session_topics_reports_record(session.id, session_topic.id, :all, true, :pdf)
-     assert({:error, "Action not allowed!"} == SessionReportingService.recreate_session_topic_report(report.id, participant.id))
+     assert({:error, %{permissions: "Action not allowed!"}} == SessionReportingService.recreate_session_topic_report(report.id, participant.id))
    end
 end

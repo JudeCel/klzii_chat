@@ -72,7 +72,7 @@ defmodule KlziiChat.Services.ResourceService do
           {:ok, result}
       end
     else
-      {:error, "Action not allowed!"}
+      {:error, %{permissions: "Action not allowed!"}}
     end
   end
 
@@ -114,7 +114,7 @@ defmodule KlziiChat.Services.ResourceService do
           {:error, reason}
       end
     else
-      {:error, "Action not allowed!"}
+      {:error, %{permissions: "Action not allowed!"}}
     end
   end
 end

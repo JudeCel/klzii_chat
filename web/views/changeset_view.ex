@@ -16,4 +16,8 @@ defmodule KlziiChat.ChangesetView do
     # as a JSON object. So we just pass it forward.
     %{errors: translate_errors(changeset)}
   end
+
+  def render("error.json", %{permissions: error_message}) do
+    %{errors: %{permissions: [translate_error(error_message)]}}
+  end
 end

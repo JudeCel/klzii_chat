@@ -20,7 +20,7 @@ defmodule KlziiChat.Services.DirectMessageService do
       )
       |> Repo.insert
     else
-      { :error, "Action not allowed!" }
+      {:error, %{permissions: "Action not allowed!"}}
     end
   end
 

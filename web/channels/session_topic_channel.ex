@@ -20,8 +20,8 @@ defmodule KlziiChat.SessionTopicChannel do
       case MessageService.history(session_topic_id, get_session_member(socket)) do
         {:ok, history} ->
           {:ok, history, socket}
-        {:error, reason} ->
-          {:error, %{reason: reason}}
+        {:error, changeset} ->
+          {:reply, {:error, KlziiChat.ChangesetView.render("error.json", %{changeset: changeset})}, socket}
       end
     else
       {:error, %{reason: "unauthorized"}}
@@ -52,8 +52,8 @@ defmodule KlziiChat.SessionTopicChannel do
         {:ok, session_topic} ->
           broadcast!(socket, "board_message",  SessionTopicView.render("show.json", %{session_topic: session_topic}))
           {:reply, :ok, socket}
-        {:error, reason} ->
-          {:error, %{reason: reason}}
+        {:error, changeset} ->
+          {:reply, {:error, KlziiChat.ChangesetView.render("error.json", %{changeset: changeset})}, socket}
       end
     else
       {:error, %{reason: "Message too short"}}
@@ -64,8 +64,8 @@ defmodule KlziiChat.SessionTopicChannel do
     case MiniSurveysService.create(get_session_member(socket).id, socket.assigns.session_topic_id, payload) do
       {:ok, mini_survey} ->
         {:reply, {:ok, Phoenix.View.render_one(mini_survey, MiniSurveyView, "show.json", as: :mini_survey)}, socket}
-      {:error, reason} ->
-        {:error, %{reason: reason}}
+      {:error, changeset} ->
+        {:reply, {:error, KlziiChat.ChangesetView.render("error.json", %{changeset: changeset})}, socket}
     end
   end
 
@@ -74,8 +74,8 @@ defmodule KlziiChat.SessionTopicChannel do
     case MiniSurveysService.delete(session_member.id, id) do
       {:ok, mini_survey} ->
         {:reply, {:ok, %{id: mini_survey.id}}, socket}
-      {:error, reason} ->
-        {:error, %{reason: reason}}
+      {:error, changeset} ->
+        {:reply, {:error, KlziiChat.ChangesetView.render("error.json", %{changeset: changeset})}, socket}
     end
   end
 
@@ -83,8 +83,8 @@ defmodule KlziiChat.SessionTopicChannel do
     case MiniSurveysService.create_answer(get_session_member(socket).id, id, answer) do
       {:ok, mini_survey} ->
         {:reply, {:ok, Phoenix.View.render_one(mini_survey, MiniSurveyView, "show_with_answer.json", as: :mini_survey)}, socket}
-      {:error, reason} ->
-        {:error, %{reason: reason}}
+      {:error, changeset} ->
+        {:reply, {:error, KlziiChat.ChangesetView.render("error.json", %{changeset: changeset})}, socket}
     end
   end
 
@@ -92,8 +92,8 @@ defmodule KlziiChat.SessionTopicChannel do
     case MiniSurveysService.get_for_console(get_session_member(socket).id, id) do
       {:ok, mini_survey} ->
         {:reply, {:ok, Phoenix.View.render_one(mini_survey, MiniSurveyView, "show_with_answer.json", as: :mini_survey)}, socket}
-      {:error, reason} ->
-        {:error, %{reason: reason}}
+      {:error, changeset} ->
+        {:reply, {:error, KlziiChat.ChangesetView.render("error.json", %{changeset: changeset})}, socket}
     end
   end
 
@@ -101,8 +101,8 @@ defmodule KlziiChat.SessionTopicChannel do
     case MiniSurveysService.get_with_answers(id) do
       {:ok, mini_survey} ->
         {:reply, {:ok, Phoenix.View.render_one(mini_survey, MiniSurveyView, "show_with_answers.json", as: :mini_survey)}, socket}
-      {:error, reason} ->
-        {:error, %{reason: reason}}
+      {:error, changeset} ->
+        {:reply, {:error, KlziiChat.ChangesetView.render("error.json", %{changeset: changeset})}, socket}
     end
   end
 
@@ -110,8 +110,8 @@ defmodule KlziiChat.SessionTopicChannel do
     case MiniSurveysService.get(socket.assigns.session_topic_id) do
       {:ok, mini_surveys} ->
         {:reply, {:ok, %{mini_surveys: Phoenix.View.render_many(mini_surveys, MiniSurveyView, "show.json", as: :mini_survey)}}, socket}
-      {:error, reason} ->
-        {:error, %{reason: reason}}
+      {:error, changeset} ->
+        {:reply, {:error, KlziiChat.ChangesetView.render("error.json", %{changeset: changeset})}, socket}
     end
   end
 
@@ -120,8 +120,8 @@ defmodule KlziiChat.SessionTopicChannel do
       {:ok, console} ->
         broadcast! socket, "console",  ConsoleView.render("show.json", %{console: console})
         {:reply, :ok, socket}
-      {:error, reason} ->
-        {:error, %{reason: reason}}
+      {:error, changeset} ->
+        {:reply, {:error, KlziiChat.ChangesetView.render("error.json", %{changeset: changeset})}, socket}
     end
   end
 
@@ -130,8 +130,8 @@ defmodule KlziiChat.SessionTopicChannel do
       {:ok, console} ->
         broadcast! socket, "console",  ConsoleView.render("show.json", %{console: console})
         {:reply, :ok, socket}
-      {:error, reason} ->
-        {:error, %{reason: reason}}
+      {:error, changeset} ->
+        {:reply, {:error, KlziiChat.ChangesetView.render("error.json", %{changeset: changeset})}, socket}
     end
   end
 
@@ -140,27 +140,23 @@ defmodule KlziiChat.SessionTopicChannel do
       {:ok, console} ->
         broadcast! socket, "console",  ConsoleView.render("show.json", %{console: console})
         {:reply, :ok, socket}
-      {:error, reason} ->
-        {:error, %{reason: reason}}
+      {:error, changeset} ->
+        {:reply, {:error, KlziiChat.ChangesetView.render("error.json", %{changeset: changeset})}, socket}
     end
   end
 
   def handle_in("new_message", payload, socket) do
     session_topic_id = socket.assigns.session_topic_id
     session_member = get_session_member(socket)
-    if String.length(payload["body"]) > 0  do
       case MessageService.create_message(session_member, session_topic_id, payload) do
         {:ok, message} ->
           KlziiChat.BackgroundTasks.Message.new(message.id)
           broadcast!(socket, "new_message",  message)
           Endpoint.broadcast!("sessions:#{message.session_member.sessionId}", "update_member", SessionMembersView.render("member.json", member: message.session_member))
           {:reply, :ok, socket}
-        {:error, reason} ->
-          {:error, %{reason: reason}}
+        {:error, changeset} ->
+          {:reply, {:error, KlziiChat.ChangesetView.render("error.json", %{changeset: changeset})}, socket}
       end
-    else
-      {:error, %{reason: "Message too short"}}
-    end
   end
 
   def handle_in("delete_message", %{ "id" => id }, socket) do
@@ -170,8 +166,8 @@ defmodule KlziiChat.SessionTopicChannel do
         KlziiChat.BackgroundTasks.Message.delete(session_member.session_id, socket.assigns.session_topic_id)
         broadcast! socket, "delete_message", resp
         {:reply, :ok, socket}
-      {:error, reason} ->
-        {:error, %{reason: reason}}
+      {:error, changeset} ->
+        {:reply, {:error, KlziiChat.ChangesetView.render("error.json", %{changeset: changeset})}, socket}
     end
   end
 
@@ -180,8 +176,8 @@ defmodule KlziiChat.SessionTopicChannel do
     case MessageService.star(id, session_member) do
       {:ok, message} ->
         {:reply, {:ok, MessageView.render("show.json", %{message: message, member: session_member}) }, socket}
-      {:error, reason} ->
-        {:error, %{reason: reason}}
+      {:error, changeset} ->
+        {:reply, {:error, KlziiChat.ChangesetView.render("error.json", %{changeset: changeset})}, socket}
     end
   end
 
@@ -190,8 +186,8 @@ defmodule KlziiChat.SessionTopicChannel do
       {:ok, message} ->
         broadcast! socket, "update_message", message
         {:reply, :ok, socket}
-      {:error, reason} ->
-        {:error, %{reason: reason}}
+      {:error, changeset} ->
+        {:reply, {:error, KlziiChat.ChangesetView.render("error.json", %{changeset: changeset})}, socket}
     end
   end
 
@@ -200,8 +196,8 @@ defmodule KlziiChat.SessionTopicChannel do
       {:ok, message} ->
         broadcast! socket, "update_message", message
         {:reply, :ok, socket}
-      {:error, reason} ->
-        {:error, %{reason: reason}}
+      {:error, changeset} ->
+        {:reply, {:error, KlziiChat.ChangesetView.render("error.json", %{changeset: changeset})}, socket}
     end
   end
 

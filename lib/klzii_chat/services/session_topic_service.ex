@@ -17,7 +17,7 @@ defmodule KlziiChat.Services.SessionTopicService do
     if SessionTopicPermissions.can_board_message(session_member) do
       Ecto.Changeset.change(session_topic, boardMessage: message) |> Repo.update
     else
-      {:error, errors_messages.action_not_allowed}
+      {:error, %{permissions: errors_messages.action_not_allowed}}
     end
   end
 

@@ -18,7 +18,7 @@ defmodule KlziiChat.Services.SessionReportingService do
 
   @spec check_report_create_permision(integer) :: :ok | {:error, String.t}
   def check_report_create_permision(session_member) do
-    if SessionReportingPermissions.can_create_report(session_member), do: :ok, else: {:error, "Action not allowed!"}
+    if SessionReportingPermissions.can_create_report(session_member), do: :ok, else: {:error, %{permissions: "Action not allowed!"}}
   end
 
   @spec create_session_topic_report(integer, integer, integer, atom, atom, boolean) :: {:ok, Map.t} | {:error, String.t}
@@ -159,13 +159,13 @@ defmodule KlziiChat.Services.SessionReportingService do
         preload: [:resource]
       {:ok, Repo.all(query)}
     else
-      {:error, "Action not allowed!"}
+      {:error, %{permissions: "Action not allowed!"}}
     end
   end
 
   @spec check_report_delete_permision(integer) :: :ok | {:error, String.t}
   def check_report_delete_permision(session_member) do
-    if SessionReportingPermissions.can_delete_report(session_member), do: :ok, else: {:error, "Action not allowed!"}
+    if SessionReportingPermissions.can_delete_report(session_member), do: :ok, else: {:error, %{permissions: "Action not allowed!"}}
   end
 
   @spec delete_session_topic_report(integer, integer) :: {:ok, Map.t} | {:error, String.t}

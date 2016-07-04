@@ -44,7 +44,7 @@ defmodule KlziiChat.Services.WhiteboardService do
       Ecto.Changeset.change(shape, event: params)
       |> update
     else
-      {:error, "Action not allowed!"}
+      {:error, %{permissions: "Action not allowed!"}}
     end
   end
 
@@ -60,7 +60,7 @@ defmodule KlziiChat.Services.WhiteboardService do
       )
       create(changeset)
     else
-      {:error, "Action not allowed!"}
+      {:error, %{permissions: "Action not allowed!"}}
     end
   end
 
@@ -82,7 +82,7 @@ defmodule KlziiChat.Services.WhiteboardService do
     if WhiteboardPermissions.can_delete(session_member, shape) do
       Repo.delete(shape)
     else
-      {:error, "Action not allowed!"}
+      {:error, %{permissions: "Action not allowed!"}}
     end
   end
 end

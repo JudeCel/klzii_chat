@@ -26,16 +26,18 @@ defmodule KlziiChat.Services.MessageService do
     if MessagePermissions.can_new_message(session_member) do
       reply_message = reply_message_prefix(replyId)
       session_member = Repo.get!(SessionMember, session_member.id)
-      build_assoc(
-        session_member, :messages,
+      map = %{
         replyId: IntegerHelper.get_num(replyId),
         sessionId: session_member.sessionId,
         body: (reply_message <> body),
         emotion: IntegerHelper.get_num(emotion),
         sessionTopicId: IntegerHelper.get_num(session_topic_id)
-      ) |> create
+      }
+      build_assoc(session_member, :messages)
+      |> Message.changeset(map)
+      |> create
     else
-      {:error, "Action not allowed!"}
+      {:error, %{permissions: "Action not allowed!"}}
     end
   end
 
@@ -43,15 +45,17 @@ defmodule KlziiChat.Services.MessageService do
   def create_message(session_member, session_topic_id, %{"emotion" => emotion, "body" => body}) do
     if MessagePermissions.can_new_message(session_member) do
       session_member = Repo.get!(SessionMember, session_member.id)
-      build_assoc(
-        session_member, :messages,
-        sessionId: session_member.sessionId,
+
+      map = %{sessionId: session_member.sessionId,
         body: body,
         emotion: IntegerHelper.get_num(emotion),
-        sessionTopicId: IntegerHelper.get_num(session_topic_id)
-      ) |> create
+        sessionTopicId: IntegerHelper.get_num(session_topic_id)}
+      build_assoc(session_member, :messages)
+      |> Message.changeset(map)
+      |> create
+
     else
-      {:error, "Action not allowed!"}
+      {:error, %{permissions: "Action not allowed!"}}
     end
   end
 
@@ -66,7 +70,7 @@ defmodule KlziiChat.Services.MessageService do
           {:ok, %{ id: event.id, replyId: event.replyId } }
       end
     else
-      {:error, "Action not allowed!"}
+      {:error, %{permissions: "Action not allowed!"}}
     end
   end
 
@@ -89,7 +93,7 @@ defmodule KlziiChat.Services.MessageService do
       Ecto.Changeset.change(event, body: body, emotion: IntegerHelper.get_num(emotion) )
         |> update_msg
     else
-      {:error, "Action not allowed!"}
+      {:error, %{permissions: "Action not allowed!"}}
     end
   end
 
@@ -110,7 +114,7 @@ defmodule KlziiChat.Services.MessageService do
       Ecto.Changeset.change(event, star: !event.star)
         |> update_msg
     else
-      {:error, "Action not allowed!"}
+      {:error, %{permissions: "Action not allowed!"}}
     end
   end
 
@@ -136,7 +140,7 @@ defmodule KlziiChat.Services.MessageService do
           end
       end
     else
-      {:error, "Action not allowed!"}
+      {:error, %{permissions: "Action not allowed!"}}
     end
   end
 
