@@ -99,9 +99,9 @@ const Avatar = React.createClass({
   },
   shouldComponentUpdate(nextProps) {
     if(this.previousData) {
-      let avatarData = JSON.stringify(this.previousData.avatarData) == JSON.stringify(nextProps.member.avatarData);
-      let sessionTopicContext = JSON.stringify(this.previousData.sessionTopicContext) == JSON.stringify(nextProps.member.sessionTopicContext);
-      let username = this.previousData.username == nextProps.member.username;
+      let avatarData = JSON.stringify(this.previousData.avatarData) != JSON.stringify(nextProps.member.avatarData);
+      let sessionTopicContext = JSON.stringify(this.previousData.sessionTopicContext) != JSON.stringify(nextProps.member.sessionTopicContext);
+      let username = this.previousData.username != nextProps.member.username;
       let screenChange = JSON.stringify(nextProps.utilityWindow) != JSON.stringify(this.props.utilityWindow);
       return(!(username && avatarData && sessionTopicContext) || screenChange);
     }
