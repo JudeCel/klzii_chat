@@ -81,18 +81,11 @@ defmodule KlziiChat.SessionMemberCase do
       |> Ecto.build_assoc(:subscription_preference, data: subscription_preference_data)
       |> Repo.insert
 
-    brand_project_preference =  Repo.insert!(%BrandProjectPreference{
-        name: "cool BrandProjectPreference",
-        colours: %{},
-        accountId:  account.id
-      })
-
     session = %Session{
       name: "cool session",
       startTime: Ecto.DateTime.cast!("2016-01-17T14:00:00.030Z"),
       endTime: Ecto.DateTime.cast!("2020-04-17T14:00:00.030Z"),
       accountId: account.id,
-      brandProjectPreferenceId: brand_project_preference.id,
       active: true
     } |> Repo.insert!
 
