@@ -54,11 +54,6 @@ const Pinboard = React.createClass({
   getInitialState() {
     return { minimized: true, maxWidth: 950, maxHeight: 460 };
   },
-  componentDidMount() {
-    let svg = this.getSvg();
-    this.drawPinboard(svg);
-    this.scalePinboard(svg);
-  },
   componentDidUpdate(props, state) {
     if(props.pinboard != this.props.pinboard) {
       let svg = this.getSvg();
