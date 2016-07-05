@@ -3,7 +3,7 @@ import { connect }        from 'react-redux';
 import Modals             from './modals';
 import mixins             from '../../mixins';
 
-const { SurveyModal, UploadsModal } = Modals;
+const { SurveyModal, UploadsModal, PinboardModal } = Modals;
 
 const Console = React.createClass({
   mixins: [mixins.modalWindows, mixins.helpers],
@@ -51,6 +51,7 @@ const Console = React.createClass({
           </ul>
         </div>
 
+        <PinboardModal show={ this.shouldShow(['pinboard']) } />
         <SurveyModal show={ this.shouldShow(['mini_survey']) } />
         <UploadsModal show={ this.shouldShow(['video', 'audio']) } modalName={ modalName } />
       </div>
