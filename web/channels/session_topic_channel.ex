@@ -22,7 +22,7 @@ defmodule KlziiChat.SessionTopicChannel do
         {:ok, history} ->
           {:ok, history, socket}
         {:error, reason} ->
-          {:reply, ChangesetView.render("error.json", reason), socket }
+          {:reply, {:error, error_view(reason)}, socket}
       end
     else
       {:error, %{reason: "unauthorized"}}
@@ -53,7 +53,7 @@ defmodule KlziiChat.SessionTopicChannel do
           broadcast!(socket, "board_message",  SessionTopicView.render("show.json", %{session_topic: session_topic}))
           {:reply, :ok, socket}
         {:error, reason} ->
-          {:reply, ChangesetView.render("error.json", reason), socket }
+          {:reply, {:error, error_view(reason)}, socket}
       end
   end
 
@@ -62,7 +62,7 @@ defmodule KlziiChat.SessionTopicChannel do
       {:ok, mini_survey} ->
         {:reply, {:ok, Phoenix.View.render_one(mini_survey, MiniSurveyView, "show.json", as: :mini_survey)}, socket}
       {:error, reason} ->
-        {:reply, ChangesetView.render("error.json", reason), socket }
+        {:reply, {:error, error_view(reason)}, socket}
     end
   end
 
@@ -72,7 +72,7 @@ defmodule KlziiChat.SessionTopicChannel do
       {:ok, mini_survey} ->
         {:reply, {:ok, %{id: mini_survey.id}}, socket}
       {:error, reason} ->
-        {:reply, ChangesetView.render("error.json", reason), socket }
+        {:reply, {:error, error_view(reason)}, socket}
     end
   end
 
@@ -81,7 +81,7 @@ defmodule KlziiChat.SessionTopicChannel do
       {:ok, mini_survey} ->
         {:reply, {:ok, Phoenix.View.render_one(mini_survey, MiniSurveyView, "show_with_answer.json", as: :mini_survey)}, socket}
       {:error, reason} ->
-        {:reply, ChangesetView.render("error.json", reason), socket }
+        {:reply, {:error, error_view(reason)}, socket}
     end
   end
 
@@ -90,7 +90,7 @@ defmodule KlziiChat.SessionTopicChannel do
       {:ok, mini_survey} ->
         {:reply, {:ok, Phoenix.View.render_one(mini_survey, MiniSurveyView, "show_with_answer.json", as: :mini_survey)}, socket}
       {:error, reason} ->
-        {:reply, ChangesetView.render("error.json", reason), socket }
+        {:reply, {:error, error_view(reason)}, socket}
     end
   end
 
@@ -99,7 +99,7 @@ defmodule KlziiChat.SessionTopicChannel do
       {:ok, mini_survey} ->
         {:reply, {:ok, Phoenix.View.render_one(mini_survey, MiniSurveyView, "show_with_answers.json", as: :mini_survey)}, socket}
       {:error, reason} ->
-        {:reply, ChangesetView.render("error.json", reason), socket }
+        {:reply, {:error, error_view(reason)}, socket}
     end
   end
 
@@ -108,7 +108,7 @@ defmodule KlziiChat.SessionTopicChannel do
       {:ok, mini_surveys} ->
         {:reply, {:ok, %{mini_surveys: Phoenix.View.render_many(mini_surveys, MiniSurveyView, "show.json", as: :mini_survey)}}, socket}
       {:error, reason} ->
-        {:reply, ChangesetView.render("error.json", reason), socket }
+        {:reply, {:error, error_view(reason)}, socket}
     end
   end
 
@@ -118,7 +118,7 @@ defmodule KlziiChat.SessionTopicChannel do
         broadcast! socket, "console",  ConsoleView.render("show.json", %{console: console})
         {:reply, :ok, socket}
       {:error, reason} ->
-        {:reply, ChangesetView.render("error.json", reason), socket }
+        {:reply, {:error, error_view(reason)}, socket}
     end
   end
 
@@ -128,7 +128,7 @@ defmodule KlziiChat.SessionTopicChannel do
         broadcast! socket, "console",  ConsoleView.render("show.json", %{console: console})
         {:reply, :ok, socket}
       {:error, reason} ->
-        {:reply, ChangesetView.render("error.json", reason), socket }
+        {:reply, {:error, error_view(reason)}, socket}
     end
   end
 
@@ -142,7 +142,7 @@ defmodule KlziiChat.SessionTopicChannel do
           end)
           {:reply, {:ok, %{list: list}}, socket}
         {:error, reason} ->
-          {:reply, ChangesetView.render("error.json", reason), socket }
+          {:reply, {:error, error_view(reason)}, socket}
       end
   end
 
@@ -152,7 +152,7 @@ defmodule KlziiChat.SessionTopicChannel do
           broadcast! socket, "delete_pinboard_resource", pinboard_resource
           {:reply, :ok, socket}
         {:error, reason} ->
-          {:reply, ChangesetView.render("error.json", reason), socket }
+          {:reply, {:error, error_view(reason)}, socket}
       end
   end
 
@@ -162,7 +162,7 @@ defmodule KlziiChat.SessionTopicChannel do
         broadcast! socket, "console",  ConsoleView.render("show.json", %{console: console})
         {:reply, :ok, socket}
       {:error, reason} ->
-        {:reply, ChangesetView.render("error.json", reason), socket }
+        {:reply, {:error, error_view(reason)}, socket}
     end
   end
 
@@ -172,7 +172,7 @@ defmodule KlziiChat.SessionTopicChannel do
         broadcast! socket, "console",  ConsoleView.render("show.json", %{console: console})
         {:reply, :ok, socket}
       {:error, reason} ->
-        {:reply, ChangesetView.render("error.json", reason), socket }
+        {:reply, {:error, error_view(reason)}, socket}
     end
   end
 
@@ -186,17 +186,8 @@ defmodule KlziiChat.SessionTopicChannel do
           Endpoint.broadcast!("sessions:#{message.session_member.sessionId}", "update_member", SessionMembersView.render("member.json", member: message.session_member))
           {:reply, :ok, socket}
         {:error, reason} ->
-          {:reply, ChangesetView.render("error.json", %{changeset: reason}), socket}
+          {:reply, {:error, error_view(reason)}, socket}
       end
-  end
-
-  def error_view(reason) do
-    case reason do
-      %Ecto.Changeset{} ->
-        ChangesetView.render("error.json", %{changeset: reason})
-      _->
-        ChangesetView.render("error.json", reason)
-    end
   end
 
   def handle_in("delete_message", %{ "id" => id }, socket) do
@@ -207,7 +198,7 @@ defmodule KlziiChat.SessionTopicChannel do
         broadcast! socket, "delete_message", resp
         {:reply, :ok, socket}
       {:error, reason} ->
-        {:reply, ChangesetView.render("error.json", reason), socket }
+        {:reply, {:error, error_view(reason)}, socket}
     end
   end
 
@@ -217,7 +208,7 @@ defmodule KlziiChat.SessionTopicChannel do
       {:ok, message} ->
         {:reply, {:ok, MessageView.render("show.json", %{message: message, member: session_member}) }, socket}
       {:error, reason} ->
-        {:reply, ChangesetView.render("error.json", reason), socket }
+        {:reply, {:error, error_view(reason)}, socket}
     end
   end
 
@@ -227,7 +218,7 @@ defmodule KlziiChat.SessionTopicChannel do
         broadcast! socket, "update_message", message
         {:reply, :ok, socket}
       {:error, reason} ->
-        {:reply, ChangesetView.render("error.json", reason), socket }
+        {:reply, {:error, error_view(reason)}, socket}
     end
   end
 
@@ -237,27 +228,17 @@ defmodule KlziiChat.SessionTopicChannel do
         broadcast! socket, "update_message", message
         {:reply, :ok, socket}
       {:error, reason} ->
-        {:reply, ChangesetView.render("error.json", reason), socket }
+        {:reply, {:error, error_view(reason)}, socket}
     end
   end
 
-  def handle_out("delete_pinboard_resource", payload, socket) do
+  def handle_out(message, payload, socket) when message in ["new_pinboard_resource", "delete_pinboard_resource"] do
     session_member = get_session_member(socket)
     view =
       Phoenix.View.render_one(payload, PinboardResourceView, "show.json", as: :pinboard_resource)
       |> Map.put(:permissions, PermissionsBuilder.pinboard_resource(session_member, payload))
 
-    push socket, "delete_pinboard_resource", view
-    {:noreply, socket}
-  end
-
-  def handle_out("new_pinboard_resource", payload, socket) do
-    session_member = get_session_member(socket)
-    view =
-      Phoenix.View.render_one(payload, PinboardResourceView, "show.json", as: :pinboard_resource)
-      |> Map.put(:permissions, PermissionsBuilder.pinboard_resource(session_member, payload))
-
-    push socket, "new_pinboard_resource", view
+    push socket, message, view
     {:noreply, socket}
   end
 
@@ -265,5 +246,14 @@ defmodule KlziiChat.SessionTopicChannel do
     session_member = get_session_member(socket)
     push socket, message, MessageView.render("show.json", %{message: payload, member: session_member})
     {:noreply, socket}
+  end
+
+  defp error_view(reason) do
+    case reason do
+      %Ecto.Changeset{} ->
+        ChangesetView.render("error.json", %{changeset: reason})
+      _->
+        ChangesetView.render("error.json", reason)
+    end
   end
 end

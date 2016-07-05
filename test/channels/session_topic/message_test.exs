@@ -40,16 +40,6 @@ defmodule KlziiChat.Channels.SessionTopic.MessageTest do
       assert(message.body == body)
   end
 
-  test "can't push new empty message", %{socket: socket, session_topic_1_name: session_topic_1_name} do
-    {:ok, _, socket} = subscribe_and_join(socket, SessionTopicChannel, session_topic_1_name)
-      body = " "
-      ref = push socket, "new_message", %{"emotion" => "1", "body" => body}
-      assert_reply ref, :error, reason
-      IO.inspect(reason)
-      # assert_push "new_message", message
-      # assert(message.body == body)
-  end
-
   test "can start message and unstart message", %{socket: socket, session_topic_1_name: session_topic_1_name} do
     {:ok, _, socket} = subscribe_and_join(socket, SessionTopicChannel, session_topic_1_name)
       body = "hey!!"

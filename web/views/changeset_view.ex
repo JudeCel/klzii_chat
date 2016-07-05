@@ -17,15 +17,18 @@ defmodule KlziiChat.ChangesetView do
     %{errors: translate_errors(changeset)}
   end
   def render("error.json", %{permissions: error_message}) do
-    %{errors: %{permissions: [translate_error(error_message)]}}
+    %{errors: %{permissions: [translate_error({error_message, []})]}}
   end
   def render("error.json", %{not_found: error_message}) do
-    %{errors: %{permissions: [translate_error(error_message)]}}
+    %{errors: %{not_found: [translate_error({error_message, []})]}}
   end
   def render("error.json", %{type: error_message}) do
-    %{errors: %{permissions: [translate_error(error_message)]}}
+    %{errors: %{type: [translate_error({error_message, []})]}}
   end
   def render("error.json", %{format: error_message}) do
-    %{errors: %{permissions: [translate_error(error_message)]}}
+    %{errors: %{format: [translate_error({error_message, []})]}}
+  end
+  def render("error.json", %{system: error_message}) do
+    %{errors: %{system: [translate_error({error_message, []})]}}
   end
 end
