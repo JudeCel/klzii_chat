@@ -19,8 +19,10 @@ const Pinboard = React.createClass({
     }
   },
   removePinboardResource(id) {
-    const { dispatch, channel } = this.props;
-    dispatch(PinboardActions.delete(channel, id));
+    if(confirm('Are you sure you want to remove this?')) {
+      const { dispatch, channel } = this.props;
+      dispatch(PinboardActions.delete(channel, id));
+    }
   },
   scalePinboard(svg) {
     const { minimized, maxWidth, maxHeight } = this.state;
