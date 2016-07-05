@@ -16,6 +16,7 @@ const PinboardConsole = React.createClass({
 
     let data = {
       type: 'image',
+      // scope: 'pinboard',
       scope: 'collage',
       name: name,
       files: files,
@@ -23,6 +24,7 @@ const PinboardConsole = React.createClass({
     };
 
     dispatch(PinboardActions.upload(data, currentUserJwt));
+    this.closeAllModals();
   },
   render() {
     const { show } = this.props;
