@@ -12,13 +12,16 @@ function _errorData(data) {
 }
 
 const Actions = {
-  // subscribePinboardEvents:(channel) => {
-  //   return dispatch => {
-  //     channel.on('get_pinboard_resources', (data) =>{
-  //       return dispatch({ type: Constants.GET_PINBOARD_RESOURCES, data: data });
-  //     });
-  //   }
-  // },
+  subscribePinboardEvents:(channel) => {
+    return dispatch => {
+      channel.on('new_pinboard_resource', (data) =>{
+        return dispatch({ type: Constants.CHANGE_PINBOARD_RESOURCE, data: data });
+      });
+      channel.on('delete_pinboard_resource', (data) =>{
+        return dispatch({ type: Constants.CHANGE_PINBOARD_RESOURCE, data: data });
+      });
+    }
+  },
   enable:(channel) => {
     return dispatch => {
       channel.push('enable_pinboard')
@@ -38,24 +41,22 @@ const Actions = {
       });
     }
   },
-  delete:(channel) => {
+  delete:(channel, id) => {
     return dispatch => {
-      channel.push('delete_pinboard_resource')
-      .receive('ok', (data) => {
-        // dispatch({ type: Constants.CHANGE_PINBOARD_RESOURCE, data: data });
-      }).receive('error', (data) => {
+      channel.push('delete_pinboard_resource', { id })
+      .receive('error', (data) => {
         dispatch(_errorData(data));
       });
     }
   },
-  upload:(data, jwt) =>{
+  upload:(data, jwt) => {
     return (dispatch) => {
       let csrf_token = localStorage.getItem("csrf_token");
       let req = request.post('/api/pinboard_resource/upload')
          .set('X-CSRF-Token', csrf_token)
          .set('Authorization', jwt);
 
-      data.files.map((file)=> {
+      data.files.map((file) => {
         req.attach('file', file)
            .field('type', data.type)
            .field('sessionTopicId', data.sessionTopicId)
@@ -63,12 +64,9 @@ const Actions = {
            .field('name', data.name);
       });
 
-      req.end((error, result) =>{
+      req.end((error, result) => {
         if(error) {
           dispatch(_errorData(error));
-        }
-        else {
-          dispatch({ type: Constants.CHANGE_PINBOARD_RESOURCE, data: result.body.pinboard_resource });
         }
       });
     }

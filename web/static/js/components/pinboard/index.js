@@ -2,10 +2,11 @@ import React, {PropTypes} from 'react';
 import Snap               from 'snapsvg';
 import { connect }        from 'react-redux';
 import ReactDOM           from 'react-dom';
-import mixins             from '../../mixins';
+import PinboardActions    from '../../actions/pinboard';
+import Builder            from './builder';
 
 const Pinboard = React.createClass({
-  // mixins: [mixins.modalWindows, mixins.validations, mixins.helpers],
+  mixins: [Builder],
   changePinboardState() {
     this.setState({ minimized: !this.state.minimized });
   },
@@ -15,6 +16,12 @@ const Pinboard = React.createClass({
     }
     else {
       return '/images/icon_whiteboard_shrink.png';
+    }
+  },
+  removePinboardResource(id) {
+    if(confirm('Are you sure you want to remove this?')) {
+      const { dispatch, channel } = this.props;
+      dispatch(PinboardActions.delete(channel, id));
     }
   },
   scalePinboard(svg) {
@@ -28,34 +35,14 @@ const Pinboard = React.createClass({
     group.attr({ pointerEvents: minimized ? 'none' : 'all' });
   },
   drawPinboard(svg) {
+    let data = this.startingData();
     let group = this.getSvgGroup(svg) || svg.group();
-    let data = {
-      x: 45,
-      y: 45,
-      width: 180,
-      height: 150,
-      space: 10,
-      border: 10,
-      item: 1
-    };
 
     let startX = data.x;
     for(var key in this.props.pinboard) {
       let item = this.props.pinboard[key];
-      let image = svg.image(item.resource.url.full, data.x + data.border/2, data.y + data.border/2, data.width, data.height);
-      let rect = svg.rect(data.x, data.y, data.width + data.border, data.height + data.border, 5);
-
-      rect.attr({ fill: 'white', stroke: item.colour, strokeWidth: data.border });
-      group.add(rect, image);
-
-      if(data.item % 4 == 0) {
-        data.x = startX;
-        data.y += data.space*2 + data.height + data.border*2;
-      }
-      else {
-        data.x += data.space + data.width + data.border*2;
-      }
-      data.item++;
+      this.addImageAndFrame(svg, group, data, item);
+      this.setNextPositionForPinboard(startX, data, item);
     }
   },
   getSvg() {
