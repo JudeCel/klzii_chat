@@ -86,9 +86,11 @@ defmodule KlziiChat.Services.PinboardResourceService do
     |> Repo.one
     |> case do
         nil ->
-          build_assoc(session_member, :pinboard_resources, %{sessionTopicId: session_topic_id, resourceId: resource_id}) |> Repo.insert
+          build_assoc(session_member, :pinboard_resources, %{sessionTopicId: session_topic_id, resourceId: resource_id})
+          |> Repo.insert
         pinboard_resource ->
-          PinboardResource.changeset(pinboard_resource, %{resourceId: resource_id}) |> Repo.update
+          {:ok, p_resouce} = PinboardResource.changeset(pinboard_resource, %{resourceId: resource_id}) |> Repo.update
+          {:ok, find(p_resouce.sessionMemberId, p_resouce.sessionTopicId) |> Repo.one}
        end
   end
 
