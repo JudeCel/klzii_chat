@@ -31,15 +31,14 @@ const Actions = {
   upload:(data, jwt) =>{
     return (dispatch) => {
       let csrf_token = localStorage.getItem("csrf_token");
-      let req = request.post('/api/pinboard_resource/upload');
-      console.error(data);
-      req.set('X-CSRF-Token', csrf_token)
-         .set('Authorization', jwt)
-         .send({ sessionTopicId: data.sessionTopicId });
+      let req = request.post('/api/pinboard_resource/upload')
+         .set('X-CSRF-Token', csrf_token)
+         .set('Authorization', jwt);
 
       data.files.map((file)=> {
         req.attach('file', file)
            .field('type', data.type)
+           .field('sessionTopicId', data.sessionTopicId)
            .field('scope', data.scope)
            .field('name', data.name);
       });
