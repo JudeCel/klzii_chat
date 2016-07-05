@@ -15,9 +15,9 @@ export function joinChannal(dispatch, socket, sessionTopicId) {
     });
     dispatch(MessagesActions.subscribeMessageEvents(channel));
     dispatch(ConsoleActions.subscribeConsoleEvents(channel));
+    dispatch(PinboardActions.subscribePinboardEvents(channel));
     dispatch(WhiteboardActions.connectToChannel(socket, sessionTopicId));
     dispatch(Actions.subscribeEvents(channel));
-
 
     channel.join()
     .receive('ok', (resp) => {
