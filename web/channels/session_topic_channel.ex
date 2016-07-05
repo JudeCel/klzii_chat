@@ -146,8 +146,8 @@ defmodule KlziiChat.SessionTopicChannel do
       end
   end
 
-  def handle_in("delete_pinboard_resource", _, socket) do
-      case PinboardResourceService.delete(get_session_member(socket).id, socket.assigns.session_topic_id) do
+  def handle_in("delete_pinboard_resource", %{"id" => id}, socket) do
+      case PinboardResourceService.delete(get_session_member(socket).id, id) do
         {:ok, pinboard_resource} ->
           broadcast! socket, "delete_pinboard_resource", pinboard_resource
           {:reply, :ok, socket}
@@ -179,7 +179,6 @@ defmodule KlziiChat.SessionTopicChannel do
   def handle_in("new_message", payload, socket) do
     session_topic_id = socket.assigns.session_topic_id
     session_member = get_session_member(socket)
-    if String.length(payload["body"]) > 0  do
       case MessageService.create_message(session_member, session_topic_id, payload) do
         {:ok, message} ->
           KlziiChat.BackgroundTasks.Message.new(message.id)
@@ -187,10 +186,16 @@ defmodule KlziiChat.SessionTopicChannel do
           Endpoint.broadcast!("sessions:#{message.session_member.sessionId}", "update_member", SessionMembersView.render("member.json", member: message.session_member))
           {:reply, :ok, socket}
         {:error, reason} ->
-          {:reply, ChangesetView.render("error.json", reason), socket }
+          {:reply, ChangesetView.render("error.json", %{changeset: reason}), socket}
       end
-    else
-      {:error, %{reason: "Message too short"}}
+  end
+
+  def error_view(reason) do
+    case reason do
+      %Ecto.Changeset{} ->
+        ChangesetView.render("error.json", %{changeset: reason})
+      _->
+        ChangesetView.render("error.json", reason)
     end
   end
 

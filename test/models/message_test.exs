@@ -19,4 +19,10 @@ defmodule KlziiChat.MessageTest do
     assert {:sessionTopicId, {"can't be blank", []}} in errors_on(%Message{}, %{})
     assert {:sessionMemberId, {"can't be blank", []}} in errors_on(%Message{}, %{})
   end
+
+  test "error rendering" do
+    changeset = Message.changeset(%Message{}, @invalid_attrs)
+    KlziiChat.ChangesetView.render("error.json", %{changeset: changeset})
+    |> IO.inspect
+  end
 end

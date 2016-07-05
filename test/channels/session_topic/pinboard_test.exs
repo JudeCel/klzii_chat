@@ -24,14 +24,14 @@ defmodule KlziiChat.Channels.SessionTopic.PinboardTest do
   end
 
   test "delete pinboard resource", %{socket: socket, participant: participant, session_topic_1_name: session_topic_1_name, session_topic_1: session_topic_1} do
-    Ecto.build_assoc(
+    pinboard_resource =   Ecto.build_assoc(
       participant, :pinboard_resources,
       session_topic: session_topic_1
-    ) |> Repo.insert
+    ) |> Repo.insert!
 
     {:ok, _, socket} = subscribe_and_join(socket, SessionTopicChannel, session_topic_1_name)
 
-    ref = push socket, "delete_pinboard_resource", %{}
+    ref = push socket, "delete_pinboard_resource", %{id: pinboard_resource.id}
     assert_reply ref, :ok, %{}
 
     assert_broadcast("delete_pinboard_resource", %{})
