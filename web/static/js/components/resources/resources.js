@@ -39,7 +39,7 @@ const Resources = React.createClass({
       }
 
       if(confirmed) {
-        dispatch(PinboardActions.enablePinboard(channel));
+        dispatch(PinboardActions.enable(channel));
       }
     }
   },

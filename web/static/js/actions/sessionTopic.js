@@ -1,7 +1,8 @@
-import Constants        from '../constants';
-import MessagesActions  from './messages';
-import ConsoleActions   from './console';
-import WhiteboardActions   from './whiteboard';
+import Constants         from '../constants';
+import MessagesActions   from './messages';
+import ConsoleActions    from './console';
+import WhiteboardActions from './whiteboard';
+import PinboardActions   from './pinboard';
 
 export function joinChannal(dispatch, socket, sessionTopicId) {
   const channel = socket.channel("session_topic:" + sessionTopicId);
@@ -20,6 +21,7 @@ export function joinChannal(dispatch, socket, sessionTopicId) {
 
     channel.join()
     .receive('ok', (resp) => {
+      dispatch(PinboardActions.get(channel));
       dispatch({
         type: Constants.SET_MESSAGES,
         messages: resp

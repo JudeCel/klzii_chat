@@ -12,17 +12,37 @@ function _errorData(data) {
 }
 
 const Actions = {
-  // subscribeDirectMessageEvents:(channel) => {
+  // subscribePinboardEvents:(channel) => {
   //   return dispatch => {
-  //     channel.on('new_direct_message', (data) =>{
-  //       return dispatch({ type: Constants.NEW_DIRECT_MESSAGE, data: data });
+  //     channel.on('get_pinboard_resources', (data) =>{
+  //       return dispatch({ type: Constants.GET_PINBOARD_RESOURCES, data: data });
   //     });
   //   }
   // },
-  enablePinboard:(channel) => {
+  enable:(channel) => {
     return dispatch => {
       channel.push('enable_pinboard')
       .receive('ok', (data) => {
+      }).receive('error', (data) => {
+        dispatch(_errorData(data));
+      });
+    }
+  },
+  get:(channel) => {
+    return dispatch => {
+      channel.push('get_pinboard_resources')
+      .receive('ok', (data) => {
+        dispatch({ type: Constants.GET_PINBOARD_RESOURCES, data: data.list });
+      }).receive('error', (data) => {
+        dispatch(_errorData(data));
+      });
+    }
+  },
+  delete:(channel) => {
+    return dispatch => {
+      channel.push('delete_pinboard_resource')
+      .receive('ok', (data) => {
+        // dispatch({ type: Constants.CHANGE_PINBOARD_RESOURCE, data: data });
       }).receive('error', (data) => {
         dispatch(_errorData(data));
       });
@@ -45,12 +65,10 @@ const Actions = {
 
       req.end((error, result) =>{
         if(error) {
-          console.error(error);
           dispatch(_errorData(error));
         }
         else {
-          console.error(result);
-          // dispatch(Actions.index(jwt, { type: [data.type] }));
+          dispatch({ type: Constants.CHANGE_PINBOARD_RESOURCE, data: result.body.pinboard_resource });
         }
       });
     }
