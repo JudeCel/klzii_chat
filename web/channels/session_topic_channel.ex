@@ -12,7 +12,7 @@ defmodule KlziiChat.SessionTopicChannel do
     History for specific session topic
   """
 
-  intercept ["new_message", "update_message", "update_message", "thumbs_up", "get_pinboard_resources", "delete_pinboard_resource"]
+  intercept ["new_message", "update_message", "thumbs_up", "delete_pinboard_resource", "new_pinboard_resource"]
 
   def join("session_topic:" <> session_topic_id, _payload, socket) do
     if authorized?(socket, session_topic_id) do
@@ -248,6 +248,16 @@ defmodule KlziiChat.SessionTopicChannel do
       |> Map.put(:permissions, PermissionsBuilder.pinboard_resource(session_member, payload))
 
     push socket, "delete_pinboard_resource", view
+    {:noreply, socket}
+  end
+
+  def handle_out("new_pinboard_resource", payload, socket) do
+    session_member = get_session_member(socket)
+    view =
+      Phoenix.View.render_one(payload, PinboardResourceView, "show.json", as: :pinboard_resource)
+      |> Map.put(:permissions, PermissionsBuilder.pinboard_resource(session_member, payload))
+
+    push socket, "new_pinboard_resource", view
     {:noreply, socket}
   end
 
