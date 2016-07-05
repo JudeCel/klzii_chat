@@ -70,7 +70,4 @@ defmodule KlziiChat.Services.Permissions.Builder do
           {:ok, Map.get(preference, :data, %{})}
       end
   end
-
-  def to_boolean({:ok}), do: true
-  def to_boolean({:error, _}), do: false
 end
