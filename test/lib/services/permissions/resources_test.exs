@@ -7,43 +7,43 @@ defmodule KlziiChat.Services.Permissions.ResourcePermissionsTest do
     roles = ["facilitator"]
     Enum.map(roles, fn role ->
       member = %{role: role}
-      Resources.can_upload(member, preference)|> assert
+      assert( {:ok} = Resources.can_upload(member, preference))
     end)
   end
 
   test "can participant delete only when owner " do
     member = %{id: 1, role: "participant"}
     events = [%{id: 1, sessionMemberId: 1}]
-    Resources.can_delete(member, events) |> assert
+    assert( {:ok} = Resources.can_delete(member, events))
   end
 
   test "can zip when accountManager" do
     member = %{id: 1, role: "accountManager"}
     events = [%{id: 1, accountUser: 1}]
-    Resources.can_zip(member, events) |> assert
+    assert( {:ok} = Resources.can_zip(member, events))
   end
 
   test "can zip when admin " do
     member = %{id: 1, role: "admin"}
     events = [%{id: 1, accountUser: 1}]
-    Resources.can_zip(member, events) |> assert
+    assert( {:ok} = Resources.can_zip(member, events))
   end
 
   test "can't participant delete when not  owner " do
     member = %{id: 1, role: "participant"}
     events = [%{id: 1, sessionMemberId: 2}]
-    Resources.can_delete(member, events) |> refute
+    assert( {:error, _} = Resources.can_delete(member, events))
   end
 
   test "can facilitator delete when he not owner" do
     member = %{id: 1, role: "facilitator"}
     events = [%{id: 1, sessionMemberId: 2}]
-    Resources.can_delete(member, events) |> assert
+    assert( {:ok} = Resources.can_delete(member, events))
   end
 
   test "can facilitator delete when he admin" do
     member = %{id: 1, role: "admin"}
     events = [%{id: 1, sessionMemberId: 2}]
-    Resources.can_delete(member, events) |> assert
+    assert( {:ok} = Resources.can_delete(member, events))
   end
 end

@@ -35,14 +35,14 @@ defmodule KlziiChat.Services.Permissions.Builder do
         can_board_message: SessionTopicPermissions.can_board_message(session_member) |> to_boolean ,
       },
       whiteboard: %{
-        can_create: Validations.has_allowed_from_subscription(preference, "whiteboardFunctionality") |> to_boolean,
+        can_create: Validations.has_allowed_from_subscription(preference, "whiteboardFunctionality"),
         can_new_shape: WhiteboardPermissions.can_new_shape(session_member) |> to_boolean
       },
       resources: %{
         can_upload: ResourcePermissions.can_upload(session_member, preference) |> to_boolean
       },
       reports: %{
-        can_report: Validations.has_allowed_from_subscription(preference, "reportingFunctions") |> to_boolean
+        can_report: Validations.has_allowed_from_subscription(preference, "reportingFunctions")
       }
     }
   end
