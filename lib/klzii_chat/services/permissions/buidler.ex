@@ -1,4 +1,5 @@
 defmodule KlziiChat.Services.Permissions.Builder do
+  import KlziiChat.Services.Permissions.ErrorsHelper, only: [to_boolean: 1]
   alias KlziiChat.Queries.SessionMember, as: SessionMemberQueries
   alias KlziiChat.{Repo, SessionMember}
   alias KlziiChat.Services.Permissions.Messages, as: MessagePermissions
@@ -57,7 +58,4 @@ defmodule KlziiChat.Services.Permissions.Builder do
           {:ok, Map.get(preference, :data, %{})}
       end
   end
-
-  defp to_boolean({:ok}), do: true
-  defp to_boolean({:error, _}), do: false
 end
