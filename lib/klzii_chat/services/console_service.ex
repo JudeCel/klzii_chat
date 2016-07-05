@@ -14,15 +14,25 @@ defmodule KlziiChat.Services.ConsoleService do
     end
   end
 
+   @spec validations(boolean) :: {:ok} | {:error, String.t}
+   def validations(has_permission) do
+     with {:ok} <- has_permission,
+     do:  {:ok}
+   end
+
   @spec set_resource(Integer, Integer, Integer) :: {:ok, %Console{}} | {:error, String.t}
   def set_resource(member_id, session_topic_id, resource_id) do
     session_member = Repo.get!(SessionMember, member_id)
-    if ConsolePermissions.can_set_resource(session_member) do
-      {:ok, console} = get(session_member.sessionId, session_topic_id)
-      set_id_by_type(resource_id, :resource)
-      |> update_console(console)
-    else
-      {:error, %{permissions: "Action not allowed!"}}
+
+    ConsolePermissions.can_set_resource(session_member)
+    |> validations
+    |> case do
+      {:ok} ->
+        {:ok, console} = get(session_member.sessionId, session_topic_id)
+        set_id_by_type(resource_id, :resource)
+        |> update_console(console)
+      {:error, reason} ->
+        {:error, reason}
     end
   end
 
@@ -37,24 +47,31 @@ defmodule KlziiChat.Services.ConsoleService do
   @spec set_mini_survey(Integer, Integer, Integer) :: {:ok, %Console{}} | {:error, String.t}
   def set_mini_survey(member_id, session_topic_id, mini_survey_id) do
     session_member = Repo.get!(SessionMember, member_id)
-    if ConsolePermissions.can_set_resource(session_member) do
-      {:ok, console} = get(session_member.sessionId, session_topic_id)
-      set_id_by_type(mini_survey_id, :mini_survey)
-      |> update_console(console)
-    else
-      {:error, %{permissions: "Action not allowed!"}}
+    ConsolePermissions.can_set_resource(session_member)
+    |> validations
+    |> case do
+      {:ok} ->
+        {:ok, console} = get(session_member.sessionId, session_topic_id)
+        set_id_by_type(mini_survey_id, :mini_survey)
+        |> update_console(console)
+      {:error, reason} ->
+        {:error, reason}
     end
   end
 
   @spec remove(Integer, Integer, String.t) ::  {:ok, %Console{}} | {:error, String.t}
   def remove(member_id, session_topic_id, type) do
     session_member = Repo.get!(SessionMember, member_id)
-    if ConsolePermissions.can_remove_resource(session_member) do
-      {:ok, console} = get(session_member.sessionId, session_topic_id)
-      remove_id_by_type(type)
-      |> update_console(console)
-    else
-      {:error, %{permissions: "Action not allowed!"}}
+
+    ConsolePermissions.can_remove_resource(session_member)
+    |> validations
+    |> case do
+      {:ok} ->
+        {:ok, console} = get(session_member.sessionId, session_topic_id)
+        remove_id_by_type(type)
+        |> update_console(console)
+      {:error, reason} ->
+        {:error, reason}
     end
   end
 

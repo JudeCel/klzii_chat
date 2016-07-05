@@ -20,4 +20,8 @@ defmodule KlziiChat.ChangesetView do
   def render("error.json", %{permissions: error_message}) do
     %{errors: %{permissions: [translate_error(error_message)]}}
   end
+
+  def render("error.json", %{not_found: error_message}) do
+    %{errors: %{permissions: [translate_error(error_message)]}}
+  end
 end
