@@ -2,7 +2,6 @@ defmodule KlziiChat.Services.Permissions.ConsolePermissionsTest do
   use ExUnit.Case, async: true
   alias KlziiChat.Services.Permissions.Console
 
-
   describe("facilitator") do
     test "can set resource" do
       member = %{id: 1, role: "facilitator"}

@@ -11,25 +11,26 @@ defmodule KlziiChat.Services.SessionReportingService do
   @spec get_session_member(integer) :: {atom, String.t}
   def get_session_member(session_member_id) do
     case Repo.get(SessionMember, session_member_id) do
-      nil -> {:error, "No session member found with id: " <> session_member_id}
+      nil -> {:error, %{not_found: "No session member found with id: " <> session_member_id}}
       session_member -> {:ok, session_member}
     end
   end
 
   @spec check_report_create_permision(integer) :: :ok | {:error, String.t}
   def check_report_create_permision(session_member) do
-    if SessionReportingPermissions.can_create_report(session_member), do: :ok, else: {:error, "Action not allowed!"}
+    SessionReportingPermissions.can_create_report(session_member)
   end
 
   @spec create_session_topic_report(integer, integer, integer, atom, atom, boolean) :: {:ok, Map.t} | {:error, String.t}
-  def create_session_topic_report(_, _, _, report_format, :whiteboard, _) when report_format != :pdf, do: {:error, "pdf is the only format that is available for whiteboard reports"}
-
+  def create_session_topic_report(_, _, _, report_format, :whiteboard, _) when report_format != :pdf do
+     {:error, %{format: "pdf is the only format that is available for whiteboard reports"}}
+   end
   @spec create_session_topic_report(integer, integer, integer, atom, atom, boolean) :: {:ok, Map.t} | {:error, String.t}
   def create_session_topic_report(session_id, session_member_id, session_topic_id, report_format, report_type, include_facilitator)
   when report_type in [:all, :star, :whiteboard, :votes] and report_format in [:txt, :csv, :pdf]
   do
     with {:ok, session_member} <- get_session_member(session_member_id),
-         :ok <- check_report_create_permision(session_member),
+         {:ok} <- check_report_create_permision(session_member),
          {:ok, report} <- create_session_topics_reports_record(session_id, session_topic_id, report_type, include_facilitator, report_format),
          {:ok, report_name} <- get_report_name(report_type, report.id),
          create_report_params = [session_id, session_member.accountUserId, report.id, session_topic_id, report_name, report_format, report_type, include_facilitator],
@@ -38,7 +39,7 @@ defmodule KlziiChat.Services.SessionReportingService do
   end
 
   @spec create_session_topic_report(integer, integer, integer, atom, atom, boolean) :: {:ok, Map.t} | {:error, String.t}
-  def create_session_topic_report(_, _, _, _, _, _), do: {:error, "incorrect report format or type"}
+  def create_session_topic_report(_, _, _, _, _, _), do: {:error, %{format: "incorrect report format or type"}}
 
   @spec create_session_topics_reports_record(integer, integer, atom, boolean, atom) :: {atom, Map.t}
   def create_session_topics_reports_record(session_id, session_topic_id, report_type, include_facilitator, report_format) do
@@ -98,14 +99,14 @@ defmodule KlziiChat.Services.SessionReportingService do
         try do
           async_func.()
         catch
-          type, _ -> {:error, "Error creating report: #{to_string(type)}"}
+          type, _ -> {:error, %{system: "Error creating report: #{to_string(type)}"}}
         end
       end)
 
     case Task.yield(async_task, @save_report_timeout) do
       {:ok, {:ok, report_file_path}} -> {:ok, report_file_path}
       {:ok, {:error, err}} -> {:error, err}
-      nil -> {:error, "Report creation timeout " <> to_string(@save_report_timeout)}
+      nil -> {:error, %{system: "Report creation timeout " <> to_string(@save_report_timeout)}}
     end
   end
 
@@ -120,7 +121,7 @@ defmodule KlziiChat.Services.SessionReportingService do
       try do
         ResourceService.upload(upload_params, account_user_id)
       catch
-        type, _ -> {:error, "Error creating report: #{to_string(type)}"}
+        type, _ -> {:error, %{system: "Error creating report: #{to_string(type)}}"}}
       end
     end)
 
@@ -129,7 +130,7 @@ defmodule KlziiChat.Services.SessionReportingService do
     case result do
       {:ok, {:ok, report_file_path}} -> {:ok, report_file_path}
       {:ok, {:error, err}} -> {:error, err}
-      nil -> {:error, "Report upload timeout " <> to_string(@upload_report_timeout)}
+      nil -> {:error, %{system: "Report upload timeout " <> to_string(@upload_report_timeout)}}
     end
   end
 
@@ -144,7 +145,7 @@ defmodule KlziiChat.Services.SessionReportingService do
   @spec update_session_topics_reports_record({:error, String.t}, integer) :: {atom, Map.t}
   def update_session_topics_reports_record({:error, err}, report_id) do
     Repo.get!(SessionTopicReport, report_id)
-    |> Ecto.Changeset.change(status: "failed", message: err)
+    |> Ecto.Changeset.change(status: "failed", message: "#{err}")
     |> Repo.update()
   end
 
@@ -152,33 +153,34 @@ defmodule KlziiChat.Services.SessionReportingService do
   @spec get_session_topics_reports(integer, integer) :: {:ok, List.t} | {:error, String.t}
   def get_session_topics_reports(session_id, session_member_id) do
     {:ok, session_member} = get_session_member(session_member_id)
-    if SessionReportingPermissions.can_get_reports(session_member) do
-      query =
-        from str in SessionTopicReport,
-        where: str.sessionId == ^session_id and is_nil(str.deletedAt),
-        preload: [:resource]
-      {:ok, Repo.all(query)}
-    else
-      {:error, "Action not allowed!"}
+    case SessionReportingPermissions.can_get_reports(session_member) do
+      {:ok} ->
+        query =
+          from str in SessionTopicReport,
+          where: str.sessionId == ^session_id and is_nil(str.deletedAt),
+          preload: [:resource]
+        {:ok, Repo.all(query)}
+      {:error, reason} ->
+        {:error, reason}
     end
   end
 
   @spec check_report_delete_permision(integer) :: :ok | {:error, String.t}
   def check_report_delete_permision(session_member) do
-    if SessionReportingPermissions.can_delete_report(session_member), do: :ok, else: {:error, "Action not allowed!"}
+    SessionReportingPermissions.can_delete_report(session_member)
   end
 
   @spec delete_session_topic_report(integer, integer) :: {:ok, Map.t} | {:error, String.t}
   def delete_session_topic_report(report_id, session_member_id) do
     with  {:ok, session_member} <- get_session_member(session_member_id),
-          :ok <- check_report_delete_permision(session_member),
+          {:ok} <- check_report_delete_permision(session_member),
           report = Repo.get(SessionTopicReport, report_id),
           {ok, deleted_report} <- check_delete_session_topic_report(report, session_member.accountUserId),
     do:   {ok, deleted_report}
   end
 
   @spec check_delete_session_topic_report(nil, integer) :: {:error, String.t}
-  def check_delete_session_topic_report(nil, _), do: {:error, "Session Topic Report not found"}
+  def check_delete_session_topic_report(nil, _), do: {:error, %{not_found: "Session Topic Report not found"}}
 
   @spec check_delete_session_topic_report(Map.t, integer) :: {atom, String.t}
   def check_delete_session_topic_report(report, account_user_id) do

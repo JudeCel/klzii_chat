@@ -65,7 +65,7 @@ defmodule KlziiChat.Services.SessionTopicServiceTest do
 
   test "#SessionTopicService - participent can't update board message ", %{participant: participant, session_topic_1: session_topic_1} do
     message = " jeee"
-    {:error, error_message} = SessionTopicService.board_message(participant.id, session_topic_1.id, %{"message" => message})
+    {:error, %{permissions: error_message}} = SessionTopicService.board_message(participant.id, session_topic_1.id, %{"message" => message})
     assert(error_message == SessionTopicService.errors_messages.action_not_allowed)
   end
 end

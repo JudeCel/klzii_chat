@@ -1,5 +1,6 @@
 defmodule KlziiChat.Services.Permissions.DirectMessage do
   import KlziiChat.Services.Permissions.Validations
+  import KlziiChat.Services.Permissions.ErrorsHelper, only: [formate_error: 1]
 
   @spec can_write(Map.t, Map.t) :: Boolean.t
   def can_write(current_member, other_member) do
@@ -9,6 +10,6 @@ defmodule KlziiChat.Services.Permissions.DirectMessage do
     current_member.id != other_member.id && (
       has_role(current_member.role, participant) && has_role(other_member.role, facilitator) ||
       has_role(current_member.role, facilitator) && has_role(other_member.role, participant)
-    )
+    ) |> formate_error
   end
 end
