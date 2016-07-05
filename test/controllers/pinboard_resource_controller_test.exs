@@ -21,6 +21,6 @@ defmodule KlziiChat.PinboardResourceControllerTest do
     file = %Plug.Upload{ content_type: "image/jpg", path: @image, filename: "hamster.jpg"}
     resp = post(conn, "api/pinboard_resource/upload", %{sessionTopicId: session_topic_1.id, name: "hamster", type: "image", scope: "collage", file: file })
       |> json_response(200)
-    assert(%{"status" => "ok", "pinboard_resource" => _} = resp)
+    assert(%{"status" => "ok"} = resp)
   end
 end
