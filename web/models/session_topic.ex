@@ -27,7 +27,7 @@ defmodule KlziiChat.SessionTopic do
   def changeset(model, params \\ %{}) do
     model
     |> cast(params, [:boardMessage] )
-    |> validate_required([:boardMessage] )
+    |> validate_required([:boardMessage])
     |> validate_length(:boardMessage, min: 1)
   end
 end

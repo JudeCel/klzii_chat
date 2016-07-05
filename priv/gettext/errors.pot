@@ -89,3 +89,6 @@ msgstr ""
 
 msgid "must be equal to %{number}"
 msgstr ""
+
+msgid "Action not allowed!"
+msgstr ""
