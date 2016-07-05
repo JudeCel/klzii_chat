@@ -36,12 +36,13 @@ defmodule KlziiChat.Services.SessionResourcesService do
   @spec delete(Integer, Integer) :: {:ok, %SessionResource{}} | {:error, String}
   def delete(session_member_id, session_resource_id) do
     session_member = Repo.get!(SessionMember, session_member_id)
-    if(SessionResourcesPermissions.can_get_resources(session_member)) do
-      session_resource = Repo.get_by!(SessionResource, id: session_resource_id) |> Repo.preload([:resource]) |> Repo.delete!
-      :ok = delete_related_consoles(session_resource.resource, session_member.id)
-      {:ok, session_resource}
-    else
-      {:error, %{permissions: "Action not allowed!"}}
+    case SessionResourcesPermissions.can_get_resources(session_member) do
+      {:ok} ->
+        session_resource = Repo.get_by!(SessionResource, id: session_resource_id) |> Repo.preload([:resource]) |> Repo.delete!
+        :ok = delete_related_consoles(session_resource.resource, session_member.id)
+        {:ok, session_resource}
+      {:error, reason} ->
+        {:error, reason}
     end
   end
 
@@ -65,30 +66,31 @@ defmodule KlziiChat.Services.SessionResourcesService do
 
   def find(session_member_id, id) do
     session_member = Repo.get!(SessionMember, session_member_id)
-    if(SessionResourcesPermissions.can_get_resources(session_member)) do
-      session_resource = from(sr in SessionResource,
-        where: sr.id == ^id,
-        preload: [:resource])
-      |> Repo.one
-      {:ok, session_resource}
-    else
-      {:error, %{permissions: "Action not allowed!"}}
+    case SessionResourcesPermissions.can_get_resources(session_member) do
+      {:ok} ->
+        session_resource = from(sr in SessionResource,
+          where: sr.id == ^id,
+          preload: [:resource])
+        |> Repo.one
+        {:ok, session_resource}
+      {:error, reason} ->
+        {:error, reason}
     end
   end
 
   def get_session_resources(session_member_id, params) do
     session_member = Repo.get!(SessionMember, session_member_id) |> Repo.preload([account_user: [:account]])
-    if(SessionResourcesPermissions.can_get_resources(session_member)) do
-      resource_query =
-        QueriesResources.base_query(session_member.account_user)
-        |> QueriesResources.find_by_params(params)
-        session_resources =
-          from(sr in SessionResource, where: sr.sessionId == ^session_member.sessionId, preload: [resource: ^resource_query])
-          |> Repo.all
-        {:ok, session_resources}
-    else
-      {:error, %{permissions: "Action not allowed!"}}
+    case SessionResourcesPermissions.can_get_resources(session_member) do
+      {:ok} ->
+        resource_query =
+          QueriesResources.base_query(session_member.account_user)
+          |> QueriesResources.find_by_params(params)
+          session_resources =
+            from(sr in SessionResource, where: sr.sessionId == ^session_member.sessionId, preload: [resource: ^resource_query])
+            |> Repo.all
+          {:ok, session_resources}
+      {:error, reason} ->
+        {:error, reason}
     end
   end
-
 end

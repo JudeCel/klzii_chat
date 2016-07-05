@@ -34,18 +34,18 @@ defmodule KlziiChat.Services.SessionReportingServiceTest do
   end
 
   test "Error getting session member with incorrect id" do
-    assert({:error, "No session member found with id: 123"} == SessionReportingService.get_session_member("123"))
+    assert({:error, %{not_found: "No session member found with id: 123"}} == SessionReportingService.get_session_member("123"))
   end
 
   test "Report create permissions", %{facilitator: facilitator, participant: participant} do
-    assert(:ok == SessionReportingService.check_report_create_permision(facilitator))
+    assert({:ok} == SessionReportingService.check_report_create_permision(facilitator))
     assert({:error, %{permissions: "Action not allowed!"}} == SessionReportingService.check_report_create_permision(participant))
   end
 
   test "Try to create incorrect report format and type" do
-    assert({:error, "incorrect report format or type"} == SessionReportingService.create_session_topic_report(0, 1, 2, :incorrect, :all, true))
-    assert({:error, "incorrect report format or type"} == SessionReportingService.create_session_topic_report(0, 1, 2, :pdf, :incorrect, true))
-    assert({:error, "pdf is the only format that is available for whiteboard reports"} == SessionReportingService.create_session_topic_report(0, 1, 2, :txt, :whiteboard, true))
+    assert({:error, %{format: "incorrect report format or type"}} = SessionReportingService.create_session_topic_report(0, 1, 2, :incorrect, :all, true))
+    assert({:error, %{format: "incorrect report format or type"}} = SessionReportingService.create_session_topic_report(0, 1, 2, :pdf, :incorrect, true))
+    assert({:error, %{format: "pdf is the only format that is available for whiteboard reports"}} = SessionReportingService.create_session_topic_report(0, 1, 2, :txt, :whiteboard, true))
   end
 
   test "Create session topics reports record", %{session: session, session_topic: session_topic,facilitator: facilitator} do
@@ -208,7 +208,7 @@ defmodule KlziiChat.Services.SessionReportingServiceTest do
   end
 
   test "Check report delete permision", %{facilitator: facilitator, participant: participant} do
-    assert(:ok == SessionReportingService.check_report_delete_permision(facilitator))
+    assert({:ok} == SessionReportingService.check_report_delete_permision(facilitator))
     assert({:error, %{permissions: "Action not allowed!"}} == SessionReportingService.check_report_delete_permision(participant))
   end
 
@@ -276,7 +276,7 @@ defmodule KlziiChat.Services.SessionReportingServiceTest do
   end
 
   test "Error deleting non-existend session topics report", %{facilitator: facilitator} do
-    assert({:error, "Session Topic Report not found"} == SessionReportingService.delete_session_topic_report(123, facilitator.id))
+    assert({:error, %{not_found: "Session Topic Report not found"}} == SessionReportingService.delete_session_topic_report(123, facilitator.id))
   end
 
    test "Recreate failed session topic report", %{session: session, session_topic: session_topic, facilitator: facilitator} do
@@ -299,7 +299,7 @@ defmodule KlziiChat.Services.SessionReportingServiceTest do
   end
 
    test "Error recreating session topic report if no previous report record present", %{facilitator: facilitator} do
-     assert({:error, "Session Topic Report not found"} == SessionReportingService.recreate_session_topic_report(123, facilitator.id))
+     assert({:error, %{not_found: "Session Topic Report not found"}} == SessionReportingService.recreate_session_topic_report(123, facilitator.id))
    end
 
    test "Error recreating session topic report with wrong permission", %{session: session, session_topic: session_topic, participant: participant} do

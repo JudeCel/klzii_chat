@@ -14,10 +14,12 @@ defmodule KlziiChat.Services.SessionTopicService do
   def board_message(session_member_id, session_topic_id, %{"message" => message}) do
     session_member = Repo.get!(SessionMember, session_member_id)
     session_topic = Repo.get!(SessionTopic, session_topic_id)
-    if SessionTopicPermissions.can_board_message(session_member) do
-      Ecto.Changeset.change(session_topic, boardMessage: message) |> Repo.update
-    else
-      {:error, %{permissions: errors_messages.action_not_allowed}}
+
+    case SessionTopicPermissions.can_board_message(session_member) do
+      {:ok} ->
+        Ecto.Changeset.change(session_topic, boardMessage: message) |> Repo.update
+      {:error, reason} ->
+        {:error, reason}
     end
   end
 
