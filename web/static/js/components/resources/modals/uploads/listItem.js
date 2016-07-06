@@ -60,7 +60,7 @@ const UploadListItem = React.createClass({
         </li>
       )
     }
-    else {
+    else if(url) {
       return (
         <li className='list-group-item'>
           <div className='row'>
@@ -77,6 +77,9 @@ const UploadListItem = React.createClass({
           </div>
         </li>
       )
+    }
+    else {
+      return (false)
     }
   }
 });

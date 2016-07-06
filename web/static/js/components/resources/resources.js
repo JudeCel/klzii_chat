@@ -21,11 +21,11 @@ const Resources = React.createClass({
   },
   openModal(modal) {
     this.setState({ currentModal: modal }, function() {
-      if(this.state.currentModal == 'pinboard') {
+      if(modal == 'pinboard') {
         this.activatePinboard();
       }
       else {
-        this.openSpecificModal('resources');
+        this.openSpecificModal('resources', { type: modal });
       }
     });
   },
@@ -49,7 +49,6 @@ const Resources = React.createClass({
     }
   },
   render() {
-    const { currentModal } = this.state;
     const resourceButtons = [
       { type: 'video',    className: 'icon-video-1'    },
       { type: 'audio',    className: 'icon-volume-up'  },
@@ -71,7 +70,7 @@ const Resources = React.createClass({
             }
           </ul>
 
-          <UploadsModal show={ this.shouldShow(['video', 'audio', 'image']) } modalName={ currentModal } />
+          <UploadsModal show={ this.shouldShow(['video', 'audio', 'image']) } />
           <SurveyModal show={ this.shouldShow(['survey']) } />
         </div>
       )

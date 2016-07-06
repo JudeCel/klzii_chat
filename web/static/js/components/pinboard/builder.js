@@ -11,19 +11,22 @@ const builder = {
     }
   },
   addDeleteButton(rect, image, svg, group, data, item) {
+    let semi = group.group();
+    semi.add(rect, image);
+
     if(item.permissions.can_delete) {
-      let semi = this.createDeleteImage(svg, data, item);
-      group.add(rect, image, semi);
+      let remove = this.createDeleteImage(svg, data, item);
+      group.add(semi, remove);
     }
     else {
-      group.add(rect, image);
+      group.add(semi);
     }
   },
   createMainRect(svg, data, item) {
     return svg.rect(data.x, data.y, data.width + data.border, data.height + data.border, 5).attr({ fill: 'white', stroke: item.colour, strokeWidth: data.border });
   },
   createMainImage(svg, data, item) {
-    return svg.image(item.resource.url.full, data.x + data.border/2, data.y + data.border/2, data.width, data.height);
+    return svg.image(item.resource.url.thumb, data.x + data.border/2, data.y + data.border/2, data.width, data.height);
   },
   createDeleteImage(svg, data, item) {
     let remove = svg.image('/images/svgControls/remove.png', data.x-data.border, data.y-data.border, 25, 25);
@@ -33,20 +36,21 @@ const builder = {
   setNextPositionForPinboard(startX, data, item) {
     if(data.item % 4 == 0) {
       data.x = startX;
-      data.y += data.space*2 + data.height + data.border*2;
+      data.y += data.spaceTop + data.height + data.border*2;
     }
     else {
-      data.x += data.space + data.width + data.border*2;
+      data.x += data.spaceSide + data.width + data.border*2;
     }
     data.item++;
   },
   startingData() {
     return {
       x: 45,
-      y: 45,
+      y: 55,
       width: 180,
-      height: 150,
-      space: 10,
+      height: 125,
+      spaceTop: 55,
+      spaceSide: 10,
       border: 10,
       item: 1
     };

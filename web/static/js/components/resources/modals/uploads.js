@@ -11,19 +11,16 @@ const Uploads = React.createClass({
     return { rendering: 'index', tabActive: 1 };
   },
   initialWithTitle(props) {
-    return { ...this.getInitialState(), title: `Add ${props.modalName}` }
+    return { ...this.getInitialState(), title: `Add ${props.modalData.type}` }
   },
   componentWillReceiveProps(nextProps) {
     if(nextProps.show) {
-      this.setState(this.initialWithTitle(nextProps), function() {
-        const { dispatch, currentUserJwt, modalName } = this.props;
-        dispatch(Actions.index(currentUserJwt, { type: this.get_session_resource_types(modalName) }));
-      });
+      this.setState(this.initialWithTitle(nextProps));
     }
   },
   onCreate() {
     const { name, url, files, resourceIds } = this.state.resourceData;
-    const { dispatch, currentUserJwt, modalName } = this.props;
+    const { dispatch, currentUserJwt, modalData } = this.props;
 
     if(url) {
       let data = {
@@ -37,7 +34,7 @@ const Uploads = React.createClass({
     }
     else if(files) {
       let data = {
-        type: modalName,
+        type: modalData.type,
         scope: 'collage',
         name: name,
         files: files
@@ -46,7 +43,7 @@ const Uploads = React.createClass({
       dispatch(Actions.upload(data, currentUserJwt));
     }
     else if (resourceIds) {
-      dispatch(Actions.create(currentUserJwt, resourceIds, modalName));
+      dispatch(Actions.create(currentUserJwt, resourceIds, modalData.type));
     }
   },
   afterChange(data) {
@@ -78,7 +75,7 @@ const Uploads = React.createClass({
     }
   },
   manipulateModalWindow() {
-    let id = 'modal-uploads-' + this.props.modalName;
+    let id = 'modal-uploads-' + this.props.modalData.type;
     let modal = document.getElementById(id);
     let parent = modal.querySelector('.modal-section');
     let tabs = modal.querySelector('.tab-section');
@@ -107,8 +104,8 @@ const Uploads = React.createClass({
     }
   },
   tabModalTitles() {
-    const { modalName } = this.props;
-    return { 1: `${modalName} Resource List`, 2: `Add ${modalName} from URL`, 3: `Upload ${modalName}` };
+    const { modalData } = this.props;
+    return { 1: `${modalData.type} Resource List`, 2: `Add ${modalData.type} from URL`, 3: `Upload ${modalData.type}` };
   },
   onTab(id) {
     this.setState({ tabActive: id, title: this.tabModalTitles()[id] });
@@ -117,7 +114,7 @@ const Uploads = React.createClass({
     return id == this.state.tabActive;
   },
   tabActiveClass(id, videoCheck) {
-    if(videoCheck && this.props.modalName != 'video') {
+    if(videoCheck && this.props.modalData.type != 'video') {
       return 'hidden';
     }
     else {
@@ -135,7 +132,7 @@ const Uploads = React.createClass({
   },
   render() {
     const { rendering, tabActive, title } = this.state;
-    const { modalName, show } = this.props;
+    const { modalData, show } = this.props;
     const tabs = [
       { order: 1, title: 'Resource List' },
       { order: 2, title: 'Add From URL' },
@@ -144,7 +141,7 @@ const Uploads = React.createClass({
 
     if(show) {
       return (
-        <Modal id={ 'modal-uploads-' + modalName } dialogClassName='modal-section' show={ show } onHide={ this.onClose } onEnter={ this.onEnterModal }>
+        <Modal id={ 'modal-uploads-' + modalData.type } dialogClassName='modal-section' show={ show } onHide={ this.onClose } onEnter={ this.onEnterModal }>
           <ul className='nav nav-tabs nav-justified tab-section hidden'>
             {
               tabs.map((tab, index) =>
@@ -161,7 +158,7 @@ const Uploads = React.createClass({
             </div>
 
             <div className='col-md-8 modal-title'>
-              <h4>{ title || `Add ${modalName}` }</h4>
+              <h4>{ title || `Add ${modalData.type}` }</h4>
             </div>
 
             <div className='col-md-2'>
@@ -171,7 +168,7 @@ const Uploads = React.createClass({
 
           <Modal.Body>
             <div className='row uploads-section'>
-              <UploadsIndex { ...{ rendering, tabActive, modalName, afterChange: this.afterChange } } />
+              <UploadsIndex { ...{ rendering, tabActive, afterChange: this.afterChange, modalName: modalData.type } } />
             </div>
           </Modal.Body>
         </Modal>
@@ -186,6 +183,7 @@ const Uploads = React.createClass({
 const mapStateToProps = (state) => {
   return {
     modalWindows: state.modalWindows,
+    modalData: state.modalWindows.currentModalData,
     colours: state.chat.session.colours,
     currentUserJwt: state.members.currentUser.jwt,
     channel: state.sessionTopic.channel,

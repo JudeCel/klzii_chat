@@ -54,6 +54,7 @@ const WhiteboardCanvas = React.createClass({
 
     this.activeShape = null;
     this.initUnselectCallback();
+    this.componentWillReceiveProps(this.props);
     this.scaleWhiteboard();
   },
   componentDidUpdate(nextProps, nextState) {

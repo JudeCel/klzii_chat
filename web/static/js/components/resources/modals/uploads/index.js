@@ -14,7 +14,7 @@ const UploadsIndex = React.createClass({
       )
     }
     else {
-      return (<UploadList { ...{ modalName } }/>)
+      return (<UploadList />)
     }
   }
 });
