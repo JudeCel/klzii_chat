@@ -19,7 +19,7 @@ const UploadList = React.createClass({
   },
   render() {
     const { modalData } = this.props;
-    const sessionResources = this.chooseResourceType(modalData.type);
+    const sessionResources = this.chooseResourceType(modalData.type) || [];
 
     return (
       <ul className='list-group'>
