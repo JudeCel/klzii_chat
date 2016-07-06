@@ -14,7 +14,6 @@ defmodule KlziiChat.ChatController do
         |> render("index.html", session_id: session_member.sessionId)
       _ ->
         send_resp(conn, 401, Poison.encode!(%{error: "unauthorized, allow only dev"}))
-        |> halt
     end
   end
 
@@ -25,8 +24,9 @@ defmodule KlziiChat.ChatController do
         put_resp_cookie(conn, "chat_token", Guardian.Plug.current_token(conn), max_age: get_cookie_espire_time())
         |> render("index.html", session_id: member.session_member.sessionId)
       {:error, _reason } ->
-        send_resp(conn, 401, Poison.encode!(%{error: "unauthorized"}))
-        |> halt
+        resp =  KlziiChat.ChangesetView.render("error.json", %{not_found: "Session member not found"})
+          |> Poison.encode!
+        send_resp(conn, 401, resp)
     end
   end
 
@@ -38,12 +38,14 @@ defmodule KlziiChat.ChatController do
           put_resp_cookie(conn, "chat_token", Guardian.Plug.current_token(conn), max_age: get_cookie_espire_time())
           |> render("index.html", session_id: member.session_member.sessionId)
         {:error, _reason } ->
-          send_resp(conn, 401, Poison.encode!(%{error: "unauthorized"}))
-          |> halt
+          resp =  KlziiChat.ChangesetView.render("error.json", %{not_found: "Session member not found"})
+            |> Poison.encode!
+          send_resp(conn, 401, resp)
       end
     else
-      send_resp(conn, 401, Poison.encode!(%{error: "unauthorized"}))
-      |> halt
+      resp =  KlziiChat.ChangesetView.render("error.json", %{not_found: "Session member not found"})
+        |> Poison.encode!
+      send_resp(conn, 401, resp)
     end
   end
 
