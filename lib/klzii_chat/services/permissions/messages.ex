@@ -29,10 +29,10 @@ defmodule KlziiChat.Services.Permissions.Messages do
     |> formate_error
   end
 
-  @spec can_reply(Map.t) :: Boolean.t
-  def can_reply(member) do
+  @spec can_reply(Map.t, Map.t) :: Boolean.t
+  def can_reply(member, object) do
     roles = ["facilitator", "participant"]
-    has_role(member.role, roles)
+    (!object.replyId and has_role(member.role, roles))
     |> formate_error
   end
 
