@@ -27,8 +27,8 @@ const Pinboard = React.createClass({
   scalePinboard(svg) {
     const { minimized, maxWidth, maxHeight } = this.state;
     let whiteboard = ReactDOM.findDOMNode(this);
-    let scaleX = minimized ? whiteboard.scrollWidth/maxWidth : 1.0;
-    let scaleY = minimized ? whiteboard.scrollHeight/maxHeight : 1.0;
+    let scaleX = whiteboard.scrollWidth/maxWidth;
+    let scaleY = whiteboard.scrollHeight/maxHeight;
     let group = this.getSvgGroup(svg);
 
     group.transform(`S${scaleX},${scaleY},0,0`);
