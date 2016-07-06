@@ -72,7 +72,7 @@ defmodule KlziiChat.Services.SessionReportingService do
           broadcast_updated_report(session_id, report)
     else
           {:error, err} ->
-            {:ok, report} = update_session_topics_reports_record({:error, err}, report_id)
+            {:ok, report } = update_session_topics_reports_record({:error, err}, report_id)
             broadcast_updated_report(session_id, report)
     end
   end
@@ -145,7 +145,7 @@ defmodule KlziiChat.Services.SessionReportingService do
   @spec update_session_topics_reports_record({:error, String.t}, integer) :: {atom, Map.t}
   def update_session_topics_reports_record({:error, err}, report_id) do
     Repo.get!(SessionTopicReport, report_id)
-    |> Ecto.Changeset.change(status: "failed", message: "#{err}")
+    |> Ecto.Changeset.change(status: "failed", message: Poison.encode!(err) )
     |> Repo.update()
   end
 
