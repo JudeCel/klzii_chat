@@ -9,7 +9,7 @@ const ImageButton = React.createClass({
     this.props.changeButton({ data: { mode: 'image', url: url.full } });
   },
   onClick() {
-    this.openSpecificModal('whiteboardImage', { select: this.onSelect });
+    this.openSpecificModal('whiteboardImage', { select: this.onSelect, type: 'image' });
     this.props.parent.hide();
   },
   render() {
