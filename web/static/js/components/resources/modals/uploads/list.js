@@ -10,11 +10,16 @@ const UploadList = React.createClass({
   chooseResourceType(resources) {
     return this.props[resources];
   },
-  componentDidUpdate(props, state) {
+  getInitialData() {
     const { dispatch, currentUserJwt, modalData } = this.props;
-
-    if(props.modalData.type != modalData.type) {
-      dispatch(Actions.index(currentUserJwt, { type: this.get_session_resource_types(modalData.type) }));
+    dispatch(Actions.index(currentUserJwt, { type: this.get_session_resource_types(modalData.type) }));
+  },
+  componentDidMount() {
+    this.getInitialData();
+  },
+  componentDidUpdate(props, state) {
+    if(props.modalData.type != this.props.modalData.type) {
+      this.getInitialData();
     }
   },
   render() {
