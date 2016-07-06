@@ -16,8 +16,7 @@ const PinboardConsole = React.createClass({
 
     let data = {
       type: 'image',
-      // scope: 'pinboard',
-      scope: 'collage',
+      scope: 'pinboard',
       name: name,
       files: files,
       sessionTopicId: sessionTopic.id
