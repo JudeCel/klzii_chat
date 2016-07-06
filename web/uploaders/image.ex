@@ -15,7 +15,7 @@ defmodule KlziiChat.Uploaders.Image do
 
   # Define a thumbnail transformation:
   def transform(:thumb, _) do
-    {:convert, "-strip -thumbnail 250x250^ -gravity center -extent 250x250"}
+    {:convert, "-strip -thumbnail 250x250>"}
   end
 
   def __storage do

@@ -77,8 +77,8 @@ defmodule KlziiChat.Services.MessageService do
   end
 
   @spec preload_dependencies(%Message{}) :: %Message{}
-  def preload_dependencies(event) do
-    {:ok, Repo.preload(event, [:session_member, :votes, replies: [:replies, :session_member, :votes] ])}
+  def preload_dependencies(message) do
+    {:ok, Repo.preload(message, [:session_member, :votes, replies: [:replies, :session_member, :votes] ])}
   end
 
   @spec create(%Message{}) :: %Message{}

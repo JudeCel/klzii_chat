@@ -4,32 +4,32 @@ defmodule KlziiChat.Services.Permissions.MessagesTest do
 
   test "owner can delete" do
     member = %{id: 1, role: "participant"}
-    event = %{id: 1, sessionMemberId: 1}
-    assert( {:ok} = Messages.can_delete(member, event))
+    message = %{id: 1, sessionMemberId: 1}
+    assert( {:ok} = Messages.can_delete(member, message))
   end
 
   test "facilitator can delete" do
     member = %{id: 1, role: "facilitator"}
-    event = %{id: 1, sessionMemberId: 1}
-    assert( {:ok} = Messages.can_delete(member, event))
+    message = %{id: 1, sessionMemberId: 1}
+    assert( {:ok} = Messages.can_delete(member, message))
   end
 
   test "other can't delete" do
     member = %{id: 2, role: "participant"}
-    event = %{id: 1, sessionMemberId: 1}
-    assert( {:error, _} = Messages.can_delete(member, event))
+    message = %{id: 1, sessionMemberId: 1}
+    assert( {:error, _} = Messages.can_delete(member, message))
   end
 
   test "owner can edit" do
     member = %{id: 1, role: "facilitator"}
-    event = %{id: 1, sessionMemberId: 1}
-    assert( {:ok} = Messages.can_edit(member, event))
+    message = %{id: 1, sessionMemberId: 1}
+    assert( {:ok} = Messages.can_edit(member, message))
   end
 
   test "other can't edit" do
     member = %{id: 2, role: "facilitator"}
-    event = %{id: 1, sessionMemberId: 1}
-    assert( {:error, _} = Messages.can_edit(member, event))
+    message = %{id: 1, sessionMemberId: 1}
+    assert( {:error, _} = Messages.can_edit(member, message))
   end
 
   test "can new message" do
@@ -66,17 +66,19 @@ defmodule KlziiChat.Services.Permissions.MessagesTest do
 
   test "can reply" do
     roles = ["facilitator", "participant"]
+    message = %{id: 1, replyId: nil}
     Enum.map(roles, fn role ->
       member = %{role: role}
-      assert( {:ok} = Messages.can_reply(member))
+      assert( {:ok} = Messages.can_reply(member, message))
     end)
   end
 
   test "can't reply" do
     roles = ["observer"]
+    message = %{id: 1, replyId: nil}
     Enum.map(roles, fn role ->
       member = %{role: role}
-      assert( {:error, _} = Messages.can_reply(member))
+      assert( {:error, _} = Messages.can_reply(member, message))
     end)
   end
 
