@@ -15,6 +15,5 @@ defmodule KlziiChat.ConsoleTest do
 
   test "with invalid attrs" do
     assert {:sessionTopicId, {"can't be blank", []}} in errors_on(%Console{}, %{})
-    # assert {:pinboard, {"can't be blank", []}} in errors_on(%Console{}, %{})
   end
 end
