@@ -1,3 +1,5 @@
+import React from 'react';
+
 function _getNotificationOptions(data) {
   return {
     timeOut: data.timeOut || 5000,
@@ -6,16 +8,19 @@ function _getNotificationOptions(data) {
 }
 
 const notification = {
+  insertDangerously(html) {
+    return <span dangerouslySetInnerHTML={{ __html: html }} />
+  },
   showNotification(provider, data) {
     switch(data.type) {
       case 'success':
-        provider.success(data.message, data.title, _getNotificationOptions(data));
+        provider.success(this.insertDangerously(data.message), data.title, _getNotificationOptions(data));
         break;
       case 'warning':
-        provider.warning(data.message, data.title, _getNotificationOptions(data));
+        provider.warning(this.insertDangerously(data.message), data.title, _getNotificationOptions(data));
         break;
       case 'error':
-        provider.error(data.message, data.title, _getNotificationOptions(data));
+        provider.error(this.insertDangerously(data.message), data.title, _getNotificationOptions(data));
         break;
       default:
     }
