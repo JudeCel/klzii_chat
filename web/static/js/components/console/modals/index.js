@@ -1,7 +1,9 @@
-import uploads from './uploads';
-import survey  from './survey';
+import UploadsModal  from './uploads';
+import SurveyModal   from './survey';
+import PinboardModal from './pinboard';
 
 export default {
-  UploadsModal: uploads,
-  SurveyModal: survey
+  UploadsModal,
+  SurveyModal,
+  PinboardModal
 };

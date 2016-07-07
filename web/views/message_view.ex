@@ -1,5 +1,6 @@
 defmodule KlziiChat.MessageView do
   use KlziiChat.Web, :view
+  import KlziiChat.Services.Permissions.ErrorsHelper, only: [to_boolean: 1]
   alias KlziiChat.SessionMembersView
   alias KlziiChat.Services.Permissions.Messages, as: MessagePermissions
   alias KlziiChat.Decorators.MessageDecorator
@@ -20,12 +21,12 @@ defmodule KlziiChat.MessageView do
       votes_count: MessageDecorator.votes_count(message.votes),
       has_voted: MessageDecorator.has_voted(message.votes, member.id),
       permissions: %{
-        can_edit: MessagePermissions.can_edit(member, message),
-        can_delete: MessagePermissions.can_delete(member, message),
-        can_star: MessagePermissions.can_star(member),
-        can_vote: MessagePermissions.can_vote(member),
-        can_reply: (!message.replyId && MessagePermissions.can_reply(member)),
-        can_new_message: MessagePermissions.can_new_message(member)
+        can_edit: MessagePermissions.can_edit(member, message) |> to_boolean,
+        can_delete: MessagePermissions.can_delete(member, message) |> to_boolean,
+        can_star: MessagePermissions.can_star(member) |> to_boolean,
+        can_vote: MessagePermissions.can_vote(member) |> to_boolean,
+        can_reply: MessagePermissions.can_reply(member, message) |> to_boolean,
+        can_new_message: MessagePermissions.can_new_message(member) |> to_boolean
       }
     }
   end

@@ -35,13 +35,11 @@ defmodule KlziiChat.Services.SessionResourcesServiceTest do
   end
 
   test "delete_wrong_member_role_error", %{participant: participant} do
-    assert({:error, "Action not allowed!"} ===
-      SessionResourcesService.delete(participant.id, "not important" ))
+    assert({:error, %{permissions: "Action not allowed!"}} = SessionResourcesService.delete(participant.id, "not important" ))
   end
 
   test "get_sesion_resources_wrong_member_role_error", %{participant: participant} do
-    assert({:error, "Action not allowed!"} ===
-      SessionResourcesService.get_session_resources(participant.id, %{}))
+    assert({:error, %{permissions: "Action not allowed!"}} = SessionResourcesService.get_session_resources(participant.id, %{}))
   end
 
   defp create_image_resource(account_user, n) do

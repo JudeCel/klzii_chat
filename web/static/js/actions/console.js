@@ -1,4 +1,15 @@
 import Constants from '../constants';
+
+function _errorData(data) {
+  return {
+    type: Constants.SHOW_NOTIFICATION,
+    data: {
+      type: 'error',
+      message: data.error || data.reason
+    }
+  };
+}
+
 const Actions = {
   subscribeConsoleEvents: (channel) =>{
     return dispatch => {
@@ -17,7 +28,10 @@ const Actions = {
   },
   addToConsole: (channel, id) => {
     return dispatch => {
-      channel.push('set_console_resource', { id: id });
+      channel.push('set_console_resource', { id: id })
+      .receive('error', (data) => {
+        dispatch(_errorData(data));
+      });
     };
   }
 }

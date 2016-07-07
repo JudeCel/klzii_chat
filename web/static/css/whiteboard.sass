@@ -1,8 +1,10 @@
 .room-section
   .top-row
-    .whiteboard-section
+    .whiteboard-section, .pinboard-section
       flex: 1
       max-width: 50%
+      top: 0
+      left: 0
       width: 950px
       height: 460px
       z-index: 5
@@ -18,11 +20,6 @@
         border: 1px solid #ffc973
         border-radius: 5px
         display: block
-        -webkit-transition: transform 0.3s ease-in-out
-        -moz-transition: transform 0.3s ease-in-out
-        -ms-transition: transform 0.3s ease-in-out
-        -o-transition: transform 0.3s ease-in-out
-        transition: transform 0.3s ease-in-out
       .panel-buttons-section
         padding: 0
         margin: 0
@@ -31,18 +28,25 @@
       &.maximized
         padding-bottom: 45px
         max-width: 100%
-        transform: translateX(-75%)
+        left: 25%
       &.minimized
         height: 100%
         position: inherit
-        .panel-buttons-section
+        .panel-buttons-section, .remove-button
           display: none
-      .whiteboard-title, .whiteboard-expand
+      .whiteboard-title, .whiteboard-expand, .pinboard-title, .pinboard-expand
         position: absolute
-        top: 0px
+        top: 0
         z-index: 1
-      .whiteboard-expand
+      .whiteboard-expand, .pinboard-expand
         right: 3px
+      #pinboard-svg
+        background-image: url('/images/corkboard960x460.png')
+        background-size: 100% auto
+        image
+          position: sticky
+    .pinboard-section.maximized
+      padding-bottom: 10px
 
 #circleShapes, #scribleShapes, #lineWidthShapes, #eraserShapes
   .btn.btn-default

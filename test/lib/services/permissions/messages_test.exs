@@ -4,39 +4,39 @@ defmodule KlziiChat.Services.Permissions.MessagesTest do
 
   test "owner can delete" do
     member = %{id: 1, role: "participant"}
-    event = %{id: 1, sessionMemberId: 1}
-    Messages.can_delete(member, event) |> assert
+    message = %{id: 1, sessionMemberId: 1}
+    assert( {:ok} = Messages.can_delete(member, message))
   end
 
   test "facilitator can delete" do
     member = %{id: 1, role: "facilitator"}
-    event = %{id: 1, sessionMemberId: 1}
-    Messages.can_delete(member, event) |> assert
+    message = %{id: 1, sessionMemberId: 1}
+    assert( {:ok} = Messages.can_delete(member, message))
   end
 
   test "other can't delete" do
     member = %{id: 2, role: "participant"}
-    event = %{id: 1, sessionMemberId: 1}
-    Messages.can_delete(member, event) |> refute
+    message = %{id: 1, sessionMemberId: 1}
+    assert( {:error, _} = Messages.can_delete(member, message))
   end
 
   test "owner can edit" do
     member = %{id: 1, role: "facilitator"}
-    event = %{id: 1, sessionMemberId: 1}
-    Messages.can_edit(member, event) |> assert
+    message = %{id: 1, sessionMemberId: 1}
+    assert( {:ok} = Messages.can_edit(member, message))
   end
 
   test "other can't edit" do
     member = %{id: 2, role: "facilitator"}
-    event = %{id: 1, sessionMemberId: 1}
-    Messages.can_edit(member, event) |> refute
+    message = %{id: 1, sessionMemberId: 1}
+    assert( {:error, _} = Messages.can_edit(member, message))
   end
 
   test "can new message" do
     roles = ["facilitator", "participant"]
     Enum.map(roles, fn role ->
       member = %{role: role}
-      Messages.can_new_message(member)|> assert
+      assert( {:ok} = Messages.can_new_message(member))
     end)
   end
 
@@ -44,7 +44,7 @@ defmodule KlziiChat.Services.Permissions.MessagesTest do
     roles = ["observer"]
     Enum.map(roles, fn role ->
       member = %{role: role}
-      Messages.can_new_message(member)|> refute
+      assert( {:error, _} = Messages.can_new_message(member))
     end)
   end
 
@@ -52,7 +52,7 @@ defmodule KlziiChat.Services.Permissions.MessagesTest do
     roles = ["facilitator", "participant"]
     Enum.map(roles, fn role ->
       member = %{role: role}
-      Messages.can_vote(member)|> assert
+      assert( {:ok} = Messages.can_vote(member))
     end)
   end
 
@@ -60,23 +60,25 @@ defmodule KlziiChat.Services.Permissions.MessagesTest do
     roles = ["observer"]
     Enum.map(roles, fn role ->
       member = %{role: role}
-      Messages.can_vote(member)|> refute
+      assert( {:error, _} = Messages.can_vote(member))
     end)
   end
 
   test "can reply" do
     roles = ["facilitator", "participant"]
+    message = %{id: 1, replyId: nil}
     Enum.map(roles, fn role ->
       member = %{role: role}
-      Messages.can_reply(member)|> assert
+      assert( {:ok} = Messages.can_reply(member, message))
     end)
   end
 
   test "can't reply" do
     roles = ["observer"]
+    message = %{id: 1, replyId: nil}
     Enum.map(roles, fn role ->
       member = %{role: role}
-      Messages.can_reply(member)|> refute
+      assert( {:error, _} = Messages.can_reply(member, message))
     end)
   end
 
@@ -84,7 +86,7 @@ defmodule KlziiChat.Services.Permissions.MessagesTest do
     roles = ["facilitator"]
     Enum.map(roles, fn role ->
       member = %{role: role}
-      Messages.can_star(member)|> assert
+      assert( {:ok} = Messages.can_star(member))
     end)
   end
 
@@ -92,7 +94,7 @@ defmodule KlziiChat.Services.Permissions.MessagesTest do
     roles = ["observer", "participant"]
     Enum.map(roles, fn role ->
       member = %{role: role}
-      Messages.can_star(member)|> refute
+      assert( {:error, _} = Messages.can_star(member))
     end)
   end
 end

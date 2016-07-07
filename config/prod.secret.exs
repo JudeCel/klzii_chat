@@ -12,6 +12,7 @@ config :klzii_chat, KlziiChat.Repo,
   database: System.get_env("DB_DATABASE"),
   hostname: System.get_env("DB_HOST"),
   password: System.get_env("DB_PASSWORD"),
+  prepare: :unnamed,
   pool_size: 6
 
 config :ex_aws,

@@ -25,7 +25,7 @@ defmodule KlziiChat.Services.MiniSurveysService do
       })
         |> Repo.insert
     else
-      {:error, "Action not allowed!"}
+      {:error, %{permissions: "Action not allowed!"}}
     end
   end
 
@@ -37,7 +37,7 @@ defmodule KlziiChat.Services.MiniSurveysService do
       :ok = delete_related_consoles(mini_survey.consoles, session_member_id)
       Repo.delete(mini_survey)
     else
-      {:error, "Action not allowed!"}
+      {:error, %{permissions: "Action not allowed!"}}
     end
   end
 
@@ -75,7 +75,7 @@ defmodule KlziiChat.Services.MiniSurveysService do
             {:error, reason}
         end
       else
-        {:error, "Action not allowed!"}
+        {:error, %{permissions: "Action not allowed!"}}
       end
   end
 

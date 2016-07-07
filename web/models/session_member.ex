@@ -11,6 +11,7 @@ defmodule KlziiChat.SessionMember do
     belongs_to :session, KlziiChat.Session, [foreign_key: :sessionId]
     has_many :messages, KlziiChat.Message, [foreign_key: :sessionMemberId]
     has_many :shapes, KlziiChat.Shape, [foreign_key: :sessionMemberId]
+    has_many :pinboard_resources, KlziiChat.PinboardResource, [foreign_key: :sessionMemberId]
     has_many :votes, KlziiChat.Vote, [foreign_key: :sessionMemberId]
     has_many :sent_direct_messages, KlziiChat.DirectMessage, [foreign_key: :senderId]
     has_many :recieved_direct_messages, KlziiChat.DirectMessage, [foreign_key: :recieverId]

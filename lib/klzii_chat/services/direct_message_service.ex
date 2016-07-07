@@ -5,23 +5,29 @@ defmodule KlziiChat.Services.DirectMessageService do
   import Ecto
   import Ecto.Query
 
+
+  @spec validations(boolean) :: {:ok} | {:error, String.t}
+  def validations(has_permission) do
+    with {:ok} <- has_permission,
+    do:  {:ok}
+  end
+
   @spec create_message(Integer.t, Map.t) :: { :ok, Map.t } | { :error, Ecto.Changeset.t }
   def create_message(session_id, %{ "senderId" => current_member_id, "recieverId" => other_member_id, "text" => text }) do
     session = Repo.get!(Session, session_id)
     current_member = Repo.get!(SessionMember, current_member_id)
     other_member = Repo.get!(SessionMember, other_member_id)
 
-    if DirectMessagePermissions.can_write(current_member, other_member) do
-      build_assoc(
-      session, :direct_messages,
-      senderId: current_member_id,
-      recieverId: other_member_id,
-      text: text
-      )
-      |> Repo.insert
-    else
-      { :error, "Action not allowed!" }
-    end
+    DirectMessagePermissions.can_write(current_member, other_member)
+    |> validations
+    |> case do
+        {:ok} ->
+          build_assoc(session, :direct_messages)
+          |> DirectMessage.changeset(%{senderId: current_member_id, recieverId: other_member_id, text: text})
+          |> Repo.insert
+        {:error, reason} ->
+          {:error, reason}
+      end
   end
 
   @spec get_all_direct_messages(Integer.t, Integer.t, Integer.t) :: List.t

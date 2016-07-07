@@ -12,6 +12,7 @@ import miniSurveys         from './miniSurveys';
 import directMessages      from './directMessages';
 import reports             from './reports';
 import utility             from './utility';
+import pinboard            from './pinboard';
 
 export default combineReducers({
   chat: chat,
@@ -27,4 +28,5 @@ export default combineReducers({
   reports: reports,
   directMessages: directMessages,
   utility: utility,
+  pinboard: pinboard,
 });

@@ -9,7 +9,7 @@ defmodule KlziiChat.Services.ConsoleServiceTest do
       account_user.account, :resources,
       accountUserId: account_user.id,
       name: "test image 1",
-      type: "image",
+      type: "video",
       scope: "collage"
     ) |> Repo.insert!
 
@@ -32,12 +32,56 @@ defmodule KlziiChat.Services.ConsoleServiceTest do
     {:ok, session_id: session.id, youtube_resource: youtube_resource, resource: resource, session_topic_1: session_topic_1.id, mini_survey: mini_survey}
   end
 
-  test "get console", %{session_id: session_id, session_topic_1: session_topic_1} do
-    {:ok, first_console} = ConsoleService.get(session_id, session_topic_1)
-    {:ok, same_console} = ConsoleService.get(session_id, session_topic_1)
-    assert(first_console === same_console )
-    assert(%Console{} = same_console )
+  describe "Console" do
+    test "create if not exists", %{session_id: session_id, session_topic_1: session_topic_1} do
+      {:ok, first_console} = ConsoleService.get(session_id, session_topic_1)
+      {:ok, same_console} = ConsoleService.get(session_id, session_topic_1)
+      assert(first_console === same_console )
+      assert(%Console{} = same_console )
+    end
   end
+
+  describe "Pinboard# " do
+   test "can enablable", %{facilitator: facilitator, session_topic_1: session_topic_1} do
+      {:ok, console} = ConsoleService.enable_pinboard(facilitator.id, session_topic_1)
+      assert(console.pinboard)
+   end
+
+   test "when enable then remove all resource", %{facilitator: facilitator, session_topic_1: session_topic_1, resource: resource} do
+     {:ok, _} = ConsoleService.set_resource(facilitator.id, session_topic_1, resource.id)
+     {:ok, console} = ConsoleService.enable_pinboard(facilitator.id, session_topic_1)
+     assert(%{audioId: nil, pinboard: true, videoId: nil, fileId: nil, miniSurveyId: nil} = console)
+   end
+ end
+
+ describe "Resources# " do
+   test "add resource", %{facilitator: facilitator, session_topic_1: session_topic_1, resource: resource} do
+     {:ok, console} = ConsoleService.set_resource(facilitator.id, session_topic_1, resource.id)
+     image_id = Map.get(console, String.to_atom(resource.type <> "Id"))
+     assert(image_id == resource.id)
+     assert(%Console{} = console )
+   end
+
+   test "add resource #youtube", %{facilitator: facilitator, session_topic_1: session_topic_1, youtube_resource: resource} do
+     {:ok, console} = ConsoleService.set_resource(facilitator.id, session_topic_1, resource.id)
+     video_id = Map.get(console, String.to_atom("videoId"))
+     assert(video_id == resource.id)
+     assert(%Console{} = console )
+   end
+
+   test "remove resource #youtube", %{facilitator: facilitator, session_topic_1: session_topic_1, youtube_resource: resource} do
+     {:ok, _} = ConsoleService.set_resource(facilitator.id, session_topic_1, resource.id)
+     {:ok, console} = ConsoleService.remove(facilitator.id, session_topic_1, "video")
+     Map.get(console, String.to_atom(resource.type <> "Id"))
+     |> is_nil |> assert
+   end
+
+   test "when pinboard enable then cen't add resource", %{facilitator: facilitator, session_topic_1: session_topic_1, resource: resource} do
+     {:ok, _} = ConsoleService.enable_pinboard(facilitator.id, session_topic_1)
+     {:error, %{system: error_message}} = ConsoleService.set_resource(facilitator.id, session_topic_1, resource.id)
+     assert(ConsoleService.error_messages.pinboard_is_enable == error_message)
+   end
+ end
 
   test "add mini_survey", %{facilitator: facilitator, session_topic_1: session_topic_1, mini_survey: mini_survey} do
     {:ok, console} = ConsoleService.set_mini_survey(facilitator.id, session_topic_1, mini_survey.id)
@@ -53,49 +97,17 @@ defmodule KlziiChat.Services.ConsoleServiceTest do
     |> is_nil |> assert
   end
 
-  test "add resource", %{facilitator: facilitator, session_topic_1: session_topic_1, resource: resource} do
-    {:ok, console} = ConsoleService.set_resource(facilitator.id, session_topic_1, resource.id)
-    image_id = Map.get(console, String.to_atom(resource.type <> "Id"))
-    assert(image_id == resource.id)
-    assert(%Console{} = console )
-  end
+  describe "get_field_from_type# " do
+    test "#video" do
+      type = "video"
+      field = ConsoleService.get_field_from_type(type)
+      assert(field == :videoId)
+    end
 
-  test "remove resource ", %{facilitator: facilitator, session_topic_1: session_topic_1, resource: resource} do
-    {:ok, _} = ConsoleService.set_resource(facilitator.id, session_topic_1, resource.id)
-    {:ok, console} = ConsoleService.remove(facilitator.id, session_topic_1, "image")
-    Map.get(console, String.to_atom(resource.type <> "Id"))
-    |> is_nil |> assert
-  end
-
-  test "add resource #youtube", %{facilitator: facilitator, session_topic_1: session_topic_1, youtube_resource: resource} do
-    {:ok, console} = ConsoleService.set_resource(facilitator.id, session_topic_1, resource.id)
-    video_id = Map.get(console, String.to_atom("videoId"))
-    assert(video_id == resource.id)
-    assert(%Console{} = console )
-  end
-
-  test "remove resource #youtube", %{facilitator: facilitator, session_topic_1: session_topic_1, youtube_resource: resource} do
-    {:ok, _} = ConsoleService.set_resource(facilitator.id, session_topic_1, resource.id)
-    {:ok, console} = ConsoleService.remove(facilitator.id, session_topic_1, "video")
-    Map.get(console, String.to_atom(resource.type <> "Id"))
-    |> is_nil |> assert
-  end
-
-  test "get field from type #video" do
-    type = "video"
-    field = ConsoleService.get_field_from_type(type)
-    assert(field == :videoId)
-  end
-
-  test "get field from type #youtube link" do
-    type = "link"
-    field = ConsoleService.get_field_from_type(type)
-    assert(field == :videoId)
-  end
-
-  test "get field from type image" do
-    type = "image"
-    field = ConsoleService.get_field_from_type(type)
-    assert(field == :imageId)
+    test "#youtube link" do
+      type = "link"
+      field = ConsoleService.get_field_from_type(type)
+      assert(field == :videoId)
+    end
   end
 end
