@@ -2,13 +2,6 @@ defmodule KlziiChat.Services.Permissions.PinboardResource do
   import KlziiChat.Services.Permissions.Validations
   import KlziiChat.Services.Permissions.ErrorsHelper, only: [formate_error: 1]
 
-  @spec error_messages :: Map.t
-  def error_messages do
-    %{
-      action_not_allowed:  "Action not allowed!",
-    }
-  end
-
   @spec can_enable(Map.t) :: {:ok} | {:error, String.t}
   def can_enable(member) do
     roles = ~w(facilitator)
