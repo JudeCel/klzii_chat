@@ -39,6 +39,7 @@ config :klzii_chat, KlziiChat.Repo,
   adapter: Ecto.Adapters.Postgres,
   username: "postgres",
   database: "kliiko_development",
+  prepare: :unnamed,
   hostname: "localhost",
   pool_size: 10
 

@@ -1,5 +1,6 @@
 defmodule KlziiChat.ResourcesController do
   use KlziiChat.Web, :controller
+  import KlziiChat.ErrorHelpers, only: [error_view: 1]
   alias KlziiChat.{Repo, ResourceView}
   alias KlziiChat.Services.{ ResourceService }
   alias KlziiChat.Queries.Resources, as: QueriesResources

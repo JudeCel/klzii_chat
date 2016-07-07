@@ -37,4 +37,13 @@ defmodule KlziiChat.ErrorHelpers do
       Gettext.dgettext(KlziiChat.Gettext, "errors", msg, opts)
     end
   end
+
+  def error_view(reason) do
+    case reason do
+      %Ecto.Changeset{} ->
+        KlziiChat.ChangesetView.render("error.json", %{changeset: reason})
+      _->
+        KlziiChat.ChangesetView.render("error.json", reason)
+    end
+  end
 end

@@ -45,4 +45,12 @@ defmodule KlziiChat.SessionResourcesControllerTest do
     assert(id == session_resource.id)
     assert(type == session_resource.resource.type)
   end
+
+  describe("wrong media type") do
+    test "upload image", %{conn: conn} do
+      file = %Plug.Upload{ content_type: "image/jpg", path: @image, filename: "hamster.jpg"}
+      %{"errors" => _} = post(conn, "api/session_resources/upload", %{name: "hamster", type: "video", scope: "collage", file: file })
+        |> json_response(200)
+    end
+  end
 end

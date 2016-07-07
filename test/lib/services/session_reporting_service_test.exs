@@ -105,7 +105,7 @@ defmodule KlziiChat.Services.SessionReportingServiceTest do
 
     {:ok, report} = SessionReportingService.update_session_topics_reports_record({:error, "some error message"}, session_topics_report.id)
     assert(report.status == "failed")
-    assert(report.message == "some error message")
+    assert(report.message == Poison.encode!("some error message"))
   end
 
   test "Create Report Async is updating session topics reports record with completed status", %{session: session, session_topic: session_topic, facilitator: facilitator} do
@@ -125,7 +125,7 @@ defmodule KlziiChat.Services.SessionReportingServiceTest do
     {:ok, [db_report]} = SessionReportingService.get_session_topics_reports(session.id, facilitator.id)
     assert(db_report.id == report.id)
     assert(db_report.status == "failed")
-    assert(db_report.message == "Incorrect report format: incorrect_format")
+    assert(db_report.message == Poison.encode!("Incorrect report format: incorrect_format"))
   end
 
   test "Create session topic report updating session topics reports record asynchronously", %{session: session, session_topic: session_topic, facilitator: facilitator} do
@@ -244,7 +244,7 @@ defmodule KlziiChat.Services.SessionReportingServiceTest do
     assert(report.id == failed_report.id)
     assert(failed_report.id == db_report.id)
     assert(db_report.status == "failed")
-    assert(db_report.message == "some error message")
+    assert(db_report.message == Poison.encode!("some error message"))
     refute(is_nil(db_report.deletedAt))
   end
 
@@ -287,7 +287,7 @@ defmodule KlziiChat.Services.SessionReportingServiceTest do
      report_id = report.id
      new_report_id = new_report.id
      assert(report.status == "failed")
-     assert(report.message == "some error message")
+     assert(report.message == Poison.encode!("some error message"))
      assert(new_report.status == "progress")
      assert(new_report.message == nil)
      assert(new_report_id != report_id)

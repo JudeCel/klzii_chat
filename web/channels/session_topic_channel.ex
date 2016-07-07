@@ -5,6 +5,7 @@ defmodule KlziiChat.SessionTopicChannel do
   alias KlziiChat.{MessageView, Presence, Endpoint, ConsoleView, SessionTopicView, SessionMembersView, MiniSurveyView, PinboardResourceView, ChangesetView}
   import(KlziiChat.Authorisations.Channels.SessionTopic, only: [authorized?: 2])
   import(KlziiChat.Helpers.SocketHelper, only: [get_session_member: 1])
+  import KlziiChat.ErrorHelpers, only: [error_view: 1]
 
 
   @moduledoc """
@@ -246,14 +247,5 @@ defmodule KlziiChat.SessionTopicChannel do
     session_member = get_session_member(socket)
     push socket, message, MessageView.render("show.json", %{message: payload, member: session_member})
     {:noreply, socket}
-  end
-
-  defp error_view(reason) do
-    case reason do
-      %Ecto.Changeset{} ->
-        ChangesetView.render("error.json", %{changeset: reason})
-      _->
-        ChangesetView.render("error.json", reason)
-    end
   end
 end

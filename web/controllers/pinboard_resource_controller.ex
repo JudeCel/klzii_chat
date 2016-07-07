@@ -1,5 +1,6 @@
 defmodule KlziiChat.PinboardResourceController do
   use KlziiChat.Web, :controller
+  import KlziiChat.ErrorHelpers, only: [error_view: 1]
   alias KlziiChat.{PinboardResourceView, Endpoint}
   alias KlziiChat.Services.Permissions.Builder, as: PermissionsBuilder
   alias KlziiChat.Services.{ PinboardResourceService, ResourceService}
