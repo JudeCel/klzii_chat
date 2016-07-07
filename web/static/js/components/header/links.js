@@ -2,14 +2,30 @@ import React, {PropTypes} from 'react';
 import { connect }        from 'react-redux';
 import mixins             from '../../mixins';
 import ReportsModal       from './../reports/modal';
+import WhiteboardActions  from './../../actions/whiteboard';
 
 const Links = React.createClass({
   mixins: [mixins.modalWindows, mixins.validations],
+  clearWhiteboard() {
+    if(confirm('Are you sure you want to clear whiteboard?')) {
+      const { dispatch, whiteboardChannel } = this.props;
+      dispatch(WhiteboardActions.deleteAll(whiteboardChannel));
+    }
+  },
   reportsFunction(style) {
     if(this.hasPermission(['reports', 'can_report'])) {
       return (
         <li style={ style } onClick={ this.openSpecificModal.bind(this, 'reports') }>
           <i className='icon-book-1' />
+        </li>
+      )
+    }
+  },
+  clearWhiteboardFunction(style) {
+    if(this.isFacilitator(this.props.currentUser)) {
+      return (
+        <li style={ style } onClick={ this.clearWhiteboard }>
+          <i className='fa fa-paint-brush' />
         </li>
       )
     }
@@ -41,10 +57,9 @@ const Links = React.createClass({
       <div>
         <div className='col-md-4 links-section'>
           <ul className='icons'>
-            <li style={ style }>
-              <i className='icon-trash' />
-            </li>
+            { this.clearWhiteboardFunction(style) }
             { this.reportsFunction(style) }
+
             <li style={ style } onClick={ this.showDirectMessages }>
               <i className={ 'icon-message' + (count ? ' with-badge' : '') }/>
               <i className='badge'>{ count }</i>
@@ -53,12 +68,12 @@ const Links = React.createClass({
               <i className='icon-help' />
             </li>
             <li style={ style }>
-              <i className='icon-reply' />
+              <i className='icon-power' />
             </li>
           </ul>
         </div>
         <div className='col-md-1 logo-section'>
-          <img width='150%' src='/images/logo.png' />
+          <img src='/images/klzii_logo.png' />
         </div>
 
         <ReportsModal show={ this.showSpecificModal('reports') } />
@@ -69,6 +84,7 @@ const Links = React.createClass({
 
 const mapStateToProps = (state) => {
   return {
+    whiteboardChannel: state.whiteboard.channel,
     modalWindows: state.modalWindows,
     unreadDirectMessages: state.directMessages.unreadCount,
     firstParticipant: state.members.participants[0],
