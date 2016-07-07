@@ -30,7 +30,7 @@ defmodule KlziiChat.Services.ConsoleService do
 
   @spec is_pinboard_enable?(%Console{}, Atom) :: {:ok} | {:error, String.t}
   defp is_pinboard_enable?(console, :resource) do
-    if console.pinboard, do: {:error, error_messages.pinboard_is_enable}, else: {:ok}
+    if console.pinboard, do: {:error, %{system: error_messages.pinboard_is_enable}}, else: {:ok}
   end
 
   @spec set_resource(Integer, Integer, Integer) :: {:ok, %Console{}} | {:error, String.t}
