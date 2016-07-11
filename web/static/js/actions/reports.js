@@ -1,14 +1,5 @@
 import Constants from '../constants';
-
-function _errorData(data) {
-  return {
-    type: Constants.SHOW_NOTIFICATION,
-    data: {
-      type: 'error',
-      message: data.error
-    }
-  };
-}
+import NotificationActions from './notifications';
 
 const Actions = {
   subscribeReportsEvents:(channel) => {
@@ -23,8 +14,8 @@ const Actions = {
       channel.push('get_session_topics_reports')
       .receive('ok', (data) => {
         dispatch({ type: Constants.SET_REPORTS, data: data });
-      }).receive('error', (data) => {
-        dispatch(_errorData(data));
+      }).receive('error', (errors) => {
+        NotificationActions.showErrorNotification(dispatch, errors);
       });
     }
   },
@@ -33,8 +24,8 @@ const Actions = {
       channel.push('create_session_topic_report', params)
       .receive('ok', (data) => {
         dispatch({ type: Constants.CREATE_REPORT, data: data });
-      }).receive('error', (data) => {
-        dispatch(_errorData(data));
+      }).receive('error', (errors) => {
+        NotificationActions.showErrorNotification(dispatch, errors);
       });
     }
   },
@@ -43,8 +34,8 @@ const Actions = {
       channel.push('recreate_session_topic_report', { id: reportId })
       .receive('ok', (data) => {
         dispatch({ type: Constants.RECREATE_REPORT, data: data });
-      }).receive('error', (data) => {
-        dispatch(_errorData(data));
+      }).receive('error', (errors) => {
+        NotificationActions.showErrorNotification(dispatch, errors);
       });
     }
   },
@@ -53,8 +44,8 @@ const Actions = {
       channel.push('delete_session_topic_report', { id: reportId })
       .receive('ok', (data) => {
         dispatch({ type: Constants.DELETE_REPORT, data: data });
-      }).receive('error', (data) => {
-        dispatch(_errorData(data));
+      }).receive('error', (errors) => {
+        NotificationActions.showErrorNotification(dispatch, errors);
       });
     }
   }

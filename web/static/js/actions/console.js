@@ -1,14 +1,5 @@
 import Constants from '../constants';
-
-function _errorData(data) {
-  return {
-    type: Constants.SHOW_NOTIFICATION,
-    data: {
-      type: 'error',
-      message: data.error || data.reason
-    }
-  };
-}
+import NotificationActions from './notifications';
 
 const Actions = {
   subscribeConsoleEvents: (channel) =>{
@@ -23,14 +14,17 @@ const Actions = {
   },
   removeFromConsole: (channel, type) => {
     return dispatch => {
-      channel.push('remove_console_element', { type: type });
+      channel.push('remove_console_element', { type: type })
+      .receive('error', (errors) => {
+        NotificationActions.showErrorNotification(dispatch, errors);
+      });
     };
   },
   addToConsole: (channel, id) => {
     return dispatch => {
       channel.push('set_console_resource', { id: id })
-      .receive('error', (data) => {
-        dispatch(_errorData(data));
+      .receive('error', (errors) => {
+        NotificationActions.showErrorNotification(dispatch, errors);
       });
     };
   }

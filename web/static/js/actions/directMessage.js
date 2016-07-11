@@ -1,14 +1,5 @@
-import Constants  from '../constants';
-
-function _errorData(data) {
-  return {
-    type: Constants.SHOW_NOTIFICATION,
-    data: {
-      type: 'error',
-      message: data.error
-    }
-  };
-}
+import Constants from '../constants';
+import NotificationActions from './notifications';
 
 const Actions = {
   subscribeDirectMessageEvents:(channel) => {
@@ -23,8 +14,8 @@ const Actions = {
       channel.push('get_unread_count')
       .receive('ok', (data) => {
         dispatch({ type: Constants.UNREAD_DIRECT_MESSAGES, data: data.count });
-      }).receive('error', (data) => {
-        dispatch(_errorData(data));
+      }).receive('error', (errors) => {
+        NotificationActions.showErrorNotification(dispatch, errors);
       });
     }
   },
@@ -33,8 +24,8 @@ const Actions = {
       channel.push('get_all_direct_messages', { recieverId, page: 0 })
       .receive('ok', (data) => {
         dispatch({ type: Constants.SET_DIRECT_MESSAGES, data: { ...data.messages, currentReciever: recieverId } });
-      }).receive('error', (data) => {
-        dispatch(_errorData(data));
+      }).receive('error', (errors) => {
+        NotificationActions.showErrorNotification(dispatch, errors);
       });
     }
   },
@@ -44,8 +35,8 @@ const Actions = {
       channel.push('get_all_direct_messages', { recieverId, page })
       .receive('ok', (data) => {
         dispatch({ type: Constants.ADD_DIRECT_MESSAGES, data: data.messages });
-      }).receive('error', (data) => {
-        dispatch(_errorData(data));
+      }).receive('error', (errors) => {
+        NotificationActions.showErrorNotification(dispatch, errors);
       });
     }
   },
@@ -54,8 +45,8 @@ const Actions = {
       channel.push('create_direct_message', data)
       .receive('ok', (data) => {
         dispatch({ type: Constants.CREATE_DIRECT_MESSAGE, data: data.message });
-      }).receive('error', (data) => {
-        dispatch(_errorData(data));
+      }).receive('error', (errors) => {
+        NotificationActions.showErrorNotification(dispatch, errors);
       });
     }
   },
@@ -64,8 +55,8 @@ const Actions = {
       channel.push('set_read_direct_messages', { senderId })
       .receive('ok', (data) => {
         dispatch({ type: Constants.READ_DIRECT_MESSAGES, data: data.count });
-      }).receive('error', (data) => {
-        dispatch(_errorData(data));
+      }).receive('error', (errors) => {
+        NotificationActions.showErrorNotification(dispatch, errors);
       });
     }
   },
@@ -74,8 +65,8 @@ const Actions = {
       channel.push('get_last_messages')
       .receive('ok', (data) => {
         dispatch({ type: Constants.LAST_DIRECT_MESSAGES, data: data.messages });
-      }).receive('error', (data) => {
-        dispatch(_errorData(data));
+      }).receive('error', (errors) => {
+        NotificationActions.showErrorNotification(dispatch, errors);
       });
     }
   },

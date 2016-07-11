@@ -1,14 +1,5 @@
 import Constants from '../constants';
-
-function _errorData(data) {
-  return {
-    type: Constants.SHOW_NOTIFICATION,
-    data: {
-      type: 'error',
-      message: data.error
-    }
-  };
-}
+import NotificationActions from './notifications';
 
 const Actions = {
   addToConsole(channel, surveyId) {
@@ -27,8 +18,8 @@ const Actions = {
       .receive('ok', (data) => {
         dispatch({ type: Constants.CREATE_SURVEY, data: data });
         if(callback) callback();
-      }).receive('error', (data) => {
-        dispatch(_errorData(data));
+      }).receive('error', (errors) => {
+        NotificationActions.showErrorNotification(dispatch, errors);
       });
     }
   },
@@ -38,8 +29,8 @@ const Actions = {
       .receive('ok', (data) => {
         dispatch({ type: Constants.SET_SURVEYS, data: data.mini_surveys });
         if(callback) callback();
-      }).receive('error', (data) => {
-        dispatch(_errorData(data));
+      }).receive('error', (errors) => {
+        NotificationActions.showErrorNotification(dispatch, errors);
       });
     }
   },
@@ -49,8 +40,8 @@ const Actions = {
       .receive('ok', (data) => {
         dispatch({ type: Constants.SET_CONSOLE_SURVEY, data: data });
         if(callback) callback();
-      }).receive('error', (data) => {
-        dispatch(_errorData(data));
+      }).receive('error', (errors) => {
+        NotificationActions.showErrorNotification(dispatch, errors);
       });
     }
   },
@@ -60,8 +51,8 @@ const Actions = {
       .receive('ok', (data) => {
         dispatch({ type: Constants.SET_CONSOLE_SURVEY, data: data });
         if(callback) callback();
-      }).receive('error', (data) => {
-        dispatch(_errorData(data));
+      }).receive('error', (errors) => {
+        NotificationActions.showErrorNotification(dispatch, errors);
       });
     }
   },
@@ -71,8 +62,8 @@ const Actions = {
       .receive('ok', (data) => {
         dispatch({ type: Constants.SET_VIEW_SURVEY, data: data });
         if(callback) callback();
-      }).receive('error', (data) => {
-        dispatch(_errorData(data));
+      }).receive('error', (errors) => {
+        NotificationActions.showErrorNotification(dispatch, errors);
       });
     }
   },
@@ -82,8 +73,8 @@ const Actions = {
       .receive('ok', (data) => {
         dispatch({ type: Constants.DELETE_SURVEY, data: data });
         if(callback) callback();
-      }).receive('error', (data) => {
-        dispatch(_errorData(data));
+      }).receive('error', (errors) => {
+        NotificationActions.showErrorNotification(dispatch, errors);
       });
     }
   }

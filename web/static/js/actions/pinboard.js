@@ -1,15 +1,6 @@
 import Constants from '../constants';
 import request   from 'superagent';
-
-function _errorData(data) {
-  return {
-    type: Constants.SHOW_NOTIFICATION,
-    data: {
-      type: 'error',
-      message: data.error
-    }
-  };
-}
+import NotificationActions from './notifications';
 
 const Actions = {
   subscribePinboardEvents:(channel) => {
@@ -26,8 +17,8 @@ const Actions = {
     return dispatch => {
       channel.push('enable_pinboard')
       .receive('ok', (data) => {
-      }).receive('error', (data) => {
-        dispatch(_errorData(data));
+      }).receive('error', (errors) => {
+        NotificationActions.showErrorNotification(dispatch, errors);
       });
     }
   },
@@ -36,16 +27,16 @@ const Actions = {
       channel.push('get_pinboard_resources')
       .receive('ok', (data) => {
         dispatch({ type: Constants.GET_PINBOARD_RESOURCES, data: data.list });
-      }).receive('error', (data) => {
-        dispatch(_errorData(data));
+      }).receive('error', (errors) => {
+        NotificationActions.showErrorNotification(dispatch, errors);
       });
     }
   },
   delete:(channel, id) => {
     return dispatch => {
       channel.push('delete_pinboard_resource', { id })
-      .receive('error', (data) => {
-        dispatch(_errorData(data));
+      .receive('error', (errors) => {
+        NotificationActions.showErrorNotification(dispatch, errors);
       });
     }
   },
@@ -64,9 +55,9 @@ const Actions = {
            .field('name', data.name);
       });
 
-      req.end((error, result) => {
-        if(error) {
-          dispatch(_errorData(error));
+      req.end((errors, result) => {
+        if(errors) {
+          NotificationActions.showErrorNotification(dispatch, errors);
         }
       });
     }
