@@ -6,7 +6,7 @@ defmodule KlziiChat.Services.ResourceService do
   import Ecto
   import Ecto.Query
 
-
+  @spec upload(map, integer) ::  {:ok, %Resource{}} | {:error, map}
   def upload(params, account_user_id)  do
     account_user = Repo.get!(AccountUser, account_user_id) |> Repo.preload([:account])
     if account_user.role == "admin" do
@@ -16,10 +16,12 @@ defmodule KlziiChat.Services.ResourceService do
     end |> save_resource(account_user)
   end
 
+  @spec validate(map, map) :: {:ok} | {:error, map}
   def validate(file, params) do
     validate_file_type(file, params)
   end
 
+  @spec validate_file_type(map | String.t, map) :: {:ok} | {:error, map}
   def validate_file_type(file, params) when is_map(file) do
     file_type = String.split(file.content_type, "/") |> List.first
     cond do
@@ -29,7 +31,6 @@ defmodule KlziiChat.Services.ResourceService do
         {:ok}
     end
   end
-
   def validate_file_type(file, params) when is_bitstring(file) do
     cond do
       params.type in ["file", "link"] ->
@@ -38,11 +39,11 @@ defmodule KlziiChat.Services.ResourceService do
         {:error, %{code: 415, type: "Accept only links"}}
     end
   end
-
   def validate_file_type(_, _) do
     {:error, %{code: 415, type: "File not valid"}}
   end
 
+  @spec save_resource(map, integer) :: {:ok, %Resource{}} | {:error, map}
   def save_resource(%{"private" => private, "type" => type, "scope" => scope, "file" => file, "name"=> name}, account_user) do
     params = %{
       type: type,
@@ -69,6 +70,7 @@ defmodule KlziiChat.Services.ResourceService do
     end
   end
 
+  @spec get(integer, String.t) :: {:ok, list}
   def get(account_user_id, type) do
     account_user = Repo.get!(AccountUser, account_user_id)
       |> Repo.preload([:account])
@@ -80,6 +82,7 @@ defmodule KlziiChat.Services.ResourceService do
     {:ok, resources}
   end
 
+  @spec find(integer, integer) :: {:ok, list}
   def find(account_user_id, id) do
     account_user = Repo.get!(AccountUser, account_user_id)
       |> Repo.preload([:account])
@@ -110,6 +113,7 @@ defmodule KlziiChat.Services.ResourceService do
     end
   end
 
+  @spec daily_cleanup() :: {:ok, list}
   def daily_cleanup do
     from(e in Resource,
       where: e.expiryDate < ^Timex.DateTime.now,
