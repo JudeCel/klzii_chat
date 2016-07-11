@@ -5,7 +5,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.12.0">
-    <title>KlziiChat.Services.Permissions.Console – klzii_chat v0.0.1</title>
+    <title>KlziiChat.Queries.Messages – klzii_chat v0.0.1</title>
     <link rel="stylesheet" href="dist/app-88251e7c81.css" />
     
     <script src="dist/sidebar_items.js"></script>
@@ -59,7 +59,7 @@
 
       <h1>
         <small class="visible-xs">klzii_chat v0.0.1</small>
-        KlziiChat.Services.Permissions.Console
+        KlziiChat.Queries.Messages
         
         
       </h1>
@@ -83,19 +83,37 @@
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#can_enable_pinboard/1">can_enable_pinboard(member)</a>
+    <a href="#base_query/1">base_query(session_topic_id)</a>
   </div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#can_remove_resource/1">can_remove_resource(member)</a>
+    <a href="#exclude_by_role/2">exclude_by_role(query, role)</a>
   </div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#can_set_resource/1">can_set_resource(member)</a>
+    <a href="#filter_star/2">filter_star(query, bool)</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#join_session_member/1">join_session_member(query)</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#session_topic_messages/2">session_topic_messages(session_topic_id, list)</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#sort_select/1">sort_select(query)</a>
   </div>
   
 </div>
@@ -120,12 +138,12 @@
             </a>
             Functions
           </h1>
-          <div class="detail" id="can_enable_pinboard/1">
+          <div class="detail" id="base_query/1">
   <div class="detail-header">
-    <a href="#can_enable_pinboard/1" class="detail-link" title="Link to this function">
+    <a href="#base_query/1" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">can_enable_pinboard(member)</span>
+    <span class="signature">base_query(session_topic_id)</span>
     
     
   </div>
@@ -134,9 +152,7 @@
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">can_enable_pinboard(<a href="http://elixir-lang.org/docs/stable/elixir/Map.html#t:t/0">Map.t</a>) ::
-  {:ok} |
-  {:error, <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>}</code></pre>
+          <pre><code class="elixir">base_query(integer) :: Ecto.Query</code></pre>
         
       </div>
     </div>
@@ -145,12 +161,12 @@
     
   </section>
 </div>
-<div class="detail" id="can_remove_resource/1">
+<div class="detail" id="exclude_by_role/2">
   <div class="detail-header">
-    <a href="#can_remove_resource/1" class="detail-link" title="Link to this function">
+    <a href="#exclude_by_role/2" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">can_remove_resource(member)</span>
+    <span class="signature">exclude_by_role(query, role)</span>
     
     
   </div>
@@ -159,9 +175,7 @@
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">can_remove_resource(<a href="http://elixir-lang.org/docs/stable/elixir/Map.html#t:t/0">Map.t</a>) ::
-  {:ok} |
-  {:error, <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>}</code></pre>
+          <pre><code class="elixir">exclude_by_role(Ecto.Query, <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>) :: Ecto.Query</code></pre>
         
       </div>
     </div>
@@ -170,12 +184,12 @@
     
   </section>
 </div>
-<div class="detail" id="can_set_resource/1">
+<div class="detail" id="filter_star/2">
   <div class="detail-header">
-    <a href="#can_set_resource/1" class="detail-link" title="Link to this function">
+    <a href="#filter_star/2" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">can_set_resource(member)</span>
+    <span class="signature">filter_star(query, bool)</span>
     
     
   </div>
@@ -184,7 +198,80 @@
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">can_set_resource(<a href="http://elixir-lang.org/docs/stable/elixir/Map.html#t:t/0">Map.t</a>) :: Boolean.t</code></pre>
+          <pre><code class="elixir">filter_star(Ecto.Query, true) :: Ecto.Query</code></pre>
+        
+          <pre><code class="elixir">filter_star(Ecto.Query, false) :: Ecto.Query</code></pre>
+        
+      </div>
+    </div>
+  
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="join_session_member/1">
+  <div class="detail-header">
+    <a href="#join_session_member/1" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">join_session_member(query)</span>
+    
+    
+  </div>
+  
+    <div class="specs">
+      <h4 class="specs-title">Specs</h4>
+      <div class="specs-list">
+        
+          <pre><code class="elixir">join_session_member(Ecto.Query) :: Ecto.Query</code></pre>
+        
+      </div>
+    </div>
+  
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="session_topic_messages/2">
+  <div class="detail-header">
+    <a href="#session_topic_messages/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">session_topic_messages(session_topic_id, list)</span>
+    
+    
+  </div>
+  
+    <div class="specs">
+      <h4 class="specs-title">Specs</h4>
+      <div class="specs-list">
+        
+          <pre><code class="elixir">session_topic_messages(integer, <a href="http://elixir-lang.org/docs/stable/elixir/List.html#t:t/0">List.t</a>) :: Ecto.Query</code></pre>
+        
+          <pre><code class="elixir">session_topic_messages(integer, <a href="http://elixir-lang.org/docs/stable/elixir/List.html#t:t/0">List.t</a>) :: Ecto.Query</code></pre>
+        
+      </div>
+    </div>
+  
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="sort_select/1">
+  <div class="detail-header">
+    <a href="#sort_select/1" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">sort_select(query)</span>
+    
+    
+  </div>
+  
+    <div class="specs">
+      <h4 class="specs-title">Specs</h4>
+      <div class="specs-list">
+        
+          <pre><code class="elixir">sort_select(Ecto.Query) :: Ecto.Query</code></pre>
         
       </div>
     </div>

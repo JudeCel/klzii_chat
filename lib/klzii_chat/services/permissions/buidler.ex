@@ -27,7 +27,7 @@ defmodule KlziiChat.Services.Permissions.Builder do
   def session_member_permissions(session_member_id) do
     session_member = Repo.get!(SessionMember, session_member_id)
 
-    case get_subscription_preference(session_member.sessionId) do
+    case get_subscription_preference_session_memeber(session_member.sessionId) do
       {:ok, preference} ->
         {:ok, buid_map(session_member, preference)}
       {:error, reason} ->
@@ -59,9 +59,9 @@ defmodule KlziiChat.Services.Permissions.Builder do
     }
   end
 
-  @spec get_subscription_preference(Integer.t) :: Map.t
-  defp get_subscription_preference(session_member_id) do
-    SessionMemberQueries.get_subscription_preference(session_member_id)
+  @spec get_subscription_preference_session_memeber(Integer.t) :: Map.t
+  defp get_subscription_preference_session_memeber(session_member_id) do
+    SessionMemberQueries.get_subscription_preference_session_memeber(session_member_id)
       |> Repo.one
       |> case do
         nil ->

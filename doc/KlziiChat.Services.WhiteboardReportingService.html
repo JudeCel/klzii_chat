@@ -5,7 +5,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.12.0">
-    <title>KlziiChat.Queries.SessionMember – klzii_chat v0.0.1</title>
+    <title>KlziiChat.Services.WhiteboardReportingService – klzii_chat v0.0.1</title>
     <link rel="stylesheet" href="dist/app-88251e7c81.css" />
     
     <script src="dist/sidebar_items.js"></script>
@@ -59,7 +59,7 @@
 
       <h1>
         <small class="visible-xs">klzii_chat v0.0.1</small>
-        KlziiChat.Queries.SessionMember
+        KlziiChat.Services.WhiteboardReportingService
         
         
       </h1>
@@ -83,7 +83,13 @@
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#get_subscription_preference_session_memeber/1">get_subscription_preference_session_memeber(sessionId)</a>
+    <a href="#get_all_events/1">get_all_events(session_topic_id)</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#save_report/3">save_report(report_name, atom, session_topic_id)</a>
   </div>
   
 </div>
@@ -108,12 +114,12 @@
             </a>
             Functions
           </h1>
-          <div class="detail" id="get_subscription_preference_session_memeber/1">
+          <div class="detail" id="get_all_events/1">
   <div class="detail-header">
-    <a href="#get_subscription_preference_session_memeber/1" class="detail-link" title="Link to this function">
+    <a href="#get_all_events/1" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">get_subscription_preference_session_memeber(sessionId)</span>
+    <span class="signature">get_all_events(session_topic_id)</span>
     
     
   </div>
@@ -122,7 +128,30 @@
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">get_subscription_preference_session_memeber(integer) :: Ecto.Query.t</code></pre>
+          <pre><code class="elixir">get_all_events(integer) :: <a href="http://elixir-lang.org/docs/stable/elixir/List.html#t:t/0">List.t</a></code></pre>
+        
+      </div>
+    </div>
+  
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="save_report/3">
+  <div class="detail-header">
+    <a href="#save_report/3" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">save_report(report_name, atom, session_topic_id)</span>
+    
+    
+  </div>
+  
+    <div class="specs">
+      <h4 class="specs-title">Specs</h4>
+      <div class="specs-list">
+        
+          <pre><code class="elixir">save_report(<a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>, :pdf, integer) :: {:ok | :error, <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>}</code></pre>
         
       </div>
     </div>

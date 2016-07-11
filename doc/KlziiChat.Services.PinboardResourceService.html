@@ -5,7 +5,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.12.0">
-    <title>KlziiChat.Services.ConsoleService – klzii_chat v0.0.1</title>
+    <title>KlziiChat.Services.PinboardResourceService – klzii_chat v0.0.1</title>
     <link rel="stylesheet" href="dist/app-88251e7c81.css" />
     
     <script src="dist/sidebar_items.js"></script>
@@ -59,7 +59,7 @@
 
       <h1>
         <small class="visible-xs">klzii_chat v0.0.1</small>
-        KlziiChat.Services.ConsoleService
+        KlziiChat.Services.PinboardResourceService
         
         
       </h1>
@@ -83,7 +83,25 @@
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#enable_pinboard/2">enable_pinboard(member_id, session_topic_id)</a>
+    <a href="#add/3">add(session_member_id, session_topic_id, resource_id)</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#add_resource/3">add_resource(session_member, session_topic_id, resource_id)</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#all/1">all(session_topi_id)</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#delete/2">delete(session_member_id, pinboard_resource_id)</a>
   </div>
   
 </div>
@@ -95,43 +113,31 @@
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#get/2">get(, session_topic_id)</a>
+    <a href="#find/2">find(session_member_id, session_topic_id)</a>
   </div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#get_field_from_type/1">get_field_from_type(resurce_type)</a>
+    <a href="#find_by_id/1">find_by_id(id)</a>
   </div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#remove/3">remove(member_id, session_topic_id, type)</a>
+    <a href="#is_pinboard_enable?/1">is_pinboard_enable?(session_topic_id)</a>
   </div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#resource_validations/2">resource_validations(has_permission, console)</a>
+    <a href="#resource_is_image/1">resource_is_image(resource_id)</a>
   </div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#set_mini_survey/3">set_mini_survey(member_id, session_topic_id, mini_survey_id)</a>
-  </div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#set_resource/3">set_resource(member_id, session_topic_id, resource_id)</a>
-  </div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#tidy_up/3">tidy_up(consoles, type, session_member_id)</a>
+    <a href="#validations/3">validations(has_permission, session_topic_id, resource_id)</a>
   </div>
   
 </div>
@@ -156,12 +162,12 @@
             </a>
             Functions
           </h1>
-          <div class="detail" id="enable_pinboard/2">
+          <div class="detail" id="add/3">
   <div class="detail-header">
-    <a href="#enable_pinboard/2" class="detail-link" title="Link to this function">
+    <a href="#add/3" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">enable_pinboard(member_id, session_topic_id)</span>
+    <span class="signature">add(session_member_id, session_topic_id, resource_id)</span>
     
     
   </div>
@@ -170,8 +176,72 @@
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">enable_pinboard(Integer, Integer) ::
-  {:ok, %KlziiChat.Console{__meta__: term, audio: term, audioId: term, createdAt: term, file: term, fileId: term, id: term, miniSurveyId: term, mini_survey: term, pinboard: term, sessionTopic: term, sessionTopicId: term, updatedAt: term, video: term, videoId: term}} |
+          <pre><code class="elixir">add(integer, integer, integer) ::
+  {:ok} |
+  {:error, <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>}</code></pre>
+        
+      </div>
+    </div>
+  
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="add_resource/3">
+  <div class="detail-header">
+    <a href="#add_resource/3" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">add_resource(session_member, session_topic_id, resource_id)</span>
+    
+    
+  </div>
+  
+    <div class="specs">
+      <h4 class="specs-title">Specs</h4>
+      <div class="specs-list">
+        
+          <pre><code class="elixir">add_resource(integer, integer, integer) ::
+  {:ok} |
+  {:error, <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>}</code></pre>
+        
+      </div>
+    </div>
+  
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="all/1">
+  <div class="detail-header">
+    <a href="#all/1" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">all(session_topi_id)</span>
+    
+    
+  </div>
+  
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="delete/2">
+  <div class="detail-header">
+    <a href="#delete/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">delete(session_member_id, pinboard_resource_id)</span>
+    
+    
+  </div>
+  
+    <div class="specs">
+      <h4 class="specs-title">Specs</h4>
+      <div class="specs-list">
+        
+          <pre><code class="elixir">delete(integer, integer) ::
+  {:ok} |
   {:error, <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>}</code></pre>
         
       </div>
@@ -204,12 +274,12 @@
     
   </section>
 </div>
-<div class="detail" id="get/2">
+<div class="detail" id="find/2">
   <div class="detail-header">
-    <a href="#get/2" class="detail-link" title="Link to this function">
+    <a href="#find/2" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">get(, session_topic_id)</span>
+    <span class="signature">find(session_member_id, session_topic_id)</span>
     
     
   </div>
@@ -218,7 +288,7 @@
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">get(Integer, Integer) :: {:ok, %KlziiChat.Console{__meta__: term, audio: term, audioId: term, createdAt: term, file: term, fileId: term, id: term, miniSurveyId: term, mini_survey: term, pinboard: term, sessionTopic: term, sessionTopicId: term, updatedAt: term, video: term, videoId: term}}</code></pre>
+          <pre><code class="elixir">find(integer, integer) :: %Ecto.Query{assocs: term, distinct: term, from: term, group_bys: term, havings: term, joins: term, limit: term, lock: term, offset: term, order_bys: term, prefix: term, preloads: term, select: term, sources: term, updates: term, wheres: term}</code></pre>
         
       </div>
     </div>
@@ -227,35 +297,26 @@
     
   </section>
 </div>
-<div class="detail" id="get_field_from_type/1">
+<div class="detail" id="find_by_id/1">
   <div class="detail-header">
-    <a href="#get_field_from_type/1" class="detail-link" title="Link to this function">
+    <a href="#find_by_id/1" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">get_field_from_type(resurce_type)</span>
+    <span class="signature">find_by_id(id)</span>
     
     
   </div>
-  
-    <div class="specs">
-      <h4 class="specs-title">Specs</h4>
-      <div class="specs-list">
-        
-          <pre><code class="elixir">get_field_from_type(<a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>) :: <a href="http://elixir-lang.org/docs/stable/elixir/Atom.html#t:t/0">Atom.t</a></code></pre>
-        
-      </div>
-    </div>
   
   <section class="docstring">
     
   </section>
 </div>
-<div class="detail" id="remove/3">
+<div class="detail" id="is_pinboard_enable?/1">
   <div class="detail-header">
-    <a href="#remove/3" class="detail-link" title="Link to this function">
+    <a href="#is_pinboard_enable?/1" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">remove(member_id, session_topic_id, type)</span>
+    <span class="signature">is_pinboard_enable?(session_topic_id)</span>
     
     
   </div>
@@ -264,32 +325,7 @@
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">remove(Integer, Integer, <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>) ::
-  {:ok, %KlziiChat.Console{__meta__: term, audio: term, audioId: term, createdAt: term, file: term, fileId: term, id: term, miniSurveyId: term, mini_survey: term, pinboard: term, sessionTopic: term, sessionTopicId: term, updatedAt: term, video: term, videoId: term}} |
-  {:error, <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>}</code></pre>
-        
-      </div>
-    </div>
-  
-  <section class="docstring">
-    
-  </section>
-</div>
-<div class="detail" id="resource_validations/2">
-  <div class="detail-header">
-    <a href="#resource_validations/2" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">resource_validations(has_permission, console)</span>
-    
-    
-  </div>
-  
-    <div class="specs">
-      <h4 class="specs-title">Specs</h4>
-      <div class="specs-list">
-        
-          <pre><code class="elixir">resource_validations(boolean, %KlziiChat.Console{__meta__: term, audio: term, audioId: term, createdAt: term, file: term, fileId: term, id: term, miniSurveyId: term, mini_survey: term, pinboard: term, sessionTopic: term, sessionTopicId: term, updatedAt: term, video: term, videoId: term}) ::
+          <pre><code class="elixir">is_pinboard_enable?(integer) ::
   {:ok} |
   {:error, <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>}</code></pre>
         
@@ -300,12 +336,12 @@
     
   </section>
 </div>
-<div class="detail" id="set_mini_survey/3">
+<div class="detail" id="resource_is_image/1">
   <div class="detail-header">
-    <a href="#set_mini_survey/3" class="detail-link" title="Link to this function">
+    <a href="#resource_is_image/1" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">set_mini_survey(member_id, session_topic_id, mini_survey_id)</span>
+    <span class="signature">resource_is_image(resource_id)</span>
     
     
   </div>
@@ -314,8 +350,8 @@
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">set_mini_survey(Integer, Integer, Integer) ::
-  {:ok, %KlziiChat.Console{__meta__: term, audio: term, audioId: term, createdAt: term, file: term, fileId: term, id: term, miniSurveyId: term, mini_survey: term, pinboard: term, sessionTopic: term, sessionTopicId: term, updatedAt: term, video: term, videoId: term}} |
+          <pre><code class="elixir">resource_is_image(integer) ::
+  {:ok} |
   {:error, <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>}</code></pre>
         
       </div>
@@ -325,12 +361,12 @@
     
   </section>
 </div>
-<div class="detail" id="set_resource/3">
+<div class="detail" id="validations/3">
   <div class="detail-header">
-    <a href="#set_resource/3" class="detail-link" title="Link to this function">
+    <a href="#validations/3" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">set_resource(member_id, session_topic_id, resource_id)</span>
+    <span class="signature">validations(has_permission, session_topic_id, resource_id)</span>
     
     
   </div>
@@ -339,32 +375,9 @@
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">set_resource(Integer, Integer, Integer) ::
-  {:ok, %KlziiChat.Console{__meta__: term, audio: term, audioId: term, createdAt: term, file: term, fileId: term, id: term, miniSurveyId: term, mini_survey: term, pinboard: term, sessionTopic: term, sessionTopicId: term, updatedAt: term, video: term, videoId: term}} |
+          <pre><code class="elixir">validations(boolean, integer, integer) ::
+  {:ok} |
   {:error, <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>}</code></pre>
-        
-      </div>
-    </div>
-  
-  <section class="docstring">
-    
-  </section>
-</div>
-<div class="detail" id="tidy_up/3">
-  <div class="detail-header">
-    <a href="#tidy_up/3" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">tidy_up(consoles, type, session_member_id)</span>
-    
-    
-  </div>
-  
-    <div class="specs">
-      <h4 class="specs-title">Specs</h4>
-      <div class="specs-list">
-        
-          <pre><code class="elixir">tidy_up(list, <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>, integer) :: :ok</code></pre>
         
       </div>
     </div>

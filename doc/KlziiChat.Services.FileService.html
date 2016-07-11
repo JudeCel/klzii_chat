@@ -5,7 +5,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.12.0">
-    <title>KlziiChat.Services.Permissions.Messages – klzii_chat v0.0.1</title>
+    <title>KlziiChat.Services.FileService – klzii_chat v0.0.1</title>
     <link rel="stylesheet" href="dist/app-88251e7c81.css" />
     
     <script src="dist/sidebar_items.js"></script>
@@ -59,7 +59,7 @@
 
       <h1>
         <small class="visible-xs">klzii_chat v0.0.1</small>
-        KlziiChat.Services.Permissions.Messages
+        KlziiChat.Services.FileService
         
         
       </h1>
@@ -83,37 +83,37 @@
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#can_delete/2">can_delete(member, object)</a>
+    <a href="#compose_path/3">compose_path(path_to_dir, file_name, file_extension)</a>
   </div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#can_edit/2">can_edit(member, object)</a>
+    <a href="#get_tmp_path/0">get_tmp_path()</a>
   </div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#can_new_message/1">can_new_message(member)</a>
+    <a href="#html_to_pdf/1">html_to_pdf(path_to_html)</a>
   </div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#can_reply/2">can_reply(member, object)</a>
+    <a href="#wkhtmltopdf/1">wkhtmltopdf(path_to_html)</a>
   </div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#can_star/1">can_star(member)</a>
+    <a href="#write_data/2">write_data(file_path, data_string)</a>
   </div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#can_vote/1">can_vote(member)</a>
+    <a href="#write_report/3">write_report(report_name, report_format, report_data)</a>
   </div>
   
 </div>
@@ -138,12 +138,12 @@
             </a>
             Functions
           </h1>
-          <div class="detail" id="can_delete/2">
+          <div class="detail" id="compose_path/3">
   <div class="detail-header">
-    <a href="#can_delete/2" class="detail-link" title="Link to this function">
+    <a href="#compose_path/3" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">can_delete(member, object)</span>
+    <span class="signature">compose_path(path_to_dir, file_name, file_extension)</span>
     
     
   </div>
@@ -152,7 +152,7 @@
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">can_delete(<a href="http://elixir-lang.org/docs/stable/elixir/Map.html#t:t/0">Map.t</a>, <a href="http://elixir-lang.org/docs/stable/elixir/Map.html#t:t/0">Map.t</a>) :: Boolean.t</code></pre>
+          <pre><code class="elixir">compose_path(<a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>, <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>, <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>) :: <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a></code></pre>
         
       </div>
     </div>
@@ -161,12 +161,12 @@
     
   </section>
 </div>
-<div class="detail" id="can_edit/2">
+<div class="detail" id="get_tmp_path/0">
   <div class="detail-header">
-    <a href="#can_edit/2" class="detail-link" title="Link to this function">
+    <a href="#get_tmp_path/0" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">can_edit(member, object)</span>
+    <span class="signature">get_tmp_path()</span>
     
     
   </div>
@@ -175,7 +175,7 @@
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">can_edit(<a href="http://elixir-lang.org/docs/stable/elixir/Map.html#t:t/0">Map.t</a>, <a href="http://elixir-lang.org/docs/stable/elixir/Map.html#t:t/0">Map.t</a>) :: Boolean.t</code></pre>
+          <pre><code class="elixir">get_tmp_path :: <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a></code></pre>
         
       </div>
     </div>
@@ -184,12 +184,12 @@
     
   </section>
 </div>
-<div class="detail" id="can_new_message/1">
+<div class="detail" id="html_to_pdf/1">
   <div class="detail-header">
-    <a href="#can_new_message/1" class="detail-link" title="Link to this function">
+    <a href="#html_to_pdf/1" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">can_new_message(member)</span>
+    <span class="signature">html_to_pdf(path_to_html)</span>
     
     
   </div>
@@ -198,7 +198,7 @@
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">can_new_message(<a href="http://elixir-lang.org/docs/stable/elixir/Map.html#t:t/0">Map.t</a>) :: Boolean.t</code></pre>
+          <pre><code class="elixir">html_to_pdf(<a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>) :: {:ok | :error, <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>}</code></pre>
         
       </div>
     </div>
@@ -207,12 +207,12 @@
     
   </section>
 </div>
-<div class="detail" id="can_reply/2">
+<div class="detail" id="wkhtmltopdf/1">
   <div class="detail-header">
-    <a href="#can_reply/2" class="detail-link" title="Link to this function">
+    <a href="#wkhtmltopdf/1" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">can_reply(member, object)</span>
+    <span class="signature">wkhtmltopdf(path_to_html)</span>
     
     
   </div>
@@ -221,7 +221,7 @@
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">can_reply(<a href="http://elixir-lang.org/docs/stable/elixir/Map.html#t:t/0">Map.t</a>, <a href="http://elixir-lang.org/docs/stable/elixir/Map.html#t:t/0">Map.t</a>) :: Boolean.t</code></pre>
+          <pre><code class="elixir">wkhtmltopdf(<a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>) :: {:ok | :error, <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>}</code></pre>
         
       </div>
     </div>
@@ -230,12 +230,12 @@
     
   </section>
 </div>
-<div class="detail" id="can_star/1">
+<div class="detail" id="write_data/2">
   <div class="detail-header">
-    <a href="#can_star/1" class="detail-link" title="Link to this function">
+    <a href="#write_data/2" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">can_star(member)</span>
+    <span class="signature">write_data(file_path, data_string)</span>
     
     
   </div>
@@ -244,7 +244,11 @@
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">can_star(<a href="http://elixir-lang.org/docs/stable/elixir/Map.html#t:t/0">Map.t</a>) :: Boolean.t</code></pre>
+          <pre><code class="elixir">write_data(<a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>, <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>) ::
+  :ok |
+  {:error, atom}</code></pre>
+        
+          <pre><code class="elixir">write_data(<a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>, <a href="http://elixir-lang.org/docs/stable/elixir/Enum.html#t:t/0">Enum.t</a>) :: :ok | {:error, atom}</code></pre>
         
       </div>
     </div>
@@ -253,12 +257,12 @@
     
   </section>
 </div>
-<div class="detail" id="can_vote/1">
+<div class="detail" id="write_report/3">
   <div class="detail-header">
-    <a href="#can_vote/1" class="detail-link" title="Link to this function">
+    <a href="#write_report/3" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">can_vote(member)</span>
+    <span class="signature">write_report(report_name, report_format, report_data)</span>
     
     
   </div>
@@ -267,7 +271,9 @@
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">can_vote(<a href="http://elixir-lang.org/docs/stable/elixir/Map.html#t:t/0">Map.t</a>) :: Boolean.t</code></pre>
+          <pre><code class="elixir">write_report(<a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>, :pdf, <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a> | <a href="http://elixir-lang.org/docs/stable/elixir/Stream.html#t:t/0">Stream.t</a>) :: {:ok, <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>}</code></pre>
+        
+          <pre><code class="elixir">write_report(<a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>, atom, <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a> | <a href="http://elixir-lang.org/docs/stable/elixir/Stream.html#t:t/0">Stream.t</a>) :: {:ok, <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>}</code></pre>
         
       </div>
     </div>

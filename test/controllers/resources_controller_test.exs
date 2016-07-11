@@ -78,4 +78,12 @@ defmodule KlziiChat.ResourcesControllerTest do
     conn = delete conn, resources_path(conn, :delete, ids: [zip_resource.id])
     assert json_response(conn, 200)["ids"] |> is_list
   end
+
+  describe("when error") do
+    test "wrong type", %{conn: conn} do
+      file = %Plug.Upload{ content_type: Plug.MIME.path("test.mp3"), path: @image, filename: "test.mp3"}
+      conn = post(conn, "api/resources/upload", %{name: "test_audio", type: "image", scope: "collage", file: file })
+      assert json_response(conn, 415)
+    end
+  end
 end

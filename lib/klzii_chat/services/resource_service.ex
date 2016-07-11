@@ -16,6 +16,33 @@ defmodule KlziiChat.Services.ResourceService do
     end |> save_resource(account_user)
   end
 
+  def validate(file, params) do
+    validate_file_type(file, params)
+  end
+
+  def validate_file_type(file, params) when is_map(file) do
+    file_type = String.split(file.content_type, "/") |> List.first
+    cond do
+      file_type != params.type ->
+        {:error, %{code: 415, type: "You are trying to upload #{file_type} where it is allowed only #{params.type}."}}
+      true ->
+        {:ok}
+    end
+  end
+
+  def validate_file_type(file, params) when is_bitstring(file) do
+    cond do
+      params.type in ["file", "link"] ->
+        {:ok}
+      true ->
+        {:error, %{code: 415, type: "Accept only links"}}
+    end
+  end
+
+  def validate_file_type(_, _) do
+    {:error, %{code: 415, type: "File not valid"}}
+  end
+
   def save_resource(%{"private" => private, "type" => type, "scope" => scope, "file" => file, "name"=> name}, account_user) do
     params = %{
       type: type,
@@ -25,12 +52,18 @@ defmodule KlziiChat.Services.ResourceService do
       type: type,
       name: name,
       private: private
-    } |> Map.put(String.to_atom(type), file)
-    changeset = Resource.changeset(%Resource{}, params)
+      } |> Map.put(String.to_atom(type), file)
 
-    case Repo.insert(changeset) do
-      {:ok, resource} ->
-        {:ok, resource}
+    case validate(file, params) do
+      {:ok} ->
+        Resource.changeset(%Resource{}, params)
+        |> Repo.insert
+        |> case do
+            {:ok, resource} ->
+              {:ok, resource}
+            {:error, reason} ->
+              {:error, reason}
+           end
       {:error, reason} ->
         {:error, reason}
     end
@@ -64,15 +97,16 @@ defmodule KlziiChat.Services.ResourceService do
     query = QueriesResources.base_query(account_user) |> where([r], r.id in ^ids)
     result = Repo.all(query)
 
-    if ResourcePermissions.can_delete(account_user, result) do
-      case Repo.delete_all(query) do
-        {:error, error} ->
-          {:error, error}
-        {_count, nil} ->
-          {:ok, result}
-      end
-    else
-      {:error, %{permissions: "Action not allowed!"}}
+    case ResourcePermissions.can_delete(account_user, result) do
+      {:ok} ->
+        case Repo.delete_all(query) do
+          {:error, error} ->
+            {:error, error}
+          {_count, nil} ->
+            {:ok, result}
+        end
+      {:error, reason} ->
+        {:error, reason}
     end
   end
 
@@ -93,28 +127,29 @@ defmodule KlziiChat.Services.ResourceService do
       where: e.type in ~w(image audio file video)
     result = Repo.all(query)
 
+    case ResourcePermissions.can_zip(account_user, result) do
+      {:ok} ->
+        changeset = Ecto.build_assoc(
+          account_user.account, :resources,
+          accountUserId: account_user.id,
+          scope: "zip",
+          type: "file",
+          name: name,
+          status: "progress",
+          expiryDate: Timex.DateTime.now |> Timex.shift(days: 1),
+          properties: %{zip_ids: ids}
+        )
 
-    if ResourcePermissions.can_zip(account_user, result) do
-      changeset = Ecto.build_assoc(
-        account_user.account, :resources,
-        accountUserId: account_user.id,
-        scope: "zip",
-        type: "file",
-        name: name,
-        status: "progress",
-        expiryDate: Timex.DateTime.now |> Timex.shift(days: 1),
-        properties: %{zip_ids: ids}
-      )
+        case Repo.insert(changeset) do
+          {:ok, resource} ->
+            Task.async(fn -> KlziiChat.Files.Tasks.run(resource, ids) end)
+            {:ok, resource }
+          {:error, reason} ->
+            {:error, reason}
+        end
 
-      case Repo.insert(changeset) do
-        {:ok, resource} ->
-          Task.async(fn -> KlziiChat.Files.Tasks.run(resource, ids) end)
-          {:ok, resource }
-        {:error, reason} ->
-          {:error, reason}
-      end
-    else
-      {:error, %{permissions: "Action not allowed!"}}
+      {:error, reason} ->
+        {:error, reason}
     end
   end
 end

@@ -5,7 +5,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.12.0">
-    <title>KlziiChat.Services.ConsoleService – klzii_chat v0.0.1</title>
+    <title>KlziiChat.Services.MiniSurveysReportingService – klzii_chat v0.0.1</title>
     <link rel="stylesheet" href="dist/app-88251e7c81.css" />
     
     <script src="dist/sidebar_items.js"></script>
@@ -59,7 +59,7 @@
 
       <h1>
         <small class="visible-xs">klzii_chat v0.0.1</small>
-        KlziiChat.Services.ConsoleService
+        KlziiChat.Services.MiniSurveysReportingService
         
         
       </h1>
@@ -83,55 +83,55 @@
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#enable_pinboard/2">enable_pinboard(member_id, session_topic_id)</a>
+    <a href="#format_survey_csv/2">format_survey_csv(map, facilitator)</a>
   </div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#error_messages/0">error_messages()</a>
+    <a href="#format_survey_html/2">format_survey_html(map, facilitator)</a>
   </div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#get/2">get(, session_topic_id)</a>
+    <a href="#format_survey_txt/2">format_survey_txt(map, facilitator)</a>
   </div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#get_field_from_type/1">get_field_from_type(resurce_type)</a>
+    <a href="#get_html/5">get_html(mini_surveys, session_name, session_topic_name, session_members, facilitator)</a>
   </div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#remove/3">remove(member_id, session_topic_id, type)</a>
+    <a href="#get_mini_survey_answers/2">get_mini_survey_answers(survvey_id, bool)</a>
   </div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#resource_validations/2">resource_validations(has_permission, console)</a>
+    <a href="#get_mini_surveys/1">get_mini_surveys(session_topic_id)</a>
   </div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#set_mini_survey/3">set_mini_survey(member_id, session_topic_id, mini_survey_id)</a>
+    <a href="#get_report/3">get_report(report_format, session_topic_id, include_facilitator)</a>
   </div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#set_resource/3">set_resource(member_id, session_topic_id, resource_id)</a>
+    <a href="#get_stream/5">get_stream(atom, mini_surveys, session_name, session_topic_name, include_facilitator)</a>
   </div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#tidy_up/3">tidy_up(consoles, type, session_member_id)</a>
+    <a href="#save_report/4">save_report(report_name, report_format, session_topic_id, include_facilitator)</a>
   </div>
   
 </div>
@@ -156,12 +156,12 @@
             </a>
             Functions
           </h1>
-          <div class="detail" id="enable_pinboard/2">
+          <div class="detail" id="format_survey_csv/2">
   <div class="detail-header">
-    <a href="#enable_pinboard/2" class="detail-link" title="Link to this function">
+    <a href="#format_survey_csv/2" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">enable_pinboard(member_id, session_topic_id)</span>
+    <span class="signature">format_survey_csv(map, facilitator)</span>
     
     
   </div>
@@ -170,9 +170,7 @@
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">enable_pinboard(Integer, Integer) ::
-  {:ok, %KlziiChat.Console{__meta__: term, audio: term, audioId: term, createdAt: term, file: term, fileId: term, id: term, miniSurveyId: term, mini_survey: term, pinboard: term, sessionTopic: term, sessionTopicId: term, updatedAt: term, video: term, videoId: term}} |
-  {:error, <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>}</code></pre>
+          <pre><code class="elixir">format_survey_csv(<a href="http://elixir-lang.org/docs/stable/elixir/Map.html#t:t/0">Map.t</a>, boolean) :: <a href="http://elixir-lang.org/docs/stable/elixir/List.html#t:t/0">List.t</a></code></pre>
         
       </div>
     </div>
@@ -181,12 +179,12 @@
     
   </section>
 </div>
-<div class="detail" id="error_messages/0">
+<div class="detail" id="format_survey_html/2">
   <div class="detail-header">
-    <a href="#error_messages/0" class="detail-link" title="Link to this function">
+    <a href="#format_survey_html/2" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">error_messages()</span>
+    <span class="signature">format_survey_html(map, facilitator)</span>
     
     
   </div>
@@ -195,7 +193,7 @@
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">error_messages :: <a href="http://elixir-lang.org/docs/stable/elixir/Map.html#t:t/0">Map.t</a></code></pre>
+          <pre><code class="elixir">format_survey_html(<a href="http://elixir-lang.org/docs/stable/elixir/Map.html#t:t/0">Map.t</a>, boolean) :: <a href="http://elixir-lang.org/docs/stable/elixir/Map.html#t:t/0">Map.t</a></code></pre>
         
       </div>
     </div>
@@ -204,12 +202,12 @@
     
   </section>
 </div>
-<div class="detail" id="get/2">
+<div class="detail" id="format_survey_txt/2">
   <div class="detail-header">
-    <a href="#get/2" class="detail-link" title="Link to this function">
+    <a href="#format_survey_txt/2" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">get(, session_topic_id)</span>
+    <span class="signature">format_survey_txt(map, facilitator)</span>
     
     
   </div>
@@ -218,7 +216,7 @@
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">get(Integer, Integer) :: {:ok, %KlziiChat.Console{__meta__: term, audio: term, audioId: term, createdAt: term, file: term, fileId: term, id: term, miniSurveyId: term, mini_survey: term, pinboard: term, sessionTopic: term, sessionTopicId: term, updatedAt: term, video: term, videoId: term}}</code></pre>
+          <pre><code class="elixir">format_survey_txt(<a href="http://elixir-lang.org/docs/stable/elixir/Map.html#t:t/0">Map.t</a>, boolean) :: <a href="http://elixir-lang.org/docs/stable/elixir/List.html#t:t/0">List.t</a></code></pre>
         
       </div>
     </div>
@@ -227,12 +225,12 @@
     
   </section>
 </div>
-<div class="detail" id="get_field_from_type/1">
+<div class="detail" id="get_html/5">
   <div class="detail-header">
-    <a href="#get_field_from_type/1" class="detail-link" title="Link to this function">
+    <a href="#get_html/5" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">get_field_from_type(resurce_type)</span>
+    <span class="signature">get_html(mini_surveys, session_name, session_topic_name, session_members, facilitator)</span>
     
     
   </div>
@@ -241,7 +239,7 @@
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">get_field_from_type(<a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>) :: <a href="http://elixir-lang.org/docs/stable/elixir/Atom.html#t:t/0">Atom.t</a></code></pre>
+          <pre><code class="elixir">get_html(<a href="http://elixir-lang.org/docs/stable/elixir/List.html#t:t/0">List.t</a>, <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>, <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>, <a href="http://elixir-lang.org/docs/stable/elixir/List.html#t:t/0">List.t</a>, boolean) :: <a href="http://elixir-lang.org/docs/stable/elixir/Stream.html#t:t/0">Stream.t</a></code></pre>
         
       </div>
     </div>
@@ -250,12 +248,12 @@
     
   </section>
 </div>
-<div class="detail" id="remove/3">
+<div class="detail" id="get_mini_survey_answers/2">
   <div class="detail-header">
-    <a href="#remove/3" class="detail-link" title="Link to this function">
+    <a href="#get_mini_survey_answers/2" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">remove(member_id, session_topic_id, type)</span>
+    <span class="signature">get_mini_survey_answers(survvey_id, bool)</span>
     
     
   </div>
@@ -264,9 +262,9 @@
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">remove(Integer, Integer, <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>) ::
-  {:ok, %KlziiChat.Console{__meta__: term, audio: term, audioId: term, createdAt: term, file: term, fileId: term, id: term, miniSurveyId: term, mini_survey: term, pinboard: term, sessionTopic: term, sessionTopicId: term, updatedAt: term, video: term, videoId: term}} |
-  {:error, <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>}</code></pre>
+          <pre><code class="elixir">get_mini_survey_answers(integer, boolean) :: <a href="http://elixir-lang.org/docs/stable/elixir/List.html#t:t/0">List.t</a></code></pre>
+        
+          <pre><code class="elixir">get_mini_survey_answers(integer, boolean) :: <a href="http://elixir-lang.org/docs/stable/elixir/List.html#t:t/0">List.t</a></code></pre>
         
       </div>
     </div>
@@ -275,12 +273,12 @@
     
   </section>
 </div>
-<div class="detail" id="resource_validations/2">
+<div class="detail" id="get_mini_surveys/1">
   <div class="detail-header">
-    <a href="#resource_validations/2" class="detail-link" title="Link to this function">
+    <a href="#get_mini_surveys/1" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">resource_validations(has_permission, console)</span>
+    <span class="signature">get_mini_surveys(session_topic_id)</span>
     
     
   </div>
@@ -289,9 +287,7 @@
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">resource_validations(boolean, %KlziiChat.Console{__meta__: term, audio: term, audioId: term, createdAt: term, file: term, fileId: term, id: term, miniSurveyId: term, mini_survey: term, pinboard: term, sessionTopic: term, sessionTopicId: term, updatedAt: term, video: term, videoId: term}) ::
-  {:ok} |
-  {:error, <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>}</code></pre>
+          <pre><code class="elixir">get_mini_surveys(integer) :: Map</code></pre>
         
       </div>
     </div>
@@ -300,12 +296,12 @@
     
   </section>
 </div>
-<div class="detail" id="set_mini_survey/3">
+<div class="detail" id="get_report/3">
   <div class="detail-header">
-    <a href="#set_mini_survey/3" class="detail-link" title="Link to this function">
+    <a href="#get_report/3" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">set_mini_survey(member_id, session_topic_id, mini_survey_id)</span>
+    <span class="signature">get_report(report_format, session_topic_id, include_facilitator)</span>
     
     
   </div>
@@ -314,9 +310,7 @@
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">set_mini_survey(Integer, Integer, Integer) ::
-  {:ok, %KlziiChat.Console{__meta__: term, audio: term, audioId: term, createdAt: term, file: term, fileId: term, id: term, miniSurveyId: term, mini_survey: term, pinboard: term, sessionTopic: term, sessionTopicId: term, updatedAt: term, video: term, videoId: term}} |
-  {:error, <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>}</code></pre>
+          <pre><code class="elixir">get_report(atom, integer, boolean) :: {:ok | :error, <a href="http://elixir-lang.org/docs/stable/elixir/List.html#t:t/0">List.t</a> | <a href="http://elixir-lang.org/docs/stable/elixir/Stream.html#t:t/0">Stream.t</a>}</code></pre>
         
       </div>
     </div>
@@ -325,12 +319,12 @@
     
   </section>
 </div>
-<div class="detail" id="set_resource/3">
+<div class="detail" id="get_stream/5">
   <div class="detail-header">
-    <a href="#set_resource/3" class="detail-link" title="Link to this function">
+    <a href="#get_stream/5" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">set_resource(member_id, session_topic_id, resource_id)</span>
+    <span class="signature">get_stream(atom, mini_surveys, session_name, session_topic_name, include_facilitator)</span>
     
     
   </div>
@@ -339,9 +333,9 @@
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">set_resource(Integer, Integer, Integer) ::
-  {:ok, %KlziiChat.Console{__meta__: term, audio: term, audioId: term, createdAt: term, file: term, fileId: term, id: term, miniSurveyId: term, mini_survey: term, pinboard: term, sessionTopic: term, sessionTopicId: term, updatedAt: term, video: term, videoId: term}} |
-  {:error, <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>}</code></pre>
+          <pre><code class="elixir">get_stream(atom, <a href="http://elixir-lang.org/docs/stable/elixir/List.html#t:t/0">List.t</a>, <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>, <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>, boolean) :: <a href="http://elixir-lang.org/docs/stable/elixir/Stream.html#t:t/0">Stream.t</a></code></pre>
+        
+          <pre><code class="elixir">get_stream(atom, <a href="http://elixir-lang.org/docs/stable/elixir/List.html#t:t/0">List.t</a>, <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>, <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>, boolean) :: <a href="http://elixir-lang.org/docs/stable/elixir/Stream.html#t:t/0">Stream.t</a></code></pre>
         
       </div>
     </div>
@@ -350,12 +344,12 @@
     
   </section>
 </div>
-<div class="detail" id="tidy_up/3">
+<div class="detail" id="save_report/4">
   <div class="detail-header">
-    <a href="#tidy_up/3" class="detail-link" title="Link to this function">
+    <a href="#save_report/4" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">tidy_up(consoles, type, session_member_id)</span>
+    <span class="signature">save_report(report_name, report_format, session_topic_id, include_facilitator)</span>
     
     
   </div>
@@ -364,7 +358,7 @@
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">tidy_up(list, <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>, integer) :: :ok</code></pre>
+          <pre><code class="elixir">save_report(<a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>, atom, integer, boolean) :: {:ok | :error, <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>}</code></pre>
         
       </div>
     </div>

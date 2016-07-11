@@ -5,7 +5,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.12.0">
-    <title>KlziiChat.Queries.SessionMember – klzii_chat v0.0.1</title>
+    <title>KlziiChat.Services.Permissions.PinboardResource – klzii_chat v0.0.1</title>
     <link rel="stylesheet" href="dist/app-88251e7c81.css" />
     
     <script src="dist/sidebar_items.js"></script>
@@ -59,7 +59,7 @@
 
       <h1>
         <small class="visible-xs">klzii_chat v0.0.1</small>
-        KlziiChat.Queries.SessionMember
+        KlziiChat.Services.Permissions.PinboardResource
         
         
       </h1>
@@ -83,7 +83,19 @@
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#get_subscription_preference_session_memeber/1">get_subscription_preference_session_memeber(sessionId)</a>
+    <a href="#can_add_resource/1">can_add_resource(member)</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#can_enable/1">can_enable(member)</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#can_remove_resource/2">can_remove_resource(member, object)</a>
   </div>
   
 </div>
@@ -108,12 +120,12 @@
             </a>
             Functions
           </h1>
-          <div class="detail" id="get_subscription_preference_session_memeber/1">
+          <div class="detail" id="can_add_resource/1">
   <div class="detail-header">
-    <a href="#get_subscription_preference_session_memeber/1" class="detail-link" title="Link to this function">
+    <a href="#can_add_resource/1" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">get_subscription_preference_session_memeber(sessionId)</span>
+    <span class="signature">can_add_resource(member)</span>
     
     
   </div>
@@ -122,7 +134,55 @@
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">get_subscription_preference_session_memeber(integer) :: Ecto.Query.t</code></pre>
+          <pre><code class="elixir">can_add_resource(<a href="http://elixir-lang.org/docs/stable/elixir/Map.html#t:t/0">Map.t</a>) :: {:ok} | {:error, <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>}</code></pre>
+        
+      </div>
+    </div>
+  
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="can_enable/1">
+  <div class="detail-header">
+    <a href="#can_enable/1" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">can_enable(member)</span>
+    
+    
+  </div>
+  
+    <div class="specs">
+      <h4 class="specs-title">Specs</h4>
+      <div class="specs-list">
+        
+          <pre><code class="elixir">can_enable(<a href="http://elixir-lang.org/docs/stable/elixir/Map.html#t:t/0">Map.t</a>) :: {:ok} | {:error, <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>}</code></pre>
+        
+      </div>
+    </div>
+  
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="can_remove_resource/2">
+  <div class="detail-header">
+    <a href="#can_remove_resource/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">can_remove_resource(member, object)</span>
+    
+    
+  </div>
+  
+    <div class="specs">
+      <h4 class="specs-title">Specs</h4>
+      <div class="specs-list">
+        
+          <pre><code class="elixir">can_remove_resource(<a href="http://elixir-lang.org/docs/stable/elixir/Map.html#t:t/0">Map.t</a>, <a href="http://elixir-lang.org/docs/stable/elixir/Map.html#t:t/0">Map.t</a>) ::
+  {:ok} |
+  {:error, <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>}</code></pre>
         
       </div>
     </div>

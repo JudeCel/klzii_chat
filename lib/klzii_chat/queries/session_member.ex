@@ -3,8 +3,8 @@ defmodule KlziiChat.Queries.SessionMember do
   import Ecto.Query
   alias KlziiChat.{SessionMember, SubscriptionPreference}
 
-  @spec get_subscription_preference(integer) :: Ecto.Query.t
-  def get_subscription_preference(sessionId) do
+  @spec get_subscription_preference_session_memeber(integer) :: Ecto.Query.t
+  def get_subscription_preference_session_memeber(sessionId) do
     from(sp in SubscriptionPreference,
     join: s in assoc(sp, :subscription),
     join: a in assoc(s, :account),
