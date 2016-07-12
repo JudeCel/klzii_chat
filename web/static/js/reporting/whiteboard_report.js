@@ -1,7 +1,14 @@
-function draw(class_name, type, attr, image_path) {
-  var wb = Snap('.' + class_name);
-  var svg_el;
+var drawElements = function (events) {
+  events.forEach(function(event) {
+    if(event.action == "draw") {
+      draw("whiteboard", event.element.type, event.element.attr)
+    }
+  });
+}
 
+var draw = function (class_name, type, attr) {
+  var wb = window.Snap('.' + class_name);
+  var svg_el;
   switch(type){
     case "ellipse":
       svg_el = wb.ellipse(attr.cx, attr.cy, attr.rx, attr.ry);
@@ -19,7 +26,7 @@ function draw(class_name, type, attr, image_path) {
       svg_el = wb.text(attr.x, attr.y, attr.textVal);
       break;
     case "image":
-      svg_el = wb.image(image_path + '/' + attr.href, attr.x, attr.y, attr.width, attr.height);  //TODO: correct full path to images upload folder
+      svg_el = wb.image(attr.href, attr.x, attr.y, attr.width, attr.height);
       break;
     default:
       return;
@@ -34,4 +41,9 @@ function draw(class_name, type, attr, image_path) {
   }
 
   svg_el.transform(attr.transform);
+}
+
+module.exports = {
+  drawElements: drawElements,
+  draw: draw
 }

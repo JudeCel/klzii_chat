@@ -1,6 +1,6 @@
 import React from 'react';
 import {assert} from 'chai';
-import undoHistoryFactory  from '../../web/static/js/components/whiteboard/actionHistory';
+import undoHistoryFactory  from '../../../web/static/js/components/whiteboard/actionHistory';
 
 describe("testWhiteboard", ()=> {
   let step1Object = "one";
