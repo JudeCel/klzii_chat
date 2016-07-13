@@ -5,7 +5,7 @@ defmodule KlziiChat.Uploaders.Image do
   use Arc.Ecto.Definition
 
   # To add a thumbnail version:
-  @versions [:original, :thumb]
+  @versions [:original, :thumb, :gallery_thumb]
   @acl :public_read
 
   # Whitelist file extensions:
