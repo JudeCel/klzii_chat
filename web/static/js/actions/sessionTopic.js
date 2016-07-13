@@ -58,10 +58,10 @@ const Actions = {
         type: Constants.SET_SESSION_TOPICS,
         all: sessionTopics
       });
-      let sessionTopicId = sessionTopics[0].id;
+      let sessionTopicId = sessionTopics[0];
 
       if (sessionTopicId) {
-        joinChannal(dispatch, socket, sessionTopicId);
+        joinChannal(dispatch, socket, sessionTopicId.id);
       }else{
         dispatch({
           type: Constants.SOCKET_CONNECTION_ERROR,
