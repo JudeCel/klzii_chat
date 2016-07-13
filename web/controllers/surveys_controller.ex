@@ -1,6 +1,6 @@
 defmodule KlziiChat.SurveysController do
   use KlziiChat.Web, :controller
-  import KlziiChat.ErrorHelpers, only: [error_view: 1]
+  # import KlziiChat.ErrorHelpers, only: [error_view: 1]
   alias KlziiChat.{Survey, Repo, SurveyView}
   import Ecto.Query, only: [from: 2]
 

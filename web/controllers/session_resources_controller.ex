@@ -1,7 +1,7 @@
 defmodule KlziiChat.SessionResourcesController do
   use KlziiChat.Web, :controller
   import KlziiChat.ErrorHelpers, only: [error_view: 1]
-  alias KlziiChat.{SessionResourcesView, ResourceView, ChangesetView}
+  alias KlziiChat.{SessionResourcesView, ResourceView}
   alias KlziiChat.Services.{ SessionResourcesService, ResourceService}
   alias KlziiChat.Queries.Resources, as: QueriesResources
   use Guardian.Phoenix.Controller

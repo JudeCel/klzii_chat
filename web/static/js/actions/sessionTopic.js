@@ -59,7 +59,15 @@ const Actions = {
         all: sessionTopics
       });
       let sessionTopicId = sessionTopics[0].id;
-      joinChannal(dispatch, socket, sessionTopicId);
+
+      if (sessionTopicId) {
+        joinChannal(dispatch, socket, sessionTopicId);
+      }else{
+        dispatch({
+          type: Constants.SOCKET_CONNECTION_ERROR,
+          error: "This session is without Topics"
+        });
+      }
     }
   },
   changeSessionTopic: (currentChannal, whiteboardChannel, sessionTopicId) =>{

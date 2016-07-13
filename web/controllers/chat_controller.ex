@@ -1,6 +1,6 @@
 defmodule KlziiChat.ChatController do
   use KlziiChat.Web, :controller
-  import KlziiChat.ErrorHelpers, only: [error_view: 1]
+  # import KlziiChat.ErrorHelpers, only: [error_view: 1]
   import KlziiChat.Services.SessionMembersService, only: [get_member_from_token: 1]
 
   @doc """

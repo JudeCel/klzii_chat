@@ -1,6 +1,6 @@
 defmodule KlziiChat.SessionMemberCase do
   use ExUnit.CaseTemplate
-  alias KlziiChat.{Repo, User, SubscriptionPlan, Session, Account, SessionMember, BrandProjectPreference}
+  alias KlziiChat.{Repo, User, SubscriptionPlan, Session, Account, SessionMember}
 
   setup do
     user = %User{ email: "dainis@gmail.com", encryptedPassword: "jee" } |> Repo.insert!
