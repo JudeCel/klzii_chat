@@ -30,7 +30,8 @@ defmodule KlziiChat.ResourcesController do
       {:ok, resource} ->
         json(conn, %{resource: ResourceView.render("resource.json", %{resource: resource}) })
       {:error, reason} ->
-        json(conn, %{status: :error, reason: reason})
+        put_status(conn, reason.code)
+        |> json(error_view(reason))
     end
   end
 
@@ -42,7 +43,8 @@ defmodule KlziiChat.ResourcesController do
         end)
         json(conn, %{ids: resp, message: "Success deleted!"})
       {:error, reason} ->
-        json(conn, %{status: :error, reason: reason})
+        put_status(conn, reason.code)
+        |> json(error_view(reason))
     end
   end
 
@@ -51,7 +53,8 @@ defmodule KlziiChat.ResourcesController do
       {:ok, resource} ->
         json(conn, %{resource: ResourceView.render("resource.json", %{resource: resource}) })
       {:error, reason} ->
-        json(conn, %{status: :error, reason: reason})
+        put_status(conn, reason.code)
+        |> json(error_view(reason))
     end
   end
 

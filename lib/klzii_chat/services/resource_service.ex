@@ -63,7 +63,7 @@ defmodule KlziiChat.Services.ResourceService do
             {:ok, resource} ->
               {:ok, resource}
             {:error, reason} ->
-              {:error, reason}
+              {:error, Map.put(reason, :code, 400)}
            end
       {:error, reason} ->
         {:error, reason}
@@ -149,9 +149,8 @@ defmodule KlziiChat.Services.ResourceService do
             Task.async(fn -> KlziiChat.Files.Tasks.run(resource, ids) end)
             {:ok, resource }
           {:error, reason} ->
-            {:error, reason}
+            {:error, Map.put(reason, :code, 400)}
         end
-
       {:error, reason} ->
         {:error, reason}
     end

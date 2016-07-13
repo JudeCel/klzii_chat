@@ -31,6 +31,7 @@ defmodule KlziiChat.Resource do
     resource
     |> cast(params, [:status, :scope, :type, :accountUserId, :accountId, :name, :link, :properties])
     |> validate_required([:status, :scope, :type, :accountUserId, :accountId, :name])
+    |> unique_constraint(:name, name: :UniqResourceNameByAccount)
     |> cast_attachments(params,["file", "image", "audio", "video"])
     |> parse_link
   end
@@ -39,6 +40,7 @@ defmodule KlziiChat.Resource do
     model
     |> cast(params, [:status, :scope, :type, :accountUserId, :accountId, :name, :link, :properties])
     |> validate_required([:status, :scope, :type, :accountUserId, :accountId, :name, :link])
+    |> unique_constraint(:name, name: :UniqResourceNameByAccount)
     |> cast_attachments(params, ["file", "image", "audio", "video"])
   end
 
