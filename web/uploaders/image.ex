@@ -17,6 +17,9 @@ defmodule KlziiChat.Uploaders.Image do
   def transform(:thumb, _) do
     {:convert, "-strip -thumbnail 250x250>"}
   end
+  def transform(:gallery_thumb, _) do
+     {:convert, "-strip -thumbnail 250x250^ -gravity center -extent 250x250"}
+  end
 
   def __storage do
     case Mix.env do
