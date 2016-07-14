@@ -17,6 +17,7 @@ defmodule KlziiChat.Resource do
     field :name, :string
     field :status, :string, default: "completed"
     field :properties, :map, default: %{}
+    field :stock, :boolean, default: false
     field :expiryDate, Timex.Ecto.DateTime
     timestamps [inserted_at: :createdAt, updated_at: :updatedAt]
   end
@@ -29,8 +30,8 @@ defmodule KlziiChat.Resource do
   """
   def changeset(resource, params \\ %{}) do
     resource
-    |> cast(params, [:status, :scope, :type, :accountUserId, :accountId, :name, :link, :properties])
-    |> validate_required([:status, :scope, :type, :accountUserId, :accountId, :name])
+    |> cast(params, [:status, :scope, :type, :accountUserId, :accountId, :name, :link, :properties, :stock])
+    |> validate_required([:status, :scope, :type, :accountUserId, :accountId, :name, :stock])
     |> unique_constraint(:name, name: :UniqResourceNameByAccount)
     |> cast_attachments(params,["file", "image", "audio", "video"])
     |> parse_link

@@ -9,16 +9,28 @@ defmodule KlziiChat.ResourcesController do
   plug Guardian.Plug.EnsureAuthenticated, handler: KlziiChat.Guardian.AuthErrorHandler
   plug :if_current_member
 
+
   def ping(conn, _, _, _) do
     json(conn, %{status: :ok})
   end
 
   def index(conn, params, member, _) do
-    query =
+    resources =
       QueriesResources.base_query(member.account_user)
       |> QueriesResources.find_by_params(params)
+      |> Repo.all
+      |> Enum.map(fn resource ->
+        ResourceView.render("resource.json", %{resource: resource})
+      end)
+    json(conn, %{resources: resources})
+  end
+
+  def stock(conn, params) do
     resources =
-      Repo.all(query)
+      QueriesResources.base_resource_query()
+      |> QueriesResources.find_by_params(params)
+      |> QueriesResources.stock_query(true)
+      |> Repo.all
       |> Enum.map(fn resource ->
         ResourceView.render("resource.json", %{resource: resource})
       end)

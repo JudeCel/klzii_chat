@@ -7,8 +7,18 @@ defmodule KlziiChat.SessionMemberCase do
     user2 = %User{ email: "dainis_2@gmail.com", encryptedPassword: "pfff" } |> Repo.insert!
     user3 = %User{ email: "dainis_3@gmail.com", encryptedPassword: "pfff11" } |> Repo.insert!
     user4 = %User{ email: "dainis_4@gmail.com", encryptedPassword: "11111" } |> Repo.insert!
+    admin_user = %User{ email: "admin@gmail.com", encryptedPassword: "admin" } |> Repo.insert!
 
+    admin_account = Repo.insert!(%Account{name: "admin account"})
     account = Repo.insert!(%Account{name: "cool account"})
+
+    account_user_admin = Ecto.build_assoc(admin_account, :account_users, user: admin_user,
+      firstName: "Dainis",
+      lastName: "Lapins",
+      gender: "male",
+      role: "admin",
+      email: user.email
+    ) |> Repo.insert! |>  Repo.preload(:account)
 
     account_user_account_manager = Ecto.build_assoc(account, :account_users, user: user,
       firstName: "Dainis",
@@ -160,7 +170,10 @@ defmodule KlziiChat.SessionMemberCase do
       account_user_participant: account_user_participant,
       account_user_participant_2: account_user_participant_2,
       account_user_observer: account_user_observer,
-      account: account
+      account: account,
+      admin_account: admin_account,
+      account_user_admin: account_user_admin,
+      admin_user: admin_user
     }
   end
 end

@@ -28,6 +28,7 @@ defmodule KlziiChat.Router do
     pipe_through :api
     # CORS Routes
     options "/", ResourcesController, :index
+    options "/stock", StockResourcesController, :index
     options "/ping", ResourcesController, :ping
     options "/zip", ResourcesController, :zip
     options "/upload", ResourcesController, :upload
@@ -37,6 +38,7 @@ defmodule KlziiChat.Router do
 
     # Generic routes for API be call from original domain
     get "/", ResourcesController, :index
+    get "/stock", StockResourcesController, :index
     get "/ping", ResourcesController, :ping
     post "/zip", ResourcesController, :zip
     post "/upload", ResourcesController, :upload

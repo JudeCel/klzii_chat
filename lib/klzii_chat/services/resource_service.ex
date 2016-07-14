@@ -10,9 +10,9 @@ defmodule KlziiChat.Services.ResourceService do
   def upload(params, account_user_id)  do
     account_user = Repo.get!(AccountUser, account_user_id) |> Repo.preload([:account])
     if account_user.role == "admin" do
-      Map.put(params, "private", (params["private"] || false))
+      Map.put(params, "stock", (params["stock"] || false))
     else
-      Map.put(params, "private", false)
+      Map.put(params, "stock", false)
     end |> save_resource(account_user)
   end
 
@@ -44,7 +44,7 @@ defmodule KlziiChat.Services.ResourceService do
   end
 
   @spec save_resource(map, integer) :: {:ok, %Resource{}} | {:error, map}
-  def save_resource(%{"private" => private, "type" => type, "scope" => scope, "file" => file, "name"=> name}, account_user) do
+  def save_resource(%{"stock" => stock, "type" => type, "scope" => scope, "file" => file, "name"=> name}, account_user) do
     params = %{
       type: type,
       scope: scope,
@@ -52,7 +52,7 @@ defmodule KlziiChat.Services.ResourceService do
       accountUserId: account_user.id,
       type: type,
       name: name,
-      private: private
+      stock: stock
       } |> Map.put(String.to_atom(type), file)
 
     case validate(file, params) do
@@ -97,7 +97,9 @@ defmodule KlziiChat.Services.ResourceService do
   def deleteByIds(account_user_id, ids) do
     account_user = Repo.get!(AccountUser, account_user_id) |> Repo.preload([:account])
 
-    query = QueriesResources.base_query(account_user) |> where([r], r.id in ^ids)
+    query = QueriesResources.base_query(account_user)
+      |> where([r], r.id in ^ids)
+      |> where([r], r.stock == false)
     result = Repo.all(query)
 
     case ResourcePermissions.can_delete(account_user, result) do
