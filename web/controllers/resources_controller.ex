@@ -17,12 +17,18 @@ defmodule KlziiChat.ResourcesController do
     resources =
       QueriesResources.base_query(member.account_user)
       |> QueriesResources.find_by_params(params)
-      |> QueriesResources.stock_query(false)
+      |> QueriesResources.stock_query(%{"stock" => false})
       |> Repo.all
-      |> Enum.map(fn resource ->
+    stock_resources =
+      QueriesResources.base_resource_query
+        |> QueriesResources.stock_query(params)
+        |> QueriesResources.find_by_params(params)
+        |> Repo.all
+
+      list = Enum.map((stock_resources ++ resources), fn resource ->
         ResourceView.render("resource.json", %{resource: resource})
       end)
-    json(conn, %{resources: resources})
+    json(conn, %{resources: list})
   end
 
   def stock(conn, params) do

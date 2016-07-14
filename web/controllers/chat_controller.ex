@@ -50,7 +50,11 @@ defmodule KlziiChat.ChatController do
     end
   end
 
-# TODO Replace with elixir standard lib when migrated to 1.3
+  def logout(conn, _) do
+    Guardian.Plug.sign_out(conn)
+    |> delete_resp_cookie("chat_token")
+  end
+
   defp get_cookie_espire_time() do
     use Timex
     expire_date = Date.today |> Timex.shift(days: 7)

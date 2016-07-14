@@ -19,10 +19,11 @@ defmodule KlziiChat.ResourcesControllerTest do
       image_resource = Ecto.build_assoc(
         account_user.account, :resources,
         accountUserId: account_user.id,
-        name: "cool iamge",
+        name: "cool iamge1",
         type: "image",
         scope: "collage"
       ) |> Repo.insert!
+
       {:ok,
         conn: put_req_header(conn, "accept", "application/json"),
         zip_resource: zip_resource,
@@ -93,6 +94,21 @@ defmodule KlziiChat.ResourcesControllerTest do
       conn = post(conn, "api/resources/upload", %{name: "test_audio", type: "image", scope: "collage", file: file })
       assert json_response(conn, 415)
     end
+
+    test "return stock images", %{conn: conn, account_user_admin: account_user_admin} do
+
+      Ecto.build_assoc(
+        account_user_admin.account, :resources,
+        accountUserId: account_user_admin.id,
+        stock: true,
+        name: "cool iamge2",
+        type: "image",
+        scope: "collage"
+      ) |> Repo.insert!
+
+      conn = get(conn, "api/resources", %{stock: true, type: "image" })
+      assert json_response(conn, 200)["resources"] |> length == 2
+    end
   end
 
   describe("admin user") do
@@ -115,22 +131,6 @@ defmodule KlziiChat.ResourcesControllerTest do
       resp_conn = post(conn, "api/resources/upload", %{name: "hamster", type: "image", scope: "collage", file: file })
       assert json_response(resp_conn, 200)["resource"]["name"] == "hamster"
       assert json_response(resp_conn, 200)["resource"]["stock"] == false
-    end
-  end
-
-  describe("guest user") do
-    setup %{conn: conn} do
-      {:ok, conn: put_req_header(conn, "accept", "application/json")}
-    end
-
-    test "return stock images", %{conn: conn} do
-      conn = get(conn, "api/resources/stock")
-      assert json_response(conn, 200)["resources"] |> is_list
-    end
-
-    test "return root key resources", %{conn: conn} do
-      conn = get(conn, "api/resources")
-      assert json_response(conn, 401)
     end
   end
 end

@@ -14,9 +14,12 @@ defmodule KlziiChat.Queries.Resources do
     from(r in Resource)
   end
 
-  @spec stock_query(Ecto.Query.t, boolean | false) :: Ecto.Query.t
-  def stock_query(query, boolean \\ false) when is_boolean(boolean) do
-    from r in query, where: r.stock == ^boolean
+  @spec stock_query(Ecto.Query.t, map) :: Ecto.Query.t
+  def stock_query(query, %{"stock" => stock})do
+    from r in query, where: r.stock == ^stock
+  end
+  def stock_query(query, _)do
+    from r in query, where: r.stock == false
   end
 
   @spec find_by_params(Ecto.Query.t, map) :: Ecto.Query.t
