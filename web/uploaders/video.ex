@@ -27,7 +27,7 @@ defmodule KlziiChat.Uploaders.Video do
     end
   end
 
-  def storage_dir(_, {file, scope}) do
+  def storage_dir(_, {_file, scope}) do
     case Mix.env do
       :prod ->
         "video/#{scope.accountId}/"
@@ -37,7 +37,7 @@ defmodule KlziiChat.Uploaders.Video do
   end
 
   # Override the persisted filenames:
-  def filename(version, {file, scope}) do
+  def filename(version, {_file, scope}) do
     str = "#{version}_#{scope.name}"
     Regex.replace(~r/( |-)/, str, "")
   end

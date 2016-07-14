@@ -3,7 +3,7 @@ defmodule KlziiChat.Services.WhiteboardService do
   alias KlziiChat.Services.Permissions.Whiteboard, as: WhiteboardPermissions
   alias KlziiChat.Queries.Shapes, as: ShapesQueries
   import Ecto
-  import Ecto.Query, only: [from: 1, from: 2]
+  import Ecto.Query, only: [from: 2]
 
   def history(session_topic_id, session_member_id) do
     session_topic = Repo.get!(SessionTopic, session_topic_id)

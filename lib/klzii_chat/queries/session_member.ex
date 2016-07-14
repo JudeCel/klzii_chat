@@ -1,7 +1,6 @@
 defmodule KlziiChat.Queries.SessionMember do
-  import Ecto
-  import Ecto.Query
-  alias KlziiChat.{SessionMember, SubscriptionPreference}
+  import Ecto.Query, only: [from: 2]
+  alias KlziiChat.{SubscriptionPreference}
 
   @spec get_subscription_preference_session_memeber(integer) :: Ecto.Query.t
   def get_subscription_preference_session_memeber(sessionId) do

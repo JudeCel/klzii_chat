@@ -1,5 +1,5 @@
 defmodule KlziiChat.Presence do
-  alias KlziiChat.{SessionMember, SessionMembersView}
+  alias KlziiChat.{SessionMembersView}
   use Phoenix.Presence, otp_app: :klzii_chat, pubsub_server: KlziiChat.PubSub
 
   def fetch(_topic, entries) do
