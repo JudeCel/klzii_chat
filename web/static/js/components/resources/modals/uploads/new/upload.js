@@ -33,7 +33,8 @@ const UploadNew = React.createClass({
     const fileTypes = {
       image: '.gif, .jpg, .png',
       video: '.mp4',
-      audio: '.mp3'
+      audio: '.mp3',
+      file: '.pdf',
     };
 
     return (

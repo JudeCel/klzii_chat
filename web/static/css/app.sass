@@ -42,11 +42,9 @@ body
   @extend .dropshadow
   vertical-align: middle
   text-align: right
-  .logo-section
-    line-height: 3.5
-    img
-      width: 100%
   .topic-select-section
+    float: left
+    display: inline-block
     text-align: left
     .viewers-section
       vertical-align: middle
@@ -76,7 +74,22 @@ body
         padding: 0px
         background-color: none
         border: none
+  .resources-section
+    margin-left: 5%
+    float: left
+    vertical-align: middle
+    display: inline-block
+    @extend .lineup-icons
+    @extend .lineup-icons.header
+    ul.icons
+      text-align: center
+      li
+        background-color: $header-red
   .links-section
+    margin-right: 5%
+    float: right
+    vertical-align: middle
+    display: inline-block
     @extend .lineup-icons
     @extend .lineup-icons.header
     ul.icons
@@ -89,13 +102,13 @@ body
           background-color: $header-red
         .icon-message.with-badge
           margin-left: -20px
-  .resources-section
-    @extend .lineup-icons
-    @extend .lineup-icons.header
-    ul.icons
-      text-align: center
-      li
-        background-color: $header-red
+  .logo-section
+    line-height: 3
+    float: right
+    display: inline-block
+    width: 7%
+    img
+      width: 100%
 
 .room-outerbox
   padding: 0 15px

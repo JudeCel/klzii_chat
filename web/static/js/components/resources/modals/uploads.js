@@ -35,7 +35,7 @@ const Uploads = React.createClass({
     else if(files) {
       let data = {
         type: modalData.type,
-        scope: 'collage',
+        scope: modalData.type == 'file' ? 'pdf' : 'collage',
         name: name,
         files: files
       };
