@@ -8,6 +8,11 @@ defmodule KlziiChat.Uploaders.Video do
   @versions [:original]
   @acl :public_read
 
+
+  def allowed_extensions() do
+    ~w(.mp4 .mpeg )
+  end
+
   # Whitelist file extensions:
   def validate({file, _}) do
     ~w(.mp4 .mpeg ) |> Enum.member?(Path.extname(file.file_name))

@@ -6,6 +6,11 @@ defmodule KlziiChat.Services.ResourceService do
   import Ecto
   import Ecto.Query
 
+  @spec file_type_error_mesage(String.t, String.t) :: %{code: integer, type: String.t}
+  def file_type_error_mesage(should, actual) do
+    %{code: 415, type: "You are trying to upload #{actual} where it is allowed only #{should}."}
+  end
+
   @spec upload(map, integer) ::  {:ok, %Resource{}} | {:error, map}
   def upload(params, account_user_id)  do
     account_user = Repo.get!(AccountUser, account_user_id) |> Repo.preload([:account])
@@ -22,18 +27,28 @@ defmodule KlziiChat.Services.ResourceService do
   end
 
   @spec validate_file_type(map | String.t, map) :: {:ok} | {:error, map}
-  def validate_file_type(file, params) when is_map(file) do
-    file_type = String.split(file.content_type, "/") |> List.first
+  def validate_file_type(%Plug.Upload{content_type: content_type}, %{type:  type}) when type in ["image", "audio", "video"] do
+    file_type = String.split(content_type, "/") |> List.first
     cond do
-      file_type != params.type ->
-        {:error, %{code: 415, type: "You are trying to upload #{file_type} where it is allowed only #{params.type}."}}
+      file_type != type ->
+        {:error, file_type_error_mesage(file_type, type)}
       true ->
         {:ok}
     end
   end
-  def validate_file_type(file, params) when is_bitstring(file) do
+  def validate_file_type(%Plug.Upload{content_type: content_type}, %{type: type}) when type in ["file"] do
+    extension = Plug.MIME.extensions(content_type) |> List.last
+    allowed_extensions = KlziiChat.Uploaders.File.allowed_extensions
+      |> Enum.map(fn i -> String.trim(i, ".") end)
+    if extension in allowed_extensions do
+      {:ok}
+    else
+      {:error, file_type_error_mesage(extension, type)}
+    end
+  end
+  def validate_file_type(file, %{type: type}) when is_bitstring(file) do
     cond do
-      params.type in ["file", "link"] ->
+      type in ["file", "link"] ->
         {:ok}
       true ->
         {:error, %{code: 415, type: "Accept only links"}}
@@ -74,7 +89,7 @@ defmodule KlziiChat.Services.ResourceService do
   def add_file(resource, file) do
     Resource.changeset(resource, %{String.to_atom(resource.type) => file})
     |> Repo.update
-    |> case  do
+    |> case do
         {:ok, resource } ->
           {:ok, resource}
         {:error, reason} ->

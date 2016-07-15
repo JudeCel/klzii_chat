@@ -8,9 +8,13 @@ defmodule KlziiChat.Uploaders.Image do
   @versions [:original, :thumb, :gallery_thumb]
   @acl :public_read
 
+  def allowed_extensions() do
+    ~w(.gif .png .jpg .jpeg .bmp)
+  end
+
   # Whitelist file extensions:
   def validate({file, _}) do
-    ~w(.gif .png .jpg .jpeg .bmp) |> Enum.member?(Path.extname(file.file_name))
+    allowed_extensions |> Enum.member?(Path.extname(file.file_name))
   end
 
   # Define a thumbnail transformation:

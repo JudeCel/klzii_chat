@@ -2,6 +2,7 @@ defmodule KlziiChat.ResourcesControllerTest do
   use KlziiChat.{ConnCase, SessionMemberCase}
   alias KlziiChat.{Repo}
   @image "test/fixtures/images/hamster.jpg"
+  @pdf "test/fixtures/file/test.pdf"
 
   describe("regular user") do
     setup %{conn: conn, account_user_account_manager: account_user} do
@@ -61,6 +62,13 @@ defmodule KlziiChat.ResourcesControllerTest do
       conn = post(conn, "api/resources/upload", %{name: "hamster", type: "image", scope: "collage", file: file })
       assert json_response(conn, 200)["resource"]["name"] == "hamster"
       assert json_response(conn, 200)["resource"]["stock"] == false
+    end
+
+    test "upload pdf", %{conn: conn} do
+      file = %Plug.Upload{ content_type:  Plug.MIME.path("test.pdf"), path: @pdf, filename: "test.pdf"}
+      conn = post(conn, "api/resources/upload", %{name: "cool pdf", type: "file", scope: "collage", file: file })
+      assert json_response(conn, 200)["resource"]["name"] == "cool pdf"
+      # assert json_response(conn, 200)["resource"]["file"] == "false"
     end
 
     test "can't upload stock image skipe stock parametr", %{conn: conn} do

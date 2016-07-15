@@ -8,9 +8,13 @@ defmodule KlziiChat.Uploaders.Audio do
   @versions [:original]
   @acl :public_read
 
+  def allowed_extensions() do
+    ~w(.mp3 )
+  end
+
   # Whitelist file extensions:
   def validate({file, _}) do
-    ~w(.mp3 ) |> Enum.member?(Path.extname(file.file_name))
+    allowed_extensions |> Enum.member?(Path.extname(file.file_name))
   end
 
   def __storage do

@@ -8,9 +8,14 @@ defmodule KlziiChat.Uploaders.File do
   @versions [:original]
   @acl :public_read
 
+
+  def allowed_extensions() do
+    ~w(.pdf .csv .xls .zip .txt)
+  end
+
   # Whitelist file extensions:
   def validate({file, _}) do
-    ~w(.pdf .csv .xls .zip .txt) |> Enum.member?(Path.extname(file.file_name))
+    allowed_extensions |> Enum.member?(Path.extname(file.file_name))
   end
 
   # Define a thumbnail transformation:
