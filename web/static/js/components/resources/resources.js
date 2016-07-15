@@ -55,11 +55,12 @@ const Resources = React.createClass({
       { type: 'image',    className: 'icon-picture'    },
       { type: 'pinboard', className: 'icon-camera'     },
       { type: 'survey',   className: 'icon-ok-squared' },
+      { type: 'file',     className: 'icon-pdf'        },
     ];
 
     if(this.hasPermission(['resources', 'can_upload'])) {
       return (
-        <div className='resources-section col-md-4'>
+        <div className='resources-section'>
           <ul className='icons'>
             {
               resourceButtons.map((button, index) =>
@@ -70,13 +71,13 @@ const Resources = React.createClass({
             }
           </ul>
 
-          <UploadsModal show={ this.shouldShow(['video', 'audio', 'image']) } />
+          <UploadsModal show={ this.shouldShow(['video', 'audio', 'image', 'file']) } />
           <SurveyModal show={ this.shouldShow(['survey']) } />
         </div>
       )
     }
     else {
-      return(<div className='resources-section col-md-4'></div>)
+      return(<div className='resources-section'></div>)
     }
   }
 });

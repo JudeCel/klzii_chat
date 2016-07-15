@@ -13,7 +13,7 @@ const Select = React.createClass({
     const { current, sessionTopics, session, unread_messages } = this.props;
 
     return (
-      <div className='col-md-3 topic-select-section'>
+      <div className='topic-select-section'>
         <div className='topic-select-box'>
           <div>
             { session.name }

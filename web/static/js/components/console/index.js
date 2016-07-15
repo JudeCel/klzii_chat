@@ -34,7 +34,7 @@ const Console = React.createClass({
       { type: 'audio',       className: 'icon-volume-up',  permission: true },
       { type: 'pinboard',    className: 'icon-camera',     permission: this.hasPermission(['pinboard', 'can_add_resource']) },
       { type: 'mini_survey', className: 'icon-ok-squared', permission: true },
-      { type: 'pdf',         className: 'icon-pdf',        permission: true },
+      { type: 'file',        className: 'icon-pdf',        permission: true },
     ];
 
     return (
@@ -53,7 +53,7 @@ const Console = React.createClass({
 
         <PinboardModal show={ this.shouldShow(['pinboard']) } />
         <SurveyModal show={ this.shouldShow(['mini_survey']) } />
-        <UploadsModal show={ this.shouldShow(['video', 'audio']) } modalName={ modalName } />
+        <UploadsModal show={ this.shouldShow(['video', 'audio', 'file']) } modalName={ modalName } />
       </div>
     )
   }

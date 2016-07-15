@@ -54,8 +54,11 @@ const Links = React.createClass({
     };
 
     return (
-      <div>
-        <div className='col-md-4 links-section'>
+      <span>
+        <div className='logo-section'>
+          <img src='/images/klzii_logo.png' />
+        </div>
+        <div className='links-section'>
           <ul className='icons'>
             { this.clearWhiteboardFunction(style) }
             { this.reportsFunction(style) }
@@ -72,12 +75,9 @@ const Links = React.createClass({
             </li>
           </ul>
         </div>
-        <div className='col-md-1 logo-section'>
-          <img src='/images/klzii_logo.png' />
-        </div>
 
         <ReportsModal show={ this.showSpecificModal('reports') } />
-      </div>
+      </span>
     )
   }
 });

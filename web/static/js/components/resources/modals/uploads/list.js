@@ -12,7 +12,12 @@ const UploadList = React.createClass({
   },
   getInitialData() {
     const { dispatch, currentUserJwt, modalData } = this.props;
-    dispatch(Actions.index(currentUserJwt, { type: this.get_session_resource_types(modalData.type) }));
+    let params = { type: this.get_session_resource_types(modalData.type) };
+    if(modalData.type == 'file') {
+      params.scope = ['pdf'];
+    }
+
+    dispatch(Actions.index(currentUserJwt, params));
   },
   componentDidMount() {
     this.getInitialData();
@@ -45,7 +50,8 @@ const mapStateToProps = (state) => {
     currentUserJwt: state.members.currentUser.jwt,
     image: state.resources.images,
     video: state.resources.videos,
-    audio: state.resources.audios
+    audio: state.resources.audios,
+    file: state.resources.files,
   }
 };
 

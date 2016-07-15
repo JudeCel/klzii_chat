@@ -37,6 +37,10 @@ const GalleryNew = React.createClass({
       data.type = ['video', 'link'];
       data.scope = ['collage', 'youtube'];
     }
+    else if(modalName == 'file') {
+      data.type = [modalName];
+      data.scope = ['pdf'];
+    }
     else {
       data.type = [modalName];
     }

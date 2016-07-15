@@ -2,6 +2,7 @@ import React, {PropTypes} from 'react';
 import UploadTypeImage    from './image';
 import UploadTypeVideo    from './video';
 import UploadTypeAudio    from './audio';
+import UploadTypePdf      from './pdf';
 
 const UploadTypeIndex = React.createClass({
   render() {
@@ -19,6 +20,9 @@ const UploadTypeIndex = React.createClass({
     }
     else if(modalName == 'audio') {
       return (<UploadTypeAudio url={ url } />)
+    }
+    else if(modalName == 'file') {
+      return (<UploadTypePdf url={ url } />)
     }
     else {
       return (<div>Not found</div>)
