@@ -33,7 +33,7 @@ defmodule KlziiChat.Resource do
     |> cast(params, [:status, :scope, :type, :accountUserId, :accountId, :name, :link, :properties, :stock])
     |> validate_required([:status, :scope, :type, :accountUserId, :accountId, :name, :stock])
     |> unique_constraint(:name, name: :UniqResourceNameByAccount)
-    |> cast_attachments(params,["file", "image", "audio", "video"])
+    |> cast_attachments(params, ["file", "image", "audio", "video"])
     |> parse_link
   end
 
@@ -47,7 +47,7 @@ defmodule KlziiChat.Resource do
 
   defp parse_link(base_changeset) do
     case base_changeset do
-      %Ecto.Changeset{valid?: true, changes: %{type: "link", scope: "youtube", link: link}} ->
+      %Ecto.Changeset{valid?: true, changes: %{link: link}} ->
         put_change(base_changeset, :link, UrlHelpers.youtube_id(link))
       _ ->
         base_changeset

@@ -53,7 +53,7 @@ defmodule KlziiChat.Services.ResourceService do
       type: type,
       name: name,
       stock: stock
-      } |> Map.put(String.to_atom(type), file)
+    }
 
     case validate(file, params) do
       {:ok} ->
@@ -61,13 +61,25 @@ defmodule KlziiChat.Services.ResourceService do
         |> Repo.insert
         |> case do
             {:ok, resource} ->
-              {:ok, resource}
+              add_file(resource, file)
             {:error, reason} ->
               {:error, Map.put(reason, :code, 400)}
            end
       {:error, reason} ->
         {:error, reason}
     end
+  end
+
+  @spec add_file(%Resource{}, map) :: {:ok, %Resource{}} | {:error, map}
+  def add_file(resource, file) do
+    Resource.changeset(resource, %{String.to_atom(resource.type) => file})
+    |> Repo.update
+    |> case  do
+        {:ok, resource } ->
+          {:ok, resource}
+        {:error, reason} ->
+          {:error, Map.put(reason, :code, 400)}
+       end
   end
 
   @spec get(integer, String.t) :: {:ok, list}
