@@ -7,6 +7,7 @@ defmodule KlziiChat.Services.Permissions.Builder do
   alias KlziiChat.Services.Permissions.SessionTopic, as: SessionTopicPermissions
   alias KlziiChat.Services.Permissions.Whiteboard, as: WhiteboardPermissions
   alias KlziiChat.Services.Permissions.PinboardResource, as: PinboardResourcePermissions
+  alias KlziiChat.Services.Permissions.Report, as: ReportPermissions
   alias KlziiChat.Services.Permissions.Validations
 
   @spec error_messages() :: Map.t
@@ -50,7 +51,7 @@ defmodule KlziiChat.Services.Permissions.Builder do
         can_upload: ResourcePermissions.can_upload(session_member, preference) |> to_boolean
       },
       reports: %{
-        can_report: Validations.has_allowed_from_subscription(preference, "reportingFunctions")
+        can_report: ReportPermissions.can_use(session_member, preference) |> to_boolean
       },
       pinboard: %{
         can_enable: PinboardResourcePermissions.can_enable(session_member) |> to_boolean,
