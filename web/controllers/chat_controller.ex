@@ -44,7 +44,7 @@ defmodule KlziiChat.ChatController do
           send_resp(conn, 401, resp)
       end
     else
-      resp =  KlziiChat.ChangesetView.render("error.json", %{not_found: "Session member not found"})
+      resp =  KlziiChat.ChangesetView.render("error.json", %{not_found: "Session member not found or you need login"})
         |> Poison.encode!
       send_resp(conn, 401, resp)
     end
@@ -53,6 +53,7 @@ defmodule KlziiChat.ChatController do
   def logout(conn, _) do
     Guardian.Plug.sign_out(conn)
     |> delete_resp_cookie("chat_token")
+    |> send_resp(200, Poison.encode!(%{message: "Success"}))
   end
 
   defp get_cookie_espire_time() do

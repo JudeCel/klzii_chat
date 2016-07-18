@@ -46,6 +46,9 @@ const Links = React.createClass({
 
     this.openSpecificModal('directMessage', { member: member });
   },
+  logout(){
+     window.location.href = this.props.currentUser.logout_path
+  },
   render() {
     const { colours } = this.props;
     const count = this.countAllUnread() || null;
@@ -71,7 +74,7 @@ const Links = React.createClass({
               <i className='icon-help' />
             </li>
             <li style={ style }>
-              <i className='icon-power' />
+              <i className='icon-power' onClick={this.logout}/>
             </li>
           </ul>
         </div>
