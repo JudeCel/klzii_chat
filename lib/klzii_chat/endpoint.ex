@@ -9,7 +9,7 @@ defmodule KlziiChat.Endpoint do
   # when deploying your static files in production.
   plug KlziiChat.Corsica.Router
   plug Plug.Static,
-    at: "/", from: :klzii_chat, gzip: false,
+    at: "/", from: :klzii_chat, gzip: true,
     only: ~w(uploads css fonts images js images/avatar favicon.ico robots.txt)
 
   # Code reloading can be explicitly enabled under the

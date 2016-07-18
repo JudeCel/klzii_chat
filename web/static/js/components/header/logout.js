@@ -14,8 +14,6 @@ const Links = React.createClass({
     const style = {
       backgroundColor: colours.headerButton
     };
-
-    console.log(this.hasPermission(['can_redirect', 'logout']));
     if (this.hasPermission(['can_redirect', 'logout'])){
       return(
         <li style={ style }>
