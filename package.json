@@ -15,12 +15,6 @@
     "npm": "3.5.x"
   },
   "devDependencies": {
-    "babel-core": "^6.10.4",
-    "babel-loader": "^6.2.4",
-    "babel-plugin-transform-decorators-legacy": "^1.3.4",
-    "babel-preset-es2015": "^6.9.0",
-    "babel-preset-react": "^6.11.1",
-    "babel-preset-stage-0": "^6.5.0",
     "chai": "^3.5.0",
     "chai-spies": "^0.7.1",
     "copy-webpack-plugin": "^1.1.1",
@@ -30,6 +24,12 @@
     "mocha": "^2.5.3"
   },
   "dependencies": {
+    "babel-core": "^6.10.4",
+    "babel-loader": "^6.2.4",
+    "babel-plugin-transform-decorators-legacy": "^1.3.4",
+    "babel-preset-es2015": "^6.9.0",
+    "babel-preset-react": "^6.11.1",
+    "babel-preset-stage-0": "^6.5.0",
     "extract-text-webpack-plugin": "^1.0.1",
     "copy-webpack-plugin": "^3.0.1",
     "css-loader": "^0.23.1",
