@@ -3,6 +3,7 @@ import { connect }        from 'react-redux';
 import mixins             from '../../mixins';
 import ReportsModal       from './../reports/modal';
 import WhiteboardActions  from './../../actions/whiteboard';
+import LogoutLink         from './logout';
 
 const Links = React.createClass({
   mixins: [mixins.modalWindows, mixins.validations],
@@ -46,9 +47,6 @@ const Links = React.createClass({
 
     this.openSpecificModal('directMessage', { member: member });
   },
-  logout(){
-     window.location.href = this.props.currentUser.logout_path
-  },
   render() {
     const { colours } = this.props;
     const count = this.countAllUnread() || null;
@@ -73,9 +71,7 @@ const Links = React.createClass({
             <li style={ style }>
               <i className='icon-help' />
             </li>
-            <li style={ style }>
-              <i className='icon-power' onClick={this.logout}/>
-            </li>
+            <LogoutLink />
           </ul>
         </div>
 

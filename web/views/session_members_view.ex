@@ -20,13 +20,17 @@ defmodule KlziiChat.SessionMembersView do
 
   def render("current_member.json", %{ member: member, permissions_map: permissions_map}) do
     member_map = render("member.json", %{ member: member})
+
     current_member_info = %{
-      logout_path:  KlziiChat.Router.Helpers.chat_path(KlziiChat.Endpoint, :logout),
       jwt: buildJWT(member),
       account_user_id: member.accountUserId,
       session_id: member.sessionId,
       permissions: permissions_map
     }
+    if permissions_map.can_redirect.logout do
+      url = KlziiChat.Router.Helpers.chat_path(KlziiChat.Endpoint, :logout)
+      current_member_info = Map.put(current_member_info, :logout_path, url)
+    end
     Map.merge(member_map, current_member_info)
   end
 
