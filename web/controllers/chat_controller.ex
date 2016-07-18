@@ -21,7 +21,8 @@ defmodule KlziiChat.ChatController do
   def index(conn, %{"token" => token}) do
     case get_member_from_token(token) do
       {:ok , member} ->
-        conn = Guardian.Plug.sign_in(conn, member.session_member)
+        conn = set_redirect_url(conn)
+        |> Guardian.Plug.sign_in(member.session_member)
         put_resp_cookie(conn, "chat_token", Guardian.Plug.current_token(conn), max_age: get_cookie_espire_time())
         |> render("index.html", session_id: member.session_member.sessionId)
       {:error, _reason } ->
@@ -51,9 +52,24 @@ defmodule KlziiChat.ChatController do
   end
 
   def logout(conn, _) do
-    Guardian.Plug.sign_out(conn)
+    conn = Guardian.Plug.sign_out(conn)
     |> delete_resp_cookie("chat_token")
-    |> send_resp(200, Poison.encode!(%{message: "Success"}))
+
+    if redirect_url = conn.cookies["redirect_url"] do
+      delete_resp_cookie(conn, "redirect_url")
+      |> redirect(external: redirect_url)
+    else
+      send_resp(conn, 200, Poison.encode!(%{message: "Successfully logged out"}))
+    end
+  end
+
+  defp set_redirect_url(conn) do
+    case List.keyfind(conn.req_headers, "referer", 0) do
+      {"referer", referer} ->
+        conn = put_resp_cookie(conn, "redirect_url", referer)
+      nil ->
+        conn
+    end
   end
 
   defp get_cookie_espire_time() do
