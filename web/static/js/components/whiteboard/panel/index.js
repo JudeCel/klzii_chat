@@ -1,6 +1,6 @@
-import React, {PropTypes} from 'react';
+import React, {PropTypes}         from 'react';
 import { ButtonToolbar, OverlayTrigger, Button, Popover }    from 'react-bootstrap'
-import PopoverButtons            from './buttons';
+import PopoverButtons             from './buttons';
 
 const ButtonPanel = React.createClass({
   getInitialState() {

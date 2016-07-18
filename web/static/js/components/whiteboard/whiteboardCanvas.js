@@ -1,13 +1,13 @@
-import React, {PropTypes} from 'react';
-import Snap               from 'snapsvg';
+import React, {PropTypes}     from 'react';
+import Snap                   from 'snapsvg';
 import { OverlayTrigger, Button, Popover, ButtonToolbar, Input}    from 'react-bootstrap'
-import whiteboardActions    from '../../actions/whiteboard'
-import { connect }          from 'react-redux';
+import whiteboardActions      from '../../actions/whiteboard'
+import { connect }            from 'react-redux';
 require("./drawControlls");
-import undoHistoryFactory  from './actionHistory';
-import mixins             from '../../mixins';
-import ReactDOM                 from 'react-dom';
-import ButtonPanel        from './panel';
+import undoHistoryFactory     from './actionHistory';
+import mixins                 from '../../mixins';
+import ReactDOM               from 'react-dom';
+import ButtonPanel            from './panel';
 
 const WhiteboardCanvas = React.createClass({
   mixins: [mixins.validations],
@@ -589,6 +589,11 @@ const WhiteboardCanvas = React.createClass({
       this.addImage(data.url);
     }
   },
+  renderButtonPanel(){
+    if (this.hasPermission(['whiteboard', 'can_new_shape'])){
+      return <ButtonPanel changeButton={ this.changeButton } mode={ this.mode } enum={ this.ModeEnum } />
+    };
+  },
   render() {
     if(this.props.channel) {
       return (
@@ -601,8 +606,7 @@ const WhiteboardCanvas = React.createClass({
             onMouseUp={ this.handleMouseUp }
             onMouseMove={ this.handleMouseMove }
           />
-
-          <ButtonPanel changeButton={ this.changeButton } mode={ this.mode } enum={ this.ModeEnum } />
+        {this.renderButtonPanel()}
         </div>
       )
     }
