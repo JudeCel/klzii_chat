@@ -25,6 +25,10 @@ defmodule KlziiChat.ResourcesControllerTest do
         scope: "collage"
       ) |> Repo.insert!
 
+      on_exit fn ->
+        KlziiChat.FileTestHelper.clean_up_uploads_dir
+      end
+
       {:ok,
         conn: put_req_header(conn, "accept", "application/json"),
         zip_resource: zip_resource,
@@ -134,6 +138,9 @@ defmodule KlziiChat.ResourcesControllerTest do
       { :ok, jwt, _encoded_claims } =  Guardian.encode_and_sign(account_user_admin)
       conn = put_req_header(conn, "authorization", jwt)
         |> put_req_header("accept", "application/json")
+      on_exit fn ->
+        KlziiChat.FileTestHelper.clean_up_uploads_dir
+      end
       {:ok, conn: put_req_header(conn, "accept", "application/json")}
     end
 

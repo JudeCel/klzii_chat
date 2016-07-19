@@ -25,6 +25,11 @@ defmodule KlziiChat.Services.SessionReportingServiceTest do
       star: false,
     ) |> Repo.insert!()
 
+    on_exit fn ->
+      KlziiChat.FileTestHelper.clean_up_uploads_dir
+    end
+
+
     {:ok, session: session, session_topic: session_topic_1, facilitator: facilitator, participant: participant}
   end
 

@@ -16,6 +16,10 @@ defmodule KlziiChat.SessionResourcesControllerTest do
       scope: "collage"
     ) |> Repo.insert!
 
+    on_exit fn ->
+      KlziiChat.FileTestHelper.clean_up_uploads_dir
+    end
+
     {:ok,
       conn: put_req_header(conn, "accept", "application/json"),
       image_resource: image_resource

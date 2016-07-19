@@ -38,6 +38,10 @@ defmodule KlziiChat.Services.SessionTopicReportingServiceTest do
       updatedAt: create_date2
     ) |> Repo.insert!()
 
+    on_exit fn ->
+      KlziiChat.FileTestHelper.clean_up_uploads_dir
+    end
+
     messages = SessionTopicService.get_messages(session_topic_1.id, false, true)
 
     {:ok, messages: messages, session: session, session_topic: session_topic_1, facilitator: facilitator, create_date1: create_date1, create_date2: create_date2}

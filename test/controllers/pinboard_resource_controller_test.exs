@@ -7,6 +7,10 @@ defmodule KlziiChat.PinboardResourceControllerTest do
     { :ok, jwt, _encoded_claims } =  Guardian.encode_and_sign(participant)
     conn = put_req_header(conn, "authorization", jwt)
 
+    on_exit fn ->
+      KlziiChat.FileTestHelper.clean_up_uploads_dir
+    end
+
     {:ok,
       conn: put_req_header(conn, "accept", "application/json")
     }
