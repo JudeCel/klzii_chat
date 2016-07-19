@@ -1,4 +1,6 @@
 defmodule KlziiChat.Uploaders.Image do
+  use KlziiChat.Uploaders.StoreDefinition
+
   use Arc.Definition
 
   # Include ecto support (requires package arc_ecto installed):
@@ -6,6 +8,7 @@ defmodule KlziiChat.Uploaders.Image do
 
   # To add a thumbnail version:
   @versions [:original, :thumb, :gallery_thumb]
+  def versions, do: @versions
   @acl :public_read
 
   def allowed_extensions() do
@@ -24,29 +27,4 @@ defmodule KlziiChat.Uploaders.Image do
   def transform(:gallery_thumb, _) do
      {:convert, "-strip -thumbnail 250x250^ -gravity center -extent 250x250"}
   end
-
-  def __storage do
-    case Mix.env do
-      :prod ->
-        Arc.Storage.S3
-      _ ->
-        Arc.Storage.Local
-    end
-  end
-  # Override the persisted filenames:
-  def filename(version, {_file, scope}) do
-    str = "#{version}_#{scope.name}"
-    Regex.replace(~r/( |-)/, str, "")
-  end
-  def filename(version, _), do: version
-
-  def storage_dir(_, {_file, scope}) do
-    case Mix.env do
-      :prod ->
-        "uploads/images/#{scope.accountId}/"
-      _ ->
-        "priv/static/uploads/images/#{scope.accountId}"
-    end
-  end
-
 end

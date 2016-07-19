@@ -1,4 +1,6 @@
 defmodule KlziiChat.Uploaders.Audio do
+  use KlziiChat.Uploaders.StoreDefinition
+
   use Arc.Definition
 
   # Include ecto support (requires package arc_ecto installed):
@@ -6,6 +8,7 @@ defmodule KlziiChat.Uploaders.Audio do
 
   # To add a thumbnail version:
   @versions [:original]
+  def versions, do: @versions
   @acl :public_read
 
   def allowed_extensions() do
@@ -15,30 +18,5 @@ defmodule KlziiChat.Uploaders.Audio do
   # Whitelist file extensions:
   def validate({file, _}) do
     allowed_extensions |> Enum.member?(Path.extname(file.file_name))
-  end
-
-  def __storage do
-    case Mix.env do
-      :prod ->
-        Arc.Storage.S3
-      _ ->
-        Arc.Storage.Local
-    end
-  end
-
-  # Override the persisted filenames:
-  def filename(version, {_file, scope}) do
-    str = "#{version}_#{scope.name}"
-    Regex.replace(~r/( |-)/, str, "")
-  end
-  def filename(version, _), do: version
-
-  def storage_dir(_, {_file, scope}) do
-    case Mix.env do
-      :prod ->
-        "uploads/audio/#{scope.accountId}/"
-      _ ->
-        "priv/static/uploads/audio/#{scope.accountId}/"
-    end
   end
 end

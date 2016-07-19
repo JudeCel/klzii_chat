@@ -135,10 +135,42 @@ defmodule KlziiChat.Services.ResourceService do
           {:error, error} ->
             {:error, error}
           {_count, nil} ->
+             Task.start(fn -> clean_up(result) end)
             {:ok, result}
         end
       {:error, reason} ->
         {:error, reason}
+    end
+  end
+
+  def clean_up(list) do
+    Enum.map(list, fn(item) ->
+      type = item.type
+      uploader = get_uploader(type)
+
+      if field = Map.get(item, String.to_atom(type)) do
+        extname = Map.get(field, :file_name)
+        |> Path.extname
+        Enum.map(uploader.versions, fn version ->
+          url = uploader.url({item.type, item}, version) <> extname
+          uploader.delete({url, item})
+        end)
+      end
+    end)
+  end
+
+  def get_uploader(type) do
+    case type do
+      "image" ->
+        KlziiChat.Uploaders.Image
+      "file" ->
+        KlziiChat.Uploaders.File
+      "audio" ->
+        KlziiChat.Uploaders.Audio
+      "video" ->
+        KlziiChat.Uploaders.Video
+      _ ->
+        raise("File type not found")
     end
   end
 
