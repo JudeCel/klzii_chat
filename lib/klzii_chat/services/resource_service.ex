@@ -143,6 +143,7 @@ defmodule KlziiChat.Services.ResourceService do
     end
   end
 
+  @spec clean_up(list) :: :ok
   def clean_up(list) do
     Enum.map(list, fn(item) ->
       type = item.type
@@ -157,8 +158,14 @@ defmodule KlziiChat.Services.ResourceService do
         end)
       end
     end)
+    :ok
   end
 
+  @spec get_uploader(String.t) ::
+    KlziiChat.Uploaders.Image |
+    KlziiChat.Uploaders.File |
+    KlziiChat.Uploaders.Audio |
+    KlziiChat.Uploaders.Video
   def get_uploader(type) do
     case type do
       "image" ->
