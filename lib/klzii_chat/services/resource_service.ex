@@ -167,17 +167,13 @@ defmodule KlziiChat.Services.ResourceService do
     KlziiChat.Uploaders.Audio |
     KlziiChat.Uploaders.Video
   def get_uploader(type) do
-    case type do
-      "image" ->
-        KlziiChat.Uploaders.Image
-      "file" ->
-        KlziiChat.Uploaders.File
-      "audio" ->
-        KlziiChat.Uploaders.Audio
-      "video" ->
-        KlziiChat.Uploaders.Video
-      _ ->
-        raise("File type not found")
+    module_refix = "KlziiChat.Uploaders."
+    {module_path, _} = Code.eval_string(module_refix <> String.capitalize(type))
+    case Code.ensure_loaded(module_path) do
+      {:module, module} ->
+        module
+      {:error, :nofile} ->
+        raise("Uploader module not found #{module_path}")
     end
   end
 
