@@ -1,6 +1,6 @@
 FROM dainisl/phoenix-docker
 
-ENV MIX_ENV=prod \ 
+ENV MIX_ENV=prod \
     NODE_ENV=production \
     PORT=3000
 
@@ -11,10 +11,13 @@ WORKDIR /var/www/klzii_chat
 RUN mix local.hex --force && \
 	    mix local.rebar --force && \
 	    mix deps.get --only prod && \
-	    npm install --production --quiet && \
-	    node node_modules/.bin/webpack -p && \
-	    mix phoenix.digest && \
-	    mix compile.protocols 
+      mix compile.protocols
+
+RUN npm install --production --quiet && \
+	    node node_modules/.bin/webpack -p
+      
+RUN mix phoenix.digest
+
 
 EXPOSE 3000
 
