@@ -1,6 +1,6 @@
 defmodule KlziiChat.Helpers.CorsaUrl do
   def compile_url do
-    ["^https?://(.*\.?)klzii\.com", "^https?://(.*\.?)focus\.com", "^https?://(.*\.?)kliiko\.diatomdemo\.com"]
+    ["^https?://(.*\.?)klzii\.com", "^https?://(.*\.?)focus\.com", "^https?://(.*\.?)kliiko\.diatomdemo\.com", "^https?://(.*\.?)test\.klzii\.com"]
     |> Enum.map(fn url ->
       compile_regex(url)
     end)
