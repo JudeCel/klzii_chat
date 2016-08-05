@@ -41,7 +41,7 @@ spec:
         - name: SECRET_KEY_BASE
           value: 265728C3CEE6D163E3A210D2C7952CF50EF3E1765E3FB69DC13E70C93E6D0EF8
         - name: CORS_URL
-          value: ^https?://(.*\.?)klzii\.com
+          value: ^https?://(.*\.?)klzii\.chat
         - name: DB_USERNAME
           valueFrom:
             secretKeyRef:
@@ -57,7 +57,7 @@ spec:
         - name: DB_DATABASE
           value: klzii_production
         - name: SERVER_HOST
-          value: chat.klzii.com
+          value: chat.klzii.chat
         - name: GUARDIAN_SECRET_KEY
           value: "SttPra/cddsnX+Vko2i8KA=="
         volumeMounts:
