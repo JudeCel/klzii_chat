@@ -12,4 +12,11 @@ defmodule KlziiChat.Services.Permissions.DirectMessage do
       has_role(current_member.role, facilitator) && has_role(other_member.role, participant)
     ) |> formate_error
   end
+
+  @spec can_direct_message(Map.t) :: Boolean.t
+  def can_direct_message(member) do
+    roles = ["facilitator", "participant"]
+    has_role(member.role, roles)
+    |> formate_error
+  end
 end

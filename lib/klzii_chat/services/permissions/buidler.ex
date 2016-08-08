@@ -9,6 +9,7 @@ defmodule KlziiChat.Services.Permissions.Builder do
   alias KlziiChat.Services.Permissions.PinboardResource, as: PinboardResourcePermissions
   alias KlziiChat.Services.Permissions.Report, as: ReportPermissions
   alias KlziiChat.Services.Permissions.Redirect, as: RedirectPermissions
+  alias KlziiChat.Services.Permissions.DirectMessage, as: DirectMessagePermissions
   alias KlziiChat.Services.Permissions.Validations
 
   @spec error_messages() :: Map.t
@@ -44,6 +45,7 @@ defmodule KlziiChat.Services.Permissions.Builder do
         logout: RedirectPermissions.can_redirect(session_member) |> to_boolean
       },
       messages: %{
+        can_direct_message: DirectMessagePermissions.can_direct_message(session_member) |> to_boolean,
         can_new_message: MessagePermissions.can_new_message(session_member) |> to_boolean,
         can_board_message: SessionTopicPermissions.can_board_message(session_member) |> to_boolean ,
       },
