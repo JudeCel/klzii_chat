@@ -40,17 +40,24 @@ const SurveyConsole = React.createClass({
     dispatch(MiniSurveyActions.getConsole(channel, topicConsole.mini_survey_id));
   },
   showContent(survey) {
-    if(this.hasPermission(['console', 'can_vote_mini_survey'])) {
-      return <SurveyAnswer type={ survey.type } afterChange={ this.afterChange } />
-    }
-    else {
-      this.onViewAnswers(survey);
-      return <SurveyViewAnswers type={ survey.type } />
+    if(survey.id) {
+      if(this.hasPermission(['console', 'can_vote_mini_survey'])) {
+        return <SurveyAnswer type={ survey.type } afterChange={ this.afterChange } />
+      }
+      else {
+        this.onViewAnswers(survey);
+        return <SurveyViewAnswers type={ survey.type } />
+      }
     }
   },
   onViewAnswers(survey) {
     const { dispatch, channel } = this.props;
     dispatch(MiniSurveyActions.viewAnswers(channel, survey.id));
+  },
+  canAnswer() {
+    if(this.hasPermission(['console', 'can_vote_mini_survey'])) {
+      return <span className='pull-right fa fa-check' onClick={ this.answer }></span>
+    }
   },
   render() {
     const { survey, show } = this.props;
@@ -68,7 +75,7 @@ const SurveyConsole = React.createClass({
             </div>
 
             <div className='col-md-2'>
-              <span className='pull-right fa fa-check' onClick={ this.answer }></span>
+              { this.canAnswer() }
             </div>
           </Modal.Header>
 

@@ -16,30 +16,35 @@ const SurveyView5StarRating = React.createClass({
   render() {
     const { answers } = this.props;
 
-    return (
-      <ul className='list-group'>
-        <li key={ -1 } className='list-group-item'>
-          <div className='row'>
-            <div className='col-md-offset-3 col-md-9 star-rating-section text-right'>
-              <Rating placeholder='fa fa-star' empty='fa fa-star-o' full='fa fa-star' initialRate={ this.getAvarageCount() } readonly={ true } />
-            </div>
-          </div>
-        </li>
-
-        {
-          answers.map((answer, index) =>
-            <li key={ index } className='list-group-item'>
-              <div className='row'>
-                <div className='col-md-6'>{ answer.session_member.username }</div>
-                <div className='col-md-6 star-rating-section text-right'>
-                  <Rating placeholder='fa fa-star' empty='fa fa-star-o' full='fa fa-star' initialRate={ answer.answer.value } readonly={ true } />
-                </div>
+    if(answers.length) {
+      return (
+        <ul className='list-group'>
+          <li key={ -1 } className='list-group-item'>
+            <div className='row'>
+              <div className='col-md-offset-3 col-md-9 star-rating-section text-right'>
+                <Rating placeholder='fa fa-star' empty='fa fa-star-o' full='fa fa-star' initialRate={ this.getAvarageCount() } readonly={ true } />
               </div>
-            </li>
-          )
-        }
-      </ul>
-    )
+            </div>
+          </li>
+
+          {
+            answers.map((answer, index) =>
+              <li key={ index } className='list-group-item'>
+                <div className='row'>
+                  <div className='col-md-6'>{ answer.session_member.username }</div>
+                  <div className='col-md-6 star-rating-section text-right'>
+                    <Rating placeholder='fa fa-star' empty='fa fa-star-o' full='fa fa-star' initialRate={ answer.answer.value } readonly={ true } />
+                  </div>
+                </div>
+              </li>
+            )
+          }
+        </ul>
+      )
+    }
+    else {
+      return (<h4 className='text-center'>There are no answers yet</h4>)
+    }
   }
 });
 
