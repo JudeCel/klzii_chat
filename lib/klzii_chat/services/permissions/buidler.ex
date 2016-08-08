@@ -61,7 +61,7 @@ defmodule KlziiChat.Services.Permissions.Builder do
         can_report: ReportPermissions.can_use(session_member, preference) |> to_boolean
       },
       console: %{
-        can_vote_miny_survey: MiniSurveysPermissions.can_answer(session_member) |> to_boolean
+        can_vote_mini_survey: MiniSurveysPermissions.can_answer(session_member) |> to_boolean
       },
       pinboard: %{
         can_enable: PinboardResourcePermissions.can_enable(session_member) |> to_boolean,

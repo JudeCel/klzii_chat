@@ -40,7 +40,7 @@ const SurveyConsole = React.createClass({
     dispatch(MiniSurveyActions.getConsole(channel, topicConsole.mini_survey_id));
   },
   showContent(survey) {
-    if(this.hasPermission(['console', 'can_vote_miny_survey'])) {
+    if(this.hasPermission(['console', 'can_vote_mini_survey'])) {
       return <SurveyAnswer type={ survey.type } afterChange={ this.afterChange } />
     }
     else {
