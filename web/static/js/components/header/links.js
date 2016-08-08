@@ -31,6 +31,16 @@ const Links = React.createClass({
       )
     }
   },
+  directMessageFunction(style, count) {
+    if(this.hasPermission(['messages', 'can_direct_message'])) {
+      return (
+        <li style={ style } onClick={ this.showDirectMessages }>
+          <i className={ 'icon-message' + (count ? ' with-badge' : '') }/>
+          <i className='badge'>{ count }</i>
+        </li>
+      )
+    }
+  },
   countAllUnread() {
     const { unreadDirectMessages } = this.props;
 
@@ -63,11 +73,8 @@ const Links = React.createClass({
           <ul className='icons'>
             { this.clearWhiteboardFunction(style) }
             { this.reportsFunction(style) }
+            { this.directMessageFunction(style, count) }
 
-            <li style={ style } onClick={ this.showDirectMessages }>
-              <i className={ 'icon-message' + (count ? ' with-badge' : '') }/>
-              <i className='badge'>{ count }</i>
-            </li>
             <li style={ style }>
               <i className='icon-help' />
             </li>
