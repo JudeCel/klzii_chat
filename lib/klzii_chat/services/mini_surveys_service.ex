@@ -15,17 +15,18 @@ defmodule KlziiChat.Services.MiniSurveysService do
   @spec create(Integer, Integer, Map.t) :: {:ok, %MiniSurvey{}} | {:error, Ecto.Changeset.t}
   def create(session_member_id, session_topic_id, %{"type" => type, "question" => question, "title" => title} ) do
     session_member = Repo.get!(SessionMember, session_member_id)
-    if MiniSurveysPermissions.can_create(session_member) do
-      session_topic = Repo.get!(SessionTopic, session_topic_id)
-      build_assoc(session_topic, :mini_surveys, %{
-        sessionId: session_topic.sessionId,
-        type: type,
-        question: question,
-        title: title
-      })
-        |> Repo.insert
-    else
-      {:error, %{permissions: "Action not allowed!"}}
+    case MiniSurveysPermissions.can_create(session_member) do
+      {:ok} ->
+        session_topic = Repo.get!(SessionTopic, session_topic_id)
+        build_assoc(session_topic, :mini_surveys, %{
+          sessionId: session_topic.sessionId,
+          type: type,
+          question: question,
+          title: title
+        })
+          |> Repo.insert
+      {:error, reason} ->
+        {:error, reason}
     end
   end
 
@@ -33,11 +34,12 @@ defmodule KlziiChat.Services.MiniSurveysService do
   def delete(session_member_id, id) do
     session_member = Repo.get!(SessionMember, session_member_id)
     mini_survey = Repo.get!(MiniSurvey, id) |> Repo.preload([:consoles])
-    if MiniSurveysPermissions.can_delete(session_member, mini_survey) do
-      :ok = delete_related_consoles(mini_survey.consoles, session_member_id)
-      Repo.delete(mini_survey)
-    else
-      {:error, %{permissions: "Action not allowed!"}}
+    case MiniSurveysPermissions.can_delete(session_member, mini_survey) do
+      {:ok} ->
+        :ok = delete_related_consoles(mini_survey.consoles, session_member_id)
+        Repo.delete(mini_survey)
+      {:error, reason} ->
+        {:error, reason}
     end
   end
 
@@ -51,32 +53,33 @@ defmodule KlziiChat.Services.MiniSurveysService do
   @spec create_answer(Integer, Integer, Map.t) :: {:ok, %MiniSurvey{}} | {:error, Ecto.Changeset.t}
   def create_answer(session_member_id, mini_survey_id, answer) do
     session_member = Repo.get!(SessionMember, session_member_id)
-    if MiniSurveysPermissions.can_answer(session_member) do
-      mini_survey = Repo.get!(MiniSurvey, mini_survey_id)
+    case MiniSurveysPermissions.can_answer(session_member) do
+      {:ok} ->
+        mini_survey = Repo.get!(MiniSurvey, mini_survey_id)
 
-      Repo.one(from msa in MiniSurveyAnswer,
-        where: msa.sessionMemberId == ^session_member.id,
-        where: msa.miniSurveyId == ^mini_survey.id
-      )|> case  do
-            nil ->
-              build_assoc(mini_survey, :mini_survey_answers, %{
-                sessionMemberId: session_member.id,
-                answer: answer
-              })
-            mini_survey_answere ->
-              mini_survey_answere
+        Repo.one(from msa in MiniSurveyAnswer,
+          where: msa.sessionMemberId == ^session_member.id,
+          where: msa.miniSurveyId == ^mini_survey.id
+        )|> case  do
+              nil ->
+                build_assoc(mini_survey, :mini_survey_answers, %{
+                  sessionMemberId: session_member.id,
+                  answer: answer
+                })
+              mini_survey_answere ->
+                mini_survey_answere
+            end
+          |> Ecto.Changeset.change([answer: answer])
+          |> Repo.insert_or_update
+          |> case do
+            {:ok, answer } ->
+              {:ok, Repo.preload(mini_survey ,[mini_survey_answers: from(msa in MiniSurveyAnswer, where: msa.id == ^answer.id, preload: [:session_member])])}
+            {:error, reason} ->
+              {:error, reason}
           end
-        |> Ecto.Changeset.change([answer: answer])
-        |> Repo.insert_or_update
-        |> case do
-          {:ok, answer } ->
-            {:ok, Repo.preload(mini_survey ,[mini_survey_answers: from(msa in MiniSurveyAnswer, where: msa.id == ^answer.id, preload: [:session_member])])}
-          {:error, reason} ->
-            {:error, reason}
-        end
-      else
-        {:error, %{permissions: "Action not allowed!"}}
-      end
+      {:error, reason} ->
+        {:error, reason}
+    end
   end
 
   @spec get_for_console(Integer, Integer) :: {:ok, %MiniSurvey{}}
