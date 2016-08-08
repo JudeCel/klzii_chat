@@ -5,6 +5,7 @@ import SurveyAnswer        from './survey/answer';
 import mixins              from '../../../mixins';
 import MiniSurveyActions   from '../../../actions/miniSurvey';
 import NotificationActions from '../../../actions/notifications';
+import SurveyViewAnswers   from '../../resources/modals/survey/viewAnswers';
 
 const SurveyConsole = React.createClass({
   mixins: [mixins.modalWindows, mixins.validations],
@@ -38,6 +39,19 @@ const SurveyConsole = React.createClass({
     this.onEnterModal(e);
     dispatch(MiniSurveyActions.getConsole(channel, topicConsole.mini_survey_id));
   },
+  showContent(survey) {
+    if(this.hasPermission(['console', 'can_vote_miny_survey'])) {
+      return <SurveyAnswer type={ survey.type } afterChange={ this.afterChange } />
+    }
+    else {
+      this.onViewAnswers(survey);
+      return <SurveyViewAnswers type={ survey.type } />
+    }
+  },
+  onViewAnswers(survey) {
+    const { dispatch, channel } = this.props;
+    dispatch(MiniSurveyActions.viewAnswers(channel, survey.id));
+  },
   render() {
     const { survey, show } = this.props;
 
@@ -60,7 +74,7 @@ const SurveyConsole = React.createClass({
 
           <Modal.Body>
             <div className='row survey-answer-section'>
-              <SurveyAnswer type={ survey.type } afterChange={ this.afterChange } />
+              { this.showContent(survey) }
             </div>
           </Modal.Body>
         </Modal>
@@ -74,6 +88,7 @@ const SurveyConsole = React.createClass({
 
 const mapStateToProps = (state) => {
   return {
+    currentUser: state.members.currentUser,
     modalWindows: state.modalWindows,
     colours: state.chat.session.colours,
     survey: state.miniSurveys.console,
