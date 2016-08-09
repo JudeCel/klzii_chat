@@ -10,12 +10,14 @@
   ###Before run server need setup Kliiko project and run seeds.
 
   1) Go to project folder
-  
-  2) Install dependencies with `mix deps.get`
-  
-  3) Install Node.js dependencies with `npm install`
-  
-  4) Start Phoenix endpoint with `mix phoenix.server`
+
+  2) copy ```config/dev.exs.example ``` to ``` config/dev.exs``` and changes with necessary database credentials.
+
+  3) Install dependencies with `mix deps.get`
+
+  4) Install Node.js dependencies with `npm install`
+
+  5) Start Phoenix endpoint with `mix phoenix.server`
 
 # Development
   Development URL ``` http://localhost:3000/?token_dev=facilitator```
