@@ -9,10 +9,10 @@
   ### This project depends to nodejs project [Kliiko](https://github.com/DiatomEnterprises/Kliiko)
   ###Before run server need setup Kliiko project and run seeds.
 
-  * Go to project folder
-  * Install dependencies with `mix deps.get`
-  * Install Node.js dependencies with `npm install`
-  * Start Phoenix endpoint with `mix phoenix.server`
+  1) Go to project folder
+  2) Install dependencies with `mix deps.get`
+  3) Install Node.js dependencies with `npm install`
+  4) Start Phoenix endpoint with `mix phoenix.server`
 
 # Development
   Development URL ``` http://localhost:3000/?token_dev=facilitator```
