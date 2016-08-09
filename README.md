@@ -10,8 +10,11 @@
   ###Before run server need setup Kliiko project and run seeds.
 
   1) Go to project folder
+  
   2) Install dependencies with `mix deps.get`
+  
   3) Install Node.js dependencies with `npm install`
+  
   4) Start Phoenix endpoint with `mix phoenix.server`
 
 # Development
