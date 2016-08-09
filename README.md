@@ -8,7 +8,8 @@
  
 # Setup project
   ### This project depends to nodejs project [Kliiko](https://github.com/DiatomEnterprises/Kliiko)
-  ###Before run server need setup Kliiko project and run seeds.
+  
+### Before run server need setup Kliiko project and run seeds.
 
   1) Go to project folder
 
@@ -21,19 +22,22 @@
   5) Start Phoenix endpoint with `mix phoenix.server`
 
 # Development
-  Development URL ``` http://localhost:3000/?token_dev=facilitator```
+Development URL ``` http://localhost:3000/?token_dev=facilitator```
 
-  ### Available ``` token_dev ```
-  ### Faciitator users
-    facilitator
-  ### Participents users
-    participantone
-    participanttwo
-    participantthree
-    participantfour
-    participantfive
-    participantsix
-    participantseven
-    participanteight
-  ### Observers users
-    observerone
+Available ``` token_dev ```
+ 
+Faciitator users
+ * facilitator
+
+Participents users
+ * participantone
+ * participanttwo
+ * participantthree
+ * participantfour
+ * participantfive
+ * participantsix
+ * participantseven
+ * participanteight
+
+Observers users
+ * observerone
