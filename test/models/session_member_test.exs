@@ -12,6 +12,6 @@ defmodule KlziiChat.SessionMemberTest do
   end
 
   test "with invalid attrs" do
-    assert({:username, {"should be at least %{count} character(s)", [count: 1]}} in errors_on(%SessionMember{}, %{username: ""}))
+    assert({:username, {"can't be blank", []}} in errors_on(%SessionMember{}, %{username: " "}))
   end
 end

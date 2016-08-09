@@ -18,6 +18,5 @@ defmodule KlziiChat.DirectMessageTest do
     assert {:sessionId, {"can't be blank", []}} in errors_on(%DirectMessage{}, %{})
     assert {:senderId, {"can't be blank", []}} in errors_on(%DirectMessage{}, %{})
     assert {:recieverId, {"can't be blank", []}} in errors_on(%DirectMessage{}, %{})
-    assert({:text, {"should be at least %{count} character(s)", [count: 1]}} in errors_on(%DirectMessage{}, %{text: ""}))
   end
 end

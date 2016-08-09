@@ -33,6 +33,7 @@ defmodule KlziiChat.SessionMember do
   def changeset(model, params \\ %{}) do
     model
     |> cast(params, [:username, :avatarData, :sessionTopicContext])
+    |> validate_required([:username])
     |> validate_length(:username, min: 1)
   end
 end
