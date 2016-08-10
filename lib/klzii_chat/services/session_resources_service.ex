@@ -5,7 +5,6 @@ defmodule KlziiChat.Services.SessionResourcesService do
   alias KlziiChat.Helpers.ListHelper
   alias KlziiChat.Queries.Resources, as: QueriesResources
 
-  use Timex
 
   import Ecto.Query
 
@@ -27,7 +26,7 @@ defmodule KlziiChat.Services.SessionResourcesService do
       from(sr in SessionResource, where: sr.sessionId == ^session_id, select: sr.resourceId)
       |> Repo.all()
       |> ListHelper.find_diff_of_left(ListHelper.str_to_num(resource_ids))
-      |> Enum.map(&%{resourceId: &1, sessionId: session_id, createdAt: DateTime.now, updatedAt: DateTime.now})
+      |> Enum.map(&%{resourceId: &1, sessionId: session_id, createdAt: Timex.now, updatedAt: Timex.now})
 
     {_, inserted_resources} = Repo.insert_all(SessionResource, sr_map, returning: true)
     {:ok, inserted_resources}

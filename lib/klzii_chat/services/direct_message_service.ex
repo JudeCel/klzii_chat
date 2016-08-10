@@ -54,7 +54,7 @@ defmodule KlziiChat.Services.DirectMessageService do
     other_member = Repo.get!(SessionMember, other_member_id)
 
     (from dm in DirectMessage, where: dm.recieverId == ^current_member.id and dm.senderId == ^other_member.id and is_nil(dm.readAt))
-    |> Repo.update_all(set: [readAt: Timex.DateTime.now])
+    |> Repo.update_all(set: [readAt: Timex.now])
     :ok
   end
 

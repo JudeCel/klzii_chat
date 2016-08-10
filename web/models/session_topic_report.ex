@@ -10,7 +10,7 @@ defmodule KlziiChat.SessionTopicReport do
     field :format, :string
     field :status, :string, default: "progress"
     field :message, :string, default: nil
-    field :deletedAt, Ecto.DateTime, default: nil
+    field :deletedAt, Timex.Ecto.DateTime, default: nil
     timestamps [inserted_at: :createdAt, updated_at: :updatedAt]
   end
 

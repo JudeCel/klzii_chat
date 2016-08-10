@@ -127,7 +127,7 @@ defmodule KlziiChat.Services.UnreadMessageService do
           UnreadMessage.scopes.normal
       end
       [ scope: scope, sessionTopicId: message.sessionTopicId, sessionMemberId: id,
-        messageId: message.id, createdAt: Timex.DateTime.now, updatedAt: Timex.DateTime.now ]
+        messageId: message.id, createdAt: Timex.now, updatedAt: Timex.now ]
     end)
 
     Repo.insert_all(UnreadMessage, offline_messages)

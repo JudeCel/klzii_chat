@@ -93,8 +93,8 @@ defmodule KlziiChat.SessionMemberCase do
 
     session = %Session{
       name: "cool session",
-      startTime: Ecto.DateTime.cast!("2016-01-17T14:00:00.030Z"),
-      endTime: Ecto.DateTime.cast!("2020-04-17T14:00:00.030Z"),
+      startTime: Timex.now,
+      endTime: Timex.shift(Timex.now, days: 7),
       accountId: account.id,
       active: true
     } |> Repo.insert!

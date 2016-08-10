@@ -74,7 +74,7 @@ defmodule KlziiChat.ChatController do
 
   defp get_cookie_espire_time() do
     use Timex
-    expire_date = Date.today |> Timex.shift(days: 7)
-    Date.now |> Date.diff(expire_date, :seconds)
+    expire_date = Timex.now |> Timex.shift(days: 7)
+    Timex.now |> Timex.diff(expire_date, :seconds)
   end
 end

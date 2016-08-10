@@ -3,7 +3,7 @@ defmodule KlziiChat.DirectMessageTest do
 
   alias KlziiChat.DirectMessage
 
-  @valid_attrs %{sessionId: 1, senderId: 2, recieverId: 3, text: "test", readAt: Timex.DateTime.now }
+  @valid_attrs %{sessionId: 1, senderId: 2, recieverId: 3, text: "test", readAt: Timex.now }
   @invalid_attrs %{}
 
 

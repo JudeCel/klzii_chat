@@ -35,7 +35,9 @@ defmodule KlziiChat.Mixfile do
      {:phoenix_ecto, "~> 3.0"},
      {:phoenix_html, "~> 2.6"},
      {:phoenix_live_reload, "~> 1.0", only: :dev},
-     {:timex_ecto, "~> 1.1"},
+     {:timex_ecto, "~> 3.0.3"},
+     {:timex, "~> 3.0.5"},
+     {:quantum, "~> 1.7"},
      {:poison, "~> 2.2"},
      {:arc_ecto, "~> 0.4.2"},
      {:arc, "~> 0.5.3"},
@@ -47,11 +49,9 @@ defmodule KlziiChat.Mixfile do
      {:guardian, "~> 0.12.0"},
      {:cowboy, "~> 1.0"},
      {:corsica, "~> 0.5"},
-     {:timex, "~> 2.2"},
-     {:quantum, "~> 1.7"},
      {:httpoison, "~> 0.9"},
-     {:earmark, "~> 0.2", only: :dev},
-     {:ex_doc, "~> 0.12", only: :dev},
+     {:earmark, "~> 1.0.1", only: :dev},
+     {:ex_doc, "~> 0.13.0", only: :dev},
      {:credo, "~> 0.4.5", only: :dev}
     ]
   end

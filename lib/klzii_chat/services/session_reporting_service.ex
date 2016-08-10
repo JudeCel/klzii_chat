@@ -203,7 +203,7 @@ defmodule KlziiChat.Services.SessionReportingService do
   @spec delete_report(Map.t) :: {atom, Map.t}
   def delete_report(report) do
     case report.status do
-      "failed" -> Ecto.Changeset.change(report, deletedAt: Ecto.DateTime.utc(), resourceId: nil) |> Repo.update()
+      "failed" -> Ecto.Changeset.change(report, deletedAt: Timex.now, resourceId: nil) |> Repo.update()
       _ -> Repo.delete(report)
     end
   end

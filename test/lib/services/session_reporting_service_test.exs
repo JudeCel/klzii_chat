@@ -202,7 +202,7 @@ defmodule KlziiChat.Services.SessionReportingServiceTest do
       facilitator: false,
       format: "txt",
       status: "failed",
-      deletedAt: Ecto.DateTime.utc()
+      deletedAt: Timex.now
     })
 
     assert({:ok, [%{status: "completed"}]} = SessionReportingService.get_session_topics_reports(session.id, facilitator.id))

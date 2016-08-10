@@ -180,7 +180,7 @@ defmodule KlziiChat.Services.ResourceService do
   @spec daily_cleanup() :: {:ok, list}
   def daily_cleanup do
     from(e in Resource,
-      where: e.expiryDate < ^Timex.DateTime.now,
+      where: e.expiryDate < ^Timex.now,
       where: e.type == "file",
       where: e.scope == "zip")
     |> Repo.delete_all
@@ -204,7 +204,7 @@ defmodule KlziiChat.Services.ResourceService do
           type: "file",
           name: name,
           status: "progress",
-          expiryDate: Timex.DateTime.now |> Timex.shift(days: 1),
+          expiryDate: Timex.shift(Timex.now, days: 1),
           properties: %{zip_ids: ids}
         )
 
