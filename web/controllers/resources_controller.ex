@@ -4,6 +4,7 @@ defmodule KlziiChat.ResourcesController do
   alias KlziiChat.{Repo, ResourceView}
   alias KlziiChat.Services.{ ResourceService }
   alias KlziiChat.Queries.Resources, as: QueriesResources
+  alias KlziiChat.Services.Permissions.Resources, as: ResourcePermissions
   use Guardian.Phoenix.Controller
 
   plug Guardian.Plug.EnsureAuthenticated, handler: KlziiChat.Guardian.AuthErrorHandler
@@ -77,14 +78,20 @@ defmodule KlziiChat.ResourcesController do
   end
 
   def upload(conn, params, member, _) do
-    case ResourceService.upload(params, member.account_user.id) do
-      {:ok, resource} ->
-        json(conn, %{
-        type: resource.type,
-        resource: ResourceView.render("resource.json", %{resource: resource}),
-        message: "File successfully uploaded" })
+    case ResourcePermissions.can_upload(member.account_user) do
+      {:ok} ->
+        case ResourceService.upload(params, member.account_user.id) do
+          {:ok, resource} ->
+            json(conn, %{
+            type: resource.type,
+            resource: ResourceView.render("resource.json", %{resource: resource}),
+            message: "File successfully uploaded" })
+          {:error, reason} ->
+            put_status(conn, reason.code)
+            |> json(error_view(reason))
+        end
       {:error, reason} ->
-        put_status(conn, reason.code)
+        put_status(conn, 403)
         |> json(error_view(reason))
     end
   end

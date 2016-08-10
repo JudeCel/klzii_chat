@@ -1,11 +1,32 @@
 defmodule KlziiChat.ResourcesControllerTest do
-  use KlziiChat.{ConnCase, SessionMemberCase}
+  use KlziiChat.{ConnCase, AccountsCase}
   alias KlziiChat.{Repo}
   @image "test/fixtures/images/hamster.jpg"
   @pdf "test/fixtures/file/test.pdf"
 
+  describe "when no subscription for resource" do
+    setup %{conn: conn, accountManager_free: account_user} do
+      { :ok, jwt, _encoded_claims } =  Guardian.encode_and_sign(account_user)
+      conn = put_req_header(conn, "authorization", jwt)
+
+      on_exit fn ->
+        KlziiChat.FileTestHelper.clean_up_uploads_dir
+      end
+
+      {:ok,
+        conn: put_req_header(conn, "accept", "application/json")
+      }
+    end
+
+    test "upload image", %{conn: conn} do
+      file = %Plug.Upload{ content_type: "image/jpg", path: @image, filename: "hamster.jpg"}
+      conn = post(conn, "api/resources/upload", %{name: "hamster", type: "image", scope: "collage", file: file })
+      assert json_response(conn, 403)
+    end
+  end
+
   describe("regular user") do
-    setup %{conn: conn, account_user_account_manager: account_user} do
+    setup %{conn: conn, accountManager_core: account_user} do
       { :ok, jwt, _encoded_claims } =  Guardian.encode_and_sign(account_user)
       conn = put_req_header(conn, "authorization", jwt)
 
@@ -72,7 +93,6 @@ defmodule KlziiChat.ResourcesControllerTest do
       file = %Plug.Upload{ content_type:  Plug.MIME.path("test.pdf"), path: @pdf, filename: "test.pdf"}
       conn = post(conn, "api/resources/upload", %{name: "cool pdf", type: "file", scope: "collage", file: file })
       assert json_response(conn, 200)["resource"]["name"] == "cool pdf"
-      # assert json_response(conn, 200)["resource"]["file"] == "false"
     end
 
     test "can't upload stock image skipe stock parametr", %{conn: conn} do
@@ -117,7 +137,7 @@ defmodule KlziiChat.ResourcesControllerTest do
       assert json_response(conn, 415)
     end
 
-    test "return stock images", %{conn: conn, account_user_admin: account_user_admin} do
+    test "return stock images", %{conn: conn, admin: account_user_admin} do
 
       Ecto.build_assoc(
         account_user_admin.account, :resources,
@@ -134,7 +154,7 @@ defmodule KlziiChat.ResourcesControllerTest do
   end
 
   describe("admin user") do
-    setup %{conn: conn, account_user_admin: account_user_admin} do
+    setup %{conn: conn, admin: account_user_admin} do
       { :ok, jwt, _encoded_claims } =  Guardian.encode_and_sign(account_user_admin)
       conn = put_req_header(conn, "authorization", jwt)
         |> put_req_header("accept", "application/json")

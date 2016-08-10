@@ -20,7 +20,8 @@ defmodule KlziiChat.Services.Permissions.ResourcePermissionsTest do
   test "can zip when accountManager" do
     member = %{id: 1, role: "accountManager"}
     events = [%{id: 1, accountUser: 1}]
-    assert( {:ok} = Resources.can_zip(member, events))
+    preference = %{"uploadToGallery" => true}
+    assert( {:ok} = Resources.can_zip(member, events, preference))
   end
 
   test "can zip when admin " do
