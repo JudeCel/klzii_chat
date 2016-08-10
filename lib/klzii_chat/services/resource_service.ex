@@ -14,11 +14,16 @@ defmodule KlziiChat.Services.ResourceService do
   @spec upload(map, integer) ::  {:ok, %Resource{}} | {:error, map}
   def upload(params, account_user_id)  do
     account_user = Repo.get!(AccountUser, account_user_id) |> Repo.preload([:account])
-    if account_user.role == "admin" do
-      Map.put(params, "stock", (params["stock"] || false))
-    else
-      Map.put(params, "stock", false)
-    end |> save_resource(account_user)
+    case ResourcePermissions.can_upload(account_user) do
+      {:ok} ->
+        if account_user.role == "admin" do
+          Map.put(params, "stock", (params["stock"] || false))
+        else
+          Map.put(params, "stock", false)
+        end |> save_resource(account_user)
+      {:error, reason} ->
+        {:error, reason}
+    end
   end
 
   @spec validate(map, map) :: {:ok} | {:error, map}

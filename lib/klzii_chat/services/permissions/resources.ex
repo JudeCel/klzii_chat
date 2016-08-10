@@ -38,7 +38,7 @@ defmodule KlziiChat.Services.Permissions.Resources do
 
   @spec can_upload(Map.t, Map.t) :: Boolean.t
   def can_upload(member, preference) do
-    roles =  ~w(facilitator accountManager admin)
+    roles =  ~w(facilitator accountManager admin, participant)
     (has_role(member.role, roles) && has_allowed_from_subscription(preference, "uploadToGallery"))
     |> formate_error
   end
