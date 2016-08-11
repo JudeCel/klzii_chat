@@ -17,16 +17,17 @@ defmodule KlziiChat.SessionChannel do
 
   def join("sessions:" <> session_id, _, socket) do
     {session_id, _} = Integer.parse(session_id)
-    if authorized?(socket, session_id) do
-      send(self, :after_join)
-      case SessionService.find_active(session_id) do
-        {:ok, session} ->
-          {:ok, session, assign(socket, :session_id, session_id)}
-        {:error, reason} ->
-          {:error, %{reason: reason}}
-      end
-    else
-      {:error, %{reason: "unauthorized"}}
+    case authorized?(socket, session_id) do
+      {:ok} ->
+        send(self, :after_join)
+        case SessionService.find_active(session_id) do
+          {:ok, session} ->
+            {:ok, session, assign(socket, :session_id, session_id)}
+          {:error, reason} ->
+           {:error, %{reason: reason}}
+        end
+      {:error, reason} ->
+        {:error, reason}
     end
   end
 

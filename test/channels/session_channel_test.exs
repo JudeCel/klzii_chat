@@ -18,7 +18,7 @@ defmodule KlziiChat.SessionChannelTest do
   end
 
   test "when unauthorized", %{socket: socket, channel_name: channel_name} do
-    {:error,  %{reason: "unauthorized"}} = join(socket, SessionChannel, channel_name <> "2233")
+    {:error, "You don't have access this session"} = join(socket, SessionChannel, channel_name <> "2233")
   end
 
   test "after join events", %{socket: socket, session: session, channel_name: channel_name} do

@@ -34,7 +34,7 @@ export function joinChannal(dispatch) {
     })
     .receive('error', (error) =>{
       dispatch({
-        type: Constants.SOCKET_CONNECTED,
+        type: Constants.SOCKET_CONNECTION_ERROR,
         error
       });
     });

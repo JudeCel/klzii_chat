@@ -81,7 +81,7 @@ defmodule KlziiChat.SessionMemberCase do
 
     subscription_plan = Map.merge(%SubscriptionPlan{}, subscription_preference_data) |> Repo.insert!
 
-   {:ok, _} = Ecto.build_assoc(account, :subscription,
+     Ecto.build_assoc(account, :subscription,
       accountId: account.id,
       subscriptionPlanId: subscription_plan.id,
       planId: "some plan id",
@@ -89,7 +89,7 @@ defmodule KlziiChat.SessionMemberCase do
       subscriptionId: "some ID"
     ) |> Repo.insert!
       |> Ecto.build_assoc(:subscription_preference, data: subscription_preference_data)
-      |> Repo.insert
+      |> Repo.insert!
 
     session = %Session{
       name: "cool session",
