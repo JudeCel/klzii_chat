@@ -47,4 +47,9 @@ defmodule KlziiChat.Services.Permissions.ResourcePermissionsTest do
     events = [%{id: 1, sessionMemberId: 2}]
     assert( {:ok} = Resources.can_delete(member, events))
   end
+
+  test "facilitator only can see resource section" do
+    member = %{id: 1, role: "facilitator"}
+    assert( {:ok} = Resources.can_see_section(member))
+  end
 end

@@ -58,7 +58,7 @@ const Resources = React.createClass({
       { type: 'file',     className: 'icon-pdf'        },
     ];
 
-    if(this.hasPermission(['resources', 'can_upload'])) {
+    if(this.hasPermission(['resources', 'can_see_section'])) {
       return (
         <div className='resources-section'>
           <ul className='icons'>

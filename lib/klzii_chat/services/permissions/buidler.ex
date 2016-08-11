@@ -56,7 +56,8 @@ defmodule KlziiChat.Services.Permissions.Builder do
         can_new_shape: WhiteboardPermissions.can_new_shape(session_member) |> to_boolean
       },
       resources: %{
-        can_upload: ResourcePermissions.can_upload(session_member, preference) |> to_boolean
+        can_upload: ResourcePermissions.can_upload(session_member, preference) |> to_boolean,
+        can_see_section: ResourcePermissions.can_see_section(session_member) |> to_boolean
       },
       reports: %{
         can_report: ReportPermissions.can_use(session_member, preference) |> to_boolean
