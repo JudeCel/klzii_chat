@@ -38,8 +38,12 @@ defmodule KlziiChat.Services.Permissions.Resources do
     if member.role == "admin" do
       {:ok}
     else
-      {:ok, preference} = KlziiChat.Services.Permissions.Builder.get_subscription_preference_account_user(member.id)
-      can_zip(member, objects, preference)
+      case KlziiChat.Services.Permissions.Builder.get_subscription_preference_account_user(member.id) do
+        {:ok, preference} ->
+          can_zip(member, objects, preference)
+        {:error, reason} ->
+          {:error, reason}
+      end
     end
   end
 
@@ -55,8 +59,12 @@ defmodule KlziiChat.Services.Permissions.Resources do
     if member.role == "admin" do
       {:ok}
     else
-      {:ok, preference} = KlziiChat.Services.Permissions.Builder.get_subscription_preference_account_user(member.id)
-      can_upload(member, preference)
+      case KlziiChat.Services.Permissions.Builder.get_subscription_preference_account_user(member.id) do
+        {:ok, preference} ->
+          can_upload(member, preference)
+        {:error, reason} ->
+          {:error, reason}
+      end
     end
   end
 end

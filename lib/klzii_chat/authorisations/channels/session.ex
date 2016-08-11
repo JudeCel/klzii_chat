@@ -1,6 +1,6 @@
 defmodule KlziiChat.Authorisations.Channels.Session do
   alias KlziiChat.{Repo}
-  alias KlziiChat.Queries.SessionMember, as: SessionMemberQueries
+  alias KlziiChat.Queries.Sessions, as: SessionQueries
 
   @spec authorized?(Integer.t, Integer.t) :: boolean
   def authorized?(socket, sesssion_id) do
@@ -10,7 +10,7 @@ defmodule KlziiChat.Authorisations.Channels.Session do
   @spec authorized?(Integer.t, Integer.t) :: boolean
   def validate(session_member, sesssion_id) do
     with {:ok} <- valid_session_for_session_member(session_member, sesssion_id),
-         {:ok} <- get_subscription_preference_session_memeber(sesssion_id),
+         {:ok} <- get_subscription_preference_session(sesssion_id),
     do: {:ok}
   end
 
@@ -30,9 +30,9 @@ defmodule KlziiChat.Authorisations.Channels.Session do
     }
   end
 
-  @spec get_subscription_preference_session_memeber(Integer.t) :: Map.t
-  defp get_subscription_preference_session_memeber(session_id) do
-    SessionMemberQueries.get_subscription_preference_session_memeber(session_id)
+  @spec get_subscription_preference_session(Integer.t) :: Map.t
+  defp get_subscription_preference_session(session_id) do
+    SessionQueries.get_subscription_preference_session(session_id)
       |> Repo.one
       |> case do
         nil ->
