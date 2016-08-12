@@ -9,11 +9,11 @@ const Actions = {
     }
   },
   showErrorNotification(dispatch, errors) {
-    let messages = [];
-    let keys = Object.keys(errors);
+    let messages = [], errorObject = errors.errors || errors;
+    let keys = Object.keys(errorObject);
 
     keys.map((key, index) => {
-      messages.push(_handleErrorType(key, errors[key]));
+      messages.push(_handleErrorType(key, errorObject[key]));
     });
 
     messages.map((error, index) => {
