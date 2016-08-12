@@ -41,7 +41,6 @@ defmodule KlziiChat.Mixfile do
      {:poison, "~> 2.2"},
      {:arc_ecto, "~> 0.4.2"},
      {:arc, "~> 0.5.3"},
-     {:plug, "~> 1.2"},
      {:ex_aws, "~> 0.5"},
      {:httpotion, "~> 3.0"},
      {:postgrex, "~> 0.11.2"},
