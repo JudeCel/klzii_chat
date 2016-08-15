@@ -53,7 +53,8 @@ defmodule KlziiChat.Services.Permissions.Builder do
       },
       whiteboard: %{
         can_create: Validations.has_allowed_from_subscription(preference, "whiteboardFunctionality"),
-        can_new_shape: WhiteboardPermissions.can_new_shape(session_member) |> to_boolean
+        can_new_shape: WhiteboardPermissions.can_new_shape(session_member) |> to_boolean,
+        can_add_image: WhiteboardPermissions.can_add_image(session_member) |> to_boolean
       },
       resources: %{
         can_upload: ResourcePermissions.can_upload(session_member, preference) |> to_boolean,

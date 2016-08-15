@@ -2,7 +2,7 @@ defmodule KlziiChat.Services.Permissions.DirectMessage do
   import KlziiChat.Services.Permissions.Validations
   import KlziiChat.Services.Permissions.ErrorsHelper, only: [formate_error: 1]
 
-  @spec can_write(Map.t, Map.t) :: Boolean.t
+  @spec can_write(Map.t, Map.t) :: {:ok } | {:error, String.t}
   def can_write(current_member, other_member) do
     participant = ["participant"]
     facilitator = ["facilitator"]
@@ -13,7 +13,7 @@ defmodule KlziiChat.Services.Permissions.DirectMessage do
     ) |> formate_error
   end
 
-  @spec can_direct_message(Map.t) :: Boolean.t
+  @spec can_direct_message(Map.t) :: {:ok } | {:error, String.t}
   def can_direct_message(member) do
     roles = ["facilitator", "participant"]
     has_role(member.role, roles)
