@@ -96,7 +96,7 @@ defmodule KlziiChat.SessionMemberCase do
       startTime: Timex.now,
       endTime: Timex.shift(Timex.now, days: 7),
       accountId: account.id,
-      active: true
+      status: "open"
     } |> Repo.insert!
 
     topic_1 = Ecto.build_assoc(account, :topics,
