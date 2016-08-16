@@ -8,6 +8,18 @@ defmodule KlziiChat.Services.Permissions.WhiteboardTest do
     assert({:ok} = Whiteboard.can_delete(member, shape))
   end
 
+  test "#Permissions.Whiteboard facilitator can add image" do
+    member = %{id: 1, role: "facilitator"}
+    assert({:ok} = Whiteboard.can_add_image(member))
+  end
+  test "#Permissions.Whiteboard participent or observer can't add image" do
+    roles = ["observer", "participant"]
+    Enum.map(roles, fn role ->
+      member = %{role: role}
+      assert({:error, _} = Whiteboard.can_add_image(member))
+    end)
+  end
+
   test "#Permissions.Whiteboard owner can delete shape" do
     member = %{id: 1, role: "participant"}
     shape = %{id: 1, sessionMemberId: 1}

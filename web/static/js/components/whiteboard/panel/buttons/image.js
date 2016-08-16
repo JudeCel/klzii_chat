@@ -3,7 +3,7 @@ import { connect }        from 'react-redux';
 import mixins             from '../../../../mixins';
 
 const ImageButton = React.createClass({
-  mixins: [mixins.modalWindows],
+  mixins: [mixins.modalWindows, mixins.validations],
   onSelect(url) {
     this.closeAllModals();
     this.props.changeButton({ data: { mode: 'image', url: url.full } });
@@ -13,14 +13,19 @@ const ImageButton = React.createClass({
     this.props.parent.hide();
   },
   render() {
-    return (
-      <i className={ this.props.activeClass('image') + 'btn btn-default fa fa-file-image-o' } aria-hidden='true' onClick={ this.onClick } />
-    )
+    if(this.hasPermission(['whiteboard', 'can_add_image'])) {
+      return (
+        <i className={ this.props.activeClass('image') + 'btn btn-default fa fa-file-image-o' } aria-hidden='true' onClick={ this.onClick } />
+      )
+    }else {
+      return(false)
+    }
   }
 });
 
 const mapStateToProps = (state) => {
   return {
+    currentUser: state.members.currentUser,
     modalWindows: state.modalWindows
   }
 };

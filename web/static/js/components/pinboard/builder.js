@@ -15,8 +15,9 @@ const builder = {
     semi.add(rect, image);
 
     if(item.permissions.can_delete) {
-      let remove = this.createDeleteImage(svg, data, item);
-      group.add(semi, remove);
+      // Disable by https://rally1.rallydev.com/#/9459752931d/detail/task/60306650946
+      // let remove = this.createDeleteImage(svg, data, item);
+      // group.add(semi, remove);
     }
     else {
       group.add(semi);
