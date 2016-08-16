@@ -14,7 +14,6 @@ defmodule KlziiChat.Authorisations.Channels.SessionTopic do
      join: st in assoc(s, :session_topics),
      where: sm.id == ^session_memeber_id,
      where: st.id == ^sesssion_topic_id,
-     where: s.status == "open",
      select: count(sm.id, :distinct)
    ) |> Repo.one
   end
