@@ -8,11 +8,11 @@ defmodule KlziiChat.Session do
 
   schema "Sessions" do
     field :name, :string
+    field :status, :string
     field :brand_project_id,  :integer
     field :startTime, Timex.Ecto.DateTime
     field :endTime, Timex.Ecto.DateTime
     field :incentive_details, :string
-    field :active, :boolean
     field :colours_used, :string
     has_many :session_members, KlziiChat.SessionMember, [foreign_key: :sessionId]
     has_many :mini_surveys, KlziiChat.MiniSurvey, [foreign_key: :sessionId]
