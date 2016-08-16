@@ -1,7 +1,5 @@
 FROM dainisl/phoenix-docker
 
-RUN apt-get install -y wkhtmltopdf
-
 ENV MIX_ENV=prod \
     NODE_ENV=production \
     PORT=3000
