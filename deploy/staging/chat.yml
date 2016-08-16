@@ -63,7 +63,7 @@ spec:
         volumeMounts:
           - name: postgres-credentials
             mountPath: /etc/postgres-credentials
-        image: index.docker.io/klzii/klzii_chat:latest
+        image: index.docker.io/klzii/klzii_chat:stable
         name: chat
         ports:
         - containerPort: 3000
