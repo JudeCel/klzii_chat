@@ -62,6 +62,11 @@ defmodule KlziiChat.Services.ConsoleServiceTest do
      assert(%Console{} = console )
    end
 
+   test "can add only one  resource", context do
+     {:ok, %Console{}} = ConsoleService.set_resource(context.facilitator.id, context.session_topic_1, context.resource.id)
+     {:error, %{system: _ }} = ConsoleService.set_resource(context.facilitator.id, context.session_topic_1, context.youtube_resource.id)
+   end
+
    test "add resource #youtube", %{facilitator: facilitator, session_topic_1: session_topic_1, youtube_resource: resource} do
      {:ok, console} = ConsoleService.set_resource(facilitator.id, session_topic_1, resource.id)
      video_id = Map.get(console, String.to_atom("videoId"))

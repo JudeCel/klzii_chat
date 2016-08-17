@@ -124,7 +124,7 @@ defmodule KlziiChat.Services.MessageService do
 
   @spec thumbs_up(Integer.t, Map.t) :: Map.t | {:error, String.t}
   def thumbs_up(id, session_member) do
-    case MessagePermissions.can_star(session_member) do
+    case MessagePermissions.can_vote(session_member) do
       {:ok} ->
         message = Repo.get_by!(Message, id: id)
         case Repo.get_by(Vote, messageId: id, sessionMemberId: session_member.id) do

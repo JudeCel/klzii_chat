@@ -15,7 +15,7 @@ RUN mix local.hex --force && \
 
 RUN npm install --production --quiet && \
 	    node node_modules/.bin/webpack -p
-      
+
 RUN mix phoenix.digest
 
 
