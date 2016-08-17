@@ -6,7 +6,8 @@ defmodule KlziiChat.Services.ConsoleService do
   @spec error_messages :: Map.t
   def error_messages do
     %{
-      pinboard_is_enable: "Can't activate resource because pinboard is enabled"
+      pinboard_is_enable: "Can't activate resource because pinboard is enabled",
+      other_resource_is_enable: "Can't activate resource because other resource is enable: "
     }
   end
 
@@ -25,6 +26,7 @@ defmodule KlziiChat.Services.ConsoleService do
   def resource_validations(has_permission, console) do
     with {:ok} <- is_pinboard_enable?(console, :resource),
          {:ok} <- has_permission,
+         {:ok} <- has_enable_resource(console),
     do:  {:ok}
   end
 
@@ -65,6 +67,19 @@ defmodule KlziiChat.Services.ConsoleService do
   defp pinboard_setings do
     %{ audioId: nil, videoId: nil,  fileId: nil, pinboard: true }
   end
+
+  @spec has_enable_resource(%Console{}) :: {:ok}
+  def has_enable_resource(%Console{audioId: nil, videoId: nil,  fileId: nil}) do
+    {:ok}
+  end
+  def has_enable_resource(%Console{} = console) do
+    {:error, %{system: "#{error_messages.other_resource_is_enable} + #{find_enable_resource(console)}" }}
+  end
+
+  def find_enable_resource(%Console{audioId: id}) when is_integer(id), do: "audio"
+  def find_enable_resource(%Console{videoId: id}) when is_integer(id), do: "video"
+  def find_enable_resource(%Console{fileId: id}) when is_integer(id), do: "file"
+  def find_enable_resource(_), do: "type not found"
 
   @spec tidy_up(list, String.t, integer) :: :ok
   def tidy_up(consoles, type, session_member_id) do
