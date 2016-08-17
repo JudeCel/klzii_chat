@@ -17,6 +17,7 @@ const Links = React.createClass({
     if (this.hasPermission(['can_redirect', 'logout'])){
       return(
         <li style={ style }>
+          <span>Leave</span>
           <i className='icon-power' onClick={this.logout_redirect}/>
         </li>
       )
