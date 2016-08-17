@@ -12,7 +12,7 @@ const Actions = {
     let messages = [], errorObject = errors.errors || errors;
 
     if (errors instanceof Error) {
-      messages.push(handleStandartErrorObject(errors));
+      handleStandartErrorObject(errors, messages);
     }else{
       let keys = Object.keys(errorObject);
       keys.map((key, index) => {
@@ -42,11 +42,16 @@ var titles = {
   format: 'Format error',
   system: 'System error'
 };
-function handleStandartErrorObject(error) {
+function handleStandartErrorObject(error, messages) {
   if (error.status == 413) {
-    return _handleErrorType("system", "File is too big");
+    messages.push(_handleErrorType("system", "File is too big"));
   }else {
-    return _handleErrorType("unhandled", error.message);
+    let errorObject = JSON.parse(error.response.text).errors
+    let keys = Object.keys(errorObject);
+
+    keys.map((key, index) => {
+      messages.push(_handleErrorType(key, errorObject[key]));
+    });
   }
 }
 

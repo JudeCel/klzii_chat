@@ -14,7 +14,9 @@ defmodule KlziiChat.SessionResourcesController do
       {:ok, session_resources} ->
         json(conn, Phoenix.View.render_many(session_resources, SessionResourcesView, "show.json", as: :session_resource))
       {:error, reason} ->
-        json(conn, error_view(reason))
+        conn
+        |> put_status(400)
+        |> json(error_view(reason))
     end
   end
 
@@ -23,7 +25,9 @@ defmodule KlziiChat.SessionResourcesController do
       {:ok, _} ->
         json(conn, %{status: :ok})
       {:error, reason} ->
-        json(conn, error_view(reason))
+        conn
+        |> put_status(400)
+        |> json(error_view(reason))
     end
   end
 
@@ -33,7 +37,9 @@ defmodule KlziiChat.SessionResourcesController do
         SessionResourcesService.add_session_resources(resource.id, member.session_member.id)
         json(conn, %{status: :ok})
       {:error, reason} ->
-        json(conn, error_view(reason))
+        conn
+        |> put_status(reason.code)
+        |> json(error_view(reason))
     end
   end
 
@@ -42,7 +48,9 @@ defmodule KlziiChat.SessionResourcesController do
       {:ok, session_resource} ->
         json(conn, KlziiChat.SessionResourcesView.render("delete.json", %{session_resource: session_resource}))
       {:error, reason} ->
-        json(conn, error_view(reason))
+        conn
+        |> put_status(reason.code)
+        |> json(error_view(reason))
     end
   end
 

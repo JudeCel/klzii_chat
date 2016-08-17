@@ -32,7 +32,7 @@ defmodule KlziiChat.Resource do
     resource
     |> cast(params, [:status, :scope, :type, :accountUserId, :accountId, :name, :link, :properties, :stock])
     |> validate_required([:status, :scope, :type, :accountUserId, :accountId, :name, :stock])
-    |> unique_constraint(:name, name: :UniqResourceNameByAccount)
+    |> unique_constraint(:name, name: :UniqResourceNameByAccount, message: "Resource name has already been taken")
     |> cast_attachments(params, ["file", "image", "audio", "video"])
     |> parse_link
   end
@@ -41,7 +41,7 @@ defmodule KlziiChat.Resource do
     model
     |> cast(params, [:status, :scope, :type, :accountUserId, :accountId, :name, :link, :properties])
     |> validate_required([:status, :scope, :type, :accountUserId, :accountId, :name, :link])
-    |> unique_constraint(:name, name: :UniqResourceNameByAccount)
+    |> unique_constraint(:name, name: :UniqResourceNameByAccount, message: "Resource name has already been taken")
     |> cast_attachments(params, ["file", "image", "audio", "video"])
   end
 
