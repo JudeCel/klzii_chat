@@ -25,5 +25,6 @@ defmodule KlziiChat.Message do
     |> cast(params, [:sessionTopicId, :sessionMemberId, :body, :emotion, :star, :replyId ])
     |> validate_required([:sessionTopicId, :sessionMemberId, :body, :emotion])
     |> validate_length(:body, min: 1)
+    |> validate_length(:body, max: 255, message: "Max length of message is 255 characters")
   end
 end
