@@ -16,6 +16,7 @@ import Console              from '../components/console/index';
 
 import Pinboard             from '../components/pinboard/index.js';
 import WhiteboardCanvas     from '../components/whiteboard/whiteboardCanvas';
+import Whiteboard           from '../components/whiteboard_new/whiteboard';
 import Notifications        from '../actions/notifications';
 import notificationMixin    from '../mixins/notification';
 import ReactToastr, { ToastContainer, ToastMessage } from 'react-toastr';
@@ -35,7 +36,8 @@ const ChatView = React.createClass({
       return <Pinboard />;
     }
     else {
-      return <WhiteboardCanvas member={ this.props }/>;
+      return <Whiteboard />
+      // return <WhiteboardCanvas member={ this.props }/>;
     }
   },
   componentDidUpdate() {
