@@ -9,6 +9,12 @@ const Actions = {
     }
   },
   showErrorNotification(dispatch, errors) {
+
+
+    if (errors instanceof Error) {
+
+    }
+
     let messages = [], errorObject = errors.errors || errors;
     let keys = Object.keys(errorObject);
 
