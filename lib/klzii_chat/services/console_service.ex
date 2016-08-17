@@ -73,7 +73,7 @@ defmodule KlziiChat.Services.ConsoleService do
     {:ok}
   end
   def has_enable_resource(%Console{} = console) do
-    {:error, %{system: "#{error_messages.other_resource_is_enable} + #{find_enable_resource(console)}" }}
+    {:error, %{system: "#{error_messages.other_resource_is_enable} #{find_enable_resource(console)}" }}
   end
 
   def find_enable_resource(%Console{audioId: id}) when is_integer(id), do: "audio"
