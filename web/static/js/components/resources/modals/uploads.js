@@ -105,7 +105,21 @@ const Uploads = React.createClass({
   },
   tabModalTitles() {
     const { modalData } = this.props;
-    return { 1: `${modalData.type} Resource List`, 2: `Add ${modalData.type} from URL`, 3: `Upload ${modalData.type}` };
+    if(modalData.type == "image") {
+      return { 1: `${modalData.type} Gallery`, 2: `Add ${modalData.type} from URL`, 3: `Upload ${modalData.type}` };
+    }
+    else {
+      return { 1: `${modalData.type} Resource List`, 2: `Add ${modalData.type} from URL`, 3: `Upload ${modalData.type}` };
+    }
+  },
+  selectTabTitle(title, order) {
+    const { modalData } = this.props;
+    if(modalData.type == "image" && order == 1) {
+      return "Gallery";
+    }
+    else {
+      return title;
+    }
   },
   onTab(id) {
     this.setState({ tabActive: id, title: this.tabModalTitles()[id] });
@@ -146,7 +160,7 @@ const Uploads = React.createClass({
             {
               tabs.map((tab, index) =>
                 <li key={ tab.order } className={ this.tabActiveClass(tab.order, tab.order == 2) } onClick={ this.onTab.bind(this, tab.order) }>
-                  <a style={ this.tabStyle(tab.order) }>{ tab.title }</a>
+                  <a style={ this.tabStyle(tab.order) }>{ this.selectTabTitle(tab.title, tab.order) }</a>
                 </li>
               )
             }

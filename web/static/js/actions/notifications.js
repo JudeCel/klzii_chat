@@ -65,6 +65,7 @@ function _childElement(error) {
 
 function _handleErrorType(type, errors) {
   let isArray = errors instanceof Array;
+  let title = "Error";
 
   if(isArray) {
     if(errors.length > 1) {
@@ -72,13 +73,13 @@ function _handleErrorType(type, errors) {
       errors.map((error, index) => {
         children += _childElement(error);
       });
-      return { type: 'error', title: titles[type], message: _parentElement(children) };
+      return { type: 'error', title: title, message: _parentElement(children) };
     }
     else {
-      return { type: 'error', title: titles[type], message: errors[0] };
+      return { type: 'error', title: title, message: errors[0] };
     }
   }
   else {
-    return { type: 'error', title: titles[type], message: errors };
+    return { type: 'error', title: title, message: errors };
   }
 }
