@@ -6,6 +6,7 @@ module.exports = {
   boardMouseMove,
   boardMouseUp,
   shapeDrawFinish,
+  shapeUpdate,
 };
 
 var self;
@@ -19,7 +20,7 @@ function boardMouseDown(e) {
 
   switch(self.mouseData.type) {
     case 'select':
-      if(e.target.id == board.node.id) {
+      if(e.target.id == self.board.node.id) {
         self.deps.Shape.deselectShape();
       }
       break;
@@ -62,5 +63,14 @@ function boardMouseUp(e) {
 
 function shapeDrawFinish(e) {
   const { dispatch, channel } = self.props;
-  dispatch(Actions.create(channel, { id: e.target.id, element: self.shapeData.shape.svg() }));
+  dispatch(Actions.create(channel, _shapeParams(e)));
+}
+
+function shapeUpdate(e) {
+  const { dispatch, channel } = self.props;
+  dispatch(Actions.update(channel, _shapeParams(e)));
+}
+
+function _shapeParams(e) {
+  return { id: e.target.id, element: e.target.instance.svg() };
 }

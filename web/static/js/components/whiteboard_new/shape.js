@@ -18,14 +18,22 @@ function init(data) {
 function loadShapes() {
   for(var id in self.props.shapes) {
     var object = self.props.shapes[id];
+    var existing = self.shapeData.added[object.uid];
 
-    if(!self.shapeData.added[object.uid]) {
-      var nested = self.board.nested();
-      nested.svg(object.event.element);
-      var shape = nested.first();
-      initShapeEvents(shape);
+    if(!existing) {
+      loadOne(object);
+    }
+    else if(object.event.element != existing.svg()) {
+      existing.parent().remove();
+      loadOne(object);
     }
   }
+}
+
+function loadOne(object) {
+  var nested = self.board.nested();
+  nested.svg(object.event.element);
+  initShapeEvents(nested.first());
 }
 
 function createShape(e) {
@@ -37,8 +45,10 @@ function createShape(e) {
 }
 
 function initShapeEvents(shape) {
-  self.shapeData.added[shape.id] = shape;
+  self.shapeData.added[shape.id()] = shape;
   shape.mousedown(selectShape);
+  shape.on('resizedone', self.deps.Events.shapeUpdate);
+  shape.on('dragend', self.deps.Events.shapeUpdate);
 }
 
 // TODO: refactor
@@ -83,6 +93,7 @@ function buildShape(e) {
       build = nested.rect().draw(e);
   }
 
+  attrs.id = nested.id() + build.type + Date.now();
   return build.attr(attrs);
 }
 
