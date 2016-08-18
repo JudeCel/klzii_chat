@@ -21,7 +21,10 @@ const SurveyView5StarRating = React.createClass({
         <ul className='list-group'>
           <li key={ -1 } className='list-group-item'>
             <div className='row'>
-              <div className='col-md-offset-3 col-md-9 star-rating-section text-right'>
+              <div className='col-md-6'>
+                Average
+              </div>
+              <div className='col-md-6 star-rating-section text-right'>
                 <Rating placeholder='fa fa-star' empty='fa fa-star-o' full='fa fa-star' initialRate={ this.getAvarageCount() } readonly={ true } />
               </div>
             </div>
