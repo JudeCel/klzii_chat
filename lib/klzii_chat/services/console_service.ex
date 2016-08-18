@@ -65,7 +65,7 @@ defmodule KlziiChat.Services.ConsoleService do
 
   @spec pinboard_setings() :: Map.t
   defp pinboard_setings do
-    %{ audioId: nil, videoId: nil,  fileId: nil, pinboard: true }
+    %{ miniSurveyId: nil, audioId: nil, videoId: nil,  fileId: nil, pinboard: true }
   end
 
   @spec has_enable_resource(%Console{}) :: {:ok}
