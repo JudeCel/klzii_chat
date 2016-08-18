@@ -41,6 +41,9 @@ const Whiteboard = React.createClass({
       this.deps.Shape.loadShapes();
     }
     else if(prevState.minimized != this.state.minimized || screenChange) {
+      if(this.state.minimized) {
+        this.deps.Shape.deselectShape();
+      }
       this.initScale();
     }
   },
