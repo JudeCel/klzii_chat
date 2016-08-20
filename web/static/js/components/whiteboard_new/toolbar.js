@@ -1,10 +1,10 @@
 import React from 'react';
 import { ButtonToolbar } from 'react-bootstrap';
 
-import Hand from './buttons/hand';
-import Forms from './buttons/forms';
-import Poly from './buttons/poly';
-import Width from './buttons/width';
+import Hand from './toolbar/hand';
+import Forms from './toolbar/forms';
+import Poly from './toolbar/poly';
+import Width from './toolbar/width';
 
 const Buttons = React.createClass({
   getInitialState() {

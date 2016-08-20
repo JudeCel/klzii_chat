@@ -1,5 +1,5 @@
 import React from 'react';
-import Shapes from './shapes';
+import Buttons from './buttons';
 import { OverlayTrigger, Button, Popover } from 'react-bootstrap';
 
 const ButtonsPoly = React.createClass({
@@ -24,11 +24,11 @@ const ButtonsPoly = React.createClass({
     return (
       <OverlayTrigger ref='poly' trigger='click' rootClose placement='top' overlay={
           <Popover id='wb-buttons-poly'>
-            <Shapes.Poly.ScribbleEmpty { ...params } />
-            <Shapes.Poly.ScribbleFilled { ...params } />
-            <Shapes.Poly.Line { ...params } />
-            <Shapes.Poly.Arrow { ...params } />
-            {/* <Shapes.Image { ...params } /> */}
+            <Buttons.Poly.ScribbleEmpty { ...params } />
+            <Buttons.Poly.ScribbleFilled { ...params } />
+            <Buttons.Poly.Line { ...params } />
+            <Buttons.Poly.Arrow { ...params } />
+            {/* <Buttons.Poly.Text { ...params } /> */}
           </Popover>
         }>
 

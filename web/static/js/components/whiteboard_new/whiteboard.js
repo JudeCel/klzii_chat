@@ -9,7 +9,7 @@ import svgSelect    from 'svg.select.js';
 import Events       from './events';
 import Shape        from './shape';
 import Design       from './design';
-import Buttons      from './buttons';
+import Toolbar      from './toolbar';
 
 const Whiteboard = React.createClass({
   mixins:[Design],
@@ -72,7 +72,7 @@ const Whiteboard = React.createClass({
           <img className='whiteboard-expand' src={ this.getExpandButtonImage() } onClick={ this.expandWhiteboard } />
 
           <svg id='whiteboard-draw' className='inline-board-section'/>
-          <Buttons />
+          <Toolbar />
         </div>
       );
     }

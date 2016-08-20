@@ -1,5 +1,5 @@
 import React from 'react';
-import Shapes from './shapes';
+import Buttons from './buttons';
 import { OverlayTrigger, Button, Popover } from 'react-bootstrap';
 
 const ButtonsForms = React.createClass({
@@ -24,11 +24,11 @@ const ButtonsForms = React.createClass({
     return (
       <OverlayTrigger ref='forms' trigger='click' rootClose placement='top' overlay={
           <Popover id='wb-buttons-forms'>
-            <Shapes.Forms.CircleEmpty { ...params } />
-            <Shapes.Forms.CircleFilled { ...params } />
-            <Shapes.Forms.RectEmpty { ...params } />
-            <Shapes.Forms.RectFilled { ...params } />
-            {/* <Shapes.Image { ...params } /> */}
+            <Buttons.Forms.CircleEmpty { ...params } />
+            <Buttons.Forms.CircleFilled { ...params } />
+            <Buttons.Forms.RectEmpty { ...params } />
+            <Buttons.Forms.RectFilled { ...params } />
+            {/* <Buttons.Forms.Image { ...params } /> */}
           </Popover>
         }>
 
