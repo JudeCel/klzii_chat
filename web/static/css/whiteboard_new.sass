@@ -21,7 +21,7 @@
       padding: 0
       margin: 0
       padding-top: 5px
-      @extend #circleShapes
+      @extend #wb-buttons-forms
     &.maximized
       max-width: initial
       left: 0vw
@@ -57,7 +57,7 @@
   .pinboard-section.maximized
     padding-bottom: 10px
 
-#circleShapes, #scribleShapes, #lineWidthShapes, #eraserShapes
+#wb-buttons-forms, #wb-buttons-poly, #wb-buttons-erase
   .btn.btn-default
     border-radius: 0
     margin-right: 5px
@@ -68,3 +68,16 @@
       border-color: #bbb
     &:focus
       outline: none
+
+#wb-buttons-width
+  padding: 9px 12px
+
+#wb-buttons-width + .dropdown-menu
+  width: 47px
+  min-width: 47px
+  border-radius: 0
+  padding: 0
+  li > a
+    padding: 3px 19px
+  li.active > a
+    background-color: orange

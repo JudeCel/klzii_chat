@@ -9,6 +9,7 @@ import svgSelect    from 'svg.select.js';
 import Events       from './events';
 import Shape        from './shape';
 import Design       from './design';
+import Buttons      from './buttons';
 
 const Whiteboard = React.createClass({
   mixins:[Design],
@@ -57,7 +58,7 @@ const Whiteboard = React.createClass({
       color: 'red'
     };
 
-    this.board = SVG('whiteboard').size(this.drawData.initialWidth, this.drawData.initialHeight).addClass('inline-board-section');
+    this.board = SVG('whiteboard-draw').size(this.drawData.initialWidth, this.drawData.initialHeight);
 
     this.initBoardEvents();
     this.initDependencies();
@@ -66,9 +67,12 @@ const Whiteboard = React.createClass({
   render() {
     if(this.props.channel) {
       return (
-        <div id='whiteboard' className={ 'whiteboard-section' + this.expandButtonClass() }>
+        <div className={ 'whiteboard-section' + this.expandButtonClass() }>
           <img className='whiteboard-title' src='/images/title_whiteboard.png' />
           <img className='whiteboard-expand' src={ this.getExpandButtonImage() } onClick={ this.expandWhiteboard } />
+
+          <svg id='whiteboard-draw' className='inline-board-section'/>
+          <Buttons />
         </div>
       );
     }
