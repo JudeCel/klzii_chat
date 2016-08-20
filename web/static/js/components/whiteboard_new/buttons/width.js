@@ -2,9 +2,6 @@ import React from 'react';
 import { DropdownButton, MenuItem } from 'react-bootstrap';
 
 const ButtonsWidth = React.createClass({
-  getInitialState() {
-    return { activeButton: null, buttonType: 'poly' };
-  },
   render() {
     const widths = [2, 4, 6];
 

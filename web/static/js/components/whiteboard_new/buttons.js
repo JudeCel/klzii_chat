@@ -19,7 +19,8 @@ const Buttons = React.createClass({
   render() {
     const params = {
       setType: this.setType,
-      getClassnameParent: this.getClassnameParent
+      getClassnameParent: this.getClassnameParent,
+      activeType: this.state.activeType
     };
 
     return (

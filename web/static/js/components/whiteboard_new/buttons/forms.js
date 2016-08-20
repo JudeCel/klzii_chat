@@ -7,7 +7,8 @@ const ButtonsForms = React.createClass({
     return { activeButton: null, buttonType: 'forms' };
   },
   getClassnameChild(shapeType) {
-    return this.state.activeButton == shapeType ? 'set-active ' : '';
+    const { buttonType, activeButton } = this.state;
+    return this.props.activeType == buttonType && activeButton == shapeType ? 'set-active ' : '';
   },
   setActiveButton(shapeType) {
     this.refs.forms.hide();
