@@ -9,7 +9,7 @@ const ScribbleFilled = React.createClass({
   },
   render() {
     return (
-      <i className={ this.props.getClassnameChild(this.state.shapeType) + 'btn btn-default fa fa-bookmark' } aria-hidden='true' onClick={ this.onClick } />
+      <i className={ this.props.getClassnameChild(this.state.shapeType) + 'btn btn-default fa fa-leaf' } aria-hidden='true' onClick={ this.onClick } />
     )
   }
 });

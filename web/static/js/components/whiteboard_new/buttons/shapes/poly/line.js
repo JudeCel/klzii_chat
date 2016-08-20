@@ -9,7 +9,7 @@ const Line = React.createClass({
   },
   render() {
     return (
-      <i className={ this.props.getClassnameChild(this.state.shapeType) + 'btn btn-default fa' } aria-hidden='true' onClick={ this.onClick } >/</i>
+      <i className={ this.props.getClassnameChild(this.state.shapeType) + 'btn btn-default fa fa-minus' } aria-hidden='true' onClick={ this.onClick } />
     )
   }
 });

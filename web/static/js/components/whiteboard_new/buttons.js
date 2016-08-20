@@ -1,6 +1,7 @@
 import React from 'react';
 import { ButtonToolbar } from 'react-bootstrap';
 
+import Hand from './buttons/hand';
 import Forms from './buttons/forms';
 import Poly from './buttons/poly';
 import Width from './buttons/width';
@@ -24,8 +25,7 @@ const Buttons = React.createClass({
     return (
       <ButtonToolbar className='row panel-buttons-section'>
         <div className='col-md-offset-4'>
-          {/* <PopoverButtons.None { ...this.paramsForChild('none') } /> */}
-
+          <Hand { ...params } />
           <Forms { ...params } />
           <Poly { ...params } />
           <Width />

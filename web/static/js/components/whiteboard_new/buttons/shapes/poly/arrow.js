@@ -9,7 +9,7 @@ const Arrow = React.createClass({
   },
   render() {
     return (
-      <i className={ this.props.getClassnameChild(this.state.shapeType) + 'btn btn-default fa fa-long-arrow-right' } aria-hidden='true' onClick={ this.onClick } />
+      <i className={ this.props.getClassnameChild(this.state.shapeType) + 'btn btn-default fa fa-arrow-right' } aria-hidden='true' onClick={ this.onClick } />
     )
   }
 });
