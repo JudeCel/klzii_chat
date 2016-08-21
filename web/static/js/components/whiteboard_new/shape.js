@@ -68,7 +68,7 @@ function createShape(e) {
       initShapeEvents(self.shapeData.shape);
     }
     else {
-      console.error("Shape is not found:", self.drawData.current);
+      console.error('Shape is not found:', self.drawData.current);
     }
   }
 }
@@ -115,6 +115,7 @@ function deleteShape(id) {
 function deleteAllShapes() {
   self.board.clear();
   self.shapeData.added = {};
+  self.initDefs();
 }
 
 function setMouseType(type) {
