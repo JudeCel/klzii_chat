@@ -6,6 +6,12 @@ import Forms from './toolbar/forms';
 import Poly from './toolbar/poly';
 import Width from './toolbar/width';
 
+var self;
+function init(data) {
+  self = data;
+  return this;
+}
+
 const Buttons = React.createClass({
   getInitialState() {
     return { activeType: 'none' };
@@ -15,6 +21,11 @@ const Buttons = React.createClass({
   },
   setType(buttonType) {
     this.setState({ activeType: buttonType });
+    self.drawData.current = buttonType;
+  },
+  setWidth(value) {
+    self.drawData.strokeWidth = value;
+    this.forceUpdate();
   },
   render() {
     const params = {
@@ -29,11 +40,14 @@ const Buttons = React.createClass({
           <Hand { ...params } />
           <Forms { ...params } />
           <Poly { ...params } />
-          <Width />
+          <Width strokeWidth={ self.drawData.strokeWidth } setWidth={ this.setWidth } />
         </div>
       </ButtonToolbar>
     )
   }
 });
 
-export default Buttons;
+export default {
+  Buttons,
+  init
+};

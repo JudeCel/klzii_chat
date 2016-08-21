@@ -25,6 +25,7 @@ const Whiteboard = React.createClass({
     this.deps = {};
     this.deps.Events = Events.init(this);
     this.deps.Shape = Shape.init(this);
+    this.deps.Toolbar = Toolbar.init(this);
   },
   initBoardEvents() {
     this.board.mousedown(Events.boardMouseDown);
@@ -32,6 +33,17 @@ const Whiteboard = React.createClass({
     this.board.mouseup(Events.boardMouseUp);
   },
   getInitialState() {
+    this.mouseData = { type: 'select', prevType: null, selected: null };
+    this.shapeData = { shape: {}, added: {} };
+    this.drawData = {
+      initialWidth: 950,
+      initialHeight: 460,
+      strokeWidth: 2,
+      current: 'none',
+      color: 'red'
+    };
+
+    this.initDependencies();
     return { minimized: true };
   },
   componentDidUpdate(prevProps, prevState) {
@@ -49,19 +61,9 @@ const Whiteboard = React.createClass({
     }
   },
   componentDidMount() {
-    this.mouseData = { type: 'draw', prevType: null, selected: null };
-    this.shapeData = { shape: {}, added: {} };
-    this.drawData = {
-      initialWidth: 950,
-      initialHeight: 460,
-      current: 'rect',
-      color: 'red'
-    };
-
     this.board = SVG('whiteboard-draw').size(this.drawData.initialWidth, this.drawData.initialHeight);
 
     this.initBoardEvents();
-    this.initDependencies();
     this.initScale();
   },
   render() {
@@ -72,7 +74,7 @@ const Whiteboard = React.createClass({
           <img className='whiteboard-expand' src={ this.getExpandButtonImage() } onClick={ this.expandWhiteboard } />
 
           <svg id='whiteboard-draw' className='inline-board-section'/>
-          <Toolbar />
+          <Toolbar.Buttons />
         </div>
       );
     }
