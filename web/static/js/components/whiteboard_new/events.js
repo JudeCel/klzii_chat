@@ -7,6 +7,8 @@ module.exports = {
   boardMouseUp,
   shapeDrawFinish,
   shapeUpdate,
+  shapeDelete,
+  shapeDeleteAll,
 };
 
 var self;
@@ -68,6 +70,19 @@ function shapeDrawFinish(e) {
 function shapeUpdate(e) {
   const { dispatch, channel } = self.props;
   dispatch(Actions.update(channel, _shapeParams(e)));
+}
+
+function shapeDelete(shape) {
+  if(shape) {
+    const { dispatch, channel } = self.props;
+    dispatch(Actions.delete(channel, shape.id()));
+    shape.parent().remove();
+  }
+}
+
+function shapeDeleteAll() {
+  const { dispatch, channel } = self.props;
+  dispatch(Actions.deleteAll(channel));
 }
 
 function _shapeParams(e) {

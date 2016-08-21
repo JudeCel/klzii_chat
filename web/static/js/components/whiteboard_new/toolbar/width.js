@@ -3,7 +3,7 @@ import { DropdownButton, MenuItem } from 'react-bootstrap';
 
 const ButtonsWidth = React.createClass({
   render() {
-    const widths = [2, 4, 6];
+    const widths = [6, 4, 2];
     const { strokeWidth } = this.props;
 
     return (

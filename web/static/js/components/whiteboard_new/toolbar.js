@@ -1,10 +1,11 @@
 import React from 'react';
 import { ButtonToolbar } from 'react-bootstrap';
 
-import Hand from './toolbar/hand';
-import Forms from './toolbar/forms';
-import Poly from './toolbar/poly';
-import Width from './toolbar/width';
+import Hand   from './toolbar/hand';
+import Forms  from './toolbar/forms';
+import Poly   from './toolbar/poly';
+import Width  from './toolbar/width';
+import Delete from './toolbar/delete';
 
 var self;
 function init(data) {
@@ -35,6 +36,14 @@ const Buttons = React.createClass({
     self.drawData.strokeWidth = value;
     this.forceUpdate();
   },
+  delete(all) {
+    if(all) {
+      self.deps.Events.shapeDeleteAll();
+    }
+    else {
+      self.deps.Events.shapeDelete(self.mouseData.selected);
+    }
+  },
   render() {
     const params = {
       setType: this.setType,
@@ -49,6 +58,7 @@ const Buttons = React.createClass({
           <Forms { ...params } />
           <Poly { ...params } />
           <Width strokeWidth={ self.drawData.strokeWidth } setWidth={ this.setWidth } />
+          <Delete delete={ this.delete } />
         </div>
       </ButtonToolbar>
     )
