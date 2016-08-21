@@ -74,15 +74,18 @@ function shapeUpdate(e) {
 
 function shapeDelete(shape) {
   if(shape) {
+    var id = shape.id();
     const { dispatch, channel } = self.props;
-    dispatch(Actions.delete(channel, shape.id()));
-    shape.parent().remove();
+
+    dispatch(Actions.delete(channel, id));
+    self.deps.Shape.deleteShape(id);
   }
 }
 
 function shapeDeleteAll() {
   const { dispatch, channel } = self.props;
   dispatch(Actions.deleteAll(channel));
+  self.deps.Shape.deleteAllShapes();
 }
 
 function _shapeParams(e) {

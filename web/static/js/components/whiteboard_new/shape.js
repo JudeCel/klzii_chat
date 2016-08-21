@@ -6,6 +6,8 @@ module.exports = {
   finishPolyShape,
   selectShape,
   deselectShape,
+  deleteShape,
+  deleteAllShapes,
   setMouseType,
 };
 
@@ -16,6 +18,29 @@ function init(data) {
 }
 
 function loadShapes() {
+  var newKeys = Object.keys(self.props.shapes);
+  var newLength = newKeys.length;
+  var oldKeys = Object.keys(self.shapeData.added);
+  var oldLength = oldKeys.length;
+
+  if(!newLength && oldLength) {
+    deleteAllShapes();
+  }
+  else if(newLength) {
+    removeOld(oldKeys);
+    addNewOrChange();
+  }
+}
+
+function removeOld(oldKeys) {
+  oldKeys.map(function(key) {
+    if(!self.props.shapes[key]) {
+      deleteShape(key);
+    }
+  });
+}
+
+function addNewOrChange() {
   for(var id in self.props.shapes) {
     var object = self.props.shapes[id];
     var existing = self.shapeData.added[object.uid];
@@ -93,6 +118,16 @@ function deselectShape() {
     self.mouseData.selected.selectize(false).resize('stop').draggable(false);
     self.mouseData.selected = null;
   }
+}
+
+function deleteShape(id) {
+  self.shapeData.added[id].parent().remove();
+  delete self.shapeData.added[id];
+}
+
+function deleteAllShapes() {
+  self.board.clear();
+  self.shapeData.added = {};
 }
 
 function setMouseType(type) {
