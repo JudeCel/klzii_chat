@@ -3,7 +3,6 @@ module.exports = {
   createShape,
   loadShapes,
   buildShape,
-  finishPolyShape,
   selectShape,
   deselectShape,
   deleteShape,
@@ -90,18 +89,6 @@ function buildShape(e) {
     var build = element(e, nested, attrs);
     attrs.id = nested.id() + build.type + Date.now();
     return build.attr(attrs);
-  }
-}
-
-function finishPolyShape(e) {
-  if(e.buttons == 2) {
-    self.shapeData.shape.draw('done', e);
-    self.board.on('contextmenu', function(ev) {
-      self.board.off('contextmenu');
-      ev.preventDefault();
-      setMouseType('select');
-      self.shapeData.shape;
-    });
   }
 }
 

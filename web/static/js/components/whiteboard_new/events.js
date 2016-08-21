@@ -29,9 +29,6 @@ function boardMouseDown(e) {
     case 'draw':
       self.deps.Shape.createShape(e);
       break;
-    case 'point':
-      self.deps.Shape.finishPolyShape(e);
-      break;
   }
 
   e.preventDefault();
@@ -39,7 +36,7 @@ function boardMouseDown(e) {
 
 function boardMouseMove(e) {
   if(self.mouseData.holding && self.mouseData.type == 'stop') {
-    if(self.drawData.current == 'scribbleEmpty' || self.drawData.current == 'scribbleFilled') {
+    if(['scribbleEmpty', 'scribbleFilled'].includes(self.drawData.current)) {
       self.shapeData.shape.draw('point', e);
     }
   }
@@ -51,9 +48,6 @@ function boardMouseUp(e) {
   switch(self.mouseData.type) {
     case 'draw':
       self.shapeData.shape.draw(e);
-      break;
-    case 'point':
-      self.shapeData.shape.draw('point', e);
       break;
     case 'stop':
       self.shapeData.shape.draw('stop', e);
