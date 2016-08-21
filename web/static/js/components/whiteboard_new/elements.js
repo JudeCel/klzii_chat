@@ -8,6 +8,7 @@ module.exports = {
     scribbleEmpty,
     scribbleFilled,
     line,
+    arrow,
   }
 };
 
@@ -49,5 +50,10 @@ function scribbleFilled(e, nested, attrs) {
 }
 
 function line(e, nested, attrs) {
+  return nested.line(0, 0, 0, 0).draw(e);
+}
+
+function arrow(e, nested, attrs) {
+  attrs['marker-end'] = self.markers.arrows[self.props.currentUser.id];
   return nested.line(0, 0, 0, 0).draw(e);
 }

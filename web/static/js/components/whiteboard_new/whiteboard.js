@@ -14,6 +14,16 @@ import Elements     from './elements';
 
 const Whiteboard = React.createClass({
   mixins:[Design],
+  initDefs() {
+    this.markers = { arrows: {} };
+
+    let array = [this.props.facilitator, ...this.props.participants];
+    array.map(function(member) {
+      let marker = this.board.defs().marker(10, 10).attr({ id: 'marker-arrow-' + member.id });
+      marker.polygon('0,2 0,8 10,5').attr({ fill: member.colour });
+      this.markers.arrows[member.id] = marker;
+    }, this);
+  },
   initScale() {
     const { minimized } = this.state;
     let parent = this.board.parent();
@@ -61,6 +71,9 @@ const Whiteboard = React.createClass({
       }
       this.initScale();
     }
+    else if(JSON.stringify(prevProps.participants) != JSON.stringify(this.props.participants)) {
+      this.initDefs();
+    }
   },
   componentDidMount() {
     this.board = SVG('whiteboard-draw').size(this.drawData.initialWidth, this.drawData.initialHeight);
@@ -91,6 +104,8 @@ const mapStateToProps = (state) => {
     shapes: state.whiteboard.shapes,
     channel: state.whiteboard.channel,
     currentUser: state.members.currentUser,
+    facilitator: state.members.facilitator,
+    participants: state.members.participants,
     utilityWindow: state.utility.window
   }
 };
