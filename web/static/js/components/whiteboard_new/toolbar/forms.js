@@ -13,7 +13,7 @@ const ButtonsForms = React.createClass({
   setActiveButton(shapeType) {
     this.refs.forms.hide();
     this.setState({ activeButton: shapeType });
-    this.props.setType(this.state.buttonType);
+    this.props.setType(this.state.buttonType, shapeType);
   },
   render() {
     const params = {

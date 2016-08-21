@@ -19,9 +19,17 @@ const Buttons = React.createClass({
   getClassnameParent(buttonType) {
     return this.state.activeType == buttonType ? 'set-active ' : '';
   },
-  setType(buttonType) {
+  setType(buttonType, shapeType) {
     this.setState({ activeType: buttonType });
-    self.drawData.current = buttonType;
+    self.drawData.current = shapeType;
+
+    if(buttonType == 'none') {
+      self.deps.Shape.setMouseType('select');
+    }
+    else {
+      self.deps.Shape.deselectShape();
+      self.deps.Shape.setMouseType('draw');
+    }
   },
   setWidth(value) {
     self.drawData.strokeWidth = value;

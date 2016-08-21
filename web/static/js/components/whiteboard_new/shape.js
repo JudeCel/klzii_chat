@@ -39,8 +39,13 @@ function loadOne(object) {
 function createShape(e) {
   if(e.buttons == 1) {
     self.shapeData.shape = buildShape(e);
-    self.shapeData.shape.on('drawstop', self.deps.Events.shapeDrawFinish);
-    initShapeEvents(self.shapeData.shape);
+    if(self.shapeData.shape) {
+      self.shapeData.shape.on('drawstop', self.deps.Events.shapeDrawFinish);
+      initShapeEvents(self.shapeData.shape);
+    }
+    else {
+      console.error("Shape is not found:", self.drawData.current);
+    }
   }
 }
 
@@ -51,50 +56,16 @@ function initShapeEvents(shape) {
   shape.on('dragend', self.deps.Events.shapeUpdate);
 }
 
-// TODO: refactor
 function buildShape(e) {
-  var build;
-  var nested = self.board.nested();
-  var attrs = { fill: self.drawData.color, 'stroke-width': 3, stroke: self.drawData.color };
+  var element = self.deps.Elements.shapes[self.drawData.current];
 
-  switch(self.drawData.current) {
-    case 'circle':
-      build = nested.circle().draw(e);
-      break;
-    case 'ellipse':
-      build = nested.ellipse().draw(e);
-      break;
-    case 'rect':
-      build = nested.rect().draw(e);
-      break;
-    case 'polygon':
-      attrs['pointer-events'] = 'all';
-      setMouseType('point');
-      build = nested.polygon().draw(e);
-      break;
-    case 'polyline':
-      attrs.fill = 'none';
-      attrs['pointer-events'] = 'all';
-      setMouseType('point');
-      build = nested.polyline().draw(e);
-      break;
-    case 'line':
-      build = nested.line(0, 0, 0, 0).draw(e);
-      break;
-    case 'scribble':
-      attrs.fill = 'none';
-      attrs['pointer-events'] = 'all';
-      setMouseType('stop');
-      build = nested.polyline().draw(e);
-      build.remember("_paintHandler").drawCircles = function() {};
-      break;
-    default:
-      console.error('Shape not supported -', self.drawData.current);
-      build = nested.rect().draw(e);
+  if(element) {
+    var nested = self.board.nested();
+    var attrs = { fill: self.drawData.color, 'stroke-width': self.drawData.strokeWidth, stroke: self.drawData.color };
+    var build = element(e, nested, attrs);
+    attrs.id = nested.id() + build.type + Date.now();
+    return build.attr(attrs);
   }
-
-  attrs.id = nested.id() + build.type + Date.now();
-  return build.attr(attrs);
 }
 
 function finishPolyShape(e) {

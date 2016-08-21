@@ -37,7 +37,7 @@ function boardMouseDown(e) {
 
 function boardMouseMove(e) {
   if(self.mouseData.holding && self.mouseData.type == 'stop') {
-    if(self.drawData.current == 'scribble') {
+    if(self.drawData.current == 'scribbleEmpty' || self.drawData.current == 'scribbleFilled') {
       self.shapeData.shape.draw('point', e);
     }
   }
@@ -49,7 +49,6 @@ function boardMouseUp(e) {
   switch(self.mouseData.type) {
     case 'draw':
       self.shapeData.shape.draw(e);
-      self.deps.Shape.setMouseType('select');
       break;
     case 'point':
       self.shapeData.shape.draw('point', e);

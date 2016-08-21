@@ -13,7 +13,7 @@ const ButtonsPoly = React.createClass({
   setActiveButton(shapeType) {
     this.refs.poly.hide();
     this.setState({ activeButton: shapeType });
-    this.props.setType(this.state.buttonType);
+    this.props.setType(this.state.buttonType, shapeType);
   },
   render() {
     const params = {
