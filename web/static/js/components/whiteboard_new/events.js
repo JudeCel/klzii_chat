@@ -1,14 +1,11 @@
-import Actions from '../../actions/whiteboard';
-
 module.exports = {
   init,
   boardMouseDown,
   boardMouseMove,
   boardMouseUp,
-  shapeDrawFinish,
-  shapeUpdate,
-  shapeDelete,
-  shapeDeleteAll,
+  shapeWasCreated,
+  shapeWillUpdate,
+  shapeWasUpdated
 };
 
 var self;
@@ -56,32 +53,23 @@ function boardMouseUp(e) {
   }
 }
 
-function shapeDrawFinish(e) {
-  const { dispatch, channel } = self.props;
-  dispatch(Actions.create(channel, _shapeParams(e)));
+function shapeWasCreated(e) {
+  var shape = e.target.instance;
+  self.deps.History.add(shape, 'draw');
+  self.deps.Actions.shapeCreate(_shapeParams(shape));
 }
 
-function shapeUpdate(e) {
-  const { dispatch, channel } = self.props;
-  dispatch(Actions.update(channel, _shapeParams(e)));
+function shapeWillUpdate(e) {
+  var shape = e.target.instance;
+  self.deps.History.add(shape, 'update', 'start');
 }
 
-function shapeDelete(shape) {
-  if(shape) {
-    var id = shape.id();
-    const { dispatch, channel } = self.props;
-
-    dispatch(Actions.delete(channel, id));
-    self.deps.Shape.deleteShape(id);
-  }
+function shapeWasUpdated(e) {
+  var shape = e.target.instance;
+  self.deps.History.add(shape, 'update', 'end');
+  self.deps.Actions.shapeUpdate(_shapeParams(shape));
 }
 
-function shapeDeleteAll() {
-  const { dispatch, channel } = self.props;
-  dispatch(Actions.deleteAll(channel));
-  self.deps.Shape.deleteAllShapes();
-}
-
-function _shapeParams(e) {
-  return { id: e.target.id, element: e.target.instance.svg() };
+function _shapeParams(shape) {
+  return { id: shape.id(), element: shape.svg() };
 }

@@ -1,11 +1,12 @@
 import React from 'react';
 import { ButtonToolbar } from 'react-bootstrap';
 
-import Hand   from './toolbar/hand';
-import Forms  from './toolbar/forms';
-import Poly   from './toolbar/poly';
-import Width  from './toolbar/width';
-import Delete from './toolbar/delete';
+import Hand    from './toolbar/hand';
+import Forms   from './toolbar/forms';
+import Poly    from './toolbar/poly';
+import Width   from './toolbar/width';
+import Delete  from './toolbar/delete';
+import History from './toolbar/history';
 
 var self;
 function init(data) {
@@ -36,12 +37,18 @@ const Buttons = React.createClass({
     self.drawData.strokeWidth = value;
     this.forceUpdate();
   },
+  setHistory(type) {
+    let action = self.deps.History[type];
+    action();
+  },
   delete(all) {
     if(all) {
-      self.deps.Events.shapeDeleteAll();
+      self.deps.History.add(self.shapeData.added, 'removeAll');
+      self.deps.Actions.shapeDeleteAll();
     }
     else {
-      self.deps.Events.shapeDelete(self.mouseData.selected);
+      self.deps.History.add(self.mouseData.selected, 'remove');
+      self.deps.Actions.shapeDelete(self.mouseData.selected);
     }
   },
   render() {
@@ -59,6 +66,7 @@ const Buttons = React.createClass({
           <Poly { ...params } />
           <Width strokeWidth={ self.drawData.strokeWidth } setWidth={ this.setWidth } />
           <Delete delete={ this.delete } />
+          <History setHistory={ this.setHistory } />
         </div>
       </ButtonToolbar>
     )

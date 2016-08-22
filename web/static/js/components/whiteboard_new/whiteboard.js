@@ -11,6 +11,8 @@ import Shape        from './shape';
 import Design       from './design';
 import Toolbar      from './toolbar';
 import Elements     from './elements';
+import History      from './history';
+import Actions      from './actions';
 
 const Whiteboard = React.createClass({
   mixins:[Design],
@@ -38,6 +40,8 @@ const Whiteboard = React.createClass({
     this.deps.Shape = Shape.init(this);
     this.deps.Toolbar = Toolbar.init(this);
     this.deps.Elements = Elements.init(this);
+    this.deps.History = History.init(this);
+    this.deps.Actions = Actions.init(this);
   },
   initBoardEvents() {
     this.board.mousedown(Events.boardMouseDown);

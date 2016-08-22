@@ -7,6 +7,7 @@ module.exports = {
   deselectShape,
   deleteShape,
   deleteAllShapes,
+  loadOne,
   setMouseType,
 };
 
@@ -45,18 +46,18 @@ function addNewOrChange() {
     var existing = self.shapeData.added[object.uid];
 
     if(!existing) {
-      loadOne(object);
+      loadOne(object.event.element);
     }
     else if(object.event.element != existing.svg()) {
       existing.parent().remove();
-      loadOne(object);
+      loadOne(object.event.element);
     }
   }
 }
 
-function loadOne(object) {
+function loadOne(data) {
   var nested = self.board.nested();
-  nested.svg(object.event.element);
+  nested.svg(data);
   initShapeEvents(nested.first());
 }
 
@@ -64,7 +65,7 @@ function createShape(e) {
   if(e.buttons == 1) {
     self.shapeData.shape = buildShape(e);
     if(self.shapeData.shape) {
-      self.shapeData.shape.on('drawstop', self.deps.Events.shapeDrawFinish);
+      self.shapeData.shape.on('drawstop', self.deps.Events.shapeWasCreated);
       initShapeEvents(self.shapeData.shape);
     }
     else {
@@ -76,8 +77,9 @@ function createShape(e) {
 function initShapeEvents(shape) {
   self.shapeData.added[shape.id()] = shape;
   shape.mousedown(selectShape);
-  shape.on('resizedone', self.deps.Events.shapeUpdate);
-  shape.on('dragend', self.deps.Events.shapeUpdate);
+  shape.on('resizedone', self.deps.Events.shapeWasUpdated);
+  shape.on('dragstart', self.deps.Events.shapeWillUpdate);
+  shape.on('dragend', self.deps.Events.shapeWasUpdated);
 }
 
 function buildShape(e) {
