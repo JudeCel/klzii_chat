@@ -14,10 +14,26 @@ defmodule KlziiChat.Files.UrlHelpers do
     base_url <> "/"<> Path.relative_to(path, "priv/static")
   end
 
-  @spec youtube_id(String) :: String
+  @spec youtube_id(String) :: {:ok} | {:error, String.t}
   def youtube_id(url) do
-    ~r{^.*(?:youtu\.be/|\w+/|v=)(?<id>[^#&?]*)}
-    |> Regex.named_captures(url)
-    |> get_in(["id"])
+    case youtube_url_validator(url) do
+      {:ok} ->
+        result = ~r{^.*(?:youtu\.be/|\w+/|v=)(?<id>[^#&?]*)}
+        |> Regex.named_captures(url)
+        |> get_in(["id"])
+        {:ok, result}
+      {:error, reason} ->
+        {:error, reason}
+    end
+  end
+
+  @spec youtube_url_validator(String) :: {:ok} | {:error, String.t}
+  def youtube_url_validator(url) do
+    valid_paterns = ~r{(youtu.be/|youtube.com/embed|youtube.com/watch|youtube.com/v/|youtube.com)}
+    if String.match?(url, valid_paterns) do
+      {:ok}
+    else
+      {:error, "link not valid"}
+    end
   end
 end
