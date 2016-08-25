@@ -36,13 +36,13 @@ const ButtonPanel = React.createClass({
       <ButtonToolbar className='row panel-buttons-section'>
         <div className='col-md-offset-4'>
           <PopoverButtons.None { ...this.paramsForChild('none') } />
-          <OverlayTrigger ref='circleShapes' trigger='click' rootClose placement='top' overlay={
+          <PopoverButtons.Image { ...params.circle } />
+        <OverlayTrigger ref='circleShapes' trigger='click' rootClose placement='top' overlay={
               <Popover id='circleShapes'>
                 <PopoverButtons.EmptyCircle { ...params.circle } />
                 <PopoverButtons.FilledCircle { ...params.circle } />
                 <PopoverButtons.EmptyRect { ...params.circle } />
                 <PopoverButtons.FilledRect { ...params.circle } />
-                <PopoverButtons.Image { ...params.circle } />
               </Popover>
             }>
 

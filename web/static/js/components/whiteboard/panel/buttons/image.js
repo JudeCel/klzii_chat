@@ -1,6 +1,8 @@
 import React, {PropTypes} from 'react';
 import { connect }        from 'react-redux';
 import mixins             from '../../../../mixins';
+import { Button }         from 'react-bootstrap'
+
 
 const ImageButton = React.createClass({
   mixins: [mixins.modalWindows, mixins.validations],
@@ -15,7 +17,7 @@ const ImageButton = React.createClass({
   render() {
     if(this.hasPermission(['whiteboard', 'can_add_image'])) {
       return (
-        <i className={ this.props.activeClass('image') + 'btn btn-default fa fa-file-image-o' } aria-hidden='true' onClick={ this.onClick } />
+        <Button className={ this.props.activeClass('image') }> <i className={'fa fa-file-image-o' } aria-hidden='true' onClick={ this.onClick } /></Button>
       )
     }else {
       return(false)
