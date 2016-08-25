@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import { connect }        from 'react-redux';
 import mixins             from '../../../../mixins';
-import { Button }         from 'react-bootstrap'
+import { Button, OverlayTrigger, Tooltip }         from 'react-bootstrap'
 
 
 const ImageButton = React.createClass({
@@ -15,9 +15,15 @@ const ImageButton = React.createClass({
     this.props.parent.hide();
   },
   render() {
+    const tooltip =(
+      <Tooltip id="tooltip"><strong>Add Image</strong></Tooltip>
+    );
+
     if(this.hasPermission(['whiteboard', 'can_add_image'])) {
       return (
-        <Button className={ this.props.activeClass('image') }> <i className={'fa fa-file-image-o' } aria-hidden='true' onClick={ this.onClick } /></Button>
+        <OverlayTrigger placement="top" overlay={tooltip}>
+          <Button className={ this.props.activeClass('image') }> <i className={'fa fa-file-image-o' } aria-hidden='true' onClick={ this.onClick } /></Button>
+        </OverlayTrigger>
       )
     }else {
       return(false)
