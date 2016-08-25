@@ -1,5 +1,5 @@
 defmodule KlziiChat.Decorators.MiniSurveyAnswersDecorator do
-  @yes_no_maybe %{1 => "Yes", 2 => "No", 3 => "Maybe"}
+  @yes_no_maybe %{1 => "Yes", 2 => "No", 3 => "Unsure"}
   @star_rating %{1 => "1 star", 2 => "2 stars", 3 => "3 stars", 4 => "4 stars", 5 => "5 stars"}
 
   @spec answer_text(String.t, String.t) :: {:ok | :error, String.t}
