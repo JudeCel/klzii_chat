@@ -6,7 +6,7 @@ defmodule KlziiChat.Services.Validations.Resource do
   end
 
   @spec file_type_error_mesage(String.t, String.t) :: %{code: integer, type: String.t}
-  def file_type_error_mesage(should, actual) do
+  def file_type_error_mesage(actual, should) do
     %{code: 415, type: "You are trying to upload #{actual} where it is allowed only #{should}."}
   end
 
