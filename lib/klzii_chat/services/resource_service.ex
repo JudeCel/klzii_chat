@@ -161,8 +161,7 @@ defmodule KlziiChat.Services.ResourceService do
 
     case ResourcePermissions.can_zip(account_user, result) do
       {:ok} ->
-        changeset = Ecto.build_assoc(
-          account_user.account, :resources,
+        params = %{
           accountUserId: account_user.id,
           scope: "zip",
           type: "file",
@@ -170,17 +169,19 @@ defmodule KlziiChat.Services.ResourceService do
           status: "progress",
           expiryDate: Timex.shift(Timex.now, days: 1),
           properties: %{zip_ids: ids}
-        )
+        }
 
-        case Repo.insert(changeset) do
-          {:ok, resource} ->
-            Task.async(fn -> KlziiChat.Files.Tasks.run(resource, ids) end)
-            {:ok, resource }
-          {:error, reason} ->
-            {:error, Map.put(reason, :code, 400)}
-        end
-      {:error, reason} ->
-        {:error, reason}
-    end
+        Resource.changeset(Ecto.build_assoc( account_user.account, :resources), params)
+        |> Repo.insert
+        |> case  do
+            {:ok, resource} ->
+              Task.async(fn -> KlziiChat.Files.Tasks.run(resource, ids) end)
+              {:ok, resource }
+            {:error, reason} ->
+              {:error, Map.put(reason, :code, 400)}
+          end
+        {:error, reason} ->
+          {:error, reason}
+      end
   end
 end

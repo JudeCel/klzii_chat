@@ -27,7 +27,8 @@ defmodule KlziiChat.Services.Validations.Resource do
     if extension in allowed_extensions do
       {:ok}
     else
-      {:error, file_type_error_mesage(extension, type)}
+      file_type = String.split(content_type, "/") |> List.first
+      {:error, file_type_error_mesage(file_type, type)}
     end
   end
   def validate_file_type(file, %{type: type}) when is_bitstring(file) and type in ["link"] do
