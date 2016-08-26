@@ -15,16 +15,17 @@ const Select = React.createClass({
     return (
       <div className='topic-select-section'>
         <div className='topic-select-box'>
-          <div>
+          <div className='div-inline-block session-name'>
+            <strong>Welcome to:</strong><br />
             { session.name }
           </div>
 
-          <Dropdown id='topic-selector' bsSize='medium'>
+          <Dropdown id='topic-selector'>
             <Dropdown.Toggle className='no-border-radius' noCaret>
-              <div className='no-border-radius btn btn-default'>
+              <div className='no-border-radius btn btn-default name'>
                 { current.name }
               </div>
-              <div className='no-border-radius btn btn-default'>
+              <div className='no-border-radius btn btn-default dropcaret'>
                 <span className='caret'></span>
               </div>
             </Dropdown.Toggle>
