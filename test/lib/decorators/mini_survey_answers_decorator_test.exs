@@ -4,7 +4,7 @@ defmodule KlziiChat.Decorators.MiniSurveyAnswersDecoratorTest do
 
   test "Get text answer by ID for yesNoMaybe type" do
     assert(MiniSurveyAnswersDecorator.answer_text("yesNoMaybe", 1) == {:ok, "Yes"})
-    assert(MiniSurveyAnswersDecorator.answer_text("yesNoMaybe", "3") == {:ok, "Maybe"})
+    assert(MiniSurveyAnswersDecorator.answer_text("yesNoMaybe", "3") == {:ok, "Unsure"})
 
     assert(MiniSurveyAnswersDecorator.answer_text("yesNoMaybe", "0") == {:error, "incorrect answer id"})
     assert(MiniSurveyAnswersDecorator.answer_text("yesNoMaybe", 4) == {:error, "incorrect answer id"})
