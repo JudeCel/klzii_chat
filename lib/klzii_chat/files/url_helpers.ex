@@ -14,7 +14,7 @@ defmodule KlziiChat.Files.UrlHelpers do
     base_url <> "/"<> Path.relative_to(path, "priv/static")
   end
 
-  @spec youtube_id(String) :: String
+  @spec youtube_id(String) :: {:ok} | {:error, String.t}
   def youtube_id(url) do
     ~r{^.*(?:youtu\.be/|\w+/|v=)(?<id>[^#&?]*)}
     |> Regex.named_captures(url)

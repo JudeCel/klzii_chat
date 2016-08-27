@@ -32,6 +32,7 @@ defmodule KlziiChat.Resource do
     resource
     |> cast(params, [:status, :scope, :type, :accountUserId, :accountId, :name, :link, :properties, :stock])
     |> validate_required([:status, :scope, :type, :accountUserId, :accountId, :name, :stock])
+    |> validate_length(:name, max: 255)
     |> unique_constraint(:name, name: :UniqResourceNameByAccount, message: "Resource name has already been taken")
     |> cast_attachments(params, ["file", "image", "audio", "video"])
     |> parse_link
@@ -41,13 +42,14 @@ defmodule KlziiChat.Resource do
     model
     |> cast(params, [:status, :scope, :type, :accountUserId, :accountId, :name, :link, :properties])
     |> validate_required([:status, :scope, :type, :accountUserId, :accountId, :name, :link])
+    |> validate_length(:name, max: 255)
     |> unique_constraint(:name, name: :UniqResourceNameByAccount, message: "Resource name has already been taken")
     |> cast_attachments(params, ["file", "image", "audio", "video"])
   end
 
   defp parse_link(base_changeset) do
     case base_changeset do
-      %Ecto.Changeset{valid?: true, changes: %{link: link}} ->
+      %Ecto.Changeset{valid?: true, changes: %{link: link}} when is_bitstring(link) ->
         put_change(base_changeset, :link, UrlHelpers.youtube_id(link))
       _ ->
         base_changeset

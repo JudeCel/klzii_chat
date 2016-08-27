@@ -67,7 +67,7 @@ defmodule KlziiChat.Services.FileServiceTest do
   end
 
   test "wkhtmltopdf error (non 0 exit code)" do
-    {:error, _} = FileService.wkhtmltopdf("somethingwrong")
+    assert({:error, _} = FileService.wkhtmltopdf("somethingwrong"))
   end
 
 

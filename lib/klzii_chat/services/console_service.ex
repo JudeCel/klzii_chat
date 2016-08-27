@@ -6,7 +6,7 @@ defmodule KlziiChat.Services.ConsoleService do
   @spec error_messages :: Map.t
   def error_messages do
     %{
-      pinboard_is_enable: "Can't activate resource because pinboard is enabled",
+      pinboard_is_enable: "Sorry, can't add a resource when Pinboard enabled",
       other_resource_is_enable: "Can't activate resource because other resource is enable: "
     }
   end
@@ -65,7 +65,7 @@ defmodule KlziiChat.Services.ConsoleService do
 
   @spec pinboard_setings() :: Map.t
   defp pinboard_setings do
-    %{ audioId: nil, videoId: nil,  fileId: nil, pinboard: true }
+    %{audioId: nil, videoId: nil,  fileId: nil, pinboard: true }
   end
 
   @spec has_enable_resource(%Console{}) :: {:ok}

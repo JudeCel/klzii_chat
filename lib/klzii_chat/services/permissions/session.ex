@@ -11,8 +11,8 @@ defmodule KlziiChat.Services.Permissions.Session do
     {:ok}
   end
   @spec can_access?(%AccountUser{}, %SessionMember{}, %Session{}) :: {:ok} | {:error, String.t}
-  def can_access?(%AccountUser{role: "accountManager"}, %SessionMember{role: "observer"}, %Session{status: status, startTime: startTime, endTime: endTime}) when status in ["open", "closed"] do
-    validate_time(startTime, endTime)
+  def can_access?(%AccountUser{role: "accountManager"}, %SessionMember{role: "observer"}, %Session{}) do
+    {:ok}
   end
   @spec can_access?(%AccountUser{}, %SessionMember{}, %Session{}) :: {:ok} | {:error, String.t}
   def can_access?(%AccountUser{role: _}, %SessionMember{role: "facilitator"}, %Session{}) do

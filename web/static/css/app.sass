@@ -34,7 +34,6 @@ body
   font-family: 'Source Sans Pro', Arial, sans-serif
 
 .footer
-  position: absolute
   bottom: 50px
   right: 50%
 
@@ -59,28 +58,55 @@ body
         font-size: 50%
     .topic-select-box
       margin-left: 20px
-      .dropdown-menu > li > a
-        padding: 5px 0 5px 5px
-        .pull-left
-          margin-right: 2px
+      .session-name
+        margin-top: 5px
+      .dropdown-menu
+        padding: 0
+        margin: 0
+        background-color: #369D32
+        margin-left: 15px
+        border: 0
+        width: 200px
+        li
+          a
+            color: white
+            padding: 5px 0 5px 5px
+            .pull-left
+              margin-right: 2px
+          &.active, &:hover, &:focus, &:active
+            a
+              background-color: #4CB648
       .unread-messages-section
         list-style: none
         padding: 0
+        margin: 0
         padding-left: 2px
-        margin: 0px
-        vertical-align: middle
         display: inline-block
       .badge
         &.normal
           background-color: $header-red
         &.reply
           background-color: black
-      #topic-selector
-        padding: 0px
-        background-color: none
-        border: none
+      .dropdown.btn-group
+        vertical-align: top
+        #topic-selector
+          margin-left: 15px
+          padding: 0px
+          background-color: none
+          border: none
+          .btn-default
+            color: white
+            border-color: transparent
+            max-height: 50px
+            line-height: 2.5
+            &.name
+              width: 165px
+              background-color: #4CB648
+            &.dropcaret
+              width: 36px
+              background-color: #45AC43
   .resources-section
-    margin-left: 5%
+    margin-left: 15px
     float: left
     vertical-align: middle
     display: inline-block
@@ -91,7 +117,7 @@ body
       li
         background-color: $header-red
   .links-section
-    margin-right: 5%
+    margin-right: 15px
     float: right
     vertical-align: middle
     display: inline-block
@@ -101,6 +127,9 @@ body
       text-align: center
       li
         min-width: 55px
+        max-height: 55px
+        span.log-out
+          font-size: 20px
         .badge
           margin-top: -25px
           margin-left: -40px

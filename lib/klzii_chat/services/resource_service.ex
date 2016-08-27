@@ -2,14 +2,10 @@ defmodule KlziiChat.Services.ResourceService do
   alias KlziiChat.{Repo, AccountUser, Resource, ResourceView}
   alias KlziiChat.Services.Permissions.Resources, as: ResourcePermissions
   alias KlziiChat.Queries.Resources, as: QueriesResources
+  alias KlziiChat.Services.Validations.Resource, as: ResourceValidations
 
   import Ecto
   import Ecto.Query
-
-  @spec file_type_error_mesage(String.t, String.t) :: %{code: integer, type: String.t}
-  def file_type_error_mesage(should, actual) do
-    %{code: 415, type: "You are trying to upload #{actual} where it is allowed only #{should}."}
-  end
 
   @spec upload(map, integer) ::  {:ok, %Resource{}} | {:error, map}
   def upload(params, account_user_id)  do
@@ -26,43 +22,6 @@ defmodule KlziiChat.Services.ResourceService do
     end
   end
 
-  @spec validate(map, map) :: {:ok} | {:error, map}
-  def validate(file, params) do
-    validate_file_type(file, params)
-  end
-
-  @spec validate_file_type(map | String.t, map) :: {:ok} | {:error, map}
-  def validate_file_type(%Plug.Upload{content_type: content_type}, %{type:  type}) when type in ["image", "audio", "video"] do
-    file_type = String.split(content_type, "/") |> List.first
-    cond do
-      file_type != type ->
-        {:error, file_type_error_mesage(file_type, type)}
-      true ->
-        {:ok}
-    end
-  end
-  def validate_file_type(%Plug.Upload{content_type: content_type}, %{type: type}) when type in ["file"] do
-    extension = Plug.MIME.extensions(content_type) |> List.last
-    allowed_extensions = KlziiChat.Uploaders.File.allowed_extensions
-      |> Enum.map(fn i -> String.trim(i, ".") end)
-    if extension in allowed_extensions do
-      {:ok}
-    else
-      {:error, file_type_error_mesage(extension, type)}
-    end
-  end
-  def validate_file_type(file, %{type: type}) when is_bitstring(file) do
-    cond do
-      type in ["file", "link"] ->
-        {:ok}
-      true ->
-        {:error, %{code: 415, type: "Accept only links"}}
-    end
-  end
-  def validate_file_type(_, _) do
-    {:error, %{code: 415, type: "File not valid"}}
-  end
-
   @spec save_resource(map, integer) :: {:ok, %Resource{}} | {:error, map}
   def save_resource(%{"stock" => stock, "type" => type, "scope" => scope, "file" => file, "name"=> name}, account_user) do
     params = %{
@@ -75,7 +34,7 @@ defmodule KlziiChat.Services.ResourceService do
       stock: stock
     }
 
-    case validate(file, params) do
+    case ResourceValidations.validate(file, params) do
       {:ok} ->
         Resource.changeset(%Resource{}, params)
         |> Repo.insert
@@ -202,8 +161,7 @@ defmodule KlziiChat.Services.ResourceService do
 
     case ResourcePermissions.can_zip(account_user, result) do
       {:ok} ->
-        changeset = Ecto.build_assoc(
-          account_user.account, :resources,
+        params = %{
           accountUserId: account_user.id,
           scope: "zip",
           type: "file",
@@ -211,17 +169,19 @@ defmodule KlziiChat.Services.ResourceService do
           status: "progress",
           expiryDate: Timex.shift(Timex.now, days: 1),
           properties: %{zip_ids: ids}
-        )
+        }
 
-        case Repo.insert(changeset) do
-          {:ok, resource} ->
-            Task.async(fn -> KlziiChat.Files.Tasks.run(resource, ids) end)
-            {:ok, resource }
-          {:error, reason} ->
-            {:error, Map.put(reason, :code, 400)}
-        end
-      {:error, reason} ->
-        {:error, reason}
-    end
+        Resource.changeset(Ecto.build_assoc( account_user.account, :resources), params)
+        |> Repo.insert
+        |> case  do
+            {:ok, resource} ->
+              Task.async(fn -> KlziiChat.Files.Tasks.run(resource, ids) end)
+              {:ok, resource }
+            {:error, reason} ->
+              {:error, Map.put(reason, :code, 400)}
+          end
+        {:error, reason} ->
+          {:error, reason}
+      end
   end
 end

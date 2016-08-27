@@ -54,7 +54,7 @@ defmodule KlziiChat.SessionResourcesControllerTest do
     test "upload image", %{conn: conn} do
       file = %Plug.Upload{ content_type: "image/jpg", path: @image, filename: "hamster.jpg"}
       %{"errors" => _} = post(conn, "api/session_resources/upload", %{name: "hamster", type: "video", scope: "collage", file: file })
-        |> json_response(200)
+        |> json_response(415)
     end
   end
 end

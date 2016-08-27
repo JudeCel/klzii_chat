@@ -112,6 +112,9 @@ const ChatView = React.createClass({
               </div>
             </div>
           </div>
+          <div className="footer text-center">
+            <span>Powered by <a href="//www.klzii.com" target="_blank"> <b>klzii.</b> </a> </span>
+          </div>
         </div>
       )
     }
