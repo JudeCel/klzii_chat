@@ -6,6 +6,8 @@ defmodule KlziiChat.SessionChannel do
   alias KlziiChat.{Presence, SessionMembersView, SessionTopicsReportView, DirectMessageView}
   import(KlziiChat.Authorisations.Channels.Session, only: [authorized?: 2])
   import(KlziiChat.Helpers.SocketHelper, only: [get_session_member: 1])
+  import KlziiChat.ErrorHelpers, only: [error_view: 1]
+
 
   @moduledoc """
     This Channel is only for session context
@@ -111,12 +113,17 @@ defmodule KlziiChat.SessionChannel do
   def handle_in("create_direct_message", %{ "recieverId" => other_member_id, "text" => text }, socket) do
     current_member = get_session_member(socket)
 
-    { :ok, message } = DirectMessageService.create_message(current_member.session_id, %{ "recieverId" => other_member_id, "text" => text, "senderId" => current_member.id })
-    encoded = DirectMessageView.render("show.json", message: message);
 
-    key = message.recieverId |> to_string
-    broadcast(socket, "new_direct_message", %{ key => encoded })
-    {:reply, { :ok, %{ message: encoded } }, socket}
+    DirectMessageService.create_message(current_member.session_id, %{ "recieverId" => other_member_id, "text" => text, "senderId" => current_member.id })
+    |> case  do
+      { :ok, message } ->
+        encoded = DirectMessageView.render("show.json", message: message);
+        key = message.recieverId |> to_string
+        broadcast(socket, "new_direct_message", %{ key => encoded })
+        {:reply, { :ok, %{ message: encoded } }, socket}
+      { :error, reason} ->
+        {:reply, {:error, error_view(reason)}, socket}
+      end
   end
 
   def handle_in("set_read_direct_messages", %{ "senderId" => other_member_id }, socket) do

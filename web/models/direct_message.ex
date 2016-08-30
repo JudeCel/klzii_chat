@@ -21,5 +21,6 @@ defmodule KlziiChat.DirectMessage do
     |> cast(params, [:readAt, :sessionId, :senderId, :recieverId, :text])
     |> validate_required([:sessionId, :senderId, :recieverId, :text])
     |> validate_length(:text, min: 1)
+    |> validate_length(:text, max: 255, message: "Max length of message is 255 characters")
   end
 end
