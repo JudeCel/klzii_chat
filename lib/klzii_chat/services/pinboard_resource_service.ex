@@ -106,8 +106,8 @@ defmodule KlziiChat.Services.PinboardResourceService do
             nil ->
               {:ok, pinboard_resource}
             resource ->
-              {:ok, resource} = Repo.delete(resource)
-              {:ok, find_by_id(pinboard_resource_id)}
+              {:ok, _} = Repo.delete(resource)
+              {:ok, %{id: pinboard_resource.id}}
           end
         {:error, reason} ->
           {:error, reason}
@@ -115,7 +115,7 @@ defmodule KlziiChat.Services.PinboardResourceService do
   end
 
   def find_by_id(id)  do
-    Repo.get_by(PinboardResource, id: id)
-    |> Repo.preload([:resource, :session_member])
+    from(pr in PinboardResource, where: [id: ^id], preload: [:resource, :session_member] )
+    |> Repo.one!
   end
 end

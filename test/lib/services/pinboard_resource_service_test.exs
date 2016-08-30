@@ -48,9 +48,8 @@ defmodule KlziiChat.Services.PinboardResourceTest do
     test "can remove", %{participant: participant, session_topic_1: session_topic_1, resource: resource} do
       {:ok, _} = build_pinboard_console(session_topic_1, true)
       {:ok, pinboard_resource1} = PinboardResourceService.add(participant.id, session_topic_1.id, resource.id)
-      {:ok, pinboard_resource2} = PinboardResourceService.delete(participant.id, pinboard_resource1.id)
-      assert(pinboard_resource1.id == pinboard_resource2.id)
-      assert(pinboard_resource2.resourceId == nil)
+      {:ok, %{id: id}} = PinboardResourceService.delete(participant.id, pinboard_resource1.id)
+      assert(pinboard_resource1.id == id)
     end
   end
 
