@@ -83,7 +83,6 @@ defmodule KlziiChat.Services.SessionResourcesService do
         resource_query =
           QueriesResources.base_resource_query
           |> QueriesResources.find_by_params(params)
-          |> QueriesResources.stock_query(%{"stock" => true})
           session_resources =
             from(sr in SessionResource, where: sr.sessionId == ^session_member.sessionId, preload: [resource: ^resource_query])
             |> Repo.all
