@@ -4,6 +4,7 @@ import { connect }        from 'react-redux';
 import mixins             from '../../../../mixins';
 import Board              from './board';
 import Actions            from '../../../../actions/facilitatorBoard';
+import NotificationActions      from '../../../../actions/notifications';
 
 const BoardModal = React.createClass({
   mixins: [mixins.modalWindows],
@@ -23,8 +24,12 @@ const BoardModal = React.createClass({
   },
   onSave(e) {
     let { channel, dispatch } = this.props
-    Actions.saveBoard(channel, dispatch, this.state.content);
-    this.closeAllModals();
+    if (this.state.content > 200) {
+      Actions.saveBoard(channel, dispatch, this.state.content);
+      this.closeAllModals();
+    }else{
+      NotificationActions.showErrorNotification(dispatch, {errors: {"body": ["Facilitator Board Message is too long, max 200"]}})
+    }
   },
   setContent(content) {
     this.setState({ content: content });

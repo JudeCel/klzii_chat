@@ -1,6 +1,9 @@
 import Constants from '../constants';
 
 const initialState = {
+  message: "",
+  title:"",
+  type:""
 };
 
 export default function reducer(state = initialState, action = {}) {

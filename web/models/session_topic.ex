@@ -28,6 +28,6 @@ defmodule KlziiChat.SessionTopic do
     model
     |> cast(params, [:boardMessage] )
     |> validate_required([:boardMessage])
-    |> validate_length(:boardMessage, min: 1)
+    |> validate_length(:boardMessage, min: 1, max: 200)
   end
 end
