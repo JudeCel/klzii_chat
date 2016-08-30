@@ -59,10 +59,18 @@ defmodule KlziiChat.SessionResourcesController do
     resources =
       QueriesResources.base_query(member.account_user)
       |> QueriesResources.find_by_params(params)
+      |> QueriesResources.stock_query(%{"stock" => false})
       |> QueriesResources.exclude_by_ids(session_resources)
       |> Repo.all
-      |> Phoenix.View.render_many(ResourceView, "resource.json", as: :resource)
-    json(conn, resources)
+
+    stock_resources =
+      QueriesResources.base_resource_query
+        |> QueriesResources.find_by_params(params)
+        |> QueriesResources.stock_query(%{"stock" => true})
+        |> QueriesResources.exclude_by_ids(session_resources)
+        |> Repo.all
+        
+    json(conn, Phoenix.View.render_many((stock_resources ++ resources), ResourceView, "resource.json", as: :resource))
   end
 
   defp if_current_member(conn, opts) do
