@@ -15,6 +15,7 @@ defmodule KlziiChat.SessionTopic do
     field :boardMessage, :string
     field :order, :integer
     field :name, :string
+    field :landing, :boolean
     timestamps [inserted_at: :createdAt, updated_at: :updatedAt]
   end
 
