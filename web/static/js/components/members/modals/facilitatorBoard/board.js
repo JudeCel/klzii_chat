@@ -4,7 +4,6 @@ import ReactDOM           from 'react-dom';
 
 const Board = React.createClass({
   getInitialState() {
-    this.maxInputLength = 200;
     return {
       content: this.props.boardContent,
       options: {
@@ -14,17 +13,12 @@ const Board = React.createClass({
   },
   onKeyPress(e) {
     let element = ReactDOM.findDOMNode(this).querySelector('.input-box');
-    if(element.textContent.length > this.maxInputLength) {
-      e.preventDefault();
-      e.stopPropagation();
-    }
+    e.preventDefault();
+    e.stopPropagation();
   },
   onChange(content, data) {
-    let length = data.origElements.textContent.length;
-    if(length > 0 && length < this.maxInputLength) {
-      this.setState({ content: content });
-      this.props.setContent(content);
-    }
+    this.setState({ content: content });
+    this.props.setContent(content);
   },
   render() {
     const { content, options } = this.state;
