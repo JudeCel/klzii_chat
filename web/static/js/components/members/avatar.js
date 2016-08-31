@@ -66,7 +66,6 @@ const Avatar = React.createClass({
     const { username, colour } = this.props.member;
     avatar.rect(25, 125, 100, 20, 1, 1).attr({fill: colour}).addClass('svg-avatar-label');
     avatar.text(76, 138, username).attr({fill: '#fff', 'font-size': '75%', 'text-anchor': 'middle'}).addClass('svg-avatar-label');
-    avatar.rect(30, 130, 90, 3, 5, 5).attr({fill: '#ccc', opacity: 0.2}).addClass('svg-avatar-label');
   },
   scaleAvatar(group) {
     if(group) {
