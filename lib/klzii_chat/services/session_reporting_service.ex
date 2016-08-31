@@ -54,13 +54,13 @@ defmodule KlziiChat.Services.SessionReportingService do
 
 
   @spec get_report_name(atom, integer) :: {:ok, String.t}
-  def get_report_name(:whiteboard, report_id), do: {:ok, "Session_topic_whiteboard_report_" <> to_string(report_id)}
+  def get_report_name(:whiteboard, report_id), do: {:ok, "STW_Report_" <> to_string(report_id)}
 
   @spec get_report_name(atom, integer) :: {:ok, String.t}
-  def get_report_name(:votes, report_id), do: {:ok, "Session_topic_mini_surveys_report_" <> to_string(report_id)}
+  def get_report_name(:votes, report_id), do: {:ok, "STMS_Report_" <> to_string(report_id)}
 
   @spec get_report_name(atom, integer) :: {:ok, String.t}
-  def get_report_name(_, report_id), do: {:ok, "Session_topic_messages_report_" <> to_string(report_id)}
+  def get_report_name(_, report_id), do: {:ok, "STM_Report_" <> to_string(report_id)}
 
 
   @spec create_report_async(integer, integer, integer, integer, String.t, atom, atom, boolean) :: {:ok, pid} | {:error, String.t}
