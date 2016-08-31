@@ -1,5 +1,4 @@
 import React, {PropTypes} from 'react';
-import moment             from 'moment';
 import Avatar             from './../../avatar.js';
 import mixins             from '../../../../mixins';
 
@@ -21,7 +20,7 @@ const Message = React.createClass({
             </div>
 
             <div className='col-md-6 text-right'>
-              <span>{ this.formatDate(moment, message.createdAt) }</span>
+              <span>{ this.formatDate(message.createdAt) }</span>
             </div>
           </div>
 

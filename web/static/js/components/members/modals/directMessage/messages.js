@@ -1,7 +1,6 @@
 import React, {PropTypes} from 'react';
 import { connect }        from 'react-redux';
 import ReactDOM           from 'react-dom';
-import moment             from 'moment';
 import Message            from './message';
 import mixins             from '../../../../mixins';
 import DirectMessageActions from '../../../../actions/directMessage';
@@ -16,7 +15,7 @@ const Messages = React.createClass({
       return (
         <div className='unread-separator text-center'>
           <hr className='pull-left' style={ this.borderColor() } />
-          <span className='date'>{ this.formatDate(moment, unread[0].createdAt) }</span>
+          <span className='date'>{ this.formatDate(unread[0].createdAt) }</span>
           <hr className='pull-right' style={ this.borderColor() } />
         </div>
       )

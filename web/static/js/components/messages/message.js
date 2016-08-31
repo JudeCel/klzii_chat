@@ -1,5 +1,4 @@
 import React, { PropTypes } from 'react';
-import moment               from 'moment';
 import MessageActions       from './actions';
 import mixins               from '../../mixins';
 
@@ -47,7 +46,7 @@ const Message = React.createClass({
             </span>
 
             <span className='pull-right'>
-              <small>{ this.formatDate(moment, message.time) }</small>
+              <small>{ this.formatDate(message.time) }</small>
             </span>
           </div>
 
