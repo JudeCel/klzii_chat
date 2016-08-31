@@ -58,7 +58,7 @@ const Actions = {
         type: Constants.SET_SESSION_TOPICS,
         all: sessionTopics
       });
-      let sessionTopicId = sessionTopics[0];
+      let sessionTopicId = selectLandingTopic(sessionTopics);
 
       if (sessionTopicId) {
         joinChannal(dispatch, socket, sessionTopicId.id);
@@ -81,3 +81,13 @@ const Actions = {
 
 
 export default Actions;
+
+function selectLandingTopic(topics) {
+  for(var i in topics) {
+    if(topics[i].landing) {
+      return topics[i];
+    }
+  }
+
+  return topics[0];
+}
