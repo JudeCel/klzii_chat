@@ -16,7 +16,7 @@ const EmotionPicker = React.createClass({
     e.currentTarget.style.backgroundColor = this.props.currentColour;
   },
   onMouseLeave(e) {
-    e.currentTarget.style = {};
+    e.currentTarget.style.backgroundColor = '#FFFFFF';
   },
   render() {
     const { currentEmotion } = this.props;
