@@ -24,8 +24,8 @@ const BoardModal = React.createClass({
   },
   onSave(e) {
     let { channel, dispatch } = this.props
-    
-    if (this.state.content.length < 200) {
+
+    if (this.state.content.length < 150) {
       Actions.saveBoard(channel, dispatch, this.state.content);
       this.closeAllModals();
     }else{

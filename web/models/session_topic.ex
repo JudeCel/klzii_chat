@@ -13,6 +13,7 @@ defmodule KlziiChat.SessionTopic do
     has_one :console, KlziiChat.Console,[foreign_key: :sessionTopicId]
     has_many :mini_surveys, KlziiChat.MiniSurvey, [foreign_key: :sessionTopicId]
     field :boardMessage, :string
+    field :board_message_text, :string, virtual: true
     field :order, :integer
     field :name, :string
     field :landing, :boolean, default: false
@@ -29,6 +30,18 @@ defmodule KlziiChat.SessionTopic do
     model
     |> cast(params, [:boardMessage] )
     |> validate_required([:boardMessage])
-    |> validate_length(:boardMessage, min: 1, max: 200)
+    |> set_board_message_text
+    |> validate_length(:board_message_text, min: 1, max: 200)
+  end
+
+
+  def set_board_message_text(base_changeset) do
+    case base_changeset do
+      %Ecto.Changeset{valid?: true, changes: %{boardMessage: boardMessage}} when is_bitstring(boardMessage) ->
+        text = Regex.replace(~r/<[^>]*>/, boardMessage, "")
+        put_change(base_changeset, :board_message_text, text)
+      _ ->
+        base_changeset
+    end
   end
 end
