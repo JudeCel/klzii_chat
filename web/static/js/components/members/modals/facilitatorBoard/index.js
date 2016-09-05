@@ -29,8 +29,7 @@ const BoardModal = React.createClass({
     }
   },
   onClose(e) {
-    let {modalWindows } = this.props
-    if (!modalWindows.postData) {
+    if (!this.props.modalWindows.postData) {
       this.closeAllModals();
     }
   },
