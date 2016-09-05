@@ -25,13 +25,16 @@ const Input = React.createClass({
   },
   defaultProps() {
     const { currentInput } = this.props;
+    let style = currentInput.replyColour ? { borderColor: currentInput.replyColour } : undefined;
+    let className = 'form-control' + (currentInput.replyColour ? ' wider-border' : '');
 
     return {
       onKeyDown: this.onKeyDown,
       value: currentInput.value,
       type: 'text',
       onChange: this.handleChange,
-      className: 'form-control',
+      style: style,
+      className: className,
       placeholder: 'Message',
       id: 'chat-input',
     };

@@ -5,7 +5,7 @@ import Constants            from '../../../constants';
 const ReplyMessage = React.createClass({
   replyMessage() {
     const { dispatch, message } = this.props;
-    dispatch({ type: Constants.SET_INPUT_REPLY, replyId: message.id });
+    dispatch({ type: Constants.SET_INPUT_REPLY, replyId: message.id, replyColour: message.session_member.colour });
   },
   render() {
     const { permission } = this.props;

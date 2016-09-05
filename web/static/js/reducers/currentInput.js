@@ -31,7 +31,7 @@ export default function reducer(state = initialState, action = {}) {
       if (state.action == 'reply' ) {
         return initialState;
       }else{
-        return { ...initialState, action: 'reply', inputPrefix: "Reply:", replyId: action.replyId, value: ''};
+        return { ...initialState, action: 'reply', inputPrefix: "Reply:", replyId: action.replyId, replyColour: action.replyColour, value: ''};
       }
     default:
       return state;
