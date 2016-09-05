@@ -23,13 +23,14 @@ const BoardModal = React.createClass({
     e.appendChild(toolbar);
   },
   onSave(e) {
-    let { channel, dispatch } = this.props
-    
-    if (this.state.content.length < 200) {
+    let { channel, dispatch, modalWindows } = this.props
+    if (!modalWindows.postData) {
       Actions.saveBoard(channel, dispatch, this.state.content);
+    }
+  },
+  onClose(e) {
+    if (!this.props.modalWindows.postData) {
       this.closeAllModals();
-    }else{
-      NotificationActions.showErrorNotification(dispatch, {errors: {"body": ["Facilitator Board Message is too long, max 200"]}})
     }
   },
   setContent(content) {
@@ -44,7 +45,7 @@ const BoardModal = React.createClass({
         <Modal dialogClassName='modal-section facilitator-board-modal' show={ show } onHide={ this.closeAllModals } onEnter={ this.onOpen }>
           <Modal.Header>
             <div className='col-md-2'>
-              <span className='pull-left fa icon-reply' onClick={ this.closeAllModals }></span>
+              <span className='pull-left fa icon-reply' onClick={ this.onClose }></span>
             </div>
 
             <div className='col-md-8 modal-title'>
