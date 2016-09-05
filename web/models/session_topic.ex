@@ -31,7 +31,7 @@ defmodule KlziiChat.SessionTopic do
     |> cast(params, [:boardMessage] )
     |> validate_required([:boardMessage])
     |> set_board_message_text
-    |> validate_length(:board_message_text, min: 1, max: 200)
+    |> validate_length(:board_message_text, min: 1, max: 150)
   end
 
 
