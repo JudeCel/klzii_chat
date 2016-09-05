@@ -11,13 +11,8 @@ const Board = React.createClass({
       }
     };
   },
-  onKeyPress(e) {
-    let element = ReactDOM.findDOMNode(this).querySelector('.input-box');
-    e.preventDefault();
-    e.stopPropagation();
-  },
-  onChange(content, data) {
-    this.setState({ content: content });
+  onChange(content) {
+    this.setState({ content });
     this.props.setContent(content);
   },
   render() {
@@ -25,7 +20,7 @@ const Board = React.createClass({
 
     return (
       <div className='col-md-12'>
-        <Editor className='input-box' text={ content } onChange={ this.onChange } options={ options } onKeyPress={ this.onKeyPress } />
+        <Editor className='input-box' text={ content } onChange={ this.onChange } options={ options } />
       </div>
     )
   }

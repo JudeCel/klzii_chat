@@ -17,7 +17,7 @@ defmodule KlziiChat.Services.SessionTopicService do
 
     case SessionTopicPermissions.can_board_message(session_member) do
       {:ok} ->
-        Ecto.Changeset.change(session_topic, boardMessage: message) |> Repo.update
+        SessionTopic.changeset(session_topic, %{ boardMessage: message}) |> Repo.update
       {:error, reason} ->
         {:error, reason}
     end
