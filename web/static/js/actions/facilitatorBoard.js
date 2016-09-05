@@ -12,9 +12,6 @@ const Actions = {
       dispatch({ type: Constants.MODAL_POST_DATA_DONE });
       NotificationActions.showErrorNotification(dispatch, errors);
     });
-  },
-  saveClose(dispatch) {
-    dispatch({ type: Constants.CLOSE_ALL_MODAL_WINDOWS });
   }
 }
 

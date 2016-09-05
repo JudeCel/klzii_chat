@@ -29,9 +29,9 @@ const BoardModal = React.createClass({
     }
   },
   onClose(e) {
-    let {dispatch, modalWindows } = this.props
+    let {modalWindows } = this.props
     if (!modalWindows.postData) {
-      Actions.saveClose(dispatch);
+      this.closeAllModals();
     }
   },
   setContent(content) {
