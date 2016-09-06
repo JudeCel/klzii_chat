@@ -8,13 +8,14 @@ defmodule KlziiChat.AuthController do
   plug Guardian.Plug.EnsureAuthenticated, handler: KlziiChat.Guardian.AuthErrorHandler
   plug :if_current_member
 
-  def token(conn, _, member, _) do
+  def token(conn, _, member, claims) do
     session_member = Repo.get_by!(KlziiChat.SessionMember, id: member.session_member.id)
     session = Repo.get_by!(KlziiChat.Session, id: member.session_member.sessionId)
 
     case SessionPermissions.can_access?(member.account_user, session_member, session) do
       {:ok} ->
-        { :ok, jwt, _encoded_claims } =  Guardian.encode_and_sign(member.session_member)
+        {:ok, %{"callback_url" => callback_url}} = claims
+        { :ok, jwt, _encoded_claims } =  Guardian.encode_and_sign(member.session_member, :token, %{callback_url: callback_url} )
         redirect_url = UrlHelper.auth_redirect_url(jwt) |> to_string
         json(conn, %{redirect_url: redirect_url})
       {:error, reason} ->

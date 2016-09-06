@@ -6,7 +6,7 @@ defmodule KlziiChat.Services.SessionMembersService do
   def get_member_from_token(token) do
     with {:ok, claims} <- Guardian.decode_and_verify(token),
          {:ok, member} <- KlziiChat.Guardian.Serializer.from_token(claims["sub"]),
-     do: {:ok, member}
+     do: {:ok, member, claims["callback_url"]}
   end
 
   @spec update_member(Integer.t, Map.t) :: {:ok, %SessionMember{}} | {:error, Ecto.Changeset.t}
