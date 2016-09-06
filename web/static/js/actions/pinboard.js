@@ -43,6 +43,7 @@ const Actions = {
   upload:(data, jwt) => {
     return (dispatch) => {
       let csrf_token = localStorage.getItem("csrf_token");
+      dispatch({ type: Constants.MODAL_POST_DATA });
       let req = request.post('/api/pinboard_resource/upload')
          .set('X-CSRF-Token', csrf_token)
          .set('Authorization', jwt);
@@ -58,6 +59,8 @@ const Actions = {
       req.end((errors, result) => {
         if(errors) {
           NotificationActions.showErrorNotification(dispatch, errors);
+        }else {
+          dispatch({ type: Constants.MODAL_POST_DATA_DONE_AND_CLOSE });
         }
       });
     }

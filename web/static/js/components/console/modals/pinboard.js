@@ -13,17 +13,16 @@ const PinboardConsole = React.createClass({
   addToPinboard() {
     const { name, files } = this.state;
     const { dispatch, sessionTopic, currentUserJwt } = this.props;
-
-    let data = {
-      type: 'image',
-      scope: 'pinboard',
-      name: name,
-      files: files,
-      sessionTopicId: sessionTopic.id
-    };
-
-    dispatch(PinboardActions.upload(data, currentUserJwt));
-    this.closeAllModals();
+    if (!this.props.modalWindows.postData) {
+      let data = {
+        type: 'image',
+        scope: 'pinboard',
+        name: name,
+        files: files,
+        sessionTopicId: sessionTopic.id
+      };
+      dispatch(PinboardActions.upload(data, currentUserJwt));
+    }
   },
   render() {
     const { show } = this.props;
