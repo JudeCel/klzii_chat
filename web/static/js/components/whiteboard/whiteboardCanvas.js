@@ -231,6 +231,12 @@ const WhiteboardCanvas = React.createClass({
       keysToDelete.push(key);
     });
 
+    var polygons = document.getElementsByTagName("polygon");
+    var polygonsList = Array.prototype.slice.call(polygons);
+    polygonsList.forEach(function(el){
+      self.fixArrowsForIE(el);
+    });
+
     while (keysToDelete.length) {
       let position = shapesKeys.indexOf(keysToDelete[0]);
       if (position >-1) {
@@ -271,6 +277,18 @@ const WhiteboardCanvas = React.createClass({
   },
   shapeTransformed(shape) {
     this.activeShape = shape;
+  },
+  fixArrowsForIE(el) {
+    //arrows fix for IE
+    if(window.navigator.userAgent.indexOf("MSIE") > 0 || !!window.navigator.userAgent.match(/Trident.*rv\:11\./)){
+      //IE replaces comma with space 
+      if (el.getAttribute && el.getAttribute("points") == "0,10 4,10 2,0 0,10"){
+        el.setAttribute("points", "0,10 4,10 2,5 0,10");
+      }
+      else if (el.attr && el.attr("points") == "0,10 4,10 2,0 0,10"){
+          el.attr("points", "0,10 4,10 2,5 0,10");
+      }
+    }
   },
   moveDistance(dx, dy) {
     return Math.sqrt( Math.pow( dx, 2)  + Math.pow( dy, 2)  );
