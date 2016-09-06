@@ -33,6 +33,7 @@ defmodule KlziiChat.SessionTopicChannel do
   def handle_info(:after_join, socket) do
     session_member = get_session_member(socket)
     {:ok, console} = ConsoleService.get(session_member.session_id, socket.assigns.session_topic_id)
+
     {:ok, _} = Presence.track(socket, (get_session_member(socket).id |> to_string), %{
       online_at: inspect(System.system_time(:seconds)),
       id: session_member.id,

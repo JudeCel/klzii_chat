@@ -76,12 +76,21 @@ function updateMember(state, member) {
 }
  function findAndUpdate(members, member) {
    let newMembers = [];
+   let newMember = true;
+
     members.map((m) => {
      if (m.id == member.id) {
+       newMember = false;
        newMembers.push(Object.assign(m, member));
      }else{
+       newMember = false;
        newMembers.push(m);
      }
    });
+
+   if (newMember) {
+     newMembers.push(member);
+   }
+
    return newMembers;
  }

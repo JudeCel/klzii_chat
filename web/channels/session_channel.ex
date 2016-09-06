@@ -41,13 +41,13 @@ defmodule KlziiChat.SessionChannel do
         {:error, %{reason: reason}}
     end
 
-      {:ok, _} = Presence.track(socket, (get_session_member(socket).id |> to_string), %{
-        online_at: inspect(System.system_time(:seconds)),
-        id: get_session_member(socket).id,
-        role: get_session_member(socket).role
-      })
-      push socket, "presence_state", Presence.list(socket)
-      push(socket, "self_info", get_session_member(socket))
+    track_item = SessionMembersView.render("member.json", member: get_session_member(socket))
+    |> Map.put(:online_at, inspect(System.system_time(:seconds)))
+
+    {:ok, _} = Presence.track(socket, (track_item.id |> to_string), track_item)
+
+    push socket, "presence_state", Presence.list(socket)
+    push(socket, "self_info", get_session_member(socket))
     {:noreply, socket}
   end
 
