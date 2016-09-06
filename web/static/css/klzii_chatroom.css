@@ -79,7 +79,3 @@
 .icon-message:before { content: '\e81a'; } /* '' */
 .icon-cancel-empty:before { content: '\e81b'; } /* '' */
 .icon-reply-empty:before { content: '\e81c'; } /* '' */
-
-.uploads-console-section a {
-  text-decoration:none !important;
-}
