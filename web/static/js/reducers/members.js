@@ -39,7 +39,7 @@ function onJoin(state) {
 }
 
 function onLeave(state) {
-  return (id, current, leftPres) =>{
+  return (id, current, leftPres) => {
     if (current.metas.length == 0) {
       leftPres.member.online = false
       updateMember(state, leftPres.member)
@@ -48,13 +48,13 @@ function onLeave(state) {
 }
 
 function syncState(state, syncData) {
-  Presence.syncState(state.presences, syncData, onJoin(state), onLeave(state))
-  return  state
+  state.presences = Presence.syncState(state.presences, syncData, onJoin(state), onLeave(state))
+  return state
 }
 
 function syncDiff(state, diff) {
-   Presence.syncDiff(state.presences, diff, onJoin(state), onLeave(state))
-   return  state;
+  state.presences = Presence.syncDiff(state.presences, diff, onJoin(state), onLeave(state))
+  return state;
 }
 
 function updateMember(state, member) {
