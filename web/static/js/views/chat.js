@@ -15,6 +15,7 @@ import HeaderLinks          from '../components/header/links.js';
 import Console              from '../components/console/index';
 
 import Pinboard             from '../components/pinboard/index.js';
+import Loading             from '../components/util/loading.js';
 import WhiteboardCanvas     from '../components/whiteboard/whiteboardCanvas';
 import Notifications        from '../actions/notifications';
 import notificationMixin    from '../mixins/notification';
@@ -71,6 +72,7 @@ const ChatView = React.createClass({
     else if(sessionReady && sessionTopicReady) {
       return (
         <div id='chat-app-container'>
+          <Loading />
           <ToastContainer ref='notification' className='toast-top-right' toastMessageFactory={ ToastMessageFactory } />
 
           <nav className='row header-section'>
