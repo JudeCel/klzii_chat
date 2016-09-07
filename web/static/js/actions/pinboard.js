@@ -6,10 +6,13 @@ const Actions = {
   subscribePinboardEvents:(channel) => {
     return dispatch => {
       channel.on('new_pinboard_resource', (data) =>{
-        return dispatch({ type: Constants.CHANGE_PINBOARD_RESOURCE, data: data });
+        dispatch({ type: Constants.CHANGE_PINBOARD_RESOURCE, data: data });
       });
       channel.on('delete_pinboard_resource', (data) =>{
-        return dispatch({ type: Constants.CHANGE_PINBOARD_RESOURCE, data: data });
+        dispatch({ type: Constants.CHANGE_PINBOARD_RESOURCE, data: data });
+      });
+      channel.on('pinboard_resources', (data) =>{
+        dispatch({ type: Constants.GET_PINBOARD_RESOURCES, data: data.list });
       });
     }
   },

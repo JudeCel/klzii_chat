@@ -45,7 +45,7 @@ defmodule KlziiChat.Services.PinboardResourceService do
     ) |> Repo.one
       |> case do
           nil ->
-            {:error, %{not_found: error_messages.not_a_image}}
+            {:error, %{code: 413, not_found: error_messages.not_a_image}}
             _ ->
             {:ok}
          end
@@ -60,7 +60,7 @@ defmodule KlziiChat.Services.PinboardResourceService do
     ) |> Repo.one
       |> case do
           nil ->
-            {:error, %{system: error_messages.pinboard_is_disable}}
+            {:error, %{code: 403, system: error_messages.pinboard_is_disable}}
             _ ->
             {:ok}
          end

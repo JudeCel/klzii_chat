@@ -47,8 +47,25 @@ defmodule KlziiChat.SessionTopicChannel do
     UnreadMessageService.delete_unread_messages_for_topic(session_member.id, socket.assigns.session_topic_id)
     messages = UnreadMessageService.sync_state(session_member.id)
     Endpoint.broadcast!("sessions:#{session_member.session_id}", "unread_messages", messages)
-    push socket, "console", ConsoleView.render("show.json", %{console: console})
-    {:noreply, socket}
+
+    if console.pinboard do
+      case PinboardResourceService.all(socket.assigns.session_topic_id) do
+        {:ok, pinboard_resources} ->
+          list = Enum.map(pinboard_resources, fn item->
+            view = Phoenix.View.render_one(item, PinboardResourceView, "show.json", as: :pinboard_resource)
+            permissions = PermissionsBuilder.pinboard_resource(get_session_member(socket), item)
+            Map.put(view, :permissions, permissions)
+          end)
+          push socket, "console", ConsoleView.render("show.json", %{console: console})
+          push socket, "pinboard_resources", %{list: list}
+          {:noreply, socket}
+        {:error, reason} ->
+          {:reply, {:error, error_view(reason)}, socket}
+      end
+    else
+      push socket, "console", ConsoleView.render("show.json", %{console: console})
+      {:noreply, socket}
+    end
   end
 
   def handle_in("board_message", payload, socket) do
