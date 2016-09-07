@@ -62,6 +62,7 @@ const ChatView = React.createClass({
     window.addEventListener('resize', (e) => {
       this.props.dispatch({ type: Constants.SCREEN_SIZE_CHANGED, window: { width: e.target.innerWidth, height: e.target.innerHeight } });
     });
+    this.props.dispatch({ type: Constants.SCREEN_SIZE_CHANGED, window: { width: window.innerWidth, height: window.innerHeight } });
   },
   render() {
     const { error, sessionReady, sessionTopicReady } = this.props;
@@ -80,6 +81,16 @@ const ChatView = React.createClass({
               <SessionTopicSelect/>
               <Resources/>
               <HeaderLinks/>
+            </div>
+            <div className='header-innerbox header-innerbox-mobile'>
+              <div className='navbar-header'>
+                <button type='button' className='navbar-toggle'>
+                  <span className='icon-bar'></span>
+                  <span className='icon-bar'></span>
+                  <span className='icon-bar'></span>
+                </button>
+                <span className='navbar-brand'><img src='/images/klzii_logo.png'/></span>
+              </div>
             </div>
           </nav>
 
