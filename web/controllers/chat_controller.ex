@@ -53,15 +53,7 @@ defmodule KlziiChat.ChatController do
   end
 
   def logout(conn, _) do
-    conn = Guardian.Plug.sign_out(conn)
-    |> delete_resp_cookie("chat_token")
-
-    if redirect_url = conn.cookies["redirect_url"] do
-      delete_resp_cookie(conn, "redirect_url")
-      |> redirect(external: redirect_url)
-    else
-      send_resp(conn, 200, Poison.encode!(%{message: "Successfully logged out"}))
-    end
+    redirect(conn, external: conn.cookies["redirect_url"])
   end
 
   defp set_redirect_url(conn, nil), do: conn
