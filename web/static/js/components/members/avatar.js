@@ -85,7 +85,7 @@ const Avatar = React.createClass({
     }
   },
   componentDidMount() {
-    const { avatarData, username, sessionTopicContext } = this.props.member;
+    const { avatarData, username, sessionTopicContext, currentTopic } = this.props.member;
 
     let avatar = this.findAvatar();
     this.clearAvatar(avatar);
@@ -98,7 +98,7 @@ const Avatar = React.createClass({
       this.scaleAvatar(group);
     }
 
-    this.previousData = { avatarData, username, sessionTopicContext };
+    this.previousData = { avatarData, username, sessionTopicContext, currentTopic };
   },
   shouldComponentUpdate(nextProps) {
     if(this.previousData) {
