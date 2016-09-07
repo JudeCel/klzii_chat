@@ -7,7 +7,8 @@ defmodule KlziiChat.SessionMembersView do
       colour: member.colour,
       avatarData: member.avatarData,
       sessionTopicContext: member.sessionTopicContext,
-      role: member.role
+      role: member.role,
+      currentTopic: member.currentTopic
     }
   end
 

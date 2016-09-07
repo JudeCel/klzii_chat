@@ -1,7 +1,8 @@
 defmodule KlziiChat.SessionTopicChannel do
   use KlziiChat.Web, :channel
   alias KlziiChat.Services.Permissions.Builder, as: PermissionsBuilder
-  alias KlziiChat.Services.{MessageService, UnreadMessageService, ConsoleService, SessionTopicService, MiniSurveysService, PinboardResourceService}
+  alias KlziiChat.Services.{MessageService, UnreadMessageService, ConsoleService,
+    SessionTopicService, MiniSurveysService, PinboardResourceService, SessionMembersService}
   alias KlziiChat.{MessageView, Presence, Endpoint, ConsoleView, SessionTopicView, SessionMembersView, MiniSurveyView, PinboardResourceView}
   import(KlziiChat.Authorisations.Channels.SessionTopic, only: [authorized?: 2])
   import(KlziiChat.Helpers.SocketHelper, only: [get_session_member: 1])
@@ -39,6 +40,9 @@ defmodule KlziiChat.SessionTopicChannel do
       id: session_member.id,
       role: session_member.role
     })
+
+    {:ok, member} = SessionMembersService.update_current_topic(session_member.id, socket.assigns.session_topic_id)
+    Endpoint.broadcast!("sessions:#{session_member.session_id}", "update_member", member)
 
     UnreadMessageService.delete_unread_messages_for_topic(session_member.id, socket.assigns.session_topic_id)
     messages = UnreadMessageService.sync_state(session_member.id)

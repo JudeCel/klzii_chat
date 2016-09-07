@@ -15,7 +15,7 @@ defmodule KlziiChat.SessionChannel do
     Global messages for session
   """
 
-  intercept ["unread_messages", "session_topics_report_updated", "new_direct_message"]
+  intercept ["unread_messages", "session_topics_report_updated", "new_direct_message", "update_member"]
 
   def join("sessions:" <> session_id, _, socket) do
     {session_id, _} = Integer.parse(session_id)
@@ -59,7 +59,7 @@ defmodule KlziiChat.SessionChannel do
           push(socket, "self_info", SessionMembersView.render("current_member.json", member: session_member, permissions_map: permissions_map))
         end)
 
-        broadcast(socket, "update_member", SessionMembersView.render("member.json", member: session_member))
+        broadcast(socket, "update_member", session_member)
         Task.await(permission_task)
       {:error, reason} ->
         {:error, %{reason: reason}}
@@ -160,6 +160,11 @@ defmodule KlziiChat.SessionChannel do
     if SessionReportingPermissions.can_create_report(get_session_member(socket)) do
       push socket, "session_topics_report_updated", SessionTopicsReportView.render("show.json", %{report: payload})
     end
+    {:noreply, socket}
+  end
+
+  def handle_out("update_member", payload, socket) do
+    push socket, "update_member", SessionMembersView.render("member.json", member: payload)
     {:noreply, socket}
   end
 

@@ -1,5 +1,6 @@
 defmodule KlziiChat.Services.SessionMembersService do
-  alias KlziiChat.{Repo, Message, AccountUser, SessionMember, SessionMembersView}
+  alias KlziiChat.{Repo, Message, AccountUser, SessionMember,
+    SessionTopci, SessionMembersView, SessionTopic}
   import Ecto.Query, only: [from: 2]
 
   @spec get_member_from_token(String.t) :: {:ok, %AccountUser{}} | {:error, String.t}
@@ -27,6 +28,15 @@ defmodule KlziiChat.Services.SessionMembersService do
   def update_session_topic_context(session_member, session_topic_id, params) do
     session_topic_context = merge_session_topic_context(session_member.sessionTopicContext, params, session_topic_id)
     SessionMember.changeset(session_member, %{sessionTopicContext: session_topic_context})
+    |> update_member
+  end
+
+  @spec update_current_topic(Integer, Integer) :: {:ok, %SessionMember{}} | {:error, Ecto.Changeset.t}
+  def update_current_topic(session_member_id, session_topic_id) do
+    session_member =  Repo.get_by!(SessionMember, id: session_member_id)
+    session_topic = Repo.get!(SessionTopic, session_topic_id)
+    current_topic = %{"id" => session_topic.id, "name" => session_topic.name, "date" => to_string(Timex.now) }
+    SessionMember.changeset(session_member, %{currentTopic: current_topic})
     |> update_member
   end
 

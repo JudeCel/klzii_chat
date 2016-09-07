@@ -27,7 +27,7 @@ defmodule KlziiChat.Services.Permissions.Session do
     validate_time(startTime, endTime)
   end
   def can_access?(_account_user, _session_member, session) do
-    {:error, %{permissions: "Session status: #{session.status}", code: 401}}
+    {:error, %{permissions: "Session status: #{String.capitalize(session.status)}", code: 401}}
   end
 
   @spec validate_time(Timex.t, Timex) :: {:ok} | {:error, map}

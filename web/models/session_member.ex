@@ -18,6 +18,7 @@ defmodule KlziiChat.SessionMember do
     field :colour, :string
     field :avatarData, :map, default: %{ base: 0, face: 3, body: 0, hair: 0, desk: 0, head: 0 }
     field :sessionTopicContext, :map, default: %{}
+    field :currentTopic, :map, default: %{"id" => nil, "name" => nil, "date" => nil}
     field :token, :string
     field :role, :string
     timestamps [inserted_at: :createdAt, updated_at: :updatedAt]
@@ -32,7 +33,7 @@ defmodule KlziiChat.SessionMember do
   """
   def changeset(model, params \\ %{}) do
     model
-    |> cast(params, [:username, :avatarData, :sessionTopicContext])
+    |> cast(params, [:username, :avatarData, :sessionTopicContext, :currentTopic])
     |> validate_required([:username])
     |> validate_length(:username, min: 1)
   end
