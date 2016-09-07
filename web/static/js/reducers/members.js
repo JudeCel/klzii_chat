@@ -3,7 +3,8 @@ import { Presence } from 'phoenix';
 const initialState = {
   currentUser: { },
   facilitator: {
-    avatarData: { base: 0, face: 3, body: 0, hair: 0, desk: 0, head: 0 }
+    avatarData: { base: 0, face: 3, body: 0, hair: 0, desk: 0, head: 0 },
+    currentTopic: {}
   },
   participants: [],
   observers: [],
