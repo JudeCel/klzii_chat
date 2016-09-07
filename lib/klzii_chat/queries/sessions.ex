@@ -1,5 +1,5 @@
 defmodule KlziiChat.Queries.Sessions do
-  alias KlziiChat.{Session, SessionTopic, SubscriptionPreference}
+  alias KlziiChat.{Session, SessionTopic, SubscriptionPreference, Account}
   import Ecto.Query, only: [from: 2]
 
   @spec find(Integer) :: Ecto.Query.t
@@ -18,6 +18,15 @@ defmodule KlziiChat.Queries.Sessions do
     join: a in assoc(s, :account),
     join: session in assoc(a, :sessions),
     where: session.id == ^sessionId
+    )
+  end
+
+  @spec is_admin(integer) :: Ecto.Query.t
+  def is_admin(sessionId) do
+    from(a in Account,
+    join: session in assoc(a, :sessions),
+    where: session.id == ^sessionId,
+    where: a.admin == true
     )
   end
 end

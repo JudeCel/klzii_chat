@@ -11,6 +11,7 @@ defmodule KlziiChat.Services.Permissions.Validations do
   end
 
   @spec has_allowed_from_subscription(Map.t, Atom.t) :: Boolean.t
+  def has_allowed_from_subscription(%{admin: true}, _), do: true
   def has_allowed_from_subscription(subscription_preference, key) do
     Map.get(subscription_preference, key, false)
   end

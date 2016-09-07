@@ -25,9 +25,10 @@ defmodule KlziiChat.Services.Permissions.ResourcePermissionsTest do
   end
 
   test "can zip when admin " do
+    preference = %{"admin" =>  true}
     member = %{id: 1, role: "admin"}
     events = [%{id: 1, accountUser: 1}]
-    assert( {:ok} = Resources.can_zip(member, events))
+    assert( {:ok} = Resources.can_zip(member, events, preference))
   end
 
   test "can't participant delete when not  owner " do
