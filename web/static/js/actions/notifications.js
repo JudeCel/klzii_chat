@@ -23,6 +23,7 @@ const Actions = {
     messages.map((error, index) => {
       dispatch({ type: Constants.SHOW_NOTIFICATION, data: error });
     });
+    dispatch({ type: Constants.MODAL_POST_DATA_DONE });
   },
   showNotification(dispatch, data) {
     dispatch({ type: Constants.SHOW_NOTIFICATION, data: data });
