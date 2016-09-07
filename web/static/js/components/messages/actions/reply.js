@@ -1,10 +1,11 @@
 import React, { PropTypes } from 'react';
 import { connect }          from 'react-redux';
 import Constants            from '../../../constants';
+import ReactDOM                 from 'react-dom';
 
 const ReplyMessage = React.createClass({
   replyMessage() {
-    const { dispatch, message } = this.props;
+    window.scrollTo(0, window.innerHeight * window.innerHeight)
     dispatch({ type: Constants.SET_INPUT_REPLY, replyId: message.id, replyColour: message.session_member.colour });
   },
   render() {

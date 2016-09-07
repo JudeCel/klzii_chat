@@ -70,17 +70,19 @@ defmodule KlziiChat.Channels.SessionTopic.MessageTest do
       assert(resp == %{id: message.id, replyId: nil})
   end
 
-  test "can thumbs up for message", %{socket: socket, session_topic_1_name: session_topic_1_name} do
+  test "can thumbs up for message", %{socket: socket, socket2: socket2, session_topic_1_name: session_topic_1_name} do
     {:ok, _, socket} = subscribe_and_join(socket, SessionTopicChannel, session_topic_1_name)
-      ref = push socket, "new_message", %{"emotion" => "1", "body" => "hey!!"}
-      assert_reply ref, :ok
-      assert_push "new_message", message
+    {:ok, _, socket2} = subscribe_and_join(socket2, SessionTopicChannel, session_topic_1_name)
+    ref = push socket, "new_message", %{"emotion" => "1", "body" => "hey!!"}
 
-      ref2 = push socket, "thumbs_up", %{"id" => message.id}
-      assert_reply ref2, :ok
+    assert_reply ref, :ok
+    assert_push "new_message", message
 
-      assert_push "update_message", resp
-      assert(resp.has_voted)
+    ref2 = push socket2, "thumbs_up", %{"id" => message.id}
+    assert_reply ref2, :ok
+
+    assert_push "update_message", resp
+    assert(resp.has_voted)
   end
 
   test "can reply ", %{socket: socket, session_topic_1_name: session_topic_1_name} do
