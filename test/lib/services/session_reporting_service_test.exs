@@ -3,7 +3,7 @@ defmodule KlziiChat.Services.SessionReportingServiceTest do
   alias KlziiChat.SessionTopicReport
   alias KlziiChat.Services.SessionReportingService
 
-  @report_prefix "ReportingService_test_report"
+  @report_prefix "RSTReport"
   @db_wait 500
 
   setup %{session: session, session_topic_1: session_topic_1, facilitator: facilitator, participant: participant} do

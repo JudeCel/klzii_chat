@@ -14,8 +14,7 @@ defmodule KlziiChat.AuthController do
 
     case SessionPermissions.can_access?(member.account_user, session_member, session) do
       {:ok} ->
-        {:ok, %{"callback_url" => callback_url}} = claims
-        { :ok, jwt, _encoded_claims } =  Guardian.encode_and_sign(member.session_member, :token, %{callback_url: callback_url} )
+        { :ok, jwt, _encoded_claims } =  Guardian.encode_and_sign(member.session_member, :token, %{callback_url: get_callback_url(claims)} )
         redirect_url = UrlHelper.auth_redirect_url(jwt) |> to_string
         json(conn, %{redirect_url: redirect_url})
       {:error, reason} ->
@@ -31,4 +30,10 @@ defmodule KlziiChat.AuthController do
       KlziiChat.Guardian.AuthErrorHandler.unauthenticated(conn, opts)
     end
   end
+
+  def get_callback_url({:ok, claims}) do
+    Map.get(claims, "callback_url", nil)
+  end
+  def get_callback_url(_), do: nil
+
 end

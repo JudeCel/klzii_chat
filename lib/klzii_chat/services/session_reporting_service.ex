@@ -137,7 +137,7 @@ defmodule KlziiChat.Services.SessionReportingService do
 
   @spec update_session_topics_reports_record({:ok, Map.t}, integer) :: {atom, Map.t}
   def update_session_topics_reports_record({:ok, resource}, report_id) do
-    Repo.get(SessionTopicReport, report_id)
+    Repo.get!(SessionTopicReport, report_id)
     |> Ecto.Changeset.change(status: "completed", resourceId: resource.id, message: nil)
     |> Repo.update()
   end

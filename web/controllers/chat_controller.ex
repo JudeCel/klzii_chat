@@ -23,6 +23,7 @@ defmodule KlziiChat.ChatController do
       {:ok, member, callback_url} ->
         conn = set_redirect_url(conn, callback_url)
         |> Guardian.Plug.sign_in(member.session_member)
+
         put_resp_cookie(conn, "chat_token", Guardian.Plug.current_token(conn), max_age: get_cookie_espire_time())
         |> render("index.html", session_id: member.session_member.sessionId)
       {:error, _reason } ->
@@ -63,9 +64,11 @@ defmodule KlziiChat.ChatController do
     end
   end
 
+  defp set_redirect_url(conn, nil), do: conn
   defp set_redirect_url(conn, callback_url) do
     put_resp_cookie(conn, "redirect_url", callback_url)
   end
+
 
   defp get_cookie_espire_time() do
     use Timex
