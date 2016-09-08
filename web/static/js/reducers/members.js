@@ -62,7 +62,7 @@ function updateMember(state, member) {
   switch (member.role) {
     case "facilitator":
       Object.assign(state.facilitator, member)
-      state.facilitator = {...state.facilitator, member};
+      state.facilitator = {...state.facilitator, ...member};
       break;
     case "participant":
       state.participants = findAndUpdate(state.participants, member);
@@ -83,7 +83,8 @@ function findAndUpdate(members, member) {
   members.map((m) => {
     if(m.id == member.id) {
       newMember = false;
-      newMembers.push(Object.assign(m, member));
+      Object.assign(m, member)
+      newMembers.push({...m, ...member});
     }
     else {
       newMembers.push(m);
