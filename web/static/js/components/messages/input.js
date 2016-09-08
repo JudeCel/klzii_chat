@@ -1,6 +1,7 @@
 import React, {PropTypes} from 'react';
 import { connect }        from 'react-redux';
 import TextareaAutosize   from 'react-autosize-textarea';
+import ReactDOM           from 'react-dom';
 import EmotionPicker      from './emotionPicker';
 import InputActions       from '../../actions/currentInput';
 import MessagesActions    from '../../actions/messages';
@@ -38,6 +39,12 @@ const Input = React.createClass({
       placeholder: 'Message',
       id: 'chat-input',
     };
+  },
+  componentDidUpdate(props) {
+    if(this.props.currentInput.replyColour != props.currentInput.replyColour) {
+      let input = ReactDOM.findDOMNode(this).querySelector('#chat-input');
+      input.focus();
+    }
   },
   render() {
     const { currentInput } = this.props;

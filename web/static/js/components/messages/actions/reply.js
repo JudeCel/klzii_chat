@@ -5,7 +5,7 @@ import ReactDOM                 from 'react-dom';
 
 const ReplyMessage = React.createClass({
   replyMessage() {
-    window.scrollTo(0, window.innerHeight * window.innerHeight)
+    const { dispatch, message } = this.props;
     dispatch({ type: Constants.SET_INPUT_REPLY, replyId: message.id, replyColour: message.session_member.colour });
   },
   render() {
