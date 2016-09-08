@@ -47,18 +47,24 @@
   }
 }
 
-.header-innerbox-mobile, .icon-whiteboard-hide-mobile, .icon-pinboard-hide-mobile, .facilitator-name-mobile {
+.header-innerbox-mobile, .icon-whiteboard-hide-mobile, .icon-pinboard-hide-mobile, .facilitator-name-mobile,
+.emotion-chat-avatar {
   display:none;
 }
 
 @media (max-width: 767px) {
   .header-innerbox, .inmplayer-launcher, .whiteboard-title, .footer, .whiteboard-section.minimized, .participants-section,
-  .pinboard-title, .pinboard-section.minimized {
+  .pinboard-title, .pinboard-section.minimized, .message-section .emotion-chat-section div:first-child {
     display:none !important;
   }
 
-  .header-innerbox-mobile {
+  .header-innerbox-mobile, .emotion-chat-avatar {
     display:block !important;
+  }
+
+  .emotion-chat-avatar {
+    height: 52px;
+    width: 75px;
   }
 
   .facilitator-name-mobile {
@@ -249,8 +255,14 @@
     height: 67px !important;
   }
 
-  .facilitator-section svg text, .facilitator-section svg rect {
-    display:none
+  .facilitator-section svg text, .facilitator-section svg rect, .message-section svg text, .message-section svg rect {
+    display:none;
+  }
+
+  .message-section svg {
+    transform: scale(0.5) translate(-37.5px, -37.5px);
+    margin-left: -25px;
+    margin-top: -35px;
   }
 
   .facilitator-section .outerbox {
