@@ -1,5 +1,5 @@
 defmodule KlziiChat.Services.UnreadMessageService do
-  alias KlziiChat.{Repo, Message, SessionMember, UnreadMessage}
+  alias KlziiChat.{Repo, Message, SessionMember, UnreadMessage, SessionTopic}
   alias KlziiChat.Helpers.ListHelper
   import Ecto.Query, only: [from: 2]
   import KlziiChat.Helpers.Presence, only: [topic_presences_ids: 1, session_presences_ids: 1]
@@ -73,6 +73,7 @@ defmodule KlziiChat.Services.UnreadMessageService do
     from(sm in SessionMember,
       where: sm.id in ^session_member_ids,
       left_join: um in UnreadMessage, on: sm.id == um.sessionMemberId,
+      join: st in SessionTopic, on: st.id == um.sessionTopicId and st.active == true, 
       group_by: [sm.id, um.scope, um.sessionTopicId],
       select: %{"id" => sm.id, "session_topic" => {um.sessionTopicId, %{um.scope => count(um.scope)}}}
     )|> Repo.all
