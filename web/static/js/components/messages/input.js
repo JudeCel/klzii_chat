@@ -41,7 +41,7 @@ const Input = React.createClass({
     };
   },
   componentDidUpdate(props) {
-    if(this.props.currentInput.replyColour != props.currentInput.replyColour) {
+    if(this.props.currentInput.replyId != props.currentInput.replyId) {
       let input = ReactDOM.findDOMNode(this).querySelector('#chat-input');
       input.focus();
     }
