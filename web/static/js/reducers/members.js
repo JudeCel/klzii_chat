@@ -65,7 +65,7 @@ function updateMember(state, member) {
       state.facilitator = {...state.facilitator, member};
       break;
     case "participant":
-      state.participants =  findAndUpdate(state.participants, member);
+      state.participants = findAndUpdate(state.participants, member);
       break
     case "observer":
       state.observers = findAndUpdate(state.observers, member) ;
@@ -75,23 +75,24 @@ function updateMember(state, member) {
   }
   return state;
 }
- function findAndUpdate(members, member) {
-   let newMembers = [];
-   let newMember = true;
 
-    members.map((m) => {
-     if (m.id == member.id) {
-       newMember = false;
-       newMembers.push(Object.assign(m, member));
-     }else{
-       newMember = false;
-       newMembers.push(m);
-     }
-   });
+function findAndUpdate(members, member) {
+  let newMembers = [];
+  let newMember = true;
 
-   if (newMember) {
-     newMembers.push(member);
-   }
+  members.map((m) => {
+    if(m.id == member.id) {
+      newMember = false;
+      newMembers.push(Object.assign(m, member));
+    }
+    else {
+      newMembers.push(m);
+    }
+  });
 
-   return newMembers;
- }
+  if(newMember) {
+    newMembers.push(member);
+  }
+
+  return newMembers;
+}
