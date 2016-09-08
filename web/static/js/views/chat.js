@@ -60,9 +60,17 @@ const ChatView = React.createClass({
   },
   componentDidMount() {
     window.addEventListener('resize', (e) => {
-      this.props.dispatch({ type: Constants.SCREEN_SIZE_CHANGED, window: { width: e.target.innerWidth, height: e.target.innerHeight } });
+      var width = Math.max(e.target.innerWidth, 580);
+      if (width <= 767) {
+        width = 580;
+      }
+      this.props.dispatch({ type: Constants.SCREEN_SIZE_CHANGED, window: { width: width, height: e.target.innerHeight } });
     });
-    this.props.dispatch({ type: Constants.SCREEN_SIZE_CHANGED, window: { width: window.innerWidth, height: window.innerHeight } });
+    var width = Math.max(window.innerWidth, 580);
+    if (width <= 767) {
+      width = 580;
+    }
+    this.props.dispatch({ type: Constants.SCREEN_SIZE_CHANGED, window: { width: width, height: window.innerHeight } });
   },
   render() {
     const { error, sessionReady, sessionTopicReady } = this.props;
