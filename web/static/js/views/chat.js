@@ -72,6 +72,12 @@ const ChatView = React.createClass({
     }
     this.props.dispatch({ type: Constants.SCREEN_SIZE_CHANGED, window: { width: width, height: window.innerHeight } });
   },
+  whiteboardIconClick() {
+    if (document.getElementsByClassName("whiteboard-expand")[0])
+      document.getElementsByClassName("whiteboard-expand")[0].click()
+    else if (document.getElementsByClassName("pinboard-expand")[0])
+      document.getElementsByClassName("pinboard-expand")[0].click();
+  },
   render() {
     const { error, sessionReady, sessionTopicReady } = this.props;
 
@@ -98,6 +104,7 @@ const ChatView = React.createClass({
                   <span className='icon-bar'></span>
                 </button>
                 <span className='navbar-brand'><img src='/images/klzii_logo.png'/></span>
+                <span className='navbar-whiteboard' onClick={this.whiteboardIconClick}><img src='/images/whiteboard-icon.png'/></span>
               </div>
             </div>
           </nav>

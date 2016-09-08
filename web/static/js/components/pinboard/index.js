@@ -54,6 +54,9 @@ const Pinboard = React.createClass({
   getInitialState() {
     return { minimized: true, maxWidth: 950, maxHeight: 460 };
   },
+  pinboardIconClick() {
+    document.getElementsByClassName("pinboard-expand")[0].click()
+  },
   componentDidUpdate(props, state) {
     if(props.pinboard != this.props.pinboard) {
       let svg = this.getSvg();
@@ -74,6 +77,7 @@ const Pinboard = React.createClass({
     if(this.props.channel) {
       return (
         <div id='pinboard-box' className={ 'pinboard-section' + (minimized ? ' minimized' : ' maximized') }>
+          <span className="icon-pinboard-hide-mobile" onClick={this.pinboardIconClick}></span>
           <img className='pinboard-title' src='/images/title_whiteboard.png' />
           <img className='pinboard-expand' src={ this.getPinboardStateIcon() } onClick={ this.changePinboardState } />
 
