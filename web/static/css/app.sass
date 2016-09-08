@@ -47,6 +47,9 @@ body
   @extend .dropshadow
   vertical-align: middle
   text-align: right
+  .header-innerbox
+    display: flex
+    justify-content: space-between
   .topic-select-section
     float: left
     display: inline-block
@@ -58,7 +61,7 @@ body
       small
         font-size: 50%
     .topic-select-box
-      margin-left: 20px
+      order: 1
       .session-name
         margin-top: 5px
       .dropdown-menu
@@ -107,10 +110,8 @@ body
               width: 36px
               background-color: #45AC43
   .resources-section
-    margin-left: 15px
-    float: left
+    order: 2
     vertical-align: middle
-    display: inline-block
     @extend .lineup-icons
     @extend .lineup-icons.header
     ul.icons
@@ -118,10 +119,8 @@ body
       li
         background-color: $header-red
   .links-section
-    margin-right: 15px
-    float: right
+    order: 3
     vertical-align: middle
-    display: inline-block
     @extend .lineup-icons
     @extend .lineup-icons.header
     ul.icons
@@ -139,11 +138,8 @@ body
           margin-left: -20px
   .logo-section
     line-height: 3
-    float: right
-    display: inline-block
-    width: 7%
-    img
-      width: 100%
+    order: 4
+    width: 5%
 
 .room-outerbox
   padding: 0 15px

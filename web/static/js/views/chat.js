@@ -19,6 +19,7 @@ import Loading             from '../components/util/loading.js';
 import WhiteboardCanvas     from '../components/whiteboard/whiteboardCanvas';
 import Notifications        from '../actions/notifications';
 import notificationMixin    from '../mixins/notification';
+import ReportsModal       from '../components/reports/modal';
 import ReactToastr, { ToastContainer, ToastMessage } from 'react-toastr';
 var ToastMessageFactory     = React.createFactory(ToastMessage.animation);
 
@@ -80,6 +81,9 @@ const ChatView = React.createClass({
               <SessionTopicSelect/>
               <Resources/>
               <HeaderLinks/>
+              <div className='logo-section'>
+                <img className='img-responsive' src='/images/klzii_logo.png' />
+              </div>
             </div>
           </nav>
 
@@ -87,6 +91,7 @@ const ChatView = React.createClass({
             <div className='col-md-12 room-section' style={ this.styles() }>
               <ChangeAvatarModal />
               <DirectMessageModal />
+              <ReportsModal />
 
               <div className='row'>
                 <div className='col-md-8'>

@@ -30,7 +30,7 @@ const ReportsModal = React.createClass({
   },
   render() {
     const { rendering, report } = this.state;
-    const { show } = this.props;
+    let show = this.showSpecificModal('reports');
 
     if(show) {
       return (
