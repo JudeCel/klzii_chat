@@ -35,23 +35,23 @@ defmodule KlziiChat.Mixfile do
      {:phoenix_ecto, "~> 3.0"},
      {:phoenix_html, "~> 2.6"},
      {:phoenix_live_reload, "~> 1.0", only: :dev},
-     {:timex_ecto, "~> 3.0.3"},
-     {:timex, "~> 3.0.5"},
+     {:timex_ecto, "~> 3.0"},
+     {:timex, "~> 3.0"},
      {:quantum, "~> 1.7"},
      {:poison, "~> 2.2"},
-     {:arc_ecto, "~> 0.4.2"},
+     {:arc_ecto, "~> 0.4"},
      {:arc, "~> 0.5.3"},
      {:ex_aws, "~> 0.5"},
      {:httpotion, "~> 3.0"},
-     {:postgrex, "~> 0.11.2"},
-     {:gettext, "~> 0.11.0"},
-     {:guardian, "~> 0.12.0"},
+     {:postgrex, "~> 0.11"},
+     {:gettext, "~> 0.11"},
+     {:guardian, "~> 0.12"},
      {:cowboy, "~> 1.0"},
      {:corsica, "~> 0.5"},
      {:httpoison, "~> 0.9"},
-     {:earmark, "~> 1.0.1", only: :dev},
-     {:ex_doc, "~> 0.13.0", only: :dev},
-     {:credo, "~> 0.4.5", only: :dev}
+     {:earmark, "~> 1.0", only: :dev},
+     {:ex_doc, "~> 0.13", only: :dev},
+     {:credo, "~> 0.4", only: :dev}
     ]
   end
 

@@ -113,7 +113,6 @@ defmodule KlziiChat.SessionChannel do
   def handle_in("create_direct_message", %{ "recieverId" => other_member_id, "text" => text }, socket) do
     current_member = get_session_member(socket)
 
-
     DirectMessageService.create_message(current_member.session_id, %{ "recieverId" => other_member_id, "text" => text, "senderId" => current_member.id })
     |> case  do
       { :ok, message } ->
@@ -164,6 +163,11 @@ defmodule KlziiChat.SessionChannel do
   end
 
   def handle_out("update_member", payload, socket) do
+    track_item = SessionMembersView.render("member.json", member: payload)
+    |> Map.put(:online_at, inspect(System.system_time(:seconds)))
+
+    {:ok, _} = Presence.track(socket, (payload.id |> to_string), track_item)
+
     push socket, "update_member", SessionMembersView.render("member.json", member: payload)
     {:noreply, socket}
   end
