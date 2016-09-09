@@ -8,11 +8,11 @@ const UploadTypeYoutube = React.createClass({
     this.setState({ iframe: true });
   },
   render() {
-    const { url } = this.props;
+    const { url, autoPlay } = this.props;
 
-    if(this.state.iframe) {
+    if(this.state.iframe || autoPlay) {
       return (
-        <iframe type='text/html' src={ 'http://www.youtube.com/embed/' + url } frameBorder='0' allowFullScreen="1" />
+        <iframe type='text/html' src={ 'http://www.youtube.com/embed/' + url +"?autoplay=1" } frameBorder='0' allowFullScreen="1" />
       )
     }
     else {
