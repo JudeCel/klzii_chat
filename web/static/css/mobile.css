@@ -49,7 +49,7 @@
 
 .header-innerbox-mobile, .icon-whiteboard-hide-mobile, .icon-pinboard-hide-mobile, .facilitator-name-mobile,
 .emotion-chat-avatar {
-  display:none;
+  display:none !important;
 }
 
 @media (max-width: 767px) {
@@ -68,7 +68,7 @@
   }
 
   .facilitator-name-mobile {
-    display: block;
+    display: block !important;
     height: auto !important;
     color: rgb(229, 30, 57);
   }
@@ -341,7 +341,7 @@
     height: 41px;
     padding: 8px;
     font-size: 20px;
-    display:block;
+    display:block !important;
     cursor:pointer;
     background-color: #fff;
   }
