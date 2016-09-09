@@ -23,7 +23,7 @@ export default function reducer(state = initialState, action = {}) {
       return { ...state, shapes: mapToObject({...state.shapes}, action.objects) };
 
     case Constants.DELETE_ALL_WHITEBOARD_SHAPES:
-      return { ...state, shapes: {}};
+      return { ...state, shapes: findAndDelete({...state.shapes}, action.shapes)};
 
     default:
       return state;
