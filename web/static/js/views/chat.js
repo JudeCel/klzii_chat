@@ -13,6 +13,7 @@ import SessionTopicSelect   from '../components/sessionTopics/select.js';
 import Resources            from '../components/resources/resources.js';
 import HeaderLinks          from '../components/header/links.js';
 import Console              from '../components/console/index';
+import MobileHeader         from '../components/header/mobile.js';
 
 import Pinboard             from '../components/pinboard/index.js';
 import Loading             from '../components/util/loading.js';
@@ -58,24 +59,14 @@ const ChatView = React.createClass({
       this.props.dispatch(sessionTopicActions.selectCurrent(nextProps.socket, nextProps.session_topics));
     }
   },
-  getScreenWidthForAvatar(){
-    let width = Math.max(window.innerWidth, 580);
-    if (width <= 767) {
-      width = 580;
-    }
-    return width;
+  getScreenWidthForAvatar(targetInnerWidth) {
+    return targetInnerWidth >= 768 ? targetInnerWidth : 580;
   },
   componentDidMount() {
     window.addEventListener('resize', (e) => {
-      this.props.dispatch({ type: Constants.SCREEN_SIZE_CHANGED, window: { width: this.getScreenWidthForAvatar(), height: e.target.innerHeight } });
+      this.props.dispatch({ type: Constants.SCREEN_SIZE_CHANGED, window: { width: this.getScreenWidthForAvatar(e.target.innerWidth), height: e.target.innerHeight } });
     });
-    this.props.dispatch({ type: Constants.SCREEN_SIZE_CHANGED, window: { width: this.getScreenWidthForAvatar(), height: window.innerHeight } });
-  },
-  whiteboardIconClick() {
-    if (document.getElementsByClassName("whiteboard-expand")[0])
-      document.getElementsByClassName("whiteboard-expand")[0].click()
-    else if (document.getElementsByClassName("pinboard-expand")[0])
-      document.getElementsByClassName("pinboard-expand")[0].click();
+    this.props.dispatch({ type: Constants.SCREEN_SIZE_CHANGED, window: { width: this.getScreenWidthForAvatar(window.innerWidth), height: window.innerHeight } });
   },
   render() {
     const { error, sessionReady, sessionTopicReady } = this.props;
@@ -95,17 +86,7 @@ const ChatView = React.createClass({
               <Resources/>
               <HeaderLinks/>
             </div>
-            <div className='header-innerbox header-innerbox-mobile'>
-              <div className='navbar-header'>
-                <button type='button' className='navbar-toggle'>
-                  <span className='icon-bar'></span>
-                  <span className='icon-bar'></span>
-                  <span className='icon-bar'></span>
-                </button>
-                <span className='navbar-brand'><img src='/images/klzii_logo.png'/></span>
-                <span className='navbar-whiteboard' onClick={this.whiteboardIconClick}><img src='/images/whiteboard-icon.png'/></span>
-              </div>
-            </div>
+            <MobileHeader/>
           </nav>
 
           <div className='row room-outerbox'>

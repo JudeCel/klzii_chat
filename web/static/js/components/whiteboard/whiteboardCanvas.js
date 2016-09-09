@@ -560,9 +560,6 @@ const WhiteboardCanvas = React.createClass({
     });
     return objects;
   },
-  whiteboardIconClick() {
-    document.getElementsByClassName("whiteboard-expand")[0].click()
-  },
   changeButton(params) {
     const { mode, data } = params;
     this.mode = mode ? this.ModeEnum[mode] : this.mode;
@@ -619,7 +616,7 @@ const WhiteboardCanvas = React.createClass({
     if(this.props.channel) {
       return (
         <div id='whiteboard-box' className={ 'whiteboard-section' + (this.minimized ? ' minimized' : ' maximized') }>
-          <span className="icon-whiteboard-hide-mobile" onClick={this.whiteboardIconClick}></span>
+          <span className="icon-whiteboard-hide-mobile" onClick={ this.expand }></span>
           <img className='whiteboard-title' src='/images/title_whiteboard.png' />
           <img className='whiteboard-expand' src={ this.getExpandButtonImage() } onClick={ this.expand } />
 
