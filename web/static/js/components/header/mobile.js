@@ -26,4 +26,4 @@ const MobileHeader = React.createClass({
   }
 });
 
-export default connect()(MobileHeader);
+export default MobileHeader;
