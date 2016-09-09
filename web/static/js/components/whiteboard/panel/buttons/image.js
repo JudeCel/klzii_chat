@@ -22,7 +22,7 @@ const ImageButton = React.createClass({
     if(this.hasPermission(['whiteboard', 'can_add_image'])) {
       return (
         <OverlayTrigger placement="top" overlay={tooltip}>
-          <Button className={ this.props.activeClass('image') }> <i className={'fa fa-file-image-o' } aria-hidden='true' onClick={ this.onClick } /></Button>
+          <Button className={ this.props.activeClass('image') } onClick={ this.onClick }> <i className={'fa fa-file-image-o' } aria-hidden='true' /></Button>
         </OverlayTrigger>
       )
     }else {
