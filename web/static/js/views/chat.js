@@ -58,19 +58,18 @@ const ChatView = React.createClass({
       this.props.dispatch(sessionTopicActions.selectCurrent(nextProps.socket, nextProps.session_topics));
     }
   },
-  componentDidMount() {
-    window.addEventListener('resize', (e) => {
-      var width = Math.max(e.target.innerWidth, 580);
-      if (width <= 767) {
-        width = 580;
-      }
-      this.props.dispatch({ type: Constants.SCREEN_SIZE_CHANGED, window: { width: width, height: e.target.innerHeight } });
-    });
-    var width = Math.max(window.innerWidth, 580);
+  getScreenWidthForAvatar(){
+    let width = Math.max(window.innerWidth, 580);
     if (width <= 767) {
       width = 580;
     }
-    this.props.dispatch({ type: Constants.SCREEN_SIZE_CHANGED, window: { width: width, height: window.innerHeight } });
+    return width;
+  },
+  componentDidMount() {
+    window.addEventListener('resize', (e) => {
+      this.props.dispatch({ type: Constants.SCREEN_SIZE_CHANGED, window: { width: this.getScreenWidthForAvatar(), height: e.target.innerHeight } });
+    });
+    this.props.dispatch({ type: Constants.SCREEN_SIZE_CHANGED, window: { width: this.getScreenWidthForAvatar(), height: window.innerHeight } });
   },
   whiteboardIconClick() {
     if (document.getElementsByClassName("whiteboard-expand")[0])

@@ -34,11 +34,8 @@ const Message = React.createClass({
     const { message } = this.props;
     const { can_edit, can_delete, can_star, can_vote, can_reply } = message.permissions;
     
-
-    var member = message.session_member;
-    //remove this if 1 is ok, need test
-    //member.sessionTopicContext[member.currentTopic.id].avatarData.face = message.emotion;
-    member.sessionTopicContext[1].avatarData.face = message.emotion;
+    let member = message.session_member;
+    member.sessionTopicContext[member.currentTopic.id].avatarData.face = message.emotion;
     member.online = true;
 
     return (
