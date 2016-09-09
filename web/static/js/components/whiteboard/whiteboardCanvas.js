@@ -616,6 +616,7 @@ const WhiteboardCanvas = React.createClass({
     if(this.props.channel) {
       return (
         <div id='whiteboard-box' className={ 'whiteboard-section' + (this.minimized ? ' minimized' : ' maximized') }>
+          <span className="icon-whiteboard-hide-mobile" onClick={ this.expand }></span>
           <img className='whiteboard-title' src='/images/title_whiteboard.png' />
           <img className='whiteboard-expand' src={ this.getExpandButtonImage() } onClick={ this.expand } />
 

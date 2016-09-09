@@ -43,7 +43,7 @@ const helpers = {
   },
   formatDate(date) {
     if(date) {
-      return moment(new Date(date + "Z")).format('ddd H:m MMM D,YY');
+      return moment(new Date(date + "Z")).format('ddd H:m MMM D,YYYY');
     }
   },
   addOrRemoveScrollbarY(element, _this) {
