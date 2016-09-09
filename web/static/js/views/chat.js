@@ -13,6 +13,7 @@ import SessionTopicSelect   from '../components/sessionTopics/select.js';
 import Resources            from '../components/resources/resources.js';
 import HeaderLinks          from '../components/header/links.js';
 import Console              from '../components/console/index';
+import MobileHeader         from '../components/header/mobile.js';
 
 import Pinboard             from '../components/pinboard/index.js';
 import Loading             from '../components/util/loading.js';
@@ -59,10 +60,14 @@ const ChatView = React.createClass({
       this.props.dispatch(sessionTopicActions.selectCurrent(nextProps.socket, nextProps.session_topics));
     }
   },
+  getScreenWidthForAvatar(targetInnerWidth) {
+    return targetInnerWidth >= 768 ? targetInnerWidth : 580;
+  },
   componentDidMount() {
     window.addEventListener('resize', (e) => {
-      this.props.dispatch({ type: Constants.SCREEN_SIZE_CHANGED, window: { width: e.target.innerWidth, height: e.target.innerHeight } });
+      this.props.dispatch({ type: Constants.SCREEN_SIZE_CHANGED, window: { width: this.getScreenWidthForAvatar(e.target.innerWidth), height: e.target.innerHeight } });
     });
+    this.props.dispatch({ type: Constants.SCREEN_SIZE_CHANGED, window: { width: this.getScreenWidthForAvatar(window.innerWidth), height: window.innerHeight } });
   },
   render() {
     const { error, sessionReady, sessionTopicReady } = this.props;
@@ -85,6 +90,7 @@ const ChatView = React.createClass({
                 <img className='img-responsive' src='/images/klzii_logo.png' />
               </div>
             </div>
+            <MobileHeader/>
           </nav>
 
           <div className='row room-outerbox'>

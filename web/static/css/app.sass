@@ -22,14 +22,7 @@ $input-size: 1.5em
 @import 'dependencies/animate/animate.min.css'
 @import 'dependencies/toastr/toastr.min.css'
 @import 'util/loading.sass'
-
-#screen-too-small
-  width: 50%
-  border: 1px solid #ccc
-  text-align: center
-  margin: 18% auto 0 auto
-  padding: 30px
-  background-color: white
+@import 'mobile.css'
 
 body
   font-family: 'Source Sans Pro', Arial, sans-serif
@@ -39,8 +32,6 @@ body
   right: 50%
 
 .header-section
-  width: 100%
-  position: absolute
   z-index: 1060
   background: white
   padding: 20px 0
@@ -143,7 +134,7 @@ body
 
 .room-outerbox
   padding: 0 15px
-  padding-top: 130px
+  padding-top: 20px
 .room-section
   border: 2px solid
   padding-top: 1%
@@ -278,10 +269,6 @@ body
     width: 1600px
   .direct-message-modal
     padding: 0 15px
-
-@media (max-width: 992px)
-  *[role="dialog"]
-    visibility: hidden
 
 @media (max-width: 1200px)
   .outerbox
