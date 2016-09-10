@@ -37,8 +37,7 @@ defmodule KlziiChat.SessionTopicChannel do
     push socket, "console", ConsoleView.render("show.json", %{console: console})
     {:ok, _} = Presence.track(socket, (get_session_member(socket).id |> to_string), %{
       online_at: inspect(System.system_time(:seconds)),
-      id: session_member.id,
-      role: session_member.role
+      id: session_member.id
     })
 
     {:ok, member} = SessionMembersService.update_current_topic(session_member.id, socket.assigns.session_topic_id)

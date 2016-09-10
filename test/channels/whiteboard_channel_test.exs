@@ -75,6 +75,6 @@ defmodule KlziiChat.WhiteboardChannelTest do
     delete_ref = push socket, "deleteAll", %{}
     assert_reply(delete_ref, :ok)
     assert_push "deleteAll", remaining_shapes
-    assert(remaining_shapes == %{"shapes" => []})
+    assert(remaining_shapes == %{"shapes" => [%{uid: body["id"]}]})
   end
 end

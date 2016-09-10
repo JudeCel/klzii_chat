@@ -34,6 +34,7 @@ defmodule KlziiChat.SessionChannel do
   end
 
   def handle_info(:after_join, socket) do
+    session_member = get_session_member(socket)
     case SessionMembersService.by_session(socket.assigns.session_id) do
       {:ok, members} ->
         push socket, "members", members
@@ -41,26 +42,22 @@ defmodule KlziiChat.SessionChannel do
         {:error, %{reason: reason}}
     end
 
-    track_item = SessionMembersView.render("member.json", member: get_session_member(socket))
-    |> Map.put(:online_at, inspect(System.system_time(:seconds)))
-
-    {:ok, _} = Presence.track(socket, (track_item.id |> to_string), track_item)
+    {:ok, _} = Presence.track(socket, (session_member.id |> to_string), %{
+      online_at: inspect(System.system_time(:seconds)),
+      id: session_member.id
+    })
 
     push socket, "presence_state", Presence.list(socket)
-    push(socket, "self_info", get_session_member(socket))
+    push(socket, "self_info", session_member)
     {:noreply, socket}
   end
 
   def handle_in("update_member", params, socket) do
     case SessionMembersService.update_member(get_session_member(socket).id, params) do
       {:ok, session_member} ->
-        permission_task = Task.async(fn ->
-          {:ok, permissions_map} = PermissionsBuilder.session_member_permissions(session_member.id)
-          push(socket, "self_info", SessionMembersView.render("current_member.json", member: session_member, permissions_map: permissions_map))
-        end)
-
+        socket = assign(socket, :session_member, Map.merge(get_session_member(socket), SessionMembersView.render("member.json", member: session_member )))
+        push(socket, "self_info", get_session_member(socket))
         broadcast(socket, "update_member", session_member)
-        Task.await(permission_task)
       {:error, reason} ->
         {:error, %{reason: reason}}
     end
@@ -163,11 +160,6 @@ defmodule KlziiChat.SessionChannel do
   end
 
   def handle_out("update_member", payload, socket) do
-    track_item = SessionMembersView.render("member.json", member: payload)
-    |> Map.put(:online_at, inspect(System.system_time(:seconds)))
-
-    {:ok, _} = Presence.track(socket, (payload.id |> to_string), track_item)
-
     push socket, "update_member", SessionMembersView.render("member.json", member: payload)
     {:noreply, socket}
   end
