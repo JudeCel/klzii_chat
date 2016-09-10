@@ -56,7 +56,7 @@ function addNewOrChange() {
 }
 
 function loadOne(data) {
-  var nested = self.board.nested();
+  var nested = self.mainGroup.nested();
   nested.svg(data);
   initShapeEvents(nested.first());
 }
@@ -86,7 +86,7 @@ function buildShape(e) {
   var element = self.deps.Elements.shapes[self.drawData.current];
 
   if(element) {
-    var nested = self.board.nested();
+    var nested = self.mainGroup.nested();
     var attrs = { fill: self.drawData.color, 'stroke-width': self.drawData.strokeWidth, stroke: self.drawData.color };
     var build = element(e, nested, attrs);
     attrs.id = nested.id() + build.type + Date.now();
@@ -115,9 +115,8 @@ function deleteShape(id) {
 }
 
 function deleteAllShapes() {
-  self.board.clear();
+  self.mainGroup.clear();
   self.shapeData.added = {};
-  self.initDefs();
 }
 
 function setMouseType(type) {

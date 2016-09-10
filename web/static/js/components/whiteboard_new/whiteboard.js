@@ -31,7 +31,7 @@ const Whiteboard = React.createClass({
     let parent = this.board.parent();
     let scaleX = minimized ? parent.scrollWidth/this.drawData.initialWidth : 1.0;
     let scaleY = minimized ? parent.scrollHeight/this.drawData.initialHeight : 1.0;
-    this.board.scale(scaleX, scaleY).translate(0, 0);
+    this.mainGroup.scale(scaleX, scaleY).translate(0, 0);
     this.board.attr({ 'pointer-events': minimized ? 'none' : 'all' });
   },
   initDependencies() {
@@ -81,6 +81,7 @@ const Whiteboard = React.createClass({
   },
   componentDidMount() {
     this.board = SVG('whiteboard-draw').size(this.drawData.initialWidth, this.drawData.initialHeight);
+    this.mainGroup = this.board.group();
 
     this.initBoardEvents();
     this.initScale();
