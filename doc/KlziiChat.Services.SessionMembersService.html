@@ -108,6 +108,12 @@
 </div>
 <div class="summary-row">
   <div class="summary-signature">
+    <a href="#update_current_topic/2">update_current_topic(session_member_id, session_topic_id)</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
     <a href="#update_emotion/1">update_emotion(message_id)</a>
   </div>
   
@@ -239,6 +245,31 @@
     
   </section>
 </div>
+<div class="detail" id="update_current_topic/2">
+  <div class="detail-header">
+    <a href="#update_current_topic/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">update_current_topic(session_member_id, session_topic_id)</span>
+    
+    
+  </div>
+  
+    <div class="specs">
+      <h4 class="specs-title">Specs</h4>
+      <div class="specs-list">
+        
+          <pre><code class="elixir">update_current_topic(Integer, Integer) ::
+  {:ok, %KlziiChat.SessionMember{__meta__: term, accountUserId: term, account_user: term, avatarData: term, colour: term, createdAt: term, currentTopic: term, id: term, messages: term, pinboard_resources: term, recieved_direct_messages: term, role: term, sent_direct_messages: term, session: term, sessionId: term, sessionTopicContext: term, shapes: term, token: term, updatedAt: term, username: term, votes: term}} |
+  {:error, Ecto.Changeset.t}</code></pre>
+        
+      </div>
+    </div>
+  
+  <section class="docstring">
+    
+  </section>
+</div>
 <div class="detail" id="update_emotion/1">
   <div class="detail-header">
     <a href="#update_emotion/1" class="detail-link" title="Link to this function">
@@ -277,7 +308,7 @@
       <div class="specs-list">
         
           <pre><code class="elixir">update_member(<a href="http://elixir-lang.org/docs/stable/elixir/Integer.html#t:t/0">Integer.t</a>, <a href="http://elixir-lang.org/docs/stable/elixir/Map.html#t:t/0">Map.t</a>) ::
-  {:ok, %KlziiChat.SessionMember{__meta__: term, accountUserId: term, account_user: term, avatarData: term, colour: term, createdAt: term, id: term, messages: term, pinboard_resources: term, recieved_direct_messages: term, role: term, sent_direct_messages: term, session: term, sessionId: term, sessionTopicContext: term, shapes: term, token: term, updatedAt: term, username: term, votes: term}} |
+  {:ok, %KlziiChat.SessionMember{__meta__: term, accountUserId: term, account_user: term, avatarData: term, colour: term, createdAt: term, currentTopic: term, id: term, messages: term, pinboard_resources: term, recieved_direct_messages: term, role: term, sent_direct_messages: term, session: term, sessionId: term, sessionTopicContext: term, shapes: term, token: term, updatedAt: term, username: term, votes: term}} |
   {:error, Ecto.Changeset.t}</code></pre>
         
       </div>
@@ -301,8 +332,8 @@
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">update_session_topic_context(%KlziiChat.SessionMember{__meta__: term, accountUserId: term, account_user: term, avatarData: term, colour: term, createdAt: term, id: term, messages: term, pinboard_resources: term, recieved_direct_messages: term, role: term, sent_direct_messages: term, session: term, sessionId: term, sessionTopicContext: term, shapes: term, token: term, updatedAt: term, username: term, votes: term}, Integer, <a href="http://elixir-lang.org/docs/stable/elixir/Map.html#t:t/0">Map.t</a>) ::
-  {:ok, %KlziiChat.SessionMember{__meta__: term, accountUserId: term, account_user: term, avatarData: term, colour: term, createdAt: term, id: term, messages: term, pinboard_resources: term, recieved_direct_messages: term, role: term, sent_direct_messages: term, session: term, sessionId: term, sessionTopicContext: term, shapes: term, token: term, updatedAt: term, username: term, votes: term}} |
+          <pre><code class="elixir">update_session_topic_context(%KlziiChat.SessionMember{__meta__: term, accountUserId: term, account_user: term, avatarData: term, colour: term, createdAt: term, currentTopic: term, id: term, messages: term, pinboard_resources: term, recieved_direct_messages: term, role: term, sent_direct_messages: term, session: term, sessionId: term, sessionTopicContext: term, shapes: term, token: term, updatedAt: term, username: term, votes: term}, Integer, <a href="http://elixir-lang.org/docs/stable/elixir/Map.html#t:t/0">Map.t</a>) ::
+  {:ok, %KlziiChat.SessionMember{__meta__: term, accountUserId: term, account_user: term, avatarData: term, colour: term, createdAt: term, currentTopic: term, id: term, messages: term, pinboard_resources: term, recieved_direct_messages: term, role: term, sent_direct_messages: term, session: term, sessionId: term, sessionTopicContext: term, shapes: term, token: term, updatedAt: term, username: term, votes: term}} |
   {:error, Ecto.Changeset.t}</code></pre>
         
       </div>

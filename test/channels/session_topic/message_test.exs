@@ -1,7 +1,7 @@
 defmodule KlziiChat.Channels.SessionTopic.MessageTest do
   use KlziiChat.ChannelCase
   use KlziiChat.SessionMemberCase
-  alias KlziiChat.{Repo, Presence, UserSocket, SessionTopicChannel}
+  alias KlziiChat.{Repo, UserSocket, SessionTopicChannel}
 
   setup %{session_topic_1: session_topic_1, facilitator: facilitator, participant: participant} do
     Ecto.Adapters.SQL.Sandbox.mode(Repo, {:shared, self()})
@@ -17,18 +17,6 @@ defmodule KlziiChat.Channels.SessionTopic.MessageTest do
 
   test "when unauthorized", %{socket: socket, session_topic_1_name: session_topic_1_name} do
     {:error,  %{reason: "unauthorized"}} = join(socket, SessionTopicChannel, session_topic_1_name <> "2233")
-  end
-
-  test "presents register is enable for topics", %{socket: socket, session_topic_1_name: session_topic_1_name} do
-    {:ok, _, socket} =
-      join(socket, SessionTopicChannel, session_topic_1_name)
-      session_member = socket.assigns.session_member
-
-      id = Presence.list(socket)
-        |> Map.get(session_member.id |> to_string)
-        |> Map.get(:member)
-        |> Map.get(:id)
-      assert(id == session_member.id)
   end
 
   test "can push new message", %{socket: socket, session_topic_1_name: session_topic_1_name} do

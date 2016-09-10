@@ -3,9 +3,9 @@ defmodule KlziiChat.SessionTopicChannel do
   alias KlziiChat.Services.Permissions.Builder, as: PermissionsBuilder
   alias KlziiChat.Services.{MessageService, UnreadMessageService, ConsoleService,
     SessionTopicService, MiniSurveysService, PinboardResourceService, SessionMembersService}
-  alias KlziiChat.{MessageView, Presence, Endpoint, ConsoleView, SessionTopicView, SessionMembersView, MiniSurveyView, PinboardResourceView}
+  alias KlziiChat.{MessageView, Endpoint, ConsoleView, SessionTopicView, SessionMembersView, MiniSurveyView, PinboardResourceView}
   import(KlziiChat.Authorisations.Channels.SessionTopic, only: [authorized?: 2])
-  import(KlziiChat.Helpers.SocketHelper, only: [get_session_member: 1])
+  import(KlziiChat.Helpers.SocketHelper, only: [get_session_member: 1, track: 1])
   import KlziiChat.ErrorHelpers, only: [error_view: 1]
 
 
@@ -35,10 +35,8 @@ defmodule KlziiChat.SessionTopicChannel do
     session_member = get_session_member(socket)
     {:ok, console} = ConsoleService.get(session_member.session_id, socket.assigns.session_topic_id)
     push socket, "console", ConsoleView.render("show.json", %{console: console})
-    {:ok, _} = Presence.track(socket, (get_session_member(socket).id |> to_string), %{
-      online_at: inspect(System.system_time(:seconds)),
-      id: session_member.id
-    })
+
+    {:ok, _} = track(socket)
 
     {:ok, member} = SessionMembersService.update_current_topic(session_member.id, socket.assigns.session_topic_id)
     Endpoint.broadcast!("sessions:#{session_member.session_id}", "update_member", member)

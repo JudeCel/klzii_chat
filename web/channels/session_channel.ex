@@ -1,11 +1,10 @@
 defmodule KlziiChat.SessionChannel do
   use KlziiChat.Web, :channel
   alias KlziiChat.Services.{SessionService, SessionMembersService, SessionReportingService, DirectMessageService}
-  alias KlziiChat.Services.Permissions.Builder, as: PermissionsBuilder
   alias KlziiChat.Services.Permissions.SessionReporting, as: SessionReportingPermissions
   alias KlziiChat.{Presence, SessionMembersView, SessionTopicsReportView, DirectMessageView}
   import(KlziiChat.Authorisations.Channels.Session, only: [authorized?: 2])
-  import(KlziiChat.Helpers.SocketHelper, only: [get_session_member: 1])
+  import(KlziiChat.Helpers.SocketHelper, only: [get_session_member: 1, track: 1])
   import KlziiChat.ErrorHelpers, only: [error_view: 1]
 
 
@@ -42,10 +41,7 @@ defmodule KlziiChat.SessionChannel do
         {:error, %{reason: reason}}
     end
 
-    {:ok, _} = Presence.track(socket, (session_member.id |> to_string), %{
-      online_at: inspect(System.system_time(:seconds)),
-      id: session_member.id
-    })
+    {:ok, _} = track(socket)
 
     push socket, "presence_state", Presence.list(socket)
     push(socket, "self_info", session_member)
@@ -61,6 +57,7 @@ defmodule KlziiChat.SessionChannel do
       {:error, reason} ->
         {:error, %{reason: reason}}
     end
+
     {:noreply, socket}
   end
 
