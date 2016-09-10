@@ -3,7 +3,8 @@ import { Presence } from 'phoenix';
 const initialState = {
   currentUser: { },
   facilitator: {
-    avatarData: { base: 0, face: 3, body: 0, hair: 0, desk: 0, head: 0 }
+    avatarData: { base: 0, face: 3, body: 0, hair: 0, desk: 0, head: 0 },
+    currentTopic: {}
   },
   participants: [],
   observers: [],
@@ -39,7 +40,7 @@ function onJoin(state) {
 }
 
 function onLeave(state) {
-  return (id, current, leftPres) =>{
+  return (id, current, leftPres) => {
     if (current.metas.length == 0) {
       leftPres.member.online = false
       updateMember(state, leftPres.member)
@@ -48,23 +49,23 @@ function onLeave(state) {
 }
 
 function syncState(state, syncData) {
-  Presence.syncState(state.presences, syncData, onJoin(state), onLeave(state))
-  return  state
+  state.presences = Presence.syncState(state.presences, syncData, onJoin(state), onLeave(state))
+  return state
 }
 
 function syncDiff(state, diff) {
-   Presence.syncDiff(state.presences, diff, onJoin(state), onLeave(state))
-   return  state;
+  state.presences = Presence.syncDiff(state.presences, diff, onJoin(state), onLeave(state))
+  return state;
 }
 
 function updateMember(state, member) {
   switch (member.role) {
     case "facilitator":
       Object.assign(state.facilitator, member)
-      state.facilitator = {...state.facilitator, member};
+      state.facilitator = {...state.facilitator, ...member};
       break;
     case "participant":
-      state.participants =  findAndUpdate(state.participants, member);
+      state.participants = findAndUpdate(state.participants, member);
       break
     case "observer":
       state.observers = findAndUpdate(state.observers, member) ;
@@ -74,14 +75,25 @@ function updateMember(state, member) {
   }
   return state;
 }
- function findAndUpdate(members, member) {
-   let newMembers = [];
-    members.map((m) => {
-     if (m.id == member.id) {
-       newMembers.push(Object.assign(m, member));
-     }else{
-       newMembers.push(m);
-     }
-   });
-   return newMembers;
- }
+
+function findAndUpdate(members, member) {
+  let newMembers = [];
+  let newMember = true;
+
+  members.map((m) => {
+    if(m.id == member.id) {
+      newMember = false;
+      Object.assign(m, member)
+      newMembers.push({...m, ...member});
+    }
+    else {
+      newMembers.push(m);
+    }
+  });
+
+  if(newMember) {
+    newMembers.push(member);
+  }
+
+  return newMembers;
+}

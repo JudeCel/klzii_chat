@@ -22,10 +22,10 @@ defmodule KlziiChat.Services.Permissions.Messages do
      |> formate_error
   end
 
-  @spec can_vote(Map.t) :: {:ok } | {:error, String.t}
-  def can_vote(member) do
-    roles = ["facilitator", "participant"]
-    has_role(member.role, roles)
+  @spec can_vote(Map.t, Map.t) :: {:ok } | {:error, String.t}
+  def can_vote(member, object) do
+    roles = ["participant"]
+    (has_role(member.role, roles) && !has_owner(member, object, :sessionMemberId))
     |> formate_error
   end
 

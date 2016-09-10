@@ -48,19 +48,30 @@ defmodule KlziiChat.Services.Permissions.MessagesTest do
     end)
   end
 
-  test "can vote" do
-    roles = ["facilitator", "participant"]
+  test "can vote other messages" do
+    roles = ["participant"]
     Enum.map(roles, fn role ->
-      member = %{role: role}
-      assert( {:ok} = Messages.can_vote(member))
+      message = %{sessionMemberId: 2}
+      member = %{id: 1, role: role }
+      assert( {:ok} = Messages.can_vote(member, message))
+    end)
+  end
+
+  test "can't vote own messages" do
+    roles = ["participant"]
+    Enum.map(roles, fn role ->
+      message = %{sessionMemberId: 1}
+      member = %{id: 1, role: role}
+      assert({:error, _} = Messages.can_vote(member, message))
     end)
   end
 
   test "can't vote" do
-    roles = ["observer"]
+    roles = ["observer", "facilitator"]
     Enum.map(roles, fn role ->
-      member = %{role: role}
-      assert( {:error, _} = Messages.can_vote(member))
+      message = %{}
+      member = %{id: 2,role: role}
+      assert( {:error, _} = Messages.can_vote(member, message))
     end)
   end
 

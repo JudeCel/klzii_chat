@@ -11,7 +11,7 @@ const AnswerYesNoMaybe = React.createClass({
   },
   render() {
     const { survey } = this.props;
-    const answers = ['Yes', 'No', 'Maybe'];
+    const answers = ['Yes', 'No', 'Unsure'];
 
     return (
       <div className='col-md-12'>

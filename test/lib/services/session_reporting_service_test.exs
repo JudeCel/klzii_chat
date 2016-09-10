@@ -3,7 +3,7 @@ defmodule KlziiChat.Services.SessionReportingServiceTest do
   alias KlziiChat.SessionTopicReport
   alias KlziiChat.Services.SessionReportingService
 
-  @report_prefix "ReportingService_test_report"
+  @report_prefix "RSTReport"
   @db_wait 500
 
   setup %{session: session, session_topic_1: session_topic_1, facilitator: facilitator, participant: participant} do
@@ -60,10 +60,10 @@ defmodule KlziiChat.Services.SessionReportingServiceTest do
   end
 
   test "Get report name for a given type" do
-    {:ok, "Session_topic_messages_report_1"} = SessionReportingService.get_report_name(:all, 1)
-    {:ok, "Session_topic_messages_report_2"} = SessionReportingService.get_report_name(:star, 2)
-    {:ok, "Session_topic_whiteboard_report_4"} = SessionReportingService.get_report_name(:whiteboard, 4)
-    {:ok, "Session_topic_mini_surveys_report_5"} = SessionReportingService.get_report_name(:votes, 5)
+    {:ok, "STM_Report_1"} = SessionReportingService.get_report_name(:all, 1)
+    {:ok, "STM_Report_2"} = SessionReportingService.get_report_name(:star, 2)
+    {:ok, "STW_Report_4"} = SessionReportingService.get_report_name(:whiteboard, 4)
+    {:ok, "STMS_Report_5"} = SessionReportingService.get_report_name(:votes, 5)
   end
 
   test "Save report of a given type", %{session_topic: session_topic} do

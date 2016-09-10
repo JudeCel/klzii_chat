@@ -132,6 +132,7 @@ const Actions = {
   },
   upload:(data, jwt) =>{
     return (dispatch) => {
+      dispatch({ type: Constants.MODAL_POST_DATA });
       let csrf_token = localStorage.getItem("csrf_token");
       let req = request.post('/api/session_resources/upload');
       req.set('X-CSRF-Token', csrf_token);
@@ -147,6 +148,7 @@ const Actions = {
           NotificationActions.showErrorNotification(dispatch, error);
         }
         else {
+          dispatch({ type: Constants.MODAL_POST_DATA_DONE });
           dispatch(Actions.index(jwt, { type: [data.type] }));
         }
       });

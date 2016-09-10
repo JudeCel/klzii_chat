@@ -74,6 +74,7 @@ const Pinboard = React.createClass({
     if(this.props.channel) {
       return (
         <div id='pinboard-box' className={ 'pinboard-section' + (minimized ? ' minimized' : ' maximized') }>
+          <span className="icon-pinboard-hide-mobile" onClick={ this.changePinboardState }></span>
           <img className='pinboard-title' src='/images/title_whiteboard.png' />
           <img className='pinboard-expand' src={ this.getPinboardStateIcon() } onClick={ this.changePinboardState } />
 

@@ -41,6 +41,28 @@
 @media (min-width: 1200px)
   .lineup-icons.header > ul.icons > li
     font-size: 25px
+  #topic-selector > .btn-default
+      line-height: 3 !important
+      max-height: 55.5px !important
+
+@media (max-width: 1119px)
+  .header-section .links-section
+    margin-left: 10px
+  .lineup-icons.header > ul.icons > li
+    min-width: 48px !important
+    max-height: 48px !important
+    font-size: 19px !important
+  #topic-selector > .btn-default
+    line-height: 2.4 !important
+    max-height: 47px !important
+
+@media (max-width: 1079px)
+  .header-section .resources-section
+    float: right !important
+    margin-left: -310px !important
+    margin-top: 60px
+    margin-right: 10px
+    margin-bottom: -10px;
 
 .dropshadow
   $x: 0px
@@ -52,8 +74,12 @@
   box-shadow: $x $y $blur rgba(0, 0, 0, $alpha)
 
 .text-break-all
+  white-space: pre-wrap
+  white-space: -moz-pre-wrap
+  white-space: -pre-wrap
+  white-space: -o-pre-wrap
+  word-wrap: break-word
   -ms-word-break: break-all
-  word-break: break-all
 
 .cursor-pointer
   cursor: pointer

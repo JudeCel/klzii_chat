@@ -1,11 +1,12 @@
 defmodule KlziiChat.SessionChannel do
   use KlziiChat.Web, :channel
   alias KlziiChat.Services.{SessionService, SessionMembersService, SessionReportingService, DirectMessageService}
-  alias KlziiChat.Services.Permissions.Builder, as: PermissionsBuilder
   alias KlziiChat.Services.Permissions.SessionReporting, as: SessionReportingPermissions
   alias KlziiChat.{Presence, SessionMembersView, SessionTopicsReportView, DirectMessageView}
   import(KlziiChat.Authorisations.Channels.Session, only: [authorized?: 2])
-  import(KlziiChat.Helpers.SocketHelper, only: [get_session_member: 1])
+  import(KlziiChat.Helpers.SocketHelper, only: [get_session_member: 1, track: 1])
+  import KlziiChat.ErrorHelpers, only: [error_view: 1]
+
 
   @moduledoc """
     This Channel is only for session context
@@ -13,7 +14,7 @@ defmodule KlziiChat.SessionChannel do
     Global messages for session
   """
 
-  intercept ["unread_messages", "session_topics_report_updated", "new_direct_message"]
+  intercept ["unread_messages", "session_topics_report_updated", "new_direct_message", "update_member"]
 
   def join("sessions:" <> session_id, _, socket) do
     {session_id, _} = Integer.parse(session_id)
@@ -32,6 +33,7 @@ defmodule KlziiChat.SessionChannel do
   end
 
   def handle_info(:after_join, socket) do
+    session_member = get_session_member(socket)
     case SessionMembersService.by_session(socket.assigns.session_id) do
       {:ok, members} ->
         push socket, "members", members
@@ -39,29 +41,23 @@ defmodule KlziiChat.SessionChannel do
         {:error, %{reason: reason}}
     end
 
-      {:ok, _} = Presence.track(socket, (get_session_member(socket).id |> to_string), %{
-        online_at: inspect(System.system_time(:seconds)),
-        id: get_session_member(socket).id,
-        role: get_session_member(socket).role
-      })
-      push socket, "presence_state", Presence.list(socket)
-      push(socket, "self_info", get_session_member(socket))
+    {:ok, _} = track(socket)
+
+    push socket, "presence_state", Presence.list(socket)
+    push(socket, "self_info", session_member)
     {:noreply, socket}
   end
 
   def handle_in("update_member", params, socket) do
     case SessionMembersService.update_member(get_session_member(socket).id, params) do
       {:ok, session_member} ->
-        permission_task = Task.async(fn ->
-          {:ok, permissions_map} = PermissionsBuilder.session_member_permissions(session_member.id)
-          push(socket, "self_info", SessionMembersView.render("current_member.json", member: session_member, permissions_map: permissions_map))
-        end)
-
-        broadcast(socket, "update_member", SessionMembersView.render("member.json", member: session_member))
-        Task.await(permission_task)
+        socket = assign(socket, :session_member, Map.merge(get_session_member(socket), SessionMembersView.render("member.json", member: session_member )))
+        push(socket, "self_info", get_session_member(socket))
+        broadcast(socket, "update_member", session_member)
       {:error, reason} ->
         {:error, %{reason: reason}}
     end
+
     {:noreply, socket}
   end
 
@@ -111,12 +107,16 @@ defmodule KlziiChat.SessionChannel do
   def handle_in("create_direct_message", %{ "recieverId" => other_member_id, "text" => text }, socket) do
     current_member = get_session_member(socket)
 
-    { :ok, message } = DirectMessageService.create_message(current_member.session_id, %{ "recieverId" => other_member_id, "text" => text, "senderId" => current_member.id })
-    encoded = DirectMessageView.render("show.json", message: message);
-
-    key = message.recieverId |> to_string
-    broadcast(socket, "new_direct_message", %{ key => encoded })
-    {:reply, { :ok, %{ message: encoded } }, socket}
+    DirectMessageService.create_message(current_member.session_id, %{ "recieverId" => other_member_id, "text" => text, "senderId" => current_member.id })
+    |> case  do
+      { :ok, message } ->
+        encoded = DirectMessageView.render("show.json", message: message);
+        key = message.recieverId |> to_string
+        broadcast(socket, "new_direct_message", %{ key => encoded })
+        {:reply, { :ok, %{ message: encoded } }, socket}
+      { :error, reason} ->
+        {:reply, {:error, error_view(reason)}, socket}
+      end
   end
 
   def handle_in("set_read_direct_messages", %{ "senderId" => other_member_id }, socket) do
@@ -153,6 +153,11 @@ defmodule KlziiChat.SessionChannel do
     if SessionReportingPermissions.can_create_report(get_session_member(socket)) do
       push socket, "session_topics_report_updated", SessionTopicsReportView.render("show.json", %{report: payload})
     end
+    {:noreply, socket}
+  end
+
+  def handle_out("update_member", payload, socket) do
+    push socket, "update_member", SessionMembersView.render("member.json", member: payload)
     {:noreply, socket}
   end
 

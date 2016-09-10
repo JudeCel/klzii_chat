@@ -9,6 +9,7 @@ defmodule KlziiChat.Account do
   schema "Accounts" do
     field :name, :string
     field :subdomain, :string
+    field :admin, :boolean, default: false
     has_many :account_users, KlziiChat.AccountUser, [foreign_key: :AccountId]
     has_many :users, through: [:account_users, :user]
     has_many :resources, KlziiChat.Resource, [foreign_key: :accountId]

@@ -54,13 +54,13 @@ defmodule KlziiChat.Services.SessionReportingService do
 
 
   @spec get_report_name(atom, integer) :: {:ok, String.t}
-  def get_report_name(:whiteboard, report_id), do: {:ok, "Session_topic_whiteboard_report_" <> to_string(report_id)}
+  def get_report_name(:whiteboard, report_id), do: {:ok, "STW_Report_" <> to_string(report_id)}
 
   @spec get_report_name(atom, integer) :: {:ok, String.t}
-  def get_report_name(:votes, report_id), do: {:ok, "Session_topic_mini_surveys_report_" <> to_string(report_id)}
+  def get_report_name(:votes, report_id), do: {:ok, "STMS_Report_" <> to_string(report_id)}
 
   @spec get_report_name(atom, integer) :: {:ok, String.t}
-  def get_report_name(_, report_id), do: {:ok, "Session_topic_messages_report_" <> to_string(report_id)}
+  def get_report_name(_, report_id), do: {:ok, "STM_Report_" <> to_string(report_id)}
 
 
   @spec create_report_async(integer, integer, integer, integer, String.t, atom, atom, boolean) :: {:ok, pid} | {:error, String.t}
@@ -137,7 +137,7 @@ defmodule KlziiChat.Services.SessionReportingService do
 
   @spec update_session_topics_reports_record({:ok, Map.t}, integer) :: {atom, Map.t}
   def update_session_topics_reports_record({:ok, resource}, report_id) do
-    Repo.get(SessionTopicReport, report_id)
+    Repo.get!(SessionTopicReport, report_id)
     |> Ecto.Changeset.change(status: "completed", resourceId: resource.id, message: nil)
     |> Repo.update()
   end

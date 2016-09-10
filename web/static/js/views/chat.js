@@ -13,12 +13,15 @@ import SessionTopicSelect   from '../components/sessionTopics/select.js';
 import Resources            from '../components/resources/resources.js';
 import HeaderLinks          from '../components/header/links.js';
 import Console              from '../components/console/index';
+import MobileHeader         from '../components/header/mobile.js';
 
 import Pinboard             from '../components/pinboard/index.js';
+import Loading             from '../components/util/loading.js';
 import WhiteboardCanvas     from '../components/whiteboard/whiteboardCanvas';
 import Whiteboard           from '../components/whiteboard_new/whiteboard';
 import Notifications        from '../actions/notifications';
 import notificationMixin    from '../mixins/notification';
+import ReportsModal       from '../components/reports/modal';
 import ReactToastr, { ToastContainer, ToastMessage } from 'react-toastr';
 var ToastMessageFactory     = React.createFactory(ToastMessage.animation);
 
@@ -59,10 +62,14 @@ const ChatView = React.createClass({
       this.props.dispatch(sessionTopicActions.selectCurrent(nextProps.socket, nextProps.session_topics));
     }
   },
+  getScreenWidthForAvatar(targetInnerWidth) {
+    return targetInnerWidth >= 768 ? targetInnerWidth : 580;
+  },
   componentDidMount() {
     window.addEventListener('resize', (e) => {
-      this.props.dispatch({ type: Constants.SCREEN_SIZE_CHANGED, window: { width: e.target.innerWidth, height: e.target.innerHeight } });
+      this.props.dispatch({ type: Constants.SCREEN_SIZE_CHANGED, window: { width: this.getScreenWidthForAvatar(e.target.innerWidth), height: e.target.innerHeight } });
     });
+    this.props.dispatch({ type: Constants.SCREEN_SIZE_CHANGED, window: { width: this.getScreenWidthForAvatar(window.innerWidth), height: window.innerHeight } });
   },
   render() {
     const { error, sessionReady, sessionTopicReady } = this.props;
@@ -73,6 +80,7 @@ const ChatView = React.createClass({
     else if(sessionReady && sessionTopicReady) {
       return (
         <div id='chat-app-container'>
+          <Loading />
           <ToastContainer ref='notification' className='toast-top-right' toastMessageFactory={ ToastMessageFactory } />
 
           <nav className='row header-section'>
@@ -80,13 +88,18 @@ const ChatView = React.createClass({
               <SessionTopicSelect/>
               <Resources/>
               <HeaderLinks/>
+              <div className='logo-section'>
+                <img className='img-responsive' src='/images/klzii_logo.png' />
+              </div>
             </div>
+            <MobileHeader/>
           </nav>
 
           <div className='row room-outerbox'>
             <div className='col-md-12 room-section' style={ this.styles() }>
               <ChangeAvatarModal />
               <DirectMessageModal />
+              <ReportsModal />
 
               <div className='row'>
                 <div className='col-md-8'>
@@ -113,6 +126,9 @@ const ChatView = React.createClass({
                 </div>
               </div>
             </div>
+          </div>
+          <div className="footer text-center">
+            <span>Powered by <a href="//www.klzii.com" target="_blank"> <b>klzii.</b> </a> </span>
           </div>
         </div>
       )

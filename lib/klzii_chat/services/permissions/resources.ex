@@ -35,36 +35,28 @@ defmodule KlziiChat.Services.Permissions.Resources do
 
   @spec can_zip(Map.t, Map.t) :: {:ok } | {:error, String.t}
   def can_zip(member, objects) do
-    if member.role == "admin" do
-      {:ok}
-    else
-      case KlziiChat.Services.Permissions.Builder.get_subscription_preference_account_user(member.id) do
-        {:ok, preference} ->
-          can_zip(member, objects, preference)
-        {:error, reason} ->
-          {:error, reason}
-      end
+    case KlziiChat.Services.Permissions.Builder.get_subscription_preference_account_user(member.id) do
+      {:ok, preference} ->
+        can_zip(member, objects, preference)
+      {:error, reason} ->
+        {:error, reason}
     end
   end
 
   @spec can_upload(Map.t, Map.t) :: {:ok } | {:error, String.t}
   def can_upload(member, preference) do
-    roles =  ~w(facilitator accountManager admin, participant)
+    roles =  ~w(facilitator accountManager admin participant)
     (has_role(member.role, roles) && has_allowed_from_subscription(preference, "uploadToGallery"))
     |> formate_error
   end
 
   @spec can_upload(Map.t) :: {:ok } | {:error, String.t}
   def can_upload(member) do
-    if member.role == "admin" do
-      {:ok}
-    else
-      case KlziiChat.Services.Permissions.Builder.get_subscription_preference_account_user(member.id) do
-        {:ok, preference} ->
-          can_upload(member, preference)
-        {:error, reason} ->
-          {:error, reason}
-      end
+    case KlziiChat.Services.Permissions.Builder.get_subscription_preference_account_user(member.id) do
+      {:ok, preference} ->
+        can_upload(member, preference)
+      {:error, reason} ->
+        {:error, reason}
     end
   end
 end

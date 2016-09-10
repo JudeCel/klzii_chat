@@ -1,3 +1,5 @@
+import moment               from 'moment';
+
 const helpers = {
   getConsoleResourceId(type) {
     switch (type) {
@@ -39,9 +41,9 @@ const helpers = {
     }
     return avatarData
   },
-  formatDate(moment, date) {
+  formatDate(date) {
     if(date) {
-      return moment(new Date(date + "Z")).format('ddd H:m D/YY');
+      return moment(new Date(date + "Z")).format('ddd H:m MMM D,YYYY');
     }
   },
   addOrRemoveScrollbarY(element, _this) {

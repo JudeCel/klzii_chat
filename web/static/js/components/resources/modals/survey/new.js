@@ -28,7 +28,7 @@ const SurveyNew = React.createClass({
         <div className='form-group'>
           <label htmlFor='type'>Type</label>
           <select id='type' className='form-control no-border-radius' onChange={ this.onChange }>
-            <option value='yesNoMaybe'>Yes/No/Maybe</option>
+            <option value='yesNoMaybe'>Yes/No/Unsure</option>
             <option value='5starRating'>5 Star rating</option>
           </select>
         </div>

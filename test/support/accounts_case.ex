@@ -1,6 +1,6 @@
 defmodule KlziiChat.AccountsCase do
   use ExUnit.CaseTemplate
-  alias KlziiChat.{Repo, User, SubscriptionPlan, Session, Account, SessionMember}
+  alias KlziiChat.{Repo, User, SubscriptionPlan, Account}
 
   setup do
     admin_user = %User{ email: "admin@gmail.com", encryptedPassword: "admin" } |> Repo.insert!
@@ -8,7 +8,7 @@ defmodule KlziiChat.AccountsCase do
     user2 = %User{ email: "dainis_2@gmail.com", encryptedPassword: "pfff" } |> Repo.insert!
     user3 = %User{ email: "dainis_3@gmail.com", encryptedPassword: "pfff11" } |> Repo.insert!
 
-    admin_account = Repo.insert!(%Account{name: "admin account", subdomain: "adminaccount"})
+    admin_account = Repo.insert!(%Account{admin: true, name: "admin account", subdomain: "adminaccount"})
 
     free_account = Repo.insert!(%Account{name: "free account", subdomain: "freeaccount"})
     core_account = Repo.insert!(%Account{name: "core account", subdomain: "coreaccount"})

@@ -20,11 +20,7 @@
   <body>
     <div class="container-fluid">
       <header class="header"></header>
-      <main role="main" id="main_container" class="hidden-xs hidden-sm"></main>
-    </div>
-
-    <div id="screen-too-small" class="visible-xs-block visible-sm-block">
-      This site is not compatible with small window sizes.
+      <main role="main" id="main_container"></main>
     </div>
 
     <script type="text/javascript">
@@ -36,8 +32,5 @@
     </script>
     <script src="<%= static_path(@conn, "/js/app.js") %>"></script>
     <script>!function(){var e=document.createElement("script"),t=document.getElementsByTagName("script")[0];e.async=1,e.src="https://inlinemanual.com/embed/player.901881c0404c8cfa38ac155515053df9.js",e.charset="UTF-8",t.parentNode.insertBefore(e,t)}();</script>
-    <div class="footer text-center">
-      <span>Powered by <b>klzii.</b></span>
-    </div>
   </body>
 </html>

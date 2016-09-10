@@ -1,7 +1,6 @@
 import React, {PropTypes} from 'react';
 import { connect }        from 'react-redux';
 import mixins             from '../../mixins';
-import ReportsModal       from './../reports/modal';
 import WhiteboardActions  from './../../actions/whiteboard';
 import LogoutLink         from './logout';
 
@@ -65,25 +64,18 @@ const Links = React.createClass({
     };
 
     return (
-      <span>
-        <div className='logo-section'>
-          <img src='/images/klzii_logo.png' />
-        </div>
-        <div className='links-section'>
-          <ul className='icons'>
-            { this.clearWhiteboardFunction(style) }
-            { this.reportsFunction(style) }
-            { this.directMessageFunction(style, count) }
+      <div className='links-section'>
+        <ul className='icons'>
+          { this.clearWhiteboardFunction(style) }
+          { this.reportsFunction(style) }
+          { this.directMessageFunction(style, count) }
 
-            <li style={ style }>
-              <i className='icon-help' />
-            </li>
-            <LogoutLink />
-          </ul>
-        </div>
-
-        <ReportsModal show={ this.showSpecificModal('reports') } />
-      </span>
+          <li style={ style }>
+            <i className='icon-help' />
+          </li>
+          <LogoutLink />
+        </ul>
+      </div>
     )
   }
 });

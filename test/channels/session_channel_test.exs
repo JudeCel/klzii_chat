@@ -41,20 +41,6 @@ defmodule KlziiChat.SessionChannelTest do
     assert_push "presence_state", %{}
   end
 
-  test "when join member broadcast others", %{socket: socket, socket2: socket2, channel_name: channel_name} do
-    {:ok, _, socket} = join(socket, SessionChannel, channel_name)
-
-    {:ok, _, _socket2} = join(socket2, SessionChannel, channel_name)
-
-    session_member = socket.assigns.session_member
-
-    assert_push "presence_diff", %{joins: joins}
-    id = Map.get(joins, session_member.id |> to_string)
-      |> Map.get(:member)
-      |> Map.get(:id)
-      assert(id == session_member.id)
-  end
-
   test "when update session member broadcast others", %{socket: socket, socket2: socket2, channel_name: channel_name} do
     {:ok, _, socket} = join(socket, SessionChannel, channel_name)
 

@@ -6,10 +6,13 @@ const Actions = {
   subscribePinboardEvents:(channel) => {
     return dispatch => {
       channel.on('new_pinboard_resource', (data) =>{
-        return dispatch({ type: Constants.CHANGE_PINBOARD_RESOURCE, data: data });
+        dispatch({ type: Constants.CHANGE_PINBOARD_RESOURCE, data: data });
       });
       channel.on('delete_pinboard_resource', (data) =>{
-        return dispatch({ type: Constants.CHANGE_PINBOARD_RESOURCE, data: data });
+        dispatch({ type: Constants.CHANGE_PINBOARD_RESOURCE, data: data });
+      });
+      channel.on('pinboard_resources', (data) =>{
+        dispatch({ type: Constants.GET_PINBOARD_RESOURCES, data: data.list });
       });
     }
   },
@@ -43,6 +46,7 @@ const Actions = {
   upload:(data, jwt) => {
     return (dispatch) => {
       let csrf_token = localStorage.getItem("csrf_token");
+      dispatch({ type: Constants.MODAL_POST_DATA });
       let req = request.post('/api/pinboard_resource/upload')
          .set('X-CSRF-Token', csrf_token)
          .set('Authorization', jwt);
@@ -58,6 +62,8 @@ const Actions = {
       req.end((errors, result) => {
         if(errors) {
           NotificationActions.showErrorNotification(dispatch, errors);
+        }else {
+          dispatch({ type: Constants.MODAL_POST_DATA_DONE_AND_CLOSE });
         }
       });
     }

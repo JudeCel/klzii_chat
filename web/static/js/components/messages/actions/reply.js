@@ -1,11 +1,12 @@
 import React, { PropTypes } from 'react';
 import { connect }          from 'react-redux';
 import Constants            from '../../../constants';
+import ReactDOM                 from 'react-dom';
 
 const ReplyMessage = React.createClass({
   replyMessage() {
     const { dispatch, message } = this.props;
-    dispatch({ type: Constants.SET_INPUT_REPLY, replyId: message.id });
+    dispatch({ type: Constants.SET_INPUT_REPLY, replyId: message.id, replyColour: message.session_member.colour });
   },
   render() {
     const { permission } = this.props;

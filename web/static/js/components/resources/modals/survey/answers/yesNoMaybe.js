@@ -4,7 +4,7 @@ import { connect }        from 'react-redux';
 const SurveyViewYesNoMaybe = React.createClass({
   render() {
     const { answers } = this.props;
-    const staticAnswers = ['Yes', 'No', 'Maybe'];
+    const staticAnswers = ['Yes', 'No', 'Unsure'];
 
     if(answers.length) {
       return (

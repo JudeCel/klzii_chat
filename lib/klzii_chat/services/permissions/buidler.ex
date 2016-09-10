@@ -21,7 +21,6 @@ defmodule KlziiChat.Services.Permissions.Builder do
     }
   end
 
-
   def pinboard_resource(session_member, pinboard_resource) do
     %{
       can_delete: PinboardResourcePermissions.can_remove_resource(session_member, pinboard_resource) |> to_boolean
@@ -79,7 +78,11 @@ defmodule KlziiChat.Services.Permissions.Builder do
       |> Repo.one
       |> case do
         nil ->
-          {:error, error_messages.subscription_not_found}
+          if is_admin(AccountUserQueries.is_admin(account_user_id)) do
+            {:ok, %{admin: true}}
+          else
+            {:error, error_messages.subscription_not_found}
+          end
         preference ->
           {:ok, Map.get(preference, :data, %{})}
       end
@@ -88,12 +91,25 @@ defmodule KlziiChat.Services.Permissions.Builder do
   @spec get_subscription_preference_session(Integer.t) :: Map.t
   defp get_subscription_preference_session(session_id) do
     SessionQueries.get_subscription_preference_session(session_id)
-      |> Repo.one
-      |> case do
-        nil ->
+    |> Repo.one
+    |> case do
+      nil ->
+        if is_admin(SessionQueries.is_admin(session_id)) do
+          {:ok, %{admin: true}}
+        else
           {:error, error_messages.subscription_not_found}
-        preference ->
+        end
+      preference ->
           {:ok, Map.get(preference, :data, %{})}
       end
+  end
+
+  def is_admin(query) do
+    case Repo.one(query) do
+      nil ->
+        false
+      _ ->
+        true
+    end
   end
 end

@@ -51,7 +51,7 @@ const Actions = {
       channel.on("deleteAll", (resp) =>{
         dispatch({
           type: Constants.DELETE_ALL_WHITEBOARD_SHAPES,
-          objects: resp
+          shapes: resp.shapes
         });
       });
 

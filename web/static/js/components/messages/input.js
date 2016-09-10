@@ -1,6 +1,7 @@
 import React, {PropTypes} from 'react';
 import { connect }        from 'react-redux';
 import TextareaAutosize   from 'react-autosize-textarea';
+import ReactDOM           from 'react-dom';
 import EmotionPicker      from './emotionPicker';
 import InputActions       from '../../actions/currentInput';
 import MessagesActions    from '../../actions/messages';
@@ -25,16 +26,25 @@ const Input = React.createClass({
   },
   defaultProps() {
     const { currentInput } = this.props;
+    let style = currentInput.replyColour ? { borderColor: currentInput.replyColour } : undefined;
+    let className = 'form-control' + (currentInput.replyColour ? ' wider-border' : '');
 
     return {
       onKeyDown: this.onKeyDown,
       value: currentInput.value,
       type: 'text',
       onChange: this.handleChange,
-      className: 'form-control',
+      style: style,
+      className: className,
       placeholder: 'Message',
       id: 'chat-input',
     };
+  },
+  componentDidUpdate(props) {
+    if(this.props.currentInput.replyId != props.currentInput.replyId) {
+      let input = ReactDOM.findDOMNode(this).querySelector('#chat-input');
+      input.focus();
+    }
   },
   render() {
     const { currentInput } = this.props;

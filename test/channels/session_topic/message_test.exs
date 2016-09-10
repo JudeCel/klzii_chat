@@ -1,7 +1,7 @@
 defmodule KlziiChat.Channels.SessionTopic.MessageTest do
   use KlziiChat.ChannelCase
   use KlziiChat.SessionMemberCase
-  alias KlziiChat.{Repo, Presence, UserSocket, SessionTopicChannel}
+  alias KlziiChat.{Repo, UserSocket, SessionTopicChannel}
 
   setup %{session_topic_1: session_topic_1, facilitator: facilitator, participant: participant} do
     Ecto.Adapters.SQL.Sandbox.mode(Repo, {:shared, self()})
@@ -17,18 +17,6 @@ defmodule KlziiChat.Channels.SessionTopic.MessageTest do
 
   test "when unauthorized", %{socket: socket, session_topic_1_name: session_topic_1_name} do
     {:error,  %{reason: "unauthorized"}} = join(socket, SessionTopicChannel, session_topic_1_name <> "2233")
-  end
-
-  test "presents register is enable for topics", %{socket: socket, session_topic_1_name: session_topic_1_name} do
-    {:ok, _, socket} =
-      join(socket, SessionTopicChannel, session_topic_1_name)
-      session_member = socket.assigns.session_member
-
-      id = Presence.list(socket)
-        |> Map.get(session_member.id |> to_string)
-        |> Map.get(:member)
-        |> Map.get(:id)
-      assert(id == session_member.id)
   end
 
   test "can push new message", %{socket: socket, session_topic_1_name: session_topic_1_name} do
@@ -70,17 +58,19 @@ defmodule KlziiChat.Channels.SessionTopic.MessageTest do
       assert(resp == %{id: message.id, replyId: nil})
   end
 
-  test "can thumbs up for message", %{socket: socket, session_topic_1_name: session_topic_1_name} do
+  test "can thumbs up for message", %{socket: socket, socket2: socket2, session_topic_1_name: session_topic_1_name} do
     {:ok, _, socket} = subscribe_and_join(socket, SessionTopicChannel, session_topic_1_name)
-      ref = push socket, "new_message", %{"emotion" => "1", "body" => "hey!!"}
-      assert_reply ref, :ok
-      assert_push "new_message", message
+    {:ok, _, socket2} = subscribe_and_join(socket2, SessionTopicChannel, session_topic_1_name)
+    ref = push socket, "new_message", %{"emotion" => "1", "body" => "hey!!"}
 
-      ref2 = push socket, "thumbs_up", %{"id" => message.id}
-      assert_reply ref2, :ok
+    assert_reply ref, :ok
+    assert_push "new_message", message
 
-      assert_push "update_message", resp
-      assert(resp.has_voted)
+    ref2 = push socket2, "thumbs_up", %{"id" => message.id}
+    assert_reply ref2, :ok
+
+    assert_push "update_message", resp
+    assert(resp.has_voted)
   end
 
   test "can reply ", %{socket: socket, session_topic_1_name: session_topic_1_name} do

@@ -13,15 +13,15 @@ export function joinChannal(dispatch, socket, sessionTopicId) {
       channel,
       currentId: sessionTopicId
     });
+
     dispatch(MessagesActions.subscribeMessageEvents(channel));
     dispatch(ConsoleActions.subscribeConsoleEvents(channel));
-    dispatch(PinboardActions.subscribePinboardEvents(channel));
     dispatch(WhiteboardActions.connectToChannel(socket, sessionTopicId));
     dispatch(Actions.subscribeEvents(channel));
+    dispatch(PinboardActions.subscribePinboardEvents(channel));
 
     channel.join()
     .receive('ok', (resp) => {
-      dispatch(PinboardActions.get(channel));
       dispatch({
         type: Constants.SET_MESSAGES,
         messages: resp
@@ -36,7 +36,7 @@ export function joinChannal(dispatch, socket, sessionTopicId) {
   }
 };
 
-function leave_chanal(dispatch, channal) {
+function leave_channal(dispatch, channal) {
   channal.leave();
   dispatch({ type: Constants.SET_SESSION_TOPIC });
 }
@@ -58,7 +58,7 @@ const Actions = {
         type: Constants.SET_SESSION_TOPICS,
         all: sessionTopics
       });
-      let sessionTopicId = sessionTopics[0];
+      let sessionTopicId = selectLandingTopic(sessionTopics);
 
       if (sessionTopicId) {
         joinChannal(dispatch, socket, sessionTopicId.id);
@@ -73,7 +73,7 @@ const Actions = {
   changeSessionTopic: (currentChannal, whiteboardChannel, sessionTopicId) =>{
     return dispatch => {
       whiteboardChannel.leave();
-      leave_chanal(dispatch, currentChannal);
+      leave_channal(dispatch, currentChannal);
       joinChannal(dispatch, currentChannal.socket, sessionTopicId);
     }
   }
@@ -81,3 +81,13 @@ const Actions = {
 
 
 export default Actions;
+
+function selectLandingTopic(topics) {
+  for(var i in topics) {
+    if(topics[i].landing) {
+      return topics[i];
+    }
+  }
+
+  return topics[0];
+}

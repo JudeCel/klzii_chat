@@ -1,7 +1,6 @@
 import React, {PropTypes} from 'react';
 import { connect }        from 'react-redux';
 import mixins             from '../../../../mixins';
-import moment             from 'moment';
 import Avatar             from './../../avatar';
 
 const Participants = React.createClass({
@@ -36,7 +35,7 @@ const Participants = React.createClass({
 
                   <div className='col-md-6 text-right'>
                     <span className='badge'>{ unreadDirectMessages[participant.id] }</span>
-                    <span>{ this.formatDate(moment, this.getLastUnread(participant.id).createdAt) }</span>
+                    <span>{ this.formatDate(this.getLastUnread(participant.id).createdAt) }</span>
                   </div>
                 </div>
 

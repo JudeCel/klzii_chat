@@ -1,16 +1,17 @@
 defmodule KlziiChat.Services.UnreadMessageService do
-  alias KlziiChat.{Repo, Message, SessionMember, UnreadMessage, Presence}
+  alias KlziiChat.{Repo, Message, SessionMember, UnreadMessage, SessionTopic}
   alias KlziiChat.Helpers.ListHelper
   import Ecto.Query, only: [from: 2]
+  import KlziiChat.Helpers.Presence, only: [topic_presences_ids: 1, session_presences_ids: 1]
 
   @default_summary %{"summary" => %{"normal" => 0, "reply" => 0 }}
 
   @spec process_delete_message(Integer.t, Integer.t) :: :ok
   def process_delete_message(session_id, session_topic_id) do
-    current_topic_presences_ids = topic_presences_ids(session_topic_id)
+
     current_session_presences_ids = session_presences_ids(session_id)
 
-    diff = ListHelper.find_diff(current_topic_presences_ids, current_session_presences_ids)
+    diff = ListHelper.find_diff(topic_presences_ids(session_topic_id), current_session_presences_ids)
     data = get_unread_messages(diff) |> group_by_session_topics_and_scope |> calculate_summary
     {:ok, session_id, data}
   end
@@ -72,6 +73,7 @@ defmodule KlziiChat.Services.UnreadMessageService do
     from(sm in SessionMember,
       where: sm.id in ^session_member_ids,
       left_join: um in UnreadMessage, on: sm.id == um.sessionMemberId,
+      join: st in SessionTopic, on: st.id == um.sessionTopicId and st.active == true, 
       group_by: [sm.id, um.scope, um.sessionTopicId],
       select: %{"id" => sm.id, "session_topic" => {um.sessionTopicId, %{um.scope => count(um.scope)}}}
     )|> Repo.all
@@ -149,15 +151,5 @@ defmodule KlziiChat.Services.UnreadMessageService do
     roles = ["facilitator", "participant"]
     from(sm in SessionMember, where: sm.sessionId == ^session_id, where: sm.role in ^roles, select: sm.id)
       |> Repo.all
-  end
-
-  @spec topic_presences_ids(String.t) :: List.t
-  def topic_presences_ids(session_topic_id) do
-    Presence.list("session_topic:#{session_topic_id}") |> Map.keys |> Enum.map(&(String.to_integer(&1)))
-  end
-
-  @spec session_presences_ids(String.t) :: List.t
-  def session_presences_ids(session_id) do
-    Presence.list("sessions:#{session_id}") |> Map.keys |> Enum.map(&(String.to_integer(&1)))
   end
 end

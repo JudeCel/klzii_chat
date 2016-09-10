@@ -81,7 +81,7 @@ defmodule KlziiChat.Services.SessionResourcesService do
     case SessionResourcesPermissions.can_get_resources(session_member) do
       {:ok} ->
         resource_query =
-          QueriesResources.base_query(session_member.account_user)
+          QueriesResources.base_resource_query
           |> QueriesResources.find_by_params(params)
           session_resources =
             from(sr in SessionResource, where: sr.sessionId == ^session_member.sessionId, preload: [resource: ^resource_query])

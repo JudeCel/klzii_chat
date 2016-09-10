@@ -8,13 +8,14 @@ defmodule KlziiChat.Services.MessageService do
   @spec history(Integer.t, Map.t) :: {:ok, List.t }
   def history(session_topic_id, session_member) do
     session_topic = Repo.get!(SessionTopic, session_topic_id)
-    messages = Repo.all(
+    {:ok, messages} = Repo.all(
       from e in assoc(session_topic, :messages),
         where: is_nil(e.replyId),
         order_by: [asc: e.createdAt],
-        limit: 200,
-      preload: [:session_member, :votes, replies: [:replies, :session_member, :votes] ]
-    )
+        limit: 200
+      )
+      |> preload_dependencies
+
     resp = Enum.map(messages, fn message ->
       MessageView.render("show.json", %{message: message, member: session_member})
     end)
@@ -76,9 +77,10 @@ defmodule KlziiChat.Services.MessageService do
     end
   end
 
-  @spec preload_dependencies(%Message{}) :: %Message{}
+  @spec preload_dependencies(%Message{} | [%Message{}] ) :: %Message{} | [%Message{}]
   def preload_dependencies(message) do
-    {:ok, Repo.preload(message, [:session_member, :votes, replies: [:replies, :session_member, :votes] ])}
+    replies_query = from(st in Message, order_by: [asc: :createdAt], preload: [:session_member, :votes, :replies])
+    {:ok, Repo.preload(message, [:session_member, :votes, replies: replies_query ])}
   end
 
   @spec create(%Message{}) :: %Message{}
@@ -124,9 +126,9 @@ defmodule KlziiChat.Services.MessageService do
 
   @spec thumbs_up(Integer.t, Map.t) :: Map.t | {:error, String.t}
   def thumbs_up(id, session_member) do
-    case MessagePermissions.can_vote(session_member) do
+    message = Repo.get_by!(Message, id: id)
+    case MessagePermissions.can_vote(session_member, message) do
       {:ok} ->
-        message = Repo.get_by!(Message, id: id)
         case Repo.get_by(Vote, messageId: id, sessionMemberId: session_member.id) do
           nil ->
             changeset = Vote.changeset(%Vote{}, %{sessionMemberId: session_member.id, messageId: id})

@@ -1,7 +1,7 @@
 import React, { PropTypes } from 'react';
-import moment               from 'moment';
 import MessageActions       from './actions';
 import mixins               from '../../mixins';
+import Avatar               from '../members/avatar.js';
 
 const { EditMessage, DeleteMessage, StarMessage, RateMessage, ReplyMessage } = MessageActions;
 
@@ -33,11 +33,18 @@ const Message = React.createClass({
   render() {
     const { message } = this.props;
     const { can_edit, can_delete, can_star, can_vote, can_reply } = message.permissions;
+    
+    let member = message.session_member;
+    member.sessionTopicContext[member.currentTopic.id].avatarData.face = message.emotion;
+    member.online = true;
 
     return (
       <div className='message-section media'>
         <div className={ this.mediaImagePosition(message) }>
           <div className={ 'emotion-chat-' + message.emotion } aria-hidden='true' style={{ backgroundColor: message.session_member.colour }}/>
+          <div className='emotion-chat-avatar'>
+            <Avatar member={ member } specificId={ 'msgAvatar' + message.id } />
+          </div>
         </div>
 
         <div className='media-body'>
@@ -47,7 +54,7 @@ const Message = React.createClass({
             </span>
 
             <span className='pull-right'>
-              <small>{ this.formatDate(moment, message.time) }</small>
+              <small>{ this.formatDate(message.time) }</small>
             </span>
           </div>
 

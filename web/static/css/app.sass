@@ -21,32 +21,26 @@ $input-size: 1.5em
 @import '../../../node_modules/medium-editor/dist/css/themes/beagle.css'
 @import 'dependencies/animate/animate.min.css'
 @import 'dependencies/toastr/toastr.min.css'
-
-#screen-too-small
-  width: 50%
-  border: 1px solid #ccc
-  text-align: center
-  margin: 18% auto 0 auto
-  padding: 30px
-  background-color: white
+@import 'util/loading.sass'
+@import 'mobile.css'
 
 body
   font-family: 'Source Sans Pro', Arial, sans-serif
 
 .footer
-  position: absolute
   bottom: 50px
   right: 50%
 
 .header-section
-  width: 100%
-  position: absolute
   z-index: 1060
   background: white
   padding: 20px 0
   @extend .dropshadow
   vertical-align: middle
   text-align: right
+  .header-innerbox
+    display: flex
+    justify-content: space-between
   .topic-select-section
     float: left
     display: inline-block
@@ -58,32 +52,57 @@ body
       small
         font-size: 50%
     .topic-select-box
-      margin-left: 20px
-      .dropdown-menu > li > a
-        padding: 5px 0 5px 5px
-        .pull-left
-          margin-right: 2px
+      order: 1
+      .session-name
+        margin-top: 5px
+      .dropdown-menu
+        padding: 0
+        margin: 0
+        background-color: #369D32
+        margin-left: 15px
+        border: 0
+        width: 200px
+        li
+          a
+            color: white
+            padding: 5px 0 5px 5px
+            .pull-left
+              margin-right: 2px
+          &.active, &:hover, &:focus, &:active
+            a
+              background-color: #4CB648
       .unread-messages-section
         list-style: none
         padding: 0
+        margin: 0
         padding-left: 2px
-        margin: 0px
-        vertical-align: middle
         display: inline-block
       .badge
         &.normal
           background-color: $header-red
         &.reply
           background-color: black
-      #topic-selector
-        padding: 0px
-        background-color: none
-        border: none
+      .dropdown.btn-group
+        vertical-align: top
+        #topic-selector
+          margin-left: 15px
+          padding: 0px
+          background-color: none
+          border: none
+          .btn-default
+            color: white
+            border-color: transparent
+            max-height: 50px
+            line-height: 2.5
+            &.name
+              width: 165px
+              background-color: #4CB648
+            &.dropcaret
+              width: 36px
+              background-color: #45AC43
   .resources-section
-    margin-left: 5%
-    float: left
+    order: 2
     vertical-align: middle
-    display: inline-block
     @extend .lineup-icons
     @extend .lineup-icons.header
     ul.icons
@@ -91,16 +110,17 @@ body
       li
         background-color: $header-red
   .links-section
-    margin-right: 5%
-    float: right
+    order: 3
     vertical-align: middle
-    display: inline-block
     @extend .lineup-icons
     @extend .lineup-icons.header
     ul.icons
       text-align: center
       li
         min-width: 55px
+        max-height: 55px
+        span.log-out
+          font-size: 20px
         .badge
           margin-top: -25px
           margin-left: -40px
@@ -109,15 +129,12 @@ body
           margin-left: -20px
   .logo-section
     line-height: 3
-    float: right
-    display: inline-block
-    width: 7%
-    img
-      width: 100%
+    order: 4
+    width: 5%
 
 .room-outerbox
   padding: 0 15px
-  padding-top: 130px
+  padding-top: 20px
 .room-section
   border: 2px solid
   padding-top: 1%
@@ -131,6 +148,8 @@ body
         &.active
           @extend .cursor-pointer
   .input-section
+    .wider-border
+      border-width: 2px
     .input-group-addon
       height: $scaled-chat-emotion-size
     .emotion-picker-section
@@ -250,10 +269,6 @@ body
     width: 1600px
   .direct-message-modal
     padding: 0 15px
-
-@media (max-width: 992px)
-  *[role="dialog"]
-    visibility: hidden
 
 @media (max-width: 1200px)
   .outerbox

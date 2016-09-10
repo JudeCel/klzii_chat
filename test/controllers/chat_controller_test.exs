@@ -17,12 +17,4 @@ defmodule KlziiChat.ChatControllerTest do
       assert(html_response(conn, 200))
     end
   end
-
-  # describe("log out") do
-  #   test "success", %{conn: conn, token: token} do
-  #     conn = get(conn, "/", token: token)
-  #     |> get("/logout")
-  #     assert(html_response(conn, 200))
-  #   end
-  # end
 end
