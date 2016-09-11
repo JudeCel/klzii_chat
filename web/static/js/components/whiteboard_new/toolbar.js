@@ -36,6 +36,9 @@ const Buttons = React.createClass({
   setWidth(value) {
     self.drawData.strokeWidth = value;
     this.forceUpdate();
+    if(self.mouseData.selected) {
+      self.mouseData.selected.stroke({ width: value });
+    }
   },
   setHistory(type) {
     let action = self.deps.History[type];
