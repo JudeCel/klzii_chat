@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Hand = React.createClass({
+const ButtonsHand = React.createClass({
   getInitialState() {
     return { buttonType: 'none' };
   },
@@ -16,4 +16,4 @@ const Hand = React.createClass({
   }
 });
 
-export default Hand;
+export default ButtonsHand;

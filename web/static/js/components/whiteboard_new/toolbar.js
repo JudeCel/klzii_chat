@@ -8,6 +8,7 @@ import Width   from './toolbar/width';
 import Delete  from './toolbar/delete';
 import History from './toolbar/history';
 import Image   from './toolbar/image';
+import Text    from './toolbar/text';
 
 var self;
 function init(data) {
@@ -60,10 +61,15 @@ const Buttons = React.createClass({
     this.setType(type, type);
     self.drawData.imageUrl = url;
   },
+  setText(type, text) {
+    this.setType(type, type);
+    self.drawData.text = text;
+  },
   render() {
     const params = {
       setType: this.setType,
       setImage: this.setImage,
+      setText: this.setText,
       getClassnameParent: this.getClassnameParent,
       activeType: this.state.activeType
     };
@@ -75,6 +81,7 @@ const Buttons = React.createClass({
           <Forms { ...params } />
           <Poly { ...params } />
           <Image { ...params } />
+          <Text { ...params } />
           <Width strokeWidth={ self.drawData.strokeWidth } setWidth={ this.setWidth } />
           <Delete setDelete={ this.setDelete } />
           <History setHistory={ this.setHistory } />

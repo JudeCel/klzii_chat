@@ -30,7 +30,6 @@ const ButtonsPoly = React.createClass({
                 <i key={ index } className={ this.getClassnameChild(object.id) + object.className } aria-hidden='true' onClick={ this.setActiveButton.bind(this, object.id) } />
               )
             }
-            {/* <Buttons.Poly.Text { ...params } /> */}
           </Popover>
         }>
 

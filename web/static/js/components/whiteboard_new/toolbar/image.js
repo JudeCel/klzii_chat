@@ -1,9 +1,8 @@
-import React, {PropTypes} from 'react';
-import { connect }        from 'react-redux';
-import mixins             from '../../../mixins';
-import { Button, OverlayTrigger, Tooltip }         from 'react-bootstrap'
+import React       from 'react';
+import { connect } from 'react-redux';
+import mixins      from '../../../mixins';
 
-const ImageButton = React.createClass({
+const ButtonsImage = React.createClass({
   mixins: [mixins.modalWindows, mixins.validations],
   getInitialState() {
     return { buttonType: 'image' };
@@ -16,10 +15,6 @@ const ImageButton = React.createClass({
     this.openSpecificModal('whiteboardImage', { select: this.onSelect, type: 'image' });
   },
   render() {
-    const tooltip =(
-      <Tooltip id='tooltip'><strong>Add Image</strong></Tooltip>
-    );
-
     if(this.hasPermission(['whiteboard', 'can_add_image'])) {
       return (
         <button className={ this.props.getClassnameParent(this.state.buttonType) + 'btn btn-default' } onClick={ this.onClick }>
@@ -40,4 +35,4 @@ const mapStateToProps = (state) => {
   }
 };
 
-export default connect(mapStateToProps)(ImageButton);
+export default connect(mapStateToProps)(ButtonsImage);
