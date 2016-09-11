@@ -96,10 +96,15 @@ function buildShape(e) {
 
 function selectShape(e) {
   if(self.mouseData.type == 'select') {
-    deselectShape();
-    self.mouseData.selected = e.target.instance.selectize().resize(self.drawData.minsMaxs).draggable();
-    self.mouseData.selected.remember('_draggable').start(e);
-    _moveSelectizeToParent();
+    var shape = e.target.instance;
+    var selected = self.mouseData.selected;
+
+    if(shape && (!selected || selected && selected.id() != shape.id())) { // IE fix
+      deselectShape();
+      self.mouseData.selected = shape.selectize().resize(self.drawData.minsMaxs).draggable();
+      self.mouseData.selected.remember('_draggable').start(e);
+      _moveSelectizeToParent();
+    }
   }
 }
 
