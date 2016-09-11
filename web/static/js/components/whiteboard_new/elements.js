@@ -10,6 +10,7 @@ module.exports = {
     line,
     arrow,
     image,
+    text,
   }
 };
 
@@ -61,6 +62,9 @@ function arrow(e, nested, attrs) {
 
 function image(e, nested, attrs) {
   attrs.fill = 'none';
-  attrs.strokeWidth = 0;
   return nested.image(self.drawData.imageUrl).draw(e);
+}
+
+function text(e, nested, attrs) {
+  return nested.plain(self.drawData.text).draw(e);
 }

@@ -6,6 +6,7 @@ import svgDrag      from 'svg.draggable.js';
 import svgResize    from 'svg.resize.js';
 import svgSelect    from 'svg.select.js';
 
+import Plugins      from './plugins';
 import Events       from './events';
 import Shape        from './shape';
 import Design       from './design';
