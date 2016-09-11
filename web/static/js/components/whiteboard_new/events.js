@@ -19,9 +19,7 @@ function boardMouseDown(e) {
 
   switch(self.mouseData.type) {
     case 'select':
-      if(e.target.id == self.board.node.id) {
-        self.deps.Shape.deselectShape();
-      }
+      self.deps.Shape.deselectShape();
       break;
     case 'draw':
       self.deps.Shape.createShape(e);
@@ -44,7 +42,9 @@ function boardMouseUp(e) {
 
   switch(self.mouseData.type) {
     case 'draw':
-      self.shapeData.shape.draw(e);
+      if(self.shapeData.shape.draw) {
+        self.shapeData.shape.draw(e);
+      }
       break;
     case 'stop':
       self.shapeData.shape.draw('stop', e);
