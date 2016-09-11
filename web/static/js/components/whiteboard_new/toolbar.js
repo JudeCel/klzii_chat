@@ -63,6 +63,7 @@ const Buttons = React.createClass({
   render() {
     const params = {
       setType: this.setType,
+      setImage: this.setImage,
       getClassnameParent: this.getClassnameParent,
       activeType: this.state.activeType
     };
@@ -73,7 +74,7 @@ const Buttons = React.createClass({
           <Hand { ...params } />
           <Forms { ...params } />
           <Poly { ...params } />
-          <Image getClassnameParent={ this.getClassnameParent } setImage={ this.setImage } />
+          <Image { ...params } />
           <Width strokeWidth={ self.drawData.strokeWidth } setWidth={ this.setWidth } />
           <Delete setDelete={ this.setDelete } />
           <History setHistory={ this.setHistory } />

@@ -30,7 +30,6 @@ const ButtonsForms = React.createClass({
                 <i key={ index } className={ this.getClassnameChild(object.id) + object.className } aria-hidden='true' onClick={ this.setActiveButton.bind(this, object.id) } />
               )
             }
-            {/* <Buttons.Forms.Image { ...params } /> */}
           </Popover>
         }>
 
