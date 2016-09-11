@@ -29,6 +29,7 @@ function shapeDelete(shape) {
     var id = shape.id();
     const { dispatch, channel } = self.props;
 
+    shape.selectize(false);
     dispatch(Actions.delete(channel, id));
     self.deps.Shape.deleteShape(id);
   }
