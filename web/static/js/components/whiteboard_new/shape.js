@@ -99,6 +99,7 @@ function selectShape(e) {
     deselectShape();
     self.mouseData.selected = e.target.instance.selectize().resize().draggable();
     self.mouseData.selected.remember('_draggable').start(e);
+    _moveSelectizeToParent();
   }
 }
 
@@ -122,4 +123,9 @@ function deleteAllShapes() {
 function setMouseType(type) {
   self.mouseData.prevType = self.mouseData.type;
   self.mouseData.type = type;
+}
+
+function _moveSelectizeToParent() {
+  let selectize = self.mouseData.selected.remember('_selectHandler').nested;
+  self.mainGroup.add(selectize);
 }
