@@ -1,4 +1,5 @@
 import React from 'react';
+import { OverlayTrigger, Button } from 'react-bootstrap';
 
 const History = React.createClass({
   onClick(type) {
@@ -7,12 +8,16 @@ const History = React.createClass({
   render() {
     return (
       <span>
-        <button className='btn btn-default' onClick={ this.onClick.bind(this, 'undo') }>
-          <i className='fa fa-undo' aria-hidden='true' />
-        </button>
-        <button className='btn btn-default' onClick={ this.onClick.bind(this, 'redo') }>
-          <i className='fa fa-repeat' aria-hidden='true' />
-        </button>
+        <OverlayTrigger placement='top' overlay={ this.props.tooltipFormat('Undo') }>
+          <Button className='btn btn-default' onClick={ this.onClick.bind(this, 'undo') }>
+            <i className='fa fa-undo' aria-hidden='true' />
+          </Button>
+        </OverlayTrigger>
+        <OverlayTrigger placement='top' overlay={ this.props.tooltipFormat('Redo') }>
+          <Button className='btn btn-default' onClick={ this.onClick.bind(this, 'redo') }>
+            <i className='fa fa-repeat' aria-hidden='true' />
+          </Button>
+        </OverlayTrigger>
       </span>
     )
   }

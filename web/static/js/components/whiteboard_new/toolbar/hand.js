@@ -1,4 +1,5 @@
 import React from 'react';
+import { OverlayTrigger, Button } from 'react-bootstrap';
 
 const ButtonsHand = React.createClass({
   getInitialState() {
@@ -9,9 +10,11 @@ const ButtonsHand = React.createClass({
   },
   render() {
     return (
-      <button className={ this.props.getClassnameParent(this.state.buttonType) + 'btn btn-default' } onClick={ this.onClick }>
-        <i className='fa fa-hand-paper-o' aria-hidden='true' />
-      </button>
+      <OverlayTrigger placement='top' overlay={ this.props.tooltipFormat('Selection') }>
+        <Button className={ this.props.getClassnameParent(this.state.buttonType) + 'btn btn-default' } onClick={ this.onClick }>
+          <i className='fa fa-hand-paper-o' aria-hidden='true' />
+        </Button>
+      </OverlayTrigger>
     )
   }
 });

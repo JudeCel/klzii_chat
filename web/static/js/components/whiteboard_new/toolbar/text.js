@@ -30,9 +30,11 @@ const ButtonsText = React.createClass({
   render() {
     return (
       <OverlayTrigger ref='text' trigger='click' placement='top' rootClose overlay={ this.popoverInput() }>
-        <Button className={ this.props.getClassnameParent(this.state.buttonType) + 'btn btn-default' }>
-          <i className='fa fa-font' aria-hidden='true' />
-        </Button>
+        <OverlayTrigger placement='top' overlay={ this.props.tooltipFormat('Add Text') }>
+          <Button className={ this.props.getClassnameParent(this.state.buttonType) + 'btn btn-default' }>
+            <i className='fa fa-font' aria-hidden='true' />
+          </Button>
+        </OverlayTrigger>
       </OverlayTrigger>
     )
   }

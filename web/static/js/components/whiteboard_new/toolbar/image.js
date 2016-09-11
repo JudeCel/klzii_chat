@@ -1,6 +1,7 @@
 import React       from 'react';
 import { connect } from 'react-redux';
 import mixins      from '../../../mixins';
+import { OverlayTrigger, Button } from 'react-bootstrap';
 
 const ButtonsImage = React.createClass({
   mixins: [mixins.modalWindows, mixins.validations],
@@ -17,9 +18,11 @@ const ButtonsImage = React.createClass({
   render() {
     if(this.hasPermission(['whiteboard', 'can_add_image'])) {
       return (
-        <button className={ this.props.getClassnameParent(this.state.buttonType) + 'btn btn-default' } onClick={ this.onClick }>
-          <i className='fa fa-file-image-o' aria-hidden='true' />
-        </button>
+        <OverlayTrigger placement='top' overlay={ this.props.tooltipFormat('Add Image') }>
+          <Button className={ this.props.getClassnameParent(this.state.buttonType) + 'btn btn-default' } onClick={ this.onClick }>
+            <i className='fa fa-file-image-o' aria-hidden='true' />
+          </Button>
+        </OverlayTrigger>
       )
     }
     else {

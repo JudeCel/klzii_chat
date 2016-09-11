@@ -33,7 +33,9 @@ const ButtonsPoly = React.createClass({
           </Popover>
         }>
 
-        <Button className={ this.props.getClassnameParent(this.state.buttonType) }><i className='fa fa-pencil' aria-hidden='true' /></Button>
+        <OverlayTrigger placement='top' overlay={ this.props.tooltipFormat('Pencil') }>
+          <Button className={ this.props.getClassnameParent(this.state.buttonType) }><i className='fa fa-pencil' aria-hidden='true' /></Button>
+        </OverlayTrigger>
       </OverlayTrigger>
     )
   }

@@ -1,14 +1,6 @@
 import React from 'react';
-import { ButtonToolbar } from 'react-bootstrap';
-
-import Hand    from './toolbar/hand';
-import Forms   from './toolbar/forms';
-import Poly    from './toolbar/poly';
-import Width   from './toolbar/width';
-import Delete  from './toolbar/delete';
-import History from './toolbar/history';
-import Image   from './toolbar/image';
-import Text    from './toolbar/text';
+import ToolbarButtons from './toolbar/index';
+import { ButtonToolbar, Tooltip } from 'react-bootstrap';
 
 var self;
 function init(data) {
@@ -65,26 +57,34 @@ const Buttons = React.createClass({
     this.setType(type, type);
     self.drawData.text = text;
   },
+  tooltipFormat(text) {
+    return <Tooltip id='tooltip'><strong>{ text }</strong></Tooltip>
+  },
   render() {
     const params = {
       setType: this.setType,
       setImage: this.setImage,
       setText: this.setText,
+      setDelete: this.setDelete,
+      setHistory: this.setHistory,
+      setWidth: this.setWidth,
+      strokeWidth: self.drawData.strokeWidth,
       getClassnameParent: this.getClassnameParent,
+      tooltipFormat: this.tooltipFormat,
       activeType: this.state.activeType
     };
 
     return (
       <ButtonToolbar className='row panel-buttons-section'>
         <div className='col-md-offset-4'>
-          <Hand { ...params } />
-          <Forms { ...params } />
-          <Poly { ...params } />
-          <Image { ...params } />
-          <Text { ...params } />
-          <Width strokeWidth={ self.drawData.strokeWidth } setWidth={ this.setWidth } />
-          <Delete setDelete={ this.setDelete } />
-          <History setHistory={ this.setHistory } />
+          <ToolbarButtons.Hand    { ...params } />
+          <ToolbarButtons.Forms   { ...params } />
+          <ToolbarButtons.Poly    { ...params } />
+          <ToolbarButtons.Image   { ...params } />
+          <ToolbarButtons.Text    { ...params } />
+          <ToolbarButtons.Width   { ...params } />
+          <ToolbarButtons.Delete  { ...params } />
+          <ToolbarButtons.History { ...params } />
         </div>
       </ButtonToolbar>
     )

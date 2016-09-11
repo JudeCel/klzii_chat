@@ -15,7 +15,9 @@ const ButtonsDelete = React.createClass({
           </Popover>
         }>
 
-        <Button><i className='fa fa-trash' aria-hidden='true' /></Button>
+        <OverlayTrigger placement='top' overlay={ this.props.tooltipFormat('Erase') }>
+          <Button><i className='fa fa-trash' aria-hidden='true' /></Button>
+        </OverlayTrigger>
       </OverlayTrigger>
     )
   }

@@ -33,7 +33,9 @@ const ButtonsForms = React.createClass({
           </Popover>
         }>
 
-        <Button className={ this.props.getClassnameParent(this.state.buttonType) }><i className='fa fa-star' aria-hidden='true' /></Button>
+        <OverlayTrigger placement='top' overlay={ this.props.tooltipFormat('Shapes') }>
+          <Button className={ this.props.getClassnameParent(this.state.buttonType) }><i className='fa fa-star' aria-hidden='true' /></Button>
+        </OverlayTrigger>
       </OverlayTrigger>
     )
   }

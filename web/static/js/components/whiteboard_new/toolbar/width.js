@@ -1,5 +1,5 @@
 import React from 'react';
-import { DropdownButton, MenuItem } from 'react-bootstrap';
+import { DropdownButton, MenuItem, OverlayTrigger } from 'react-bootstrap';
 
 const ButtonsWidth = React.createClass({
   render() {
@@ -7,13 +7,15 @@ const ButtonsWidth = React.createClass({
     const { strokeWidth } = this.props;
 
     return (
-      <DropdownButton title={ strokeWidth } dropup noCaret className='fa fa-cog' id='wb-buttons-width'>
-        {
-          widths.map((value) =>
-            <MenuItem key={ value } eventKey={ value } active={ strokeWidth == value } onSelect={ this.props.setWidth } >{ value }</MenuItem>
-          )
-        }
-      </DropdownButton>
+      <OverlayTrigger placement='top' overlay={ this.props.tooltipFormat('Size') }>
+        <DropdownButton title={ strokeWidth } dropup noCaret className='fa fa-cog' id='wb-buttons-width'>
+          {
+            widths.map((value) =>
+              <MenuItem key={ value } eventKey={ value } active={ strokeWidth == value } onSelect={ this.props.setWidth } >{ value }</MenuItem>
+            )
+          }
+        </DropdownButton>
+      </OverlayTrigger>
     )
   }
 });
