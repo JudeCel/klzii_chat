@@ -1,6 +1,8 @@
 module.exports = {
   init,
+  last,
   add,
+  remove,
   undo,
   redo
 };
@@ -12,10 +14,14 @@ function init(data) {
   return this;
 }
 
+function last(type) {
+  return self.historyData[type][self.historyData[type].length - 1]
+}
+
 function add(object, type, when) {
   if(type == 'update' && when == 'end') {
-    var last = self.historyData.undo[self.historyData.undo.length - 1];
-    last.endElement = object.svg();
+    var historyObject = last('undo');
+    historyObject.endElement = object.svg();
   }
   else {
     if(type == 'removeAll') {
@@ -32,9 +38,13 @@ function add(object, type, when) {
   }
 }
 
+function remove(type) {
+  return self.historyData[type].pop();
+}
+
 function undo() {
   if(self.historyData.undo.length) {
-    var object = self.historyData.undo.pop();
+    var object = remove('undo');
     self.historyData.redo.push(object);
     _actionUndo(object);
   }
@@ -42,7 +52,7 @@ function undo() {
 
 function redo() {
   if(self.historyData.redo.length) {
-    var object = self.historyData.redo.pop();
+    var object = remove('redo');
     self.historyData.undo.push(object);
     _actionRedo(object);
   }
