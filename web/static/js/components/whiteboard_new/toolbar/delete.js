@@ -4,7 +4,7 @@ import { OverlayTrigger, Button, Popover } from 'react-bootstrap';
 const ButtonsDelete = React.createClass({
   onClick(all) {
     this.refs.delete.hide();
-    this.props.delete(all);
+    this.props.setDelete(all);
   },
   render() {
     return (

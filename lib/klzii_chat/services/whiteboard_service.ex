@@ -10,6 +10,7 @@ defmodule KlziiChat.Services.WhiteboardService do
     session_member = Repo.get!(SessionMember, session_member_id)
     shapes = Repo.all(
       from e in assoc(session_topic, :shapes),
+      order_by: [asc: e.id],
       preload: [:session_member]
     )
     resp = Enum.map(shapes, fn shape ->

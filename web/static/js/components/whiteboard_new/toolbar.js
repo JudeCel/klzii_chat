@@ -7,6 +7,7 @@ import Poly    from './toolbar/poly';
 import Width   from './toolbar/width';
 import Delete  from './toolbar/delete';
 import History from './toolbar/history';
+import Image   from './toolbar/image';
 
 var self;
 function init(data) {
@@ -45,7 +46,7 @@ const Buttons = React.createClass({
     let action = self.deps.History[type];
     action();
   },
-  delete(all) {
+  setDelete(all) {
     if(all) {
       self.deps.History.add(self.shapeData.added, 'removeAll');
       self.deps.Actions.shapeDeleteAll();
@@ -54,6 +55,10 @@ const Buttons = React.createClass({
       self.deps.History.add(self.mouseData.selected, 'remove');
       self.deps.Actions.shapeDelete(self.mouseData.selected);
     }
+  },
+  setImage(type, url) {
+    this.setType(type, type);
+    self.drawData.imageUrl = url;
   },
   render() {
     const params = {
@@ -68,8 +73,9 @@ const Buttons = React.createClass({
           <Hand { ...params } />
           <Forms { ...params } />
           <Poly { ...params } />
+          <Image getClassnameParent={ this.getClassnameParent } setImage={ this.setImage } />
           <Width strokeWidth={ self.drawData.strokeWidth } setWidth={ this.setWidth } />
-          <Delete delete={ this.delete } />
+          <Delete setDelete={ this.setDelete } />
           <History setHistory={ this.setHistory } />
         </div>
       </ButtonToolbar>

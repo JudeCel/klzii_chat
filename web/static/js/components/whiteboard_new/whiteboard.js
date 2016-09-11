@@ -58,7 +58,8 @@ const Whiteboard = React.createClass({
       initialHeight: 460,
       strokeWidth: 2,
       current: 'none',
-      color: 'red'
+      color: 'red',
+      imageUrl: ''
     };
     this.drawData.minsMaxs = {
       minX: 0,

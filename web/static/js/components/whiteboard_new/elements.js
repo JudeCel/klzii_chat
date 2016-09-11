@@ -9,6 +9,7 @@ module.exports = {
     scribbleFilled,
     line,
     arrow,
+    image,
   }
 };
 
@@ -45,7 +46,7 @@ function scribbleFilled(e, nested, attrs) {
   attrs['pointer-events'] = 'all';
   self.deps.Shape.setMouseType('stop');
   var build = nested.polyline().draw(e);
-  build.remember("_paintHandler").drawCircles = function() {};
+  build.remember('_paintHandler').drawCircles = function() {};
   return build;
 }
 
@@ -56,4 +57,10 @@ function line(e, nested, attrs) {
 function arrow(e, nested, attrs) {
   attrs['marker-end'] = self.markers.arrows[self.props.currentUser.id];
   return nested.line(0, 0, 0, 0).draw(e);
+}
+
+function image(e, nested, attrs) {
+  attrs.fill = 'none';
+  attrs.strokeWidth = 0;
+  return nested.image(self.drawData.imageUrl).draw(e);
 }
