@@ -45,6 +45,7 @@ function remove(type) {
 function undo() {
   if(self.historyData.undo.length) {
     var object = remove('undo');
+    self.deps.Shape.deselectShape();
     self.historyData.redo.push(object);
     _actionUndo(object);
   }
@@ -53,6 +54,7 @@ function undo() {
 function redo() {
   if(self.historyData.redo.length) {
     var object = remove('redo');
+    self.deps.Shape.deselectShape();
     self.historyData.undo.push(object);
     _actionRedo(object);
   }
