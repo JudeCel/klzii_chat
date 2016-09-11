@@ -1,5 +1,4 @@
 import React from 'react';
-import Buttons from './buttons';
 import { OverlayTrigger, Button, Popover } from 'react-bootstrap';
 
 const ButtonsPoly = React.createClass({
@@ -16,18 +15,21 @@ const ButtonsPoly = React.createClass({
     this.props.setType(this.state.buttonType, shapeType);
   },
   render() {
-    const params = {
-      getClassnameChild: this.getClassnameChild,
-      setActiveButton: this.setActiveButton,
-    };
+    const buttons = [
+      { id: 'scribbleEmpty',  className: 'btn btn-default fa fa-paint-brush' },
+      { id: 'scribbleFilled', className: 'btn btn-default fa fa-leaf'        },
+      { id: 'line',           className: 'btn btn-default fa fa-minus'       },
+      { id: 'arrow',          className: 'btn btn-default fa fa-arrow-right' }
+    ];
 
     return (
       <OverlayTrigger ref='poly' trigger='click' rootClose placement='top' overlay={
           <Popover id='wb-buttons-poly'>
-            <Buttons.Poly.ScribbleEmpty { ...params } />
-            <Buttons.Poly.ScribbleFilled { ...params } />
-            <Buttons.Poly.Line { ...params } />
-            <Buttons.Poly.Arrow { ...params } />
+            {
+              buttons.map((object, index) =>
+                <i key={ index } className={ this.getClassnameChild(object.id) + object.className } aria-hidden='true' onClick={ this.setActiveButton.bind(this, object.id) } />
+              )
+            }
             {/* <Buttons.Poly.Text { ...params } /> */}
           </Popover>
         }>

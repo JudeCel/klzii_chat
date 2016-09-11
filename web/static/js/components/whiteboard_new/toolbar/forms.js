@@ -1,5 +1,4 @@
 import React from 'react';
-import Buttons from './buttons';
 import { OverlayTrigger, Button, Popover } from 'react-bootstrap';
 
 const ButtonsForms = React.createClass({
@@ -16,18 +15,21 @@ const ButtonsForms = React.createClass({
     this.props.setType(this.state.buttonType, shapeType);
   },
   render() {
-    const params = {
-      getClassnameChild: this.getClassnameChild,
-      setActiveButton: this.setActiveButton,
-    };
+    const buttons = [
+      { id: 'circleEmpty',  className: 'btn btn-default fa fa-circle-o' },
+      { id: 'circleFilled', className: 'btn btn-default fa fa-circle'   },
+      { id: 'rectEmpty',    className: 'btn btn-default fa fa-square-o' },
+      { id: 'rectFilled',   className: 'btn btn-default fa fa-square'   }
+    ];
 
     return (
       <OverlayTrigger ref='forms' trigger='click' rootClose placement='top' overlay={
           <Popover id='wb-buttons-forms'>
-            <Buttons.Forms.CircleEmpty { ...params } />
-            <Buttons.Forms.CircleFilled { ...params } />
-            <Buttons.Forms.RectEmpty { ...params } />
-            <Buttons.Forms.RectFilled { ...params } />
+            {
+              buttons.map((object, index) =>
+                <i key={ index } className={ this.getClassnameChild(object.id) + object.className } aria-hidden='true' onClick={ this.setActiveButton.bind(this, object.id) } />
+              )
+            }
             {/* <Buttons.Forms.Image { ...params } /> */}
           </Popover>
         }>
