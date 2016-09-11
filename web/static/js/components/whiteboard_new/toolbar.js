@@ -34,11 +34,12 @@ const Buttons = React.createClass({
     }
   },
   setWidth(value) {
+    if(self.mouseData.selected) {
+      self.mouseData.selected.stroke({ width: value, color: self.props.currentUser.colour });
+      self.deps.Actions.shapeUpdate(self.deps.Helpers.shapeParams(self.mouseData.selected));
+    }
     self.drawData.strokeWidth = value;
     this.forceUpdate();
-    if(self.mouseData.selected) {
-      self.mouseData.selected.stroke({ width: value });
-    }
   },
   setHistory(type) {
     let action = self.deps.History[type];

@@ -13,6 +13,7 @@ import Toolbar      from './toolbar';
 import Elements     from './elements';
 import History      from './history';
 import Actions      from './actions';
+import Helpers      from './helpers';
 
 const Whiteboard = React.createClass({
   mixins:[Design],
@@ -42,6 +43,7 @@ const Whiteboard = React.createClass({
     this.deps.Elements = Elements.init(this);
     this.deps.History = History.init(this);
     this.deps.Actions = Actions.init(this);
+    this.deps.Helpers = Helpers.init(this);
   },
   initBoardEvents() {
     this.board.mousedown(Events.boardMouseDown);

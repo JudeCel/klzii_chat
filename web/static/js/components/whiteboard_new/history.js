@@ -109,7 +109,8 @@ function _update(object) {
 }
 
 function _paramsFormat(object, type) {
-  return { id: object.id(), element: object.svg(), type: type };
+  var params = self.deps.Helpers.shapeParams(object);
+  return { ...params, type: type };
 }
 
 //           undo  |  redo

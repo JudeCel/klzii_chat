@@ -76,5 +76,5 @@ function shapeWasUpdated(e) {
 }
 
 function _shapeParams(shape) {
-  return { id: shape.id(), element: shape.svg() };
+  return self.deps.Helpers.shapeParams(shape);
 }
