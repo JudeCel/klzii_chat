@@ -6,6 +6,8 @@ import svgDrag      from 'svg.draggable.js';
 import svgResize    from 'svg.resize.js';
 import svgSelect    from 'svg.select.js';
 
+import mixins       from '../../mixins';
+
 import Plugins      from './plugins';
 import Events       from './events';
 import Shape        from './shape';
@@ -17,7 +19,7 @@ import Actions      from './actions';
 import Helpers      from './helpers';
 
 const Whiteboard = React.createClass({
-  mixins:[Design],
+  mixins:[Design, mixins.validations],
   initDefs() {
     this.markers = { arrows: {} };
 
@@ -101,11 +103,12 @@ const Whiteboard = React.createClass({
     if(this.props.channel) {
       return (
         <div className={ 'whiteboard-section' + this.expandButtonClass() }>
+          <span className="icon-whiteboard-hide-mobile" onClick={ this.expandWhiteboard }></span>
           <img className='whiteboard-title' src='/images/title_whiteboard.png' />
           <img className='whiteboard-expand' src={ this.getExpandButtonImage() } onClick={ this.expandWhiteboard } />
 
           <svg id='whiteboard-draw' className='inline-board-section'/>
-          <Toolbar.Buttons />
+          { this.showToolbar() }
         </div>
       );
     }

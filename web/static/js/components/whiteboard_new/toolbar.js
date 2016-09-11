@@ -76,7 +76,7 @@ const Buttons = React.createClass({
 
     return (
       <ButtonToolbar className='row panel-buttons-section'>
-        <div className='col-md-offset-4'>
+        <span className='toolbar-section'>
           <ToolbarButtons.Hand    { ...params } />
           <ToolbarButtons.Forms   { ...params } />
           <ToolbarButtons.Poly    { ...params } />
@@ -85,7 +85,7 @@ const Buttons = React.createClass({
           <ToolbarButtons.Width   { ...params } />
           <ToolbarButtons.Delete  { ...params } />
           <ToolbarButtons.History { ...params } />
-        </div>
+        </span>
       </ButtonToolbar>
     )
   }

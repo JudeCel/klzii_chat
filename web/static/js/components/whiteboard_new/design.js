@@ -1,3 +1,6 @@
+import React   from 'react';
+import Toolbar from './toolbar';
+
 const design = {
   getExpandButtonImage() {
     if(this.state.minimized) {
@@ -12,6 +15,11 @@ const design = {
   },
   expandButtonClass() {
     return this.state.minimized ? ' minimized' : ' maximized';
+  },
+  showToolbar() {
+    if(this.hasPermission(['whiteboard', 'can_new_shape'])) {
+      return (<Toolbar.Buttons />)
+    }
   }
 };
 
