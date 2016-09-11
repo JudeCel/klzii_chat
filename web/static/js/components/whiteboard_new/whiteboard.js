@@ -45,8 +45,8 @@ const Whiteboard = React.createClass({
   },
   initBoardEvents() {
     this.board.mousedown(Events.boardMouseDown);
-    this.board.mousemove(Events.boardMouseMove);
-    this.board.mouseup(Events.boardMouseUp);
+    document.addEventListener('mousemove', Events.boardMouseMove);
+    document.addEventListener('mouseup', Events.boardMouseUp);
   },
   getInitialState() {
     this.mouseData = { type: 'select', prevType: null, selected: null };
@@ -57,6 +57,12 @@ const Whiteboard = React.createClass({
       strokeWidth: 2,
       current: 'none',
       color: 'red'
+    };
+    this.drawData.minsMaxs = {
+      minX: 0,
+      minY: 0,
+      maxX: this.drawData.initialWidth,
+      maxY: this.drawData.initialHeight
     };
 
     this.initDependencies();

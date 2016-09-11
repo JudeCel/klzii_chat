@@ -97,7 +97,7 @@ function buildShape(e) {
 function selectShape(e) {
   if(self.mouseData.type == 'select') {
     deselectShape();
-    self.mouseData.selected = e.target.instance.selectize().resize().draggable();
+    self.mouseData.selected = e.target.instance.selectize().resize(self.drawData.minsMaxs).draggable();
     self.mouseData.selected.remember('_draggable').start(e);
     _moveSelectizeToParent();
   }
