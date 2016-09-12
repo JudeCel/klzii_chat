@@ -46,7 +46,7 @@ const PinboardConsole = React.createClass({
 
           <Modal.Body>
             <div className='row pinboard-upload-section'>
-              <UploadImage modalName='image' afterChange={ this.afterChange } />
+              <UploadImage modalName='image' afterChange={ this.afterChange } mobileCamera={ true } />
             </div>
           </Modal.Body>
         </Modal>
