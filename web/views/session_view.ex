@@ -1,6 +1,6 @@
 defmodule KlziiChat.SessionView do
   use KlziiChat.Web, :view
-  alias KlziiChat.SessionTopicView
+  alias KlziiChat.{SessionTopicView, ResourceView}
 
   def render("session.json", %{session: session}) do
     %{id: session.id,
@@ -8,6 +8,7 @@ defmodule KlziiChat.SessionView do
       startTime: session.startTime,
       endTime: session.endTime,
       colours: brand_project_preference(session.brand_project_preference),
+      brand_logo:  Phoenix.View.render_one(session.brand_logo, ResourceView, "resource.json"),
       session_topics: Enum.map(session.session_topics, fn t ->
         SessionTopicView.render("show.json", %{session_topic: t })
       end)

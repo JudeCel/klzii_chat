@@ -49,6 +49,7 @@ defmodule KlziiChat.Mixfile do
      {:cowboy, "~> 1.0"},
      {:corsica, "~> 0.5"},
      {:httpoison, "~> 0.9"},
+     {:mogrify, "~> 0.4.0"},
      {:earmark, "~> 1.0", only: :dev},
      {:ex_doc, "~> 0.13", only: :dev},
      {:credo, "~> 0.4", only: :dev}

@@ -2,13 +2,33 @@ defmodule KlziiChat.Services.Validations.Resource do
 
   @spec validate(map, map) :: {:ok} | {:error, map}
   def validate(file, params) do
-    validate_file_type(file, params)
+    with {:ok} <- validate_file_type(file, params),
+         {:ok} <- validate_file_scope(file, params),
+    do: {:ok}
   end
 
   @spec file_type_error_mesage(String.t, String.t) :: %{code: integer, type: String.t}
   def file_type_error_mesage(actual, should) do
     %{code: 415, type: "You are trying to upload #{actual} where it is allowed only #{should}."}
   end
+
+  @spec file_scope_error_mesage(String.t, String.t) :: %{code: integer, type: String.t}
+  def file_scope_error_mesage(width, height) do
+    %{code: 415, scope: "Image should have #{width}x#{height}px format"}
+  end
+
+  @spec validate_file_scope(map | String.t, map) :: {:ok} | {:error, map}
+  def validate_file_scope(%Plug.Upload{path: path}, %{scope:  scope}) when scope in ["brandLogo"] do
+    import Mogrify
+    %Mogrify.Image{height: height, width: width} =  open(path) |> verbose
+    if height == 80 && width == 150 do
+      {:ok}
+    else
+      {:error, file_scope_error_mesage(width, height)}
+    end
+  end
+  def validate_file_scope(_,_), do: {:ok}
+
 
   @spec validate_file_type(map | String.t, map) :: {:ok} | {:error, map}
   def validate_file_type(%Plug.Upload{content_type: content_type}, %{type:  type}) when type in ["image", "audio", "video"] do
