@@ -142,6 +142,17 @@
             position: relative
         span
           padding-left: 22px
+body.modal-open
+  nav.header-section
+    margin-right: -31px
+    padding-right: 16px
+.modal-backdrop.fade.in
+  @media (min-width: 768px)
+    margin-top: 100px !important
+    @media (max-width: 1199px)
+      margin-top: 96px !important
+    @media (max-width: 1119px)
+      margin-top: 94px !important
 .modal-section
   margin-top: 130px
   .modal-backdrop
@@ -181,6 +192,15 @@
     .survey-answer-section
       ul li
         border: 0
+        .row
+          .col-md-6:first-child
+            float: left
+            padding: 5px
+            padding-left: 30px
+          .col-md-6.text-right
+            float: right;
+            padding: 5px;
+            padding-right: 30px
     .survey-create-section, .uploads-section
       @extend .no-border-radius
       .icon-pdf
