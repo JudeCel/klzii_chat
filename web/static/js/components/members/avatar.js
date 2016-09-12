@@ -63,11 +63,11 @@ const Avatar = React.createClass({
     this.shouldAddToAvatar(avatar, 'head', head);
   },
   drawLabelAndText(avatar) {
-    const { username, colour, currentTopic } = this.props.member;
+    const { username, colour, currentTopic, online } = this.props.member;
     avatar.rect(25, 125, 100, 20, 1, 1).attr({fill: colour}).addClass('svg-avatar-label');
     avatar.text(76, 138, username).attr({fill: '#fff', 'font-size': '75%', 'text-anchor': 'middle'}).addClass('svg-avatar-label');
 
-    if (currentTopic) {
+    if(currentTopic && online) {
       avatar.text(76, 158, currentTopic.name).attr({fill: '#000', 'font-size': '75%', 'text-anchor': 'middle'}).addClass('svg-avatar-label');
     }
   },
