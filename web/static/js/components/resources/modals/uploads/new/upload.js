@@ -3,7 +3,7 @@ import ReactDOM           from 'react-dom';
 
 const UploadNew = React.createClass({
   getInitialState() {
-    return { fileName: '' };
+    return { fileName: '', uploadMobileSourceVisibility: false, useCamera: false };
   },
   onNameChange(e) {
     const data = { [e.target.id]: e.target.value };
@@ -20,35 +20,38 @@ const UploadNew = React.createClass({
       this.props.afterChange({ resourceData: { name, files } });
     });
   },
-  openSelect(e) {
-    let el = e.currentTarget; 
-    this.updateFileUpload(el.getAttribute('id') == "uploadMobileSourceCamera");
-
+  openSelect(useMobileCamera, e) {
+      this.setState({
+        useCamera: useMobileCamera, 
+        uploadMobileSourceVisibility: false
+      });
+    
     let element = ReactDOM.findDOMNode(this).querySelector('#uploadFile');
     if(element) {
       element.click();
     }
   },
-  updateFileUpload(useCamera) {
-    let el = document.getElementById("uploadFile");
-    if (useCamera) {
-      el.setAttribute("capture", "camera");
-    }
-    else {
-      el.removeAttribute("capture");
-    }
-    document.getElementById("uploadMobileSource").style.display = 'none';
+  getFileUploadCapture() {
+    const { modalName } = this.props;
+    return this.state.useCamera ? { capture: true, accept: modalName + "/*" } : {};
+  },
+  isMobileCameraAllowed() {
+    const { modalName } = this.props;
+    return window.innerWidth < 768 && (modalName == "image" || modalName == "video");
   },
   chooseFile(e) {
-    if (window.innerWidth < 768 && (this.props.modalName == "image" || this.props.modalName == "video")) {
-      let el = e.currentTarget;
-      while ((el = el.parentElement) && !el.classList.contains("mobile-camera"));
-      if (el) {
-        document.getElementById("uploadMobileSource").style.display = 'block';
-        return;
-      }
+    const { mobileCamera } = this.props;
+    if (mobileCamera && this.isMobileCameraAllowed()) {
+      this.setState({uploadMobileSourceVisibility: !this.state.uploadMobileSourceVisibility});
     }
-    this.openSelect(e);
+    else {
+      this.openSelect(false, e);
+    }
+  },
+  getUploadMobileSourceStyle() {
+    return { 
+      display: (this.state.uploadMobileSourceVisibility ? "block" : "none")
+    };
   },
   render() {
     const { modalName } = this.props;
@@ -79,12 +82,12 @@ const UploadNew = React.createClass({
 
           <div className='col-md-10'>
             <div className='input-group'>
-              <input type='file' className='hidden' id='uploadFile' onChange={ this.onFileChange } accept={ fileTypes[modalName] } />
+              <input type='file' className='hidden' id='uploadFile' onChange={ this.onFileChange } accept={ fileTypes[modalName] } { ...this.getFileUploadCapture() } />
               <input type='text' className='form-control no-border-radius' value={ fileName } disabled='true' />
               <span onClick={ this.chooseFile } className='input-group-addon no-border-radius cursor-pointer'>Choose File</span>
-              <div id='uploadMobileSource'>
-                <div id='uploadMobileSourceCamera' onClick={ this.openSelect }>Take Photo or Video</div>
-                <div onClick={ this.openSelect }>Choose Existing</div>
+              <div id='uploadMobileSource' style={ this.getUploadMobileSourceStyle() }>
+                <div onClick={ this.openSelect.bind(this, true) }>Take Photo or Video</div>
+                <div onClick={ this.openSelect.bind(this, false) }>Choose Existing</div>
               </div>
             </div>
           </div>
