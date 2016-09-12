@@ -21,11 +21,34 @@ const UploadNew = React.createClass({
     });
   },
   openSelect(e) {
-    let element = ReactDOM.findDOMNode(this).querySelector('#uploadFile');
+    let el = e.currentTarget; 
+    this.updateFileUpload(el.getAttribute('id') == "uploadMobileSourceCamera");
 
+    let element = ReactDOM.findDOMNode(this).querySelector('#uploadFile');
     if(element) {
       element.click();
     }
+  },
+  updateFileUpload(useCamera) {
+    let el = document.getElementById("uploadFile");
+    if (useCamera) {
+      el.setAttribute("capture", "camera");
+    }
+    else {
+      el.removeAttribute("capture");
+    }
+    document.getElementById("uploadMobileSource").style.display = 'none';
+  },
+  chooseFile(e) {
+    if (window.innerWidth < 768 && (this.props.modalName == "image" || this.props.modalName == "video")) {
+      let el = e.currentTarget;
+      while ((el = el.parentElement) && !el.classList.contains("mobile-camera"));
+      if (el) {
+        document.getElementById("uploadMobileSource").style.display = 'block';
+        return;
+      }
+    }
+    this.openSelect(e);
   },
   render() {
     const { modalName } = this.props;
@@ -58,7 +81,11 @@ const UploadNew = React.createClass({
             <div className='input-group'>
               <input type='file' className='hidden' id='uploadFile' onChange={ this.onFileChange } accept={ fileTypes[modalName] } />
               <input type='text' className='form-control no-border-radius' value={ fileName } disabled='true' />
-              <span onClick={ this.openSelect } className='input-group-addon no-border-radius cursor-pointer'>Choose File</span>
+              <span onClick={ this.chooseFile } className='input-group-addon no-border-radius cursor-pointer'>Choose File</span>
+              <div id='uploadMobileSource'>
+                <div id='uploadMobileSourceCamera' onClick={ this.openSelect }>Take Photo or Video</div>
+                <div onClick={ this.openSelect }>Choose Existing</div>
+              </div>
             </div>
           </div>
         </div>
