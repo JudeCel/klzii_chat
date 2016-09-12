@@ -2,6 +2,7 @@ defmodule KlziiChat.Services.ResourceService do
   alias KlziiChat.{Repo, AccountUser, Resource, ResourceView}
   alias KlziiChat.Services.Permissions.Resources, as: ResourcePermissions
   alias KlziiChat.Queries.Resources, as: QueriesResources
+  alias KlziiChat.Queries.SessionResources, as: QueriesSessionResources
   alias KlziiChat.Services.Validations.Resource, as: ResourceValidations
 
   import Ecto
@@ -84,17 +85,34 @@ defmodule KlziiChat.Services.ResourceService do
     {:ok, resource}
   end
 
+
+  def validations(account_user, ids, query) do
+    with {:ok} <- if_resource_used(ids),
+         result <- Repo.all(query),
+         {:ok} <- ResourcePermissions.can_delete(account_user, result),
+    do: {:ok, result}
+  end
+
+  def if_resource_used(ids) do
+    QueriesSessionResources.get_by_resource_ids(ids)
+    |> Repo.all
+    |> case  do
+        [] ->
+          {:ok}
+        _ ->
+          {:error, %{code: 415, type: "This file is currently used in a Session, you cannot delete active media files"}}
+      end
+  end
+
   @spec deleteByIds(Integer.t, List.t) :: {:ok, %Resource{} } | {:error, String.t}
   def deleteByIds(account_user_id, ids) do
     account_user = Repo.get!(AccountUser, account_user_id) |> Repo.preload([:account])
-
     query = QueriesResources.base_query(account_user)
       |> where([r], r.id in ^ids)
       |> where([r], r.stock == false)
-    result = Repo.all(query)
 
-    case ResourcePermissions.can_delete(account_user, result) do
-      {:ok} ->
+    case validations(account_user, ids, query) do
+      {:ok, result} ->
         case Repo.delete_all(query) do
           {:error, error} ->
             {:error, error}
