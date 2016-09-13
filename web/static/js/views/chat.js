@@ -70,7 +70,7 @@ const ChatView = React.createClass({
     this.props.dispatch({ type: Constants.SCREEN_SIZE_CHANGED, window: { width: this.getScreenWidthForAvatar(window.innerWidth), height: window.innerHeight } });
   },
   render() {
-    const { error, sessionReady, sessionTopicReady } = this.props;
+    const { error, sessionReady, sessionTopicReady, brand_logo } = this.props;
 
     if(error) {
       return (<div>{error}</div>)
@@ -87,10 +87,10 @@ const ChatView = React.createClass({
               <Resources/>
               <HeaderLinks/>
               <div className='logo-section'>
-                <img className='img-responsive' src='/images/klzii_logo.png' />
+                <img className='img-responsive' src={brand_logo.url.full} />
               </div>
             </div>
-            <MobileHeader/>
+            <MobileHeader brand_logo={brand_logo}/>
           </nav>
 
           <div className='row room-outerbox'>
@@ -142,6 +142,7 @@ const mapStateToProps = (state) => {
   return {
     pinboardActive: state.sessionTopic.console.pinboard,
     colours: state.chat.session.colours,
+    brand_logo: state.chat.session.brand_logo,
     sessionReady: state.chat.ready,
     error: state.chat.error,
     session_topics: state.chat.session.session_topics,

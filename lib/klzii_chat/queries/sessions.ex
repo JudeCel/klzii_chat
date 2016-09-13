@@ -7,7 +7,7 @@ defmodule KlziiChat.Queries.Sessions do
     session_topic_query = from(st in SessionTopic, where: st.active == true, order_by: [ asc: st.order])
     from(s in Session,
       where: s.id == ^session_id,
-      preload: [:brand_project_preference, session_topics: ^session_topic_query]
+      preload: [:brand_logo, :brand_project_preference, session_topics: ^session_topic_query]
     )
   end
 

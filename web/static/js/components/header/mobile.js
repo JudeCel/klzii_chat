@@ -2,11 +2,10 @@ import React, {PropTypes} from 'react';
 import { connect }        from 'react-redux';
 import mixins             from '../../mixins';
 import Badge              from '../sessionTopics/badge';
-import Actions            from '../../actions/sessionTopic';
 import Avatar             from '../members/avatar.js';
 
 const MobileHeader = React.createClass({
-  mixins: [mixins.modalWindows, mixins.validations],
+  mixins: [mixins.modalWindows, mixins.validations, mixins.sessionTopic],
   getInitialState() {
     return { mobileSideMenuVisibility: false, mobileSideMenuTopicsVisibility: false };
   },
@@ -47,8 +46,7 @@ const MobileHeader = React.createClass({
     };
   },
   toggleMenu() {
-    this.setState({mobileSideMenuTopicsVisibility: false});
-    this.setState({mobileSideMenuVisibility: !this.state.mobileSideMenuVisibility});
+    this.setState({mobileSideMenuVisibility: !this.state.mobileSideMenuVisibility, mobileSideMenuTopicsVisibility: false});
   },
   toggleTopics() {
     this.setState({mobileSideMenuTopicsVisibility: !this.state.mobileSideMenuTopicsVisibility});
@@ -64,8 +62,7 @@ const MobileHeader = React.createClass({
     };
   },
   changeSessionTopic(id) {
-    const { dispatch, channel, whiteboardChannel } = this.props;
-    dispatch(Actions.changeSessionTopic(channel, whiteboardChannel, id));
+    this.setSessionTopic(id);
     this.toggleMenu();
   },
   directMessageBadge() {
@@ -83,7 +80,7 @@ const MobileHeader = React.createClass({
     this.openSpecificModal('avatar');
   },
   render() {
-    const { sessionTopics, unread_messages, currentUser } = this.props;
+    const { sessionTopics, unread_messages, currentUser, brand_logo } = this.props;
 
     if (currentUser && currentUser.avatarData) {
       return (
@@ -94,7 +91,7 @@ const MobileHeader = React.createClass({
               <span className='icon-bar'></span>
               <span className='icon-bar'></span>
             </button>
-            <span className='navbar-brand'><img src='/images/klzii_logo.png'/></span>
+            <span className='navbar-brand'><img src={brand_logo.url.full}/></span>
             <span className='navbar-whiteboard' onClick={this.whiteboardIconClick}><img src='/images/whiteboard-icon.png'/></span>
           </div>
           <div className='mobile-side-menu' style={ this.getMobileSideMenuStyle() }>
@@ -172,5 +169,4 @@ const mapStateToProps = (state) => {
     facilitator: state.members.facilitator
   };
 };
-
 export default connect(mapStateToProps)(MobileHeader);
