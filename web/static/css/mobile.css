@@ -521,12 +521,16 @@
     background-color: #fff;
     position: absolute;
     top: 0px;
+    z-index: 999;
   }
 
   .mobile-side-menu .mobile-side-menu-content ul, .mobile-side-menu .mobile-side-menu-topics ul {
     padding: 0;
     margin: 0;
     list-style: none;
+    z-index: 999;
+    position: relative;
+    background-color: #fff;
   }
 
   .mobile-side-menu .mobile-side-menu-content ul li, .mobile-side-menu .mobile-side-menu-topics ul li {
@@ -540,6 +544,7 @@
     margin-right: 10px;
     color: #34BDE8;
     font-size: 18px;
+    width: 20px;
   }
 
   .mobile-side-menu .mobile-side-menu-content ul li .fa.fa-angle-right {
@@ -547,6 +552,7 @@
     margin-right: -20px;
     font-weight: bold;
     color: #555;
+    text-align: right;
   }
 
   .mobile-side-menu .mobile-side-menu-content .navbar-title {
@@ -555,6 +561,15 @@
     font-size: 24px;
     padding: 16px 12px!important;
     display:block;
+  }
+
+  .mobile-side-menu .mobile-side-menu-content .navbar-avatar {
+    text-align: center;
+    cursor: default;
+  }
+
+  .mobile-side-menu .mobile-side-menu-content .navbar-avatar svg {
+    cursor: pointer;
   }
 
   .mobile-side-menu .navbar-back span {
@@ -572,6 +587,7 @@
     position: absolute;
     width: 100%;
     bottom: 90px;
+    z-index: 22;
   }
 
   .mobile-side-menu .mobile-side-menu-content .powered-by a {
@@ -580,15 +596,68 @@
     color: #444 !important;
   }
 
-  .mobile-side-menu .mobile-side-menu-content ul li .badge {
+  .mobile-side-menu ul li .badge {
     background-color: #e51D39;
     float: right;
+    margin-left: 5px;
+  }
+
+  .mobile-side-menu ul li .badge.reply {
+    background-color: black;
   }
 
   .mobile-side-menu .mobile-side-menu-content ul li .badge.badge-messages-0 {
     display:none;
   }
+
+  .customize-avatar-section .biizu-section {
+    margin-left: -30px !important;
+    margin-right: -30px !important;
+    position: relative !important;
+    display: block !important;
+    width: auto !important;
+  }
+
+  .customize-avatar-section .elements-section {
+    width: 100% !important;
+  }
+
+  .customize-avatar-section .preview-section {
+    text-align: center;
+    width: 100% !important;
+    margin-top: -20px;
+  }
+
+  .customize-avatar-section .elements-section, .customize-avatar-section .preview-section {
+    display: block;
+    border: 0px !important;
+  }
   
+  .customize-avatar-section .elements-section .row .col-md-3 {
+    width: 150px;
+    float: left;
+  }
+
+  .customize-avatar-section .elements-section .preview-images img {
+    max-width: 100% !important;
+  }
+
+  .change-avatar-modal {
+    width:auto !important;
+  }
+
+  .customize-avatar-section .selection-section {
+    margin-bottom: 100px !important;
+  }
+
+  .customize-avatar-section .selection-section > div {
+    display: block;
+  }
+
+  .customize-avatar-section .selection-section > div:first-child > div > * {
+    display: initial !important;
+    width: auto !important;
+  }
 }
 
 @media (max-width: 379px) {
