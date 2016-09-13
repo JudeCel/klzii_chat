@@ -29,10 +29,6 @@ const MobileHeader = React.createClass({
     this.toggleMenu();
     this.openSpecificModal('directMessage', { member: member });
   },
-  helpClick() {
-    this.toggleMenu();
-    //
-  },
   logoutClick() {
     this.toggleMenu();
     if (this.props.currentUser.logout_path) {
@@ -114,7 +110,7 @@ const MobileHeader = React.createClass({
                 <li onClick={this.messagesClick} style={ this.getMenuItemStyle('messages', 'can_direct_message') }>
                   <span className='fa fa-comment'></span>Messages { this.directMessageBadge() }
                 </li>
-                <li onClick={this.helpClick}>
+                <li onClick={this.toggleMenu}>
                   <span className='fa fa-question'></span>Help
                 </li>
                 <li onClick={this.logoutClick} style={ this.getMenuItemStyle('can_redirect', 'logout') }>
