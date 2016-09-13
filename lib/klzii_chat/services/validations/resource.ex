@@ -1,5 +1,9 @@
 defmodule KlziiChat.Services.Validations.Resource do
 
+  @validation_constants %{
+    brand_logo: %{size: %{ height: 80, width: 150 }}
+  }
+
   @spec validate(map, map) :: {:ok} | {:error, map}
   def validate(file, params) do
     with {:ok} <- validate_file_type(file, params),
@@ -21,7 +25,7 @@ defmodule KlziiChat.Services.Validations.Resource do
   def validate_file_scope(%Plug.Upload{path: path}, %{scope:  scope}) when scope in ["brandLogo"] do
     import Mogrify
     %Mogrify.Image{height: height, width: width} =  open(path) |> verbose
-    if height == 80 && width == 150 do
+    if height == @validation_constants.brand_logo.size.height && width == @validation_constants.brand_logo.size.width do
       {:ok}
     else
       {:error, file_scope_error_mesage(width, height)}
