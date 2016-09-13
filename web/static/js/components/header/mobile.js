@@ -10,9 +10,9 @@ const MobileHeader = React.createClass({
     return { mobileSideMenuVisibility: false, mobileSideMenuTopicsVisibility: false };
   },
   clickIfExists(className) {
-    var el = document.getElementsByClassName(className)[0];
+    let el = document.getElementsByClassName(className)[0];
     if (el) {
-      document.getElementsByClassName(className)[0].click();
+      el.click();
       return true;
     } else {
       return false;
@@ -36,7 +36,7 @@ const MobileHeader = React.createClass({
     }
   },
   getMenuItemStyle(object, action) {
-    var canShow = this.hasPermission([object, action]);
+    let canShow = this.hasPermission([object, action]);
     return { 
       display: (canShow ? "block" : "none")
     };
@@ -64,8 +64,8 @@ const MobileHeader = React.createClass({
   directMessageBadge() {
     const { unreadDirectMessages } = this.props;
     let count = 0;
-    for(var i in unreadDirectMessages) {
-    count += unreadDirectMessages[i];
+    for(let i in unreadDirectMessages) {
+      count += unreadDirectMessages[i];
     }
     return (
       <span className={ 'badge badge-messages-' + count  }>{ count }</span>
