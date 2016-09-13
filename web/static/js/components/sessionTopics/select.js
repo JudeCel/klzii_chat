@@ -1,13 +1,13 @@
 import React, {PropTypes}                           from 'react';
 import { connect }                                  from 'react-redux';
 import { Dropdown, Button, SplitButton, MenuItem }  from 'react-bootstrap'
-import Actions                                      from '../../actions/sessionTopic';
 import Badge                                        from './badge';
+import mixins                                       from '../../mixins';
 
 const Select = React.createClass({
+  mixins: [mixins.headerActions],
   changeSessionTopic(id) {
-    const { dispatch, channel, whiteboardChannel } = this.props;
-    dispatch(Actions.changeSessionTopic(channel, whiteboardChannel, id));
+    this.setSessionTopic(id);
   },
   render() {
     const { current, sessionTopics, session, unread_messages } = this.props;

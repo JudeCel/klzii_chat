@@ -35,7 +35,9 @@ const Message = React.createClass({
     const { can_edit, can_delete, can_star, can_vote, can_reply } = message.permissions;
     
     let member = message.session_member;
-    member.sessionTopicContext[member.currentTopic.id].avatarData.face = message.emotion;
+    if (member.sessionTopicContext[member.currentTopic.id]) {
+      member.sessionTopicContext[member.currentTopic.id].avatarData.face = message.emotion;
+    }
     member.online = true;
 
     return (

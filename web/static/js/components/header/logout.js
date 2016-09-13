@@ -3,12 +3,7 @@ import { connect }        from 'react-redux';
 import mixins             from '../../mixins';
 
 const Links = React.createClass({
-  mixins: [mixins.validations],
-  logout_redirect(){
-    if (this.props.currentUser.logout_path) {
-      window.location.href = this.props.currentUser.logout_path
-    }
-  },
+  mixins: [mixins.validations, mixins.headerActions],
   render() {
     const { colours } = this.props;
     const style = {
@@ -16,7 +11,7 @@ const Links = React.createClass({
     };
     if (this.hasPermission(['can_redirect', 'logout'])){
       return(
-        <li style={ style } onClick={ this.logout_redirect }>
+        <li style={ style } onClick={ this.logOut }>
           <span className="log-out">Leave</span>
           <i className='icon-power'/>
         </li>
