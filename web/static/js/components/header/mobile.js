@@ -5,23 +5,13 @@ import Badge              from '../sessionTopics/badge';
 import Avatar             from '../members/avatar.js';
 
 const MobileHeader = React.createClass({
-  mixins: [mixins.modalWindows, mixins.validations, mixins.sessionTopic],
+  mixins: [mixins.modalWindows, mixins.validations, mixins.headerActions],
   getInitialState() {
     return { mobileSideMenuVisibility: false, mobileSideMenuTopicsVisibility: false };
   },
-  clickIfExists(className) {
-    let el = document.getElementsByClassName(className)[0];
-    if (el) {
-      el.click();
-      return true;
-    } else {
-      return false;
-    }
-  },
   whiteboardIconClick() {
-    if (!this.clickIfExists("whiteboard-expand")) {
-      this.clickIfExists("pinboard-expand")
-    }
+    const { sessionConsole } = this.props;
+    document.getElementsByClassName(sessionConsole.pinboard ? "pinboard-expand" : "whiteboard-expand")[0].click();
   },
   messagesClick() {
     const { currentUser, firstParticipant, facilitator } = this.props;
@@ -31,9 +21,7 @@ const MobileHeader = React.createClass({
   },
   logoutClick() {
     this.toggleMenu();
-    if (this.props.currentUser.logout_path) {
-      window.location.href = this.props.currentUser.logout_path;
-    }
+    this.logOut();
   },
   getMenuItemStyle(object, action) {
     let canShow = this.hasPermission([object, action]);
@@ -155,14 +143,15 @@ const mapStateToProps = (state) => {
     unread_messages: state.messages.unreadMessages,
     session: state.chat.session,
     channel: state.sessionTopic.channel,
-    current: state.sessionTopic.current,
+    currentTopic: state.sessionTopic.current,
     sessionTopics: state.sessionTopic.all,
     currentUser: state.members.currentUser,
     whiteboardChannel: state.whiteboard.channel,
     modalWindows: state.modalWindows,
     unreadDirectMessages: state.directMessages.unreadCount,
     firstParticipant: state.members.participants[0],
-    facilitator: state.members.facilitator
+    facilitator: state.members.facilitator,
+    sessionConsole: state.sessionTopic.console
   };
 };
 export default connect(mapStateToProps)(MobileHeader);

@@ -5,7 +5,7 @@ import Badge                                        from './badge';
 import mixins                                       from '../../mixins';
 
 const Select = React.createClass({
-  mixins: [mixins.sessionTopic],
+  mixins: [mixins.headerActions],
   changeSessionTopic(id) {
     this.setSessionTopic(id);
   },
