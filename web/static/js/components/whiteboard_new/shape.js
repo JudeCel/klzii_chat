@@ -77,6 +77,7 @@ function createShape(e) {
 function initShapeEvents(shape) {
   self.shapeData.added[shape.id()] = shape;
   shape.mousedown(selectShape);
+  shape.on('resizestart', self.deps.Events.shapeWillUpdate);
   shape.on('resizedone', self.deps.Events.shapeWasUpdated);
   shape.on('dragstart', self.deps.Events.shapeWillUpdate);
   shape.on('dragend', self.deps.Events.shapeWasUpdated);

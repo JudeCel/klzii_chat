@@ -66,7 +66,10 @@ function shapeWillUpdate(e) {
 
 function shapeWasUpdated(e) {
   var shape = e.target.instance;
-  if(self.deps.History.last('undo').element != shape.svg()) {
+  if(self.deps.History.last('undo').element == shape.svg()) {
+    self.deps.History.remove('undo');
+  }
+  else {
     self.deps.History.add(shape, 'update', 'end');
     self.deps.Actions.shapeUpdate(_shapeParams(shape));
   }
