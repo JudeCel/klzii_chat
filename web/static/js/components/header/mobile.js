@@ -18,7 +18,7 @@ const MobileHeader = React.createClass({
             <span className='icon-bar'></span>
             <span className='icon-bar'></span>
           </button>
-          <span className='navbar-brand'><img src='/images/klzii_logo.png'/></span>
+          <span className='navbar-brand'><img src={this.props.brand_logo.full}/></span>
           <span className='navbar-whiteboard' onClick={this.whiteboardIconClick}><img src='/images/whiteboard-icon.png'/></span>
         </div>
       </div>

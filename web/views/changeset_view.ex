@@ -25,6 +25,9 @@ defmodule KlziiChat.ChangesetView do
   def render("error.json", %{type: error_message}) do
     %{errors: %{type: [translate_error({error_message, []})]}}
   end
+  def render("error.json", %{scope: error_message}) do
+    %{errors: %{scope: [translate_error({error_message, []})]}}
+  end
   def render("error.json", %{format: error_message}) do
     %{errors: %{format: [translate_error({error_message, []})]}}
   end
