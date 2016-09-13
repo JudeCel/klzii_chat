@@ -50,6 +50,18 @@ defmodule KlziiChat.SessionResourcesControllerTest do
       assert(type == session_resource.resource.type)
     end
 
+    test "can't delete if resource used in session", %{conn: conn, facilitator: facilitator} do
+      file = %Plug.Upload{ content_type: Plug.MIME.path("hamster.jpg"), path: @image, filename: "hamster.jpg"}
+      resp = post(conn, "api/resources/upload", %{name: "image_test_hamster", type: "image", scope: "collage", file: file })
+       |> json_response(200)
+
+      id = resp["resource"]["id"]
+      {:ok, _} = SessionResourcesService.add_session_resources(id, facilitator.id)
+
+      conn = delete conn, resources_path(conn, :delete, ids: [id])
+      assert json_response(conn, 415)
+    end
+
   describe("wrong media type") do
     test "upload image", %{conn: conn} do
       file = %Plug.Upload{ content_type: "image/jpg", path: @image, filename: "hamster.jpg"}

@@ -5,7 +5,9 @@ const UploadTypePdf = React.createClass({
     const { url } = this.props;
 
     return (
-      <a href={ url.full } target='_blank'><i className='icon-pdf' /></a>
+      <div className='text-center'>
+        <a href={ url.full } target='_blank'><i className='icon-pdf' /></a>
+      </div>
     )
   }
 });

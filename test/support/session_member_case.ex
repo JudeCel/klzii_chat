@@ -7,9 +7,9 @@ defmodule KlziiChat.SessionMemberCase do
     user2 = %User{ email: "dainis_2@gmail.com", encryptedPassword: "pfff" } |> Repo.insert!
     user3 = %User{ email: "dainis_3@gmail.com", encryptedPassword: "pfff11" } |> Repo.insert!
     user4 = %User{ email: "dainis_4@gmail.com", encryptedPassword: "11111" } |> Repo.insert!
-    admin_user = %User{ email: "admin@gmail.com", encryptedPassword: "admin" } |> Repo.insert!
+    admin_user = %User{email: "admin@gmail.com", encryptedPassword: "admin" } |> Repo.insert!
 
-    admin_account = Repo.insert!(%Account{name: "admin account", subdomain: "adminaccount"})
+    admin_account = Repo.insert!(%Account{admin: true, name: "admin account", subdomain: "adminaccount"})
     account = Repo.insert!(%Account{name: "cool account", subdomain: "coolaccount"})
 
     account_user_admin = Ecto.build_assoc(admin_account, :account_users, user: admin_user,
