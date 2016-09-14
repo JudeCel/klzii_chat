@@ -724,13 +724,13 @@
     background-color: #fff;
   }
 
-  .modal-open .modal[allowscrool='true'] {
+  .modal-open .modal[allowscroll='true'] {
     min-height: 50vh;
     bottom: -3px !important;
     overflow-y: hidden;
   }
 
-  .modal-open .modal[allowscrool='true'] .modal-content{
+  .modal-open .modal[allowscroll='true'] .modal-content{
     height:auto !important;
   }
   
