@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Klzii Chat history</title>
+    <link rel="stylesheet" type = "text/css" href="/css/reporting/reporting.css">
+    <script type="text/javascript" src="/js/reporting/snap.svg-min.js"></script>
+  </head>
+
+  <body>
+    <h3>@header</h3>
+    <%= render @view_module, @view_template, assigns %>
+  </body>
+</html>

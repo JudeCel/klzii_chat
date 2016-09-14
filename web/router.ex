@@ -20,6 +20,10 @@ defmodule KlziiChat.Router do
     get "/", ChatController, :index
     get "/logout", ChatController, :logout
   end
+  scope "/reporting", KlziiChat.Reporting do
+    pipe_through :browser # Use the default browser stack
+    get "/:session_topic_id", PreviewController, :index
+  end
 
   scope "/", KlziiChat do
     get "/ping", PingController, :index

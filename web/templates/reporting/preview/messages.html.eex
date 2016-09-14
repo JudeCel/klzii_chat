@@ -1,0 +1,19 @@
+<table>
+   <%= for message <- @messages do %>
+   <tr>
+     <td></td>
+     <td class="bottom_border" colspan="2"></td>
+   </tr>
+   <tr>
+     <td class="img_holder" rowspan="2">
+       <img class="emoticon" src=<%= get_emotion_url(message.emotion) %>> </img>
+     </td>
+     <td class="name <%= message.session_member.role %>"><%= message.session_member.username %></td>
+     <td class="time #{message.role}"><%= message.createdAt %></td>
+   </tr>
+   <tr>
+     <td class="body <%= message.session_member.role %>" colspan="3"><%= message.body %></td>
+   </tr>
+
+   <% end %>
+</table>
