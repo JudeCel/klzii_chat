@@ -24,7 +24,6 @@ export default function reducer(state = initialState, action = {}) {
     case Constants.SET_MEMBERS:
       return { ...state,
         facilitator: action.facilitator,
-        observers: action.observer,
         participants: action.participant
       };
     default:
@@ -35,7 +34,7 @@ export default function reducer(state = initialState, action = {}) {
 function onJoin(state) {
   return (id, current, newPres) => {
     newPres.member.online = true
-    updateMember(state, newPres.member)
+    updateMember(state, newPres.member);
   }
 }
 
@@ -43,7 +42,11 @@ function onLeave(state) {
   return (id, current, leftPres) => {
     if (current.metas.length == 0) {
       leftPres.member.online = false
-      updateMember(state, leftPres.member)
+      if (leftPres.member.role == "observer") {
+        removeObserver(state, leftPres.member);
+      }else {
+        updateMember(state, leftPres.member);
+      }
     }
   }
 }
@@ -58,6 +61,16 @@ function syncDiff(state, diff) {
   return state;
 }
 
+
+function removeObserver(state, member) {
+  let newState = [];
+  state.observers.map((observer) => {
+      if (observer.id != membe.id) {
+        newState.push(membe)
+      }
+    });
+  return state.observers = newState;
+}
 function updateMember(state, member) {
   switch (member.role) {
     case "facilitator":

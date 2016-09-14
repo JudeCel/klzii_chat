@@ -10,7 +10,7 @@ const Select = React.createClass({
     this.setSessionTopic(id);
   },
   render() {
-    const { current, sessionTopics, session, unread_messages } = this.props;
+    const { current, sessionTopics, session, unread_messages, observers } = this.props;
 
     return (
       <div className='topic-select-section'>
@@ -51,6 +51,9 @@ const Select = React.createClass({
 
           <ul className='unread-messages-section'>
             <li>
+              {observers.length}
+            </li>
+            <li>
               <Badge type='reply' data={ unread_messages.summary } />
             </li>
             <li>
@@ -67,6 +70,7 @@ const mapStateToProps = (state) => {
   return {
     unread_messages: state.messages.unreadMessages,
     session: state.chat.session,
+    observers: state.members.observers,
     channel: state.sessionTopic.channel,
     current: state.sessionTopic.current,
     sessionTopics: state.sessionTopic.all,
