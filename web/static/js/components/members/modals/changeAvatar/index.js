@@ -5,6 +5,7 @@ import mixins             from '../../../../mixins';
 import MemberActions      from '../../../../actions/member';
 import Avatar             from '../../avatar';
 import AvatarPreview      from './preview';
+import ReactDOM           from 'react-dom';
 
 const ChangeAvatarModal = React.createClass({
   mixins: [mixins.modalWindows],
@@ -31,6 +32,7 @@ const ChangeAvatarModal = React.createClass({
   onOpen(e) {
     this.setStateBasedOnCurrentUser();
     this.onEnterModal(e);
+    e.setAttribute("allowscrool", "true");
   },
   onNameChange(e) {
     this.setState({ username: e.target.value });
