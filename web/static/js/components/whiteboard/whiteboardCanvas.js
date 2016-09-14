@@ -624,6 +624,9 @@ const WhiteboardCanvas = React.createClass({
             onMouseDown={ this.handleMouseDown }
             onMouseUp={ this.handleMouseUp }
             onMouseMove={ this.handleMouseMove }
+            onTouchStart={ this.handleMouseDown }
+            onTouchEnd={ this.handleMouseUp }
+            onTouchMove={ this.handleMouseMove }
           />
         {this.renderButtonPanel()}
         </div>

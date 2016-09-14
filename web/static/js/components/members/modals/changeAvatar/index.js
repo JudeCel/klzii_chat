@@ -31,6 +31,7 @@ const ChangeAvatarModal = React.createClass({
   onOpen(e) {
     this.setStateBasedOnCurrentUser();
     this.onEnterModal(e);
+    e.setAttribute("allowscroll", "true");
   },
   onNameChange(e) {
     this.setState({ username: e.target.value });

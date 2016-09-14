@@ -87,6 +87,14 @@
     display:block !important;
   }
 
+  .role-facilitator > * {
+    display:none !important;
+  }
+
+  .role-facilitator #small-screen{
+    display:block !important;
+  }
+
   .emotion-chat-avatar {
     height: 52px;
     width: 75px;
@@ -611,28 +619,50 @@
   }
 
   .customize-avatar-section .biizu-section {
-    margin-left: -30px !important;
-    margin-right: -30px !important;
     position: relative !important;
     display: block !important;
     width: auto !important;
+    padding-right: 10px !important;
+    padding-left: 10px !important;
+    height: 100vh !important;
+    overflow-y: auto !important;
+    padding-top: 15px !important;
+    margin: -15px -30px -201px -30px !important;
   }
 
   .customize-avatar-section .elements-section {
     width: 100% !important;
+    margin-top: 25px !important;
+    display: block;
+    border: 0px !important;
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+    overflow-x: hidden;
+    overflow-y: auto;
+    height: 212px;
+    bottom: 215px;
+    position: absolute;
+    right: 5px;
+    top: 160px;
+    height: auto !important;
   }
 
   .customize-avatar-section .preview-section {
     text-align: center;
     width: 100% !important;
-    margin-top: -20px;
-  }
-
-  .customize-avatar-section .elements-section, .customize-avatar-section .preview-section {
+    margin-top: -30px !important;
     display: block;
     border: 0px !important;
   }
+
+  .customize-avatar-section .preview-section svg text, .customize-avatar-section .preview-section svg rect {
+    display: none;
+  }
   
+  .customize-avatar-section .elements-section .row {
+    
+  }
+
   .customize-avatar-section .elements-section .row .col-md-3 {
     width: 150px;
     float: left;
@@ -646,18 +676,64 @@
     width:auto !important;
   }
 
+  .customize-avatar-section .selection-section > div:last-child {
+    float: none !important;
+    margin-left: 50% !important;
+    margin-top: 5px !important;
+  }
+
+  .customize-avatar-section .selection-section:last-child ul {
+    margin-left: -100px !important;
+    position:absolute;
+  }
+  
   .customize-avatar-section .selection-section {
-    margin-bottom: 100px !important;
+    background-color: #F0E936;
+    margin-left: -35px !important;
+    width: 100vw !important;
+    margin-bottom: -12px !important;
+    height: 56px;
   }
 
   .customize-avatar-section .selection-section > div {
     display: block;
   }
 
-  .customize-avatar-section .selection-section > div:first-child > div > * {
-    display: initial !important;
-    width: auto !important;
+  .customize-avatar-section .selection-section > div:first-child {
+    position:absolute;
+    top: 130px;
+    width: 90vw;
+    text-align: center;
+    white-space: nowrap;
   }
+
+  .customize-avatar-section .selection-section > div:first-child > div > * {
+    display: inline !important;
+    width: 50% !important;
+  }
+
+  .customize-avatar-section .selection-section > div:first-child > div > label {
+    width: 30% !important;
+  }
+
+  .customize-avatar-section .selection-section ul.icons li {
+    opacity: 1 !important;
+  }
+
+  .customize-avatar-section .selection-section ul.icons li.active {
+    background-color: #fff;
+  }
+
+  .modal-open .modal[allowscroll='true'] {
+    min-height: 50vh;
+    bottom: -3px !important;
+    overflow-y: hidden;
+  }
+
+  .modal-open .modal[allowscroll='true'] .modal-content{
+    height:auto !important;
+  }
+  
 }
 
 @media (max-width: 379px) {
