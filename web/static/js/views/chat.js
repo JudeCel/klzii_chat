@@ -16,11 +16,12 @@ import Console              from '../components/console/index';
 import MobileHeader         from '../components/header/mobile.js';
 
 import Pinboard             from '../components/pinboard/index.js';
-import Loading             from '../components/util/loading.js';
+import Loading              from '../components/util/loading.js';
 import WhiteboardCanvas     from '../components/whiteboard/whiteboardCanvas';
 import Notifications        from '../actions/notifications';
 import notificationMixin    from '../mixins/notification';
-import ReportsModal       from '../components/reports/modal';
+import ReportsModal         from '../components/reports/modal';
+import ObserverListModal    from '../components/modals/observerList';
 import ReactToastr, { ToastContainer, ToastMessage } from 'react-toastr';
 var ToastMessageFactory     = React.createFactory(ToastMessage.animation);
 
@@ -98,6 +99,7 @@ const ChatView = React.createClass({
               <ChangeAvatarModal />
               <DirectMessageModal />
               <ReportsModal />
+              <ObserverListModal />
 
               <div className='row'>
                 <div className='col-md-8'>

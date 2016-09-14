@@ -5,12 +5,22 @@ import Badge                                        from './badge';
 import mixins                                       from '../../mixins';
 
 const Select = React.createClass({
-  mixins: [mixins.headerActions],
+  mixins: [mixins.headerActions, mixins.validations, mixins.modalWindows],
   changeSessionTopic(id) {
     this.setSessionTopic(id);
   },
+  renderIconEye() {
+    if(!this.isFacilitator(this.props.currentUser)) return;
+
+    return (
+      <span className='eye-section' onClick={ this.openSpecificModal.bind(this, 'observerList') }>
+        <span className='icon-eye' />
+        { this.props.observers.length }
+      </span>
+    )
+  },
   render() {
-    const { current, sessionTopics, session, unread_messages, observers } = this.props;
+    const { current, sessionTopics, session, unread_messages } = this.props;
 
     return (
       <div className='topic-select-section'>
@@ -49,10 +59,9 @@ const Select = React.createClass({
             </Dropdown.Menu>
           </Dropdown>
 
+          { this.renderIconEye() }
+
           <ul className='unread-messages-section'>
-            <li>
-              {observers.length}
-            </li>
             <li>
               <Badge type='reply' data={ unread_messages.summary } />
             </li>
@@ -68,6 +77,8 @@ const Select = React.createClass({
 
 const mapStateToProps = (state) => {
   return {
+    modalWindows: state.modalWindows,
+    currentUser: state.members.currentUser,
     unread_messages: state.messages.unreadMessages,
     session: state.chat.session,
     observers: state.members.observers,
