@@ -82,7 +82,12 @@ defmodule KlziiChat.Services.ResourceService do
       QueriesResources.base_query(account_user)
       |> where([r], r.id in ^[id])
       |> Repo.one
-    {:ok, resource}
+      |> case  do
+          nil ->
+            {:error, %{code: 404, not_found: "Resource not found"}}
+          resource ->
+            {:ok, resource}
+        end
   end
 
 

@@ -69,7 +69,7 @@ defmodule KlziiChat.ResourcesController do
   def show(conn, %{"id" => id}, member, _) do
     case ResourceService.find(member.account_user.id, id ) do
       {:ok, resource} ->
-        json(conn, %{resource: ResourceView.render("resource.json", %{resource: resource}) })
+        json(conn, %{ resource: ResourceView.render("resource.json", %{resource: resource}) })
       {:error, reason} ->
         put_status(conn, reason.code)
         |> json(error_view(reason))
