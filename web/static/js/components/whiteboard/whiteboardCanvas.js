@@ -394,9 +394,9 @@ const WhiteboardCanvas = React.createClass({
     if (!this.isValidButton(e)) return;
     if (this.minimized) return;
     this.handleObjectCreated();
-    if(this.isTouch(e)) {
+    /*if(this.isTouch(e)) {
       this.activeShape = null;
-    }
+    }*/
   },
   isTouch(e) {
     return e.type.includes("touch");
