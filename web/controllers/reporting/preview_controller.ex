@@ -3,18 +3,22 @@ defmodule KlziiChat.Reporting.PreviewController do
   use KlziiChat.Web, :controller
 
   def index(conn, %{"session_topic_id" => session_topic_id}) do
-
     session_topic = Repo.get!(SessionTopic, session_topic_id)
+
+    session_topic = Repo.preload(session_topic, [session: [:account] ])
+
     {:ok, messages} = Repo.all(
       from e in assoc(session_topic, :messages),
         where: is_nil(e.replyId),
         order_by: [asc: e.createdAt],
         limit: 200
-      ) |> preload_dependencies |> IO.inspect
+      ) |> preload_dependencies
 
+      header_title = "Chat History - #{session_topic.session.account.name} / #{session_topic.session.name}"
+      
       conn |>
       put_layout("report.html") |>
-      render("messages.html", %{messages: messages, img_path: "/images/"})
+      render("messages.html", %{header_title: header_title, messages: messages, img_path: "/images/"})
   end
 
   @spec preload_dependencies(%Message{} | [%Message{}] ) :: %Message{} | [%Message{}]
