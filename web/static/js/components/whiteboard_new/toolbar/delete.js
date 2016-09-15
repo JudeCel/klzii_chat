@@ -10,8 +10,13 @@ const ButtonsDelete = React.createClass({
     return (
       <OverlayTrigger ref='delete' trigger='click' rootClose placement='top' overlay={
           <Popover id='wb-buttons-delete'>
-            <i className='btn btn-default fa fa-cube' aria-hidden='true' onClick={ this.onClick.bind(this, false) } />
-            <i className='btn btn-default fa fa-cubes' aria-hidden='true' onClick={ this.onClick.bind(this, true) } />
+            <OverlayTrigger placement='top' overlay={ this.props.tooltipFormat('Delete') }>
+              <i className='btn btn-default fa fa-cube' aria-hidden='true' onClick={ this.onClick.bind(this, false) } />
+            </OverlayTrigger>
+
+            <OverlayTrigger placement='top' overlay={ this.props.tooltipFormat('Delete All') }>
+              <i className='btn btn-default fa fa-cubes' aria-hidden='true' onClick={ this.onClick.bind(this, true) } />
+            </OverlayTrigger>
           </Popover>
         }>
 
