@@ -33,8 +33,10 @@ const Whiteboard = React.createClass({
   initScale() {
     const { minimized } = this.state;
     let parent = this.board.parent();
-    let scaleX = minimized ? parent.scrollWidth/this.drawData.initialWidth : 1.0;
-    let scaleY = minimized ? parent.scrollHeight/this.drawData.initialHeight : 1.0;
+    let scaleX = parent.scrollWidth/this.drawData.initialWidth;
+    let scaleY = parent.scrollHeight/this.drawData.initialHeight;
+    scaleX = scaleX > 1 ? 1 : scaleX;
+    scaleY = scaleY > 1 ? 1 : scaleY;
     this.mainGroup.scale(scaleX, scaleY).translate(0, 0);
     this.board.attr({ 'pointer-events': minimized ? 'none' : 'all' });
   },
@@ -57,8 +59,8 @@ const Whiteboard = React.createClass({
     this.mouseData = { type: 'select', prevType: null, selected: null };
     this.shapeData = { shape: {}, added: {} };
     this.drawData = {
-      initialWidth: 950,
-      initialHeight: 460,
+      initialWidth: 925,
+      initialHeight: 465,
       strokeWidth: 2,
       current: 'none',
       color: 'red',
