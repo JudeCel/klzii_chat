@@ -24,7 +24,6 @@ export default function reducer(state = initialState, action = {}) {
     case Constants.SET_MEMBERS:
       return { ...state,
         facilitator: action.facilitator,
-        observers: action.observer,
         participants: action.participant
       };
     default:
@@ -34,30 +33,45 @@ export default function reducer(state = initialState, action = {}) {
 
 function onJoin(state) {
   return (id, current, newPres) => {
-    newPres.member.online = true
-    updateMember(state, newPres.member)
+    newPres.member.online = true;
+    updateMember(state, newPres.member);
   }
 }
 
 function onLeave(state) {
   return (id, current, leftPres) => {
     if (current.metas.length == 0) {
-      leftPres.member.online = false
-      updateMember(state, leftPres.member)
+      leftPres.member.online = false;
+      if(leftPres.member.role == 'observer') {
+        removeObserver(state, leftPres.member);
+      }
+      else {
+        updateMember(state, leftPres.member);
+      }
     }
   }
 }
 
 function syncState(state, syncData) {
-  state.presences = Presence.syncState(state.presences, syncData, onJoin(state), onLeave(state))
-  return state
-}
-
-function syncDiff(state, diff) {
-  state.presences = Presence.syncDiff(state.presences, diff, onJoin(state), onLeave(state))
+  state.presences = Presence.syncState(state.presences, syncData, onJoin(state), onLeave(state));
   return state;
 }
 
+function syncDiff(state, diff) {
+  state.presences = Presence.syncDiff(state.presences, diff, onJoin(state), onLeave(state));
+  return state;
+}
+
+
+function removeObserver(state, member) {
+  let newState = [];
+  state.observers.map((observer) => {
+    if(observer.id != member.id) {
+      newState.push(member);
+    }
+  });
+  return state.observers = newState;
+}
 function updateMember(state, member) {
   switch (member.role) {
     case "facilitator":
@@ -68,7 +82,7 @@ function updateMember(state, member) {
       state.participants = findAndUpdate(state.participants, member);
       break
     case "observer":
-      state.observers = findAndUpdate(state.observers, member) ;
+      state.observers = findAndUpdate(state.observers, member);
       break
     default:
       return state;

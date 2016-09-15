@@ -8,6 +8,7 @@ const initialState = {
   reports: false,
   whiteboardText: false,
   whiteboardImage: false,
+  observerList: false,
   postData: false,
   currentModalData: {}
 };
