@@ -46,8 +46,8 @@ const MessageBox = React.createClass({
         <div className='row direct-message-section'>
           <div className='col-md-12'>
             <Messages reciever={ reciever } />
-            <MessageInput />
           </div>
+          <MessageInput />
         </div>
       )
     }
