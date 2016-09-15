@@ -1,49 +1,44 @@
-table {
- width: 100%;
+.report-section {
+  margin: 0 auto;
+  width: 50%;
 }
 
-td.bottom_border{
-  border-bottom: 2pt solid gray;
+.report-section .report-title {
+  padding: 30px 0;
 }
 
-td.img_holder {
-  vertical-align: top;
-  width: 1%;
-  white-space: nowrap;
+.report-section .report-topic {
+  padding: 25px;
 }
 
-td.time {
-  text-align: right;
+.report-section .emotion-chat-section {
+  display: table-cell;
 }
 
-.body.facilitator {
-  color: red;
+.report-section .emotion-chat-section.media-top.push-image {
+  padding-top: 13px;
 }
 
-img.emoticon {
-  height: auto;
-  width: 80px;
+.report-section .emotion-chat-section.media-bottom.push-image {
+  padding-bottom: 18px;
 }
 
-table {
- width: 100%;
+.report-section .heading-section span small {
+  color: grey;
 }
 
-td.bottom_border{
-  border-bottom: 2pt solid gray;
+.report-section .body-section {
+  border: 1px solid #ccc;
 }
 
-td.svg_holder {
-  width: 1%;
-  white-space: nowrap;
+.report-section .body-section p {
+  margin: 5px -5px;
 }
 
-.answer.facilitator {
-  color: red;
+.report-section .body-section.facilitator {
+  background-color: #FBE7E9;
 }
 
-.whiteboard {
-  width: 920px;
-  height: 430px;
-  border: solid 1px #ccc;
+.report-section .body-section.participant {
+  background-color: #F2F2F4;
 }

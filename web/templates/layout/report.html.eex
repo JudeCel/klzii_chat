@@ -9,8 +9,15 @@
   </head>
 
   <body>
-    <%= report_log_url%>
-    <%= header_title(assigns) %>
-    <%= render @view_module, @view_template, assigns %>
+    <div class='report-section'>
+      <%= report_log_url%>
+      <div class='text-center report-title'>
+        <%= header_title(assigns) %>
+      </div>
+      <div class='report-topic'>
+        TopicName
+      </div>
+      <%= render @view_module, @view_template, assigns %>
+    </div>
   </body>
 </html>
