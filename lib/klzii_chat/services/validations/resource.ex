@@ -11,13 +11,13 @@ defmodule KlziiChat.Services.Validations.Resource do
     do: {:ok}
   end
 
-  @spec file_type_error_mesage(String.t, String.t) :: %{code: integer, type: String.t}
-  def file_type_error_mesage(actual, should) do
+  @spec file_type_error_message(String.t, String.t) :: %{code: integer, type: String.t}
+  def file_type_error_message(actual, should) do
     %{code: 415, type: "You are trying to upload #{actual} where it is allowed only #{should}."}
   end
 
-  @spec file_scope_error_mesage(String.t, String.t) :: %{code: integer, type: String.t}
-  def file_scope_error_mesage(width, height) do
+  @spec file_scope_error_message(String.t, String.t) :: %{code: integer, type: String.t}
+  def file_scope_error_message(width, height) do
     %{code: 415, scope: "Image should have #{width}x#{height}px format"}
   end
 
@@ -28,7 +28,7 @@ defmodule KlziiChat.Services.Validations.Resource do
     if height == @validation_constants.brand_logo.size.height && width == @validation_constants.brand_logo.size.width do
       {:ok}
     else
-      {:error, file_scope_error_mesage(width, height)}
+      {:error, file_scope_error_message(@validation_constants.brand_logo.size.width, @validation_constants.brand_logo.size.height)}
     end
   end
   def validate_file_scope(_,_), do: {:ok}
@@ -39,7 +39,7 @@ defmodule KlziiChat.Services.Validations.Resource do
     file_type = String.split(content_type, "/") |> List.first
     cond do
       file_type != type ->
-        {:error, file_type_error_mesage(file_type, type)}
+        {:error, file_type_error_message(file_type, type)}
       true ->
         {:ok}
     end
@@ -52,7 +52,7 @@ defmodule KlziiChat.Services.Validations.Resource do
       {:ok}
     else
       file_type = String.split(content_type, "/") |> List.first
-      {:error, file_type_error_mesage(file_type, type)}
+      {:error, file_type_error_message(file_type, type)}
     end
   end
   def validate_file_type(file, %{type: type}) when is_bitstring(file) and type in ["link"] do

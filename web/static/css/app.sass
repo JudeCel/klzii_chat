@@ -15,6 +15,7 @@ $input-size: 1.5em
 @import 'emotion-avatar.sass'
 @import 'helpers.sass'
 @import 'inputs.sass'
+@import 'buttons.sass'
 @import 'modals.sass'
 @import 'whiteboard.sass'
 @import '../../../node_modules/medium-editor/dist/css/medium-editor.css'
@@ -77,11 +78,17 @@ body
         margin: 0
         padding-left: 2px
         display: inline-block
-      .badge
-        &.normal
-          background-color: $header-red
-        &.reply
-          background-color: black
+        .badge
+          &.normal
+            background-color: $header-red
+          &.reply
+            background-color: black
+      .eye-section
+        cursor: pointer
+        color: $header-red
+        font-size: 10px
+        .icon-eye
+          font-size: 25px
       .dropdown.btn-group
         vertical-align: top
         #topic-selector
