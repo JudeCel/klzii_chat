@@ -10,9 +10,12 @@
 
   <body>
     <div class='report-section'>
-      <%= report_log_url%>
-      <div class='text-center report-title'>
-        <%= header_title(assigns) %>
+      <div class='text-center report-header'>
+        <span class='report-title'><%= header_title(assigns) %></span>
+
+        <span class='pull-right report-logo'>
+          <img class='img-responsive' src="<%= report_logo_url() %>" />
+        </span>
       </div>
       <div class='report-topic'>
         TopicName

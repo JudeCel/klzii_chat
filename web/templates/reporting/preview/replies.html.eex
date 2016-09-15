@@ -1,3 +1,0 @@
-<div class='remove-side-margin pull-right'>
-  <%= render "messages.html", messages: @messages %>
-</div>

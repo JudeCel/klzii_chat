@@ -1,10 +1,21 @@
 .report-section {
   margin: 0 auto;
-  width: 50%;
 }
 
-.report-section .report-title {
+.report-section .report-header {
   padding: 30px 0;
+}
+
+.report-section .report-header .report-title {
+  line-height: 4;
+}
+
+.report-section .report-header .report-logo {
+  margin-right: 25px;
+}
+
+.report-section .report-header .report-logo img {
+  width: 100px;
 }
 
 .report-section .report-topic {
@@ -15,30 +26,49 @@
   display: table-cell;
 }
 
-.report-section .emotion-chat-section.media-top.push-image {
-  padding-top: 13px;
-}
-
 .report-section .emotion-chat-section.media-bottom.push-image {
-  padding-bottom: 18px;
+  padding-bottom: 16px;
 }
 
 .report-section .heading-section span small {
   color: grey;
 }
 
-.report-section .body-section {
-  border: 1px solid #ccc;
+.report-section .message-section > .heading-section {
+  padding-right: -15px;
+  padding-left: -15px;
+}
+
+.report-section .heading-section {
+  padding-left: 10px;
+}
+
+.report-section .remove-side-margin .body-section {
+  border-bottom: 1px solid #000;
+}
+
+.report-section .message-section {
+  padding-top: 20px;
+  margin: 10px;
+}
+
+.report-section .message-section .emotion-chat-avatar > img {
+  border: 1px solid #aaa;
+  width: 40px;
+}
+
+.report-section .remove-side-margin .message-section {
+  border: none;
 }
 
 .report-section .body-section p {
   margin: 5px -5px;
 }
 
-.report-section .body-section.facilitator {
-  background-color: #FBE7E9;
+.remove-side-margin {
+  margin-right: -15px;
+  margin-left: -15px;
 }
-
-.report-section .body-section.participant {
-  background-color: #F2F2F4;
+.remove-side-margin .message-section {
+  margin: 0px;
 }
