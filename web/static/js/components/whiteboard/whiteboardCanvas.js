@@ -354,7 +354,7 @@ const WhiteboardCanvas = React.createClass({
     return 'Whiteboard_';
   },
   eventCoords(e) {
-    return({x: Number(e.clientX), y: Number(e.clientY)});
+    return this.isTouch(e) ? {x: Number(e.touches[0].pageX), y: Number(e.touches[0].pageY)} : {x: Number(e.clientX), y: Number(e.clientY)};
   },
   sendObjectData(action, mainAction) {
     let message = this.prepareMessage(this.activeShape, action, mainAction)
@@ -394,6 +394,12 @@ const WhiteboardCanvas = React.createClass({
     if (!this.isValidButton(e)) return;
     if (this.minimized) return;
     this.handleObjectCreated();
+    if(this.isTouch(e)) {
+      this.activeShape = null;
+    }
+  },
+  isTouch(e) {
+    return e.type.includes("touch");
   },
   getArrowShape(colour) {
     var arrow = this.snap.polygon([0,10, 4,10, 2,0, 0,10]).attr({fill: colour}).transform('r270');
@@ -409,7 +415,7 @@ const WhiteboardCanvas = React.createClass({
 
     var dx = coordsMove.x - this.coords.x;
     var dy = coordsMove.y - this.coords.y;
-
+    
     if(!this.activeShape && this.moveDistance(dx, dy) > 10) {
       if (this.mode == this.ModeEnum.emptyScribble) {
         this.activeShape = this.snap.polyline([]).transform('r0.1');
@@ -487,7 +493,7 @@ const WhiteboardCanvas = React.createClass({
     }
   },
   isValidButton(e) {
-    return (e && e.button == 0);
+    return (e && e.button == 0 || this.isTouch(e) && !e.button);
   },
   expand() {
     this.minimized = !this.minimized;

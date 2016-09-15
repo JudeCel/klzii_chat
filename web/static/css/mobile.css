@@ -95,6 +95,10 @@
     display:block !important;
   }
 
+  .popover.top {
+    margin-top:-25px !important;
+  }
+
   .emotion-chat-avatar {
     height: 52px;
     width: 75px;
