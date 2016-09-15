@@ -29,6 +29,7 @@ defmodule KlziiChat.Services.SessionReportingService do
   def create_session_topic_report(session_id, session_member_id, session_topic_id, report_format, report_type, include_facilitator)
   when report_type in [:all, :star, :whiteboard, :votes] and report_format in [:txt, :csv, :pdf]
   do
+
     with {:ok, session_member} <- get_session_member(session_member_id),
          {:ok} <- check_report_create_permision(session_member),
          {:ok, report} <- create_session_topics_reports_record(session_id, session_topic_id, report_type, include_facilitator, report_format),
@@ -76,6 +77,9 @@ defmodule KlziiChat.Services.SessionReportingService do
             broadcast_updated_report(session_id, report)
     end
   end
+
+
+
 
   @spec broadcast_updated_report(integer, Map.t) :: no_return
   def broadcast_updated_report(session_id, report), do: Endpoint.broadcast!("sessions:#{session_id}", "session_topics_report_updated", Repo.preload(report, :resource))

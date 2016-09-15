@@ -1,0 +1,29 @@
+<%= for message <- @messages do %>
+  <div class='message-section media'>
+    <div class='<%= media_image_position(message) %>'>
+      <div class='emotion-chat-avatar'>
+        <img src="<%= get_emotion_url(message.emotion) %>" />
+      </div>
+    </div>
+
+    <div class='media-body'>
+      <div class='col-md-12 media-heading heading-section'>
+        <span class='pull-left' style='color: <%= message.session_member.colour %>'>
+          <%= message.session_member.username %>
+        </span>
+
+        <span class='pull-right'>
+          <small><%= message.createdAt %></small>
+        </span>
+      </div>
+
+      <div class='col-md-12 body-section' style='<%= facilitator_color(message) %>'>
+        <p class='text-break-all'><%= message.body %></p>
+      </div>
+
+      <div class='col-md-12 remove-side-margin pull-right'>
+        <%= render "messages.html", messages: message.replies %>
+      </div>
+    </div>
+  </div>
+<% end %>

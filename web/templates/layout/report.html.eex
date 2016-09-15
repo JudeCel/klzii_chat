@@ -3,22 +3,21 @@
   <head>
     <meta charset="utf-8">
     <title>Klzii Chat history</title>
-    <link rel="stylesheet" type = "text/css" href="/css/reporting/bootstrap.min.css">
-    <link rel="stylesheet" type = "text/css" href="/css/reporting/reporting.css">
-    <script type="text/javascript" src="/js/reporting/snap.svg-min.js"></script>
+      <link rel="stylesheet" type = "text/css" href="<%= path_to_js_css(assigns[:conn], "/css/reporting/bootstrap.min.css") %>">
+      <link rel="stylesheet" type = "text/css" href="<%= path_to_js_css(assigns[:conn], "/css/reporting/reporting.css") %>">
+      <script type="text/javascript" src="<%= path_to_js_css(assigns[:conn],"/js/reporting/snap.svg-min.js") %>"></script>
   </head>
 
   <body>
     <div class='report-section'>
       <div class='text-center report-header'>
-        <span class='report-title'><%= header_title(assigns) %></span>
-
+        <span class='report-title'><%= @header_title %></span>
         <span class='pull-right report-logo'>
-          <img class='img-responsive' src="<%= report_logo_url() %>" />
+          <img class='img-responsive' src="<%= path_to_assets(assigns[:conn], report_logo_url) %>" />
         </span>
       </div>
       <div class='report-topic'>
-        TopicName
+        TopicName: <%= @session_topic_name%>
       </div>
       <%= render @view_module, @view_template, assigns %>
     </div>
