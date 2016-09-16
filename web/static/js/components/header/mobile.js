@@ -70,7 +70,6 @@ const MobileHeader = React.createClass({
     const { sessionTopics, unread_messages, currentUser, brand_logo } = this.props;
 
     if (currentUser && currentUser.avatarData) {
-      let avatarUser = { id: currentUser.id, username: currentUser.username, colour: currentUser.colour, avatarData: currentUser.avatarData, online: true, edit: false }
 
       return (
         <div className='header-innerbox header-innerbox-mobile'>
@@ -88,9 +87,9 @@ const MobileHeader = React.createClass({
             <div className='mobile-side-menu-content'>
               <ul>
                 <li className='navbar-title'>Talk Radio</li>
-                <li className={ "navbar-avatar " + currentUser.role } }>
+                <li className={ "navbar-avatar " + currentUser.role } >
                   <span onClick={this.changeAvatar}>
-                    <Avatar member={ avatarUser } specificId={ 'mobile-menu-avatar' } />
+                    <Avatar member={ { id: currentUser.id, username: currentUser.username, colour: currentUser.colour, avatarData: currentUser.avatarData, online: true, edit: false } } specificId={ 'mobile-menu-avatar' } />
                   </span>
                   <div>Click on Avatar to Customize Your Biizu</div>
                 </li>

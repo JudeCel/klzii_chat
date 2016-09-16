@@ -778,7 +778,7 @@
     height:auto !important;
   }
   
-  .navbar-avatar .observer {
+  .navbar-avatar.observer {
     display: none;
   }
 }
