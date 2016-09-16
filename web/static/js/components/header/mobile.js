@@ -66,17 +66,11 @@ const MobileHeader = React.createClass({
       this.openSpecificModal('avatar');
     }
   },
-  getMenuAvatarStyle() {
-    const { currentUser } = this.props;
-    return { 
-      display: (currentUser.role != "observer" ? "block" : "none")
-    };
-  },
   render() {
     const { sessionTopics, unread_messages, currentUser, brand_logo } = this.props;
 
     if (currentUser && currentUser.avatarData) {
-      currentUser.online = true;
+      let avatarUser = { id: currentUser.id, username: currentUser.username, colour: currentUser.colour, avatarData: currentUser.avatarData, online: true, edit: false }
 
       return (
         <div className='header-innerbox header-innerbox-mobile'>
@@ -94,9 +88,9 @@ const MobileHeader = React.createClass({
             <div className='mobile-side-menu-content'>
               <ul>
                 <li className='navbar-title'>Talk Radio</li>
-                <li className='navbar-avatar' style={ this.getMenuAvatarStyle() }>
+                <li className={ "navbar-avatar " + currentUser.role } }>
                   <span onClick={this.changeAvatar}>
-                    <Avatar member={ currentUser } specificId={ 'mobile-menu-avatar' } />
+                    <Avatar member={ avatarUser } specificId={ 'mobile-menu-avatar' } />
                   </span>
                   <div>Click on Avatar to Customize Your Biizu</div>
                 </li>

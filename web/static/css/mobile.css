@@ -590,10 +590,10 @@
 
   .mobile-side-menu .mobile-side-menu-content .navbar-avatar svg {
     cursor: pointer;
-    margin-bottom: -5px;
+    margin-bottom: -15px;
   }
 
-  .mobile-side-menu .mobile-side-menu-content .navbar-avatar svg text.svg-avatar-label:last-child {
+  .mobile-side-menu .mobile-side-menu-content .navbar-avatar svg text, .mobile-side-menu .mobile-side-menu-content .navbar-avatar svg rect {
     display:none;
   }
 
@@ -778,6 +778,9 @@
     height:auto !important;
   }
   
+  .navbar-avatar .observer {
+    display: none;
+  }
 }
 
 @media (max-width: 379px) {
