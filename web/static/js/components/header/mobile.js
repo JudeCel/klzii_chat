@@ -60,8 +60,17 @@ const MobileHeader = React.createClass({
     );
   },
   changeAvatar() {
+    const { currentUser } = this.props;
     this.toggleMenu();
-    this.openSpecificModal('avatar');
+    if (currentUser.role != "observer") {
+      this.openSpecificModal('avatar');
+    }
+  },
+  getMenuAvatarStyle() {
+    const { currentUser } = this.props;
+    return { 
+      display: (currentUser.role != "observer" ? "block" : "none")
+    };
   },
   render() {
     const { sessionTopics, unread_messages, currentUser, brand_logo } = this.props;
@@ -85,7 +94,7 @@ const MobileHeader = React.createClass({
             <div className='mobile-side-menu-content'>
               <ul>
                 <li className='navbar-title'>Talk Radio</li>
-                <li className='navbar-avatar'>
+                <li className='navbar-avatar' style={ this.getMenuAvatarStyle() }>
                   <span onClick={this.changeAvatar}>
                     <Avatar member={ currentUser } specificId={ 'mobile-menu-avatar' } />
                   </span>

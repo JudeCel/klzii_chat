@@ -138,8 +138,9 @@
   }
 
   #whiteboard-box svg {
-    margin-left: -25vw;
-    width: 126% !important;
+    margin-left: -45vw;
+    width: 145% !important;
+    padding-top: 70px;
   }
 
   .room-outerbox {
@@ -332,7 +333,7 @@
     border:0px !important;
   }
 
-  .room-section .input-section textarea {
+  .room-section .input-section textarea, .direct-message-modal .direct-message-section .input-section textarea {
     max-height: 46px;
   }
 
@@ -428,6 +429,10 @@
     padding: 10px 15px;
     min-height: 55px;
     position: relative;
+  }
+
+  .direct-message-modal .input-section .input-group {
+    margin-right: 10px;
   }
 
   .direct-message-modal .direct-message-section {
