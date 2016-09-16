@@ -205,6 +205,8 @@ body.modal-open
         text-decoration: none !important
       text-align: center
       @extend .resource-types
+      iframe
+        height: 450px
       .icon-pdf
         font-size: 100px
     .survey-answer-section
@@ -223,8 +225,12 @@ body.modal-open
       @extend .no-border-radius
       .icon-pdf
         font-size: 25px
+      img.youtube-preview
+        max-height: 150px
       .gallery-section
         @extend .resource-types
+        img.youtube-preview
+          max-height: 120px
         .top-row
           display: flex
           justify-content: flex-end

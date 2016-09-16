@@ -17,7 +17,7 @@ const UploadTypeYoutube = React.createClass({
     }
     else {
       return (
-        <img className='cursor-pointer' src={ `http://img.youtube.com/vi/${ url }/hqdefault.jpg` } onClick={ this.loadIframe } />
+        <img className='img-responsive youtube-preview cursor-pointer' src={ `http://img.youtube.com/vi/${ url }/hqdefault.jpg` } onClick={ this.loadIframe } />
       )
     }
   }
