@@ -67,6 +67,8 @@ const MobileHeader = React.createClass({
     const { sessionTopics, unread_messages, currentUser, brand_logo } = this.props;
 
     if (currentUser && currentUser.avatarData) {
+      currentUser.online = true;
+
       return (
         <div className='header-innerbox header-innerbox-mobile'>
           <div className='navbar-header'>
@@ -106,7 +108,7 @@ const MobileHeader = React.createClass({
                 </li>
               </ul>
               <div className='powered-by'>
-                Powered by <a href='http://www.klzii.com' target='_blank'>klsii</a>
+                Powered by <a href='http://www.klzii.com' target='_blank'>klzii</a>
               </div>
             </div>
             <div className='mobile-side-menu-topics' style={ this.getMobileSideMenuTopicsStyle() }>
