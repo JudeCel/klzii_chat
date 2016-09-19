@@ -2,6 +2,10 @@
   margin: 0 auto;
 }
 
+.report-section .media-body {
+  padding-left: 30px;
+}
+
 .report-section .report-header {
   padding: 30px 0;
 }
@@ -19,7 +23,7 @@
 }
 
 .report-section .report-topic {
-  padding: 25px;
+  padding: 10px;
 }
 
 .report-section .emotion-chat-section {
@@ -34,13 +38,12 @@
   color: grey;
 }
 
-.report-section .message-section > .heading-section {
-  padding-right: -15px;
-  padding-left: -15px;
+.report-section .remove-side-margin .heading-section {
+  padding-right: 20px;
 }
 
 .report-section .heading-section {
-  padding-left: 10px;
+  padding-right: 30px;
 }
 
 .report-section .remove-side-margin .body-section {
@@ -59,16 +62,4 @@
 
 .report-section .remove-side-margin .message-section {
   border: none;
-}
-
-.report-section .body-section p {
-  margin: 5px -5px;
-}
-
-.remove-side-margin {
-  margin-right: -15px;
-  margin-left: -15px;
-}
-.remove-side-margin .message-section {
-  margin: 0px;
 }
