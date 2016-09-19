@@ -1,11 +1,9 @@
-function setAvatar(sessionMember, imgPath) {
-  for(var i = 0; i < avatars.length; i++){
-    var svg = Snap(avatars[i]);
-      if(ad.base >= 0) svg.image(imgPath + '/base_' + padToTwo(ad.base) + '.svg', 0, 0, 76, 70);
-      if(ad.face >= 0) svg.image(imgPath + '/face_' + padToTwo(ad.face) + '.svg', 0, 0, 76, 70);
-      if(ad.body >= 0) svg.image(imgPath + '/body_' + padToTwo(ad.body) + '.svg', 0, 0, 76, 70);
-      if(ad.hair >= 0) svg.image(imgPath + '/hair_' + padToTwo(ad.hair) + '.svg', 0, 0, 76, 70);
-      if(ad.desk >= 0) svg.image(imgPath + '/desk_' + padToTwo(ad.desk) + '.svg', 0, 0, 76, 70);
-      if(ad.head >= 0) svg.image(imgPath + '/head_' + padToTwo(ad.head) + '.svg', 0, 0, 76, 70);
-
+function setAvatar(id, avatarData, imgPath) {
+  var svg = Snap('#' + id);
+  var array = ['base', 'face', 'body', 'hair', 'desk', 'head'];
+  for(var u in array) {
+    var key = array[u];
+    var value = avatarData[key];
+    if(value >= 0) svg.image(imgPath + '/' + key + '_0' + value + '.svg', 0, 0, 76, 70);
+  }
 }

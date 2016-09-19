@@ -1,9 +1,20 @@
-
 <%= for mini_survey_answer <- @mini_survey_answers do %>
-  <%= mini_survey_answer.answer["type"]%>
+  <div class='media'>
+    <div class='media-left media-top'>
+      <div class='svg_avatar' data-avatardata='<%= {:safe, Poison.encode!(mini_survey_answer.session_member.avatarData) }%>'>
+        <svg id="svg_<%= mini_survey_answer.id %>_<%= mini_survey_answer.session_member.id %>"></svg>
+      </div>
+    </div>
 
-  <div class="svg_avatar" 
-      data-avatarDta='<%= {:safe, Poison.encode!(mini_survey_answer.session_member.avatarData) }%>'>
+    <div class='media-body'>
+      <div class='media-heading'>
+        <span class='pull-left'><%= mini_survey_answer.session_member.username %></span>
+        <span class='pull-right'><%= mini_survey_answer.createdAt %></span>
+      </div>
+
+      <div class='body' style='<%= facilitator_color(mini_survey_answer) %>'>
+        "<%= get_mini_survey_answer(mini_survey_answer.answer) %>"
+      </div>
+    </div>
   </div>
-
 <% end %>
