@@ -1,5 +1,5 @@
 defmodule KlziiChat.Services.WhiteboardReportingService do
-  alias KlziiChat.{Repo, Shape,ShapeView}
+  alias KlziiChat.{Repo, ShapeView, SessionTopic}
   alias KlziiChat.Services.FileService
   alias KlziiChat.Queries.Shapes, as: QueriesShapes
 
@@ -8,7 +8,6 @@ defmodule KlziiChat.Services.WhiteboardReportingService do
   @spec save_report(String.t, :pdf, integer) :: {:ok | :error, String.t}
   def save_report(report_name, :pdf, session_topic_id) do
     session_topic = Repo.get(SessionTopic, session_topic_id) |> Repo.preload([session: :account])
-    wb_events = get_all_events(session_topic_id)
 
     shapes =
       QueriesShapes.base_query(session_topic)
@@ -27,14 +26,5 @@ defmodule KlziiChat.Services.WhiteboardReportingService do
 
     {:ok, html_file_path} = FileService.write_report(report_name, :pdf, html_text)
     {:ok, html_file_path}
-  end
-
-  @spec get_all_events(integer) :: List.t
-  def get_all_events(session_topic_id) do
-    Repo.all(
-      from shape in Shape,
-      where: shape.sessionTopicId == ^session_topic_id,
-      order_by: [asc: shape.updatedAt]
-    )
   end
 end
