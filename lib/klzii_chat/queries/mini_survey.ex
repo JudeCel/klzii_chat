@@ -1,6 +1,6 @@
 defmodule KlziiChat.Queries.MiniSurvey do
-  alias KlziiChat.{MiniSurvey, SessionMember, MiniSurveyAnswer}
-  import Ecto.Query, only: [from: 2, from: 1]
+  alias KlziiChat.{MiniSurvey, MiniSurveyAnswer}
+  import Ecto.Query, only: [from: 2]
 
   @spec base_query(integer) :: Ecto.Query
   def base_query(session_topic_id) do
