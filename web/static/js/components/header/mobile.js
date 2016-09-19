@@ -60,13 +60,17 @@ const MobileHeader = React.createClass({
     );
   },
   changeAvatar() {
+    const { currentUser } = this.props;
     this.toggleMenu();
-    this.openSpecificModal('avatar');
+    if (currentUser.role != "observer") {
+      this.openSpecificModal('avatar');
+    }
   },
   render() {
     const { sessionTopics, unread_messages, currentUser, brand_logo } = this.props;
 
     if (currentUser && currentUser.avatarData) {
+
       return (
         <div className='header-innerbox header-innerbox-mobile'>
           <div className='navbar-header'>
@@ -83,9 +87,9 @@ const MobileHeader = React.createClass({
             <div className='mobile-side-menu-content'>
               <ul>
                 <li className='navbar-title'>Talk Radio</li>
-                <li className='navbar-avatar'>
+                <li className={ "navbar-avatar " + currentUser.role } >
                   <span onClick={this.changeAvatar}>
-                    <Avatar member={ currentUser } specificId={ 'mobile-menu-avatar' } />
+                    <Avatar member={ { id: currentUser.id, username: currentUser.username, colour: currentUser.colour, avatarData: currentUser.avatarData, online: true, edit: false } } specificId={ 'mobile-menu-avatar' } />
                   </span>
                   <div>Click on Avatar to Customize Your Biizu</div>
                 </li>
@@ -106,7 +110,7 @@ const MobileHeader = React.createClass({
                 </li>
               </ul>
               <div className='powered-by'>
-                Powered by <a href='http://www.klzii.com' target='_blank'>klsii</a>
+                Powered by <a href='http://www.klzii.com' target='_blank'>klzii</a>
               </div>
             </div>
             <div className='mobile-side-menu-topics' style={ this.getMobileSideMenuTopicsStyle() }>

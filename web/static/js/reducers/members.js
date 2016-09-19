@@ -67,7 +67,7 @@ function removeObserver(state, member) {
   let newState = [];
   state.observers.map((observer) => {
     if(observer.id != member.id) {
-      newState.push(member);
+      newState.push(observer);
     }
   });
   return state.observers = newState;

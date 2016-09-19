@@ -95,6 +95,10 @@
     display:block !important;
   }
 
+  .popover.top {
+    margin-top:-25px !important;
+  }
+
   .emotion-chat-avatar {
     height: 52px;
     width: 75px;
@@ -134,8 +138,9 @@
   }
 
   #whiteboard-box svg {
-    margin-left: -25vw;
-    width: 126% !important;
+    margin-left: -45vw;
+    width: 145% !important;
+    padding-top: 70px;
   }
 
   .room-outerbox {
@@ -165,6 +170,7 @@
     padding-top: 10px;
     margin-bottom: -6px;
     min-height: 100px;
+    background-color:#fff;
   }
 
   .chat-section {
@@ -327,7 +333,7 @@
     border:0px !important;
   }
 
-  .room-section .input-section textarea {
+  .room-section .input-section textarea, .direct-message-modal .direct-message-section .input-section textarea {
     max-height: 46px;
   }
 
@@ -425,6 +431,10 @@
     position: relative;
   }
 
+  .direct-message-modal .input-section .input-group {
+    margin-right: 10px;
+  }
+
   .direct-message-modal .direct-message-section {
     height: 100vh;
     padding-bottom: 215px;
@@ -520,6 +530,8 @@
     top: -1px;
     box-shadow: 4px 4px 5px rgba(0,0,0,.2);
     border-top: 1px solid #eee;
+    overflow-y: auto;
+    padding-bottom: 70px !important;
   }
 
   .mobile-side-menu .mobile-side-menu-topics {
@@ -578,6 +590,11 @@
 
   .mobile-side-menu .mobile-side-menu-content .navbar-avatar svg {
     cursor: pointer;
+    margin-bottom: -15px;
+  }
+
+  .mobile-side-menu .mobile-side-menu-content .navbar-avatar svg text, .mobile-side-menu .mobile-side-menu-content .navbar-avatar svg rect {
+    display:none;
   }
 
   .mobile-side-menu .navbar-back span {
@@ -592,10 +609,10 @@
 
   .mobile-side-menu .mobile-side-menu-content .powered-by {
     text-align:center;
-    position: absolute;
     width: 100%;
     bottom: 90px;
     z-index: 22;
+    margin-top: 20px;
   }
 
   .mobile-side-menu .mobile-side-menu-content .powered-by a {
@@ -624,25 +641,29 @@
     width: auto !important;
     padding-right: 10px !important;
     padding-left: 10px !important;
-    height: 100vh !important;
     overflow-y: auto !important;
     padding-top: 15px !important;
     margin: -15px -30px -201px -30px !important;
+    position: absolute !important;
+    bottom: 200px;
+    top: 0px;
+    right: 15px;
+    left: 15px;
+
   }
 
   .customize-avatar-section .elements-section {
-    width: 100% !important;
+    width: auto !important;
     margin-top: 25px !important;
     display: block;
     border: 0px !important;
-    padding-top: 0px !important;
-    padding-bottom: 0px !important;
+    padding: 0px 5px !important;
     overflow-x: hidden;
     overflow-y: auto;
-    height: 212px;
-    bottom: 215px;
+    bottom: 60px;
     position: absolute;
-    right: 5px;
+    right: 15px;
+    left: 5px;
     top: 160px;
     height: auto !important;
   }
@@ -650,7 +671,7 @@
   .customize-avatar-section .preview-section {
     text-align: center;
     width: 100% !important;
-    margin-top: -30px !important;
+    margin-top: -20px !important;
     display: block;
     border: 0px !important;
   }
@@ -674,6 +695,20 @@
 
   .change-avatar-modal {
     width:auto !important;
+    overflow-y: auto;
+    overflow-x: hidden;
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    top: 0px;
+    bottom: 0px;
+    height: auto;
+  }
+
+  .customize-avatar-section {
+    min-height: 340px;
+    position: relative;
+    height: calc(100vh - 172px);
   }
 
   .customize-avatar-section .selection-section > div:last-child {
@@ -693,6 +728,9 @@
     width: 100vw !important;
     margin-bottom: -12px !important;
     height: 56px;
+    position: absolute;
+    display: block;
+    bottom: 0px;
   }
 
   .customize-avatar-section .selection-section > div {
@@ -701,10 +739,16 @@
 
   .customize-avatar-section .selection-section > div:first-child {
     position:absolute;
-    top: 130px;
     width: 90vw;
     text-align: center;
     white-space: nowrap;
+    top: calc(-100vh + 335px);
+  }
+
+  @media (max-height: 512px) {
+    .customize-avatar-section .selection-section > div:first-child {
+      top: -177px;
+    }
   }
 
   .customize-avatar-section .selection-section > div:first-child > div > * {
@@ -734,6 +778,9 @@
     height:auto !important;
   }
   
+  .navbar-avatar.observer {
+    display: none;
+  }
 }
 
 @media (max-width: 379px) {
