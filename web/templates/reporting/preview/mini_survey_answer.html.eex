@@ -1,0 +1,9 @@
+
+<%= for mini_survey_answer <- @mini_survey_answers do %>
+  <%= mini_survey_answer.answer["type"]%>
+
+  <div class="svg_avatar" 
+      data-avatarDta='<%= {:safe, Poison.encode!(mini_survey_answer.session_member.avatarData) }%>'>
+  </div>
+
+<% end %>
