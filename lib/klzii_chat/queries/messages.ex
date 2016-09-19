@@ -6,6 +6,7 @@ defmodule KlziiChat.Queries.Messages do
   def base_query(session_topic_id) do
     from message in Message,
     where: message.sessionTopicId == ^session_topic_id,
+    where: is_nil(message.replyId),
     order_by: [asc: :createdAt]
   end
 
@@ -18,8 +19,9 @@ defmodule KlziiChat.Queries.Messages do
 
   @spec join_replies(Ecto.Query) :: Ecto.Query
   def join_replies(query) do
+    replies_query = from(st in Message, order_by: [asc: :createdAt], preload: [:session_member, :votes, :replies])
     from message in query,
-    preload: [replies: ^query]
+    preload: [replies: ^replies_query]
   end
 
   @spec join_votes(Ecto.Query) :: Ecto.Query
