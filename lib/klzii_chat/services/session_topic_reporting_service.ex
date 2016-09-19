@@ -17,7 +17,7 @@ defmodule KlziiChat.Services.SessionTopicReportingService do
   def get_report(report_format, session_topic_id, filter_star, include_facilitator) do
     session_topic = Repo.get(SessionTopic, session_topic_id) |> Repo.preload([session: :account])
 
-    messages = KlziiChat.Queries.Messages.session_topic_messages(session_topic_id, [ star: filter_star, facilitator: include_facilitator ] )
+    messages = KlziiChat.Queries.Messages.session_topic_messages(session_topic_id, [ star: filter_star, facilitator: include_facilitator ])
       |> Repo.all
 
     case report_format do
@@ -59,11 +59,11 @@ defmodule KlziiChat.Services.SessionTopicReportingService do
   @spec get_html(Atom.t, List.t, String.t, String.t, String.t) :: {String.t}
   def get_html(:html, messages, session_topic_name, session_name, account_name) do
     Phoenix.View.render_to_string(
-      KlziiChat.Reporting.MessagesView, "messages.html",
+      KlziiChat.Reporting.PreviewView, "messages.html",
       messages: messages,
       session_topic_name: session_topic_name,
       header_title: "Chat History - #{account_name} / #{session_name}",
       layout: {KlziiChat.LayoutView, "report.html"}
-    ) |> IO.inspect
+    )
   end
 end

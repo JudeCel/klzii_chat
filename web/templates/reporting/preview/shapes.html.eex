@@ -1,0 +1,4 @@
+<svg class="whiteboard"></svg>
+<script>
+  drawElements(<%= {:safe, Poison.encode!(@shapes)} %>);
+</script>

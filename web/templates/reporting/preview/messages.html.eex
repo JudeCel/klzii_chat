@@ -2,7 +2,7 @@
   <div class='message-section media'>
     <div class='<%= media_image_position(message) %>'>
       <div class='emotion-chat-avatar'>
-        <img src="<%= get_emotion_url(message.emotion) %>" />
+        <img src="<%= KlziiChat.LayoutView.path_to_assets(assigns[:conn], get_emotion_url(message.emotion)) %>" />
       </div>
     </div>
 
@@ -22,7 +22,7 @@
       </div>
 
       <div class='col-md-12 remove-side-margin pull-right'>
-        <%= render "messages.html", messages: message.replies %>
+        <%= render "messages.html", messages: message.replies, conn: assigns[:conn] %>
       </div>
     </div>
   </div>

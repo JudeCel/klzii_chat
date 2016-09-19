@@ -23,8 +23,8 @@ defmodule KlziiChat.Router do
   scope "/reporting", KlziiChat.Reporting do
     pipe_through :browser # Use the default browser stack
     get "messages/:session_topic_id", PreviewController, :messages
-    get "mini_survey/:session_topic_id", PreviewController, :mini_survey
     get "whiteboard/:session_topic_id", PreviewController, :whiteboard
+    get "mini_survey/:session_topic_id", PreviewController, :mini_survey
   end
 
   scope "/", KlziiChat do

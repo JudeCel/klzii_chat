@@ -1,7 +1,7 @@
-var drawElements = function (events) {
-  events.forEach(function(event) {
-    if(event.action == "draw") {
-      draw("whiteboard", event.element.type, event.element.attr)
+var drawElements = function (shapes) {
+  shapes.forEach(function(shape) {
+    if(shape.event.action == "draw") {
+      draw("whiteboard", shape.event.element.type, shape.event.element.attr)
     }
   });
 }
@@ -42,8 +42,8 @@ var draw = function (class_name, type, attr) {
 
   svg_el.transform(attr.transform);
 }
-
-module.exports = {
-  drawElements: drawElements,
-  draw: draw
-}
+// 
+// module.exports = {
+//   drawElements: drawElements,
+//   draw: draw
+// }
