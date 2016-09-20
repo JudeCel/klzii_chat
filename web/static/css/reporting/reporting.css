@@ -96,6 +96,7 @@
   padding-left: inherit;
 }
 
+.mini-survey .answers .svg_avatar,
 .mini-survey .answers .svg_avatar svg {
   width: 76px;
   height: 70px;
