@@ -8,7 +8,7 @@
 
     <div class='media-body'>
       <div class='row media-heading heading-section'>
-        <span class='pull-left' style='color: <%= message.session_member.colour %>'>
+        <span class='pull-left username' style='<%= facilitator_color(message) %>'>
           <%= message.session_member.username %>
         </span>
 

@@ -8,8 +8,12 @@
 
     <div class='media-body'>
       <div class='media-heading'>
-        <span class='pull-left'><%= mini_survey_answer.session_member.username %></span>
-        <span class='pull-right'><%= mini_survey_answer.createdAt %></span>
+        <span class='pull-left username'>
+          <%= mini_survey_answer.session_member.username %>
+        </span>
+        <span class='pull-right'>
+          <small><%= mini_survey_answer.createdAt %></small>
+        </span>
       </div>
 
       <div class='body' style='<%= facilitator_color(mini_survey_answer) %>'>
