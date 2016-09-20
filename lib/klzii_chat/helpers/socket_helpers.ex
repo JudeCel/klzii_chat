@@ -6,7 +6,7 @@ defmodule KlziiChat.Helpers.SocketHelper do
     socket.assigns.session_member
   end
 
-  @spec get_session_member(%Phoenix.Socket{}) :: {:ok, string}
+  @spec get_session_member(%Phoenix.Socket{}) :: {:ok, String.t}
   def track(socket) do
     # we not track Presence for test
     case Mix.env do

@@ -10,6 +10,7 @@ defmodule KlziiChat.Reporting.PreviewController do
     session_topic = Repo.get!(SessionTopic, session_topic_id)
       |> Repo.preload([session: [:account] ])
 
+      IO.inspect session_topic.session.timeZone
     messages =
       QueriesMessages.session_topic_messages(session_topic_id, [star: false, facilitator: true])
       |> Repo.all
@@ -18,7 +19,9 @@ defmodule KlziiChat.Reporting.PreviewController do
 
       conn |>
       put_layout("report.html") |>
-      render("messages.html", %{session_topic_name: session_topic.name,
+      render("messages.html", %{
+        session_topic_name: session_topic.name,
+        time_zone: session_topic.session.timeZone,
         header_title: header_title, messages: messages
       })
   end

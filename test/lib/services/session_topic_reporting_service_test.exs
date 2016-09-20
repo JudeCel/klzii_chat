@@ -94,7 +94,7 @@ defmodule KlziiChat.Services.SessionTopicReportingServiceTest do
     {:ok, messages} = KlziiChat.Queries.Messages.session_topic_messages(session_topic.id, [ star: false, facilitator: false ])
     |> Repo.all |> preload_dependencies
 
-    text_string = SessionTopicReportingService.get_stream(:txt, messages, session_name, session_topic.name)
+    text_string = SessionTopicReportingService.get_stream(:txt, messages, session_name, session_topic.name, session_topic.session.timeZone)
     |> Enum.to_list |> Enum.join
 
     assert(String.contains?(text_string, session_name))
@@ -111,7 +111,7 @@ defmodule KlziiChat.Services.SessionTopicReportingServiceTest do
     {:ok, messages} = KlziiChat.Queries.Messages.session_topic_messages(session_topic.id, [ star: false, facilitator: false ])
     |> Repo.all |> preload_dependencies
 
-    csv_string = SessionTopicReportingService.get_stream(:csv, messages, session_topic.name, session_name)
+    csv_string = SessionTopicReportingService.get_stream(:csv, messages, session_topic.name, session_name, session_topic.session.timeZone)
     |> Enum.to_list |> Enum.join
 
     assert(String.contains?(csv_string, SessionTopicReportingService.csv_header) )
@@ -128,7 +128,7 @@ defmodule KlziiChat.Services.SessionTopicReportingServiceTest do
     {:ok, messages} = KlziiChat.Queries.Messages.session_topic_messages(session_topic.id, [ star: false, facilitator: false ])
     |> Repo.all |> preload_dependencies
 
-    html_string = SessionTopicReportingService.get_html(:html, messages, session_topic.name, session_name, account_name)
+    html_string = SessionTopicReportingService.get_html(:html, messages, session_topic.name, session_name, account_name, session_topic.session.timeZone)
 
     assert(String.contains?(html_string, session_name))
     assert(String.contains?(html_string, account_name))

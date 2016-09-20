@@ -13,7 +13,7 @@
         </span>
 
         <span class='pull-right'>
-          <small><%= message.createdAt %></small>
+          <small><%= time_format(message.createdAt, assigns[:time_zone]) %></small>
         </span>
       </div>
 
@@ -22,7 +22,7 @@
       </div>
 
       <div class='remove-side-margin pull-right'>
-        <%= render "messages.html", messages: message.replies, conn: assigns[:conn] %>
+        <%= render "messages.html", messages: message.replies, conn: assigns[:conn], time_zone: assigns[:time_zone]  %>
       </div>
     </div>
   </div>

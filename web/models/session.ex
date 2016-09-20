@@ -9,6 +9,7 @@ defmodule KlziiChat.Session do
   schema "Sessions" do
     field :name, :string
     field :status, :string
+    field :timeZone, :string
     field :brand_project_id,  :integer
     field :startTime, Timex.Ecto.DateTime
     field :endTime, Timex.Ecto.DateTime

@@ -96,6 +96,7 @@ defmodule KlziiChat.SessionMemberCase do
       startTime: Timex.now,
       endTime: Timex.shift(Timex.now, days: 7),
       accountId: account.id,
+      timeZone: Timex.now |> Timex.format!( "%Z", :strftime),
       status: "open"
     } |> Repo.insert!
 

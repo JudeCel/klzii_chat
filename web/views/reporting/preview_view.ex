@@ -13,6 +13,10 @@ defmodule KlziiChat.Reporting.PreviewView do
     "emotion-chat-section push-image " <> if(length(message.replies) > 0, do: "media-top", else:  "media-bottom")
   end
 
+  def time_format(time, time_zone) do
+    KlziiChat.Helpers.DateTimeHelper.report_format(time, time_zone)
+  end
+
   def facilitator_color(message) do
     if message.session_member.role == "facilitator" do
       "color: #{message.session_member.colour}"
