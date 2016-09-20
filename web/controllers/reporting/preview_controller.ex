@@ -1,9 +1,10 @@
 defmodule KlziiChat.Reporting.PreviewController do
-  alias KlziiChat.{Repo, SessionTopic, Message, ShapeView, MiniSurveyView }
+  alias KlziiChat.{Repo, SessionTopic, ShapeView, MiniSurveyView }
   alias KlziiChat.Queries.Messages, as: QueriesMessages
   alias KlziiChat.Queries.Shapes, as: QueriesShapes
   alias KlziiChat.Queries.MiniSurvey, as: QueriesMiniSurvey
   use KlziiChat.Web, :controller
+  plug :filter_access
 
   def messages(conn, %{"session_topic_id" => session_topic_id}) do
     session_topic = Repo.get!(SessionTopic, session_topic_id)
@@ -58,5 +59,15 @@ defmodule KlziiChat.Reporting.PreviewController do
       mini_surveys: mini_surveys,
       session_topic_name: session_topic.name,
     })
+  end
+
+
+  def filter_access(conn, opts) do
+    case Mix.env do
+      :dev ->
+        conn
+      _ ->
+        KlziiChat.Guardian.AuthErrorHandler.unauthenticated(conn, opts)
+    end
   end
 end
