@@ -48,7 +48,7 @@ defmodule KlziiChat.Reporting.PreviewController do
     session_topic = Repo.get!(SessionTopic, session_topic_id) |> Repo.preload([session: [:account] ])
     header_title = "Voutes History - #{session_topic.session.account.name} / #{session_topic.session.name}"
 
-    mini_surveys = QueriesMiniSurvey.base_query(session_topic.id)
+    mini_surveys = QueriesMiniSurvey.report_query(session_topic.id, true)
     |> Repo.all
     |> Phoenix.View.render_many(MiniSurveyView, "show_with_answers.json", as: :mini_survey)
 
