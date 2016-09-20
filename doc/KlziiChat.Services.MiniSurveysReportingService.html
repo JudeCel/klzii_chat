@@ -84,37 +84,19 @@
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#format_survey_csv/2">format_survey_csv(map, facilitator)</a>
+    <a href="#format_survey_csv/1">format_survey_csv(map)</a>
   </div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#format_survey_html/2">format_survey_html(map, facilitator)</a>
+    <a href="#format_survey_txt/1">format_survey_txt(map)</a>
   </div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#format_survey_txt/2">format_survey_txt(map, facilitator)</a>
-  </div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#get_html/5">get_html(mini_surveys, session_name, session_topic_name, session_members, facilitator)</a>
-  </div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#get_mini_survey_answers/2">get_mini_survey_answers(survvey_id, bool)</a>
-  </div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#get_mini_surveys/1">get_mini_surveys(session_topic_id)</a>
+    <a href="#get_html/2">get_html(mini_surveys, session_topic)</a>
   </div>
   
 </div>
@@ -126,7 +108,7 @@
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#get_stream/5">get_stream(atom, mini_surveys, session_name, session_topic_name, include_facilitator)</a>
+    <a href="#get_stream/4">get_stream(atom, mini_surveys, session_name, session_topic_name)</a>
   </div>
   
 </div>
@@ -157,12 +139,12 @@
             </a>
             Functions
           </h1>
-          <div class="detail" id="format_survey_csv/2">
+          <div class="detail" id="format_survey_csv/1">
   <div class="detail-header">
-    <a href="#format_survey_csv/2" class="detail-link" title="Link to this function">
+    <a href="#format_survey_csv/1" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">format_survey_csv(map, facilitator)</span>
+    <span class="signature">format_survey_csv(map)</span>
     
     
   </div>
@@ -171,7 +153,7 @@
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">format_survey_csv(<a href="http://elixir-lang.org/docs/stable/elixir/Map.html#t:t/0">Map.t</a>, boolean) :: <a href="http://elixir-lang.org/docs/stable/elixir/List.html#t:t/0">List.t</a></code></pre>
+          <pre><code class="elixir">format_survey_csv(<a href="http://elixir-lang.org/docs/stable/elixir/Map.html#t:t/0">Map.t</a>) :: <a href="http://elixir-lang.org/docs/stable/elixir/List.html#t:t/0">List.t</a></code></pre>
         
       </div>
     </div>
@@ -180,12 +162,12 @@
     
   </section>
 </div>
-<div class="detail" id="format_survey_html/2">
+<div class="detail" id="format_survey_txt/1">
   <div class="detail-header">
-    <a href="#format_survey_html/2" class="detail-link" title="Link to this function">
+    <a href="#format_survey_txt/1" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">format_survey_html(map, facilitator)</span>
+    <span class="signature">format_survey_txt(map)</span>
     
     
   </div>
@@ -194,7 +176,7 @@
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">format_survey_html(<a href="http://elixir-lang.org/docs/stable/elixir/Map.html#t:t/0">Map.t</a>, boolean) :: <a href="http://elixir-lang.org/docs/stable/elixir/Map.html#t:t/0">Map.t</a></code></pre>
+          <pre><code class="elixir">format_survey_txt(<a href="http://elixir-lang.org/docs/stable/elixir/Map.html#t:t/0">Map.t</a>) :: <a href="http://elixir-lang.org/docs/stable/elixir/List.html#t:t/0">List.t</a></code></pre>
         
       </div>
     </div>
@@ -203,12 +185,12 @@
     
   </section>
 </div>
-<div class="detail" id="format_survey_txt/2">
+<div class="detail" id="get_html/2">
   <div class="detail-header">
-    <a href="#format_survey_txt/2" class="detail-link" title="Link to this function">
+    <a href="#get_html/2" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">format_survey_txt(map, facilitator)</span>
+    <span class="signature">get_html(mini_surveys, session_topic)</span>
     
     
   </div>
@@ -217,78 +199,7 @@
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">format_survey_txt(<a href="http://elixir-lang.org/docs/stable/elixir/Map.html#t:t/0">Map.t</a>, boolean) :: <a href="http://elixir-lang.org/docs/stable/elixir/List.html#t:t/0">List.t</a></code></pre>
-        
-      </div>
-    </div>
-  
-  <section class="docstring">
-    
-  </section>
-</div>
-<div class="detail" id="get_html/5">
-  <div class="detail-header">
-    <a href="#get_html/5" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">get_html(mini_surveys, session_name, session_topic_name, session_members, facilitator)</span>
-    
-    
-  </div>
-  
-    <div class="specs">
-      <h4 class="specs-title">Specs</h4>
-      <div class="specs-list">
-        
-          <pre><code class="elixir">get_html(<a href="http://elixir-lang.org/docs/stable/elixir/List.html#t:t/0">List.t</a>, <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>, <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>, <a href="http://elixir-lang.org/docs/stable/elixir/List.html#t:t/0">List.t</a>, boolean) :: <a href="http://elixir-lang.org/docs/stable/elixir/Stream.html#t:t/0">Stream.t</a></code></pre>
-        
-      </div>
-    </div>
-  
-  <section class="docstring">
-    
-  </section>
-</div>
-<div class="detail" id="get_mini_survey_answers/2">
-  <div class="detail-header">
-    <a href="#get_mini_survey_answers/2" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">get_mini_survey_answers(survvey_id, bool)</span>
-    
-    
-  </div>
-  
-    <div class="specs">
-      <h4 class="specs-title">Specs</h4>
-      <div class="specs-list">
-        
-          <pre><code class="elixir">get_mini_survey_answers(integer, boolean) :: <a href="http://elixir-lang.org/docs/stable/elixir/List.html#t:t/0">List.t</a></code></pre>
-        
-          <pre><code class="elixir">get_mini_survey_answers(integer, boolean) :: <a href="http://elixir-lang.org/docs/stable/elixir/List.html#t:t/0">List.t</a></code></pre>
-        
-      </div>
-    </div>
-  
-  <section class="docstring">
-    
-  </section>
-</div>
-<div class="detail" id="get_mini_surveys/1">
-  <div class="detail-header">
-    <a href="#get_mini_surveys/1" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">get_mini_surveys(session_topic_id)</span>
-    
-    
-  </div>
-  
-    <div class="specs">
-      <h4 class="specs-title">Specs</h4>
-      <div class="specs-list">
-        
-          <pre><code class="elixir">get_mini_surveys(integer) :: Map</code></pre>
+          <pre><code class="elixir">get_html(<a href="http://elixir-lang.org/docs/stable/elixir/List.html#t:t/0">List.t</a>, %KlziiChat.MiniSurvey{__meta__: term, consoles: term, createdAt: term, id: term, mini_survey_answers: term, question: term, session: term, sessionId: term, sessionTopicId: term, session_topic: term, title: term, type: term, updatedAt: term}) :: <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a></code></pre>
         
       </div>
     </div>
@@ -320,12 +231,12 @@
     
   </section>
 </div>
-<div class="detail" id="get_stream/5">
+<div class="detail" id="get_stream/4">
   <div class="detail-header">
-    <a href="#get_stream/5" class="detail-link" title="Link to this function">
+    <a href="#get_stream/4" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">get_stream(atom, mini_surveys, session_name, session_topic_name, include_facilitator)</span>
+    <span class="signature">get_stream(atom, mini_surveys, session_name, session_topic_name)</span>
     
     
   </div>
@@ -334,9 +245,9 @@
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">get_stream(atom, <a href="http://elixir-lang.org/docs/stable/elixir/List.html#t:t/0">List.t</a>, <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>, <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>, boolean) :: <a href="http://elixir-lang.org/docs/stable/elixir/Stream.html#t:t/0">Stream.t</a></code></pre>
+          <pre><code class="elixir">get_stream(atom, <a href="http://elixir-lang.org/docs/stable/elixir/List.html#t:t/0">List.t</a>, <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>, <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>) :: <a href="http://elixir-lang.org/docs/stable/elixir/Stream.html#t:t/0">Stream.t</a></code></pre>
         
-          <pre><code class="elixir">get_stream(atom, <a href="http://elixir-lang.org/docs/stable/elixir/List.html#t:t/0">List.t</a>, <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>, <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>, boolean) :: <a href="http://elixir-lang.org/docs/stable/elixir/Stream.html#t:t/0">Stream.t</a></code></pre>
+          <pre><code class="elixir">get_stream(atom, <a href="http://elixir-lang.org/docs/stable/elixir/List.html#t:t/0">List.t</a>, <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>, <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>) :: <a href="http://elixir-lang.org/docs/stable/elixir/Stream.html#t:t/0">Stream.t</a></code></pre>
         
       </div>
     </div>

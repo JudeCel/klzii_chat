@@ -19,12 +19,13 @@ defmodule KlziiChat.Reporting.PreviewView do
     end
   end
 
-  def get_mini_survey_answer(%{ "type" => "5starRating", "value" => value }) do
-    "#{value} stars"
+  def get_mini_survey_answer(%{ "type" => type, "value" => value }) do
+    {:ok, result} = KlziiChat.Decorators.MiniSurveyAnswersDecorator.answer_text(type, value)
+    result
   end
-
-  def get_mini_survey_answer(%{ "type" => "yesNoMaybe", "value" => value }) do
-    ["", "Yes", "No", "Unsure"]
-    |> Enum.at(value)
-  end
+  # 
+  # def get_mini_survey_answer(%{ "type" => "yesNoMaybe", "value" => value }) do
+  #   ["", "Yes", "No", "Unsure"]
+  #   |> Enum.at(value)
+  # end
 end
