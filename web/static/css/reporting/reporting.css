@@ -1,5 +1,6 @@
 .report-section {
   margin: 0 auto;
+  color: grey;
 }
 
 .report-section .media-body {
@@ -24,6 +25,7 @@
 
 .report-section .report-topic {
   padding: 10px;
+  font-size: 18px;
 }
 
 .report-section .emotion-chat-section {
@@ -35,7 +37,7 @@
 }
 
 .report-section .heading-section span small {
-  color: grey;
+  color: #ccc;
 }
 
 .report-section .remove-side-margin .heading-section {
@@ -46,18 +48,26 @@
   padding-right: 30px;
 }
 
+.report-section .heading-section .username {
+  font-size: 16px;
+  padding-bottom: 5px;
+}
+
 .report-section .remove-side-margin .body-section {
   border-bottom: 1px solid #000;
 }
 
 .report-section .message-section {
-  padding-top: 20px;
   margin: 10px;
 }
 
 .report-section .message-section .emotion-chat-avatar > img {
   border: 1px solid #aaa;
   width: 40px;
+}
+
+.report-section .remove-side-margin {
+  margin-left: -20px;
 }
 
 .report-section .remove-side-margin .message-section {
@@ -87,9 +97,13 @@
   padding-bottom: 10px;
 }
 
+.mini-survey .answers .media-heading .username {
+  font-size: 16px;
+}
+
 .mini-survey .answers .media-heading {
   border-top: 2px solid black;
-  height: 2rem;
+  height: 3rem;
 }
 
 .mini-survey .answers .media-body {

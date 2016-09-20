@@ -19,7 +19,7 @@
         </span>
       </div>
       <div class='report-topic'>
-        TopicName: <%= @session_topic_name%>
+        <%= @session_topic_name%>
       </div>
       <%= render @view_module, @view_template, assigns %>
     </div>
