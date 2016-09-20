@@ -1,12 +1,14 @@
 defmodule KlziiChat.Queries.Shapes do
-  alias KlziiChat.{SessionMember, SessionTopic, Shape}
+  alias KlziiChat.{SessionMember, SessionTopic}
 
   import Ecto
   import Ecto.Query
 
   @spec base_query(%SessionTopic{}) :: Ecto.Query
   def base_query(session_topic) do
-    from(s in assoc(session_topic, :shapes))
+    from(s in assoc(session_topic, :shapes),
+      order_by: [asc: :id]
+    )
   end
 
   @spec find_shapes_for_delete(%SessionMember{}, %SessionTopic{}) :: Ecto.Query.t

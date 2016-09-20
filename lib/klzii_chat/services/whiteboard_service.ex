@@ -3,19 +3,20 @@ defmodule KlziiChat.Services.WhiteboardService do
   alias KlziiChat.Services.Permissions.Whiteboard, as: WhiteboardPermissions
   alias KlziiChat.Queries.Shapes, as: ShapesQueries
   import Ecto
-  import Ecto.Query, only: [from: 2]
+  import Ecto.Query, only: [from: 2, preload: 2]
 
   def history(session_topic_id, session_member_id) do
     session_topic = Repo.get!(SessionTopic, session_topic_id)
     session_member = Repo.get!(SessionMember, session_member_id)
-    shapes = Repo.all(
-      from e in assoc(session_topic, :shapes),
-      order_by: [asc: e.id],
-      preload: [:session_member]
-    )
-    resp = Enum.map(shapes, fn shape ->
-      ShapeView.render("show.json", %{shape: shape, member: session_member})
-    end)
+
+    resp =
+      ShapesQueries.base_query(session_topic)
+      |> preload(:session_member)
+      |> Repo.all
+      |>  Enum.map(fn shape ->
+            ShapeView.render("show.json", %{shape: shape, member: session_member})
+          end)
+
     {:ok, resp}
   end
 
