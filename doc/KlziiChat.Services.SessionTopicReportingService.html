@@ -84,7 +84,13 @@
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#get_html/3">get_html(messages, session_name, session_topic_name)</a>
+    <a href="#csv_header/0">csv_header()</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#get_html/5">get_html(atom, messages, session_topic_name, session_name, account_name)</a>
   </div>
   
 </div>
@@ -102,7 +108,7 @@
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#message_csv_filter/1">message_csv_filter(map)</a>
+    <a href="#message_csv_filter/1">message_csv_filter(message)</a>
   </div>
   
 </div>
@@ -133,12 +139,12 @@
             </a>
             Functions
           </h1>
-          <div class="detail" id="get_html/3">
+          <div class="detail" id="csv_header/0">
   <div class="detail-header">
-    <a href="#get_html/3" class="detail-link" title="Link to this function">
+    <a href="#csv_header/0" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">get_html(messages, session_name, session_topic_name)</span>
+    <span class="signature">csv_header()</span>
     
     
   </div>
@@ -147,7 +153,30 @@
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">get_html(<a href="http://elixir-lang.org/docs/stable/elixir/List.html#t:t/0">List.t</a>, <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>, <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>) :: {<a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>}</code></pre>
+          <pre><code class="elixir">csv_header :: <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a></code></pre>
+        
+      </div>
+    </div>
+  
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="get_html/5">
+  <div class="detail-header">
+    <a href="#get_html/5" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">get_html(atom, messages, session_topic_name, session_name, account_name)</span>
+    
+    
+  </div>
+  
+    <div class="specs">
+      <h4 class="specs-title">Specs</h4>
+      <div class="specs-list">
+        
+          <pre><code class="elixir">get_html(<a href="http://elixir-lang.org/docs/stable/elixir/Atom.html#t:t/0">Atom.t</a>, <a href="http://elixir-lang.org/docs/stable/elixir/List.html#t:t/0">List.t</a>, <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>, <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>, <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>) :: {<a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>}</code></pre>
         
       </div>
     </div>
@@ -211,7 +240,7 @@
     <a href="#message_csv_filter/1" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">message_csv_filter(map)</span>
+    <span class="signature">message_csv_filter(message)</span>
     
     
   </div>

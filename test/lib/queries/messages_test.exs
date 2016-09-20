@@ -70,46 +70,35 @@ defmodule KlziiChat.Queries.MessagesTest  do
   end
 
   test "base query joins session member and excludes facilitator - 1 message", %{base_query: base_query} do
-    query =
+    [%{session_member: %{role: "participant"}}] =
       base_query
       |> QueriesMessages.join_session_member()
-      |> QueriesMessages.exclude_by_role("facilitator")
-
-    [%{session_member: %{role: "participant"}}] =
-      from([message, session_member] in query, preload: [:session_member])
+      |> QueriesMessages.exclude_by_role("facilitator", false)
       |> Repo.all
+
   end
 
   test "base query joins session member and excludes participant - 1 message", %{base_query: base_query} do
-    query =
+  [%{session_member: %{role: "facilitator"}}] =
       base_query
       |> QueriesMessages.join_session_member()
-      |> QueriesMessages.exclude_by_role("participant")
-
-    [%{session_member: %{role: "facilitator"}}] =
-      from([message, session_member] in query, preload: [:session_member])
+      |> QueriesMessages.exclude_by_role("participant", false)
       |> Repo.all
   end
 
 
-  test "sort and select from all messages", %{base_query: base_query, create_date1: create_date1,
-    create_date2: create_date2, facilitator: %{username: username1}, participant: %{username: username2}} do
-    [message1, message2] =
-      base_query
+  test "sort and select from all messages", %{base_query: base_query} do
+      messages = base_query
       |> QueriesMessages.join_session_member()
-      |> QueriesMessages.sort_select()
       |> Repo.all
-
-      %{createdAt: ^create_date1, session_member: %{username: ^username1}} = message1
-      %{createdAt: ^create_date2, session_member: %{username: ^username2}} = message2
+    assert(Enum.count(messages) == 2)
   end
 
   test "empty result for stars only and exlude facilitator request", %{star_true_query: star_true_query} do
     [] =
       star_true_query
       |> QueriesMessages.join_session_member()
-      |> QueriesMessages.exclude_by_role("facilitator")
-      |> QueriesMessages.sort_select()
+      |> QueriesMessages.exclude_by_role("facilitator", false)
       |> Repo.all
   end
 

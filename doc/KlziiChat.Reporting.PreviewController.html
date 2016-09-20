@@ -5,7 +5,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.13.1">
-    <title>KlziiChat.Services.SessionTopicService – klzii_chat v0.0.1</title>
+    <title>KlziiChat.Reporting.PreviewController – klzii_chat v0.0.1</title>
     <link rel="stylesheet" href="dist/app-7e84850c37.css" />
     
     <script src="dist/sidebar_items.js"></script>
@@ -60,7 +60,7 @@
 
       <h1>
         <small class="visible-xs">klzii_chat v0.0.1</small>
-        KlziiChat.Services.SessionTopicService
+        KlziiChat.Reporting.PreviewController
         
         
       </h1>
@@ -84,13 +84,25 @@
     </h2>
     <div class="summary-row">
   <div class="summary-signature">
-    <a href="#board_message/3">board_message(session_member_id, session_topic_id, map)</a>
+    <a href="#filter_access/2">filter_access(conn, opts)</a>
   </div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#errors_messages/0">errors_messages()</a>
+    <a href="#messages/2">messages(conn, map)</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#mini_survey/2">mini_survey(conn, map)</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#whiteboard/2">whiteboard(conn, map)</a>
   </div>
   
 </div>
@@ -115,37 +127,54 @@
             </a>
             Functions
           </h1>
-          <div class="detail" id="board_message/3">
+          <div class="detail" id="filter_access/2">
   <div class="detail-header">
-    <a href="#board_message/3" class="detail-link" title="Link to this function">
+    <a href="#filter_access/2" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">board_message(session_member_id, session_topic_id, map)</span>
+    <span class="signature">filter_access(conn, opts)</span>
     
     
   </div>
-  
-    <div class="specs">
-      <h4 class="specs-title">Specs</h4>
-      <div class="specs-list">
-        
-          <pre><code class="elixir">board_message(Integer, Integer, Map) ::
-  {:ok, Map} |
-  {:error, <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>}</code></pre>
-        
-      </div>
-    </div>
   
   <section class="docstring">
     
   </section>
 </div>
-<div class="detail" id="errors_messages/0">
+<div class="detail" id="messages/2">
   <div class="detail-header">
-    <a href="#errors_messages/0" class="detail-link" title="Link to this function">
+    <a href="#messages/2" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">errors_messages()</span>
+    <span class="signature">messages(conn, map)</span>
+    
+    
+  </div>
+  
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="mini_survey/2">
+  <div class="detail-header">
+    <a href="#mini_survey/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">mini_survey(conn, map)</span>
+    
+    
+  </div>
+  
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="whiteboard/2">
+  <div class="detail-header">
+    <a href="#whiteboard/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">whiteboard(conn, map)</span>
     
     
   </div>

@@ -32,9 +32,6 @@ KlziiChat.Gettext.html
 KlziiChat.Guardian.AuthErrorHandler.html
 KlziiChat.Guardian.Serializer.html
 KlziiChat.Helpers.CorsaUrl.html
-KlziiChat.Helpers.HTMLMiniSurveysReportHelper.html
-KlziiChat.Helpers.HTMLSessionTopicReportHelper.html
-KlziiChat.Helpers.HTMLWhiteboardReportHelper.html
 KlziiChat.Helpers.IntegerHelper.html
 KlziiChat.Helpers.ListHelper.html
 KlziiChat.Helpers.MapHelper.html
@@ -56,11 +53,14 @@ KlziiChat.PingController.html
 KlziiChat.Presence.html
 KlziiChat.Queries.AccountUser.html
 KlziiChat.Queries.Messages.html
+KlziiChat.Queries.MiniSurvey.html
 KlziiChat.Queries.Resources.html
 KlziiChat.Queries.SessionResources.html
 KlziiChat.Queries.Sessions.html
 KlziiChat.Queries.Shapes.html
 KlziiChat.Repo.html
+KlziiChat.Reporting.PreviewController.html
+KlziiChat.Reporting.PreviewView.html
 KlziiChat.Resource.html
 KlziiChat.ResourceView.html
 KlziiChat.ResourcesController.html

@@ -70,6 +70,7 @@ defmodule KlziiChat.Services.SessionReportingServiceTest do
     {:ok, all_file_path} = SessionReportingService.save_report_async(:all, @report_prefix <> "all", :txt, session_topic.id, true)
     {:ok, star_file_path} = SessionReportingService.save_report_async(:star, @report_prefix <> "star", :csv, session_topic.id, false)
     {:ok, whiteboard_file_path} = SessionReportingService.save_report_async(:whiteboard, @report_prefix <> "wb", :pdf, session_topic.id, false)
+
     {:ok, votes_file_path} = SessionReportingService.save_report_async(:votes, @report_prefix <> "votes", :pdf, session_topic.id, true)
 
     assert(File.exists?(all_file_path))

@@ -7,7 +7,8 @@ defmodule KlziiChat.MiniSurveyAnswerView do
     %{
       id: mini_survey_answer.id,
       answer: mini_survey_answer.answer,
-      session_member: render_one(mini_survey_answer.session_member, SessionMembersView, "member.json", as: :member)
+      session_member: render_one(mini_survey_answer.session_member, SessionMembersView, "member.json", as: :member),
+      createdAt: mini_survey_answer.createdAt
     }
   end
 end

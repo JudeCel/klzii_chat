@@ -5,7 +5,7 @@
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="generator" content="ExDoc v0.13.1">
-    <title>KlziiChat.Queries.Messages – klzii_chat v0.0.1</title>
+    <title>KlziiChat.Queries.MiniSurvey – klzii_chat v0.0.1</title>
     <link rel="stylesheet" href="dist/app-7e84850c37.css" />
     
     <script src="dist/sidebar_items.js"></script>
@@ -60,7 +60,7 @@
 
       <h1>
         <small class="visible-xs">klzii_chat v0.0.1</small>
-        KlziiChat.Queries.Messages
+        KlziiChat.Queries.MiniSurvey
         
         
       </h1>
@@ -90,37 +90,19 @@
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#exclude_by_role/3">exclude_by_role(query, role, bool)</a>
+    <a href="#exclude_by_role/2">exclude_by_role(role, bool)</a>
   </div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#filter_star/2">filter_star(query, bool)</a>
+    <a href="#join_mini_survey_answers/3">join_mini_survey_answers(query, role, state)</a>
   </div>
   
 </div>
 <div class="summary-row">
   <div class="summary-signature">
-    <a href="#join_replies/1">join_replies(query)</a>
-  </div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#join_session_member/1">join_session_member(query)</a>
-  </div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#join_votes/1">join_votes(query)</a>
-  </div>
-  
-</div>
-<div class="summary-row">
-  <div class="summary-signature">
-    <a href="#session_topic_messages/2">session_topic_messages(session_topic_id, list)</a>
+    <a href="#report_query/2">report_query(session_topic_id, include_facilitator)</a>
   </div>
   
 </div>
@@ -168,12 +150,12 @@
     
   </section>
 </div>
-<div class="detail" id="exclude_by_role/3">
+<div class="detail" id="exclude_by_role/2">
   <div class="detail-header">
-    <a href="#exclude_by_role/3" class="detail-link" title="Link to this function">
+    <a href="#exclude_by_role/2" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">exclude_by_role(query, role, bool)</span>
+    <span class="signature">exclude_by_role(role, bool)</span>
     
     
   </div>
@@ -182,7 +164,7 @@
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">exclude_by_role(Ecto.Query, <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>, boolean) :: Ecto.Query</code></pre>
+          <pre><code class="elixir">exclude_by_role(<a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>, boolean) :: Ecto.Query</code></pre>
         
       </div>
     </div>
@@ -191,12 +173,12 @@
     
   </section>
 </div>
-<div class="detail" id="filter_star/2">
+<div class="detail" id="join_mini_survey_answers/3">
   <div class="detail-header">
-    <a href="#filter_star/2" class="detail-link" title="Link to this function">
+    <a href="#join_mini_survey_answers/3" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">filter_star(query, bool)</span>
+    <span class="signature">join_mini_survey_answers(query, role, state)</span>
     
     
   </div>
@@ -205,9 +187,7 @@
       <h4 class="specs-title">Specs</h4>
       <div class="specs-list">
         
-          <pre><code class="elixir">filter_star(Ecto.Query, true) :: Ecto.Query</code></pre>
-        
-          <pre><code class="elixir">filter_star(Ecto.Query, false) :: Ecto.Query</code></pre>
+          <pre><code class="elixir">join_mini_survey_answers(Ecto.Query, <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>, boolean) :: Ecto.Query</code></pre>
         
       </div>
     </div>
@@ -216,93 +196,15 @@
     
   </section>
 </div>
-<div class="detail" id="join_replies/1">
+<div class="detail" id="report_query/2">
   <div class="detail-header">
-    <a href="#join_replies/1" class="detail-link" title="Link to this function">
+    <a href="#report_query/2" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
-    <span class="signature">join_replies(query)</span>
+    <span class="signature">report_query(session_topic_id, include_facilitator)</span>
     
     
   </div>
-  
-    <div class="specs">
-      <h4 class="specs-title">Specs</h4>
-      <div class="specs-list">
-        
-          <pre><code class="elixir">join_replies(Ecto.Query) :: Ecto.Query</code></pre>
-        
-      </div>
-    </div>
-  
-  <section class="docstring">
-    
-  </section>
-</div>
-<div class="detail" id="join_session_member/1">
-  <div class="detail-header">
-    <a href="#join_session_member/1" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">join_session_member(query)</span>
-    
-    
-  </div>
-  
-    <div class="specs">
-      <h4 class="specs-title">Specs</h4>
-      <div class="specs-list">
-        
-          <pre><code class="elixir">join_session_member(Ecto.Query) :: Ecto.Query</code></pre>
-        
-      </div>
-    </div>
-  
-  <section class="docstring">
-    
-  </section>
-</div>
-<div class="detail" id="join_votes/1">
-  <div class="detail-header">
-    <a href="#join_votes/1" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">join_votes(query)</span>
-    
-    
-  </div>
-  
-    <div class="specs">
-      <h4 class="specs-title">Specs</h4>
-      <div class="specs-list">
-        
-          <pre><code class="elixir">join_votes(Ecto.Query) :: Ecto.Query</code></pre>
-        
-      </div>
-    </div>
-  
-  <section class="docstring">
-    
-  </section>
-</div>
-<div class="detail" id="session_topic_messages/2">
-  <div class="detail-header">
-    <a href="#session_topic_messages/2" class="detail-link" title="Link to this function">
-      <i class="icon-link"></i>
-    </a>
-    <span class="signature">session_topic_messages(session_topic_id, list)</span>
-    
-    
-  </div>
-  
-    <div class="specs">
-      <h4 class="specs-title">Specs</h4>
-      <div class="specs-list">
-        
-          <pre><code class="elixir">session_topic_messages(integer, <a href="http://elixir-lang.org/docs/stable/elixir/List.html#t:t/0">List.t</a>) :: Ecto.Query</code></pre>
-        
-      </div>
-    </div>
   
   <section class="docstring">
     

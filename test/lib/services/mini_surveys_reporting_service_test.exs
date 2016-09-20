@@ -1,6 +1,7 @@
 defmodule KlziiChat.Services.MiniSurveysReportingServiceTest do
   use KlziiChat.{ModelCase, SessionMemberCase}
   alias KlziiChat.Services.MiniSurveysReportingService
+  alias KlziiChat.Queries.MiniSurvey, as: QueriesMiniSurvey
 
   setup %{session: session, session_topic_1: session_topic_1, facilitator: facilitator, participant: participant} do
      {:ok, create_date1} = Ecto.DateTime.cast("2016-05-20T09:00:00Z")
@@ -15,7 +16,7 @@ defmodule KlziiChat.Services.MiniSurveysReportingServiceTest do
         question: "Question 1",
         type: "yesNoMaybe",
         createdAt: create_date2
-      ) |> Repo.insert!()
+      ) |> Repo.insert!
 
      mini_survey2 =
        Ecto.build_assoc(
@@ -26,7 +27,7 @@ defmodule KlziiChat.Services.MiniSurveysReportingServiceTest do
          question: "Question 2",
          type: "5starRating",
          createdAt: create_date1
-       ) |> Repo.insert!()
+       ) |> Repo.insert!
 
     Ecto.build_assoc(
       mini_survey1, :mini_survey_answers,
@@ -34,9 +35,8 @@ defmodule KlziiChat.Services.MiniSurveysReportingServiceTest do
       miniSurveyId: mini_survey1.id,
       answer: %{"type" => "yesNoMaybe", "value" => "3"},
       createdAt: create_date2
-    ) |> Repo.insert!()
+    ) |> Repo.insert!
 
-    answer12 =
       Ecto.build_assoc(
         mini_survey1, :mini_survey_answers,
         sessionMemberId: participant.id,
@@ -45,111 +45,105 @@ defmodule KlziiChat.Services.MiniSurveysReportingServiceTest do
         createdAt: create_date1
       ) |> Repo.insert!()
 
-
     Ecto.build_assoc(
      mini_survey2, :mini_survey_answers,
      sessionMemberId: facilitator.id,
      miniSurveyId: mini_survey2.id,
      answer: %{"type" => "5starRating", "value" => "1"},
      createdAt: create_date2
-    ) |> Repo.insert!()
+    ) |> Repo.insert!
 
-    answer12 = Repo.preload(answer12, [:session_member])
+    mini_surveys_list =  %{mini_survey1: mini_survey1, mini_survey2: mini_survey2}
+    session_topic_with_preload = Repo.preload(session_topic_1, [session: :account])
 
-    {:ok, session: session, session_topic: session_topic_1, mini_survey1: mini_survey1, mini_survey2: mini_survey2, answer12: answer12, facilitator: facilitator}
+    {:ok, session: session, session_topic: session_topic_with_preload, mini_surveys_list: mini_surveys_list}
   end
 
-  test "Get all Mini Surveys", %{session_topic: session_topic, mini_survey2: mini_survey2} do
-    mini_surveys = MiniSurveysReportingService.get_mini_surveys(session_topic.id)
+  describe "save_report" do
+    test "pdf", %{session_topic: session_topic} do
+      assert({:ok, _} = MiniSurveysReportingService.save_report("some_name",:pdf, session_topic.id, false ))
+    end
 
-    assert(Enum.count(mini_surveys) == 2)
-    assert(List.first(mini_surveys) == mini_survey2)
+    test "txt", %{session_topic: session_topic} do
+      assert({:ok, _} = MiniSurveysReportingService.save_report("some_name",:txt, session_topic.id, false ))
+    end
+
+    test "csv", %{session_topic: session_topic} do
+      assert({:ok, _} = MiniSurveysReportingService.save_report("some_name", :csv, session_topic.id, false ))
+    end
   end
 
-  test "Get Mini Survey answers - including Facilitator", %{mini_survey1: mini_survey1, mini_survey2: mini_survey2, answer12: answer12} do
-    answers = MiniSurveysReportingService.get_mini_survey_answers(mini_survey1.id, true)
-    answers2 = MiniSurveysReportingService.get_mini_survey_answers(mini_survey2.id, true)
+  describe "get_report" do
+    test "pdf", %{session_topic: session_topic} do
+      assert({:ok, _} = MiniSurveysReportingService.get_report(:pdf, session_topic.id, false ))
+    end
 
-    assert(Enum.count(answers) == 2)
-    assert(Enum.count(answers2) == 1)
-    assert(List.first(answers) == answer12)
+    test "txt", %{session_topic: session_topic} do
+      assert({:ok, _} = MiniSurveysReportingService.get_report(:txt, session_topic.id, false ))
+    end
+
+    test "csv", %{session_topic: session_topic} do
+      assert({:ok, _} = MiniSurveysReportingService.get_report(:csv, session_topic.id, false ))
+    end
   end
 
-  test "Get Mini Survey answers - excluding Facilitator", %{mini_survey1: mini_survey1, mini_survey2: mini_survey2, answer12: answer12} do
-    assert([answer12] == MiniSurveysReportingService.get_mini_survey_answers(mini_survey1.id, false))
-    assert([] == MiniSurveysReportingService.get_mini_survey_answers(mini_survey2.id, false))
+  test "get_html", %{session_topic: session_topic} do
+    mini_surveys = QueriesMiniSurvey.report_query(session_topic.id, false) |> Repo.all
+    html = MiniSurveysReportingService.get_html(mini_surveys, session_topic)
+
+    Enum.each(mini_surveys, fn(mini_survey) ->
+      assert(String.contains?(html, mini_survey.title))
+      assert(String.contains?(html, mini_survey.question))
+
+      Enum.each(mini_survey.mini_survey_answers, fn(mini_survey_answer) ->
+        answer = mini_survey_answer.answer
+        {:ok, text} = KlziiChat.Decorators.MiniSurveyAnswersDecorator.answer_text(answer["type"], answer["value"])
+        assert(String.contains?(html, text))
+      end)
+
+    end)
   end
 
-  test "Format survey answers: txt stream", %{mini_survey1: mini_survey1} do
-    mini_survey_txt =
-      MiniSurveysReportingService.format_survey_txt(mini_survey1, false)
+  test "get_stream :txt", %{session_topic: session_topic} do
+    mini_surveys = QueriesMiniSurvey.report_query(session_topic.id, false) |> Repo.all
+    [head | _] = MiniSurveysReportingService.get_stream(:txt, mini_surveys, session_topic.session.name, session_topic.name)
+    |> Enum.to_list
 
-    assert(String.contains?(List.first(mini_survey_txt), "Survey 1 / Question 1"))
-    assert(String.contains?(Enum.at(mini_survey_txt,1), "Yes"))
-    assert(List.last(mini_survey_txt) == "\r\n")
+    assert(String.contains?(head, session_topic.session.name))
+    assert(String.contains?(head, session_topic.name))
+
   end
 
-  test "Format survey answers: csv stream", %{mini_survey2: mini_survey2} do
-    [mini_survey_csv] =
-      MiniSurveysReportingService.format_survey_csv(mini_survey2, true)
-      |> Enum.to_list()
+  test "get_stream :csv", %{session_topic: session_topic} do
+    mini_surveys = QueriesMiniSurvey.report_query(session_topic.id, false) |> Repo.all
+    [head | _] = MiniSurveysReportingService.get_stream(:csv, mini_surveys, session_topic.session.name, session_topic.name)
+    |> Enum.to_list
 
-    assert(mini_survey_csv == ~s("Survey 2","Question 2","cool member",1 star,"2016-05-20 10:00:00"\r\n))
+    ["Title,Question,Name,Answer,Date"]
+    |> Enum.each(fn(header_item) ->
+      assert(assert(String.contains?(head, header_item)))
+    end)
   end
 
-  test "Get full TXT report stream", %{session: session, session_topic: session_topic, mini_survey1: mini_survey1} do
-    mini_surveys = MiniSurveysReportingService.get_mini_surveys(session_topic.id)
-    txt_stream = MiniSurveysReportingService.get_stream(:txt, mini_surveys, session.name, session_topic.name, true) |> Enum.to_list()
+  test "format_survey_txt", %{session_topic: session_topic} do
+    mini_survey =
+      QueriesMiniSurvey.report_query(session_topic.id, false)
+      |> Repo.all
+      |> List.last
 
-    assert(Enum.count(txt_stream) == 3)
-    assert(List.first(txt_stream) == "cool session / cool session topic 1\r\n\r\n")
-    assert(List.last(txt_stream) == MiniSurveysReportingService.format_survey_txt(mini_survey1, true))
+      txt = MiniSurveysReportingService.format_survey_txt(mini_survey) |> List.first
+      assert(String.contains?(txt, mini_survey.question))
+      assert(String.contains?(txt, mini_survey.title))
   end
 
-  test "Get full CSV report stream", %{session: session, session_topic: session_topic, mini_survey1: mini_survey1} do
-    mini_surveys = MiniSurveysReportingService.get_mini_surveys(session_topic.id)
-    csv_stream = MiniSurveysReportingService.get_stream(:csv, mini_surveys, session.name, session_topic.name, true) |> Enum.to_list()
+  test "format_survey_csv", %{session_topic: session_topic} do
+    mini_survey =
+      QueriesMiniSurvey.report_query(session_topic.id, false)
+      |> Repo.all
+      |> List.last
 
-    assert(Enum.count(csv_stream) == 3)
-    assert(List.first(csv_stream) == "Title,Question,Name,Answer,Date\n\r")
-    assert(List.last(csv_stream) == MiniSurveysReportingService.format_survey_csv(mini_survey1, true))
-  end
-
-  test "Format survey answers for HTML: list of maps", %{mini_survey1: mini_survey1, answer12: answer12} do
-    surveys = MiniSurveysReportingService.format_survey_html(mini_survey1, true)
-    first_answer = List.first(surveys.answers)
-
-    assert(surveys.title == mini_survey1.title)
-    assert(surveys.question == mini_survey1.question)
-    assert(first_answer.answer == "Yes")
-    assert(first_answer.date == answer12.createdAt)
-    assert(first_answer.session_member == answer12.session_member)
-  end
-
-  test "Get HTML", %{session_topic: session_topic, facilitator: facilitator, answer12: answer12} do
-    {:ok, html} = MiniSurveysReportingService.get_report(:pdf, session_topic.id, true)
-
-    assert(String.starts_with?(html, "<!DOCTYPE html>"))
-    assert(String.contains?(html, session_topic.name))
-    assert(String.contains?(html, answer12.answer["value"]))
-    assert(String.contains?(html, "svg#{facilitator.id}"))
-  end
-
-  test "Save report file", %{session_topic: session_topic} do
-    report_name = "mini_surveys_test_report"
-    {:ok, txt_report_path} = MiniSurveysReportingService.save_report(report_name, :txt, session_topic.id, true)
-    {:ok, csv_report_path} = MiniSurveysReportingService.save_report(report_name, :csv, session_topic.id, true)
-    {:ok, pdf_report_path} = MiniSurveysReportingService.save_report(report_name, :pdf, session_topic.id, true)
-
-    assert(File.exists?(txt_report_path))
-    assert(File.exists?(csv_report_path))
-    assert(File.exists?(pdf_report_path))
-
-    html_report_path = Path.rootname(pdf_report_path) <> ".html"
-    refute(File.exists?(html_report_path))
-
-    :ok = File.rm(txt_report_path)
-    :ok = File.rm(csv_report_path)
-    :ok = File.rm(pdf_report_path)
+      txt = MiniSurveysReportingService.format_survey_csv(mini_survey) |> List.first
+      assert(String.contains?(txt, mini_survey.question))
+      assert(String.contains?(txt, mini_survey.title))
   end
 end

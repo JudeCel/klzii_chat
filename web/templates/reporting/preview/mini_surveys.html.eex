@@ -1,0 +1,20 @@
+<%= for mini_survey <- @mini_surveys do %>
+  <div class='mini-survey'>
+    <div class='title'>
+      <strong><%= mini_survey.title %> / <%= mini_survey.question %></strong>
+    </div>
+
+    <div class='answers'>
+      <%= render "mini_survey_answer.html", mini_survey_answers: mini_survey.mini_survey_answers %>
+    </div>
+  </div>
+<% end %>
+
+<script type="text/javascript">
+  var sessionMembers = document.getElementsByClassName('svg_avatar');
+
+  for(var i = 0; i < sessionMembers.length; i++) {
+    var json = JSON.parse(sessionMembers[i].dataset.avatardata);
+    setAvatar(sessionMembers[i].children[0].id, json, '<%= KlziiChat.LayoutView.path_to_assets(assigns[:conn], "/images/avatar") %>');
+  }
+</script>

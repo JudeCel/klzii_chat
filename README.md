@@ -43,3 +43,10 @@ Participents users
 
 Observers users
  * observerone
+
+### Report Preview URL's
+
+``` :id ``` - is Session topic id  
+``` http://localhost:3000/reporting/whiteboard/:id ```
+``` http://localhost:3000/reporting/messages/:id ```
+``` http://localhost:3000/reporting/mini_survey/:id ```

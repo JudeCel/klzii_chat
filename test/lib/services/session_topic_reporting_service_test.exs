@@ -1,16 +1,7 @@
 defmodule KlziiChat.Services.SessionTopicReportingServiceTest do
   use KlziiChat.{ModelCase, SessionMemberCase}
-  alias KlziiChat.Services.{SessionTopicReportingService, SessionTopicService, FileService}
-  alias KlziiChat.Helpers.HTMLSessionTopicReportHelper
-
-  @emoticons %{0 => "0_sprite_04.jpg",
-               1 => "1_sprite_04.jpg",
-               2 => "2_sprite_01.jpg",
-               3 => "3_sprite_03.jpg",
-               4 => "4_sprite_03.jpg",
-               5 => "5_sprite_01.jpg",
-               6 => "6_sprite_06.jpg",
-               path: Path.expand("./web/static/assets/images/emotions_static")}
+  alias KlziiChat.Services.{SessionTopicReportingService}
+  alias KlziiChat.{Message}
 
   setup %{session: session, session_topic_1: session_topic_1, facilitator: facilitator, participant: participant} do
     {:ok, create_date1} = Ecto.DateTime.cast("2016-05-20T09:50:00Z")
@@ -42,77 +33,109 @@ defmodule KlziiChat.Services.SessionTopicReportingServiceTest do
       KlziiChat.FileTestHelper.clean_up_uploads_dir
     end
 
-    messages = SessionTopicService.get_messages(session_topic_1.id, false, true)
-
-    {:ok, messages: messages, session: session, session_topic: session_topic_1, facilitator: facilitator, create_date1: create_date1, create_date2: create_date2}
+    {:ok, session: session, session_topic: session_topic_1}
   end
 
-  test "Get TXT stream", %{messages: messages, session: session, session_topic: session_topic} do
-    txt_message_history =
-      SessionTopicReportingService.get_stream(:txt, messages, session.name, session_topic.name)
-      |> Enum.to_list()
-    assert(Enum.count(txt_message_history) == 3)
+    @spec preload_dependencies(%Message{} | [%Message{}] ) :: %Message{} | [%Message{}]
+    defp preload_dependencies(message) do
+      replies_query = from(st in Message, order_by: [asc: :createdAt], preload: [:session_member, :votes, :replies])
+      {:ok, Repo.preload(message, [:session_member, :votes, replies: replies_query ])}
+    end
 
-    txt_header = List.first(txt_message_history)
-    assert(String.contains?(txt_header, session.name) and String.contains?(txt_header, session_topic.name))
 
-    txt_last = List.last(txt_message_history)
-    message_last = List.last(messages)
-    assert(String.contains?(txt_last, message_last.body))
+  describe "#save_report" do
+    test "text", %{session_topic: session_topic} do
+      {:ok, _} = SessionTopicReportingService.save_report("some_name1", :txt, session_topic.id, false, false )
+    end
+
+    test "csv",  %{session_topic: session_topic} do
+      {:ok, _} = SessionTopicReportingService.save_report("some_name2", :csv, session_topic.id, false, false )
+    end
+
+    test "pdf", %{session_topic: session_topic} do
+      {:ok, _} = SessionTopicReportingService.save_report("some_name3", :pdf, session_topic.id, false, false )
+    end
+
+    test "error case",  %{session_topic: session_topic} do
+      {:error, _} = SessionTopicReportingService.save_report("some_name4", :wrong, session_topic.id, false, false )
+    end
   end
 
-  test "Get CSV stream", %{messages: messages, session: session, session_topic: session_topic} do
-    csv_message_history =
-      SessionTopicReportingService.get_stream(:csv, messages, session.name, session_topic.name)
-      |> Enum.to_list()
-    assert(Enum.count(csv_message_history) == 3)
+  describe "#get_report" do
+    test "text", %{session_topic: session_topic} do
+      {:ok, _} = SessionTopicReportingService.get_report(:txt, session_topic.id, false, false )
+    end
 
-    csv_last = List.last(csv_message_history)
-    csv_filterered_message = SessionTopicReportingService.message_csv_filter(List.last(messages))
-    assert(csv_last == csv_filterered_message)
+    test "csv",  %{session_topic: session_topic} do
+      {:ok, _} = SessionTopicReportingService.get_report(:csv, session_topic.id, false, false )
+    end
+
+    test "pdf", %{session_topic: session_topic} do
+      {:ok, _} = SessionTopicReportingService.get_report(:pdf, session_topic.id, false, false )
+    end
+
+    test "error case",  %{session_topic: session_topic} do
+      {:error, _} = SessionTopicReportingService.get_report(:wrong, session_topic.id, false, false )
+    end
   end
 
-  test "Get HTML from templates", %{messages: messages, session: session, session_topic: session_topic} do
-    html_text =
-      SessionTopicReportingService.get_html(messages, session.name, session_topic.name)
+  test "#csv_header" do
+    header_content = ["Name", "Comment", "Date", "Is tagged", "Is reply", "Emotion"]
+    header = SessionTopicReportingService.csv_header
 
-    html_from_template = HTMLSessionTopicReportHelper.html_from_template(%{
-      header: "#{session.name} : #{session_topic.name}",
-      messages: messages,
-      emoticons: @emoticons
-    })
-
-    assert(html_text == html_from_template)
+    Enum.each(header_content, fn(item) ->
+      assert(String.contains?(header, item))
+     end)
   end
 
-  test "Get different report formats", %{messages: messages, session: session, session_topic: session_topic} do
-    txt_message_stream =
-      SessionTopicReportingService.get_stream(:txt, messages, session.name, session_topic.name)
+  test "#get_stream :txt", %{session_topic: session_topic} do
+    session_name = "cool sesssion name jee"
 
-    messages_star = SessionTopicService.get_messages(session_topic.id, true, true)
-    csv_message_star_stream =
-      SessionTopicReportingService.get_stream(:csv, messages_star, session.name, session_topic.name)
+    {:ok, messages} = KlziiChat.Queries.Messages.session_topic_messages(session_topic.id, [ star: false, facilitator: false ])
+    |> Repo.all |> preload_dependencies
 
-    messages_excl_fac = SessionTopicService.get_messages(session_topic.id, false, false)
-    html_text_excl_fac =
-      SessionTopicReportingService.get_html(messages_excl_fac, session.name, session_topic.name)
+    text_string = SessionTopicReportingService.get_stream(:txt, messages, session_name, session_topic.name)
+    |> Enum.to_list |> Enum.join
 
-    assert({:ok, ^txt_message_stream} = SessionTopicReportingService.get_report(:txt, session_topic.id, false, true))
-    assert({:ok, ^csv_message_star_stream} = SessionTopicReportingService.get_report(:csv, session_topic.id, true, true))
-    assert({:ok, ^html_text_excl_fac} = SessionTopicReportingService.get_report(:pdf, session_topic.id, false, false))
+    assert(String.contains?(text_string, session_name))
+    assert(String.contains?(text_string, session_topic.name))
+
+    Enum.each(messages, fn(message) ->
+      assert(String.contains?(text_string, message.body))
+    end)
   end
 
-  test "Get error for incorrect report format", %{session_topic: session_topic} do
-    assert({:error, "Incorrect report format: incorrect_format"}
-      == SessionTopicReportingService.get_report(:incorrect_format, session_topic.id, false, true))
+  test "#get_stream :csv", %{session_topic: session_topic} do
+    session_name = "cool sesssion name jee"
+
+    {:ok, messages} = KlziiChat.Queries.Messages.session_topic_messages(session_topic.id, [ star: false, facilitator: false ])
+    |> Repo.all |> preload_dependencies
+
+    csv_string = SessionTopicReportingService.get_stream(:csv, messages, session_topic.name, session_name)
+    |> Enum.to_list |> Enum.join
+
+    assert(String.contains?(csv_string, SessionTopicReportingService.csv_header) )
+
+    Enum.each(messages, fn(message) ->
+      assert(String.contains?(csv_string, message.body))
+    end)
   end
 
-  test "save csv report", %{session_topic: session_topic} do
-    report_name = "SessionTopicReportingServiceTest_test_report"
-    {:ok, report_file_path} = SessionTopicReportingService.save_report(report_name, :csv, session_topic.id, false, true)
+  test "#get_html", %{session_topic: session_topic} do
+    account_name = "account name cool"
+    session_name = "cool sesssion name jee"
 
-    assert(report_file_path == FileService.get_tmp_path() <> "/#{report_name}.csv")
-    assert(File.exists?(report_file_path))
-    :ok = File.rm(report_file_path)
+    {:ok, messages} = KlziiChat.Queries.Messages.session_topic_messages(session_topic.id, [ star: false, facilitator: false ])
+    |> Repo.all |> preload_dependencies
+
+    html_string = SessionTopicReportingService.get_html(:html, messages, session_topic.name, session_name, account_name)
+
+    assert(String.contains?(html_string, session_name))
+    assert(String.contains?(html_string, account_name))
+    assert(String.contains?(html_string, session_topic.name))
+
+    Enum.each(messages, fn(message) ->
+      assert(String.contains?(html_string, message.body))
+    end)
   end
 end

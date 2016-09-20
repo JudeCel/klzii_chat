@@ -1,0 +1,103 @@
+.report-section {
+  margin: 0 auto;
+}
+
+.report-section .media-body {
+  padding-left: 30px;
+}
+
+.report-section .report-header {
+  padding: 30px 0;
+}
+
+.report-section .report-header .report-title {
+  line-height: 4;
+}
+
+.report-section .report-header .report-logo {
+  margin-right: 25px;
+}
+
+.report-section .report-header .report-logo img {
+  width: 100px;
+}
+
+.report-section .report-topic {
+  padding: 10px;
+}
+
+.report-section .emotion-chat-section {
+  display: table-cell;
+}
+
+.report-section .emotion-chat-section.media-bottom.push-image {
+  padding-bottom: 16px;
+}
+
+.report-section .heading-section span small {
+  color: grey;
+}
+
+.report-section .remove-side-margin .heading-section {
+  padding-right: 20px;
+}
+
+.report-section .heading-section {
+  padding-right: 30px;
+}
+
+.report-section .remove-side-margin .body-section {
+  border-bottom: 1px solid #000;
+}
+
+.report-section .message-section {
+  padding-top: 20px;
+  margin: 10px;
+}
+
+.report-section .message-section .emotion-chat-avatar > img {
+  border: 1px solid #aaa;
+  width: 40px;
+}
+
+.report-section .remove-side-margin .message-section {
+  border: none;
+}
+
+.whiteboard-frame {
+  width: 950px;
+  height: 460px;
+  border: 2px solid #aaa;
+  margin: 0 auto;
+}
+
+.whiteboard-frame .whiteboard {
+  width: 100%;
+  height: 100%;
+}
+
+.mini-survey .title,
+.mini-survey .answers {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.mini-survey .title {
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.mini-survey .answers .media-heading {
+  border-top: 2px solid black;
+  height: 2rem;
+}
+
+.mini-survey .answers .media-body {
+  padding-left: inherit;
+}
+
+.mini-survey .answers .svg_avatar,
+.mini-survey .answers .svg_avatar svg {
+  width: 76px;
+  height: 70px;
+}
