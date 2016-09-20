@@ -96,8 +96,9 @@ defmodule KlziiChat.Services.MiniSurveysReportingServiceTest do
       assert(String.contains?(html, mini_survey.question))
 
       Enum.each(mini_survey.mini_survey_answers, fn(mini_survey_answer) ->
-        assert(String.contains?(html, mini_survey_answer.answer["type"]))
-        assert(String.contains?(html, mini_survey_answer.answer["value"]))
+        answer = mini_survey_answer.answer
+        {:ok, text} = KlziiChat.Decorators.MiniSurveyAnswersDecorator.answer_text(answer["type"], answer["value"])
+        assert(String.contains?(html, text))
       end)
 
     end)

@@ -42,8 +42,3 @@ var draw = function (class_name, type, attr) {
 
   svg_el.transform(attr.transform);
 }
-// 
-// module.exports = {
-//   drawElements: drawElements,
-//   draw: draw
-// }

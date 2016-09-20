@@ -6,6 +6,8 @@ defmodule KlziiChat.Services.SessionTopicReportingService do
 
   import KlziiChat.Helpers.StringHelper, only: [double_quote: 1]
 
+  @csv_header "Name,Comment,Date,Is tagged,Is reply,Emotion"
+
   @spec save_report(String.t, atom, integer, boolean, boolean) :: {:ok, String.t}
   def save_report(report_name, report_format, session_topic_id, filter_star, include_facilitator) do
     with {:ok, report_data} <- get_report(report_format, session_topic_id, filter_star, include_facilitator),
@@ -28,24 +30,21 @@ defmodule KlziiChat.Services.SessionTopicReportingService do
     end
   end
 
-  @spec get_stream(:txt, List.t, String.t, String.t) :: Stream.t
+  @spec get_stream(Atom.t, List.t, String.t, String.t) :: Stream.t
   def get_stream(:txt, messages, session_name, session_topic_name) do
     stream = Stream.map(messages, fn (%{body: body}) -> "#{body}\r\n\r\n" end)
     header = "#{session_name} / #{session_topic_name}\r\n\r\n"
 
     Stream.concat([header], stream)
   end
-
-
-  @spec csv_header() :: String.t
-  def csv_header do
-    "Name,Comment,Date,Is tagged,Is reply,Emotion\r\n"
-  end
-
-  @spec get_stream(:csv, List.t, String.t, String.t) :: Stream.t
   def get_stream(:csv, messages, _, _) do
     stream = Stream.map(messages, &message_csv_filter(&1))
     Stream.concat([csv_header], stream)
+  end
+
+  @spec csv_header() :: String.t
+  def csv_header do
+    @csv_header <> "\r\n"
   end
 
   @spec message_csv_filter(Map.t) :: String.t
