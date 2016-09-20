@@ -11,7 +11,7 @@ defmodule KlziiChat.Reporting.PreviewController do
       |> Repo.preload([session: [:account] ])
 
     messages =
-      QueriesMessages.session_topic_messages(session_topic_id, [star: false, facilitator: false])
+      QueriesMessages.session_topic_messages(session_topic_id, [star: false, facilitator: true])
       |> Repo.all
 
       header_title = "Chat History - #{session_topic.session.account.name} / #{session_topic.session.name}"
