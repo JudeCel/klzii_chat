@@ -22,8 +22,10 @@ const Actions = {
   },
   addToConsole: (channel, id) => {
     return dispatch => {
+      dispatch({ type: Constants.POSTING_DATA_CONSOLE })
       channel.push('set_console_resource', { id: id })
       .receive('error', (errors) => {
+        dispatch({ type: Constants.POSTING_DATA_CONSOLE_DONE });
         NotificationActions.showErrorNotification(dispatch, errors);
       });
     };

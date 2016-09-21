@@ -30,9 +30,9 @@ const Resources = React.createClass({
     });
   },
   activatePinboard() {
-    const { tConsole, channel, dispatch } = this.props;
+    const { sessionTopicConsole, channel, dispatch } = this.props;
 
-    if(!tConsole.pinboard) {
+    if(!sessionTopicConsole.data.pinboard) {
       let confirmed = true;
       if(this.isOtherItemsActive('pinboard')) {
         confirmed = confirm('Enabling pinboard will remove other active console items, are you sure?');
@@ -85,7 +85,7 @@ const Resources = React.createClass({
 const mapStateToProps = (state) => {
   return {
     channel: state.sessionTopic.channel,
-    tConsole: state.sessionTopic.console,
+    sessionTopicConsole: state.sessionTopicConsole,
     currentUser: state.members.currentUser,
     modalWindows: state.modalWindows,
     whiteboardImage: state.modalWindows.whiteboardImage,

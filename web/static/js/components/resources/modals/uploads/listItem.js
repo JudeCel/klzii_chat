@@ -10,9 +10,9 @@ const UploadListItem = React.createClass({
     dispatch(SesssionResourceActions.delete(jwt, id));
   },
   getInitialState() {
-    const { sessionResourceId, resource, tConsole, modalName } = this.props;
+    const { sessionResourceId, resource, sessionTopicConsole, modalName } = this.props;
     let res = resource || {};
-    res.active = tConsole[modalName + '_id'] == res.id ? true : false;
+    res.active = sessionTopicConsole.data[modalName + '_id'] == res.id ? true : false;
     res.sessionResourceId = sessionResourceId;
     return res
   },
@@ -87,7 +87,7 @@ const UploadListItem = React.createClass({
 const mapStateToProps = (state) => {
   return {
     channel: state.sessionTopic.channel,
-    tConsole: state.sessionTopic.console,
+    sessionTopicConsole: state.sessionTopicConsole,
     jwt: state.members.currentUser.jwt,
     modalData: state.modalWindows.currentModalData
   }

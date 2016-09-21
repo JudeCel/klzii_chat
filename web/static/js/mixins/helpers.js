@@ -2,13 +2,15 @@ import moment               from 'moment';
 
 const helpers = {
   getConsoleResourceId(type) {
+    if (this.props.sessionTopicConsole.postingData) { return false}
+
     switch (type) {
       case "link":
-        return this.props.console['video_id'];
+        return this.props.sessionTopicConsole.data['video_id'];
       case "pinboard":
-        return this.props.console[type];
+        return this.props.sessionTopicConsole.data[type];
       default:
-        return this.props.console[type + '_id'];
+        return this.props.sessionTopicConsole.data[type + '_id'];
     }
   },
   get_session_resource_types(modalName){

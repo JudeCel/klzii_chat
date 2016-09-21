@@ -145,7 +145,7 @@ const ChatView = React.createClass({
 
 const mapStateToProps = (state) => {
   return {
-    pinboardActive: state.sessionTopic.console.pinboard,
+    pinboardActive: state.sessionTopicConsole.data.pinboard,
     colours: state.chat.session.colours,
     brand_logo: state.chat.session.brand_logo,
     sessionReady: state.chat.ready,

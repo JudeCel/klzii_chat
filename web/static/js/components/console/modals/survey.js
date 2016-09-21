@@ -34,10 +34,10 @@ const SurveyConsole = React.createClass({
     }
   },
   onShow(e) {
-    const { dispatch, channel, topicConsole } = this.props;
+    const { dispatch, channel, sessionTopicConsole } = this.props;
 
     this.onEnterModal(e);
-    dispatch(MiniSurveyActions.getConsole(channel, topicConsole.mini_survey_id));
+    dispatch(MiniSurveyActions.getConsole(channel, sessionTopicConsole.data.mini_survey_id));
   },
   showContent(survey) {
     if(survey.id) {
@@ -100,7 +100,7 @@ const mapStateToProps = (state) => {
     colours: state.chat.session.colours,
     survey: state.miniSurveys.console,
     channel: state.sessionTopic.channel,
-    topicConsole: state.sessionTopic.console
+    sessionTopicConsole: state.sessionTopicConsole
   }
 };
 

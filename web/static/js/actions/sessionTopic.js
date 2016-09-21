@@ -42,11 +42,12 @@ function leave_channal(dispatch, channal) {
 }
 
 function tidyUp(dispatch){
-  dispatch({ type: Constants.TIDY_UP_SESSION_TOPIC });
+  dispatch({ type: Constants.TIDY_UP_CONSOLE });
   dispatch({ type: Constants.TIDY_UP_WHITEBOARD });
   dispatch({ type: Constants.TIDY_UP_PINBOARD });
   dispatch({ type: Constants.TIDY_UP_MESSAGES });
   dispatch({ type: Constants.TIDY_UP_SURVE });
+  dispatch({ type: Constants.CLOSE_ALL_MODAL_WINDOWS });
 }
 
 const Actions = {
