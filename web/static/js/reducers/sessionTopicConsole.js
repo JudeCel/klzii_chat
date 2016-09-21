@@ -17,6 +17,9 @@ export default function reducer(state = initialState, action = {}) {
     case Constants.POSTING_DATA_CONSOLE_DONE:
       return { ...state, postingData: false };
 
+    case Constants.CLOSE_ALL_MODAL_WINDOWS:
+      return { ...state, consoleResource: {} };
+
     case Constants.SET_CONSOLE_RESOURCE:
       return { ...state, consoleResource: action.data, postingData: false };
 
