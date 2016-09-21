@@ -89,7 +89,7 @@ defmodule KlziiChat.Services.MiniSurveysReportingServiceTest do
 
   test "get_html", %{session_topic: session_topic} do
     mini_surveys = QueriesMiniSurvey.report_query(session_topic.id, false) |> Repo.all
-    html = MiniSurveysReportingService.get_html(mini_surveys, session_topic)
+    html = MiniSurveysReportingService.get_html(mini_surveys, session_topic, session_topic.session.timeZone)
 
     Enum.each(mini_surveys, fn(mini_survey) ->
       assert(String.contains?(html, mini_survey.title))
@@ -106,7 +106,7 @@ defmodule KlziiChat.Services.MiniSurveysReportingServiceTest do
 
   test "get_stream :txt", %{session_topic: session_topic} do
     mini_surveys = QueriesMiniSurvey.report_query(session_topic.id, false) |> Repo.all
-    [head | _] = MiniSurveysReportingService.get_stream(:txt, mini_surveys, session_topic.session.name, session_topic.name)
+    [head | _] = MiniSurveysReportingService.get_stream(:txt, mini_surveys, session_topic.session.name, session_topic.name, session_topic.session.timeZone)
     |> Enum.to_list
 
     assert(String.contains?(head, session_topic.session.name))
@@ -116,7 +116,7 @@ defmodule KlziiChat.Services.MiniSurveysReportingServiceTest do
 
   test "get_stream :csv", %{session_topic: session_topic} do
     mini_surveys = QueriesMiniSurvey.report_query(session_topic.id, false) |> Repo.all
-    [head | _] = MiniSurveysReportingService.get_stream(:csv, mini_surveys, session_topic.session.name, session_topic.name)
+    [head | _] = MiniSurveysReportingService.get_stream(:csv, mini_surveys, session_topic.session.name, session_topic.name, session_topic.session.timeZone)
     |> Enum.to_list
 
     ["Title,Question,Name,Answer,Date"]
@@ -131,7 +131,7 @@ defmodule KlziiChat.Services.MiniSurveysReportingServiceTest do
       |> Repo.all
       |> List.last
 
-      txt = MiniSurveysReportingService.format_survey_txt(mini_survey) |> List.first
+      txt = MiniSurveysReportingService.format_survey_txt(mini_survey, session_topic.session.timeZone) |> List.first
       assert(String.contains?(txt, mini_survey.question))
       assert(String.contains?(txt, mini_survey.title))
   end
@@ -142,7 +142,7 @@ defmodule KlziiChat.Services.MiniSurveysReportingServiceTest do
       |> Repo.all
       |> List.last
 
-      txt = MiniSurveysReportingService.format_survey_csv(mini_survey) |> List.first
+      txt = MiniSurveysReportingService.format_survey_csv(mini_survey, session_topic.session.timeZone) |> List.first
       assert(String.contains?(txt, mini_survey.question))
       assert(String.contains?(txt, mini_survey.title))
   end

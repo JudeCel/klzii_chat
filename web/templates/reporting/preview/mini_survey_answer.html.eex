@@ -12,7 +12,7 @@
           <%= mini_survey_answer.session_member.username %>
         </span>
         <span class='pull-right'>
-          <small><%= mini_survey_answer.createdAt %></small>
+          <small><%= time_format(mini_survey_answer.createdAt, @time_zone) %></small>
         </span>
       </div>
 
