@@ -29,6 +29,8 @@ export default function reducer(state = initialState, action = {}) {
 
     case Constants.SET_CONSOLE_RESOURCE:
       return { ...state, consoleResource: action.data };
+    case Constants.TIDY_UP_SESSION_TOPIC:
+      return { ...state, console: {}, consoleResource: {} };
 
     default:
       return state;

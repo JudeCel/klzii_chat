@@ -41,6 +41,14 @@ function leave_channal(dispatch, channal) {
   dispatch({ type: Constants.SET_SESSION_TOPIC });
 }
 
+function tidyUp(dispatch){
+  dispatch({ type: Constants.TIDY_UP_SESSION_TOPIC });
+  dispatch({ type: Constants.TIDY_UP_WHITEBOARD });
+  dispatch({ type: Constants.TIDY_UP_PINBOARD });
+  dispatch({ type: Constants.TIDY_UP_MESSAGES });
+  dispatch({ type: Constants.TIDY_UP_SURVE });
+}
+
 const Actions = {
   subscribeEvents: (channel) => {
       return dispatch => {
@@ -74,11 +82,11 @@ const Actions = {
     return dispatch => {
       whiteboardChannel.leave();
       leave_channal(dispatch, currentChannal);
+      tidyUp(dispatch);
       joinChannal(dispatch, currentChannal.socket, sessionTopicId);
     }
   }
 }
-
 
 export default Actions;
 

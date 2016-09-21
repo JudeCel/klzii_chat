@@ -10,6 +10,8 @@ export default function reducer(state = initialState, action = {}) {
       return { ...state, items: mapArrayToObject(action.data) };
     case Constants.CHANGE_PINBOARD_RESOURCE:
       return { ...state, items: { ...state.items, [action.data.id]: action.data } };
+    case Constants.TIDY_UP_PINBOARD:
+      return initialState;
     default:
       return state;
   }

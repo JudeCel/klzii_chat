@@ -59,8 +59,6 @@ const Select = React.createClass({
             </Dropdown.Menu>
           </Dropdown>
 
-          { this.renderIconEye() }
-
           <ul className='unread-messages-section'>
             <li>
               <Badge type='reply' data={ unread_messages.summary } />
@@ -69,6 +67,7 @@ const Select = React.createClass({
               <Badge type='normal' data={ unread_messages.summary } />
             </li>
           </ul>
+            { this.renderIconEye() }
         </div>
       </div>
     )

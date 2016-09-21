@@ -18,6 +18,8 @@ export default function reducer(state = initialState, action = {}) {
       return { ...state, list: [ ...state.list, action.data ] };
     case Constants.DELETE_SURVEY:
       return { ...state, list: removeFromState(state, action.data.id) };
+    case Constants.TIDY_UP_SURVE:
+      return initialState;
     default:
       return state;
   }
