@@ -64,6 +64,7 @@ spec:
           - name: postgres-credentials
             mountPath: /etc/postgres-credentials
         image: index.docker.io/klzii/klzii_chat:stable
+        imagePullPolicy: Always
         name: chat
         ports:
         - containerPort: 3000
