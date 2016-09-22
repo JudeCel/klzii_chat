@@ -25,7 +25,7 @@ const Facilitator = React.createClass({
             <div className='triangle'></div>
             <div className={ this.innerboxClassname(permission) } onClick={ this.openSpecificModal.bind(this, 'facilitatorBoard') }>
               <p className='facilitator-name-mobile'> { facilitator.username } </p>
-              <p className='text-break-all' dangerouslySetInnerHTML={{ __html: boardContent }} />
+              <p style={{wordWrap: 'breakWord'}} dangerouslySetInnerHTML={{ __html: boardContent }} />
             </div>
           </div>
         </div>
