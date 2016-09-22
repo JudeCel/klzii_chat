@@ -99,6 +99,7 @@ const Actions = {
   getConsoleResource:(jwt, resourceId) => {
     return dispatch => {
      let csrf_token = localStorage.getItem('csrf_token');
+     dispatch({ type: Constants.MODAL_POST_DATA });
      request
        .get('/api/resources/' + resourceId)
        .set('X-CSRF-Token', csrf_token)
@@ -108,6 +109,7 @@ const Actions = {
            NotificationActions.showErrorNotification(dispatch, error);
          }
          else {
+           dispatch({ type: Constants.MODAL_POST_DATA_DONE });
           dispatch({ type: Constants.SET_CONSOLE_RESOURCE, data: result.body.resource });
          }
        });
