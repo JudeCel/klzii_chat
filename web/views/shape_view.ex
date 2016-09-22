@@ -6,10 +6,9 @@ defmodule KlziiChat.ShapeView do
   @spec render(String.t, Map.t) :: Map.t
   def render("show.json", %{shape: shape, member: member}) do
     shape_map = render("shape.json", %{shape: shape})
-    permissions = %{permissions: %{
-        can_edit: WhiteboardcPermissions.can_edit(member, shape) |> to_boolean,
-        can_delete: WhiteboardcPermissions.can_delete(member, shape) |> to_boolean
-      }
+    permissions = %{
+      can_edit: WhiteboardcPermissions.can_edit(member, shape) |> to_boolean,
+      can_delete: WhiteboardcPermissions.can_delete(member, shape) |> to_boolean
     }
     Map.put(shape_map, :permissions, permissions)
   end
