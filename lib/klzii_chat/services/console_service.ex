@@ -7,7 +7,7 @@ defmodule KlziiChat.Services.ConsoleService do
   def error_messages do
     %{
       pinboard_is_enable: "Sorry, can't add a resource when Pinboard enabled",
-      other_resource_is_enable: "Can't activate resource because other resource is enable: "
+      other_resource_is_enable: "You can only load one media file per Topic"
     }
   end
 
@@ -83,7 +83,7 @@ defmodule KlziiChat.Services.ConsoleService do
       |> Enum.any?(fn(key) -> Map.get(console, key) |> is_integer end)
 
       if result do
-        {:error, %{system: "#{error_messages.other_resource_is_enable} #{find_enable_resource(console)}" }}
+        {:error, %{system: error_messages.other_resource_is_enable}}
       else
         {:ok}
       end
