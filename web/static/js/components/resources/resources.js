@@ -30,9 +30,9 @@ const Resources = React.createClass({
     });
   },
   activatePinboard() {
-    const { sessionTopicConsole, channel, dispatch } = this.props;
+    const { sessionTopicConsole, channel, dispatch, session } = this.props;
 
-    if(!sessionTopicConsole.data.pinboard) {
+    if(!sessionTopicConsole.data.pinboard && session.type != 'forum') {
       let confirmed = true;
       if(this.isOtherItemsActive('pinboard')) {
         confirmed = confirm('Enabling pinboard will remove other active console items, are you sure?');
@@ -49,13 +49,15 @@ const Resources = React.createClass({
     }
   },
   render() {
+    const { session } = this.props;
+
     const resourceButtons = [
-      { type: 'video',    className: 'icon-video-1'    },
-      { type: 'audio',    className: 'icon-volume-up'  },
-      { type: 'image',    className: 'icon-picture'    },
-      { type: 'pinboard', className: 'icon-camera'     },
-      { type: 'survey',   className: 'icon-ok-squared' },
-      { type: 'file',     className: 'icon-pdf'        },
+      { type: 'video',    className: 'icon-video-1',    sessionTypes: ['focus', 'forum'] },
+      { type: 'audio',    className: 'icon-volume-up',  sessionTypes: ['focus', 'forum'] },
+      { type: 'image',    className: 'icon-picture',    sessionTypes: ['focus', 'forum'] },
+      { type: 'pinboard', className: 'icon-camera',     sessionTypes: ['focus'] },
+      { type: 'survey',   className: 'icon-ok-squared', sessionTypes: ['focus', 'forum'] },
+      { type: 'file',     className: 'icon-pdf',        sessionTypes: ['focus', 'forum'] },
     ];
 
     if(this.hasPermission(['resources', 'can_see_section'])) {
@@ -63,11 +65,15 @@ const Resources = React.createClass({
         <div className='resources-section'>
           <ul className='icons'>
             {
-              resourceButtons.map((button, index) =>
-                <li key={ index } onClick={ this.openModal.bind(this, button.type) }>
-                  <i className={ button.className } />
-                </li>
-              )
+              resourceButtons.map((button, index) => {
+                if (button.sessionTypes.includes(session.type)) {
+                  return (
+                    <li key={ index } onClick={ this.openModal.bind(this, button.type) }>
+                      <i className={ button.className } />
+                    </li>
+                  )
+                }
+              })
             }
           </ul>
 
@@ -89,6 +95,7 @@ const mapStateToProps = (state) => {
     currentUser: state.members.currentUser,
     modalWindows: state.modalWindows,
     whiteboardImage: state.modalWindows.whiteboardImage,
+    session: state.chat.session
   }
 };
 

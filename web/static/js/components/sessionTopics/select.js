@@ -19,16 +19,29 @@ const Select = React.createClass({
       </span>
     )
   },
+  renderSessionNameBlock() {
+    const { session } = this.props;
+
+    if (session.type == 'forum') {
+    return (
+      <div className='session-name'>
+        { session.name }
+      </div>
+    )} else {
+    return (
+      <div className='div-inline-block session-name'>
+        <strong>Welcome to:</strong><br />
+        { session.name }
+      </div>
+    )}
+  },
   render() {
     const { current, sessionTopics, session, unread_messages } = this.props;
 
     return (
       <div className='topic-select-section'>
         <div className='topic-select-box'>
-          <div className='div-inline-block session-name'>
-            <strong>Welcome to:</strong><br />
-            { session.name }
-          </div>
+          { this.renderSessionNameBlock() }
 
           <Dropdown id='topic-selector'>
             <Dropdown.Toggle className='no-border-radius' noCaret>

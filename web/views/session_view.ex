@@ -5,6 +5,7 @@ defmodule KlziiChat.SessionView do
   def render("session.json", %{session: session}) do
     %{id: session.id,
       name: session.name,
+      type: session.type,
       startTime: session.startTime,
       endTime: session.endTime,
       colours: brand_project_preference(session.brand_project_preference),
