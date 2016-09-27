@@ -9,7 +9,6 @@ import SessionTopicSelect   from '../components/sessionTopics/select.js';
 import Resources            from '../components/resources/resources.js';
 import HeaderLinks          from '../components/header/links.js';
 import MobileHeader         from '../components/header/mobile.js';
-//import {Forum, Focus}       from '../components/chatRoom';
 import Forum                from '../components/chatRoom/forum';
 import Focus                from '../components/chatRoom/focus';
 import Loading              from '../components/util/loading.js';
