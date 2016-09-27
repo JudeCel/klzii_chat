@@ -17,7 +17,8 @@ defmodule KlziiChat.Services.Permissions.Builder do
   @spec error_messages() :: Map.t
   def error_messages do
     %{
-      subscription_not_found: "Subscription not found"
+      subscription_not_found: "Subscription not found",
+      session_not_found: "Session not found"
     }
   end
 
@@ -33,14 +34,19 @@ defmodule KlziiChat.Services.Permissions.Builder do
 
     case get_subscription_preference_session(session_member.sessionId) do
       {:ok, preference} ->
-        {:ok, buid_map(session_member, preference)}
+        case get_session(session_member.sessionId) do
+          {:ok, session} ->
+            {:ok, buid_map(session_member, preference, session)}
+          {:error, reason} ->
+            {:error, reason}
+        end
       {:error, reason} ->
         {:error, reason}
     end
   end
 
-  @spec buid_map(Map.t, Map.t) :: Map.t
-  def buid_map(session_member, preference) do
+  @spec buid_map(Map.t, Map.t, Map.t) :: Map.t
+  def buid_map(session_member, preference, session) do
     %{
       can_redirect: %{
         logout: RedirectPermissions.can_redirect(session_member) |> to_boolean
@@ -66,7 +72,7 @@ defmodule KlziiChat.Services.Permissions.Builder do
         can_vote_mini_survey: MiniSurveysPermissions.can_answer(session_member) |> to_boolean
       },
       pinboard: %{
-        can_enable: PinboardResourcePermissions.can_enable(session_member) |> to_boolean,
+        can_enable: PinboardResourcePermissions.can_enable(session_member, session) |> to_boolean,
         can_add_resource: PinboardResourcePermissions.can_add_resource(session_member) |> to_boolean
       }
     }
@@ -101,6 +107,17 @@ defmodule KlziiChat.Services.Permissions.Builder do
         end
       preference ->
           {:ok, Map.get(preference, :data, %{})}
+      end
+  end
+
+  defp get_session(session_id) do
+    SessionQueries.find(session_id)
+    |> Repo.one
+    |> case do
+      nil ->
+          {:error, error_messages.session_not_found}
+      session ->
+          {:ok, session}
       end
   end
 

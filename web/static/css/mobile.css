@@ -78,6 +78,17 @@
 }
 
 @media (max-width: 767px) {
+  .type-forum .room-section-left {
+    width: 100% !important;
+    float: none !important;
+  }
+
+  .type-forum .room-section-right {
+    margin-left: 0px !important;
+    width: 100% !important;
+    float: none !important;
+  }
+
   .header-innerbox, .inmplayer-launcher, .whiteboard-title, .footer, .whiteboard-section.minimized, .participants-section,
   .pinboard-title, .pinboard-section.minimized, .message-section .emotion-chat-section div:first-child {
     display:none !important;
@@ -410,7 +421,7 @@
     padding: 10px 15px !important;
     margin-bottom: 0px !important;
   }
-  
+
   .direct-message-modal {
     overflow-y: hidden !important;
   }
@@ -418,7 +429,7 @@
   .direct-message-modal .modal-body {
     border-top: 2px solid #ddd;
   }
-  
+
   .direct-message-modal .input-section {
     -webkit-box-shadow: 0px -4px 5px rgba(0, 0, 0, 0.2);
     -moz-box-shadow: 0px -4px 5px rgba(0, 0, 0, 0.2);
@@ -466,7 +477,7 @@
     float: none !important;
     display: flex !important;
   }
-  
+
   .direct-message-modal .messages-section .message .info .header div {
     width: 50% !important;
     float: left !important;
@@ -679,9 +690,9 @@
   .customize-avatar-section .preview-section svg text, .customize-avatar-section .preview-section svg rect {
     display: none;
   }
-  
+
   .customize-avatar-section .elements-section .row {
-    
+
   }
 
   .customize-avatar-section .elements-section .row .col-md-3 {
@@ -721,7 +732,7 @@
     margin-left: -100px !important;
     position:absolute;
   }
-  
+
   .customize-avatar-section .selection-section {
     background-color: #F0E936;
     margin-left: -35px !important;
@@ -777,7 +788,7 @@
   .modal-open .modal[allowscroll='true'] .modal-content{
     height:auto !important;
   }
-  
+
   .navbar-avatar.observer {
     display: none;
   }

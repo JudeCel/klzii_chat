@@ -25,7 +25,7 @@ const MobileHeader = React.createClass({
   },
   getMenuItemStyle(object, action) {
     let canShow = this.hasPermission([object, action]);
-    return { 
+    return {
       display: (canShow ? "block" : "none")
     };
   },
@@ -36,12 +36,12 @@ const MobileHeader = React.createClass({
     this.setState({mobileSideMenuTopicsVisibility: !this.state.mobileSideMenuTopicsVisibility});
   },
   getMobileSideMenuStyle() {
-    return { 
+    return {
       display: (this.state.mobileSideMenuVisibility ? "block" : "none")
     };
   },
   getMobileSideMenuTopicsStyle() {
-    return { 
+    return {
       display: (this.state.mobileSideMenuTopicsVisibility ? "block" : "none")
     };
   },
@@ -155,7 +155,7 @@ const mapStateToProps = (state) => {
     unreadDirectMessages: state.directMessages.unreadCount,
     firstParticipant: state.members.participants[0],
     facilitator: state.members.facilitator,
-    sessionConsole: state.sessionTopic.console
+    sessionConsole: state.sessionTopicConsole.data
   };
 };
 export default connect(mapStateToProps)(MobileHeader);

@@ -270,6 +270,58 @@ body
         .session-name
           margin-bottom: 5px
           margin-top: -10px
+  .room-section-left
+    width: 25%
+    float: left
+    text-align: center
+    .aboutThisTopic
+      margin: 0px -15px
+      margin-top: calc(-1px - 4%)
+      padding: 10px
+      color: #fff
+      margin-bottom: 15px
+      font-size: 16px
+      text-align: left
+      padding-left: 8%
+    svg text:last-child
+      display: none
+    .console-section
+      margin-left: 0px
+      white-space: nowrap
+      float: right
+      position: relative
+      left: -50%
+      text-align: left
+      ul
+        list-style: none
+        position: relative
+        left: 50%
+        li
+         font-size: calc(10px + (100vw / 120))
+         padding: calc(5px + (100vw / 400)) calc(0px + (100vw / 400))
+  .room-section-right
+    margin-left: 20px
+    width: calc(75% - 20px)
+    float: left
+    .chat-section
+      margin-top: 0px
+      .media-heading
+        padding: 0px
+      .action-section
+        padding: 0px
+      .message-section
+        .emotion-chat-section
+          .emotion-chat-avatar
+            display: block !important
+            svg
+              transform: scale(0.5) translate(-37.5px, -37.5px)
+              margin: -35px -45px -75px -25px
+              rect
+                display: none
+              text
+                display: none
+          div:first-child
+            display: none !important
 
 @media (min-width: 1500px)
   .room-outerbox, .header-innerbox, .direct-message-modal

@@ -2,10 +2,11 @@ defmodule KlziiChat.Services.Permissions.PinboardResource do
   import KlziiChat.Services.Permissions.Validations
   import KlziiChat.Services.Permissions.ErrorsHelper, only: [formate_error: 1]
 
-  @spec can_enable(Map.t) :: {:ok} | {:error, String.t}
-  def can_enable(member) do
+  @spec can_enable(Map.t, Map.t) :: {:ok} | {:error, String.t}
+  def can_enable(member, session) do
     roles = ~w(facilitator)
-    has_role(member.role, roles)
+    session_types = ~w(focus)
+    (has_role(member.role, roles) && is_in_list(session.type, session_types))
     |> formate_error
   end
 

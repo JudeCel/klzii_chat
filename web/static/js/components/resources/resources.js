@@ -30,9 +30,9 @@ const Resources = React.createClass({
     });
   },
   activatePinboard() {
-    const { sessionTopicConsole, channel, dispatch, session } = this.props;
+    const { sessionTopicConsole, channel, dispatch, session, currentUser } = this.props;
 
-    if(!sessionTopicConsole.data.pinboard && session.type != 'forum') {
+    if(!sessionTopicConsole.data.pinboard && currentUser.permissions.pinboard.can_enable) {
       let confirmed = true;
       if(this.isOtherItemsActive('pinboard')) {
         confirmed = confirm('Enabling pinboard will remove other active console items, are you sure?');
@@ -48,16 +48,23 @@ const Resources = React.createClass({
       this.setState({ currentModal: 'image' });
     }
   },
+  canShowResourceButton(buttonType) {
+    const { currentUser } = this.props;
+    switch (buttonType) {
+      case 'pinboard': return currentUser.permissions.pinboard.can_enable;
+      default: return true;
+    }
+  },
   render() {
     const { session } = this.props;
 
     const resourceButtons = [
-      { type: 'video',    className: 'icon-video-1',    sessionTypes: ['focus', 'forum'] },
-      { type: 'audio',    className: 'icon-volume-up',  sessionTypes: ['focus', 'forum'] },
-      { type: 'image',    className: 'icon-picture',    sessionTypes: ['focus', 'forum'] },
-      { type: 'pinboard', className: 'icon-camera',     sessionTypes: ['focus'] },
-      { type: 'survey',   className: 'icon-ok-squared', sessionTypes: ['focus', 'forum'] },
-      { type: 'file',     className: 'icon-pdf',        sessionTypes: ['focus', 'forum'] },
+      { type: 'video',    className: 'icon-video-1'},
+      { type: 'audio',    className: 'icon-volume-up'},
+      { type: 'image',    className: 'icon-picture'},
+      { type: 'pinboard', className: 'icon-camera'},
+      { type: 'survey',   className: 'icon-ok-squared'},
+      { type: 'file',     className: 'icon-pdf'},
     ];
 
     if(this.hasPermission(['resources', 'can_see_section'])) {
@@ -66,7 +73,7 @@ const Resources = React.createClass({
           <ul className='icons'>
             {
               resourceButtons.map((button, index) => {
-                if (button.sessionTypes.includes(session.type)) {
+                if (this.canShowResourceButton(button.type)) {
                   return (
                     <li key={ index } onClick={ this.openModal.bind(this, button.type) }>
                       <i className={ button.className } />
