@@ -77,7 +77,7 @@ const Messages = React.createClass({
       )
     }
     else {
-      return (<div></div>)
+      return (<div className='messages-section messages-section-empty'></div>)
     }
   }
 });
