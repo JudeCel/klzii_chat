@@ -27,9 +27,13 @@ const Forum = React.createClass({
           <div className='aboutThisTopic' style={ this.styles2() }>
             About this Topic
           </div>
-          <Facilitator />
+          <div className='top-row'>
+            <Facilitator />
+          </div>
           <Console />
-          <WhiteboardCanvas member={ this.props }/>
+          <div className='top-row'>
+            <WhiteboardCanvas member={ this.props }/>
+          </div>
         </div>
         <div className='col-md-9 room-section room-section-right' style={ this.styles() }>
           <Messages/>
