@@ -720,6 +720,7 @@
     min-height: 340px;
     position: relative;
     height: calc(100vh - 172px);
+    margin-bottom: 12px
   }
 
   .customize-avatar-section .selection-section > div:last-child {
@@ -737,7 +738,7 @@
     background-color: #F0E936;
     margin-left: -35px !important;
     width: 100vw !important;
-    margin-bottom: -12px !important;
+    margin-bottom: -16px !important;
     height: 56px;
     position: absolute;
     display: block;
