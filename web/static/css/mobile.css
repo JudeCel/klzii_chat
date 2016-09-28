@@ -809,6 +809,19 @@
   .type-forum .room-section-left .facilitator-section > div.div-inline-block {
     display: inline-block !important;
   }
+
+  .type-forum .room-section-left .top-row .facilitator-section .say-section .outerbox {
+    position: absolute !important;
+  }
+
+  .type-forum .room-section-left .top-row .facilitator-section .say-section .outerbox .innerbox {
+    width: 100% !important;
+  }
+
+  .type-forum .room-section-right .chat-section .media-heading {
+    padding-right: 15px !important;
+    padding-left: 15px !important;
+  }
 }
 
 @media (max-width: 379px) {

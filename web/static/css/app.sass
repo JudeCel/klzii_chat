@@ -322,19 +322,20 @@ body
           @media (max-width: 1499px)
             width: 20vw !important
     .console-section
-      margin-left: 0px
-      white-space: nowrap
-      float: right
-      position: relative
-      left: -50%
-      text-align: left
-      ul
-        list-style: none
+      @media (min-width: 768px)
+        margin-left: 0px
+        white-space: nowrap
+        float: right
         position: relative
-        left: 50%
-        li
-         font-size: calc(10px + (100vw / 120))
-         padding: calc(5px + (100vw / 400)) calc(0px + (100vw / 400))
+        left: -50%
+        text-align: left
+        ul
+          list-style: none
+          position: relative
+          left: 50%
+          li
+           font-size: calc(10px + (100vw / 120))
+           padding: calc(5px + (100vw / 400)) calc(0px + (100vw / 400))
     .top-row
       display: block
   .room-section-right
