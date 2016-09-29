@@ -11,11 +11,9 @@ defmodule KlziiChat.Services.Permissions.Whiteboard do
 
   @spec can_new_shape(Map.t, Map.t) :: {:ok } | {:error, String.t}
   def can_new_shape(member, session) do
-    session_types_1 = ["focus"]
-    roles_1 = ["facilitator", "participant"]
-    session_types_2 = ["forum"]
-    roles_2 = ["facilitator"]
-    ((has_role(member.role, roles_1) && is_in_list(session.type, session_types_1)) || (has_role(member.role, roles_2) && is_in_list(session.type, session_types_2)))
+    forum_permissions = %{roles: ["facilitator"], types: ["forum"] }
+    focus_permissions = %{roles: ["facilitator", "participant"], types: ["focus"] }
+    ((has_role(member.role, forum_permissions.roles) && is_in_list(session.type, forum_permissions.types)) || (has_role(member.role, focus_permissions.roles) && is_in_list(session.type, focus_permissions.types)))
     |> formate_error
   end
 
