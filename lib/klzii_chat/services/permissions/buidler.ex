@@ -73,7 +73,7 @@ defmodule KlziiChat.Services.Permissions.Builder do
       },
       pinboard: %{
         can_enable: PinboardResourcePermissions.can_enable(session_member, session) |> to_boolean,
-        can_add_resource: PinboardResourcePermissions.can_add_resource(session_member) |> to_boolean
+        can_add_resource: PinboardResourcePermissions.can_add_resource(session_member, session) |> to_boolean
       }
     }
   end

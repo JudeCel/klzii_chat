@@ -10,10 +10,11 @@ defmodule KlziiChat.Services.Permissions.PinboardResource do
     |> formate_error
   end
 
-  @spec can_add_resource(Map.t) :: {:ok} | {:error, String.t}
-  def can_add_resource(member) do
+  @spec can_add_resource(Map.t, Map.t) :: {:ok} | {:error, String.t}
+  def can_add_resource(member, session) do
     roles = ~w(participant)
-    has_role(member.role, roles)
+    session_types = ~w(focus)
+    (has_role(member.role, roles) && is_in_list(session.type, session_types))
     |> formate_error
   end
 

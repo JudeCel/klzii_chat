@@ -7,24 +7,23 @@ import Console              from '../console/index';
 import WhiteboardCanvas     from '../whiteboard/whiteboardCanvas';
 
 const Forum = React.createClass({
-  mainBlockStyles() {
+  getInitialState: function() {
     const { colours } = this.props;
     return {
-      backgroundColor: colours.mainBackground,
-      borderColor: colours.mainBorder
-    };
-  },
-  aboutThisTopicHeaderStyles() {
-    const { colours } = this.props;
-    return {
-      backgroundColor: colours.mainBorder
+      mainBlockStyles: {
+        backgroundColor: colours.mainBackground,
+        borderColor: colours.mainBorder
+      },
+      aboutThisTopicHeaderStyles: {
+        backgroundColor: colours.mainBorder
+      }
     };
   },
   render() {
     return (
       <div>
-        <div className='col-md-3 room-section room-section-left' style={ this.mainBlockStyles() }>
-          <div className='aboutThisTopic' style={ this.aboutThisTopicHeaderStyles() }>
+        <div className='col-md-3 room-section room-section-left' style={ this.state.mainBlockStyles }>
+          <div className='aboutThisTopic' style={ this.state.aboutThisTopicHeaderStyles }>
             About this Topic
           </div>
           <div className='top-row'>
@@ -35,7 +34,7 @@ const Forum = React.createClass({
             <WhiteboardCanvas member={ this.props }/>
           </div>
         </div>
-        <div className='col-md-9 room-section room-section-right' style={ this.mainBlockStyles() }>
+        <div className='col-md-9 room-section room-section-right' style={ this.state.mainBlockStyles }>
           <Messages/>
           <Input/>
         </div>

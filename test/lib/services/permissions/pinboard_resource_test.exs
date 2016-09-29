@@ -4,14 +4,28 @@ defmodule KlziiChat.Services.Permissions.PinboardResourceTest do
 
 
   describe("facilitator") do
-    test "can_add_resource" do
+    test "can't add resource when session type is focus" do
       member = %{id: 1, role: "facilitator"}
-      assert({:error, _} = PinboardResource.can_add_resource(member))
+      session = %{type: "focus"}
+      assert({:error, _} = PinboardResource.can_add_resource(member, session))
     end
 
-    test "can_enable" do
+    test "can't add resource when session type is forum" do
       member = %{id: 1, role: "facilitator"}
-      assert({:ok} = PinboardResource.can_enable(member))
+      session = %{type: "forum"}
+      assert({:error, _} = PinboardResource.can_add_resource(member, session))
+    end
+
+    test "can enable when session type is focus" do
+      member = %{id: 1, role: "facilitator"}
+      session = %{type: "focus"}
+      assert({:ok} = PinboardResource.can_enable(member, session))
+    end
+
+    test "can't enable when session type is forum" do
+      member = %{id: 1, role: "facilitator"}
+      session = %{type: "forum"}
+      assert({:error, _} = PinboardResource.can_enable(member, session))
     end
 
     test "can remove resource" do
@@ -22,14 +36,28 @@ defmodule KlziiChat.Services.Permissions.PinboardResourceTest do
   end
 
   describe("participent") do
-    test "can_add_resource" do
+    test "can add resource when session type is focus" do
       member = %{id: 1, role: "participant"}
-      assert({:ok} = PinboardResource.can_add_resource(member))
+      session = %{type: "focus"}
+      assert({:ok} = PinboardResource.can_add_resource(member, session))
     end
 
-    test "can_enable" do
+    test "can't add resource when session type is forum" do
       member = %{id: 1, role: "participant"}
-      assert({:error, _} = PinboardResource.can_enable(member))
+      session = %{type: "forum"}
+      assert({:error, _} = PinboardResource.can_add_resource(member, session))
+    end
+
+    test "can't 'enable when session type is focus" do
+      member = %{id: 1, role: "participant"}
+      session = %{type: "focus"}
+      assert({:error, _} = PinboardResource.can_enable(member, session))
+    end
+
+    test "can't 'enable when session type is forum" do
+      member = %{id: 1, role: "participant"}
+      session = %{type: "forum"}
+      assert({:error, _} = PinboardResource.can_enable(member, session))
     end
 
     test "can remove resource when owner" do
@@ -46,14 +74,28 @@ defmodule KlziiChat.Services.Permissions.PinboardResourceTest do
   end
 
   describe("observer") do
-    test "can set resource" do
+    test "can't add resource when session type is focus" do
       member = %{id: 1, role: "observer"}
-      assert({:error, _} = PinboardResource.can_add_resource(member))
+      session = %{type: "focus"}
+      assert({:error, _} = PinboardResource.can_add_resource(member, session))
     end
 
-    test "can_enable" do
+    test "can't add resource when session type is forum" do
       member = %{id: 1, role: "observer"}
-      assert({:error, _} = PinboardResource.can_enable(member))
+      session = %{type: "forum"}
+      assert({:error, _} = PinboardResource.can_add_resource(member, session))
+    end
+
+    test "can't 'enable when session type is focus" do
+      member = %{id: 1, role: "observer"}
+      session = %{type: "focus"}
+      assert({:error, _} = PinboardResource.can_enable(member, session))
+    end
+
+    test "can't 'enable when session type is forum" do
+      member = %{id: 1, role: "observer"}
+      session = %{type: "forum"}
+      assert({:error, _} = PinboardResource.can_enable(member, session))
     end
 
     test "can remove resource" do

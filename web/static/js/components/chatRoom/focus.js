@@ -9,11 +9,13 @@ import WhiteboardCanvas     from '../whiteboard/whiteboardCanvas';
 import Pinboard             from '../pinboard/index.js';
 
 const Focus = React.createClass({
-  styles() {
+  getInitialState: function() {
     const { colours } = this.props;
     return {
-      backgroundColor: colours.mainBackground,
-      borderColor: colours.mainBorder
+      mainBlockStyles: {
+        backgroundColor: colours.mainBackground,
+        borderColor: colours.mainBorder
+      },
     };
   },
   renderWhiteboard() {
@@ -25,7 +27,7 @@ const Focus = React.createClass({
   },
   render() {
     return (
-      <div className='col-md-12 room-section' style={ this.styles() }>
+      <div className='col-md-12 room-section' style={ this.state.mainBlockStyles }>
         <div className='row'>
           <div className='col-md-8'>
             <div className='row top-row'>
