@@ -31,17 +31,26 @@ const Message = React.createClass({
       </div>
     )
   },
-  render() {
+  getMessageMember() {
     const { message, currentUser } = this.props;
-    const { can_edit, can_delete, can_star, can_vote, can_reply } = message.permissions;
-
-    let member = message.session_member.id == currentUser.id ? currentUser : message.session_member;
+    return message.session_member.id == currentUser.id ? currentUser : message.session_member;
+  },
+  getMessageSessionTopicContext() {
+    const { message } = this.props;
     let sessionTopicContext = { };
     sessionTopicContext[message.session_member.currentTopic.id] = {
         avatarData: {
           face: message.emotion
         }
       };
+    return sessionTopicContext;
+  },
+  render() {
+    const { message, currentUser } = this.props;
+    const { can_edit, can_delete, can_star, can_vote, can_reply } = message.permissions;
+
+    let member = this.getMessageMember();
+    let sessionTopicContext = this.getMessageSessionTopicContext();
 
     return (
       <div className='message-section media'>
