@@ -180,6 +180,20 @@ body
           border: 1px solid #ccc
     textarea
       resize: none
+    .avatar-section
+      display: none
+      background-color: #fff
+      padding: 0px
+      border: 0px
+      width: 80px
+      svg
+        transform: scale(0.5) translate(-37.5px, -37.5px)
+        margin: -45px -95px -90px -45px
+        cursor: pointer
+        rect
+          display: none
+        text
+          display: none
   .chat-section
     padding-bottom: 20px
     margin-top: 20px
@@ -256,6 +270,101 @@ body
             p
               margin: 2px 5px
               font-size: 18px
+
+.type-forum
+  .header-section
+    padding-bottom: 15px
+    .topic-select-section
+      .topic-select-box
+        .dropdown.btn-group
+          #topic-selector
+           margin-left: 0px
+        .dropdown-menu
+          margin-left: 0px
+        .session-name
+          margin-bottom: 5px
+          margin-top: -10px
+  .room-section-left
+    width: 25%
+    float: left
+    text-align: center
+    padding-bottom: 15px
+    .aboutThisTopic
+      margin: 0px -15px
+      margin-top: calc(-1px - 4%)
+      padding: 10px
+      color: #fff
+      margin-bottom: 15px
+      font-size: 16px
+      text-align: left
+      padding-left: 8%
+    .facilitator-section
+      > div.div-inline-block
+        display: block
+      svg
+        @media (max-width: 1199px)
+          width: 13vw
+          height: 14vw
+      svg text:last-child
+        display: none
+      .outerbox
+        margin-left: 20px !important
+        left: 0
+        position: inherit
+        .triangle
+          margin-top: -40px !important
+          border-width: 0 15px 15px 15px !important
+          border-color: transparent transparent $message-facilitator transparent !important
+          _border-color: #000000 #000000 $message-facilitator #000000 !important
+          margin-right: -50px
+        .innerbox
+          width: 17vw !important
+          @media (max-width: 1499px)
+            width: 20vw !important
+    .console-section
+      @media (min-width: 768px)
+        margin-left: 0px
+        white-space: nowrap
+        float: right
+        position: relative
+        left: -50%
+        text-align: left
+        ul
+          list-style: none
+          position: relative
+          left: 50%
+          li
+           font-size: calc(10px + (100vw / 120))
+           padding: calc(5px + (100vw / 400)) calc(0px + (100vw / 400))
+    .top-row
+      display: block
+  .room-section-right
+    margin-left: 20px
+    width: calc(75% - 20px)
+    float: left
+    .chat-section
+      margin-top: 0px
+      .media-heading
+        padding: 0px
+      .action-section
+        padding: 0px
+      .message-section
+        .emotion-chat-section
+          .emotion-chat-avatar
+            display: block !important
+            svg
+              transform: scale(0.5) translate(-37.5px, -37.5px)
+              margin: -22px -45px -75px -25px
+              rect
+                display: none
+              text
+                display: none
+          div:first-child
+            display: none !important
+    .input-section
+      .avatar-section
+        @media (min-width: 768px)
+          display: table-cell
 
 @media (min-width: 1500px)
   .room-outerbox, .header-innerbox, .direct-message-modal

@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react';
+import { connect }          from 'react-redux';
 import MessageActions       from './actions';
 import mixins               from '../../mixins';
 import Avatar               from '../members/avatar.js';
@@ -30,22 +31,33 @@ const Message = React.createClass({
       </div>
     )
   },
-  render() {
+  getMessageMember() {
+    const { message, currentUser } = this.props;
+    return message.session_member.id == currentUser.id ? currentUser : message.session_member;
+  },
+  getMessageSessionTopicContext() {
     const { message } = this.props;
+    let sessionTopicContext = { };
+    sessionTopicContext[message.session_member.currentTopic.id] = {
+        avatarData: {
+          face: message.emotion
+        }
+      };
+    return sessionTopicContext;
+  },
+  render() {
+    const { message, currentUser } = this.props;
     const { can_edit, can_delete, can_star, can_vote, can_reply } = message.permissions;
-    
-    let member = message.session_member;
-    if (member.sessionTopicContext[member.currentTopic.id]) {
-      member.sessionTopicContext[member.currentTopic.id].avatarData.face = message.emotion;
-    }
-    member.online = true;
+
+    let member = this.getMessageMember();
+    let sessionTopicContext = this.getMessageSessionTopicContext();
 
     return (
       <div className='message-section media'>
         <div className={ this.mediaImagePosition(message) }>
           <div className={ 'emotion-chat-' + message.emotion } aria-hidden='true' style={{ backgroundColor: message.session_member.colour }}/>
           <div className='emotion-chat-avatar'>
-            <Avatar member={ member } specificId={ 'msgAvatar' + message.id } />
+            <Avatar member={ { id: member.id, username: member.username, colour: member.colour, avatarData: member.avatarData, sessionTopicContext: sessionTopicContext, online: true, edit: false } } specificId={ 'msgAvatar' + message.id } />
           </div>
         </div>
 
@@ -79,4 +91,10 @@ const Message = React.createClass({
   }
 });
 
-export default Message;
+const mapStateToProps = (state) => {
+  return {
+    currentUser: state.members.currentUser
+  }
+};
+
+export default connect(mapStateToProps)(Message);

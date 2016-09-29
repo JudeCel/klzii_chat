@@ -7,7 +7,12 @@ defmodule KlziiChat.Services.Permissions.Validations do
 
   @spec has_role(String.t, List.t) :: Boolean.t
   def has_role(role, roles) do
-    Enum.any?(roles, &(&1 == role))
+    is_in_list(role, roles)
+  end
+
+  @spec is_in_list(String.t, List.t) :: Boolean.t
+  def is_in_list(item, items) do
+    Enum.any?(items, &(&1 == item))
   end
 
   @spec has_allowed_from_subscription(Map.t, Atom.t) :: Boolean.t

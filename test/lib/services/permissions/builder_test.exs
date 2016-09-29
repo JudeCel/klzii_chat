@@ -13,9 +13,9 @@ defmodule KlziiChat.Services.Permissions.BuilderPermissionsTest do
     "availableOnTabletAndMobilePlatforms" =>  true
   }
 
-  test "build basic permissions map" do
+  test "build basic permissions map", %{session: session} do
     member = %{id: 1, role: "facilitator"}
-    %{ messages: messages, resources: resources, reports: reports } = Builder.buid_map(member, @subscription_keys)
+    %{ messages: messages, resources: resources, reports: reports } = Builder.buid_map(member, @subscription_keys, session)
     assert(is_map(messages))
     assert(is_map(resources))
     assert(is_map(reports))

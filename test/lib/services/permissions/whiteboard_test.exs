@@ -38,19 +38,42 @@ defmodule KlziiChat.Services.Permissions.WhiteboardTest do
     assert({:ok} = Whiteboard.can_edit(member, shape))
   end
 
-  test "#Permissions.Whiteboard can new shape" do
+  test "#Permissions.Whiteboard can new shape when session type is focus" do
     roles = ["facilitator", "participant"]
+    session = %{type: "focus"}
     Enum.map(roles, fn role ->
       member = %{role: role}
-      assert({:ok} = Whiteboard.can_new_shape(member))
+      assert({:ok} = Whiteboard.can_new_shape(member, session))
+    end)
+  end
+
+  test "#Permissions.Whiteboard can new shape when session type is forum" do
+    roles = ["facilitator"]
+    session = %{type: "forum"}
+    Enum.map(roles, fn role ->
+      member = %{role: role}
+      assert({:ok} = Whiteboard.can_new_shape(member, session))
+    end)
+  end
+
+  test "#Permissions.Whiteboard can't new shape when session type is forum" do
+    roles = ["participant"]
+    session = %{type: "forum"}
+    Enum.map(roles, fn role ->
+      member = %{role: role}
+      assert({:error, _} = Whiteboard.can_new_shape(member, session))
     end)
   end
 
   test "#Permissions.Whiteboard can't new shape" do
+    sessions = ["forum", "focus"]
     roles = ["observer"]
     Enum.map(roles, fn role ->
       member = %{role: role}
-      assert({:error, _} = Whiteboard.can_new_shape(member))
+      Enum.map(sessions, fn type ->
+        session = %{type: type}
+        assert({:error, _} = Whiteboard.can_new_shape(member, session))
+      end)
     end)
   end
 end

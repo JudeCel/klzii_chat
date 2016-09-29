@@ -78,6 +78,19 @@
 }
 
 @media (max-width: 767px) {
+  .type-forum .room-section-left {
+    width: 100% !important;
+    float: none !important;
+    text-align: left !important;
+    padding-bottom: 0px !important;
+  }
+
+  .type-forum .room-section-right {
+    margin-left: 0px !important;
+    width: 100% !important;
+    float: none !important;
+  }
+
   .header-innerbox, .inmplayer-launcher, .whiteboard-title, .footer, .whiteboard-section.minimized, .participants-section,
   .pinboard-title, .pinboard-section.minimized, .message-section .emotion-chat-section div:first-child {
     display:none !important;
@@ -147,6 +160,10 @@
     padding: 0px !important;
     margin: -40px -15px 0px -15px !important;
     padding-top: 46px !important;
+  }
+
+  .room-outerbox > div {
+    overflow: hidden;
   }
 
   .room-section {
@@ -310,10 +327,10 @@
   }
 
   .facilitator-section .outerbox {
-    width: 100% !important;
     left: 100px !important;
     background-color: #fff;
     z-index:666;
+    width: calc(100vw - 85px) !important;
   }
 
   .facilitator-section .outerbox .innerbox {
@@ -324,7 +341,6 @@
 
   .facilitator-section .outerbox .innerbox p {
     height: 40px;
-    margin-right: 70px !important;
     overflow: auto;
   }
 
@@ -410,15 +426,15 @@
     padding: 10px 15px !important;
     margin-bottom: 0px !important;
   }
-  
+
   .direct-message-modal {
-    overflow-y: hidden !important;
+    overflow: hidden !important;
   }
 
   .direct-message-modal .modal-body {
     border-top: 2px solid #ddd;
   }
-  
+
   .direct-message-modal .input-section {
     -webkit-box-shadow: 0px -4px 5px rgba(0, 0, 0, 0.2);
     -moz-box-shadow: 0px -4px 5px rgba(0, 0, 0, 0.2);
@@ -429,10 +445,6 @@
     padding: 10px 15px;
     min-height: 55px;
     position: relative;
-  }
-
-  .direct-message-modal .input-section .input-group {
-    margin-right: 10px;
   }
 
   .direct-message-modal .direct-message-section {
@@ -466,7 +478,7 @@
     float: none !important;
     display: flex !important;
   }
-  
+
   .direct-message-modal .messages-section .message .info .header div {
     width: 50% !important;
     float: left !important;
@@ -679,9 +691,9 @@
   .customize-avatar-section .preview-section svg text, .customize-avatar-section .preview-section svg rect {
     display: none;
   }
-  
+
   .customize-avatar-section .elements-section .row {
-    
+
   }
 
   .customize-avatar-section .elements-section .row .col-md-3 {
@@ -709,6 +721,7 @@
     min-height: 340px;
     position: relative;
     height: calc(100vh - 172px);
+    margin-bottom: 12px;
   }
 
   .customize-avatar-section .selection-section > div:last-child {
@@ -721,12 +734,12 @@
     margin-left: -100px !important;
     position:absolute;
   }
-  
+
   .customize-avatar-section .selection-section {
     background-color: #F0E936;
     margin-left: -35px !important;
     width: 100vw !important;
-    margin-bottom: -12px !important;
+    margin-bottom: -16px !important;
     height: 56px;
     position: absolute;
     display: block;
@@ -742,12 +755,12 @@
     width: 90vw;
     text-align: center;
     white-space: nowrap;
-    top: calc(-100vh + 335px);
+    top: calc(-100vh + 332px);
   }
 
   @media (max-height: 512px) {
     .customize-avatar-section .selection-section > div:first-child {
-      top: -177px;
+      top: -180px;
     }
   }
 
@@ -777,9 +790,81 @@
   .modal-open .modal[allowscroll='true'] .modal-content{
     height:auto !important;
   }
-  
+
   .navbar-avatar.observer {
     display: none;
+  }
+
+  .type-forum .room-section-left .aboutThisTopic {
+    display: none;
+  }
+
+  .type-forum .room-section-left .top-row {
+    display: flex !important;
+    margin-left: -15px;
+    margin-right: -15px;
+  }
+
+  .type-forum .room-section-left .facilitator-section > div.div-inline-block {
+    display: inline-block !important;
+  }
+
+  .type-forum .room-section-left .top-row .facilitator-section .say-section .outerbox {
+    position: absolute !important;
+    width: calc(100vw - 95px) !important;
+    margin-left: -20px !important;
+  }
+
+  .type-forum .room-section-left .top-row .facilitator-section .say-section .outerbox .innerbox {
+    width: 100% !important;
+    margin-left: 40px;
+  }
+
+  .type-forum .room-section-right .chat-section .media-heading {
+    padding-right: 15px !important;
+    padding-left: 15px !important;
+  }
+
+  .type-forum .room-section-left .facilitator-section svg {
+    width: 150px !important;
+  }
+
+  .type-forum .room-section-right {
+    height: calc(100vh - 151px);
+  }
+
+  .type-forum .room-section-right .chat-section {
+    height: calc(100vh - 265px);
+  }
+
+  .type-forum .room-section-left .console-section {
+    margin-top: -175px;
+  }
+
+  .type-forum .room-section-left #whiteboard-box.maximized {
+    margin-top: 75px;
+  }
+
+  .type-forum .room-section-right .input-section {
+    margin-top: 0px;
+    padding-top: 55px;
+    margin-left: -15px;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-right: -15px;
+    position: relative;
+    -webkit-box-shadow: 0px -4px 5px rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: 0px -4px 5px rgba(0, 0, 0, 0.2);
+    box-shadow: 0px -4px 5px rgba(0, 0, 0, 0.2);
+  }
+
+  body.modal-open nav.header-section {
+    margin-right: -15px !important;
+    padding-right: 15px !important;
+  }
+
+  body.modal-open .header-innerbox-mobile {
+    margin-right: -15px;
   }
 }
 

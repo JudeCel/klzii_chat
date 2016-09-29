@@ -1,5 +1,5 @@
 defmodule KlziiChat.Services.WhiteboardService do
-  alias KlziiChat.{Repo, Shape, ShapeView, SessionMember, SessionTopic}
+  alias KlziiChat.{Repo, Shape, ShapeView, SessionMember, SessionTopic, Session}
   alias KlziiChat.Services.Permissions.Whiteboard, as: WhiteboardPermissions
   alias KlziiChat.Queries.Shapes, as: ShapesQueries
   import Ecto
@@ -52,7 +52,8 @@ defmodule KlziiChat.Services.WhiteboardService do
 
   def create_object(session_member_id, session_topic_id, params) do
     session_member = Repo.get!(SessionMember, session_member_id)
-    if WhiteboardPermissions.can_new_shape(session_member) do
+    session = Repo.get!(Session, session_member.sessionId)
+    if WhiteboardPermissions.can_new_shape(session_member, session) do
       changeset = build_assoc(
         session_member, :shapes,
         sessionId: session_member.sessionId,
