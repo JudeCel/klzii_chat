@@ -1,5 +1,5 @@
 defmodule KlziiChat.Services.PinboardResourceService do
-  alias KlziiChat.{Repo, PinboardResource, SessionTopic, SessionMember, Resource}
+  alias KlziiChat.{Repo, PinboardResource, SessionTopic, SessionMember, Resource, Session}
   alias KlziiChat.Services.Permissions.PinboardResource, as: PinboardResourcePermissions
   alias KlziiChat.Helpers.IntegerHelper
   import Ecto.Query, only: [from: 2]
