@@ -47,6 +47,13 @@
           position: sticky
     .pinboard-section.maximized
       padding-bottom: 10px
+      @media (min-width: 992px)
+        max-width: 950px
+        left: calc((100vw - 950px) / 2)
+      @media (min-width: 1500px)
+        left: calc((100vw - 950px) / 4)
+
+
 
 #circleShapes, #scribleShapes, #lineWidthShapes, #eraserShapes
   .btn.btn-default
