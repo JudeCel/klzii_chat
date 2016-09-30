@@ -1,30 +1,30 @@
 # KlziiChat
 
-# Dependencies
+## Dependencies
+
+  * [Kliiko](https://github.com/DiatomEnterprises/Kliiko)
   * Elixir v1.3.2
-  * Node.js >= 5.11.x
-  * NPM 3.8.x
   * [FS Listener](https://github.com/synrc/fs#backends)
   * ```xvfb```
-  * ```wkhtmltopdf```
+  * ```wkhtmltopdf``
 
-# Setup project
-  ### This project depends to nodejs project [Kliiko](https://github.com/DiatomEnterprises/Kliiko)
-
+## Setup project
+  
 ### Before run server need setup Kliiko project and run seeds.
 
-  1) Go to project folder
+1) Go to project folder
 
-  2) copy ```config/dev.exs.example ``` to ``` config/dev.exs``` and changes with necessary database credentials.
+2) copy ``` config/dev.exs.example ``` to ``` config/dev.exs``` and change with necessary database credentials.
 
-  3) Install dependencies with `mix deps.get`
+2) Run ``` mix deps.get ``` in project directory to install dependencies.
 
-  4) Install Node.js dependencies with `npm install`
+3) Run ``` npm install ``` in project directory to install packages.
 
-  5) Start Phoenix endpoint with `mix phoenix.server`
+## Run project
 
-# Development
-Development URL ``` http://localhost:3000/?token_dev=facilitator```
+1) Run Phoenix ``` mix phoenix.server ```
+
+2) Open browser: ``` http://localhost:3000/?token_dev=facilitator ```
 
 Available ``` token_dev ```
 
@@ -50,3 +50,10 @@ Observers users
 ``` http://localhost:3000/reporting/whiteboard/:id ```
 ``` http://localhost:3000/reporting/messages/:id ```
 ``` http://localhost:3000/reporting/mini_survey/:id ```
+
+### Tests
+Run
+
+ ``` mocha test```
+or
+ ``` npm test ```
