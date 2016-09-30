@@ -1,12 +1,27 @@
 const builder = {
   addImageAndFrame(svg, group, data, item) {
-    let rect = this.createMainRect(svg, data, item);
-
     if(item.resource) {
-      let image = this.createMainImage(svg, data, item);
-      this.addDeleteButton(rect, image, svg, group, data, item);
-    }
-    else {
+      let obj = this;
+      let currentData = {}
+      Object.assign(currentData, data)
+      this.getImageSize(item.resource.url.thumb, function(width, height) {
+        if (height > currentData.height) {
+          width = width * currentData.height / height;
+          height = currentData.height;
+        }
+        if (width > currentData.width) {
+          height = height * currentData.width / width;
+          width = currentData.width;
+        }
+        currentData.width = width;
+        currentData.height = height;
+
+        let rect = obj.createMainRect(svg, currentData, item);
+        let image = obj.createMainImage(svg, currentData, item);
+        obj.addDeleteButton(rect, image, svg, group, currentData, item);
+      });
+    } else {
+      let rect = this.createMainRect(svg, data, item);
       group.add(rect);
     }
   },
@@ -43,6 +58,13 @@ const builder = {
       data.x += data.spaceSide + data.width + data.border*2;
     }
     data.item++;
+  },
+  getImageSize(url, callback) {
+    var img = new Image();
+    img.src = url;
+    img.onload = function() {
+      callback(this.width, this.height);
+    }
   },
   startingData() {
     return {
