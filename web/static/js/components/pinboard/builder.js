@@ -1,24 +1,25 @@
 const builder = {
   addImageAndFrame(svg, group, data, item) {
     if(item.resource) {
-      let obj = this;
-      let currentData = {}
-      Object.assign(currentData, data)
-      this.getImageSize(item.resource.url.thumb, function(width, height) {
-        if (height > currentData.height) {
-          width = width * currentData.height / height;
-          height = currentData.height;
-        }
-        if (width > currentData.width) {
-          height = height * currentData.width / width;
-          width = currentData.width;
-        }
-        currentData.width = width;
-        currentData.height = height;
+      let currentData = { ...data };
+      this.getImageSize(item.resource.url.thumb, (width, height) => {
+        let currentWidth = width;
+        let currentHeight = height;
 
-        let rect = obj.createMainRect(svg, currentData, item);
-        let image = obj.createMainImage(svg, currentData, item);
-        obj.addDeleteButton(rect, image, svg, group, currentData, item);
+        if (currentHeight > currentData.height) {
+          currentWidth = currentWidth * currentData.height / currentHeight;
+          currentHeight = currentData.height;
+        }
+        if (currentWidth > currentData.width) {
+          currentHeight = currentHeight * currentData.width / currentWidth;
+          currentWidth = currentData.width;
+        }
+        currentData.width = currentWidth;
+        currentData.height = currentHeight;
+
+        let rect = this.createMainRect(svg, currentData, item);
+        let image = this.createMainImage(svg, currentData, item);
+        this.addDeleteButton(rect, image, svg, group, currentData, item);
       });
     } else {
       let rect = this.createMainRect(svg, data, item);
