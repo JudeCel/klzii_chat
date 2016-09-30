@@ -5,8 +5,8 @@
   * [Kliiko](https://github.com/DiatomEnterprises/Kliiko)
   * Elixir v1.3.2
   * [FS Listener](https://github.com/synrc/fs#backends)
-  * ```xvfb```
-  * ```wkhtmltopdf``
+  * ``` xvfb ```
+  * ``` wkhtmltopdf ```
 
 ## Setup project
   
