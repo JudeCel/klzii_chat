@@ -1,12 +1,13 @@
 defmodule KlziiChat.Services.SessionMembersService do
-  alias KlziiChat.{Repo, Message, AccountUser, SessionMember, SessionMembersView}
-  import Ecto.Query, only: [from: 1, from: 2]
+  alias KlziiChat.{Repo, Message, AccountUser, SessionMember,
+    SessionTopci, SessionMembersView, SessionTopic}
+  import Ecto.Query, only: [from: 2]
 
   @spec get_member_from_token(String.t) :: {:ok, %AccountUser{}} | {:error, String.t}
   def get_member_from_token(token) do
     with {:ok, claims} <- Guardian.decode_and_verify(token),
          {:ok, member} <- KlziiChat.Guardian.Serializer.from_token(claims["sub"]),
-     do: {:ok, member}
+     do: {:ok, member, claims["callback_url"]}
   end
 
   @spec update_member(Integer.t, Map.t) :: {:ok, %SessionMember{}} | {:error, Ecto.Changeset.t}
@@ -27,6 +28,15 @@ defmodule KlziiChat.Services.SessionMembersService do
   def update_session_topic_context(session_member, session_topic_id, params) do
     session_topic_context = merge_session_topic_context(session_member.sessionTopicContext, params, session_topic_id)
     SessionMember.changeset(session_member, %{sessionTopicContext: session_topic_context})
+    |> update_member
+  end
+
+  @spec update_current_topic(Integer, Integer) :: {:ok, %SessionMember{}} | {:error, Ecto.Changeset.t}
+  def update_current_topic(session_member_id, session_topic_id) do
+    session_member =  Repo.get_by!(SessionMember, id: session_member_id)
+    session_topic = Repo.get!(SessionTopic, session_topic_id)
+    current_topic = %{"id" => session_topic.id, "name" => session_topic.name, "date" => to_string(Timex.now) }
+    SessionMember.changeset(session_member, %{currentTopic: current_topic})
     |> update_member
   end
 
@@ -52,7 +62,8 @@ defmodule KlziiChat.Services.SessionMembersService do
   def by_session(session_id) do
     query =
       from sm in SessionMember,
-        where: sm.sessionId == ^session_id
+        where: sm.sessionId == ^session_id,
+        order_by: sm.id
     result = Repo.all(query)
     {:ok, group_by_role(result)}
   end

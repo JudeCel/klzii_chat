@@ -2,21 +2,29 @@ defmodule KlziiChat.Services.ResourceService do
   alias KlziiChat.{Repo, AccountUser, Resource, ResourceView}
   alias KlziiChat.Services.Permissions.Resources, as: ResourcePermissions
   alias KlziiChat.Queries.Resources, as: QueriesResources
+  alias KlziiChat.Queries.SessionResources, as: QueriesSessionResources
+  alias KlziiChat.Services.Validations.Resource, as: ResourceValidations
 
   import Ecto
   import Ecto.Query
 
-
+  @spec upload(map, integer) ::  {:ok, %Resource{}} | {:error, map}
   def upload(params, account_user_id)  do
     account_user = Repo.get!(AccountUser, account_user_id) |> Repo.preload([:account])
-    if account_user.role == "admin" do
-      Map.put(params, "private", (params["private"] || false))
-    else
-      Map.put(params, "private", false)
-    end |> save_resource(account_user)
+    case ResourcePermissions.can_upload(account_user) do
+      {:ok} ->
+        if account_user.role == "admin" do
+          Map.put(params, "stock", (params["stock"] || false))
+        else
+          Map.put(params, "stock", false)
+        end |> save_resource(account_user)
+      {:error, reason} ->
+        {:error, reason}
+    end
   end
 
-  def save_resource(%{"private" => private, "type" => type, "scope" => scope, "file" => file, "name"=> name}, account_user) do
+  @spec save_resource(map, integer) :: {:ok, %Resource{}} | {:error, map}
+  def save_resource(%{"stock" => stock, "type" => type, "scope" => scope, "file" => file, "name"=> name}, account_user) do
     params = %{
       type: type,
       scope: scope,
@@ -24,18 +32,37 @@ defmodule KlziiChat.Services.ResourceService do
       accountUserId: account_user.id,
       type: type,
       name: name,
-      private: private
-    } |> Map.put(String.to_atom(type), file)
-    changeset = Resource.changeset(%Resource{}, params)
+      stock: stock
+    }
 
-    case Repo.insert(changeset) do
-      {:ok, resource} ->
-        {:ok, resource}
+    case ResourceValidations.validate(file, params) do
+      {:ok} ->
+        Resource.changeset(%Resource{}, params)
+        |> Repo.insert
+        |> case do
+            {:ok, resource} ->
+              add_file(resource, file)
+            {:error, reason} ->
+              {:error, Map.put(reason, :code, 400)}
+           end
       {:error, reason} ->
         {:error, reason}
     end
   end
 
+  @spec add_file(%Resource{}, map) :: {:ok, %Resource{}} | {:error, map}
+  def add_file(resource, file) do
+    Resource.changeset(resource, %{String.to_atom(resource.type) => file})
+    |> Repo.update
+    |> case do
+        {:ok, resource } ->
+          {:ok, resource}
+        {:error, reason} ->
+          {:error, Map.put(reason, :code, 400)}
+       end
+  end
+
+  @spec get(integer, String.t) :: {:ok, list}
   def get(account_user_id, type) do
     account_user = Repo.get!(AccountUser, account_user_id)
       |> Repo.preload([:account])
@@ -47,6 +74,7 @@ defmodule KlziiChat.Services.ResourceService do
     {:ok, resources}
   end
 
+  @spec find(integer, integer) :: {:ok, list}
   def find(account_user_id, id) do
     account_user = Repo.get!(AccountUser, account_user_id)
       |> Repo.preload([:account])
@@ -54,31 +82,92 @@ defmodule KlziiChat.Services.ResourceService do
       QueriesResources.base_query(account_user)
       |> where([r], r.id in ^[id])
       |> Repo.one
-    {:ok, resource}
+      |> case  do
+          nil ->
+            {:error, %{code: 404, not_found: "Resource not found"}}
+          resource ->
+            {:ok, resource}
+        end
+  end
+
+
+  def validations(account_user, ids, query) do
+    with {:ok} <- if_resource_used(ids),
+         result <- Repo.all(query),
+         {:ok} <- ResourcePermissions.can_delete(account_user, result),
+    do: {:ok, result}
+  end
+
+  def if_resource_used(ids) do
+    QueriesSessionResources.get_by_resource_ids(ids)
+    |> Repo.all
+    |> case  do
+        [] ->
+          {:ok}
+        _ ->
+          {:error, %{code: 415, type: "This file is currently used in a Session, you cannot delete active media files"}}
+      end
   end
 
   @spec deleteByIds(Integer.t, List.t) :: {:ok, %Resource{} } | {:error, String.t}
   def deleteByIds(account_user_id, ids) do
     account_user = Repo.get!(AccountUser, account_user_id) |> Repo.preload([:account])
+    query = QueriesResources.base_query(account_user)
+      |> where([r], r.id in ^ids)
+      |> where([r], r.stock == false)
 
-    query = QueriesResources.base_query(account_user) |> where([r], r.id in ^ids)
-    result = Repo.all(query)
-
-    if ResourcePermissions.can_delete(account_user, result) do
-      case Repo.delete_all(query) do
-        {:error, error} ->
-          {:error, error}
-        {_count, nil} ->
-          {:ok, result}
-      end
-    else
-      {:error, "Action not allowed!"}
+    case validations(account_user, ids, query) do
+      {:ok, result} ->
+        case Repo.delete_all(query) do
+          {:error, error} ->
+            {:error, error}
+          {_count, nil} ->
+             Task.start(fn -> clean_up(result) end)
+            {:ok, result}
+        end
+      {:error, reason} ->
+        {:error, reason}
     end
   end
 
+  @spec clean_up(list) :: :ok
+  def clean_up(list) do
+    Enum.map(list, fn(item) ->
+      type = item.type
+      uploader = get_uploader(type)
+
+      if field = Map.get(item, String.to_atom(type)) do
+        extname = Map.get(field, :file_name)
+        |> Path.extname
+        Enum.map(uploader.versions, fn version ->
+          url = uploader.url({item.type, item}, version) <> extname
+          uploader.delete({url, item})
+        end)
+      end
+    end)
+    :ok
+  end
+
+  @spec get_uploader(String.t) ::
+    KlziiChat.Uploaders.Image |
+    KlziiChat.Uploaders.File |
+    KlziiChat.Uploaders.Audio |
+    KlziiChat.Uploaders.Video
+  def get_uploader(type) do
+    module_refix = "KlziiChat.Uploaders."
+    {module_path, _} = Code.eval_string(module_refix <> String.capitalize(type))
+    case Code.ensure_loaded(module_path) do
+      {:module, module} ->
+        module
+      {:error, :nofile} ->
+        raise("Uploader module not found #{module_path}")
+    end
+  end
+
+  @spec daily_cleanup() :: {:ok, list}
   def daily_cleanup do
     from(e in Resource,
-      where: e.expiryDate < ^Timex.DateTime.now,
+      where: e.expiryDate < ^Timex.now,
       where: e.type == "file",
       where: e.scope == "zip")
     |> Repo.delete_all
@@ -93,28 +182,29 @@ defmodule KlziiChat.Services.ResourceService do
       where: e.type in ~w(image audio file video)
     result = Repo.all(query)
 
+    case ResourcePermissions.can_zip(account_user, result) do
+      {:ok} ->
+        params = %{
+          accountUserId: account_user.id,
+          scope: "zip",
+          type: "file",
+          name: name,
+          status: "progress",
+          expiryDate: Timex.shift(Timex.now, days: 1),
+          properties: %{zip_ids: ids}
+        }
 
-    if ResourcePermissions.can_zip(account_user, result) do
-      changeset = Ecto.build_assoc(
-        account_user.account, :resources,
-        accountUserId: account_user.id,
-        scope: "zip",
-        type: "file",
-        name: name,
-        status: "progress",
-        expiryDate: Timex.DateTime.now |> Timex.shift(days: 1),
-        properties: %{zip_ids: ids}
-      )
-
-      case Repo.insert(changeset) do
-        {:ok, resource} ->
-          Task.async(fn -> KlziiChat.Files.Tasks.run(resource, ids) end)
-          {:ok, resource }
+        Resource.changeset(Ecto.build_assoc( account_user.account, :resources), params)
+        |> Repo.insert
+        |> case  do
+            {:ok, resource} ->
+              Task.async(fn -> KlziiChat.Files.Tasks.run(resource, ids) end)
+              {:ok, resource }
+            {:error, reason} ->
+              {:error, Map.put(reason, :code, 400)}
+          end
         {:error, reason} ->
           {:error, reason}
       end
-    else
-      {:error, "Action not allowed!"}
-    end
   end
 end

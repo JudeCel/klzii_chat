@@ -4,6 +4,7 @@ import { connect }        from 'react-redux';
 import mixins             from '../../../../mixins';
 import Board              from './board';
 import Actions            from '../../../../actions/facilitatorBoard';
+import NotificationActions      from '../../../../actions/notifications';
 
 const BoardModal = React.createClass({
   mixins: [mixins.modalWindows],
@@ -11,7 +12,7 @@ const BoardModal = React.createClass({
     return { content: this.props.boardContent };
   },
   shouldComponentUpdate(nextProps, nextState) {
-    return this.state.content === nextState.content && nextProps.hasPermissions;
+    return this.state.content === nextState.content && nextProps.permission;
   },
   onOpen(e) {
     this.onEnterModal(e);
@@ -22,9 +23,15 @@ const BoardModal = React.createClass({
     e.appendChild(toolbar);
   },
   onSave(e) {
-    let { channel, dispatch } = this.props
-    Actions.saveBoard(channel, dispatch, this.state.content);
-    this.closeAllModals();
+    let { channel, dispatch, modalWindows } = this.props
+    if (!modalWindows.postData) {
+      Actions.saveBoard(channel, dispatch, this.state.content);
+    }
+  },
+  onClose(e) {
+    if (!this.props.modalWindows.postData) {
+      this.closeAllModals();
+    }
   },
   setContent(content) {
     this.setState({ content: content });
@@ -38,7 +45,7 @@ const BoardModal = React.createClass({
         <Modal dialogClassName='modal-section facilitator-board-modal' show={ show } onHide={ this.closeAllModals } onEnter={ this.onOpen }>
           <Modal.Header>
             <div className='col-md-2'>
-              <span className='pull-left fa icon-reply' onClick={ this.closeAllModals }></span>
+              <span className='pull-left fa icon-reply' onClick={ this.onClose }></span>
             </div>
 
             <div className='col-md-8 modal-title'>

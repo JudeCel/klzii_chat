@@ -1,25 +1,35 @@
-import React, { PropTypes, Component } from 'react';
+import React, { PropTypes } from 'react';
+import { connect }          from 'react-redux';
+import Constants            from '../../../constants';
+import MessagesActions      from '../../../actions/messages';
 
-class Star extends Component {
+const StarMessage = React.createClass({
+  starMessage() {
+    const { dispatch, channel, message } = this.props;
+    dispatch(MessagesActions.messageStar(channel, { id: message.id }));
+  },
   setClass() {
-    let className = 'icon-star';
-    if(!this.props.data.star) { className += '-empty'; }
-
-    return className;
-  }
+    const className = 'icon-star';
+    return this.props.message.star ? className : className + '-empty';
+  },
   render() {
-    const { id } = this.props.data;
-    const { can, onClick } = this.props;
+    const { permission } = this.props;
 
-    if(can) {
+    if(permission) {
       return(
-        <i className={ this.setClass() } onClick={ onClick } data-id={ id } />
+        <i className={ this.setClass() } onClick={ this.starMessage } />
       )
     }
     else {
       return(false)
     }
   }
-}
+});
 
-export default Star;
+const mapStateToProps = (state) => {
+  return {
+    channel: state.sessionTopic.channel
+  };
+};
+
+export default connect(mapStateToProps)(StarMessage);

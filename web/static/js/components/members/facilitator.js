@@ -1,43 +1,36 @@
 import React, {PropTypes} from 'react';
-import Member             from './member.js';
 import { connect }        from 'react-redux';
-import Console            from '../console/index';
+import Member             from './member.js';
 import BoardModal         from './modals/facilitatorBoard';
 import mixins             from '../../mixins';
 
 const Facilitator = React.createClass({
   mixins: [mixins.validations, mixins.modalWindows],
-  innerboxClassname(hasPermissions) {
+  innerboxClassname(permission) {
     const className = 'innerbox';
-    return hasPermissions ? className + ' cursor-pointer' : className;
-  },
-  selectClass(id) {
-    const className = 'div-inline-block';
-    return this.isOwner(id) ? className + ' cursor-pointer' : className;
+    return permission ? className + ' cursor-pointer' : className;
   },
   render() {
-    const { facilitator, boardContent, sessionTopicId } = this.props;
-    const hasPermissions = this.hasPermissions('events', 'can_board_message');
+    const { facilitator, boardContent } = this.props;
+    const permission = this.hasPermission(['messages', 'can_board_message']);
 
     return (
       <div className='facilitator-section'>
         <div className='div-inline-block'>
-          <div className={ this.selectClass(facilitator.id) } onClick={ this.isOwner(facilitator.id) && this.openSpecificModal.bind(this, 'avatar') }>
-            <Member key={ facilitator.id } member={ facilitator } />
-          </div>
+          <Member key={ facilitator.id } member={ facilitator } />
+        </div>
 
-          <div className='say-section'>
-            <div className='outerbox'>
-              <div className='triangle' />
-              <div className={ this.innerboxClassname(hasPermissions) } onClick={ this.openSpecificModal.bind(this, 'facilitatorBoard') }>
-                <p className='text-break-all' dangerouslySetInnerHTML={{ __html: boardContent }} />
-              </div>
+        <div className='say-section'>
+          <div className='outerbox'>
+            <div className='triangle'></div>
+            <div className={ this.innerboxClassname(permission) } onClick={ this.openSpecificModal.bind(this, 'facilitatorBoard') }>
+              <p className='facilitator-name-mobile'> { facilitator.username } </p>
+              <p style={{wordWrap: 'breakWord'}} dangerouslySetInnerHTML={{ __html: boardContent }} />
             </div>
           </div>
-
-          <BoardModal { ...{ hasPermissions, boardContent } } />
-          <Console />
         </div>
+
+        <BoardModal { ...{ permission, boardContent } } />
       </div>
     )
   }
@@ -46,7 +39,6 @@ const Facilitator = React.createClass({
 const mapStateToProps = (state) => {
   return {
     modalWindows: state.modalWindows,
-    sessionTopicId: state.sessionTopic.current.id,
     facilitator: state.members.facilitator,
     currentUser: state.members.currentUser,
     boardContent: state.sessionTopic.current.boardMessage

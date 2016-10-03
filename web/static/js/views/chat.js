@@ -1,34 +1,26 @@
 import React, { PropTypes } from 'react';
 import { connect }          from 'react-redux';
+import Constants            from './../constants';
 import sessionActions       from '../actions/session';
 import sessionTopicActions  from '../actions/sessionTopic';
-import Messages             from '../components/messages/messages.js';
-import Input                from '../components/messages/input.js';
-import Facilitator          from '../components/members/facilitator.js';
-import Participants         from '../components/members/participants.js';
 import ChangeAvatarModal    from '../components/members/modals/changeAvatar/index.js';
-import SessionTopicSelect          from '../components/sessionTopics/select.js';
+import DirectMessageModal   from '../components/members/modals/directMessage/index.js';
+import SessionTopicSelect   from '../components/sessionTopics/select.js';
 import Resources            from '../components/resources/resources.js';
 import HeaderLinks          from '../components/header/links.js';
-
-import WhiteboardCanvas     from '../components/whiteboard/whiteboardCanvas';
+import MobileHeader         from '../components/header/mobile.js';
+import Forum                from '../components/chatRoom/forum';
+import Focus                from '../components/chatRoom/focus';
+import Loading              from '../components/util/loading.js';
 import Notifications        from '../actions/notifications';
 import notificationMixin    from '../mixins/notification';
+import ReportsModal         from '../components/reports/modal';
+import ObserverListModal    from '../components/modals/observerList';
 import ReactToastr, { ToastContainer, ToastMessage } from 'react-toastr';
 var ToastMessageFactory     = React.createFactory(ToastMessage.animation);
 
 const ChatView = React.createClass({
   mixins: [notificationMixin],
-  getInitialState() {
-    return {};
-  },
-  styles() {
-    const { colours } = this.props;
-    return {
-      backgroundColor: colours.mainBackground,
-      borderColor: colours.mainBorder
-    };
-  },
   componentDidUpdate() {
     const { notifications, dispatch, colours } = this.props;
 
@@ -48,21 +40,32 @@ const ChatView = React.createClass({
       this.props.dispatch(sessionTopicActions.selectCurrent(nextProps.socket, nextProps.session_topics));
     }
   },
-  openAvatarModal() {
-    this.setState({ openAvatarModal: true });
+  getScreenWidthForAvatar(targetInnerWidth) {
+    return targetInnerWidth >= 768 ? targetInnerWidth : 580;
   },
-  closeAvatarModal() {
-    this.setState({ openAvatarModal: false });
+  componentDidMount() {
+    window.addEventListener('resize', (e) => {
+      this.props.dispatch({ type: Constants.SCREEN_SIZE_CHANGED, window: { width: this.getScreenWidthForAvatar(e.target.innerWidth), height: e.target.innerHeight } });
+    });
+    this.props.dispatch({ type: Constants.SCREEN_SIZE_CHANGED, window: { width: this.getScreenWidthForAvatar(window.innerWidth), height: window.innerHeight } });
+  },
+  renderMainContent() {
+    const { type } = this.props;
+    switch(type) {
+      case 'forum': return <Forum/>;
+      case 'focus': return <Focus/>;
+    }
   },
   render() {
-    const { error, sessionReady, sessionTopicReady } = this.props;
+    const { error, sessionReady, sessionTopicReady, brand_logo, role, type } = this.props;
 
     if(error) {
       return (<div>{error}</div>)
     }
     else if(sessionReady && sessionTopicReady) {
       return (
-        <div id='chat-app-container'>
+        <div id='chat-app-container' className={ 'role-' + role + ' type-' + type }>
+          <Loading />
           <ToastContainer ref='notification' className='toast-top-right' toastMessageFactory={ ToastMessageFactory } />
 
           <nav className='row header-section'>
@@ -70,31 +73,27 @@ const ChatView = React.createClass({
               <SessionTopicSelect/>
               <Resources/>
               <HeaderLinks/>
+              <div className='logo-section'>
+                <img className='img-responsive' src={brand_logo.url.full} />
+              </div>
             </div>
+            <MobileHeader brand_logo={brand_logo}/>
           </nav>
 
           <div className='row room-outerbox'>
-            <div className='col-md-12 room-section' style={ this.styles() }>
-              <ChangeAvatarModal show={ this.state.openAvatarModal } onHide={ this.closeAvatarModal } />
-              <div className='row'>
-                <div className='col-md-8'>
-                  <div className='row'>
-                    <Facilitator openAvatarModal={ this.openAvatarModal } />
-                  </div>
-                  <div className='row'>
-                    {<Participants openAvatarModal={ this.openAvatarModal } />}
-                  </div>
-                </div>
+            <ChangeAvatarModal />
+            <DirectMessageModal />
+            <ReportsModal />
+            <ObserverListModal />
 
-                <div className='col-md-4'>
-                  <Messages/>
-                </div>
-                <WhiteboardCanvas member={ this.props }/>
-                <div className='col-md-12'>
-                  <Input/>
-                </div>
-              </div>
-            </div>
+            { this.renderMainContent() }
+
+          </div>
+          <div className="footer text-center">
+            <span>Powered by <a href="//www.klzii.com" target="_blank"> <b>klzii.</b> </a> </span>
+          </div>
+          <div id="small-screen">
+            <div>This site is not compatible with small window sizes.</div>
           </div>
         </div>
       )
@@ -108,13 +107,17 @@ const ChatView = React.createClass({
 
 const mapStateToProps = (state) => {
   return {
+    pinboardActive: state.sessionTopicConsole.data.pinboard,
     colours: state.chat.session.colours,
+    brand_logo: state.chat.session.brand_logo,
     sessionReady: state.chat.ready,
     error: state.chat.error,
     session_topics: state.chat.session.session_topics,
     sessionTopicReady: state.sessionTopic.ready,
     socket: state.chat.socket,
-    notifications: state.notifications
+    notifications: state.notifications,
+    role: state.members.currentUser.role,
+    type: state.chat.session.type
   };
 };
 

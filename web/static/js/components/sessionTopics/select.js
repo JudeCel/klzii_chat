@@ -1,29 +1,58 @@
 import React, {PropTypes}                           from 'react';
 import { connect }                                  from 'react-redux';
 import { Dropdown, Button, SplitButton, MenuItem }  from 'react-bootstrap'
-import Actions                                      from '../../actions/sessionTopic';
 import Badge                                        from './badge';
+import mixins                                       from '../../mixins';
 
 const Select = React.createClass({
+  mixins: [mixins.headerActions, mixins.validations, mixins.modalWindows],
   changeSessionTopic(id) {
-    const { dispatch, channel } = this.props;
-    dispatch(Actions.changeSessionTopic(channel, id));
+    this.setSessionTopic(id);
+  },
+  renderIconEye() {
+    if(!this.isFacilitator(this.props.currentUser)) return;
+
+    return (
+      <span className='eye-section' onClick={ this.openSpecificModal.bind(this, 'observerList') }>
+        <span className='icon-eye' />
+        { this.props.observers.length }
+      </span>
+    )
+  },
+  renderSessionNameBlock() {
+    const { session } = this.props;
+
+    if (session.type == 'forum') {
+    return (
+      <div className='session-name'>
+        { session.name }
+      </div>
+    )} else {
+    return (
+      <div className='div-inline-block session-name'>
+        <strong>Welcome to:</strong><br />
+        { session.name }
+      </div>
+    )}
   },
   render() {
     const { current, sessionTopics, session, unread_messages } = this.props;
 
     return (
-      <div className='col-md-2 topic-select-section'>
+      <div className='topic-select-section'>
         <div className='topic-select-box'>
-          <div>
-            { session.name }
-          </div>
+          { this.renderSessionNameBlock() }
 
-          <Dropdown id='topic-selector' bsSize='medium'>
-            <Button className='no-border-radius'>
-              { current.name }
-            </Button>
-            <Dropdown.Toggle className='no-border-radius' />
+          <Dropdown id='topic-selector'>
+            <Dropdown.Toggle className='no-border-radius' noCaret>
+              <div className='no-border-radius btn btn-default name'>
+                { current.name }
+              </div>
+              <div className='no-border-radius btn btn-default dropcaret'>
+                <span className='caret'></span>
+              </div>
+            </Dropdown.Toggle>
+
             <Dropdown.Menu className='no-border-radius'>
               {
                 sessionTopics.map((sessionTopic) => {
@@ -51,6 +80,7 @@ const Select = React.createClass({
               <Badge type='normal' data={ unread_messages.summary } />
             </li>
           </ul>
+            { this.renderIconEye() }
         </div>
       </div>
     )
@@ -59,11 +89,15 @@ const Select = React.createClass({
 
 const mapStateToProps = (state) => {
   return {
+    modalWindows: state.modalWindows,
+    currentUser: state.members.currentUser,
     unread_messages: state.messages.unreadMessages,
     session: state.chat.session,
+    observers: state.members.observers,
     channel: state.sessionTopic.channel,
     current: state.sessionTopic.current,
     sessionTopics: state.sessionTopic.all,
+    whiteboardChannel: state.whiteboard.channel
   };
 };
 

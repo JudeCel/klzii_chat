@@ -9,7 +9,7 @@ defmodule KlziiChat.Endpoint do
   # when deploying your static files in production.
   plug KlziiChat.Corsica.Router
   plug Plug.Static,
-    at: "/", from: :klzii_chat, gzip: false,
+    at: "/", from: :klzii_chat, gzip: true,
     only: ~w(uploads css fonts images js images/avatar favicon.ico robots.txt)
 
   # Code reloading can be explicitly enabled under the
@@ -31,7 +31,7 @@ defmodule KlziiChat.Endpoint do
     parsers: [:urlencoded, :multipart, :json],
     pass: ["*/*"],
     json_decoder: Poison,
-    length: 100_000_000
+    length: 5_000_000
 
   plug Plug.MethodOverride
   plug Plug.Head
@@ -41,6 +41,6 @@ defmodule KlziiChat.Endpoint do
     key: "_klzii_chat_key",
     signing_salt: "Rkjb13qZ",
     log: :debug
-    
+
   plug KlziiChat.Router
 end

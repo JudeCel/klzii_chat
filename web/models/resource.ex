@@ -15,18 +15,12 @@ defmodule KlziiChat.Resource do
     field :type, :string
     field :scope, :string
     field :name, :string
-    field :private, :boolean, default: false
     field :status, :string, default: "completed"
     field :properties, :map, default: %{}
+    field :stock, :boolean, default: false
     field :expiryDate, Timex.Ecto.DateTime
     timestamps [inserted_at: :createdAt, updated_at: :updatedAt]
   end
-
-  @required_fields ~w(status scope type accountUserId accountId name)
-  @optional_fields ~w(link properties private)
-
-  @required_file_fields ~w()
-  @optional_file_fields ~w(file image audio video)
 
   @doc """
   Creates a changeset based on the `model` and `params`.
@@ -36,20 +30,26 @@ defmodule KlziiChat.Resource do
   """
   def changeset(resource, params \\ %{}) do
     resource
-    |> cast(params, (@required_fields ++ @optional_fields))
-    |> cast_attachments(params,(@required_file_fields ++ @optional_file_fields))
+    |> cast(params, [:status, :scope, :type, :accountUserId, :accountId, :name, :link, :properties, :stock])
+    |> validate_required([:status, :scope, :type, :accountUserId, :accountId, :name, :stock])
+    |> validate_length(:name, max: 30,  message: "Max length of file name is 30 characters")
+    |> unique_constraint(:name, name: :UniqResourceNameByAccount, message: "Resource name has already been taken")
+    |> cast_attachments(params, ["file", "image", "audio", "video"])
     |> parse_link
   end
 
   def banner_changeset(model, params \\ %{}) do
     model
-    |> cast(params, (@required_fields ++ @optional_fields))
-    |> cast_attachments(params, (@required_file_fields ++ @optional_file_fields))
+    |> cast(params, [:status, :scope, :type, :accountUserId, :accountId, :name, :link, :properties])
+    |> validate_required([:status, :scope, :type, :accountUserId, :accountId, :name, :link])
+    |> validate_length(:name, max: 30, message: "Max length of file name is 30 characters")
+    |> unique_constraint(:name, name: :UniqResourceNameByAccount, message: "Resource name has already been taken")
+    |> cast_attachments(params, ["file", "image", "audio", "video"])
   end
 
   defp parse_link(base_changeset) do
     case base_changeset do
-      %Ecto.Changeset{valid?: true, changes: %{type: "link", scope: "youtube", link: link}} ->
+      %Ecto.Changeset{valid?: true, changes: %{link: link}} when is_bitstring(link) ->
         put_change(base_changeset, :link, UrlHelpers.youtube_id(link))
       _ ->
         base_changeset

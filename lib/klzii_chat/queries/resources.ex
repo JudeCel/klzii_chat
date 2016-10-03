@@ -2,11 +2,24 @@ defmodule KlziiChat.Queries.Resources do
   import Ecto
   import Ecto.Query
 
-  alias KlziiChat.{AccountUser}
+  alias KlziiChat.{AccountUser, Resource}
 
   @spec base_query(%AccountUser{}) :: Ecto.Query.t
   def base_query(account_user) do
     from(r in assoc(account_user.account, :resources))
+  end
+
+  @spec base_resource_query() :: Ecto.Query.t
+  def base_resource_query() do
+    from(r in Resource)
+  end
+
+  @spec stock_query(Ecto.Query.t, map) :: Ecto.Query.t
+  def stock_query(query, %{"stock" => stock})do
+    from r in query, where: r.stock == ^stock
+  end
+  def stock_query(query, _)do
+    from r in query, where: r.stock == false
   end
 
   @spec find_by_params(Ecto.Query.t, map) :: Ecto.Query.t

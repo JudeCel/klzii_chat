@@ -1,18 +1,59 @@
 # KlziiChat
 
-To start your Phoenix app:
+## Dependencies
 
-  * Install dependencies with `mix deps.get`
-  * Install Node.js dependencies with `npm install`
-  * Start Phoenix endpoint with `mix phoenix.server`
+  * [Kliiko](https://github.com/DiatomEnterprises/Kliiko)
+  * Elixir v1.3.2
+  * [FS Listener](https://github.com/synrc/fs#backends)
+  * ``` xvfb ```
+  * ``` wkhtmltopdf ```
 
-  Now you can visit [`localhost:3000`](http://localhost:3000) from your browser.
+## Setup project
+  
+### Before run server need setup Kliiko project and run seeds.
 
+1) Go to project folder
 
-## Learn more
-  * Ready to run in production? Please [check our deployment guides](http://www.phoenixframework.org/docs/deployment).
-  * Official website: http://www.phoenixframework.org/
-  * Guides: http://phoenixframework.org/docs/overview
-  * Docs: http://hexdocs.pm/phoenix
-  * Mailing list: http://groups.google.com/group/phoenix-talk
-  * Source: https://github.com/phoenixframework/phoenix
+2) copy ``` config/dev.exs.example ``` to ``` config/dev.exs``` and change with necessary database credentials.
+
+2) Run ``` mix deps.get ``` in project directory to install dependencies.
+
+3) Run ``` npm install ``` in project directory to install packages.
+
+## Run project
+
+1) Run Phoenix ``` mix phoenix.server ```
+
+2) Open browser: ``` http://localhost:3000/?token_dev=facilitator ```
+
+Available ``` token_dev ```
+
+Faciitator users
+ * facilitator
+
+Participents users
+ * participantone
+ * participanttwo
+ * participantthree
+ * participantfour
+ * participantfive
+ * participantsix
+ * participantseven
+ * participanteight
+
+Observers users
+ * observerone
+
+### Report Preview URL's
+
+``` :id ``` - is Session topic id  
+``` http://localhost:3000/reporting/whiteboard/:id ```
+``` http://localhost:3000/reporting/messages/:id ```
+``` http://localhost:3000/reporting/mini_survey/:id ```
+
+### Tests
+Run
+
+ ``` mocha test```
+or
+ ``` npm test ```

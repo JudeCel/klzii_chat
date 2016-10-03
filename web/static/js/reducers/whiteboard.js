@@ -17,13 +17,16 @@ export default function reducer(state = initialState, action = {}) {
       return { ...state, shapes: findAndDelete({...state.shapes}, [action.shape])};
 
     case Constants.SET_WHITEBOARD_CHANNEL:
-      return { ...state, channel: action.channel};
+      return { ...state, ...initialState, channel: action.channel };
 
     case Constants.SET_WHITEBOARD_HISTORY:
       return { ...state, shapes: mapToObject({...state.shapes}, action.objects) };
 
     case Constants.DELETE_ALL_WHITEBOARD_SHAPES:
-      return { ...state, shapes: {}};
+      return { ...state, shapes: findAndDelete({...state.shapes}, action.shapes)};
+
+    case Constants.TIDY_UP_WHITEBOARD:
+      return { ...state, shapes: {} };
 
     default:
       return state;

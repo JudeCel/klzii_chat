@@ -19,6 +19,6 @@ defmodule KlziiChat.Authorisations.Channels.SessionTopic do
   end
 
   defp valid?(result) do
-    result >= 1
+    result > 0
   end
 end

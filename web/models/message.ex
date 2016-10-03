@@ -14,9 +14,6 @@ defmodule KlziiChat.Message do
     timestamps [inserted_at: :createdAt, updated_at: :updatedAt]
   end
 
-  @required_fields ~w(sessionTopicId sessionMemberId body)
-  @optional_fields ~w(emotion star replyId)
-
   @doc """
   Creates a changeset based on the `model` and `params`.
 
@@ -25,6 +22,9 @@ defmodule KlziiChat.Message do
   """
   def changeset(model, params \\ %{}) do
     model
-    |> cast(params, (@required_fields ++  @optional_fields))
+    |> cast(params, [:sessionTopicId, :sessionMemberId, :body, :emotion, :star, :replyId ])
+    |> validate_required([:sessionTopicId, :sessionMemberId, :body, :emotion])
+    |> validate_length(:body, min: 1)
+    |> validate_length(:body, max: 255, message: "Max length of message is 255 characters")
   end
 end

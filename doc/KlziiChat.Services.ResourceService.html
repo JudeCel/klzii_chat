@@ -4,22 +4,20 @@
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="generator" content="ExDoc v0.11.5">
+    <meta name="generator" content="ExDoc v0.13.1">
     <title>KlziiChat.Services.ResourceService – klzii_chat v0.0.1</title>
-    <link rel="stylesheet" href="dist/app-ddd9717ad9.css" />
+    <link rel="stylesheet" href="dist/app-7e84850c37.css" />
     
     <script src="dist/sidebar_items.js"></script>
   </head>
   <body data-type="modules">
+    <script>if(localStorage.getItem('night-mode')) document.body.className += ' night-mode';</script>
 
     <div class="main">
 <button class="sidebar-toggle">
   <i class="icon-menu"></i>
 </button>
 <section class="sidebar">
-  <button class="sidebar-toggle">
-    <i class="icon-menu"></i>
-  </button>
 
   
   <a href="api-reference.html" class="sidebar-projectLink">
@@ -56,7 +54,8 @@
 </section>
 
 <section class="content">
-  <div id="content" class="content-inner">
+  <div class="content-outer">
+    <div id="content" class="content-inner">
 
 
       <h1>
@@ -84,6 +83,18 @@
       <a href="#functions">Functions</a>
     </h2>
     <div class="summary-row">
+  <div class="summary-signature">
+    <a href="#add_file/2">add_file(resource, file)</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#clean_up/1">clean_up(list)</a>
+  </div>
+  
+</div>
+<div class="summary-row">
   <div class="summary-signature">
     <a href="#create_new_zip/3">create_new_zip(account_user_id, name, ids)</a>
   </div>
@@ -115,6 +126,18 @@
 </div>
 <div class="summary-row">
   <div class="summary-signature">
+    <a href="#get_uploader/1">get_uploader(type)</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#if_resource_used/1">if_resource_used(ids)</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
     <a href="#save_resource/2">save_resource(map, account_user)</a>
   </div>
   
@@ -122,6 +145,12 @@
 <div class="summary-row">
   <div class="summary-signature">
     <a href="#upload/2">upload(params, account_user_id)</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#validations/3">validations(account_user, ids, query)</a>
   </div>
   
 </div>
@@ -146,13 +175,62 @@
             </a>
             Functions
           </h1>
-          <div class="detail" id="create_new_zip/3">
+          <div class="detail" id="add_file/2">
+  <div class="detail-header">
+    <a href="#add_file/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">add_file(resource, file)</span>
+    
+    
+  </div>
+  
+    <div class="specs">
+      <h4 class="specs-title">Specs</h4>
+      <div class="specs-list">
+        
+          <pre><code class="elixir">add_file(%KlziiChat.Resource{__meta__: term, account: term, accountId: term, accountUserId: term, account_user: term, audio: term, createdAt: term, expiryDate: term, file: term, id: term, image: term, link: term, name: term, properties: term, scope: term, status: term, stock: term, type: term, updatedAt: term, video: term}, map) ::
+  {:ok, %KlziiChat.Resource{__meta__: term, account: term, accountId: term, accountUserId: term, account_user: term, audio: term, createdAt: term, expiryDate: term, file: term, id: term, image: term, link: term, name: term, properties: term, scope: term, status: term, stock: term, type: term, updatedAt: term, video: term}} |
+  {:error, map}</code></pre>
+        
+      </div>
+    </div>
+  
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="clean_up/1">
+  <div class="detail-header">
+    <a href="#clean_up/1" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">clean_up(list)</span>
+    
+    
+  </div>
+  
+    <div class="specs">
+      <h4 class="specs-title">Specs</h4>
+      <div class="specs-list">
+        
+          <pre><code class="elixir">clean_up(list) :: :ok</code></pre>
+        
+      </div>
+    </div>
+  
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="create_new_zip/3">
   <div class="detail-header">
     <a href="#create_new_zip/3" class="detail-link" title="Link to this function">
       <i class="icon-link"></i>
     </a>
     <span class="signature">create_new_zip(account_user_id, name, ids)</span>
-      
+    
+    
   </div>
   
     <div class="specs">
@@ -160,7 +238,7 @@
       <div class="specs-list">
         
           <pre><code class="elixir">create_new_zip(<a href="http://elixir-lang.org/docs/stable/elixir/Integer.html#t:t/0">Integer.t</a>, <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>, <a href="http://elixir-lang.org/docs/stable/elixir/List.html#t:t/0">List.t</a>) ::
-  {:ok, %KlziiChat.Resource{__meta__: term, account: term, accountId: term, accountUserId: term, account_user: term, audio: term, createdAt: term, expiryDate: term, file: term, id: term, image: term, link: term, name: term, private: term, properties: term, scope: term, status: term, type: term, updatedAt: term, video: term}} |
+  {:ok, %KlziiChat.Resource{__meta__: term, account: term, accountId: term, accountUserId: term, account_user: term, audio: term, createdAt: term, expiryDate: term, file: term, id: term, image: term, link: term, name: term, properties: term, scope: term, status: term, stock: term, type: term, updatedAt: term, video: term}} |
   %{status: :error, reason: <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>}</code></pre>
         
       </div>
@@ -176,8 +254,18 @@
       <i class="icon-link"></i>
     </a>
     <span class="signature">daily_cleanup()</span>
-      
+    
+    
   </div>
+  
+    <div class="specs">
+      <h4 class="specs-title">Specs</h4>
+      <div class="specs-list">
+        
+          <pre><code class="elixir">daily_cleanup :: {:ok, list}</code></pre>
+        
+      </div>
+    </div>
   
   <section class="docstring">
     
@@ -189,7 +277,8 @@
       <i class="icon-link"></i>
     </a>
     <span class="signature">deleteByIds(account_user_id, ids)</span>
-      
+    
+    
   </div>
   
     <div class="specs">
@@ -197,7 +286,7 @@
       <div class="specs-list">
         
           <pre><code class="elixir">deleteByIds(<a href="http://elixir-lang.org/docs/stable/elixir/Integer.html#t:t/0">Integer.t</a>, <a href="http://elixir-lang.org/docs/stable/elixir/List.html#t:t/0">List.t</a>) ::
-  {:ok, %KlziiChat.Resource{__meta__: term, account: term, accountId: term, accountUserId: term, account_user: term, audio: term, createdAt: term, expiryDate: term, file: term, id: term, image: term, link: term, name: term, private: term, properties: term, scope: term, status: term, type: term, updatedAt: term, video: term}} |
+  {:ok, %KlziiChat.Resource{__meta__: term, account: term, accountId: term, accountUserId: term, account_user: term, audio: term, createdAt: term, expiryDate: term, file: term, id: term, image: term, link: term, name: term, properties: term, scope: term, status: term, stock: term, type: term, updatedAt: term, video: term}} |
   {:error, <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>}</code></pre>
         
       </div>
@@ -213,8 +302,18 @@
       <i class="icon-link"></i>
     </a>
     <span class="signature">find(account_user_id, id)</span>
-      
+    
+    
   </div>
+  
+    <div class="specs">
+      <h4 class="specs-title">Specs</h4>
+      <div class="specs-list">
+        
+          <pre><code class="elixir">find(integer, integer) :: {:ok, list}</code></pre>
+        
+      </div>
+    </div>
   
   <section class="docstring">
     
@@ -226,7 +325,58 @@
       <i class="icon-link"></i>
     </a>
     <span class="signature">get(account_user_id, type)</span>
-      
+    
+    
+  </div>
+  
+    <div class="specs">
+      <h4 class="specs-title">Specs</h4>
+      <div class="specs-list">
+        
+          <pre><code class="elixir">get(integer, <a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>) :: {:ok, list}</code></pre>
+        
+      </div>
+    </div>
+  
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="get_uploader/1">
+  <div class="detail-header">
+    <a href="#get_uploader/1" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">get_uploader(type)</span>
+    
+    
+  </div>
+  
+    <div class="specs">
+      <h4 class="specs-title">Specs</h4>
+      <div class="specs-list">
+        
+          <pre><code class="elixir">get_uploader(<a href="http://elixir-lang.org/docs/stable/elixir/String.html#t:t/0">String.t</a>) ::
+  KlziiChat.Uploaders.Image |
+  KlziiChat.Uploaders.File |
+  KlziiChat.Uploaders.Audio |
+  KlziiChat.Uploaders.Video</code></pre>
+        
+      </div>
+    </div>
+  
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="if_resource_used/1">
+  <div class="detail-header">
+    <a href="#if_resource_used/1" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">if_resource_used(ids)</span>
+    
+    
   </div>
   
   <section class="docstring">
@@ -239,8 +389,20 @@
       <i class="icon-link"></i>
     </a>
     <span class="signature">save_resource(map, account_user)</span>
-      
+    
+    
   </div>
+  
+    <div class="specs">
+      <h4 class="specs-title">Specs</h4>
+      <div class="specs-list">
+        
+          <pre><code class="elixir">save_resource(map, integer) ::
+  {:ok, %KlziiChat.Resource{__meta__: term, account: term, accountId: term, accountUserId: term, account_user: term, audio: term, createdAt: term, expiryDate: term, file: term, id: term, image: term, link: term, name: term, properties: term, scope: term, status: term, stock: term, type: term, updatedAt: term, video: term}} |
+  {:error, map}</code></pre>
+        
+      </div>
+    </div>
   
   <section class="docstring">
     
@@ -252,7 +414,33 @@
       <i class="icon-link"></i>
     </a>
     <span class="signature">upload(params, account_user_id)</span>
-      
+    
+    
+  </div>
+  
+    <div class="specs">
+      <h4 class="specs-title">Specs</h4>
+      <div class="specs-list">
+        
+          <pre><code class="elixir">upload(map, integer) ::
+  {:ok, %KlziiChat.Resource{__meta__: term, account: term, accountId: term, accountUserId: term, account_user: term, audio: term, createdAt: term, expiryDate: term, file: term, id: term, image: term, link: term, name: term, properties: term, scope: term, status: term, stock: term, type: term, updatedAt: term, video: term}} |
+  {:error, map}</code></pre>
+        
+      </div>
+    </div>
+  
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="validations/3">
+  <div class="detail-header">
+    <a href="#validations/3" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">validations(account_user, ids, query)</span>
+    
+    
   </div>
   
   <section class="docstring">
@@ -266,23 +454,24 @@
       
 
       
-        <footer class="footer">
-      <p>
-        <span class="line">
-          Built using
-          <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" rel="help" target="_blank">ExDoc</a> (v0.11.5),
-        </span>
-        <span class="line">
-          designed by
-          <a href="https://twitter.com/dignifiedquire" target="_blank" title="@dignifiedquire">Friedel Ziegelmayer</a>.
+          <footer class="footer">
+        <p>
+          <span class="line">
+            Built using
+            <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" rel="help" target="_blank">ExDoc</a> (v0.13.1),
           </span>
-      </p>
-      <button class="night-mode-toggle" />
-    </footer>
+          <span class="line">
+            designed by
+            <a href="https://twitter.com/dignifiedquire" target="_blank" title="@dignifiedquire">Friedel Ziegelmayer</a>.
+            </span>
+        </p>
+        <button class="night-mode-toggle" />
+      </footer>
+    </div>
   </div>
 </section>
 </div>
-  <script src="dist/app-918614602f.js"></script>
+  <script src="dist/app-95540a96e6.js"></script>
   </body>
 </html>
 

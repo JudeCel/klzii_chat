@@ -37,6 +37,10 @@ const GalleryNew = React.createClass({
       data.type = ['video', 'link'];
       data.scope = ['collage', 'youtube'];
     }
+    else if(modalName == 'file') {
+      data.type = [modalName];
+      data.scope = ['pdf'];
+    }
     else {
       data.type = [modalName];
     }
@@ -59,15 +63,15 @@ const GalleryNew = React.createClass({
               gallery.map((resource, index) => {
                 return (
                   <div className='col-md-4' key={ resource.id }>
-                    <div>
-                      <span className='pull-left'>{ resource.name }</span>
-                      <span className='pull-right'>
+                    <div className='row top-row'>
+                      <div className='resource-title pull-left'>{ resource.name }</div>
+                      <div className='pull-right'>
                         <input id={ 'gallery-' + resource.id } type='checkbox' className='with-font' onClick={ this.onActivate } data-id={ resource.id } />
                         <label htmlFor={ 'gallery-' + resource.id }></label>
-                      </span>
+                      </div>
                     </div>
 
-                    <div>
+                    <div className='row'>
                       <UploadTypes modalName={ modalName } url={ resource.url } youtube={ resource.scope == 'youtube' } />
                     </div>
                   </div>

@@ -11,7 +11,8 @@ defmodule KlziiChat.ResourceView do
       url: getUrl(resource),
       name: resource.name,
       extension: extension(resource),
-      scope: resource.scope
+      scope: resource.scope,
+      stock: resource.stock
     }
   end
 
@@ -36,7 +37,8 @@ defmodule KlziiChat.ResourceView do
       "image" ->
         %{
           thumb: url_builder(resource, Image,  Map.get(resource, :image), :thumb ),
-          full: url_builder(resource, Image,  Map.get(resource, :image), :original)
+          full: url_builder(resource, Image,  Map.get(resource, :image), :original),
+          gallery_thumb: url_builder(resource, Image,  Map.get(resource, :image), :gallery_thumb)
         }
       "link" ->
         %{

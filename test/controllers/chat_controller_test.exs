@@ -6,13 +6,15 @@ defmodule KlziiChat.ChatControllerTest do
     {:ok, conn: conn, token: jwt,}
   end
 
-  test "when use dev token", %{conn: conn, facilitator: facilitator} do
-    conn = get(conn, "/", token_dev: facilitator.token)
-    assert(html_response(conn, 200))
-  end
+  describe("Join") do
+    test "when use dev token", %{conn: conn, facilitator: facilitator} do
+      conn = get(conn, "/", token_dev: facilitator.token)
+      assert(html_response(conn, 200))
+    end
 
-  test "when in dev or test en", %{conn: conn, token: token} do
-    conn = get(conn, "/", token: token)
-    assert(html_response(conn, 200))
+    test "when in dev or test env", %{conn: conn, token: token} do
+      conn = get(conn, "/", token: token)
+      assert(html_response(conn, 200))
+    end
   end
 end

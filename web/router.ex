@@ -18,6 +18,13 @@ defmodule KlziiChat.Router do
   scope "/", KlziiChat do
     pipe_through :browser # Use the default browser stack
     get "/", ChatController, :index
+    get "/logout", ChatController, :logout
+  end
+  scope "/reporting", KlziiChat.Reporting do
+    pipe_through :browser # Use the default browser stack
+    get "/messages/:session_topic_id", PreviewController, :messages
+    get "/whiteboard/:session_topic_id", PreviewController, :whiteboard
+    get "/mini_survey/:session_topic_id", PreviewController, :mini_survey
   end
 
   scope "/", KlziiChat do
@@ -44,6 +51,20 @@ defmodule KlziiChat.Router do
     get "/:id", ResourcesController, :show
   end
 
+  scope("/api", KlziiChat) do
+    pipe_through :api
+
+    scope("/pinboard_resource") do
+      options "/", PinboardResourceController, :index
+      options "/", PinboardResourceController, :delete
+      options "/upload", PinboardResourceController, :upload
+
+      get "/", PinboardResourceController, :index
+      delete "/", PinboardResourceController, :delete
+      post "/upload", PinboardResourceController, :upload
+    end
+  end
+
   scope "/api/surveys", KlziiChat do
     pipe_through :api
     # CORS Routes
@@ -58,20 +79,6 @@ defmodule KlziiChat.Router do
     options "/", BannersController, :index
     # Generic routes for API be call from original domain
     get "/", BannersController, :index
-  end
-
-  scope "/api/mini_surveys", KlziiChat do
-    pipe_through :api
-    # CORS Routes
-    options "/", MiniSurveysController, :index
-    options "/", MiniSurveysController, :create
-    options "/:id/answer/", MiniSurveysController, :answer
-    options "/:id/console/", MiniSurveysController, :console
-    # Generic routes for API be call from original domain
-    get "/", MiniSurveysController, :index
-    post "/", MiniSurveysController, :create
-    post "/:id/answer/", MiniSurveysController, :answer
-    get "/:id/console/", MiniSurveysController, :console
   end
 
   scope "/api/auth", KlziiChat do

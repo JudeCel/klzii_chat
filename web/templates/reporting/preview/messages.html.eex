@@ -1,0 +1,29 @@
+<%= for message <- @messages do %>
+  <div class='message-section media'>
+    <div class='<%= media_image_position(message) %>'>
+      <div class='emotion-chat-avatar'>
+        <img src="<%= KlziiChat.LayoutView.path_to_assets(assigns[:conn], get_emotion_url(message.emotion)) %>" />
+      </div>
+    </div>
+
+    <div class='media-body'>
+      <div class='row media-heading heading-section'>
+        <span class='pull-left username' style='<%= facilitator_color(message) %>'>
+          <%= message.session_member.username %>
+        </span>
+
+        <span class='pull-right'>
+          <small><%= time_format(message.createdAt, assigns[:time_zone]) %></small>
+        </span>
+      </div>
+
+      <div class='row body-section' style='<%= facilitator_color(message) %>'>
+        <p class='text-break-all'><%= message.body %></p>
+      </div>
+
+      <div class='remove-side-margin pull-right'>
+        <%= render "messages.html", messages: message.replies, conn: assigns[:conn], time_zone: assigns[:time_zone]  %>
+      </div>
+    </div>
+  </div>
+<% end %>

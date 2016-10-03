@@ -12,7 +12,8 @@ config :klzii_chat, KlziiChat.Repo,
   database: System.get_env("DB_DATABASE"),
   hostname: System.get_env("DB_HOST"),
   password: System.get_env("DB_PASSWORD"),
-  pool_size: 10
+  prepare: :unnamed,
+  pool_size: 6
 
 config :ex_aws,
   access_key_id: System.get_env("AWS_ACCESS_KEY_ID"),
@@ -25,5 +26,3 @@ config :arc,
 
 config :guardian, Guardian,
   secret_key: System.get_env("GUARDIAN_SECRET_KEY")
-
-

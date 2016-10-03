@@ -10,6 +10,7 @@ export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
     case Constants.SET_MESSAGES:
       return { ...state, all: action.messages };
+
     case Constants.SET_UNREAD_MESSAGES:
       return { ...state, unreadMessages: action.messages };
 
@@ -24,6 +25,10 @@ export default function reducer(state = initialState, action = {}) {
 
     case Constants.SET_MESSAGES_EVENTS:
       return { ...state, ready: true };
+
+    case Constants.TIDY_UP_MESSAGES:
+      return { ...state, all: [] };
+
     default:
       return state;
   }

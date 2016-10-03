@@ -3,7 +3,7 @@ defmodule KlziiChat.WhiteboardChannelTest do
   use KlziiChat.SessionMemberCase
   alias KlziiChat.{Repo, UserSocket, WhiteboardChannel}
 
-  setup %{session_topic_1: session_topic_1, session: session, session: session, facilitator: facilitator} do
+  setup %{session_topic_1: session_topic_1, facilitator: facilitator} do
     Ecto.Adapters.SQL.Sandbox.mode(Repo, {:shared, self()})
     whiteboard_name =  "whiteboard:" <> Integer.to_string(session_topic_1.id)
     { :ok, jwt, _encoded_claims } =  Guardian.encode_and_sign(facilitator)
@@ -70,11 +70,11 @@ defmodule KlziiChat.WhiteboardChannelTest do
     body =  %{"type" => 23, "id" => "12"}
     ref = push(socket, "draw", body)
     assert_reply(ref, :ok)
-    assert_push "draw", shape
+    assert_push "draw", %{}
 
     delete_ref = push socket, "deleteAll", %{}
     assert_reply(delete_ref, :ok)
     assert_push "deleteAll", remaining_shapes
-    assert(remaining_shapes == %{"shapes" => []})
+    assert(remaining_shapes == %{"shapes" => [%{uid: body["id"]}]})
   end
 end

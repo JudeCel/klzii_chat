@@ -1,5 +1,6 @@
 import Constants from '../constants';
 import request   from 'superagent';
+import NotificationActions from './notifications';
 
 function dispatchByType(dispatch, resp) {
   switch (resp.type) {
@@ -34,7 +35,7 @@ const Actions = {
         .send({ id })
         .end(function(error, resp) {
           if(error) {
-            console.error(error);
+            NotificationActions.showErrorNotification(dispatch, error);
           }else {
             dispatch({type: Constants.DELETE_RESOURCES, resp: resp.body });
           }
@@ -51,7 +52,7 @@ const Actions = {
         .send({ ids: data })
         .end(function(error, _) {
           if(error) {
-            console.error(error);
+            NotificationActions.showErrorNotification(dispatch, error);
           }else{
             dispatch(Actions.index(jwt, { type: [type] }));
             dispatch({type: Constants.SET_GALLERY_RESOURCES, gallery: []});
@@ -69,7 +70,7 @@ const Actions = {
         .set('Authorization', jwt)
         .end(function(error, result) {
           if(error) {
-            console.error(error);
+            NotificationActions.showErrorNotification(dispatch, error);
           }
           else {
             dispatchByType(dispatch, { type: data.type[0], resources: result.body });
@@ -87,7 +88,7 @@ const Actions = {
         .set('Authorization', jwt)
         .end(function(error, result) {
           if(error) {
-            console.error(error);
+            NotificationActions.showErrorNotification(dispatch, error);
           }
           else {
             dispatchByType(dispatch, { type: 'gallery', resources: result.body });
@@ -98,15 +99,17 @@ const Actions = {
   getConsoleResource:(jwt, resourceId) => {
     return dispatch => {
      let csrf_token = localStorage.getItem('csrf_token');
+     dispatch({ type: Constants.MODAL_POST_DATA });
      request
        .get('/api/resources/' + resourceId)
        .set('X-CSRF-Token', csrf_token)
        .set('Authorization', jwt)
        .end(function(error, result) {
          if(error) {
-           console.error(error);
+           NotificationActions.showErrorNotification(dispatch, error);
          }
          else {
+           dispatch({ type: Constants.MODAL_POST_DATA_DONE });
           dispatch({ type: Constants.SET_CONSOLE_RESOURCE, data: result.body.resource });
          }
        });
@@ -122,7 +125,7 @@ const Actions = {
         .set('Authorization', jwt)
         .end(function(error, result) {
           if(error) {
-            console.error(error);
+            NotificationActions.showErrorNotification(dispatch, error);
           }else {
             dispatch(Actions.index(jwt, { type: [data.type] }));
           }
@@ -131,6 +134,7 @@ const Actions = {
   },
   upload:(data, jwt) =>{
     return (dispatch) => {
+      dispatch({ type: Constants.MODAL_POST_DATA });
       let csrf_token = localStorage.getItem("csrf_token");
       let req = request.post('/api/session_resources/upload');
       req.set('X-CSRF-Token', csrf_token);
@@ -143,9 +147,10 @@ const Actions = {
       });
       req.end((error, result) =>{
         if(error) {
-          console.error(error);
+          NotificationActions.showErrorNotification(dispatch, error);
         }
         else {
+          dispatch({ type: Constants.MODAL_POST_DATA_DONE });
           dispatch(Actions.index(jwt, { type: [data.type] }));
         }
       });

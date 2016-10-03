@@ -1,5 +1,8 @@
 import Constants  from '../constants';
 import { Socket } from 'phoenix';
+import NotificationsActions from './notifications';
+import ReportsActions   from './reports';
+import DirectMessageActions from './directMessage';
 
 export function joinChannal(dispatch) {
   const socket = new Socket('/socket', {
@@ -9,7 +12,7 @@ export function joinChannal(dispatch) {
     // logger: (kind, msg, data) => { console.log(`${kind}: ${msg}`, data); },
   });
 
-  const channel = socket.channel(`sessions:${1}`);
+  const channel = socket.channel(`sessions:${localStorage.getItem("sessionId")}`);
   if (channel.state != 'joined') {
     dispatch({
       type: Constants.SET_SESSION_CHANNEL,
@@ -17,6 +20,9 @@ export function joinChannal(dispatch) {
       channel
     });
     dispatch(Actions.subscribeToSeesionEvents(channel));
+    dispatch(DirectMessageActions.subscribeDirectMessageEvents(channel));
+    dispatch(NotificationsActions.subscribeNotificationsEvents(channel));
+    dispatch(ReportsActions.subscribeReportsEvents(channel));
 
     channel.join()
     .receive('ok', (session) => {
@@ -24,10 +30,11 @@ export function joinChannal(dispatch) {
         type: Constants.SET_SESSION,
         session
       });
+      dispatch(DirectMessageActions.getUnreadCount(channel));
     })
     .receive('error', (error) =>{
       dispatch({
-        type: Constants.SOCKET_CONNECTED,
+        type: Constants.SOCKET_CONNECTION_ERROR,
         error
       });
     });

@@ -1,5 +1,5 @@
 defmodule KlziiChat.BackgroundTasks.Message do
-  alias KlziiChat.Services.{UnreadMessageService, SessionMembersServic}
+  alias KlziiChat.Services.{UnreadMessageService}
   alias KlziiChat.{Endpoint}
 
   def new(message_id)  do

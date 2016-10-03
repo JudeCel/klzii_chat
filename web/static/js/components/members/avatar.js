@@ -28,12 +28,19 @@ const Avatar = React.createClass({
     }
 
     if(face) {
-      const startPos = 6*152;
-      let image = avatar.image(`/images/avatar/${type}_${this.pickFace(index, this.props.member.online)}_anim.svg`, 0, 0, startPos, 140);
-      image.addClass(`emotion-avatar-${index}`);
+      if(this.props.removeAnim) {
+        let image = avatar.image(`/images/avatar/${type}_${this.pickFace(index, this.props.member.online)}.svg`, 0, 0, 152, 140);
+        image.addClass('svg-avatar-element');
+      }
+      else {
+        const startPos = 6*152;
+        let image = avatar.image(`/images/avatar/${type}_${this.pickFace(index, this.props.member.online)}_anim.svg`, 0, 0, startPos, 140);
+        image.addClass(`svg-avatar-element emotion-avatar-${index}`);
+      }
     }
     else {
-      avatar.image(`/images/avatar/${type}_${this.padToTwo(index)}.svg`, 0, 0, 152, 140);
+      let image = avatar.image(`/images/avatar/${type}_${this.padToTwo(index)}.svg`, 0, 0, 152, 140);
+      image.addClass('svg-avatar-element');
     }
   },
   findAvatar() {
@@ -56,27 +63,51 @@ const Avatar = React.createClass({
     this.shouldAddToAvatar(avatar, 'head', head);
   },
   drawLabelAndText(avatar) {
-    const { username, colour } = this.props.member;
-    avatar.rect(25, 125, 100, 20, 1, 1).attr({fill: colour});
-    avatar.text(76, 138, username).attr({fill: '#fff', 'font-size': '75%', 'text-anchor': 'middle'});
-    avatar.rect(30, 130, 90, 3, 5, 5).attr({fill: '#ccc', opacity: 0.2});
+    const { username, colour, currentTopic, online } = this.props.member;
+    avatar.rect(25, 125, 100, 20, 1, 1).attr({fill: colour}).addClass('svg-avatar-label');
+    avatar.text(76, 138, username).attr({fill: '#fff', 'font-size': '75%', 'text-anchor': 'middle'}).addClass('svg-avatar-label');
+
+    if(currentTopic && online) {
+      avatar.text(76, 158, currentTopic.name).attr({fill: '#000', 'font-size': '75%', 'text-anchor': 'middle'}).addClass('svg-avatar-label');
+    }
+  },
+  scaleAvatar(group) {
+    if(group) {
+      let minWidth = 1200;
+      const { width } = this.props.utilityWindow;
+
+      if(width  < minWidth) {
+        group.transform(`scale(${width / minWidth})`);
+      }
+      else {
+        group.transform(`scale(1)`);
+      }
+    }
   },
   componentDidMount() {
-    const { avatarData, username, sessionTopicContext } = this.props.member;
+    const { avatarData, username, sessionTopicContext, currentTopic } = this.props.member;
 
     let avatar = this.findAvatar();
     this.clearAvatar(avatar);
     this.drawAvatar(avatar);
     this.drawLabelAndText(avatar);
 
-    this.previousData = { avatarData, username, sessionTopicContext };
+    let array = [...avatar.selectAll('image'), ...avatar.selectAll('rect'), ...avatar.selectAll('text')]
+    let group = avatar.group(...array);
+    if(!this.props.specificId) {
+      this.scaleAvatar(group);
+    }
+
+    this.previousData = { avatarData, username, sessionTopicContext, currentTopic };
   },
   shouldComponentUpdate(nextProps) {
     if(this.previousData) {
       let avatarData = JSON.stringify(this.previousData.avatarData) != JSON.stringify(nextProps.member.avatarData);
       let sessionTopicContext = JSON.stringify(this.previousData.sessionTopicContext) != JSON.stringify(nextProps.member.sessionTopicContext);
       let username = this.previousData.username != nextProps.member.username;
-      return(!(username && avatarData && sessionTopicContext));
+      let currentTopic = this.previousData.currentTopic != nextProps.member.currentTopic;
+      let screenChange = JSON.stringify(nextProps.utilityWindow) != JSON.stringify(this.props.utilityWindow);
+      return(!(username && avatarData && sessionTopicContext && currentTopic) || screenChange);
     }
     else {
       return true;
@@ -92,14 +123,15 @@ const Avatar = React.createClass({
   },
   render() {
     return (
-      <svg id={ this.pickId() } width='150px' />
+      <svg id={ this.pickId() } className='svg-avatar' width='150px' height='160px'/>
     )
   }
 });
 
 const mapStateToProps = (state) => {
   return {
-    sessionTopicId: state.sessionTopic.current.id
+    sessionTopicId: state.sessionTopic.current.id,
+    utilityWindow: state.utility.window
   }
 };
 

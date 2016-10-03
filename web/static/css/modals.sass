@@ -1,3 +1,123 @@
+.observer-list-modal
+  .modal-footer
+    border-top: none
+  .observer-section .col-md-3
+    text-align: center
+    .icon-eye
+      margin-top: -20px
+      margin-left: -10px
+      font-size: 150px
+    .observer-name
+      color: white
+      height: 30px
+      div
+        border-radius: 2px
+        height: inherit
+        width: 80%
+        margin: 0 auto
+        line-height: 2
+.reports-modal
+  .download-section
+    a, a:focus
+      text-decoration: none
+      color: inherit
+      outline: none
+    .fa
+      font-size: 50px
+  .reports-section
+    .fa-exclamation
+      padding-left: 8px
+    .view-pdf
+      .fa
+        @extend .font-color-red
+    .view-csv
+      .fa
+        @extend .font-color-green
+    .view-txt
+      .fa
+        @extend .font-color-blue
+.direct-message-modal
+  $max-height-box: 600px
+  width: 100%
+  padding: 0 15px
+  .direct-message-section
+    .svg-avatar-label
+      display: none
+    .messages-section
+      max-height: $max-height-box + 4
+      border: 2px solid
+      .fetcher-section
+        margin-bottom: 10px
+        .fa
+          color: $header-red
+        div
+          border: 2px solid
+          border-top: 0
+          padding: 5px
+          width: 25%
+          margin: 0 auto
+      .unread-separator
+        hr
+          width: 40%
+          border: 1px solid
+        .date
+          line-height: 3
+    .messages-section-empty
+      border: 0px
+    .list-group
+      border: 2px solid
+      max-height: $max-height-box + 4
+      .list-group-item
+        padding: 0
+        border-right: 0
+        border-left: 0
+        border-top: 0
+        margin-bottom: 0
+        height: $scaled-avatar-emotion-size
+        &:last-child
+          border-bottom: 0
+        &.selected
+          color: #555
+          text-decoration: none
+          background-color: #f5f5f5
+    .messages-section > .message, .list-group > .list-group-item
+      .avatar
+        transform: scale($avatar-emotion-half-scale) translate(-$scaled-avatar-emotion-size/2, -$scaled-avatar-emotion-size/2)
+        float: left
+        width: $scaled-avatar-emotion-size
+        height: $scaled-avatar-emotion-size
+      .info
+        padding: 5px
+        margin-left: $scaled-avatar-emotion-size
+        height: $scaled-avatar-emotion-size
+        .header
+          float: left
+          width: 100%
+          padding-bottom: 10px
+          .badge
+            background-color: $header-red
+            margin-right: 5px
+        .body
+          word-wrap: break-word
+          p
+            white-space: nowrap
+            overflow: hidden
+            text-overflow: ellipsis
+        div
+          padding: 0
+      .message-state-read
+        color: #797878
+      .message-state-unread
+        font-weight: bold
+    .messages-section + .input-section
+      margin-top: 15px
+    .input-section
+      .input-group
+        @media (min-width: 768px)
+          margin: 0px 15px
+          padding-top: 15px
+      textarea
+        resize: none
 .facilitator-board-modal
   .facilitator-board-section
     .input-box
@@ -46,8 +166,19 @@
             position: relative
         span
           padding-left: 22px
+body.modal-open
+  nav.header-section
+    margin-right: -31px
+    padding-right: 16px
+.modal-backdrop.fade.in, .modal.fade.in
+  @media (min-width: 768px)
+    margin-top: 100px !important
+    @media (max-width: 1199px)
+      margin-top: 96px !important
+    @media (max-width: 1119px)
+      margin-top: 94px !important
 .modal-section
-  margin-top: 180px
+  margin-top: 130px
   .modal-backdrop
     z-index: 1000
   .modal-content
@@ -59,11 +190,16 @@
         padding: 10px
         font-size: 20px
         &.icon-reply
-          color: $green
-          border: 2px solid $green
-        &.fa-check, &.fa-plus
           color: $header-red
           border: 2px solid $header-red
+          width: 52px
+          height: 45px
+        &.fa-check, &.fa-plus
+          color: $green
+          border: 2px solid $green
+          width: 52px
+          height: 45px
+          text-align: center
       border: none
       .modal-title
         text-transform: capitalize
@@ -71,18 +207,52 @@
         vertical-align: middle
   .modal-body
     .uploads-console-section
+      a
+        text-decoration: none !important
       text-align: center
       @extend .resource-types
+      iframe
+        height: 450px
+      .icon-pdf
+        font-size: 100px
     .survey-answer-section
       ul li
         border: 0
+        .row
+          .col-md-6:first-child
+            float: left
+            padding: 5px
+            padding-left: 30px
+          .col-md-6.text-right
+            float: right;
+            padding: 5px;
+            padding-right: 30px
     .survey-create-section, .uploads-section
       @extend .no-border-radius
+      .icon-pdf
+        font-size: 25px
+      img.youtube-preview
+        max-height: 150px
       .gallery-section
         @extend .resource-types
+        iframe, video, img.youtube-preview
+          height: 120px
+        .top-row
+          display: flex
+          justify-content: flex-end
+        .resource-title
+          padding-right: 5px
+          padding-left: 10px
+          overflow: hidden
+          text-overflow: ellipsis
+          line-height: 2
+        .icon-pdf
+          font-size: 10em
         label
           margin: 0px -10px -10px 0px
           font-weight: normal
+        .row
+          margin-right: -5px !important
       ul li
         border-left: none
         border-right: none
@@ -92,6 +262,9 @@
           @extend .cursor-pointer
           font-size: $input-size
         @extend .resource-types
+    .uploads-section
+      a
+        text-decoration: none !important
   ul.tab-section
     padding: 0 20px
     a, .active > a, .active > a:hover
@@ -103,3 +276,7 @@
       @extend .no-border-radius
       @extend .cursor-pointer
       padding: 0 10px
+
+@media screen and (min-width: 768px)
+  .reports-modal
+    width: 900px

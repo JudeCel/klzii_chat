@@ -1,3 +1,10 @@
+.font-color-red
+  color: $header-red
+.font-color-blue
+  color: $blue
+.font-color-green
+  color: $green
+
 .lineup-icons
   ul.icons
     text-align: justify
@@ -27,9 +34,37 @@
       li
         opacity: 1
         border: none
-        font-size: 25px
+        font-size: 20px
         color: white
         text-shadow: 1px 2px 0 #666
+
+@media (min-width: 1200px)
+  .lineup-icons.header > ul.icons > li
+    font-size: 25px
+  #topic-selector > .btn-default
+      line-height: 3 !important
+      max-height: 55.5px !important
+
+@media (max-width: 1119px)
+  .header-section .links-section
+    margin-left: 10px
+  .lineup-icons.header > ul.icons > li
+    min-width: 48px !important
+    max-height: 48px !important
+    font-size: 19px !important
+  #topic-selector > .btn-default
+    line-height: 2.4 !important
+    max-height: 47px !important
+
+@media (max-width: 1079px)
+  .header-section .resources-section
+    float: right !important
+    margin-left: -310px !important
+    margin-top: 60px
+    margin-right: 10px
+    margin-bottom: -10px;
+  .type-forum .header-section .resources-section
+    margin-top: 70px
 
 .dropshadow
   $x: 0px
@@ -41,6 +76,11 @@
   box-shadow: $x $y $blur rgba(0, 0, 0, $alpha)
 
 .text-break-all
+  white-space: pre-wrap
+  white-space: -moz-pre-wrap
+  white-space: -pre-wrap
+  white-space: -o-pre-wrap
+  word-wrap: break-word
   -ms-word-break: break-all
   word-break: break-all
 
@@ -70,7 +110,30 @@
   video, audio, img, iframe
     display: block
     width: 100%
-  video, img
+  video, img, iframe
     min-height: 120px
-  iframe
-    height: 120px
+
+#small-screen
+  display: none
+  padding-top: 18%
+  position: absolute
+  top: 0px
+  left: 0px
+  width: 100vw
+  height: 100vh
+  background-color: #EFEFEF!important
+  div
+    width: 50%
+    text-align: center
+    background-color: rgb(255, 255, 255)
+    border-width: 1px
+    border-style: solid
+    border-color: rgb(204, 204, 204)
+    margin: 0px auto
+    padding: 30px
+
+.badge
+  &.normal
+    background-color: $header-red
+  &.reply
+    background-color: black

@@ -1,19 +1,29 @@
-import React, { PropTypes, Component } from 'react';
+import React, { PropTypes } from 'react';
+import { connect }          from 'react-redux';
+import Constants            from '../../../constants';
+import ReactDOM                 from 'react-dom';
 
-class Reply extends Component {
+const ReplyMessage = React.createClass({
+  replyMessage() {
+    const { dispatch, message } = this.props;
+    dispatch({ type: Constants.SET_INPUT_REPLY, replyId: message.id, replyColour: message.session_member.colour });
+  },
   render() {
-    const { id } = this.props.data;
-    const { can, onClick } = this.props;
+    const { permission } = this.props;
 
-    if(can) {
+    if(permission) {
       return(
-        <i className='icon-reply-empty' onClick={ onClick } data-replyid={ id } />
+        <i className='icon-reply-empty' onClick={ this.replyMessage } />
       )
     }
     else {
       return(false)
     }
   }
-}
+});
 
-export default Reply;
+const mapStateToProps = (state) => {
+  return {};
+};
+
+export default connect(mapStateToProps)(ReplyMessage);

@@ -2,7 +2,7 @@
   width: 55px
   height: 55px
   background-image: url($image) !important
-  transform: scale(0.8) translate(-7px, -7px)
+  transform: scale($chat-emotion-default-scale) translate(-7px, -7px)
 
   -webkit-animation: play-chat $time steps($steps) infinite
   -moz-animation: play-chat $time steps($steps) infinite
@@ -16,8 +16,8 @@
   to
     background-position: -330px
 
-// 55 * 0.8 = 44
-$scaled-chat-emotion-size: 44px
+$chat-emotion-default-scale: 0.8
+$scaled-chat-emotion-size: (55px * $chat-emotion-default-scale)
 $emotion-chat-min: 0
 $emotion-chat-max: 6
 

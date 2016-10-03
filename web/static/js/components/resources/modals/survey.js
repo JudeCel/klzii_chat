@@ -32,22 +32,22 @@ const Survey = React.createClass({
     }
 
     this.setState(this.getInitialState(), function() {
-      const { sessionTopicId, currentUserJwt, dispatch } = this.props;
-      dispatch(MiniSurveyActions.index(currentUserJwt, sessionTopicId));
+      const { channel, dispatch } = this.props;
+      dispatch(MiniSurveyActions.index(channel));
     });
   },
   onNew() {
     const { rendering, survey } = this.state;
 
     if(rendering == 'new') {
-      const { sessionTopicId, currentUserJwt, dispatch } = this.props;
+      const { channel, dispatch } = this.props;
       let hasMissing = this.hasFieldsMissing(survey, ['title', 'question', 'type']);
 
       if(hasMissing) {
         NotificationActions.showNotification(dispatch, { message: 'Please fill all fields', type: 'error' });
       }
       else {
-        dispatch(MiniSurveyActions.create(currentUserJwt, { ...survey, sessionTopicId }, this.onShow));
+        dispatch(MiniSurveyActions.create(channel, survey, this.onBack));
       }
     }
     else {
@@ -55,8 +55,10 @@ const Survey = React.createClass({
     }
   },
   onView(survey) {
-    const { rendering } = this.state;
-    if(rendering != 'view') {
+    if(this.state.rendering != 'view') {
+      const { dispatch, channel } = this.props;
+
+      dispatch(MiniSurveyActions.viewAnswers(channel, survey.id));
       this.setState({ rendering: 'view' });
     }
   },
@@ -110,10 +112,9 @@ const Survey = React.createClass({
 
 const mapStateToProps = (state) => {
   return {
-    currentUserJwt: state.members.currentUser.jwt,
-    sessionTopicId: state.sessionTopic.current.id,
+    channel: state.sessionTopic.channel,
     modalWindows: state.modalWindows,
-    colours: state.chat.session.colours,
+    colours: state.chat.session.colours
   }
 };
 

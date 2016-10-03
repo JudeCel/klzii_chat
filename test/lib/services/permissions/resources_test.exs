@@ -3,46 +3,54 @@ defmodule KlziiChat.Services.Permissions.ResourcePermissionsTest do
   alias  KlziiChat.Services.Permissions.Resources
 
   test "can upload" do
+    preference = %{"uploadToGallery" =>  true}
     roles = ["facilitator"]
     Enum.map(roles, fn role ->
       member = %{role: role}
-      Resources.can_upload(member)|> assert
+      assert( {:ok} = Resources.can_upload(member, preference))
     end)
   end
 
   test "can participant delete only when owner " do
     member = %{id: 1, role: "participant"}
     events = [%{id: 1, sessionMemberId: 1}]
-    Resources.can_delete(member, events) |> assert
+    assert( {:ok} = Resources.can_delete(member, events))
   end
 
   test "can zip when accountManager" do
     member = %{id: 1, role: "accountManager"}
     events = [%{id: 1, accountUser: 1}]
-    Resources.can_zip(member, events) |> assert
+    preference = %{"uploadToGallery" => true}
+    assert( {:ok} = Resources.can_zip(member, events, preference))
   end
 
   test "can zip when admin " do
+    preference = %{"admin" =>  true}
     member = %{id: 1, role: "admin"}
     events = [%{id: 1, accountUser: 1}]
-    Resources.can_zip(member, events) |> assert
+    assert( {:ok} = Resources.can_zip(member, events, preference))
   end
 
   test "can't participant delete when not  owner " do
     member = %{id: 1, role: "participant"}
     events = [%{id: 1, sessionMemberId: 2}]
-    Resources.can_delete(member, events) |> refute
+    assert( {:error, _} = Resources.can_delete(member, events))
   end
 
   test "can facilitator delete when he not owner" do
     member = %{id: 1, role: "facilitator"}
     events = [%{id: 1, sessionMemberId: 2}]
-    Resources.can_delete(member, events) |> assert
+    assert( {:ok} = Resources.can_delete(member, events))
   end
 
   test "can facilitator delete when he admin" do
     member = %{id: 1, role: "admin"}
     events = [%{id: 1, sessionMemberId: 2}]
-    Resources.can_delete(member, events) |> assert
+    assert( {:ok} = Resources.can_delete(member, events))
+  end
+
+  test "facilitator only can see resource section" do
+    member = %{id: 1, role: "facilitator"}
+    assert( {:ok} = Resources.can_see_section(member))
   end
 end

@@ -1,5 +1,6 @@
 defmodule KlziiChat.ResourcesController do
   use KlziiChat.Web, :controller
+  import KlziiChat.ErrorHelpers, only: [error_view: 1]
   alias KlziiChat.{Repo, ResourceView}
   alias KlziiChat.Services.{ ResourceService }
   alias KlziiChat.Queries.Resources, as: QueriesResources
@@ -13,11 +14,29 @@ defmodule KlziiChat.ResourcesController do
   end
 
   def index(conn, params, member, _) do
-    query =
+    resources =
       QueriesResources.base_query(member.account_user)
       |> QueriesResources.find_by_params(params)
+      |> QueriesResources.stock_query(%{"stock" => false})
+      |> Repo.all
+    stock_resources =
+      QueriesResources.base_resource_query
+        |> QueriesResources.stock_query(params)
+        |> QueriesResources.find_by_params(params)
+        |> Repo.all
+
+      list = Enum.map((stock_resources ++ resources), fn resource ->
+        ResourceView.render("resource.json", %{resource: resource})
+      end)
+    json(conn, %{resources: list})
+  end
+
+  def stock(conn, params) do
     resources =
-      Repo.all(query)
+      QueriesResources.base_resource_query()
+      |> QueriesResources.find_by_params(params)
+      |> QueriesResources.stock_query(true)
+      |> Repo.all
       |> Enum.map(fn resource ->
         ResourceView.render("resource.json", %{resource: resource})
       end)
@@ -29,7 +48,8 @@ defmodule KlziiChat.ResourcesController do
       {:ok, resource} ->
         json(conn, %{resource: ResourceView.render("resource.json", %{resource: resource}) })
       {:error, reason} ->
-        json(conn, %{status: :error, reason: reason})
+        put_status(conn, reason.code)
+        |> json(error_view(reason))
     end
   end
 
@@ -39,18 +59,20 @@ defmodule KlziiChat.ResourcesController do
         resp = Enum.map(resources, fn resource ->
           ResourceView.render("delete.json", %{resource: resource})
         end)
-        json(conn, %{ids: resp, message: "Success deleteed!"})
+        json(conn, %{ids: resp, message: "Success deleted!"})
       {:error, reason} ->
-        json(conn, %{status: :error, reason: reason})
+        put_status(conn, reason.code)
+        |> json(error_view(reason))
     end
   end
 
   def show(conn, %{"id" => id}, member, _) do
     case ResourceService.find(member.account_user.id, id ) do
       {:ok, resource} ->
-        json(conn, %{resource: ResourceView.render("resource.json", %{resource: resource}) })
+        json(conn, %{ resource: ResourceView.render("resource.json", %{resource: resource}) })
       {:error, reason} ->
-        json(conn, %{status: :error, reason: reason})
+        put_status(conn, reason.code)
+        |> json(error_view(reason))
     end
   end
 
@@ -60,9 +82,10 @@ defmodule KlziiChat.ResourcesController do
         json(conn, %{
         type: resource.type,
         resource: ResourceView.render("resource.json", %{resource: resource}),
-        message: "Success uploaded!" })
+        message: "File successfully uploaded" })
       {:error, reason} ->
-        json(conn, %{status: :error, reason: reason})
+        put_status(conn, reason.code)
+        |> json(error_view(reason))
     end
   end
 

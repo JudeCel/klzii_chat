@@ -1,7 +1,11 @@
 defmodule KlziiChat.Services.SessionsTest do
   use KlziiChat.{ModelCase, SessionMemberCase}
   alias KlziiChat.Queries.Sessions, as: SessionsQueries
-  alias KlziiChat.{Repo, BrandProjectPreference}
+  alias KlziiChat.{Repo, SubscriptionPreference}
+
+  test "when participant then select only own shapes for delete in session topic", %{session: session} do
+     assert(%SubscriptionPreference{} = SessionsQueries.get_subscription_preference_session(session.id) |> Repo.one!)
+  end
 
   test "can find session", %{session: session} do
     found_session = SessionsQueries.find(session.id)
@@ -16,13 +20,7 @@ defmodule KlziiChat.Services.SessionsTest do
     assert(session_topics |> Enum.count == 2)
     first = session_topics |> List.first
     last = session_topics |> List.last
-    assert(first.order > last.order)
-  end
-
-  test "is prelouded brand project preference", %{session: session} do
-      %BrandProjectPreference{} = SessionsQueries.find(session.id)
-      |> Repo.one
-      |> Map.get(:brand_project_preference)
+    assert(last.order > first.order)
   end
 
   test "can't find session", %{session: session} do

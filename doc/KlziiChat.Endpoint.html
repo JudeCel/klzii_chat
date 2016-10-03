@@ -4,22 +4,20 @@
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="generator" content="ExDoc v0.11.5">
+    <meta name="generator" content="ExDoc v0.13.1">
     <title>KlziiChat.Endpoint – klzii_chat v0.0.1</title>
-    <link rel="stylesheet" href="dist/app-ddd9717ad9.css" />
+    <link rel="stylesheet" href="dist/app-7e84850c37.css" />
     
     <script src="dist/sidebar_items.js"></script>
   </head>
   <body data-type="modules">
+    <script>if(localStorage.getItem('night-mode')) document.body.className += ' night-mode';</script>
 
     <div class="main">
 <button class="sidebar-toggle">
   <i class="icon-menu"></i>
 </button>
 <section class="sidebar">
-  <button class="sidebar-toggle">
-    <i class="icon-menu"></i>
-  </button>
 
   
   <a href="api-reference.html" class="sidebar-projectLink">
@@ -56,7 +54,8 @@
 </section>
 
 <section class="content">
-  <div id="content" class="content-inner">
+  <div class="content-outer">
+    <div id="content" class="content-inner">
 
 
       <h1>
@@ -193,7 +192,7 @@
     <a href="#struct_url/0">struct_url()</a>
   </div>
   
-    <div class="summary-synopsis"><p>Generates the endpoint base URL but as a <code class="inline">URI</code> struct</p>
+    <div class="summary-synopsis"><p>Generates the endpoint base URL but as a <a href="http://elixir-lang.org/docs/stable/elixir/URI.html"><code class="inline">URI</code></a> struct</p>
 </div>
   
 </div>
@@ -279,7 +278,8 @@
       <i class="icon-link"></i>
     </a>
     <span class="signature">__sockets__()</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
@@ -293,7 +293,8 @@
       <i class="icon-link"></i>
     </a>
     <span class="signature">broadcast(topic, event, msg)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
@@ -306,7 +307,8 @@
       <i class="icon-link"></i>
     </a>
     <span class="signature">broadcast!(topic, event, msg)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
@@ -319,7 +321,8 @@
       <i class="icon-link"></i>
     </a>
     <span class="signature">broadcast_from(from, topic, event, msg)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
@@ -332,7 +335,8 @@
       <i class="icon-link"></i>
     </a>
     <span class="signature">broadcast_from!(from, topic, event, msg)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
@@ -345,7 +349,8 @@
       <i class="icon-link"></i>
     </a>
     <span class="signature">call(conn, opts)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
@@ -359,7 +364,8 @@
       <i class="icon-link"></i>
     </a>
     <span class="signature">config(key, default \\ nil)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
@@ -374,7 +380,8 @@
       <i class="icon-link"></i>
     </a>
     <span class="signature">config_change(changed, removed)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
@@ -388,7 +395,8 @@
       <i class="icon-link"></i>
     </a>
     <span class="signature">init(opts)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
@@ -402,7 +410,8 @@
       <i class="icon-link"></i>
     </a>
     <span class="signature">path(path)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
@@ -416,7 +425,8 @@
       <i class="icon-link"></i>
     </a>
     <span class="signature">start_link()</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
@@ -430,7 +440,8 @@
       <i class="icon-link"></i>
     </a>
     <span class="signature">static_path(path)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
@@ -444,7 +455,8 @@
       <i class="icon-link"></i>
     </a>
     <span class="signature">static_url()</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
@@ -460,11 +472,12 @@ such. It fallsback to <code class="inline">:url</code> if <code class="inline">:
       <i class="icon-link"></i>
     </a>
     <span class="signature">struct_url()</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
-    <p>Generates the endpoint base URL but as a <code class="inline">URI</code> struct.</p>
+    <p>Generates the endpoint base URL but as a <a href="http://elixir-lang.org/docs/stable/elixir/URI.html"><code class="inline">URI</code></a> struct.</p>
 <p>It uses the configuration under <code class="inline">:url</code> to generate such.
 Useful for manipulating the url data and passing to
 URL helpers.</p>
@@ -477,7 +490,8 @@ URL helpers.</p>
       <i class="icon-link"></i>
     </a>
     <span class="signature">subscribe(topic)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
@@ -490,7 +504,8 @@ URL helpers.</p>
       <i class="icon-link"></i>
     </a>
     <span class="signature">subscribe(pid, topic)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
@@ -503,7 +518,8 @@ URL helpers.</p>
       <i class="icon-link"></i>
     </a>
     <span class="signature">subscribe(pid, topic, opts)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
@@ -516,7 +532,8 @@ URL helpers.</p>
       <i class="icon-link"></i>
     </a>
     <span class="signature">unsubscribe(topic)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
@@ -529,7 +546,8 @@ URL helpers.</p>
       <i class="icon-link"></i>
     </a>
     <span class="signature">unsubscribe(pid, topic)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
@@ -542,7 +560,8 @@ URL helpers.</p>
       <i class="icon-link"></i>
     </a>
     <span class="signature">url()</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
@@ -569,7 +588,8 @@ URL helpers.</p>
       <i class="icon-link"></i>
     </a>
     <span class="signature">instrument(event, runtime \\ Macro.escape(%{}), fun)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
@@ -578,7 +598,11 @@ URL helpers.</p>
 instrumenting function to call in the instrumenter modules. <code class="inline">runtime</code> is
 metadata to be associated with the event at runtime (e.g., the query being
 issued if the event to instrument is a DB query).</p>
-<h2>Examples</h2>
+<h2 id="instrument/3-examples" class="section-heading">
+  <a href="#instrument/3-examples" class="hover-link"><i class="icon-link"></i></a>
+  Examples
+</h2>
+
 <pre><code class="elixir">instrument :render_view, %{view: &quot;index.html&quot;}, fn -&gt;
   render conn, &quot;index.html&quot;
 end</code></pre>
@@ -590,23 +614,24 @@ end</code></pre>
       
 
       
-        <footer class="footer">
-      <p>
-        <span class="line">
-          Built using
-          <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" rel="help" target="_blank">ExDoc</a> (v0.11.5),
-        </span>
-        <span class="line">
-          designed by
-          <a href="https://twitter.com/dignifiedquire" target="_blank" title="@dignifiedquire">Friedel Ziegelmayer</a>.
+          <footer class="footer">
+        <p>
+          <span class="line">
+            Built using
+            <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" rel="help" target="_blank">ExDoc</a> (v0.13.1),
           </span>
-      </p>
-      <button class="night-mode-toggle" />
-    </footer>
+          <span class="line">
+            designed by
+            <a href="https://twitter.com/dignifiedquire" target="_blank" title="@dignifiedquire">Friedel Ziegelmayer</a>.
+            </span>
+        </p>
+        <button class="night-mode-toggle" />
+      </footer>
+    </div>
   </div>
 </section>
 </div>
-  <script src="dist/app-918614602f.js"></script>
+  <script src="dist/app-95540a96e6.js"></script>
   </body>
 </html>
 

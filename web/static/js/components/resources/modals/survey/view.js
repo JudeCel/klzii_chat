@@ -5,7 +5,6 @@ import SurveyViewAnswers  from './viewAnswers';
 const SurveyViewResults = React.createClass({
   render() {
     const { survey } = this.props;
-    const staticAnswers = ['Yes', 'No', 'Maybe'];
 
     return (
       <div className='col-md-12'>
@@ -21,7 +20,7 @@ const SurveyViewResults = React.createClass({
 
 const mapStateToProps = (state) => {
   return {
-    survey: state.resources.survey || { id: 1, title: 'Survey', question: 'Do you like?', type: '5starRating', active: true }
+    survey: state.miniSurveys.view
   }
 };
 

@@ -1,0 +1,75 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: chat
+  labels:
+    name: chat
+spec:
+  ports:
+    - port: 80
+      targetPort: 3000
+      protocol: TCP
+  selector:
+    name: chat
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: chat
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: chat
+  template:
+    metadata:
+      labels:
+        name: chat
+    spec:
+      imagePullSecrets:
+        - name: docker-hub-secret
+      containers:
+      - env:
+        - name: AWS_ACCESS_KEY_ID
+          value: "AKIAJV2UHLF355DYBP6A"
+        - name: AWS_SECRET_ACCESS_KEY
+          value: "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"
+        - name: AWS_REGION
+          value: "us-west-2"
+        - name: ARC_BUCKET
+          value: "klzii-staging"
+        - name: SECRET_KEY_BASE
+          value: 265728C3CEE6D163E3A210D2C7952CF50EF3E1765E3FB69DC13E70C93E6D0EF8
+        - name: CORS_URL
+          value: ^https?://(.*\.?)klzii\.chat
+        - name: DB_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: postgres-credentials
+              key: user
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: postgres-credentials
+              key: password
+        - name: DB_HOST
+          value: postgres-master
+        - name: DB_DATABASE
+          value: klzii_production
+        - name: SERVER_HOST
+          value: chat.klzii.chat
+        - name: GUARDIAN_SECRET_KEY
+          value: "SttPra/cddsnX+Vko2i8KA=="
+        volumeMounts:
+          - name: postgres-credentials
+            mountPath: /etc/postgres-credentials
+        image: index.docker.io/klzii/klzii_chat:stable
+        imagePullPolicy: Always
+        name: chat
+        ports:
+        - containerPort: 3000
+          protocol: TCP
+      volumes:
+        - name: postgres-credentials
+          secret:
+            secretName: postgres-credentials

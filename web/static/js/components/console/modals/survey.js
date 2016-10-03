@@ -1,11 +1,14 @@
-import React, {PropTypes} from 'react';
-import { connect }        from 'react-redux';
-import { Modal }          from 'react-bootstrap';
-import SurveyAnswer       from './survey/answer';
-import mixins             from '../../../mixins';
+import React, {PropTypes}  from 'react';
+import { connect }         from 'react-redux';
+import { Modal }           from 'react-bootstrap';
+import SurveyAnswer        from './survey/answer';
+import mixins              from '../../../mixins';
+import MiniSurveyActions   from '../../../actions/miniSurvey';
+import NotificationActions from '../../../actions/notifications';
+import SurveyViewAnswers   from '../../resources/modals/survey/viewAnswers';
 
 const SurveyConsole = React.createClass({
-  mixins: [mixins.modalWindows],
+  mixins: [mixins.modalWindows, mixins.validations],
   getInitialState() {
     return {};
   },
@@ -13,18 +16,58 @@ const SurveyConsole = React.createClass({
     this.setState({ value: value });
   },
   answer() {
-    console.log("answer ", this.state.value, this.props.survey);
+    const { dispatch, channel, survey } = this.props;
+    let hasMissing = this.hasFieldsMissing(this.state, ['value']);
+
+    if(hasMissing) {
+      NotificationActions.showNotification(dispatch, { message: 'Please select answer', type: 'error' });
+    }
+    else {
+      let params = {
+        id: survey.id,
+        answer: {
+          value: this.state.value,
+          type: survey.type
+        }
+      };
+      dispatch(MiniSurveyActions.answer(channel, params, this.closeAllModals));
+    }
+  },
+  onShow(e) {
+    const { dispatch, channel, sessionTopicConsole } = this.props;
+
+    this.onEnterModal(e);
+    dispatch(MiniSurveyActions.getConsole(channel, sessionTopicConsole.data.mini_survey_id));
+  },
+  showContent(survey) {
+    if(survey.id) {
+      if(this.hasPermission(['console', 'can_vote_mini_survey'])) {
+        return <SurveyAnswer type={ survey.type } afterChange={ this.afterChange } />
+      }
+      else {
+        this.onViewAnswers(survey);
+        return <SurveyViewAnswers type={ survey.type } />
+      }
+    }
+  },
+  onViewAnswers(survey) {
+    const { dispatch, channel } = this.props;
+    dispatch(MiniSurveyActions.viewAnswers(channel, survey.id));
+  },
+  canAnswer() {
+    if(this.hasPermission(['console', 'can_vote_mini_survey'])) {
+      return <span className='pull-right fa fa-check' onClick={ this.answer }></span>
+    }
   },
   render() {
-    const show = this.showSpecificModal('console');
-    const { survey, shouldRender } = this.props;
+    const { survey, show } = this.props;
 
-    if(show && shouldRender) {
+    if(show) {
       return (
-        <Modal dialogClassName='modal-section' show={ show } onHide={ this.closeAllModals } onEnter={ this.onEnterModal }>
+        <Modal dialogClassName='modal-section' show={ show } onHide={ this.closeAllModals } onEnter={ this.onShow }>
           <Modal.Header>
             <div className='col-md-2'>
-              <span className='pull-left fa icon-reply' onClick={ this.closeAllModal }></span>
+              <span className='pull-left fa icon-reply' onClick={ this.closeAllModals }></span>
             </div>
 
             <div className='col-md-8 modal-title'>
@@ -32,13 +75,13 @@ const SurveyConsole = React.createClass({
             </div>
 
             <div className='col-md-2'>
-              <span className='pull-right fa fa-check' onClick={ this.answer }></span>
+              { this.canAnswer() }
             </div>
           </Modal.Header>
 
           <Modal.Body>
             <div className='row survey-answer-section'>
-              <SurveyAnswer type={ survey.type } afterChange={ this.afterChange } />
+              { this.showContent(survey) }
             </div>
           </Modal.Body>
         </Modal>
@@ -52,9 +95,12 @@ const SurveyConsole = React.createClass({
 
 const mapStateToProps = (state) => {
   return {
+    currentUser: state.members.currentUser,
     modalWindows: state.modalWindows,
     colours: state.chat.session.colours,
-    survey: state.resources.survey || {id: 1, title: 'Survey', question: 'Do you like?', type: '5starRating', active: true}
+    survey: state.miniSurveys.console,
+    channel: state.sessionTopic.channel,
+    sessionTopicConsole: state.sessionTopicConsole
   }
 };
 

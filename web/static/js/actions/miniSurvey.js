@@ -1,41 +1,81 @@
 import Constants from '../constants';
-import request   from 'superagent';
+import NotificationActions from './notifications';
 
 const Actions = {
-  create:(jwt, data, callback) => {
+  addToConsole(channel, surveyId) {
     return dispatch => {
-      let csrf_token = localStorage.getItem('csrf_token');
-      request
-        .post('/api/mini_surveys')
-        .set('X-CSRF-Token', csrf_token)
-        .set('Authorization', jwt)
-        .send(data)
-        .end(function(error, _) {
-          if(error) {
-            console.error(error);
-          }
-          else {
-            callback();
-          }
-        });
+      channel.push('set_console_mini_survey', { id: surveyId });
     }
   },
-  index:(jwt, sessionTopicId) => {
+  removeFromConsole:(channel) => {
     return dispatch => {
-      let csrf_token = localStorage.getItem('csrf_token');
-      request
-        .get('/api/mini_surveys')
-        .query({ sessionTopicId: sessionTopicId })
-        .set('X-CSRF-Token', csrf_token)
-        .set('Authorization', jwt)
-        .end(function(error, result) {
-          if(error) {
-            console.error(error);
-          }
-          else {
-            dispatch({ type: Constants.SET_SURVEYS, data: result.body.mini_surveys });
-          }
-        });
+      channel.push('remove_console_element', { type: 'miniSurvey' });
+    };
+  },
+  create:(channel, params, callback) => {
+    return dispatch => {
+      channel.push('create_mini_survey', params)
+      .receive('ok', (data) => {
+        dispatch({ type: Constants.CREATE_SURVEY, data: data });
+        if(callback) callback();
+      }).receive('error', (errors) => {
+        NotificationActions.showErrorNotification(dispatch, errors);
+      });
+    }
+  },
+  index:(channel, callback) => {
+    return dispatch => {
+      channel.push('mini_surveys')
+      .receive('ok', (data) => {
+        dispatch({ type: Constants.SET_SURVEYS, data: data.mini_surveys });
+        if(callback) callback();
+      }).receive('error', (errors) => {
+        NotificationActions.showErrorNotification(dispatch, errors);
+      });
+    }
+  },
+  answer:(channel, params, callback) => {
+    return dispatch => {
+      channel.push('answer_mini_survey', params)
+      .receive('ok', (data) => {
+        dispatch({ type: Constants.SET_CONSOLE_SURVEY, data: data });
+        if(callback) callback();
+      }).receive('error', (errors) => {
+        NotificationActions.showErrorNotification(dispatch, errors);
+      });
+    }
+  },
+  getConsole:(channel, surveyId, callback) => {
+    return dispatch => {
+      channel.push('show_mini_survey', { id: surveyId })
+      .receive('ok', (data) => {
+        dispatch({ type: Constants.SET_CONSOLE_SURVEY, data: data });
+        if(callback) callback();
+      }).receive('error', (errors) => {
+        NotificationActions.showErrorNotification(dispatch, errors);
+      });
+    }
+  },
+  viewAnswers:(channel, surveyId, callback) => {
+    return dispatch => {
+      channel.push('show_mini_survey_answers', { id: surveyId })
+      .receive('ok', (data) => {
+        dispatch({ type: Constants.SET_VIEW_SURVEY, data: data });
+        if(callback) callback();
+      }).receive('error', (errors) => {
+        NotificationActions.showErrorNotification(dispatch, errors);
+      });
+    }
+  },
+  delete:(channel, surveyId, callback) => {
+    return dispatch => {
+      channel.push('delete_mini_survey', { id: surveyId })
+      .receive('ok', (data) => {
+        dispatch({ type: Constants.DELETE_SURVEY, data: data });
+        if(callback) callback();
+      }).receive('error', (errors) => {
+        NotificationActions.showErrorNotification(dispatch, errors);
+      });
     }
   }
 }

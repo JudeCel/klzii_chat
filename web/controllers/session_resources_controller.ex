@@ -1,5 +1,6 @@
 defmodule KlziiChat.SessionResourcesController do
   use KlziiChat.Web, :controller
+  import KlziiChat.ErrorHelpers, only: [error_view: 1]
   alias KlziiChat.{SessionResourcesView, ResourceView}
   alias KlziiChat.Services.{ SessionResourcesService, ResourceService}
   alias KlziiChat.Queries.Resources, as: QueriesResources
@@ -13,7 +14,9 @@ defmodule KlziiChat.SessionResourcesController do
       {:ok, session_resources} ->
         json(conn, Phoenix.View.render_many(session_resources, SessionResourcesView, "show.json", as: :session_resource))
       {:error, reason} ->
-        json(conn, %{status: :error, reason: reason})
+        conn
+        |> put_status(400)
+        |> json(error_view(reason))
     end
   end
 
@@ -22,7 +25,9 @@ defmodule KlziiChat.SessionResourcesController do
       {:ok, _} ->
         json(conn, %{status: :ok})
       {:error, reason} ->
-        json(conn, %{error:  reason})
+        conn
+        |> put_status(400)
+        |> json(error_view(reason))
     end
   end
 
@@ -32,7 +37,9 @@ defmodule KlziiChat.SessionResourcesController do
         SessionResourcesService.add_session_resources(resource.id, member.session_member.id)
         json(conn, %{status: :ok})
       {:error, reason} ->
-        json(conn, %{status: :error, reason: reason})
+        conn
+        |> put_status(reason.code)
+        |> json(error_view(reason))
     end
   end
 
@@ -41,7 +48,9 @@ defmodule KlziiChat.SessionResourcesController do
       {:ok, session_resource} ->
         json(conn, KlziiChat.SessionResourcesView.render("delete.json", %{session_resource: session_resource}))
       {:error, reason} ->
-        json(conn, %{status: :error, reason: reason})
+        conn
+        |> put_status(reason.code)
+        |> json(error_view(reason))
     end
   end
 
@@ -50,10 +59,18 @@ defmodule KlziiChat.SessionResourcesController do
     resources =
       QueriesResources.base_query(member.account_user)
       |> QueriesResources.find_by_params(params)
+      |> QueriesResources.stock_query(%{"stock" => false})
       |> QueriesResources.exclude_by_ids(session_resources)
       |> Repo.all
-      |> Phoenix.View.render_many(ResourceView, "resource.json", as: :resource)
-    json(conn, resources)
+
+    stock_resources =
+      QueriesResources.base_resource_query
+        |> QueriesResources.find_by_params(params)
+        |> QueriesResources.stock_query(%{"stock" => true})
+        |> QueriesResources.exclude_by_ids(session_resources)
+        |> Repo.all
+        
+    json(conn, Phoenix.View.render_many((stock_resources ++ resources), ResourceView, "resource.json", as: :resource))
   end
 
   defp if_current_member(conn, opts) do

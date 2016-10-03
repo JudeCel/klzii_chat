@@ -17,23 +17,19 @@ function currentStepObject() {
   return undoHistory[currentIdx];
 }
 function undoStepObject() {
-  currentIdx--;
-  if (currentIdx < 0) {
-    currentIdx = 0;
-    return null;
-  } else {
-    return undoHistory[currentIdx];
+  let currentObject = undoHistory[currentIdx];
+  if (currentObject) {
+      currentIdx--;
   }
+  return currentObject;
 }
 
 function redoStepObject() {
-  currentIdx++;
-  if (currentIdx > undoHistory.length - 1) {
-    currentIdx = undoHistory.length - 1;
-    return null;
-  } else {
-    return undoHistory[currentIdx];
+  let currentObject = undoHistory[currentIdx + 1];
+  if (currentObject) {
+      currentIdx++;
   }
+  return currentObject;
 }
 
 function getActionCount() {

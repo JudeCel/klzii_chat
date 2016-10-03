@@ -28,10 +28,11 @@ export default function reducer(state = initialState, action = {}) {
         return { ...state, emotion: action.emotion};
 
     case Constants.SET_INPUT_REPLY:
-      if (state.action == 'reply' ) {
+      if(state.action == 'reply' && state.replyId == action.replyId) {
         return initialState;
-      }else{
-        return { ...initialState, action: 'reply', inputPrefix: "Reply:", replyId: action.replyId, value: ''};
+      }
+      else {
+        return { ...initialState, action: 'reply', inputPrefix: "Reply:", replyId: action.replyId, replyColour: action.replyColour, value: ''};
       }
     default:
       return state;

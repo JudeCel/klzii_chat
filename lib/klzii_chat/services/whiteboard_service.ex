@@ -1,20 +1,22 @@
 defmodule KlziiChat.Services.WhiteboardService do
-  alias KlziiChat.{Repo, Shape, ShapeView, SessionMember, SessionTopic}
+  alias KlziiChat.{Repo, Shape, ShapeView, SessionMember, SessionTopic, Session}
   alias KlziiChat.Services.Permissions.Whiteboard, as: WhiteboardPermissions
   alias KlziiChat.Queries.Shapes, as: ShapesQueries
   import Ecto
-  import Ecto.Query, only: [from: 1, from: 2]
+  import Ecto.Query, only: [from: 2, preload: 2]
 
   def history(session_topic_id, session_member_id) do
     session_topic = Repo.get!(SessionTopic, session_topic_id)
     session_member = Repo.get!(SessionMember, session_member_id)
-    shapes = Repo.all(
-      from e in assoc(session_topic, :shapes),
-      preload: [:session_member]
-    )
-    resp = Enum.map(shapes, fn shape ->
-      ShapeView.render("show.json", %{shape: shape, member: session_member})
-    end)
+
+    resp =
+      ShapesQueries.base_query(session_topic)
+      |> preload(:session_member)
+      |> Repo.all
+      |>  Enum.map(fn shape ->
+            ShapeView.render("show.json", %{shape: shape, member: session_member})
+          end)
+
     {:ok, resp}
   end
 
@@ -44,13 +46,14 @@ defmodule KlziiChat.Services.WhiteboardService do
       Ecto.Changeset.change(shape, event: params)
       |> update
     else
-      {:error, "Action not allowed!"}
+      {:error, %{permissions: "Action not allowed!"}}
     end
   end
 
   def create_object(session_member_id, session_topic_id, params) do
     session_member = Repo.get!(SessionMember, session_member_id)
-    if WhiteboardPermissions.can_new_shape(session_member) do
+    session = Repo.get!(Session, session_member.sessionId)
+    if WhiteboardPermissions.can_new_shape(session_member, session) do
       changeset = build_assoc(
         session_member, :shapes,
         sessionId: session_member.sessionId,
@@ -60,18 +63,18 @@ defmodule KlziiChat.Services.WhiteboardService do
       )
       create(changeset)
     else
-      {:error, "Action not allowed!"}
+      {:error, %{permissions: "Action not allowed!"}}
     end
   end
 
   def deleteAll(session_member_id, session_topic_id) do
     session_member = Repo.get!(SessionMember, session_member_id)
     session_topic = Repo.get!(SessionTopic, session_topic_id)
-    {_count, _model}  =
+    {_count, shapes}  =
       ShapesQueries.find_shapes_for_delete(session_member, session_topic)
-      |> Repo.delete_all
-    {status, result} = history(session_topic.id, session_member.id)
-    {status, result}
+      |> Repo.delete_all(returning: true)
+
+      {:ok, Enum.map(shapes, fn(e) -> %{uid: e.uid} end)}
   end
 
   def deleteByUid(session_member_id, id) do
@@ -82,7 +85,7 @@ defmodule KlziiChat.Services.WhiteboardService do
     if WhiteboardPermissions.can_delete(session_member, shape) do
       Repo.delete(shape)
     else
-      {:error, "Action not allowed!"}
+      {:error, %{permissions: "Action not allowed!"}}
     end
   end
 end

@@ -2,16 +2,15 @@ import React, {PropTypes} from 'react';
 import { connect }        from 'react-redux';
 import Rating             from 'react-rating';
 
-const AnswerYesNoMaybe = React.createClass({
-  getInitialState() {
-    return { checked: 0 };
-  },
+const Answer5StarRating = React.createClass({
   onChange(value) {
-    this.setState({ checked: value });
     this.props.afterChange(value);
   },
+  getPlaceHolder() {
+    let survey = this.props.survey.mini_survey_answer;
+    return survey ? survey.answer.value : 0;
+  },
   render() {
-    const { checked } = this.state;
     const { survey } = this.props;
 
     return (
@@ -21,7 +20,7 @@ const AnswerYesNoMaybe = React.createClass({
         </div>
 
         <div className='text-center star-rating-section'>
-          <Rating onChange={ this.onChange } placeholder='fa fa-star' empty='fa fa-star-o' full='fa fa-star' placeholderRate={ checked } />
+          <Rating onChange={ this.onChange } placeholder='fa fa-star' empty='fa fa-star-o' full='fa fa-star' placeholderRate={ this.getPlaceHolder() } />
         </div>
       </div>
     )
@@ -30,8 +29,8 @@ const AnswerYesNoMaybe = React.createClass({
 
 const mapStateToProps = (state) => {
   return {
-    survey: state.resources.survey || {id: 1, title: 'Survey', question: 'Do you like?', type: 'yesNoMaybe', active: true}
+    survey: state.miniSurveys.console
   }
 };
 
-export default connect(mapStateToProps)(AnswerYesNoMaybe);
+export default connect(mapStateToProps)(Answer5StarRating);

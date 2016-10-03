@@ -1,6 +1,7 @@
 defmodule KlziiChat.UserSocket do
   use Phoenix.Socket
   import Guardian.Phoenix.Socket
+  alias KlziiChat.Services.Permissions.Builder, as: PermissionsBuilder
   ## Channels
   channel "sessions:*", KlziiChat.SessionChannel
   channel "session_topic:*", KlziiChat.SessionTopicChannel
@@ -45,6 +46,7 @@ defmodule KlziiChat.UserSocket do
 
   defp get_current_resource(socket) do
     member = current_resource(socket)
-    Phoenix.View.render(KlziiChat.SessionMembersView, "current_member.json", member: member.session_member)
+    {:ok, permissions_map} = PermissionsBuilder.session_member_permissions(member.session_member.id)
+    Phoenix.View.render(KlziiChat.SessionMembersView, "current_member.json", member: member.session_member, permissions_map: permissions_map)
   end
 end

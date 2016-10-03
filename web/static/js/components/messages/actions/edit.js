@@ -1,19 +1,28 @@
-import React, { PropTypes, Component } from 'react';
+import React, { PropTypes } from 'react';
+import { connect }          from 'react-redux';
+import Constants            from '../../../constants';
 
-class Edit extends Component {
+const EditMessage = React.createClass({
+  editMessage() {
+    const { message, dispatch } = this.props;
+    dispatch({ type: Constants.SET_INPUT_EDIT, id: message.id, value: message.body, emotion: message.emotion });
+  },
   render() {
-    const { id, body, emotion } = this.props.data;
-    const { can, onClick } = this.props;
+    const { permission } = this.props;
 
-    if(can) {
+    if(permission) {
       return(
-        <i className='icon-pencil' onClick={ onClick } data-id={ id } data-body={ body } data-emotion={emotion}/>
+        <i className='icon-pencil' onClick={ this.editMessage } />
       )
     }
     else {
       return(false)
     }
   }
-}
+});
 
-export default Edit;
+const mapStateToProps = (state) => {
+  return {};
+};
+
+export default connect(mapStateToProps)(EditMessage);

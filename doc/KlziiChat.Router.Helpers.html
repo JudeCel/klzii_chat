@@ -4,22 +4,20 @@
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="generator" content="ExDoc v0.11.5">
+    <meta name="generator" content="ExDoc v0.13.1">
     <title>KlziiChat.Router.Helpers – klzii_chat v0.0.1</title>
-    <link rel="stylesheet" href="dist/app-ddd9717ad9.css" />
+    <link rel="stylesheet" href="dist/app-7e84850c37.css" />
     
     <script src="dist/sidebar_items.js"></script>
   </head>
   <body data-type="modules">
+    <script>if(localStorage.getItem('night-mode')) document.body.className += ' night-mode';</script>
 
     <div class="main">
 <button class="sidebar-toggle">
   <i class="icon-menu"></i>
 </button>
 <section class="sidebar">
-  <button class="sidebar-toggle">
-    <i class="icon-menu"></i>
-  </button>
 
   
   <a href="api-reference.html" class="sidebar-projectLink">
@@ -56,7 +54,8 @@
 </section>
 
 <section class="content">
-  <div id="content" class="content-inner">
+  <div class="content-outer">
+    <div id="content" class="content-inner">
 
 
       <h1>
@@ -67,7 +66,7 @@
       </h1>
 
       
-        <section id="moduledoc" class="docstring">
+        <section id="moduledoc">
           <p>Module with named helpers generated from KlziiChat.Router.</p>
 
         </section>
@@ -171,6 +170,30 @@
 </div>
 <div class="summary-row">
   <div class="summary-signature">
+    <a href="#pinboard_resource_path/2">pinboard_resource_path(conn_or_endpoint, action)</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#pinboard_resource_path/3">pinboard_resource_path(conn_or_endpoint, action, params)</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#pinboard_resource_url/2">pinboard_resource_url(conn_or_endpoint, action)</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#pinboard_resource_url/3">pinboard_resource_url(conn_or_endpoint, action, params)</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
     <a href="#ping_path/2">ping_path(conn_or_endpoint, action)</a>
   </div>
   
@@ -190,6 +213,30 @@
 <div class="summary-row">
   <div class="summary-signature">
     <a href="#ping_url/3">ping_url(conn_or_endpoint, action, params)</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#preview_path/3">preview_path(conn_or_endpoint, action, session_topic_id)</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#preview_path/4">preview_path(conn_or_endpoint, action, session_topic_id, params)</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#preview_url/3">preview_url(conn_or_endpoint, action, session_topic_id)</a>
+  </div>
+  
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#preview_url/4">preview_url(conn_or_endpoint, action, session_topic_id, params)</a>
   </div>
   
 </div>
@@ -343,7 +390,8 @@
       <i class="icon-link"></i>
     </a>
     <span class="signature">auth_path(conn_or_endpoint, action)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
@@ -356,7 +404,8 @@
       <i class="icon-link"></i>
     </a>
     <span class="signature">auth_path(conn_or_endpoint, action, params)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
@@ -369,7 +418,8 @@
       <i class="icon-link"></i>
     </a>
     <span class="signature">auth_url(conn_or_endpoint, action)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
@@ -382,7 +432,8 @@
       <i class="icon-link"></i>
     </a>
     <span class="signature">auth_url(conn_or_endpoint, action, params)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
@@ -395,7 +446,8 @@
       <i class="icon-link"></i>
     </a>
     <span class="signature">banners_path(conn_or_endpoint, action)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
@@ -408,7 +460,8 @@
       <i class="icon-link"></i>
     </a>
     <span class="signature">banners_path(conn_or_endpoint, action, params)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
@@ -421,7 +474,8 @@
       <i class="icon-link"></i>
     </a>
     <span class="signature">banners_url(conn_or_endpoint, action)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
@@ -434,7 +488,8 @@
       <i class="icon-link"></i>
     </a>
     <span class="signature">banners_url(conn_or_endpoint, action, params)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
@@ -447,7 +502,8 @@
       <i class="icon-link"></i>
     </a>
     <span class="signature">chat_path(conn_or_endpoint, action)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
@@ -460,7 +516,8 @@
       <i class="icon-link"></i>
     </a>
     <span class="signature">chat_path(conn_or_endpoint, action, params)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
@@ -473,7 +530,8 @@
       <i class="icon-link"></i>
     </a>
     <span class="signature">chat_url(conn_or_endpoint, action)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
@@ -486,7 +544,8 @@
       <i class="icon-link"></i>
     </a>
     <span class="signature">chat_url(conn_or_endpoint, action, params)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
@@ -499,12 +558,69 @@
       <i class="icon-link"></i>
     </a>
     <span class="signature">path(data, path)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
     <p>Generates the path information including any necessary prefix.</p>
 
+  </section>
+</div>
+<div class="detail" id="pinboard_resource_path/2">
+  <div class="detail-header">
+    <a href="#pinboard_resource_path/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">pinboard_resource_path(conn_or_endpoint, action)</span>
+    
+    
+  </div>
+  
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="pinboard_resource_path/3">
+  <div class="detail-header">
+    <a href="#pinboard_resource_path/3" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">pinboard_resource_path(conn_or_endpoint, action, params)</span>
+    
+    
+  </div>
+  
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="pinboard_resource_url/2">
+  <div class="detail-header">
+    <a href="#pinboard_resource_url/2" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">pinboard_resource_url(conn_or_endpoint, action)</span>
+    
+    
+  </div>
+  
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="pinboard_resource_url/3">
+  <div class="detail-header">
+    <a href="#pinboard_resource_url/3" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">pinboard_resource_url(conn_or_endpoint, action, params)</span>
+    
+    
+  </div>
+  
+  <section class="docstring">
+    
   </section>
 </div>
 <div class="detail" id="ping_path/2">
@@ -513,7 +629,8 @@
       <i class="icon-link"></i>
     </a>
     <span class="signature">ping_path(conn_or_endpoint, action)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
@@ -526,7 +643,8 @@
       <i class="icon-link"></i>
     </a>
     <span class="signature">ping_path(conn_or_endpoint, action, params)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
@@ -539,7 +657,8 @@
       <i class="icon-link"></i>
     </a>
     <span class="signature">ping_url(conn_or_endpoint, action)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
@@ -552,7 +671,64 @@
       <i class="icon-link"></i>
     </a>
     <span class="signature">ping_url(conn_or_endpoint, action, params)</span>
-      
+    
+    
+  </div>
+  
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="preview_path/3">
+  <div class="detail-header">
+    <a href="#preview_path/3" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">preview_path(conn_or_endpoint, action, session_topic_id)</span>
+    
+    
+  </div>
+  
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="preview_path/4">
+  <div class="detail-header">
+    <a href="#preview_path/4" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">preview_path(conn_or_endpoint, action, session_topic_id, params)</span>
+    
+    
+  </div>
+  
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="preview_url/3">
+  <div class="detail-header">
+    <a href="#preview_url/3" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">preview_url(conn_or_endpoint, action, session_topic_id)</span>
+    
+    
+  </div>
+  
+  <section class="docstring">
+    
+  </section>
+</div>
+<div class="detail" id="preview_url/4">
+  <div class="detail-header">
+    <a href="#preview_url/4" class="detail-link" title="Link to this function">
+      <i class="icon-link"></i>
+    </a>
+    <span class="signature">preview_url(conn_or_endpoint, action, session_topic_id, params)</span>
+    
+    
   </div>
   
   <section class="docstring">
@@ -565,7 +741,8 @@
       <i class="icon-link"></i>
     </a>
     <span class="signature">resources_path(conn_or_endpoint, action)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
@@ -578,7 +755,8 @@
       <i class="icon-link"></i>
     </a>
     <span class="signature">resources_path(conn_or_endpoint, action, params)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
@@ -591,7 +769,8 @@
       <i class="icon-link"></i>
     </a>
     <span class="signature">resources_path(conn_or_endpoint, action, id, params)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
@@ -604,7 +783,8 @@
       <i class="icon-link"></i>
     </a>
     <span class="signature">resources_url(conn_or_endpoint, action)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
@@ -617,7 +797,8 @@
       <i class="icon-link"></i>
     </a>
     <span class="signature">resources_url(conn_or_endpoint, action, params)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
@@ -630,7 +811,8 @@
       <i class="icon-link"></i>
     </a>
     <span class="signature">resources_url(conn_or_endpoint, action, id, params)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
@@ -643,7 +825,8 @@
       <i class="icon-link"></i>
     </a>
     <span class="signature">session_resources_path(conn_or_endpoint, action)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
@@ -656,7 +839,8 @@
       <i class="icon-link"></i>
     </a>
     <span class="signature">session_resources_path(conn_or_endpoint, action, params)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
@@ -669,7 +853,8 @@
       <i class="icon-link"></i>
     </a>
     <span class="signature">session_resources_path(conn_or_endpoint, action, id, params)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
@@ -682,7 +867,8 @@
       <i class="icon-link"></i>
     </a>
     <span class="signature">session_resources_url(conn_or_endpoint, action)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
@@ -695,7 +881,8 @@
       <i class="icon-link"></i>
     </a>
     <span class="signature">session_resources_url(conn_or_endpoint, action, params)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
@@ -708,7 +895,8 @@
       <i class="icon-link"></i>
     </a>
     <span class="signature">session_resources_url(conn_or_endpoint, action, id, params)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
@@ -721,7 +909,8 @@
       <i class="icon-link"></i>
     </a>
     <span class="signature">static_path(conn, path)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
@@ -735,7 +924,8 @@
       <i class="icon-link"></i>
     </a>
     <span class="signature">static_url(conn, path)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
@@ -749,7 +939,8 @@
       <i class="icon-link"></i>
     </a>
     <span class="signature">surveys_path(conn_or_endpoint, action, id)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
@@ -762,7 +953,8 @@
       <i class="icon-link"></i>
     </a>
     <span class="signature">surveys_path(conn_or_endpoint, action, id, params)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
@@ -775,7 +967,8 @@
       <i class="icon-link"></i>
     </a>
     <span class="signature">surveys_url(conn_or_endpoint, action, id)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
@@ -788,7 +981,8 @@
       <i class="icon-link"></i>
     </a>
     <span class="signature">surveys_url(conn_or_endpoint, action, id, params)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
@@ -801,7 +995,8 @@
       <i class="icon-link"></i>
     </a>
     <span class="signature">url(data)</span>
-      
+    
+    
   </div>
   
   <section class="docstring">
@@ -816,23 +1011,24 @@
       
 
       
-        <footer class="footer">
-      <p>
-        <span class="line">
-          Built using
-          <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" rel="help" target="_blank">ExDoc</a> (v0.11.5),
-        </span>
-        <span class="line">
-          designed by
-          <a href="https://twitter.com/dignifiedquire" target="_blank" title="@dignifiedquire">Friedel Ziegelmayer</a>.
+          <footer class="footer">
+        <p>
+          <span class="line">
+            Built using
+            <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" rel="help" target="_blank">ExDoc</a> (v0.13.1),
           </span>
-      </p>
-      <button class="night-mode-toggle" />
-    </footer>
+          <span class="line">
+            designed by
+            <a href="https://twitter.com/dignifiedquire" target="_blank" title="@dignifiedquire">Friedel Ziegelmayer</a>.
+            </span>
+        </p>
+        <button class="night-mode-toggle" />
+      </footer>
+    </div>
   </div>
 </section>
 </div>
-  <script src="dist/app-918614602f.js"></script>
+  <script src="dist/app-95540a96e6.js"></script>
   </body>
 </html>
 

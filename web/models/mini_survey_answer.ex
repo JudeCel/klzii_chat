@@ -3,13 +3,10 @@ defmodule KlziiChat.MiniSurveyAnswer do
 
   schema "MiniSurveyAnswers" do
     belongs_to :session_member, KlziiChat.SessionMember, [foreign_key: :sessionMemberId]
-    belongs_to :mini_survey, KlziiChat.MiniSurve, [foreign_key: :miniSurveyId]
+    belongs_to :mini_survey, KlziiChat.MiniSurvey, [foreign_key: :miniSurveyId]
     field :answer, :map
     timestamps [inserted_at: :createdAt, updated_at: :updatedAt]
   end
-  
-  @required_fields ~w(messageId sessionMemberId)
-  @optional_fields ~w()
 
   @doc """
   Creates a changeset based on the `model` and `params`.
@@ -19,6 +16,7 @@ defmodule KlziiChat.MiniSurveyAnswer do
   """
   def changeset(model, params \\ %{}) do
     model
-    |> cast(params, (@required_fields ++  @optional_fields))
+    |> cast(params, [:messageId, :sessionMemberId, :answer])
+    |> validate_required([:messageId, :sessionMemberId, :answer])
   end
 end

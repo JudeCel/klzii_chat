@@ -2,10 +2,11 @@ import React, {PropTypes} from 'react';
 import UploadTypeImage    from './image';
 import UploadTypeVideo    from './video';
 import UploadTypeAudio    from './audio';
+import UploadTypePdf      from './pdf';
 
 const UploadTypeIndex = React.createClass({
   render() {
-    const { modalName, url, youtube } = this.props;
+    const { modalName, url, youtube, autoPlay } = this.props;
 
     if(!url) {
       return (<div>Not found</div>)
@@ -15,10 +16,13 @@ const UploadTypeIndex = React.createClass({
       return (<UploadTypeImage url={ url } />)
     }
     else if(modalName == 'video') {
-      return (<UploadTypeVideo url={ url } youtube={ youtube } />)
+      return (<UploadTypeVideo url={ url } youtube={ youtube } autoPlay={autoPlay} />)
     }
     else if(modalName == 'audio') {
       return (<UploadTypeAudio url={ url } />)
+    }
+    else if(modalName == 'file') {
+      return (<UploadTypePdf url={ url } />)
     }
     else {
       return (<div>Not found</div>)

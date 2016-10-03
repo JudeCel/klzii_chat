@@ -1,7 +1,8 @@
-import Constants        from '../constants';
-import MessagesActions  from './messages';
-import ConsoleActions   from './console';
-import WhiteboardActions   from './whiteboard';
+import Constants         from '../constants';
+import MessagesActions   from './messages';
+import ConsoleActions    from './console';
+import WhiteboardActions from './whiteboard';
+import PinboardActions   from './pinboard';
 
 export function joinChannal(dispatch, socket, sessionTopicId) {
   const channel = socket.channel("session_topic:" + sessionTopicId);
@@ -12,11 +13,12 @@ export function joinChannal(dispatch, socket, sessionTopicId) {
       channel,
       currentId: sessionTopicId
     });
+
     dispatch(MessagesActions.subscribeMessageEvents(channel));
     dispatch(ConsoleActions.subscribeConsoleEvents(channel));
     dispatch(WhiteboardActions.connectToChannel(socket, sessionTopicId));
     dispatch(Actions.subscribeEvents(channel));
-
+    dispatch(PinboardActions.subscribePinboardEvents(channel));
 
     channel.join()
     .receive('ok', (resp) => {
@@ -34,19 +36,18 @@ export function joinChannal(dispatch, socket, sessionTopicId) {
   }
 };
 
-function selectActive(sessionTopics) {
-  let currentSessionTopicId = null;
-  topics.map((t) =>{
-    if (t.active) {
-      currentSessionTopicId = t.id;
-    }
-  })
-  return (currentSessionTopicId || sessionTopics[0].id)
-}
-
-function leave_chanal(dispatch, channal) {
+function leave_channal(dispatch, channal) {
   channal.leave();
   dispatch({ type: Constants.SET_SESSION_TOPIC });
+}
+
+function tidyUp(dispatch){
+  dispatch({ type: Constants.TIDY_UP_CONSOLE });
+  dispatch({ type: Constants.TIDY_UP_WHITEBOARD });
+  dispatch({ type: Constants.TIDY_UP_PINBOARD });
+  dispatch({ type: Constants.TIDY_UP_MESSAGES });
+  dispatch({ type: Constants.TIDY_UP_SURVE });
+  dispatch({ type: Constants.CLOSE_ALL_MODAL_WINDOWS });
 }
 
 const Actions = {
@@ -66,17 +67,36 @@ const Actions = {
         type: Constants.SET_SESSION_TOPICS,
         all: sessionTopics
       });
-      let sessionTopicId = sessionTopics[0].id;
-      joinChannal(dispatch, socket, sessionTopicId);
+      let sessionTopicId = selectLandingTopic(sessionTopics);
+
+      if (sessionTopicId) {
+        joinChannal(dispatch, socket, sessionTopicId.id);
+      }else{
+        dispatch({
+          type: Constants.SOCKET_CONNECTION_ERROR,
+          error: "This session is without Topics"
+        });
+      }
     }
   },
-  changeSessionTopic: (currentChannal, sessionTopicId) =>{
+  changeSessionTopic: (currentChannal, whiteboardChannel, sessionTopicId) =>{
     return dispatch => {
-      leave_chanal(dispatch, currentChannal);
+      whiteboardChannel.leave();
+      leave_channal(dispatch, currentChannal);
+      tidyUp(dispatch);
       joinChannal(dispatch, currentChannal.socket, sessionTopicId);
     }
   }
 }
 
-
 export default Actions;
+
+function selectLandingTopic(topics) {
+  for(var i in topics) {
+    if(topics[i].landing) {
+      return topics[i];
+    }
+  }
+
+  return topics[0];
+}

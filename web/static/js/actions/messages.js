@@ -1,4 +1,6 @@
-import Constants                          from '../constants';
+import Constants from '../constants';
+import NotificationActions from './notifications';
+
 function new_message(dispatch, data) {
   return dispatch({
     type: Constants.NEW_MESSAGE,
@@ -76,23 +78,16 @@ const Actions = {
         dispatch({
           type: Constants.SET_INPUT_DEFAULT_STATE
         });
-      })
-      .receive('error', (data) => {
-        dispatch({
-          type: Constants.NEW_MESSAGE_ERROR,
-          error: data.error
-        });
+      }).receive('error', (errors) => {
+        NotificationActions.showErrorNotification(dispatch, errors);
       });
     };
   },
   deleteMessage: (channel, payload) => {
     return dispatch => {
       channel.push('delete_message', payload)
-      .receive('error', (data) => {
-        dispatch({
-          type: Constants.NEW_MESSAGE_ERROR,
-          error: data.error
-        });
+      .receive('error', (errors) => {
+        NotificationActions.showErrorNotification(dispatch, errors);
       });
     };
   },
@@ -100,23 +95,16 @@ const Actions = {
     return dispatch => {
       channel.push('message_star', payload).receive('ok', (resp) =>{
         update_message(dispatch, resp);
-      })
-      .receive('error', (data) => {
-        dispatch({
-          type: Constants.NEW_MESSAGE_ERROR,
-          error: data.error
-        });
+      }).receive('error', (errors) => {
+        NotificationActions.showErrorNotification(dispatch, errors);
       });
     };
   },
   thumbsUp: (channel, payload) => {
     return dispatch => {
       channel.push('thumbs_up', payload)
-      .receive('error', (data) => {
-        dispatch({
-          type: Constants.NEW_MESSAGE_ERROR,
-          error: data.error
-        });
+      .receive('error', (errors) => {
+        NotificationActions.showErrorNotification(dispatch, errors);
       });
     };
   }

@@ -1,10 +1,10 @@
-defmodule KlziiChat.Services.Resourecs do
+defmodule KlziiChat.Services.ResourecsTest do
   use KlziiChat.{ModelCase, SessionMemberCase}
   alias KlziiChat.Queries.Resources, as: QueriesResources
   alias KlziiChat.{Repo}
   alias KlziiChat.Services.SessionResourcesService
 
-  setup %{account_user: account_user, session: session} do
+  setup %{account_user_account_manager: account_user, session: session} do
     Ecto.build_assoc(
       account_user.account, :resources,
       accountUserId: account_user.id,
@@ -17,7 +17,7 @@ defmodule KlziiChat.Services.Resourecs do
     {:ok, base_query: base_query, account_user: account_user, session_id: session.id}
   end
 
-  test "init base query ", %{account_user: account_user} do
+  test "init base query ", %{account_user_account_manager: account_user} do
     count = QueriesResources.base_query(account_user)
       |> Repo.all |> Enum.count
     assert(count == 1 )
@@ -69,7 +69,7 @@ defmodule KlziiChat.Services.Resourecs do
   end
 
   test "find by params and exclude 1 of 3 session resources by sesion id (2 left)",
-    %{account_user: account_user, facilitator: facilitator} do
+    %{account_user_account_manager: account_user, facilitator: facilitator} do
       resource =
         Ecto.build_assoc(
           account_user.account, :resources,

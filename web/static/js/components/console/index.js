@@ -3,18 +3,18 @@ import { connect }        from 'react-redux';
 import Modals             from './modals';
 import mixins             from '../../mixins';
 
-const { SurveyModal, UploadsModal } = Modals;
+const { SurveyModal, UploadsModal, PinboardModal } = Modals;
 
 const Console = React.createClass({
-  mixins: [mixins.modalWindows, mixins.helpers],
+  mixins: [mixins.modalWindows, mixins.helpers, mixins.validations],
   getInitialState() {
     return { modalName: null };
   },
   shouldShow(modals) {
     return modals.includes(this.state.modalName) && this.showSpecificModal('console');
   },
-  openModal(type) {
-    if(this.isConsoleActive(type)) {
+  openModal(type, permission) {
+    if(this.isConsoleActive(type) && permission) {
       this.setState({ modalName: type }, function() {
         this.openSpecificModal('console');
       });
@@ -23,18 +23,18 @@ const Console = React.createClass({
   isConsoleActive(type) {
     return this.getConsoleResourceId(type);
   },
-  consoleButtonStyle(type) {
+  consoleButtonStyle(type, permission) {
     const color = this.props.colours.consoleButtonActive;
-    return this.isConsoleActive(type) ? { color: color, borderColor: color, opacity: 1, cursor: 'pointer' } : {};
+    return this.isConsoleActive(type) ? { color: color, borderColor: color, opacity: 1, cursor: permission ? 'pointer' : '' } : {};
   },
   render() {
     const { modalName } = this.state;
     const consoleButtons = [
-      { type: 'video',  className: 'icon-video-1'    },
-      { type: 'audio',  className: 'icon-volume-up'  },
-      { type: 'image',  className: 'icon-camera'     },
-      { type: 'survey', className: 'icon-ok-squared' },
-      { type: 'pdf',    className: 'icon-pdf'        },
+      { type: 'video',       className: 'icon-video-1',    permission: true },
+      { type: 'audio',       className: 'icon-volume-up',  permission: true },
+      { type: 'pinboard',    className: 'icon-camera',     permission: this.hasPermission(['pinboard', 'can_add_resource']) },
+      { type: 'mini_survey', className: 'icon-ok-squared', permission: true },
+      { type: 'file',        className: 'icon-pdf',        permission: true },
     ];
 
     return (
@@ -43,7 +43,7 @@ const Console = React.createClass({
           <ul className='icons'>
             {
               consoleButtons.map((button, index) =>
-                <li key={ index } onClick={ this.openModal.bind(this, button.type) } style={ this.consoleButtonStyle(button.type) } >
+                <li key={ index } onClick={ this.openModal.bind(this, button.type, button.permission) } style={ this.consoleButtonStyle(button.type, button.permission) } >
                   <i className={ button.className } />
                 </li>
               )
@@ -51,8 +51,9 @@ const Console = React.createClass({
           </ul>
         </div>
 
-        <SurveyModal show={ this.shouldShow(['survey']) } />
-        <UploadsModal show={ this.shouldShow(['video', 'audio', 'image']) } modalName={ modalName } />
+        <PinboardModal show={ this.shouldShow(['pinboard']) } />
+        <SurveyModal show={ this.shouldShow(['mini_survey']) } />
+        <UploadsModal show={ this.shouldShow(['video', 'audio', 'file']) } modalName={ modalName } />
       </div>
     )
   }
@@ -60,9 +61,10 @@ const Console = React.createClass({
 
 const mapStateToProps = (state) => {
   return {
+    currentUser: state.members.currentUser,
     colours: state.chat.session.colours,
     modalWindows: state.modalWindows,
-    console: state.sessionTopic.console
+    sessionTopicConsole: state.sessionTopicConsole
   }
 };
 

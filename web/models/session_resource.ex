@@ -9,9 +9,6 @@ defmodule KlziiChat.SessionResource do
     field :updatedAt, Timex.Ecto.DateTime
   end
 
-  @required_fields ~w(resourceId sessionId)
-  @optional_fields ~w()
-
   @doc """
   Creates a changeset based on the `model` and `params`.
 
@@ -20,6 +17,6 @@ defmodule KlziiChat.SessionResource do
   """
   def changeset(model, params \\ %{}) do
     model
-    |> cast(params, (@required_fields ++  @optional_fields))
+    |> cast(params, [:resourceId, :sessionId])
   end
 end

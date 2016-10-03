@@ -9,6 +9,11 @@ import resources           from './resources';
 import notifications       from './notifications';
 import modalWindows        from './modalWindows';
 import miniSurveys         from './miniSurveys';
+import directMessages      from './directMessages';
+import reports             from './reports';
+import utility             from './utility';
+import pinboard            from './pinboard';
+import sessionTopicConsole from './sessionTopicConsole';
 
 export default combineReducers({
   chat: chat,
@@ -20,5 +25,10 @@ export default combineReducers({
   resources: resources,
   notifications: notifications,
   modalWindows: modalWindows,
-  miniSurveys: miniSurveys
+  miniSurveys: miniSurveys,
+  reports: reports,
+  directMessages: directMessages,
+  utility: utility,
+  pinboard: pinboard,
+  sessionTopicConsole: sessionTopicConsole
 });

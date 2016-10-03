@@ -10,23 +10,23 @@ const modalWindows = {
   showSpecificModal(key) {
     return this.props.modalWindows[key];
   },
-  openSpecificModal(key) {
+  openSpecificModal(key, data) {
     const { modalWindows, dispatch } = this.props;
 
     if(!modalWindows) {
-      console.error("No modalWindows from state: ", key, this.props);
+      console.error('No "modalWindows" state:', key, this.props);
     }
 
     for(let i in modalWindows) {
       let modal = modalWindows[i];
 
-      if(modal && i != key) {
+      if(modal && i != key && !['currentModalData', 'postData'].includes(i)) {
         this.closeAllModals();
         break;
       }
     }
 
-    dispatch({ type: Constants.OPEN_MODAL_WINDOW, modal: key });
+    dispatch({ type: Constants.OPEN_MODAL_WINDOW, modal: key, data: data });
   },
   closeAllModals() {
     this.props.dispatch({ type: Constants.CLOSE_ALL_MODAL_WINDOWS });

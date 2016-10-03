@@ -3,7 +3,7 @@ defmodule KlziiChat.Services.SessionResourcesServiceTest do
   alias KlziiChat.Services.SessionResourcesService
   alias KlziiChat.SessionResource
 
-  setup %{session: session, account_user: account_user} do
+  setup %{session: session, account_user_account_manager: account_user} do
     img_resources = Enum.map(1..3, &create_image_resource(account_user, &1))
     img_resource_ids =
       Enum.map(img_resources, &Repo.insert!(&1))
@@ -35,13 +35,11 @@ defmodule KlziiChat.Services.SessionResourcesServiceTest do
   end
 
   test "delete_wrong_member_role_error", %{participant: participant} do
-    assert({:error, "Action not allowed!"} ===
-      SessionResourcesService.delete(participant.id, "not important" ))
+    assert({:error, %{permissions: "Action not allowed!"}} = SessionResourcesService.delete(participant.id, "not important" ))
   end
 
   test "get_sesion_resources_wrong_member_role_error", %{participant: participant} do
-    assert({:error, "Action not allowed!"} ===
-      SessionResourcesService.get_session_resources(participant.id, %{}))
+    assert({:error, %{permissions: "Action not allowed!"}} = SessionResourcesService.get_session_resources(participant.id, %{}))
   end
 
   defp create_image_resource(account_user, n) do
