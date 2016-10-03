@@ -45,8 +45,13 @@ const UploadListItem = React.createClass({
     }
   },
   render() {
-    const { justInput, modalName } = this.props;
+    const { justInput, modalName, resource } = this.props;
     const { sessionResourceId, id, active, name, type, url, scope } = this.state;
+
+    let resourceName = name || !resource ? name : resource.name;
+    let resourceUrl = url || !resource ? url : resource.url;
+    let resourceScope = scope || !resource ? scope : resource.scope;
+    let resourceId = id || !resource ? id : resource.id;
 
     if(justInput && modalName != 'image') {
       return (
@@ -60,18 +65,18 @@ const UploadListItem = React.createClass({
         </li>
       )
     }
-    else if(url) {
+    else if(resourceUrl) {
       return (
         <li className='list-group-item'>
           <div className='row'>
-            <div className='col-md-6' onClick={ this.onSelect.bind(this, url) }>
-              { name }
+            <div className='col-md-6' onClick={ this.onSelect.bind(this, resourceUrl) }>
+              { resourceName }
               <br />
-              <UploadTypes modalName={ modalName } url={ url } youtube={ scope == 'youtube' }/>
+              <UploadTypes modalName={ modalName } url={ resourceUrl } youtube={ resourceScope == 'youtube' }/>
             </div>
 
             <div className='col-md-6 text-right'>
-              { this.showRadio(id, modalName, active) }
+              { this.showRadio(resourceId, modalName, active) }
               <span className='fa fa-times' onClick={ this.onDelete.bind(this, sessionResourceId) } />
             </div>
           </div>
