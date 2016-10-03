@@ -33,7 +33,7 @@ const Message = React.createClass({
   },
   getMessageMember() {
     const { message, currentUser } = this.props;
-    return message.session_member.id == currentUser.id ? currentUser : message.session_member;
+    return currentUser && message.session_member.id == currentUser.id ? currentUser : message.session_member;
   },
   getMessageSessionTopicContext() {
     const { message } = this.props;
