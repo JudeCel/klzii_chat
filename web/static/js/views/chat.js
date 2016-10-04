@@ -36,8 +36,8 @@ const ChatView = React.createClass({
     this.props.dispatch(sessionActions.connectToChannel());
   },
   componentWillReceiveProps(nextProps){
-    if(nextProps.sessionReady && !nextProps.sessionTopicReady) {
-      this.props.dispatch(sessionTopicActions.selectCurrent(nextProps.socket, nextProps.session_topics));
+    if(nextProps.sessionReady && !nextProps.sessionTopicReady && nextProps.currentUser.currentTopic) {
+      this.props.dispatch(sessionTopicActions.selectCurrent(nextProps.socket, nextProps.session_topics, nextProps.currentUser.currentTopic));
     }
   },
   getScreenWidthForAvatar(targetInnerWidth) {
@@ -108,6 +108,7 @@ const ChatView = React.createClass({
 const mapStateToProps = (state) => {
   return {
     pinboardActive: state.sessionTopicConsole.data.pinboard,
+    currentUser: state.members.currentUser,
     colours: state.chat.session.colours,
     brand_logo: state.chat.session.brand_logo,
     sessionReady: state.chat.ready,

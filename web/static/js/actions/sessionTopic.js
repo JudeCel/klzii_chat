@@ -61,13 +61,16 @@ const Actions = {
         });
       }
   },
-  selectCurrent: (socket, sessionTopics) =>{
+  selectCurrent: (socket, sessionTopics, currentTopic) =>{
+    console.log(currentTopic);
+
     return dispatch => {
       dispatch({
         type: Constants.SET_SESSION_TOPICS,
         all: sessionTopics
       });
-      let sessionTopicId = selectLandingTopic(sessionTopics);
+
+      let sessionTopicId = selectTopic(sessionTopics, currentTopic);
 
       if (sessionTopicId) {
         joinChannal(dispatch, socket, sessionTopicId.id);
@@ -89,7 +92,17 @@ const Actions = {
   }
 }
 
-export default Actions;
+function selectTopic(topics, currentTopic) {
+  return(selectCurrenTopic(topics,currentTopic) || selectLandingTopic(topics))
+}
+
+function selectCurrenTopic(topics, currentTopic) {
+  for(var i in topics) {
+    if(topics[i].id == currentTopic.id) {
+      return topics[i];
+    }
+  }
+}
 
 function selectLandingTopic(topics) {
   for(var i in topics) {
@@ -97,6 +110,7 @@ function selectLandingTopic(topics) {
       return topics[i];
     }
   }
-
   return topics[0];
 }
+
+export default Actions;
