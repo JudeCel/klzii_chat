@@ -43,7 +43,7 @@ const Console = React.createClass({
           <ul className='icons'>
             {
               consoleButtons.map((button, index) =>
-                <li key={ index } onClick={ this.openModal.bind(this, button.type, button.permission) } style={ this.consoleButtonStyle(button.type, button.permission) } >
+                <li key={ index } onClick={ this.openModal.bind(this, button.type, button.permission) } style={ this.consoleButtonStyle(button.type, button.permission) } className={'icon-type-' + button.type}>
                   <i className={ button.className } />
                 </li>
               )
