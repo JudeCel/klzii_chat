@@ -115,3 +115,9 @@
   width: 76px;
   height: 70px;
 }
+
+.footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}

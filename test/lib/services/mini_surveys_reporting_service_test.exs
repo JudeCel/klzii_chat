@@ -2,6 +2,7 @@ defmodule KlziiChat.Services.MiniSurveysReportingServiceTest do
   use KlziiChat.{ModelCase, SessionMemberCase}
   alias KlziiChat.Services.MiniSurveysReportingService
   alias KlziiChat.Queries.MiniSurvey, as: QueriesMiniSurvey
+  alias KlziiChat.Queries.SessionTopic,  as: SessionTopicQueries
 
   setup %{session: session, session_topic_1: session_topic_1, facilitator: facilitator, participant: participant} do
      {:ok, create_date1} = Ecto.DateTime.cast("2016-05-20T09:00:00Z")
@@ -54,7 +55,10 @@ defmodule KlziiChat.Services.MiniSurveysReportingServiceTest do
     ) |> Repo.insert!
 
     mini_surveys_list =  %{mini_survey1: mini_survey1, mini_survey2: mini_survey2}
-    session_topic_with_preload = Repo.preload(session_topic_1, [session: :account])
+    session_topic_with_preload =
+      SessionTopicQueries.find(session_topic_1.id)
+      |> Repo.one
+      |> Phoenix.View.render_one(KlziiChat.SessionTopicView, "show.json", as: :session_topic )
 
     {:ok, session: session, session_topic: session_topic_with_preload, mini_surveys_list: mini_surveys_list}
   end
@@ -89,7 +93,7 @@ defmodule KlziiChat.Services.MiniSurveysReportingServiceTest do
 
   test "get_html", %{session_topic: session_topic} do
     mini_surveys = QueriesMiniSurvey.report_query(session_topic.id, false) |> Repo.all
-    html = MiniSurveysReportingService.get_html(mini_surveys, session_topic, session_topic.session.timeZone)
+    html = MiniSurveysReportingService.get_html(mini_surveys, session_topic.session, session_topic, session_topic.session.account)
 
     Enum.each(mini_surveys, fn(mini_survey) ->
       assert(String.contains?(html, mini_survey.title))
@@ -106,7 +110,7 @@ defmodule KlziiChat.Services.MiniSurveysReportingServiceTest do
 
   test "get_stream :txt", %{session_topic: session_topic} do
     mini_surveys = QueriesMiniSurvey.report_query(session_topic.id, false) |> Repo.all
-    [head | _] = MiniSurveysReportingService.get_stream(:txt, mini_surveys, session_topic.session.name, session_topic.name, session_topic.session.timeZone)
+    [head | _] = MiniSurveysReportingService.get_stream(:txt, mini_surveys, session_topic.session, session_topic, session_topic.session.account)
     |> Enum.to_list
 
     assert(String.contains?(head, session_topic.session.name))
@@ -116,7 +120,7 @@ defmodule KlziiChat.Services.MiniSurveysReportingServiceTest do
 
   test "get_stream :csv", %{session_topic: session_topic} do
     mini_surveys = QueriesMiniSurvey.report_query(session_topic.id, false) |> Repo.all
-    [head | _] = MiniSurveysReportingService.get_stream(:csv, mini_surveys, session_topic.session.name, session_topic.name, session_topic.session.timeZone)
+    [head | _] = MiniSurveysReportingService.get_stream(:csv, mini_surveys, session_topic.session, session_topic, session_topic.session.account)
     |> Enum.to_list
 
     ["Title,Question,Name,Answer,Date"]

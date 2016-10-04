@@ -15,7 +15,7 @@
       <div class='text-center report-header'>
         <span class='report-title'><%= @header_title %></span>
         <span class='pull-right report-logo'>
-          <img class='img-responsive' src="<%= path_to_assets(assigns[:conn], report_logo_url) %>" />
+          <img class='img-responsive' src="<%= assigns.brand_logo %>" />
         </span>
       </div>
       <div class='report-topic'>
