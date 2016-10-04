@@ -5,15 +5,21 @@ const UploadNew = React.createClass({
   getInitialState() {
     return { fileName: '', uploadMobileSourceVisibility: false, useCamera: false, name: "" };
   },
+  componentDidMount() {
+    this.sendDataToParent(this.state);
+  },
   onNameChange(e) {
     const data = { [e.target.id]: e.target.value };
     this.sendDataToParent(data);
+  },
+  isNameEmpty() {
+    return this.state.name == null || this.state.name == "";
   },
   onFileChange(e) {
     const file = e.target.files[0];
     let newName = this.state.name;
 
-    if (!newName) {
+    if (this.isNameEmpty()) {
       newName = file.name;
     }
 

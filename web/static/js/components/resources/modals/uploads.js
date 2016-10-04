@@ -8,7 +8,7 @@ import Actions            from '../../../actions/session_resource';
 const Uploads = React.createClass({
   mixins: [mixins.modalWindows, mixins.helpers],
   getInitialState() {
-    return { rendering: 'index', tabActive: 1 };
+    return { rendering: 'index', tabActive: 1, name: "", resourceData: {} };
   },
   initialWithTitle(props) {
     return { ...this.getInitialState(), title: `Add ${props.modalData.type}` }
@@ -63,15 +63,19 @@ const Uploads = React.createClass({
     this.closeAllModals();
   },
   onNew(e) {
-    if(this.state.rendering == 'new') {
-      this.onCreate();
-      this.onBack();
-    }
-    else {
-      this.setState({ rendering: 'new', title: this.tabModalTitles()[1] }, function() {
-        let { parent, tabs } = this.manipulateModalWindow();
-        parent.insertBefore(tabs, parent.childNodes[0]);
-      });
+    if (this.newButtonDisabled() == false) {
+      console.log("33");
+      if(this.state.rendering == 'new') {
+        this.onCreate();
+        this.onBack();
+      }
+      else {
+        console.log("11");
+        this.setState({ rendering: 'new', title: this.tabModalTitles()[1] }, function() {
+          let { parent, tabs } = this.manipulateModalWindow();
+          parent.insertBefore(tabs, parent.childNodes[0]);
+        });
+      }
     }
   },
   manipulateModalWindow() {
@@ -89,6 +93,28 @@ const Uploads = React.createClass({
 
     return { modal, parent, tabs };
   },
+  isNameEmpty() {
+    return this.state.resourceData && (this.state.resourceData.name == null || this.state.resourceData.name == "");
+  },
+  isUploadImageDataCorrect() {
+    const { resourceData} = this.state;
+    return (this.isNameEmpty() || resourceData.files == null);
+  },
+  newButtonDisabled() {
+    const { rendering, tabActive, resourceData} = this.state;
+    let disabled = false;
+    if (rendering == 'new' && tabActive == 3 && this.isUploadImageDataCorrect()) {
+      disabled = true;
+    }
+    return disabled;
+  },
+  newButtonDisabledClass() {
+    if (this.newButtonDisabled()) {
+      return " disabled";
+    } else {
+      return "";
+    }
+  },
   newButtonClass() {
     const { rendering } = this.state;
     const className = 'pull-right fa ';
@@ -97,7 +123,7 @@ const Uploads = React.createClass({
       return className + 'fa-plus';
     }
     else if(rendering == 'new') {
-      return className + 'fa-check';
+      return className + 'fa-check' + this.newButtonDisabledClass();
     }
     else {
       return className + 'hidden';
@@ -176,7 +202,7 @@ const Uploads = React.createClass({
             </div>
 
             <div className='col-md-2'>
-              <span className={ this.newButtonClass() } onClick={ this.onNew }></span>
+              <span className={ this.newButtonClass() } onClick={ this.onNew } disabled={ this.newButtonDisabled() }></span>
             </div>
           </Modal.Header>
 
