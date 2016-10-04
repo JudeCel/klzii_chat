@@ -51,7 +51,7 @@ defmodule KlziiChat.Services.FileService do
   end
 
   def conwert_with_wkhtmltopdf(path_to_html, path_to_pdf) do
-    case System.cmd("wkhtmltopdf", ["file://" <> path_to_html, path_to_pdf, "--footer-html",  @footer_path], stderr_to_stdout: true) do
+    case System.cmd("wkhtmltopdf", ["file://" <> path_to_html, path_to_pdf], stderr_to_stdout: true) do
       {_, 0} ->
         :ok = File.rm(path_to_html)
         {:ok, path_to_pdf}
@@ -61,7 +61,7 @@ defmodule KlziiChat.Services.FileService do
   end
 
   def conwert_with_xvfb(path_to_html, path_to_pdf) do
-    case System.cmd("xvfb-run", ["--auto-servernum", "wkhtmltopdf", "file://" <> path_to_html, path_to_pdf, "--footer-html", @footer_path], stderr_to_stdout: true) do
+    case System.cmd("xvfb-run", ["--auto-servernum", "wkhtmltopdf", "file://" <> path_to_html, path_to_pdf], stderr_to_stdout: true) do
       {_, 0} ->
         :ok = File.rm(path_to_html)
         {:ok, path_to_pdf}
