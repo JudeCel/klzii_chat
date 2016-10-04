@@ -61,7 +61,6 @@ const Resources = React.createClass({
     const resourceButtons = [
       { type: 'video',    className: 'icon-video-1'},
       { type: 'audio',    className: 'icon-volume-up'},
-      { type: 'image',    className: 'icon-picture'},
       { type: 'pinboard', className: 'icon-camera'},
       { type: 'survey',   className: 'icon-ok-squared'},
       { type: 'file',     className: 'icon-pdf'},

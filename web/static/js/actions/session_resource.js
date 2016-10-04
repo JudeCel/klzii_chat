@@ -114,7 +114,7 @@ const Actions = {
          }
        });
     }
- },
+  },
   youtube:(data, jwt) => {
     return dispatch => {
       let csrf_token = localStorage.getItem('csrf_token');
@@ -126,7 +126,7 @@ const Actions = {
         .end(function(error, result) {
           if(error) {
             NotificationActions.showErrorNotification(dispatch, error);
-          }else {
+          } else {
             dispatch(Actions.index(jwt, { type: [data.type] }));
           }
         });

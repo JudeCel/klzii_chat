@@ -281,7 +281,7 @@ const WhiteboardCanvas = React.createClass({
   fixArrowsForIE(el) {
     //arrows fix for IE
     if(window.navigator.userAgent.indexOf("MSIE") > 0 || !!window.navigator.userAgent.match(/Trident.*rv\:11\./)){
-      //IE replaces comma with space 
+      //IE replaces comma with space
       if (el.getAttribute && el.getAttribute("points") == "0,10 4,10 2,0 0,10"){
         el.setAttribute("points", "0,10 4,10 2,5 0,10");
       }
@@ -415,7 +415,7 @@ const WhiteboardCanvas = React.createClass({
 
     var dx = coordsMove.x - this.coords.x;
     var dy = coordsMove.y - this.coords.y;
-    
+
     if(!this.activeShape && this.moveDistance(dx, dy) > 10) {
       if (this.mode == this.ModeEnum.emptyScribble) {
         this.activeShape = this.snap.polyline([]).transform('r0.1');

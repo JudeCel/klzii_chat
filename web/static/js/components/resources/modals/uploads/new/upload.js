@@ -3,15 +3,27 @@ import ReactDOM           from 'react-dom';
 
 const UploadNew = React.createClass({
   getInitialState() {
-    return { fileName: '', uploadMobileSourceVisibility: false, useCamera: false };
+    return { fileName: '', uploadMobileSourceVisibility: false, useCamera: false, name: "" };
+  },
+  componentDidMount() {
+    this.sendDataToParent(this.state);
   },
   onNameChange(e) {
     const data = { [e.target.id]: e.target.value };
     this.sendDataToParent(data);
   },
+  isNameEmpty() {
+    return this.state.name == null || this.state.name == "";
+  },
   onFileChange(e) {
     const file = e.target.files[0];
-    const data = { files: [file], fileName: file.name };
+    let newName = this.state.name;
+
+    if (this.isNameEmpty()) {
+      newName = file.name;
+    }
+
+    const data = { files: [file], fileName: file.name, name: newName};
     this.sendDataToParent(data);
   },
   sendDataToParent(data) {
@@ -22,10 +34,10 @@ const UploadNew = React.createClass({
   },
   openSelect(useMobileCamera, e) {
       this.setState({
-        useCamera: useMobileCamera, 
+        useCamera: useMobileCamera,
         uploadMobileSourceVisibility: false
       });
-    
+
     let element = ReactDOM.findDOMNode(this).querySelector('#uploadFile');
     if(element) {
       element.click();
@@ -49,7 +61,7 @@ const UploadNew = React.createClass({
     }
   },
   getUploadMobileSourceStyle() {
-    return { 
+    return {
       display: (this.state.uploadMobileSourceVisibility ? "block" : "none")
     };
   },
@@ -71,7 +83,7 @@ const UploadNew = React.createClass({
           </div>
 
           <div className='col-md-10'>
-            <input type='text' className='form-control no-border-radius' id='name' placeholder='Name' onChange={ this.onNameChange } />
+            <input type='text' className='form-control no-border-radius' id='name' placeholder='Name' onChange={ this.onNameChange } value={ this.state.name } />
           </div>
         </div>
 
