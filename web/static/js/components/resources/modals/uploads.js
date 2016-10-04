@@ -64,13 +64,11 @@ const Uploads = React.createClass({
   },
   onNew(e) {
     if (this.newButtonDisabled() == false) {
-      console.log("33");
       if(this.state.rendering == 'new') {
         this.onCreate();
         this.onBack();
       }
       else {
-        console.log("11");
         this.setState({ rendering: 'new', title: this.tabModalTitles()[1] }, function() {
           let { parent, tabs } = this.manipulateModalWindow();
           parent.insertBefore(tabs, parent.childNodes[0]);
