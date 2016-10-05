@@ -12,8 +12,8 @@
           <%= message.session_member.username %>
         </span>
 
-        <span class='pull-right'>
-          <small><%= time_format(message.createdAt, assigns[:time_zone]) %></small>
+        <span class='time pull-right'>
+          <%= time_format(message.createdAt, assigns[:time_zone]) %>
         </span>
       </div>
 

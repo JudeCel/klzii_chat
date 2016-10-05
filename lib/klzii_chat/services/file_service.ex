@@ -1,7 +1,7 @@
 defmodule KlziiChat.Services.FileService do
 
   @tmp_path "/tmp/klzii_chat/reporting"
-  @footer_path "web/templates/reporting/preview/footer.html"
+  @footer_path File.cwd! <> "/web/templates/reporting/preview/footer.html"
 
 
   @spec get_tmp_path() :: String.t
@@ -42,32 +42,31 @@ defmodule KlziiChat.Services.FileService do
   def wkhtmltopdf(path_to_html) do
     path_to_pdf = Path.rootname(path_to_html) <> ".pdf"
 
-    case conwert_with_wkhtmltopdf(path_to_html, path_to_pdf) do
+    case conwert_with_xvfb(path_to_html, path_to_pdf) do
       {:ok, path} ->
         {:ok, path}
       {:error, reason} ->
-        conwert_with_xvfb(path_to_html, path_to_pdf)
-    end
-  end
-
-  def conwert_with_wkhtmltopdf(path_to_html, path_to_pdf) do
-    case System.cmd("wkhtmltopdf", ["file://" <> path_to_html, path_to_pdf], stderr_to_stdout: true) do
-      {_, 0} ->
-        :ok = File.rm(path_to_html)
-        {:ok, path_to_pdf}
-      {stdout, _} ->
-        {:error, stdout}
+        {:error, reason}
     end
   end
 
   def conwert_with_xvfb(path_to_html, path_to_pdf) do
-    case System.cmd("xvfb-run", ["--auto-servernum", "wkhtmltopdf", "file://" <> path_to_html, path_to_pdf], stderr_to_stdout: true) do
+    options = [
+      "--auto-servernum", "--server-args", "-screen 0, 1600x1200x24",
+      "wkhtmltopdf", "--use-xserver", "--disable-smart-shrinking",
+      "--footer-html", @footer_path, "file://" <> path_to_html, path_to_pdf
+    ]
+    case System.cmd("xvfb-run", options , stderr_to_stdout: true) do
       {_, 0} ->
         :ok = File.rm(path_to_html)
         {:ok, path_to_pdf}
       {stdout, _} ->
         {:error, stdout}
     end
+  end
+
+  def function_name do
+
   end
 
 
