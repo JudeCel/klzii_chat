@@ -1,6 +1,8 @@
 defmodule KlziiChat.Services.FileService do
 
   @tmp_path "/tmp/klzii_chat/reporting"
+  @footer_path "web/templates/reporting/preview/footer.html"
+
 
   @spec get_tmp_path() :: String.t
   def get_tmp_path() do
@@ -43,7 +45,7 @@ defmodule KlziiChat.Services.FileService do
     case conwert_with_wkhtmltopdf(path_to_html, path_to_pdf) do
       {:ok, path} ->
         {:ok, path}
-      {:error, _reason} ->
+      {:error, reason} ->
         conwert_with_xvfb(path_to_html, path_to_pdf)
     end
   end

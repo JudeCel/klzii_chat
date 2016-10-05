@@ -1,10 +1,6 @@
 defmodule KlziiChat.Reporting.PreviewView do
   use KlziiChat.Web, :view
 
-  def report_logo_url() do
-    "/images/klzii_logo.png"
-  end
-
   def get_emotion_url(emotion) do
     "/images/emotions_static/emotion-#{emotion}.png"
   end

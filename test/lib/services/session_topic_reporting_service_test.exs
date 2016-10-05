@@ -2,6 +2,8 @@ defmodule KlziiChat.Services.SessionTopicReportingServiceTest do
   use KlziiChat.{ModelCase, SessionMemberCase}
   alias KlziiChat.Services.{SessionTopicReportingService}
   alias KlziiChat.{Message}
+  alias KlziiChat.Queries.SessionTopic,  as: SessionTopicQueries
+
 
   setup %{session: session, session_topic_1: session_topic_1, facilitator: facilitator, participant: participant} do
     {:ok, create_date1} = Ecto.DateTime.cast("2016-05-20T09:50:00Z")
@@ -33,7 +35,13 @@ defmodule KlziiChat.Services.SessionTopicReportingServiceTest do
       KlziiChat.FileTestHelper.clean_up_uploads_dir
     end
 
-    {:ok, session: session, session_topic: session_topic_1}
+    session_topic_with_preload =
+      SessionTopicQueries.find(session_topic_1.id)
+      |> Repo.one
+      |> Phoenix.View.render_one(KlziiChat.SessionTopicView, "show.json", as: :session_topic )
+
+
+    {:ok, session: session, session_topic: session_topic_with_preload}
   end
 
     @spec preload_dependencies(%Message{} | [%Message{}] ) :: %Message{} | [%Message{}]
@@ -89,15 +97,14 @@ defmodule KlziiChat.Services.SessionTopicReportingServiceTest do
   end
 
   test "#get_stream :txt", %{session_topic: session_topic} do
-    session_name = "cool sesssion name jee"
 
     {:ok, messages} = KlziiChat.Queries.Messages.session_topic_messages(session_topic.id, [ star: false, facilitator: false ])
     |> Repo.all |> preload_dependencies
 
-    text_string = SessionTopicReportingService.get_stream(:txt, messages, session_name, session_topic.name, session_topic.session.timeZone)
+    text_string = SessionTopicReportingService.get_stream(:txt, messages, session_topic.session, session_topic, session_topic.session.account)
     |> Enum.to_list |> Enum.join
 
-    assert(String.contains?(text_string, session_name))
+    assert(String.contains?(text_string, session_topic.session.name))
     assert(String.contains?(text_string, session_topic.name))
 
     Enum.each(messages, fn(message) ->
@@ -106,12 +113,11 @@ defmodule KlziiChat.Services.SessionTopicReportingServiceTest do
   end
 
   test "#get_stream :csv", %{session_topic: session_topic} do
-    session_name = "cool sesssion name jee"
 
     {:ok, messages} = KlziiChat.Queries.Messages.session_topic_messages(session_topic.id, [ star: false, facilitator: false ])
     |> Repo.all |> preload_dependencies
 
-    csv_string = SessionTopicReportingService.get_stream(:csv, messages, session_topic.name, session_name, session_topic.session.timeZone)
+    csv_string = SessionTopicReportingService.get_stream(:csv, messages, session_topic.session, session_topic, session_topic.session.account)
     |> Enum.to_list |> Enum.join
 
     assert(String.contains?(csv_string, SessionTopicReportingService.csv_header) )
@@ -122,16 +128,13 @@ defmodule KlziiChat.Services.SessionTopicReportingServiceTest do
   end
 
   test "#get_html", %{session_topic: session_topic} do
-    account_name = "account name cool"
-    session_name = "cool sesssion name jee"
-
     {:ok, messages} = KlziiChat.Queries.Messages.session_topic_messages(session_topic.id, [ star: false, facilitator: false ])
     |> Repo.all |> preload_dependencies
 
-    html_string = SessionTopicReportingService.get_html(:html, messages, session_topic.name, session_name, account_name, session_topic.session.timeZone)
+    html_string = SessionTopicReportingService.get_html(:html, messages, session_topic.session, session_topic, session_topic.session.account)
 
-    assert(String.contains?(html_string, session_name))
-    assert(String.contains?(html_string, account_name))
+    assert(String.contains?(html_string, session_topic.session.name))
+    assert(String.contains?(html_string, session_topic.session.account.name))
     assert(String.contains?(html_string, session_topic.name))
 
     Enum.each(messages, fn(message) ->

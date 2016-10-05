@@ -10,6 +10,9 @@ const initialState = {
 };
 
 export default function reducer(state = initialState, action = {}) {
+  if(action.resources && action.resources[0] && action.resources[0].resource == null) {
+    return state;
+  }
   switch (action.type) {
     case Constants.GET_RESOURCE:
       return { ...state, fetch: true, videos: [], images: [], audio: [], file: [] };

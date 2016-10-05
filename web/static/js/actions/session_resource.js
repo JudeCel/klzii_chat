@@ -61,6 +61,13 @@ const Actions = {
     }
   },
   index:(jwt, data) => {
+    if (data.type[0] && !data.type[1]) {
+      if (data.type[0] == "video") {
+        data.type.push("link");
+      } else if (data.type[0] == "link") {
+        data.type.push("video");
+      }
+    } 
     return dispatch => {
       let csrf_token = localStorage.getItem('csrf_token');
       request
@@ -114,7 +121,7 @@ const Actions = {
          }
        });
     }
- },
+  },
   youtube:(data, jwt) => {
     return dispatch => {
       let csrf_token = localStorage.getItem('csrf_token');
@@ -126,7 +133,7 @@ const Actions = {
         .end(function(error, result) {
           if(error) {
             NotificationActions.showErrorNotification(dispatch, error);
-          }else {
+          } else {
             dispatch(Actions.index(jwt, { type: [data.type] }));
           }
         });

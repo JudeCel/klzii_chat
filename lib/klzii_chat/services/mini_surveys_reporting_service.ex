@@ -1,8 +1,9 @@
 defmodule KlziiChat.Services.MiniSurveysReportingService do
-  alias KlziiChat.{Repo, MiniSurvey, SessionTopic}
+  alias KlziiChat.{Repo, SessionTopicView}
   alias KlziiChat.Services.{FileService}
   alias KlziiChat.Decorators.MiniSurveyAnswersDecorator
   alias KlziiChat.Queries.MiniSurvey, as: QueriesMiniSurvey
+  alias KlziiChat.Queries.SessionTopic,  as: SessionTopicQueries
   import KlziiChat.Helpers.StringHelper, only: [double_quote: 1]
   alias KlziiChat.Helpers.DateTimeHelper
 
@@ -19,24 +20,27 @@ defmodule KlziiChat.Services.MiniSurveysReportingService do
       QueriesMiniSurvey.report_query(session_topic_id, include_facilitator)
       |> Repo.all
 
-    session_topic = Repo.get(SessionTopic, session_topic_id) |> Repo.preload([session: :account])
+      session_topic =
+        SessionTopicQueries.find(session_topic_id)
+        |> Repo.one
+        |> Phoenix.View.render_one(SessionTopicView, "show.json", as: :session_topic)
 
     case report_format do
-      :txt -> {:ok, get_stream(:txt, mini_surveys, session_topic.session.name, session_topic.name, session_topic.session.timeZone)}
-      :csv -> {:ok, get_stream(:csv, mini_surveys, session_topic.session.name, session_topic.name, session_topic.session.timeZone)}
-      :pdf -> {:ok, get_html(mini_surveys, session_topic, session_topic.session.timeZone)}
+      :txt -> {:ok, get_stream(:txt, mini_surveys, session_topic.session, session_topic, session_topic.session.account)}
+      :csv -> {:ok, get_stream(:csv, mini_surveys, session_topic.session, session_topic, session_topic.session.account)}
+      :pdf -> {:ok, get_html(mini_surveys, session_topic.session, session_topic, session_topic.session.account)}
       _ -> {:error, "Incorrect report format: " <> to_string(report_format)}
     end
   end
 
-  @spec get_stream(atom, List.t, String.t, String.t, String.t) :: Stream.t
-  def get_stream(:txt, mini_surveys, session_name, session_topic_name, time_zone) do
+  @spec get_stream(atom, List.t, Map.t, Map.t, Map.t) :: Stream.t
+  def get_stream(:txt, mini_surveys, %{name: session_name, timeZone: time_zone}, %{name: session_topic_name},_) do
     stream = Stream.map(mini_surveys, &format_survey_txt(&1, time_zone))
     Stream.concat(["#{session_name} / #{session_topic_name}\r\n\r\n"], stream)
   end
 
-  @spec get_stream(atom, List.t, String.t, String.t, String.t) :: Stream.t
-  def get_stream(:csv, mini_surveys, _, _, time_zone) do
+  @spec get_stream(atom, List.t, Map.t, Map.t, Map.t) :: Stream.t
+  def get_stream(:csv, mini_surveys, %{timeZone: time_zone}, _,_) do
     stream = Stream.map(mini_surveys, &format_survey_csv(&1, time_zone))
       Stream.concat(["Title,Question,Name,Answer,Date\n\r"], stream)
   end
@@ -59,16 +63,17 @@ defmodule KlziiChat.Services.MiniSurveysReportingService do
     end)
   end
 
-  @spec get_html(List.t, %MiniSurvey{},  String.t ) :: String.t
-  def get_html(mini_surveys, session_topic, time_zone) do
-    header_title = "Mini Surveys History - #{session_topic.session.account.name} / #{session_topic.session.name}"
+  @spec get_html(List.t, Map.t,  Map.t, Map.t ) :: String.t
+  def get_html(mini_surveys, session, session_topic, account) do
+    header_title = "Mini Surveys History - #{account.name} / #{session.name}"
 
     Phoenix.View.render_to_string(
       KlziiChat.Reporting.PreviewView, "mini_surveys.html",
       mini_surveys: mini_surveys,
       session_topic_name: session_topic.name,
+      brand_logo: session.brand_logo.url.full,
       header_title: header_title,
-      time_zone: time_zone,
+      time_zone: session.timeZone,
       layout: {KlziiChat.LayoutView, "report.html"}
     )
   end
