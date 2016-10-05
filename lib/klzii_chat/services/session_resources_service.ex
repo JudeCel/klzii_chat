@@ -83,8 +83,13 @@ defmodule KlziiChat.Services.SessionResourcesService do
         resource_query =
           QueriesResources.base_resource_query
           |> QueriesResources.find_by_params(params)
+          resource_ids = Repo.all(from r in resource_query, select: r.id)
           session_resources =
-            from(sr in SessionResource, where: sr.sessionId == ^session_member.sessionId, preload: [resource: ^resource_query])
+            from(sr in SessionResource,
+              where: sr.sessionId == ^session_member.sessionId and
+                sr.resourceId in ^resource_ids,
+                preload: [:resource]
+              )
             |> Repo.all
           {:ok, session_resources}
       {:error, reason} ->
