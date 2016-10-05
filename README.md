@@ -6,10 +6,10 @@
   * Elixir v1.3.2
   * [FS Listener](https://github.com/synrc/fs#backends)
   * ``` xvfb ```
-  * ``` wkhtmltopdf ```
+  * [Wkhtmltopdf](http://wkhtmltopdf.org/downloads.html)
 
 ## Setup project
-  
+
 ### Before run server need setup Kliiko project and run seeds.
 
 1) Go to project folder
