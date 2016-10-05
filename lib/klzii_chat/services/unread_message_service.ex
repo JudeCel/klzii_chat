@@ -49,19 +49,14 @@ defmodule KlziiChat.Services.UnreadMessageService do
     current_topic_presences_ids = topic_presences_ids(session_topic)
     current_session_presences_ids = session_presences_ids(session_id)
 
-
     # get all session members for specifice session
     all_session_member_ids = get_all_session_members(session_id)
-
     # get all members who not connected to specific topic.
     unread_members_ids = ListHelper.find_diff(current_topic_presences_ids, all_session_member_ids)
-
     # Create unread messages for session members
     insert_offline_records(unread_members_ids, message)
-
     # find conected session member ids for notification
     notifiable_session_member_ids = ListHelper.find_diff(current_topic_presences_ids, current_session_presences_ids)
-
     # get data for notifications
     data = get_unread_messages(notifiable_session_member_ids) |> group_by_session_topics_and_scope |> calculate_summary
 
@@ -73,7 +68,7 @@ defmodule KlziiChat.Services.UnreadMessageService do
     from(sm in SessionMember,
       where: sm.id in ^session_member_ids,
       left_join: um in UnreadMessage, on: sm.id == um.sessionMemberId,
-      join: st in SessionTopic, on: st.id == um.sessionTopicId and st.active == true, 
+      join: st in SessionTopic, on: st.id == um.sessionTopicId and st.active == true,
       group_by: [sm.id, um.scope, um.sessionTopicId],
       select: %{"id" => sm.id, "session_topic" => {um.sessionTopicId, %{um.scope => count(um.scope)}}}
     )|> Repo.all
@@ -148,7 +143,7 @@ defmodule KlziiChat.Services.UnreadMessageService do
 
   @spec get_all_session_members(Integer.t) :: List.t
   def get_all_session_members(session_id) do
-    roles = ["facilitator", "participant"]
+    roles = ["facilitator", "participant", "observer"]
     from(sm in SessionMember, where: sm.sessionId == ^session_id, where: sm.role in ^roles, select: sm.id)
       |> Repo.all
   end
