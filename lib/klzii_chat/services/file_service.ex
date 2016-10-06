@@ -53,8 +53,8 @@ defmodule KlziiChat.Services.FileService do
 
   def conwert_with_xvfb(path_to_html, path_to_pdf) do
     options = [
-      "--auto-servernum", "--server-args", "-screen 0, 1600x1200x24",
-      "wkhtmltopdf", "--use-xserver", "--disable-smart-shrinking",
+      "--auto-servernum",
+      "wkhtmltopdf",
       "--footer-html", @footer_path, "file://" <> path_to_html, path_to_pdf
     ]
     case System.cmd("xvfb-run", options , stderr_to_stdout: true) do

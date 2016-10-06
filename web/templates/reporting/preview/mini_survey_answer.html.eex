@@ -1,8 +1,8 @@
 <%= for mini_survey_answer <- @mini_survey_answers do %>
   <div class='media'>
     <div class='media-left media-top'>
-      <div class='svg_avatar' data-avatardata='<%= {:safe, Poison.encode!(mini_survey_answer.session_member.avatarData) }%>'>
-        <svg id="svg_<%= mini_survey_answer.id %>_<%= mini_survey_answer.session_member.id %>"></svg>
+      <div class='pull-left svg_avatar' data-avatardata='<%= {:safe, Poison.encode!(mini_survey_answer.session_member.avatarData) }%>'>
+        <svg class="pull-left" id="svg_<%= mini_survey_answer.id %>_<%= mini_survey_answer.session_member.id %>"></svg>
       </div>
     </div>
 
@@ -11,8 +11,8 @@
         <span class='pull-left username'>
           <%= mini_survey_answer.session_member.username %>
         </span>
-        <span class='pull-right'>
-          <small><%= time_format(mini_survey_answer.createdAt, @time_zone) %></small>
+        <span class='time pull-right'>
+        <%= time_format(mini_survey_answer.createdAt, @time_zone) %>
         </span>
       </div>
 
