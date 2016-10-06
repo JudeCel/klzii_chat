@@ -327,7 +327,7 @@
   }
 
   .facilitator-section .outerbox {
-    left: 100px !important;
+    left: 110px !important;
     background-color: #fff;
     z-index:666;
     width: calc(100vw - 85px) !important;
@@ -335,7 +335,6 @@
 
   .facilitator-section .outerbox .innerbox {
     height: 64px !important;
-    padding-left: 10px;
     width: 100% !important;
   }
 
@@ -563,6 +562,8 @@
     z-index: 999;
     position: relative;
     background-color: #fff;
+    height: calc(100vh - 65px);
+    overflow-y: scroll;
   }
 
   .mobile-side-menu .mobile-side-menu-content ul li, .mobile-side-menu .mobile-side-menu-topics ul li {
@@ -865,6 +866,10 @@
 
   body.modal-open .header-innerbox-mobile {
     margin-right: -15px;
+  }
+
+  .modal-section .modal-body .uploads-console-section iframe {
+    height: calc(100vh - 159px) !important;
   }
 }
 
