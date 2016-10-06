@@ -71,7 +71,7 @@ defmodule KlziiChat.Services.MiniSurveysReportingService do
       KlziiChat.Reporting.PreviewView, "mini_surveys.html",
       mini_surveys: mini_surveys,
       session_topic_name: session_topic.name,
-      brand_logo: session.brand_logo.url.full,
+      brand_logo: session.brand_logo,
       header_title: header_title,
       time_zone: session.timeZone,
       layout: {KlziiChat.LayoutView, "report.html"}

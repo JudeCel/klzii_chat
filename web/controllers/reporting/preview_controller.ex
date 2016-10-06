@@ -1,5 +1,5 @@
 defmodule KlziiChat.Reporting.PreviewController do
-  alias KlziiChat.{Repo, SessionTopic, ShapeView, MiniSurveyView, SessionTopicView}
+  alias KlziiChat.{Repo, ShapeView, MiniSurveyView, SessionTopicView}
   alias KlziiChat.Queries.Messages, as: QueriesMessages
   alias KlziiChat.Queries.Shapes, as: QueriesShapes
   alias KlziiChat.Queries.MiniSurvey, as: QueriesMiniSurvey
@@ -22,7 +22,7 @@ defmodule KlziiChat.Reporting.PreviewController do
       put_layout("report.html") |>
       render("messages.html", %{
         session_topic_name: session_topic.name,
-        brand_logo: session_topic.session.brand_logo.url.full,
+        brand_logo: session_topic.session.brand_logo,
         time_zone: session_topic.session.timeZone,
         header_title: header_title, messages: messages
       })
@@ -47,7 +47,7 @@ defmodule KlziiChat.Reporting.PreviewController do
       render("shapes.html", %{
         header_title: header_title,
         session_topic_map: session_topic_map,
-        brand_logo: session_topic_map.session.brand_logo.url.full,
+        brand_logo: session_topic_map.session.brand_logo,
         session_topic_name: session_topic_map.name,
         shapes: shapes
       })
@@ -69,7 +69,7 @@ defmodule KlziiChat.Reporting.PreviewController do
     put_layout("report.html") |>
     render("mini_surveys.html", %{
       header_title: header_title,
-      brand_logo: session_topic.session.brand_logo.url.full,
+      brand_logo: session_topic.session.brand_logo,
       mini_surveys: mini_surveys,
       session_topic_name: session_topic.name,
     })

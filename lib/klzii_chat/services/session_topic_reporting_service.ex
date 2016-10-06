@@ -65,7 +65,7 @@ defmodule KlziiChat.Services.SessionTopicReportingService do
     Phoenix.View.render_to_string(
       KlziiChat.Reporting.PreviewView, "messages.html",
       messages: messages,
-      brand_logo: session.brand_logo.url.full,
+      brand_logo: session.brand_logo,
       time_zone: session.timeZone,
       session_topic_name: session_topic.name,
       header_title: "Chat History - #{account.name} / #{session.name}",

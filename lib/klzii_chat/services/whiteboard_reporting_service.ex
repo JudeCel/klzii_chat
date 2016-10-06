@@ -22,7 +22,7 @@ defmodule KlziiChat.Services.WhiteboardReportingService do
     html_text = Phoenix.View.render_to_string(
       KlziiChat.Reporting.PreviewView, "shapes.html",
       shapes: shapes,
-      brand_logo: session_topic_map.session.brand_logo.url.full,
+      brand_logo: session_topic_map.session.brand_logo,
       session_topic_name: session_topic_map.name,
       header_title: header_title,
       layout: {KlziiChat.LayoutView, "report.html"}

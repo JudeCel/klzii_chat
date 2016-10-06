@@ -38,7 +38,7 @@ defmodule KlziiChat.SessionView do
     render_one(account, AccountView, "show.json", as: :account)
   end
 
-  defp brand_logo(nil), do: %{url: %{full: "/images/klzii_logo.png"}}
+  defp brand_logo(nil), do: %{url: %{full: "/images/klzii_logo.png"}, static: true}
   defp brand_logo(brand_logo) do
     render_one(brand_logo, ResourceView, "resource.json")
   end
