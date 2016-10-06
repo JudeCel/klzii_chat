@@ -46,6 +46,7 @@ defmodule KlziiChat.Services.FileService do
       {:ok, path} ->
         {:ok, path}
       {:error, reason} ->
+        IO.inspect(reason)
         {:error, reason}
     end
   end
@@ -60,7 +61,9 @@ defmodule KlziiChat.Services.FileService do
       {_, 0} ->
         :ok = File.rm(path_to_html)
         {:ok, path_to_pdf}
-      {stdout, _} ->
+      {stdout, second} ->
+        IO.inspect(stdout)
+        IO.inspect(second)
         {:error, stdout}
     end
   end
