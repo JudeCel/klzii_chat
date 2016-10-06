@@ -16,6 +16,9 @@ export default function reducer(state = initialState, action = {}) {
     case Constants.SET_SESSION_TOPICS:
       return { ...state, all: action.all};
 
+    case Constants.CHANGE_SESSION_TOPICS:
+      return { ...state, all: action.all};
+
     case Constants.UPDATE_SESSION_TOPIC:
       return { ...state, all: findAndUpdate(state.all, action.session_topic)};
 

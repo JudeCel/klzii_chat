@@ -21,6 +21,9 @@ export default function reducer(state = initialState, action = {}) {
     case Constants.SOCKET_CONNECTION_ERROR:
       return { ...state, error: action.error };
 
+    case Constants.SET_UPDATE_SESSION:
+      return { ...state, session: action.session };
+
     default:
       return state;
   }

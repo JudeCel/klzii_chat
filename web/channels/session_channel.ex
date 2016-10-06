@@ -172,4 +172,5 @@ defmodule KlziiChat.SessionChannel do
     end
     {:noreply, socket}
   end
+
 end
