@@ -136,4 +136,12 @@ defmodule KlziiChat.SessionChannelTest do
     session_topic_1_id = to_string(session_topic_1.id)
     assert_reply(ref, :ok, %{^session_topic_1_id => %{"txt" => %{"all" => %{status: "progress"}}}}, @message_delay)
   end
+
+  test "update session topics", %{socket: socket, channel_name: channel_name, session: session, session_topic_1: session_topic_1} do
+    {:ok, _, socket} = subscribe_and_join(socket, SessionChannel, channel_name)
+
+    assert(:ok = KlziiChat.BackgroundTasks.Session.update_session_topics(session.id))
+    assert_broadcast("update_session_topics", %{session_topics: _})
+  end
+
 end
