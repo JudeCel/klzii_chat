@@ -47,6 +47,7 @@ defmodule KlziiChat.Reporting.PreviewController do
       render("shapes.html", %{
         header_title: header_title,
         session_topic_map: session_topic_map,
+        time_zone: session_topic.session.timeZone,
         brand_logo: session_topic_map.session.brand_logo,
         session_topic_name: session_topic_map.name,
         shapes: shapes
@@ -70,6 +71,7 @@ defmodule KlziiChat.Reporting.PreviewController do
     render("mini_surveys.html", %{
       header_title: header_title,
       brand_logo: session_topic.session.brand_logo,
+      time_zone: session_topic.session.timeZone,
       mini_surveys: mini_surveys,
       session_topic_name: session_topic.name,
     })
