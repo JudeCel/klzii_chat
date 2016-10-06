@@ -51,7 +51,8 @@ const builder = {
     return svg.group(frame, remove).addClass('cursor-pointer remove-button').click(this.removePinboardResource.bind(this, item.id));
   },
   setNextPositionForPinboard(startX, data, item) {
-    if(data.item % 4 == 0) {
+    let itemsInRow = this.isVerticalMobile() ? 3 : 4;
+    if(data.item % itemsInRow == 0) {
       data.x = startX;
       data.y += data.spaceTop + data.height + data.border*2;
     }
@@ -67,12 +68,23 @@ const builder = {
       callback(this.width, this.height);
     }
   },
+  isMobile() {
+    return screen.width < 768 && screen.height < 768;
+  },
+  isVerticalMobile() {
+    return this.isMobile() && screen.height > screen.width;
+  },
+  isHorizontalMobile() {
+    return this.isMobile() && screen.height < screen.width;
+  },
   startingData() {
+    let width = this.isVerticalMobile() ? 270 : 180;
+    let height = this.isHorizontalMobile() ? width / 3 : width / 1.45;
     return {
       x: 45,
       y: 55,
-      width: 180,
-      height: 125,
+      width: width,
+      height: height,
       spaceTop: 55,
       spaceSide: 10,
       border: 10,
