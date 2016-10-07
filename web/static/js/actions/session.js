@@ -43,7 +43,7 @@ export function joinChannal(dispatch) {
   let whenConnectionCrash = (event) =>{
     dispatch({
       type: Constants.SOCKET_CONNECTION_ERROR,
-      error: "Socket connection error"
+      error: "Connection error, reconnecting"
     });
     dispatch({
       type: Constants.CLOSE_ALL_MODAL_WINDOWS
