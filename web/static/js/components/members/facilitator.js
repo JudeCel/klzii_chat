@@ -7,7 +7,7 @@ import mixins             from '../../mixins';
 const Facilitator = React.createClass({
   mixins: [mixins.validations, mixins.modalWindows],
   innerboxClassname(permission) {
-    const className = 'innerbox';
+    const className = 'innerbox text-break-all';
     return permission ? className + ' cursor-pointer' : className;
   },
   render() {
