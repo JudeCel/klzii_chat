@@ -9,6 +9,8 @@ defmodule KlziiChat.SessionResourcesController do
   plug Guardian.Plug.EnsureAuthenticated, handler: KlziiChat.Guardian.AuthErrorHandler
   plug :if_current_member
 
+  @galery_items_on_page 9
+
   def index(conn, params, member, _) do
     case SessionResourcesService.get_session_resources(member.session_member.id, params) do
       {:ok, session_resources} ->
@@ -56,7 +58,7 @@ defmodule KlziiChat.SessionResourcesController do
 
   def gallery(conn, params, member, _) do
     {:ok, session_resources} = SessionResourcesService.get_session_resources(member.session_member.id, params)
-    resources =
+    account_resources =
       QueriesResources.base_query(member.account_user)
       |> QueriesResources.find_by_params(params)
       |> QueriesResources.stock_query(%{"stock" => false})
@@ -69,8 +71,14 @@ defmodule KlziiChat.SessionResourcesController do
         |> QueriesResources.stock_query(%{"stock" => true})
         |> QueriesResources.exclude_by_ids(session_resources)
         |> Repo.all
-        
-    json(conn, Phoenix.View.render_many((stock_resources ++ resources), ResourceView, "resource.json", as: :resource))
+
+
+    all_resources = (stock_resources ++ account_resources)
+    pages = Float.ceil(length(all_resources) / @galery_items_on_page)
+    {page, _} = Integer.parse(params["page"] || "1")
+    page_resources = Enum.take(Enum.drop(all_resources, (page-1)*@galery_items_on_page), @galery_items_on_page)
+
+    json(conn, Phoenix.View.render_one(%{resources: page_resources, pages: pages}, ResourceView, "resources.json", as: :data))
   end
 
   defp if_current_member(conn, opts) do
