@@ -117,6 +117,10 @@
     width: 75px;
   }
 
+  .direct-message-modal .direct-message-section .messages-section .unread-separator hr {
+    width: 33% !important;
+  }
+
   .facilitator-name-mobile {
     display: block !important;
     height: auto !important;
