@@ -19,6 +19,17 @@ const Select = React.createClass({
       </span>
     )
   },
+  renderTopicSign() {
+    const { current } = this.props;
+
+    if(this.isFacilitator(this.props.currentUser)) return;
+
+    return (
+      <span className={ 'topic-sign text-break-all' + (current.landing ? ' topic-landing' : '') }>
+        { current.sign }
+      </span>
+    )
+  },
   renderSessionNameBlock() {
     const { session } = this.props;
 
@@ -80,7 +91,8 @@ const Select = React.createClass({
               <Badge type='normal' data={ unread_messages.summary } />
             </li>
           </ul>
-            { this.renderIconEye() }
+          { this.renderIconEye() }
+          { this.renderTopicSign() }
         </div>
       </div>
     )
