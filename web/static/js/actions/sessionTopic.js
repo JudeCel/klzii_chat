@@ -62,8 +62,6 @@ const Actions = {
       }
   },
   selectCurrent: (socket, sessionTopics, currentTopic) =>{
-    console.log(currentTopic);
-
     return dispatch => {
       dispatch({
         type: Constants.SET_SESSION_TOPICS,

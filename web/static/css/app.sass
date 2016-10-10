@@ -85,6 +85,32 @@ body
         font-size: 10px
         .icon-eye
           font-size: 25px
+      .topic-sign
+        padding: 0px 10px
+        max-width: 280px
+        width: 280px
+        display: inline-block
+        color: #373737
+        font-size: 18px
+        vertical-align: top
+        margin-top: 5px
+        &.topic-landing
+          background: url("/images/arrow-landing-topic.png")
+          background-repeat: no-repeat
+          background-position: left
+          padding-left: 65px
+          margin-left: 10px
+          min-height: 34px
+          background-size: 60px 30px
+          @media (min-width: 1200px)
+            padding-top: 20px
+        @media (max-width: 1199px)
+          margin-top: 4px
+          max-width: 200px
+          width: 200px
+          font-size: 16px
+        @media (max-width: 1119px)
+          font-size: 15px
       .dropdown.btn-group
         vertical-align: top
         #topic-selector
