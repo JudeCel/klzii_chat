@@ -26,3 +26,9 @@ config :arc,
 
 config :guardian, Guardian,
   secret_key: System.get_env("GUARDIAN_SECRET_KEY")
+
+config :klzii_chat, KlziiChat.DatabasMonitoring.Listener,
+  username: System.get_env("DB_USERNAME"),
+  database: System.get_env("DB_DATABASE"),
+  hostname: System.get_env("DB_HOST"),
+  password: System.get_env("DB_PASSWORD")

@@ -13,7 +13,8 @@ defmodule KlziiChat do
       # Start the Ecto repository
       supervisor(Repo, []),
       supervisor(Presence, []),
-      supervisor(Task.Supervisor, [[name: KlziiChat.BackgroundTasks]])
+      supervisor(Task.Supervisor, [[name: KlziiChat.BackgroundTasks]]),
+      supervisor(KlziiChat.DatabasMonitoring.Listener, [])
       # Here you could define other workers and supervisors as children
       # worker(KlziiChat.Worker, [arg1, arg2, arg3]),
     ]
