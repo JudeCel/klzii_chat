@@ -919,27 +919,26 @@
 }
 
 .header-innerbox-mobile .navbar-header .navbar-brand {
-  margin-top: -10px;
+  margin-top: -7px;
   width: 100%;
   left: 0px;
   text-align: center;
-  margin-left: -75px;
+  margin-left: -65px;
   margin-right: -50px;
-  padding-left: 50%;
 }
 
 .header-innerbox-mobile .navbar-header .navbar-brand img {
-  float: left;
+  float: none;
+  display: inline-block;
   height: 47px;
-  margin-left: -50px;
 }
 
 .navbar-whiteboard {
-  width: 45px;
-  height: 45px;
+  width: 47px;
+  height: 47px;
   display: block;
   float: right;
   cursor: pointer;
-  margin-top: 9px;
-  margin-right: 15px;
+  margin-top: 8px;
+  margin-right: 10px;
 }
