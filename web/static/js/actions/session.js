@@ -106,6 +106,13 @@ const Actions = {
         });
       });
 
+      channel.on("update_session_topics", (resp) =>{
+        return dispatch({
+          type: Constants.CHANGE_SESSION_TOPICS,
+          all: resp.session_topics
+        });
+      });
+
       channel.on("presence_state", (state) =>{
         return dispatch({
           type: Constants.SYNC_MEMBERS_STATE,

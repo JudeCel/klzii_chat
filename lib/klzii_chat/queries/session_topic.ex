@@ -9,4 +9,13 @@ defmodule KlziiChat.Queries.SessionTopic do
       preload: [session: [:brand_logo, :account, :brand_project_preference]]
     )
   end
+
+  @spec all(Integer) :: Ecto.Query.t
+  def all(session_id) do
+    from(st in SessionTopic,
+      where: st.active == true and st.sessionId == ^session_id,
+      order_by: [ asc: st.order, asc: st.topicId]
+    )
+  end
+
 end
