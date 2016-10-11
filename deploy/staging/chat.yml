@@ -30,6 +30,8 @@ spec:
         - name: docker-hub-secret
       containers:
       - env:
+        - name: REDIS_HOST
+          value: "redis-master"
         - name: AWS_ACCESS_KEY_ID
           value: "AKIAJV2UHLF355DYBP6A"
         - name: AWS_SECRET_ACCESS_KEY

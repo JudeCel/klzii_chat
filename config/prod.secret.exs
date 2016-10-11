@@ -32,3 +32,6 @@ config :klzii_chat, KlziiChat.DatabasMonitoring.Listener,
   database: System.get_env("DB_DATABASE"),
   hostname: System.get_env("DB_HOST"),
   password: System.get_env("DB_PASSWORD")
+
+config :exq,
+  host: System.get_env("REDIS_HOST")

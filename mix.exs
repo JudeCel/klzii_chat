@@ -19,7 +19,7 @@ defmodule KlziiChat.Mixfile do
   def application do
     [mod: {KlziiChat, []},
      applications: [:phoenix, :phoenix_html, :cowboy, :logger, :gettext, :quantum, :phoenix_pubsub,
-                    :phoenix_ecto, :postgrex, :ex_aws, :arc, :httpotion, :timex_ecto, :httpoison, :boltun]]
+                    :phoenix_ecto, :postgrex, :ex_aws, :arc, :httpotion, :timex_ecto, :httpoison, :exq]]
   end
 
   # Specifies which paths to compile per environment.
@@ -37,6 +37,8 @@ defmodule KlziiChat.Mixfile do
      {:phoenix_live_reload, "~> 1.0", only: :dev},
      {:timex_ecto, "~> 3.0"},
      {:boltun, "~> 1.0"},
+     {:exq, "~> 0.8.0"},
+     {:exq_ui, "~> 0.8.0"},
      {:timex, "~> 3.0"},
      {:quantum, "~> 1.7"},
      {:poison, "~> 2.2"},

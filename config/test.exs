@@ -18,5 +18,15 @@ config :klzii_chat, KlziiChat.Repo,
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox,
   sql_sandbox: true
+
 config :guardian, Guardian,
     secret_key: "SttPra/cddsnX+Vko2i8KA=="
+
+config :klzii_chat, KlziiChat.DatabasMonitoring.Listener,
+  database: "kliiko_test",
+  username: "postgres",
+  password: "postgres",
+  hostname: "localhost"
+
+config :exq,
+  host: "127.0.0.1"
