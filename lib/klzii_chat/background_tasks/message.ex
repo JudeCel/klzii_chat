@@ -1,13 +1,14 @@
 defmodule KlziiChat.BackgroundTasks.Message do
   alias KlziiChat.Services.{UnreadMessageService}
   alias KlziiChat.{Endpoint}
+  alias KlziiChat.BackgroundTasks.{General}
 
   def new(message_id)  do
-    run_task(fn -> process_new_message(message_id)end)
+    General.run_task(fn -> process_new_message(message_id)end)
   end
 
   def delete(session_id, session_topic_id) do
-    run_task(fn -> process_delete_message(session_id, session_topic_id) end)
+    General.run_task(fn -> process_delete_message(session_id, session_topic_id) end)
   end
 
   defp process_new_message(message_id) do
@@ -28,11 +29,4 @@ defmodule KlziiChat.BackgroundTasks.Message do
     end
   end
 
-  def run_task(fun) do
-    if Mix.env == :test do
-      Task.async(fun) |> Task.await
-    else
-      Task.Supervisor.start_child(KlziiChat.BackgroundTasks, fun)
-    end
-  end
 end

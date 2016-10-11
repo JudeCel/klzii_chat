@@ -67,7 +67,7 @@ const MobileHeader = React.createClass({
     }
   },
   render() {
-    const { sessionTopics, unread_messages, currentUser, brand_logo } = this.props;
+    const { sessionTopics, unread_messages, currentUser, brand_logo, colours } = this.props;
 
     if (currentUser && currentUser.avatarData) {
 
@@ -80,7 +80,9 @@ const MobileHeader = React.createClass({
               <span className='icon-bar'></span>
             </button>
             <span className='navbar-brand'><img src={brand_logo.url.full}/></span>
-            <span className='navbar-whiteboard' onClick={this.whiteboardIconClick}><img src='/images/whiteboard-icon.png'/></span>
+            <span className='navbar-whiteboard' onClick={this.whiteboardIconClick} style={{ backgroundColor: colours.headerButton }}>
+              <img src='/images/whiteboard-icon.png'/>
+            </span>
           </div>
           <div className='mobile-side-menu' style={ this.getMobileSideMenuStyle() }>
             <div className='mobile-side-menu-bg'></div>
@@ -155,7 +157,8 @@ const mapStateToProps = (state) => {
     unreadDirectMessages: state.directMessages.unreadCount,
     firstParticipant: state.members.participants[0],
     facilitator: state.members.facilitator,
-    sessionConsole: state.sessionTopicConsole.data
+    sessionConsole: state.sessionTopicConsole.data,
+    colours: state.chat.session.colours
   };
 };
 export default connect(mapStateToProps)(MobileHeader);
