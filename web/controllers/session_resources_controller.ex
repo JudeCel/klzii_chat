@@ -4,6 +4,7 @@ defmodule KlziiChat.SessionResourcesController do
   alias KlziiChat.{SessionResourcesView, ResourceView}
   alias KlziiChat.Services.{ SessionResourcesService, ResourceService}
   alias KlziiChat.Queries.Resources, as: QueriesResources
+  alias KlziiChat.Helpers.{PagesHelper}
   use Guardian.Phoenix.Controller
 
   plug Guardian.Plug.EnsureAuthenticated, handler: KlziiChat.Guardian.AuthErrorHandler
@@ -72,13 +73,11 @@ defmodule KlziiChat.SessionResourcesController do
         |> QueriesResources.exclude_by_ids(session_resources)
         |> Repo.all
 
-
     all_resources = (stock_resources ++ account_resources)
-    pages = Float.ceil(length(all_resources) / @galery_items_on_page)
     {page, _} = Integer.parse(params["page"] || "1")
-    page_resources = Enum.take(Enum.drop(all_resources, (page-1)*@galery_items_on_page), @galery_items_on_page)
+    {data, pages} = PagesHelper.paginate(all_resources, page, @galery_items_on_page)
 
-    json(conn, Phoenix.View.render_one(%{resources: page_resources, pages: pages}, ResourceView, "resources.json", as: :data))
+    json(conn, Phoenix.View.render_one(%{resources: data, pages: pages}, ResourceView, "resources.json", as: :data))
   end
 
   defp if_current_member(conn, opts) do
