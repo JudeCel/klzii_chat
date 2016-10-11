@@ -2,7 +2,7 @@ defmodule KlziiChat.DatabasMonitoring.Listener do
   use Boltun, otp_app: :klzii_chat
 
   listen do
-    channel "table_update", :decode_message
+    channel "table_update", :processe_event
   end
 
   @spec session_topics(Integer.t) :: {:ok, String.t} | {:error, String.t}
@@ -13,7 +13,7 @@ defmodule KlziiChat.DatabasMonitoring.Listener do
   def processe_event(channel, payload) do
     case Mix.env do
       :test ->
-        {:ok}
+        {:ok, "Running in Test ENV"}
       _ ->
         decode_message(channel, payload)
     end

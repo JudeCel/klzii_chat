@@ -62,4 +62,5 @@ config :klzii_chat, KlziiChat.DatabasMonitoring.Listener,
   hostname: "localhost"
 
 config :exq,
-  host: "127.0.0.1"
+  host: "127.0.0.1",
+  database: 7
