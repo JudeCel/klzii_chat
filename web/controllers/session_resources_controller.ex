@@ -11,6 +11,7 @@ defmodule KlziiChat.SessionResourcesController do
   plug :if_current_member
 
   @galery_items_on_page 9
+  @default_page 1
 
   def index(conn, params, member, _) do
     case SessionResourcesService.get_session_resources(member.session_member.id, params) do
@@ -74,7 +75,12 @@ defmodule KlziiChat.SessionResourcesController do
         |> Repo.all
 
     all_resources = (stock_resources ++ account_resources)
-    {page, _} = Integer.parse(params["page"] || "1")
+    page = case Integer.parse(params["page"] || "1") do
+      :error ->
+        @default_page
+      {integer, _} ->
+        integer
+    end
     {data, pages} = PagesHelper.paginate(all_resources, page, @galery_items_on_page)
 
     json(conn, Phoenix.View.render_one(%{resources: data, pages: pages}, ResourceView, "resources.json", as: :data))
