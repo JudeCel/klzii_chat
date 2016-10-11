@@ -227,8 +227,8 @@ body.modal-open
             padding: 5px
             padding-left: 30px
           .col-md-6.text-right
-            float: right;
-            padding: 5px;
+            float: right
+            padding: 5px
             padding-right: 30px
     .survey-create-section, .uploads-section
       @extend .no-border-radius
@@ -283,3 +283,12 @@ body.modal-open
 @media screen and (min-width: 768px)
   .reports-modal
     width: 900px
+
+.modal-section .modal-body .uploads-section .gallery-section
+  .col-md-4 .row:last-child
+    text-align: center
+    min-height: 120px
+    img
+      max-height: 120px
+      max-width: 100%
+      display: initial
