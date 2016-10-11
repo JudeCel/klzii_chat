@@ -18,7 +18,7 @@ function dispatchByType(dispatch, resp) {
       dispatch({type: Constants.SET_FILE_RESOURCES, resources: resp.resources });
       break;
     case "gallery":
-      dispatch({type: Constants.SET_GALLERY_RESOURCES, gallery: resp.resources });
+      dispatch({type: Constants.SET_GALLERY_RESOURCES, gallery: resp.resources, pages: resp.pages });
       break;
     default:
   }
@@ -67,7 +67,7 @@ const Actions = {
       } else if (data.type[0] == "link") {
         data.type.push("video");
       }
-    } 
+    }
     return dispatch => {
       let csrf_token = localStorage.getItem('csrf_token');
       request
@@ -90,7 +90,7 @@ const Actions = {
       let csrf_token = localStorage.getItem('csrf_token');
       request
         .get('/api/session_resources/gallery')
-        .query({ 'type[]': data.type, 'scope[]': data.scope })
+        .query({ 'type[]': data.type, 'scope[]': data.scope, 'page': data.page  })
         .set('X-CSRF-Token', csrf_token)
         .set('Authorization', jwt)
         .end(function(error, result) {
@@ -98,7 +98,7 @@ const Actions = {
             NotificationActions.showErrorNotification(dispatch, error);
           }
           else {
-            dispatchByType(dispatch, { type: 'gallery', resources: result.body });
+            dispatchByType(dispatch, { type: 'gallery', resources: result.body.resources, pages: result.body.pages });
           }
         });
     }

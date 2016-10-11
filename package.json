@@ -59,6 +59,7 @@
     "superagent": "^2.0.0",
     "url-loader": "^0.5.7",
     "webpack": "^1.13.1",
-    "webpack-raphael": "^2.1.4"
+    "webpack-raphael": "^2.1.4",
+    "react-js-pagination": "^2.0.0"
   }
 }
