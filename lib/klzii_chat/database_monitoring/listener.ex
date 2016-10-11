@@ -1,8 +1,18 @@
-defmodule KlziiChat.DatabasMonitoring.Listener do
+defmodule KlziiChat.DatabaseMonitoring.Listener do
   use Boltun, otp_app: :klzii_chat
 
   listen do
     channel "table_update", :processe_event
+  end
+
+
+  @spec messages() :: Map.t
+  def messages do
+    %{
+      errors: %{
+        unhandle_event: "unhandle channel event"
+      }
+    }
   end
 
   @spec session_topics(Integer.t) :: {:ok, String.t} | {:error, String.t}
@@ -15,14 +25,13 @@ defmodule KlziiChat.DatabasMonitoring.Listener do
       :test ->
         {:ok, "Running in Test ENV"}
       _ ->
-        decode_message(channel, payload)
+        decode_message(channel, payload) |> create_job
     end
   end
 
   @spec decode_message(String.t, String.t) :: {:ok, String.t} | {:error, String.t}
   def decode_message(_, payload) do
     Poison.decode!(payload)
-    |> create_job
   end
 
   @spec create_job(Map.t) :: {:ok, String.t} | {:error, String.t}
@@ -31,7 +40,7 @@ defmodule KlziiChat.DatabasMonitoring.Listener do
       %{"table" =>  "SessionTopics", "id" =>  id} ->
         session_topics(id)
       _ ->
-        {:ok, "unhandle channel event"}
+        {:error, messages.errors.unhandle_event}
     end
   end
 end

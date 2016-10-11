@@ -14,7 +14,7 @@ defmodule KlziiChat do
       supervisor(Repo, []),
       supervisor(Presence, []),
       supervisor(Task.Supervisor, [[name: KlziiChat.BackgroundTasks]]),
-      supervisor(KlziiChat.DatabasMonitoring.Listener, [])
+      supervisor(KlziiChat.DatabaseMonitoring.Listener, [])
       # Here you could define other workers and supervisors as children
       # worker(KlziiChat.Worker, [arg1, arg2, arg3]),
     ]

@@ -22,7 +22,7 @@ config :klzii_chat, KlziiChat.Repo,
 config :guardian, Guardian,
     secret_key: "SttPra/cddsnX+Vko2i8KA=="
 
-config :klzii_chat, KlziiChat.DatabasMonitoring.Listener,
+config :klzii_chat, KlziiChat.DatabaseMonitoring.Listener,
   database: "kliiko_test",
   username: "postgres",
   password: "postgres",
