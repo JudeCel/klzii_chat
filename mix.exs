@@ -38,7 +38,6 @@ defmodule KlziiChat.Mixfile do
      {:timex_ecto, "~> 3.0"},
      {:boltun, "~> 1.0"},
      {:exq, "~> 0.8.0"},
-     {:exq_ui, "~> 0.8.0"},
      {:timex, "~> 3.0"},
      {:quantum, "~> 1.7"},
      {:poison, "~> 2.2"},
