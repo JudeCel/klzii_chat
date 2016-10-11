@@ -1,11 +1,12 @@
 import React, {PropTypes} from 'react';
 import { connect }        from 'react-redux';
+import Pagination         from "react-js-pagination";
 import Actions            from '../../../../../actions/session_resource';
 import UploadTypes        from './../types/index';
 
 const GalleryNew = React.createClass({
   getInitialState() {
-    return { selected: [] };
+    return { selected: [], page: 1 };
   },
   componentDidMount() {
     this.loadResources();
@@ -31,6 +32,7 @@ const GalleryNew = React.createClass({
   },
   loadResources() {
     const { currentUserJwt, modalName, dispatch } = this.props;
+    let { page } = this.state;
     let data = {};
 
     if(modalName == 'video') {
@@ -44,11 +46,19 @@ const GalleryNew = React.createClass({
     else {
       data.type = [modalName];
     }
+    data.page = page;
 
     dispatch(Actions.getGallery(currentUserJwt, data));
   },
+  pageChange(pageNumber) {
+    if (pageNumber != this.state.page) {
+      this.setState({ page: pageNumber }, function() {
+        this.loadResources();
+      });
+    }
+  },
   render() {
-    const { modalName, active, gallery } = this.props;
+    const { modalName, active, gallery, pages } = this.props;
 
     if(active) {
       if(gallery.length == 0) {
@@ -78,6 +88,15 @@ const GalleryNew = React.createClass({
                 )
               })
             }
+            <div className="paginator">
+              <Pagination
+                activePage={this.state.page}
+                itemsCountPerPage={1}
+                totalItemsCount={pages}
+                pageRangeDisplayed={5}
+                onChange={this.pageChange}
+              />
+            </div>
           </div>
         )
       }
@@ -93,6 +112,7 @@ const mapStateToProps = (state) => {
   return {
     currentUserJwt: state.members.currentUser.jwt,
     gallery: state.resources.gallery,
+    pages: state.resources.pages,
   }
 };
 

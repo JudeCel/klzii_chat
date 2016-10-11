@@ -2,6 +2,7 @@ defmodule KlziiChat.ResourceView do
   use KlziiChat.Web, :view
   alias KlziiChat.Uploaders.{Image, Audio, Video, File}
   alias KlziiChat.Files.{ UrlHelpers }
+  alias KlziiChat.ResourceView
 
   @spec render(String.t, Map.t) :: Map.t
   def render("resource.json", %{resource: resource}) do
@@ -14,6 +15,14 @@ defmodule KlziiChat.ResourceView do
       scope: resource.scope,
       stock: resource.stock,
       static: false
+    }
+  end
+
+  @spec render(String.t, Map.t) :: Map.t
+  def render("resources.json", %{data: data}) do
+    %{
+      pages: data.pages,
+      resources: Phoenix.View.render_many(data.resources, ResourceView, "resource.json", as: :resource)
     }
   end
 
