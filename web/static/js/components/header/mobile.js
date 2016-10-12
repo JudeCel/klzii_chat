@@ -67,7 +67,7 @@ const MobileHeader = React.createClass({
     }
   },
   render() {
-    const { sessionTopics, unread_messages, currentUser, brand_logo, colours } = this.props;
+    const { sessionTopics, unread_messages, currentUser, brand_logo, colours, session } = this.props;
 
     if (currentUser && currentUser.avatarData) {
 
@@ -88,7 +88,7 @@ const MobileHeader = React.createClass({
             <div className='mobile-side-menu-bg'></div>
             <div className='mobile-side-menu-content'>
               <ul>
-                <li className='navbar-title'>Talk Radio</li>
+                <li className='navbar-title'>{ session.name }</li>
                 <li className={ "navbar-avatar " + currentUser.role } >
                   <span onClick={this.changeAvatar}>
                     <Avatar member={ { id: currentUser.id, username: currentUser.username, colour: currentUser.colour, avatarData: currentUser.avatarData, online: true, edit: false } } specificId={ 'mobile-menu-avatar' } />
