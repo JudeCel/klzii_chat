@@ -3,11 +3,12 @@ defmodule KlziiChat.DatabaseMonitoring.EventParserTest do
   alias KlziiChat.DatabaseMonitoring.{EventParser}
 
   @id 3
-  @payloade "{\"table\" : \"SessionTopics\", \"id\" : #{@id}, \"type\" : \"UPDATE\"}"
+  @session_id 3
+  @payloade "{\"table\" : \"SessionTopics\", \"id\" : #{@id}, \"session_id\" : #{@session_id}, \"type\" : \"UPDATE\"}"
 
   describe "succses"  do
     test "processe_event" do
-      assert({:ok, "Running in Test ENV"} = EventParser.processe_event("table_update",@payloade))
+      assert({:ok, "Running in Test ENV"} = EventParser.processe_event("table_update", @payloade))
     end
 
     test "decode_message" do
@@ -15,7 +16,8 @@ defmodule KlziiChat.DatabaseMonitoring.EventParserTest do
     end
 
     test "when event select_job" do
-      assert({:ok, EventParser, :session_topics, [@id]} = EventParser.select_job(%{"table" =>  "SessionTopics", "id" =>  @id}))
+      map = %{"table" =>  "SessionTopics", "id" =>  @session_id, "session_id" => @session_id}
+      assert({:ok, EventParser, :session_topics, [@session_id]} = EventParser.select_job(map))
     end
 
     test "when unhandle event select_job" do

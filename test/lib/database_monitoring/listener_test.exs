@@ -3,7 +3,8 @@ defmodule KlziiChat.DatabaseMonitoring.ListenerTest do
   alias KlziiChat.DatabaseMonitoring.{Listener}
 
   @id 3
-  @payloade "{\"table\" : \"SessionTopics\", \"id\" : #{@id}, \"type\" : \"UPDATE\"}"
+  @session_id 3
+  @payloade "{\"table\" : \"SessionTopics\", \"id\" : #{@id}, \"session_id\" : #{@session_id}, \"type\" : \"UPDATE\"}"
 
   describe "succses"  do
     test "processe_event" do

@@ -21,9 +21,11 @@ defmodule KlziiChat.Services.SessionTopicService do
     end
   end
 
-  @spec get_by_session(Integer) :: {:ok, Map } | {:error, String.t}
-  def get_by_session(session_id) do
-    session_topics = KlziiChat.Queries.SessionTopic.all(session_id) |> Repo.all
+  @spec get_related_session_topics(Integer) :: {:ok, Map } | {:error, String.t}
+  def get_related_session_topics(session_id) do
+    session_topics =
+      KlziiChat.Queries.SessionTopic.all(session_id)
+      |> Repo.all
     {:ok, session_topics}
   end
 
