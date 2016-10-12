@@ -32,8 +32,19 @@ const Message = React.createClass({
     )
   },
   getMessageMember() {
-    const { message, currentUser } = this.props;
-    return currentUser && message.session_member.id == currentUser.id ? currentUser : message.session_member;
+    const { message, currentUser, participants } = this.props;
+
+    if (currentUser && message.session_member.id == currentUser.id) {
+      return currentUser;
+    } else {
+      for (let i=0; i<participants.length; i++) {
+        if (participants[i].id == message.session_member.id) {
+          return participants[i];
+        }
+      }
+      return message.session_member;
+    }
+
   },
   getMessageSessionTopicContext() {
     const { message } = this.props;
@@ -55,7 +66,7 @@ const Message = React.createClass({
     return (
       <div className='message-section media'>
         <div className={ this.mediaImagePosition(message) }>
-          <div className={ 'emotion-chat-' + message.emotion } aria-hidden='true' style={{ backgroundColor: message.session_member.colour }}/>
+          <div className={ 'emotion-chat-' + message.emotion } aria-hidden='true' style={{ backgroundColor: member.colour }}/>
           <div className='emotion-chat-avatar'>
             <Avatar member={ { id: member.id, username: member.username, colour: member.colour, avatarData: member.avatarData, sessionTopicContext: sessionTopicContext, online: true, edit: false } } specificId={ 'msgAvatar' + message.id } />
           </div>
@@ -63,8 +74,8 @@ const Message = React.createClass({
 
         <div className='media-body'>
           <div className='media-heading heading-section col-md-12'>
-            <span className='pull-left' style={{ color: message.session_member.colour }}>
-              { message.session_member.username }
+            <span className='pull-left' style={{ color: member.colour }}>
+              { member.username }
             </span>
 
             <span className='pull-right'>
@@ -93,7 +104,8 @@ const Message = React.createClass({
 
 const mapStateToProps = (state) => {
   return {
-    currentUser: state.members.currentUser
+    currentUser: state.members.currentUser,
+    participants: state.members.participants
   }
 };
 
