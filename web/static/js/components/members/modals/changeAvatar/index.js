@@ -126,7 +126,7 @@ const ChangeAvatarModal = React.createClass({
                 <div className='form-inline div-inline-block'>
                   <div className='form-group'>
                     <label htmlFor='username' className='control-label'>Username</label>
-                    <input type='text' className='form-control no-border-radius' id='username' placeholder='Username' value={ username } onChange={ this.onNameChange } />
+                    <input type='text' className='form-control no-border-radius' id='username' placeholder='Username' value={ username } onChange={ this.onNameChange } maxLength={15}/>
                   </div>
                 </div>
 
