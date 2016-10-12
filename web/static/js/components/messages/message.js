@@ -32,10 +32,12 @@ const Message = React.createClass({
     )
   },
   getMessageMember() {
-    const { message, currentUser, participants } = this.props;
+    const { message, currentUser, participants, facilitator } = this.props;
 
     if (currentUser && message.session_member.id == currentUser.id) {
       return currentUser;
+    } else if (facilitator && message.session_member.id == facilitator.id) {
+      return facilitator;
     } else {
       for (let i=0; i<participants.length; i++) {
         if (participants[i].id == message.session_member.id) {
@@ -105,7 +107,8 @@ const Message = React.createClass({
 const mapStateToProps = (state) => {
   return {
     currentUser: state.members.currentUser,
-    participants: state.members.participants
+    participants: state.members.participants,
+    facilitator: state.members.facilitator,
   }
 };
 
