@@ -172,6 +172,7 @@
 
   .room-section {
     border:0px !important;
+    padding-top: 5px !important;
   }
 
   .room-section > div.row {
@@ -334,6 +335,7 @@
     background-color: #fff;
     z-index:666;
     width: calc(100vw - 85px) !important;
+    font-weight: bold;
   }
 
   .facilitator-section .outerbox .innerbox {
