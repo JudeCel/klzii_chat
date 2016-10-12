@@ -11,6 +11,42 @@ const GalleryNew = React.createClass({
   componentDidMount() {
     this.loadResources();
   },
+  initPaginatorButton() {
+    var galleryPaginator = document.getElementById('galleryPaginator');
+    if (galleryPaginator) {
+      var el = galleryPaginator.getElementsByClassName('pagination')[0];
+      if (el) {
+        var oldElements = galleryPaginator.getElementsByClassName('paginatorFakeButton');
+        for(var i=oldElements.length-1; i>=0; i--) {
+          el.removeChild(oldElements[i]);
+        }
+        if (el.innerHTML.indexOf('⟨') < 0) {
+          let button = this.createPaginatorButtonElement('⟨');
+          el.insertBefore(button, el.firstChild);
+        }
+        if (el.innerHTML.indexOf('«') < 0) {
+          let button = this.createPaginatorButtonElement('«');
+          el.insertBefore(button, el.firstChild);
+        }
+        if (el.innerHTML.indexOf('⟩') < 0) {
+          let button = this.createPaginatorButtonElement('⟩');
+          el.appendChild(button);
+        }
+        if (el.innerHTML.indexOf('»') < 0) {
+          let button = this.createPaginatorButtonElement('»');
+          el.appendChild(button);
+        }
+      }
+    }
+  },
+  createPaginatorButtonElement(text) {
+    let liEl = document.createElement("li");
+    let aEl = document.createElement("a");
+    aEl.innerHTML = text;
+    liEl.appendChild(aEl);
+    liEl.className = "unactive paginatorFakeButton";
+    return liEl;
+  },
   isSelected(id) {
     return this.state.selected.includes(id);
   },
@@ -49,6 +85,7 @@ const GalleryNew = React.createClass({
     data.page = page;
 
     dispatch(Actions.getGallery(currentUserJwt, data));
+    this.initPaginatorButton();
   },
   pageChange(pageNumber) {
     if (pageNumber != this.state.page) {
@@ -88,7 +125,7 @@ const GalleryNew = React.createClass({
                 )
               })
             }
-            <div className="paginator">
+            <div className="paginator" id="galleryPaginator">
               <Pagination
                 activePage={this.state.page}
                 itemsCountPerPage={1}
