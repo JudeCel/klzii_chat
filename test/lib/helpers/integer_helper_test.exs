@@ -1,4 +1,4 @@
-defmodule KlziiChat.PaginationTest do
+defmodule KlziiChat.IntegerHelperTest do
   use KlziiChat.ModelCase, async: true
   alias KlziiChat.Helpers.{IntegerHelper}
 

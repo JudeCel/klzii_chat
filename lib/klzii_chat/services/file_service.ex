@@ -46,7 +46,6 @@ defmodule KlziiChat.Services.FileService do
       {:ok, path} ->
         {:ok, path}
       {:error, reason} ->
-        IO.inspect(reason)
         {:error, reason}
     end
   end

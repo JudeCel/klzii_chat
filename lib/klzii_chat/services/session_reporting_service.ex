@@ -78,9 +78,6 @@ defmodule KlziiChat.Services.SessionReportingService do
     end
   end
 
-
-
-
   @spec broadcast_updated_report(integer, Map.t) :: no_return
   def broadcast_updated_report(session_id, report), do: Endpoint.broadcast!("sessions:#{session_id}", "session_topics_report_updated", Repo.preload(report, :resource))
 

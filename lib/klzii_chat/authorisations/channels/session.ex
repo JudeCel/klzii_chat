@@ -1,6 +1,4 @@
 defmodule KlziiChat.Authorisations.Channels.Session do
-  alias KlziiChat.{Repo}
-  alias KlziiChat.Queries.Sessions, as: SessionQueries
 
   @spec authorized?(%Phoenix.Socket{}, Integer.t) :: {:ok} | {:error, String.t}
   def authorized?(socket, sesssion_id) do
