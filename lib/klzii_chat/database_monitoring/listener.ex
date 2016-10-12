@@ -17,7 +17,9 @@ defmodule KlziiChat.DatabaseMonitoring.Listener do
 
   @spec session_topics(Integer.t) :: {:ok, String.t} | {:error, String.t}
   def session_topics(id) do
-    Exq.enqueue(Exq, "notify", KlziiChat.BackgroundTasks.SessionTopic, [id])
+    spawn(fn ->
+      Exq.enqueue(Exq, "notify", KlziiChat.BackgroundTasks.SessionTopic, [id])
+    end)
   end
 
   def processe_event(channel, payload) do
