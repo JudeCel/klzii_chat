@@ -300,7 +300,7 @@ defmodule KlziiChat.Services.SessionReportingServiceTest do
      :timer.sleep(@db_wait)
 
      query = from(str in SessionTopicReport, where: str.sessionId == ^session.id)
-     [%{id: ^report_id, status: "failed", deletedAt: deleted_at}, %{id: ^new_report_id, status: "completed"}] = Repo.all(query)
+     assert([%{id: ^report_id, status: "failed", deletedAt: deleted_at}, %{id: ^new_report_id, status: "completed"}] = Repo.all(query))
      refute(is_nil(deleted_at))
   end
 

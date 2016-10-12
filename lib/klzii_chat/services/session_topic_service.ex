@@ -1,7 +1,6 @@
 defmodule KlziiChat.Services.SessionTopicService do
   alias KlziiChat.{Repo, SessionMember, SessionTopic}
   alias KlziiChat.Services.Permissions.SessionTopic, as: SessionTopicPermissions
-  import Ecto.Query, only: [from: 2]
 
   def errors_messages do
     %{

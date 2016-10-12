@@ -76,10 +76,9 @@ defmodule KlziiChat.Services.ResourceService do
 
   @spec find(integer, integer) :: {:ok, list}
   def find(account_user_id, id) do
-    account_user = Repo.get!(AccountUser, account_user_id)
+    Repo.get!(AccountUser, account_user_id)
       |> Repo.preload([:account])
-    resource =
-      QueriesResources.base_query(account_user)
+      |> QueriesResources.base_query
       |> where([r], r.id in ^[id])
       |> Repo.one
       |> case  do
