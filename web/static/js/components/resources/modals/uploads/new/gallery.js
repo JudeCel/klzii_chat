@@ -12,6 +12,9 @@ const GalleryNew = React.createClass({
     this.loadResources();
   },
   initPaginatorButton() {
+    let { page } = this.state;
+    const { pages } = this.props;
+
     var galleryPaginator = document.getElementById('galleryPaginator');
     if (galleryPaginator) {
       var el = galleryPaginator.getElementsByClassName('pagination')[0];
@@ -21,30 +24,40 @@ const GalleryNew = React.createClass({
           el.removeChild(oldElements[i]);
         }
         if (el.innerHTML.indexOf('⟨') < 0) {
-          let button = this.createPaginatorButtonElement('⟨');
+          let button = this.createPaginatorButtonElement('⟨', page > 1, 1);
           el.insertBefore(button, el.firstChild);
         }
         if (el.innerHTML.indexOf('«') < 0) {
-          let button = this.createPaginatorButtonElement('«');
+          let button = this.createPaginatorButtonElement('«', page > 1, 1);
           el.insertBefore(button, el.firstChild);
         }
         if (el.innerHTML.indexOf('⟩') < 0) {
-          let button = this.createPaginatorButtonElement('⟩');
+          let button = this.createPaginatorButtonElement('⟩', page < pages, pages);
           el.appendChild(button);
         }
         if (el.innerHTML.indexOf('»') < 0) {
-          let button = this.createPaginatorButtonElement('»');
+          let button = this.createPaginatorButtonElement('»', page < pages, pages);
           el.appendChild(button);
         }
       }
     }
   },
-  createPaginatorButtonElement(text) {
+  createPaginatorButtonElement(text, active, page) {
     let liEl = document.createElement("li");
     let aEl = document.createElement("a");
     aEl.innerHTML = text;
+    if (active) {
+      aEl.href = "#";
+    }
     liEl.appendChild(aEl);
-    liEl.className = "unactive paginatorFakeButton";
+    liEl.className = "paginatorFakeButton";
+    if (active) {
+      liEl.onclick = () => {
+        this.pageChange(page);
+      };
+    } else {
+      liEl.className += " unactive"
+    }
     return liEl;
   },
   isSelected(id) {
