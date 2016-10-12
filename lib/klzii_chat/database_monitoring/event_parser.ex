@@ -12,18 +12,20 @@ defmodule KlziiChat.DatabaseMonitoring.EventParser do
 
   @spec session_topics(Integer.t) :: {:ok, String.t} | {:error, String.t}
   def session_topics(id) do
-    spawn_link(fn ->
-      Exq.enqueue(Exq, "notify", SessionTopic, [id])
-    end)
+      case Mix.env do
+        :test ->
+          {:ok, "Running in Test ENV"}
+        _ ->
+          spawn_link(fn ->
+            Exq.enqueue(Exq, "notify", SessionTopic, [id])
+          end)
+      end
   end
 
   def processe_event(channel, payload) do
-    case Mix.env do
-      :test ->
-        {:ok, "Running in Test ENV"}
-      _ ->
-        decode_message(channel, payload) |> create_job
-    end
+    decode_message(channel, payload)
+    |> select_job
+    |> save_event
   end
 
   @spec decode_message(String.t, String.t) :: {:ok, String.t} | {:error, String.t}
@@ -31,11 +33,15 @@ defmodule KlziiChat.DatabaseMonitoring.EventParser do
     Poison.decode!(payload)
   end
 
-  @spec create_job(Map.t) :: {:ok, String.t} | {:error, String.t}
-  def create_job(job_params) do
+  def save_event({:ok, module, fun, arrgs}) do
+    apply(module, fun, arrgs)
+  end
+
+  @spec select_job(Map.t) :: {:ok, String.t} | {:error, String.t}
+  def select_job(job_params) do
     case job_params do
       %{"table" =>  "SessionTopics", "id" =>  id} ->
-        session_topics(id)
+        {:ok, __MODULE__, :session_topics, [id]}
       _ ->
         {:error, messages.errors.unhandle_event}
     end

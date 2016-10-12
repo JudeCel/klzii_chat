@@ -5,12 +5,6 @@ defmodule KlziiChat.DatabaseMonitoring.EventParserTest do
   @id 3
   @payloade "{\"table\" : \"SessionTopics\", \"id\" : #{@id}, \"type\" : \"UPDATE\"}"
 
-  setup do
-    on_exit fn ->
-      KlziiChat.DbCleanHelper.clean_up
-    end
-  end
-
   describe "succses"  do
     test "processe_event" do
       assert({:ok, "Running in Test ENV"} = EventParser.processe_event("table_update",@payloade))
@@ -20,14 +14,13 @@ defmodule KlziiChat.DatabaseMonitoring.EventParserTest do
       assert(%{"id" => @id} = EventParser.decode_message("table_update", @payloade))
     end
 
-    test "when event create_job" do
-      pid = EventParser.create_job(%{"table" =>  "SessionTopics", "id" =>  @id})
-      assert(is_pid(pid))
+    test "when event select_job" do
+      assert({:ok, EventParser, :session_topics, [@id]} = EventParser.select_job(%{"table" =>  "SessionTopics", "id" =>  @id}))
     end
 
-    test "when unhandle event create_job" do
+    test "when unhandle event select_job" do
       message = EventParser.messages.errors.unhandle_event
-      assert({:error, ^message} = EventParser.create_job(%{}))
+      assert({:error, ^message} = EventParser.select_job(%{}))
     end
   end
 end
