@@ -38,15 +38,14 @@ const Message = React.createClass({
       return currentUser;
     } else if (facilitator && message.session_member.id == facilitator.id) {
       return facilitator;
-    } else {
+    } else if (participants) {
       for (let i=0; i<participants.length; i++) {
         if (participants[i].id == message.session_member.id) {
           return participants[i];
         }
       }
-      return message.session_member;
     }
-
+    return message.session_member;
   },
   getMessageSessionTopicContext() {
     const { message } = this.props;

@@ -3,6 +3,7 @@ import { connect }        from 'react-redux';
 import mixins             from '../../mixins';
 import Badge              from '../sessionTopics/badge';
 import Avatar             from '../members/avatar.js';
+import Constants          from '../../constants';
 
 const MobileHeader = React.createClass({
   mixins: [mixins.modalWindows, mixins.validations, mixins.headerActions],
@@ -46,6 +47,8 @@ const MobileHeader = React.createClass({
     };
   },
   changeSessionTopic(id) {
+    const { dispatch } = this.props;
+    dispatch({ type: Constants.SET_INPUT_REPLY, replyId: 0 });
     this.setSessionTopic(id);
     this.toggleMenu();
   },
