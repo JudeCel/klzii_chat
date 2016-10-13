@@ -20,7 +20,7 @@ const Select = React.createClass({
     )
   },
   renderTopicSign() {
-    const { current } = this.props;
+    let current = this.getCurrentSessionTopic();
 
     if(this.isFacilitator(this.props.currentUser)) return;
 
@@ -46,8 +46,18 @@ const Select = React.createClass({
       </div>
     )}
   },
+  getCurrentSessionTopic() {
+    const { current, sessionTopics } = this.props;
+    for(let i=0; i<sessionTopics.length; i++) {
+      if (current.id == sessionTopics[i].id) {
+        return sessionTopics[i];
+      }
+    }
+    return current;
+  },
   render() {
-    const { current, sessionTopics, session, unread_messages } = this.props;
+    const { sessionTopics, session, unread_messages } = this.props;
+    let current = this.getCurrentSessionTopic();
 
     return (
       <div className='topic-select-section'>

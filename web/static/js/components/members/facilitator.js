@@ -10,8 +10,18 @@ const Facilitator = React.createClass({
     const className = 'innerbox text-break-all';
     return permission ? className + ' cursor-pointer' : className;
   },
+  getCurrentSessionTopic() {
+    const { current, sessionTopics } = this.props;
+    for(let i=0; i<sessionTopics.length; i++) {
+      if (current.id == sessionTopics[i].id) {
+        return sessionTopics[i];
+      }
+    }
+    return current;
+  },
   render() {
-    const { facilitator, boardContent } = this.props;
+    const { facilitator } = this.props;
+    let boardContent = this.getCurrentSessionTopic().boardMessage;
     const permission = this.hasPermission(['messages', 'can_board_message']);
 
     return (
@@ -41,7 +51,8 @@ const mapStateToProps = (state) => {
     modalWindows: state.modalWindows,
     facilitator: state.members.facilitator,
     currentUser: state.members.currentUser,
-    boardContent: state.sessionTopic.current.boardMessage
+    current: state.sessionTopic.current,
+    sessionTopics: state.sessionTopic.all,
   }
 };
 

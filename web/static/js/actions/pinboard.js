@@ -45,27 +45,31 @@ const Actions = {
   },
   upload:(data, jwt) => {
     return (dispatch) => {
-      let csrf_token = localStorage.getItem("csrf_token");
-      dispatch({ type: Constants.MODAL_POST_DATA });
-      let req = request.post('/api/pinboard_resource/upload')
-         .set('X-CSRF-Token', csrf_token)
-         .set('Authorization', jwt);
+      if (data.files) {
+        let csrf_token = localStorage.getItem("csrf_token");
+        dispatch({ type: Constants.MODAL_POST_DATA });
+        let req = request.post('/api/pinboard_resource/upload')
+           .set('X-CSRF-Token', csrf_token)
+           .set('Authorization', jwt);
 
-      data.files.map((file) => {
-        req.attach('file', file)
-           .field('type', data.type)
-           .field('sessionTopicId', data.sessionTopicId)
-           .field('scope', data.scope)
-           .field('name', data.name);
-      });
+        data.files.map((file) => {
+          req.attach('file', file)
+             .field('type', data.type)
+             .field('sessionTopicId', data.sessionTopicId)
+             .field('scope', data.scope)
+             .field('name', data.name);
+        });
 
-      req.end((errors, result) => {
-        if(errors) {
-          NotificationActions.showErrorNotification(dispatch, errors);
-        }else {
-          dispatch({ type: Constants.MODAL_POST_DATA_DONE_AND_CLOSE });
-        }
-      });
+        req.end((errors, result) => {
+          if(errors) {
+            NotificationActions.showErrorNotification(dispatch, errors);
+          } else {
+            dispatch({ type: Constants.MODAL_POST_DATA_DONE_AND_CLOSE });
+          }
+        });
+      } else {
+        dispatch({ type: Constants.MODAL_POST_DATA_DONE_AND_CLOSE });
+      }
     }
   }
 }
