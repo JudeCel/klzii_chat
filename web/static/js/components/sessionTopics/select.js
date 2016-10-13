@@ -3,10 +3,13 @@ import { connect }                                  from 'react-redux';
 import { Dropdown, Button, SplitButton, MenuItem }  from 'react-bootstrap'
 import Badge                                        from './badge';
 import mixins                                       from '../../mixins';
+import Constants                                    from '../../constants';
 
 const Select = React.createClass({
   mixins: [mixins.headerActions, mixins.validations, mixins.modalWindows],
   changeSessionTopic(id) {
+    const { dispatch } = this.props;
+    dispatch({ type: Constants.SET_INPUT_REPLY, replyId: 0 });
     this.setSessionTopic(id);
   },
   renderIconEye() {
