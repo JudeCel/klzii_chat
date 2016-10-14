@@ -876,6 +876,12 @@
   .modal-section .modal-body .uploads-console-section iframe {
     height: calc(100vh - 159px) !important;
   }
+
+  #sessionExpireModal .modal-title {
+    position: inherit;
+    margin: 0px;
+    padding: 0px;
+  }
 }
 
 @media (max-width: 379px) {

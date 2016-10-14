@@ -19,6 +19,7 @@ defmodule KlziiChat.Router do
     pipe_through :browser # Use the default browser stack
     get "/", ChatController, :index
     get "/logout", ChatController, :logout
+    get "/logout_all", ChatController, :logout_all
   end
   scope "/reporting", KlziiChat.Reporting do
     pipe_through :browser # Use the default browser stack

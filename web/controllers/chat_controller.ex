@@ -56,6 +56,15 @@ defmodule KlziiChat.ChatController do
     redirect(conn, external: conn.cookies["redirect_url"])
   end
 
+  def logout_all(conn, _) do
+    if conn.cookies["redirect_url"] != nil do
+      url = conn.cookies["redirect_url"] |> URI.parse |> Map.put(:path, "/logout") |> Map.put(:fragment, nil) |> Map.put(:query, nil) |> URI.to_string
+      redirect(conn, external: url)
+    else
+      send_resp(conn, 200, "You are logged out")
+    end
+  end
+
   defp set_redirect_url(conn, nil), do: conn
   defp set_redirect_url(conn, callback_url) do
     put_resp_cookie(conn, "redirect_url", callback_url)

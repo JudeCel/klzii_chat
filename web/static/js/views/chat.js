@@ -12,6 +12,7 @@ import MobileHeader         from '../components/header/mobile.js';
 import Forum                from '../components/chatRoom/forum';
 import Focus                from '../components/chatRoom/focus';
 import Loading              from '../components/util/loading.js';
+import SessionExpire        from '../components/util/sessionExpire.js';
 import Notifications        from '../actions/notifications';
 import notificationMixin    from '../mixins/notification';
 import ReportsModal         from '../components/reports/modal';
@@ -48,6 +49,7 @@ const ChatView = React.createClass({
       this.props.dispatch({ type: Constants.SCREEN_SIZE_CHANGED, window: { width: this.getScreenWidthForAvatar(e.target.innerWidth), height: e.target.innerHeight } });
     });
     this.props.dispatch({ type: Constants.SCREEN_SIZE_CHANGED, window: { width: this.getScreenWidthForAvatar(window.innerWidth), height: window.innerHeight } });
+    SessionExpire.init();
   },
   renderMainContent() {
     const { type } = this.props;
