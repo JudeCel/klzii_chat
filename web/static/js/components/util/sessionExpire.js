@@ -2,8 +2,7 @@ import React       from 'react';
 import ReactDOM    from 'react-dom';
 
 const SessionExpire = {
-  //expireTime: 4 * 3600 * 1000, // 4h
-  expireTime: 15 * 60 * 1000, // 15m
+  expireTime: 4 * 3600 * 1000, // 4h
   //expireTime: 10 * 1000, // 10s
   dialogTimeout: 28, // 28s
   currentDialogTimeout: -1,
