@@ -57,13 +57,11 @@ defmodule KlziiChat.ChatController do
     if conn.cookies["redirect_url"] != nil do
       case get_member_from_token(token) do
         {:ok, member, _} ->
-          IO.inspect(member)
           if (member.session_member.role == "facilitator" or member.account_user.role == "accountManager") do
             redirect(conn, external: conn.cookies["redirect_url"])
           else
-            sessionsCountAsMember = from(st in SessionMember, where: st.accountUserId == ^member.session_member.accountUserId, select: count("*")) |> Repo.one
-            sessionsCountAsOwner = from(st in Session, where: st.accountId == ^member.account_user.account.id, select: count("*")) |> Repo.one
-            if sessionsCountAsMember + sessionsCountAsOwner > 1 do
+            sessions_count_as_member = from(st in SessionMember, where: st.accountUserId == ^member.session_member.accountUserId, select: count("*")) |> Repo.one
+            if sessions_count_as_member > 1 do
               redirect(conn, external: conn.cookies["redirect_url"])
             else
               logout_all(conn, nil)
