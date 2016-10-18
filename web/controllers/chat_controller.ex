@@ -2,7 +2,7 @@ defmodule KlziiChat.ChatController do
   use KlziiChat.Web, :controller
   # import KlziiChat.ErrorHelpers, only: [error_view: 1]
   import KlziiChat.Services.SessionMembersService, only: [get_member_from_token: 1]
-    alias KlziiChat.{SessionMember, Repo}
+    alias KlziiChat.{SessionMember, Session, Repo}
 
   @doc """
     This index action is only for dev or test env.
@@ -57,12 +57,13 @@ defmodule KlziiChat.ChatController do
     if conn.cookies["redirect_url"] != nil do
       case get_member_from_token(token) do
         {:ok, member, _} ->
-          IO.inspect(member.session_member)
-          if member.session_member.role == "facilitator" do
+          IO.inspect(member)
+          if (member.session_member.role == "facilitator" or member.account_user.role == "accountManager") do
             redirect(conn, external: conn.cookies["redirect_url"])
           else
-            sessionsCount = from(st in SessionMember, where: st.accountUserId == ^member.session_member.accountUserId, select: count("*")) |> Repo.one
-            if sessionsCount > 1 do
+            sessionsCountAsMember = from(st in SessionMember, where: st.accountUserId == ^member.session_member.accountUserId, select: count("*")) |> Repo.one
+            sessionsCountAsOwner = from(st in Session, where: st.accountId == ^member.account_user.account.id, select: count("*")) |> Repo.one
+            if sessionsCountAsMember + sessionsCountAsOwner > 1 do
               redirect(conn, external: conn.cookies["redirect_url"])
             else
               logout_all(conn, nil)
