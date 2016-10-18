@@ -60,8 +60,8 @@ defmodule KlziiChat.ChatController do
           if (member.session_member.role == "facilitator" or member.account_user.role == "accountManager") do
             redirect(conn, external: conn.cookies["redirect_url"])
           else
-            sessions_count_as_member = from(st in SessionMember, where: st.accountUserId == ^member.session_member.accountUserId, select: count("*")) |> Repo.one
-            if sessions_count_as_member > 1 do
+            sessions_count_as_member = from(st in SessionMember, where: st.accountUserId == ^member.session_member.accountUserId and st.sessionId != ^member.session_member.sessionId , select: count("*")) |> Repo.one
+            if sessions_count_as_member > 0 do
               redirect(conn, external: conn.cookies["redirect_url"])
             else
               logout_all(conn, nil)
