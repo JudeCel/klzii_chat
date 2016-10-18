@@ -2,6 +2,7 @@ defmodule KlziiChat.ChatController do
   use KlziiChat.Web, :controller
   # import KlziiChat.ErrorHelpers, only: [error_view: 1]
   import KlziiChat.Services.SessionMembersService, only: [get_member_from_token: 1]
+    alias KlziiChat.{SessionMember, Repo}
 
   @doc """
     This index action is only for dev or test env.
@@ -36,7 +37,7 @@ defmodule KlziiChat.ChatController do
   def index(conn, _) do
     if chat_token = conn.cookies["chat_token"] do
       case get_member_from_token(chat_token) do
-        {:ok ,member, _} ->
+        {:ok, member, _} ->
           conn = Guardian.Plug.sign_in(conn, member.session_member)
           put_resp_cookie(conn, "chat_token", Guardian.Plug.current_token(conn), max_age: get_cookie_espire_time())
           |> render("index.html", session_id: member.session_member.sessionId)
@@ -52,8 +53,27 @@ defmodule KlziiChat.ChatController do
     end
   end
 
-  def logout(conn, _) do
-    redirect(conn, external: conn.cookies["redirect_url"])
+  def logout(conn, %{"token" => token}) do
+    if conn.cookies["redirect_url"] != nil do
+      case get_member_from_token(token) do
+        {:ok, member, _} ->
+          IO.inspect(member.session_member)
+          if member.session_member.role == "facilitator" do
+            redirect(conn, external: conn.cookies["redirect_url"])
+          else
+            sessionsCount = from(st in SessionMember, where: st.accountUserId == ^member.session_member.accountUserId, select: count("*")) |> Repo.one
+            if sessionsCount > 1 do
+              redirect(conn, external: conn.cookies["redirect_url"])
+            else
+              logout_all(conn, nil)
+            end
+          end
+        {:error, _} ->
+          logout_message(conn)
+      end
+    else
+      logout_message(conn)
+    end
   end
 
   def logout_all(conn, _) do
@@ -61,8 +81,12 @@ defmodule KlziiChat.ChatController do
       url = conn.cookies["redirect_url"] |> URI.parse |> Map.put(:path, "/logout") |> Map.put(:fragment, nil) |> Map.put(:query, nil) |> URI.to_string
       redirect(conn, external: url)
     else
-      send_resp(conn, 200, "You are logged out")
+      logout_message(conn)
     end
+  end
+
+  def logout_message(conn) do
+    send_resp(conn, 200, "You are logged out")
   end
 
   defp set_redirect_url(conn, nil), do: conn

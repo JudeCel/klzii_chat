@@ -8,9 +8,12 @@ const headerActions = {
   },
   logOut() {
     if (this.props.currentUser.logout_path) {
-      window.location.href = this.props.currentUser.logout_path;
+      let token = localStorage.getItem("sessionMemberToken");
+      let url = this.props.currentUser.logout_path;
+      url += (url.split('?')[1] ? '&' : '?') + 'token=' + token;
+      window.location.href = url;
     }
-  }
+  },
 };
 
 export default headerActions;
