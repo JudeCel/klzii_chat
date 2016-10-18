@@ -28,9 +28,7 @@ const Select = React.createClass({
     if(this.isFacilitator(this.props.currentUser)) return;
 
     return (
-      <span className={ 'topic-sign text-break-all' + (current.landing ? ' topic-landing' : '') }>
-        { current.sign }
-      </span>
+      <img src='/images/click-to-access-topics.png' alt='Click to access topics' />
     )
   },
   renderSessionNameBlock() {
