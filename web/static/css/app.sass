@@ -225,6 +225,10 @@ body
     margin-top: 20px
     margin-bottom: 20px
     max-height: 550px
+    .media-heading
+      padding: 0px
+    .action-section
+      padding: 0px
     .message-section
       margin: 0
       .emotion-chat-section
@@ -256,6 +260,9 @@ body
             opacity: 0.8
           small
             font-size: 15px
+      .message-section
+        @media (min-width: 992px)
+          margin-left: -29px
   .participants-section
     margin-left: 20px
     .avatar-even
@@ -372,10 +379,6 @@ body
     float: left
     .chat-section
       margin-top: 0px
-      .media-heading
-        padding: 0px
-      .action-section
-        padding: 0px
       .message-section
         .emotion-chat-section
           .emotion-chat-avatar

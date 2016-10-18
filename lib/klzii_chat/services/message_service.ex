@@ -15,7 +15,6 @@ defmodule KlziiChat.Services.MessageService do
         limit: 200
       )
       |> preload_dependencies
-
     resp = Enum.map(messages, fn message ->
       MessageView.render("show.json", %{message: message, member: session_member})
     end)
@@ -79,7 +78,8 @@ defmodule KlziiChat.Services.MessageService do
 
   @spec preload_dependencies(%Message{} | [%Message{}] ) :: %Message{} | [%Message{}]
   def preload_dependencies(message) do
-    replies_query = from(st in Message, order_by: [asc: :createdAt], preload: [:session_member, :votes, :replies])
+    replies_replies_query = from(rpl in Message, order_by: [asc: :createdAt], preload: [:session_member, :votes, :replies])
+    replies_query = from(st in Message, order_by: [asc: :createdAt], preload: [:session_member, :votes, replies: ^replies_replies_query])
     {:ok, Repo.preload(message, [:session_member, :votes, replies: replies_query ])}
   end
 
@@ -88,6 +88,11 @@ defmodule KlziiChat.Services.MessageService do
     with {:ok, message} <- Repo.insert(changeset),
          {:ok, _} <- KlziiChat.Services.SessionMembersService.update_emotion(message.id),
     do: preload_dependencies(message)
+  end
+
+  @spec get_message(Integer.t) :: %Message{}
+  def get_message(id) do
+    Repo.get_by!(Message, id: id)
   end
 
   @spec update_message(Integer.t, String.t, String.t, Map.t) :: %Message{} | {:error, String.t}

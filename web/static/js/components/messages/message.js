@@ -17,19 +17,19 @@ const Message = React.createClass({
     return className + (message.session_member.role == 'facilitator' ? ' facilitator' : ' participant');
   },
   shouldShowRepliedMessages(message) {
-    if(message.replyId) {
+    if(message.replies.length == 0) {
       return;
+    } else {
+      return (
+        <div className='col-md-12 remove-side-margin pull-right'>
+          {
+            message.replies.map((reply) =>
+              <Message key={ reply.id } message={ reply } />
+            )
+          }
+        </div>
+      )
     }
-
-    return (
-      <div className='col-md-12 remove-side-margin pull-right'>
-        {
-          message.replies.map((reply) =>
-            <Message key={ reply.id } message={ reply } />
-          )
-        }
-      </div>
-    )
   },
   getMessageMember() {
     const { message, currentUser, participants, facilitator } = this.props;

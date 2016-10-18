@@ -1,6 +1,7 @@
 defmodule KlziiChat.Services.Permissions.Messages do
   import KlziiChat.Services.Permissions.Validations
   import KlziiChat.Services.Permissions.ErrorsHelper, only: [formate_error: 1]
+  alias KlziiChat.Services.{MessageService}
 
   @spec can_delete(Map.t, Map.t) :: {:ok } | {:error, String.t}
   def can_delete(member, object) do
@@ -32,7 +33,7 @@ defmodule KlziiChat.Services.Permissions.Messages do
   @spec can_reply(Map.t, Map.t) :: {:ok } | {:error, String.t}
   def can_reply(member, object) do
     roles = ["facilitator", "participant"]
-    (!object.replyId and has_role(member.role, roles))
+    (has_role(member.role, roles) and (!object.replyId or (object.session_member.accountUserId != member.account_user_id and !MessageService.get_message(object.replyId).replyId)))
     |> formate_error
   end
 

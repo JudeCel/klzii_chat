@@ -277,14 +277,6 @@
     padding-bottom: 5px !important;
   }
 
-  .media-body .media-heading .pull-left {
-    margin-left: -15px;
-  }
-
-  .media-body .media-heading .pull-right {
-    margin-right: -15px;
-  }
-
   .media-body .media-heading .pull-right small {
     color: #aaa !important;
   }
@@ -881,6 +873,10 @@
     position: inherit;
     margin: 0px;
     padding: 0px;
+  }
+
+  .room-section .chat-section .media-body .media-body .message-section .body-section {
+    clear: both;
   }
 }
 
