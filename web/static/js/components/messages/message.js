@@ -20,11 +20,12 @@ const Message = React.createClass({
     if(message.replies.length == 0) {
       return;
     } else {
+      const { currentUser, participants, facilitator } = this.props;
       return (
         <div className='col-md-12 remove-side-margin pull-right'>
           {
             message.replies.map((reply) =>
-              <Message key={ reply.id } message={ reply } />
+              <Message key={ reply.id } message={ reply } currentUser={ currentUser } participants={ participants } facilitator={ facilitator }/>
             )
           }
         </div>
@@ -58,7 +59,7 @@ const Message = React.createClass({
     return sessionTopicContext;
   },
   render() {
-    const { message, currentUser } = this.props;
+    const { message } = this.props;
     const { can_edit, can_delete, can_star, can_vote, can_reply } = message.permissions;
 
     let member = this.getMessageMember();
