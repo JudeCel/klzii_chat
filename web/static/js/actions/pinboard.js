@@ -32,7 +32,6 @@ const Actions = {
     return dispatch => {
       channel.push('get_pinboard_resources')
       .receive('ok', (data) => {
-        console.log(data);
         dispatch({ type: Constants.GET_PINBOARD_RESOURCES, data: data.list });
       }).receive('error', (errors) => {
         NotificationActions.showErrorNotification(dispatch, errors);
