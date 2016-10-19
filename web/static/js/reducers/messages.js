@@ -125,7 +125,7 @@ function newMessage(messages, message) {
             newR.replies.push(message);
             newReplies.push(newR);
           } else {
-            newReplies.push(m);
+            newReplies.push(r);
           }
         });
         newM.replies = newReplies;

@@ -48,7 +48,7 @@ const MobileHeader = React.createClass({
   },
   changeSessionTopic(id) {
     const { dispatch } = this.props;
-    dispatch({ type: Constants.SET_INPUT_REPLY, replyId: 0 });
+    dispatch({ type: Constants.SET_INPUT_REPLY, replyId: null });
     this.setSessionTopic(id);
     this.toggleMenu();
   },

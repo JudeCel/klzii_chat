@@ -28,7 +28,7 @@ export default function reducer(state = initialState, action = {}) {
         return { ...state, emotion: action.emotion};
 
     case Constants.SET_INPUT_REPLY:
-      if(state.action == 'reply' && (state.replyId == action.replyId || action.replyId == 0)) {
+      if(state.action == 'reply' && state.replyId == action.replyId || action.replyId == null) {
         return initialState;
       }
       else {
