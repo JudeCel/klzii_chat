@@ -16,9 +16,9 @@ const Actions = {
       });
     }
   },
-  enable:(channel) => {
+  enable:(channel, enable) => {
     return dispatch => {
-      channel.push('enable_pinboard')
+      channel.push(enable ? 'enable_pinboard' : 'disable_pinboard')
       .receive('ok', (data) => {
       }).receive('error', (errors) => {
         NotificationActions.showErrorNotification(dispatch, errors);

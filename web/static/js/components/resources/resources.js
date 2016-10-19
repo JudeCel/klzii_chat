@@ -39,8 +39,10 @@ const Resources = React.createClass({
       }
 
       if(confirmed) {
-        dispatch(PinboardActions.enable(channel));
+        dispatch(PinboardActions.enable(channel, true));
       }
+    } else if(sessionTopicConsole.data.pinboard && currentUser.permissions.pinboard.can_enable) {
+      dispatch(PinboardActions.enable(channel, false));
     }
   },
   componentDidUpdate(prevProps) {

@@ -3,13 +3,17 @@ import { connect }        from 'react-redux';
 import mixins             from '../../mixins';
 import WhiteboardActions  from './../../actions/whiteboard';
 import LogoutLink         from './logout';
+import PinboardActions    from './../../actions/pinboard';
 
 const Links = React.createClass({
   mixins: [mixins.modalWindows, mixins.validations],
   clearWhiteboard() {
     if(confirm('Are you sure you want to clear whiteboard?')) {
-      const { dispatch, whiteboardChannel } = this.props;
+      const { sessionTopicConsole, currentUser, channel, dispatch, whiteboardChannel } = this.props;
       dispatch(WhiteboardActions.deleteAll(whiteboardChannel));
+      if(sessionTopicConsole.data.pinboard && currentUser.permissions.pinboard.can_enable) {
+        dispatch(PinboardActions.enable(channel, false));
+      }
     }
   },
   reportsFunction(style) {
@@ -88,7 +92,9 @@ const mapStateToProps = (state) => {
     firstParticipant: state.members.participants[0],
     facilitator: state.members.facilitator,
     currentUser: state.members.currentUser,
-    colours: state.chat.session.colours
+    colours: state.chat.session.colours,
+    sessionTopicConsole: state.sessionTopicConsole,
+    channel: state.sessionTopic.channel,
   };
 };
 
