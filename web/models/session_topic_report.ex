@@ -6,16 +6,14 @@ defmodule KlziiChat.SessionTopicReport do
     belongs_to :session_topic, KlziiChat.SessionTopic, [foreign_key: :sessionTopicId]
     belongs_to :resource, KlziiChat.Resource, [foreign_key: :resourceId]
     field :type, :string
-    field :facilitator, :boolean
+    field :scopes, :map, default: %{}
+    field :includes, :map, default: %{}
     field :format, :string
     field :status, :string, default: "progress"
     field :message, :string, default: nil
     field :deletedAt, Timex.Ecto.DateTime, default: nil
     timestamps [inserted_at: :createdAt, updated_at: :updatedAt]
   end
-
-  @required_fields ~w(session session_topic type facilitator format status message)
-  @optional_fields ~w(resource deletedAt)
 
   @doc """
   Creates a changeset based on the `model` and `params`.
@@ -25,6 +23,6 @@ defmodule KlziiChat.SessionTopicReport do
   """
   def changeset(model, params \\ %{}) do
     model
-    |> cast(params, (@required_fields ++ @optional_fields))
+    |> cast(params, [:sessionId, :sessionTopicId, :type, :scopes, :includes, :format, :status, :message])
   end
 end
