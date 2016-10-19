@@ -20,6 +20,9 @@ const Actions = {
     return dispatch => {
       channel.push('enable_pinboard', { enable })
       .receive('ok', (data) => {
+        if (enable) {
+          dispatch(Actions.get(channel));
+        }
       }).receive('error', (errors) => {
         NotificationActions.showErrorNotification(dispatch, errors);
       });
@@ -29,6 +32,7 @@ const Actions = {
     return dispatch => {
       channel.push('get_pinboard_resources')
       .receive('ok', (data) => {
+        console.log(data);
         dispatch({ type: Constants.GET_PINBOARD_RESOURCES, data: data.list });
       }).receive('error', (errors) => {
         NotificationActions.showErrorNotification(dispatch, errors);
