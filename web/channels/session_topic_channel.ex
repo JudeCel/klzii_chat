@@ -140,18 +140,8 @@ defmodule KlziiChat.SessionTopicChannel do
     end
   end
 
-  def handle_in("enable_pinboard", _, socket) do
-    case ConsoleService.enable_pinboard(get_session_member(socket).id, socket.assigns.session_topic_id, true) do
-      {:ok, console} ->
-        broadcast! socket, "console",  ConsoleView.render("show.json", %{console: console})
-        {:reply, :ok, socket}
-      {:error, reason} ->
-        {:reply, {:error, error_view(reason)}, socket}
-    end
-  end
-
-  def handle_in("disable_pinboard", _, socket) do
-    case ConsoleService.enable_pinboard(get_session_member(socket).id, socket.assigns.session_topic_id, false) do
+  def handle_in("enable_pinboard", %{"enable" => enable}, socket) do
+    case ConsoleService.enable_pinboard(get_session_member(socket).id, socket.assigns.session_topic_id, enable) do
       {:ok, console} ->
         broadcast! socket, "console",  ConsoleView.render("show.json", %{console: console})
         {:reply, :ok, socket}

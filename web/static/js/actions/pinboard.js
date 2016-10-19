@@ -18,7 +18,7 @@ const Actions = {
   },
   enable:(channel, enable) => {
     return dispatch => {
-      channel.push(enable ? 'enable_pinboard' : 'disable_pinboard')
+      channel.push('enable_pinboard', { enable })
       .receive('ok', (data) => {
       }).receive('error', (errors) => {
         NotificationActions.showErrorNotification(dispatch, errors);

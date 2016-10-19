@@ -37,7 +37,7 @@ defmodule KlziiChat.Channels.SessionTopic.ConsoleTest do
   test "enable pinboard", %{socket: socket, session_topic_1_name: session_topic_1_name} do
     {:ok, _, socket} = subscribe_and_join(socket, SessionTopicChannel, session_topic_1_name)
 
-    ref = push socket, "enable_pinboard", %{}
+    ref = push socket, "enable_pinboard", %{enable: true}
     assert_reply ref, :ok, %{}
     
     assert_push("console", %{})
@@ -46,7 +46,7 @@ defmodule KlziiChat.Channels.SessionTopic.ConsoleTest do
   test "disable pinboard", %{socket: socket, session_topic_1_name: session_topic_1_name} do
     {:ok, _, socket} = subscribe_and_join(socket, SessionTopicChannel, session_topic_1_name)
 
-    ref = push socket, "disable_pinboard", %{}
+    ref = push socket, "enable_pinboard", %{enable: false}
     assert_reply ref, :ok, %{}
     
     assert_push("console", %{})

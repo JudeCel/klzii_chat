@@ -66,13 +66,8 @@ defmodule KlziiChat.Services.ConsoleService do
   end
 
   @spec pinboard_setings(Boolean.t) :: Map.t
-  defp pinboard_setings(enable) do
-    if enable do
-      %{audioId: nil, videoId: nil,  fileId: nil, pinboard: true }
-    else
-      %{pinboard: false }
-    end
-  end
+  defp pinboard_setings(true), do:  %{audioId: nil, videoId: nil,  fileId: nil, pinboard: true }
+  defp pinboard_setings(false), do:  %{pinboard: false }
 
   @spec has_enable_resource(%Console{}, %Resource{}) :: {:ok} | {:error, map}
   def has_enable_resource(%Console{audioId: nil, videoId: nil, fileId: nil }, _) do
