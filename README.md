@@ -1,7 +1,7 @@
 # KlziiChat
 
 ## Dependencies
-
+  * Node.js 6.x LTS
   * [Kliiko](https://github.com/DiatomEnterprises/Kliiko)
   * Elixir v1.3.2
   * [FS Listener](https://github.com/synrc/fs#backends)
