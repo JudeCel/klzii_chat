@@ -99,7 +99,7 @@ defmodule KlziiChat.Services.ConsoleServiceTest do
    end
 
    test "when pinboard enable then cen't add resource", %{facilitator: facilitator, session_topic_1: session_topic_1, resource: resource} do
-     {:ok, _} = ConsoleService.enable_pinboard(facilitator.id, session_topic_1)
+     {:ok, _} = ConsoleService.enable_pinboard(facilitator.id, session_topic_1, true)
      {:error, %{system: error_message}} = ConsoleService.set_resource(facilitator.id, session_topic_1, resource.id)
      assert(ConsoleService.error_messages.pinboard_is_enable == error_message)
    end

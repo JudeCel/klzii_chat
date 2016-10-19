@@ -53,22 +53,21 @@ defmodule KlziiChat.Services.ConsoleService do
       end
   end
 
-  @spec enable_pinboard(Integer, Integer) :: {:ok, %Console{}} | {:error, String.t}
-  def enable_pinboard(member_id, session_topic_id) do
+  @spec enable_pinboard(Integer, Integer, Boolean) :: {:ok, %Console{}} | {:error, String.t}
+  def enable_pinboard(member_id, session_topic_id, enable) do
     session_member = Repo.get!(SessionMember, member_id)
     case ConsolePermissions.can_enable_pinboard(session_member) do
       {:ok} ->
         {:ok, console} = get(session_member.sessionId, session_topic_id)
-        update_console(pinboard_setings, console)
+        update_console(pinboard_setings(enable), console)
       {:error, reason} ->
         {:error, reason}
     end
   end
 
-  @spec pinboard_setings() :: Map.t
-  defp pinboard_setings do
-    %{audioId: nil, videoId: nil,  fileId: nil, pinboard: true }
-  end
+  @spec pinboard_setings(Boolean.t) :: Map.t
+  defp pinboard_setings(true), do:  %{audioId: nil, videoId: nil,  fileId: nil, pinboard: true }
+  defp pinboard_setings(false), do:  %{pinboard: false }
 
   @spec has_enable_resource(%Console{}, %Resource{}) :: {:ok} | {:error, map}
   def has_enable_resource(%Console{audioId: nil, videoId: nil, fileId: nil }, _) do
