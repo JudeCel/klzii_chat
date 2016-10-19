@@ -20,9 +20,6 @@ const Actions = {
     return dispatch => {
       channel.push('enable_pinboard', { enable })
       .receive('ok', (data) => {
-        if (enable) {
-          dispatch(Actions.get(channel));
-        }
       }).receive('error', (errors) => {
         NotificationActions.showErrorNotification(dispatch, errors);
       });

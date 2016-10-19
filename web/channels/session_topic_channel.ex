@@ -144,6 +144,17 @@ defmodule KlziiChat.SessionTopicChannel do
     case ConsoleService.enable_pinboard(get_session_member(socket).id, socket.assigns.session_topic_id, enable) do
       {:ok, console} ->
         broadcast! socket, "console",  ConsoleView.render("show.json", %{console: console})
+        if enable do
+          case PinboardResourceService.all(socket.assigns.session_topic_id) do
+            {:ok, pinboard_resources} ->
+              list = Enum.map(pinboard_resources, fn item->
+                view = Phoenix.View.render_one(item, PinboardResourceView, "show.json", as: :pinboard_resource)
+                permissions = PermissionsBuilder.pinboard_resource(get_session_member(socket), item)
+                Map.put(view, :permissions, permissions)
+              end)
+              broadcast! socket, "pinboard_resources", %{list: list}
+          end
+        end
         {:reply, :ok, socket}
       {:error, reason} ->
         {:reply, {:error, error_view(reason)}, socket}
