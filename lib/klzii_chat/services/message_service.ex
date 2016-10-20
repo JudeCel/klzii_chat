@@ -34,7 +34,7 @@ defmodule KlziiChat.Services.MessageService do
           body: (reply_message <> body),
           emotion: IntegerHelper.get_num(emotion),
           sessionTopicId: IntegerHelper.get_num(session_topic_id),
-          replyLevel: reply_level
+          replayLevel: reply_level
         }
         build_assoc(session_member, :messages)
         |> Message.changeset(map)
@@ -53,7 +53,7 @@ defmodule KlziiChat.Services.MessageService do
           body: body,
           emotion: IntegerHelper.get_num(emotion),
           sessionTopicId: IntegerHelper.get_num(session_topic_id),
-          replyLevel: 0}
+          replayLevel: 0}
         build_assoc(session_member, :messages)
         |> Message.changeset(map)
         |> create
@@ -165,7 +165,7 @@ defmodule KlziiChat.Services.MessageService do
         nil ->
           {"", 0}
         message ->
-          {"@" <> message.session_member.username <> " ", message.replyLevel + 1}
+          {"@" <> message.session_member.username <> " ", message.replayLevel + 1}
       end
   end
 end
