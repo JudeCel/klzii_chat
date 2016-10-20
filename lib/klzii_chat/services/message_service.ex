@@ -26,14 +26,15 @@ defmodule KlziiChat.Services.MessageService do
 
     case MessagePermissions.can_new_message(session_member) do
       {:ok} ->
-        reply_message = reply_message_prefix(replyId)
+        {reply_message, reply_level} = reply_message_data(replyId)
         session_member = Repo.get!(SessionMember, session_member.id)
         map = %{
           replyId: IntegerHelper.get_num(replyId),
           sessionId: session_member.sessionId,
           body: (reply_message <> body),
           emotion: IntegerHelper.get_num(emotion),
-          sessionTopicId: IntegerHelper.get_num(session_topic_id)
+          sessionTopicId: IntegerHelper.get_num(session_topic_id),
+          replyLevel: reply_level
         }
         build_assoc(session_member, :messages)
         |> Message.changeset(map)
@@ -51,7 +52,8 @@ defmodule KlziiChat.Services.MessageService do
         map = %{sessionId: session_member.sessionId,
           body: body,
           emotion: IntegerHelper.get_num(emotion),
-          sessionTopicId: IntegerHelper.get_num(session_topic_id)}
+          sessionTopicId: IntegerHelper.get_num(session_topic_id),
+          replyLevel: 0}
         build_assoc(session_member, :messages)
         |> Message.changeset(map)
         |> create
@@ -156,14 +158,14 @@ defmodule KlziiChat.Services.MessageService do
     end
   end
 
-  @spec reply_message_prefix(Integer.t) :: String.t
-  defp reply_message_prefix(replyId) do
+  @spec reply_message_data(Integer.t) :: String.t
+  defp reply_message_data(replyId) do
     Repo.one(from m in Message, where: m.id == ^replyId, preload: [:session_member])
       |> case  do
         nil ->
-          ""
+          {"", 0}
         message ->
-          "@" <> message.session_member.username <> " "
+          {"@" <> message.session_member.username <> " ", message.replyLevel + 1}
       end
   end
 end
