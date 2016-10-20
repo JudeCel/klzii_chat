@@ -18,6 +18,19 @@ defmodule KlziiChat.Services.SessionReportingService do
     SessionReportingPermissions.can_create_report(session_member)
   end
 
+  @spec check_report_delete_permision(integer) :: :ok | {:error, String.t}
+  def check_report_delete_permision(session_member) do
+    SessionReportingPermissions.can_delete_report(session_member)
+  end
+
+  def normalize_keys(%SessionTopicReport{} = payload) do
+    Map.from_struct(payload)
+      |> normalize_keys
+  end
+  def normalize_keys(payload) do
+    for {key, val} <- payload, into: %{}, do: {to_string(key), val}
+  end
+
   @spec validate_parametrs(Map.t) :: :ok | {:error, String.t}
   def validate_parametrs(payload) do
     with {:ok} <- validate_type(payload),
@@ -55,9 +68,10 @@ defmodule KlziiChat.Services.SessionReportingService do
 
   @spec create_report(Integer, Map.t) :: {:ok, Map.t} | {:error, String.t}
   def create_report(session_member_id, payload)do
-    case validate_parametrs(payload) do
+    map = normalize_keys(payload)
+    case validate_parametrs(map) do
       {:ok} ->
-        processed_report(session_member_id, payload)
+        processed_report(session_member_id, map)
       {:error, reason} ->
         {:error,reason}
     end
@@ -146,15 +160,13 @@ defmodule KlziiChat.Services.SessionReportingService do
   # end
 
 
-  @spec update_session_topics_reports_record({:ok, Map.t}, integer) :: {atom, Map.t}
-  def update_session_topics_reports_record({:ok, resource}, report_id) do
+  @spec set_status({:ok, Map.t} | {:error, String.t}, integer) :: {atom, Map.t}
+  def set_status({:ok, resource}, report_id) do
     Repo.get!(SessionTopicReport, report_id)
     |> Ecto.Changeset.change(status: "completed", resourceId: resource.id, message: nil)
     |> Repo.update()
   end
-
-  @spec update_session_topics_reports_record({:error, String.t}, integer) :: {atom, Map.t}
-  def update_session_topics_reports_record({:error, err}, report_id) do
+  def set_status({:error, err}, report_id) do
     Repo.get!(SessionTopicReport, report_id)
     |> Ecto.Changeset.change(status: "failed", message: Poison.encode!(err) )
     |> Repo.update()
@@ -174,11 +186,6 @@ defmodule KlziiChat.Services.SessionReportingService do
       {:error, reason} ->
         {:error, reason}
     end
-  end
-
-  @spec check_report_delete_permision(integer) :: :ok | {:error, String.t}
-  def check_report_delete_permision(session_member) do
-    SessionReportingPermissions.can_delete_report(session_member)
   end
 
   @spec delete_session_topic_report(integer, integer) :: {:ok, Map.t} | {:error, String.t}
@@ -212,13 +219,15 @@ defmodule KlziiChat.Services.SessionReportingService do
   @spec delete_report(Map.t) :: {atom, Map.t}
   def delete_report(report) do
     case report.status do
-      "failed" -> Ecto.Changeset.change(report, deletedAt: Timex.now, resourceId: nil) |> Repo.update()
-      _ -> Repo.delete(report)
+      "failed" ->
+        Ecto.Changeset.change(report, deletedAt: Timex.now, resourceId: nil) |> Repo.update()
+      _ ->
+        Repo.delete(report)
     end
   end
 
-  @spec recreate_session_topic_report(integer, integer) :: {:ok, Map.t} | {:error, String.t}
-  def recreate_session_topic_report(report_id, session_member_id) do
+  @spec recreate_report(integer, integer) :: {:ok, Map.t} | {:error, String.t}
+  def recreate_report(report_id, session_member_id) do
     with  {:ok, report} <- delete_session_topic_report(report_id, session_member_id),
           {:ok, new_report} <- create_report(session_member_id, report),
     do:   {:ok, new_report}

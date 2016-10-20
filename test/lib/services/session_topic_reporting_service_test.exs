@@ -16,6 +16,7 @@ defmodule KlziiChat.Services.SessionTopicReportingServiceTest do
       body: "test message 1",
       emotion: 0,
       star: true,
+      replyLevel: 0,
       createdAt: create_date1,
       updatedAt: create_date1
     ) |> Repo.insert!()
@@ -27,6 +28,7 @@ defmodule KlziiChat.Services.SessionTopicReportingServiceTest do
       body: "test message 2",
       emotion: 1,
       star: false,
+      replyLevel: 0,
       createdAt: create_date2,
       updatedAt: create_date2
     ) |> Repo.insert!()
