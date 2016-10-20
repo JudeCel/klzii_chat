@@ -33,7 +33,7 @@ defmodule KlziiChat.SessionView do
     render_many(topics, SessionTopicView, "show.json", as: :session_topic)
   end
 
-  defp account(%{__struct__: Ecto.Association.NotLoaded}), do: []
+  defp account(%{__struct__: Ecto.Association.NotLoaded}), do: nil
   defp account(account) do
     render_one(account, AccountView, "show.json", as: :account)
   end

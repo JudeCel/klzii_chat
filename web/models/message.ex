@@ -9,7 +9,7 @@ defmodule KlziiChat.Message do
     has_many :unread_messages, KlziiChat.UnreadMessage, [foreign_key: :messageId, on_delete: :delete_all]
     has_many :votes, KlziiChat.Vote, [foreign_key: :messageId, on_delete: :delete_all]
     field :body, :string
-    field :replyLevel, :integer, default: 0
+    field :replayLevel, :integer, default: 0
     field :emotion, :integer
     field :star, :boolean, default: false
     timestamps [inserted_at: :createdAt, updated_at: :updatedAt]

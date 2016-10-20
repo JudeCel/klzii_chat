@@ -1,6 +1,6 @@
 defmodule KlziiChat.Services.SessionReportingService do
-  alias KlziiChat.Services.{SessionTopicReportingService, ResourceService, WhiteboardReportingService, MiniSurveysReportingService}
-  alias KlziiChat.{Repo, SessionTopicReport, SessionMember, Endpoint}
+  alias KlziiChat.Services.{ResourceService}
+  alias KlziiChat.{Repo, SessionTopicReport, SessionMember}
   alias KlziiChat.Services.Permissions.SessionReporting, as: SessionReportingPermissions
   import KlziiChat.Helpers.MapHelper, only: [key_to_string: 1]
   import Ecto.Query, only: [from: 2]
@@ -33,7 +33,7 @@ defmodule KlziiChat.Services.SessionReportingService do
 
   @spec validate_type(Map.t) :: :ok | {:error, String.t}
   def validate_type(%{"type" => type}) do
-    if type in ["all", "star", "whiteboard", "votes"]  do
+    if type in ["messages", "whiteboards", "votes"]  do
       {:ok}
     else
       {:error, %{type: "incorrect report type"}}
@@ -51,7 +51,7 @@ defmodule KlziiChat.Services.SessionReportingService do
 
   @spec validate_format_with_type(Map.t) :: :ok | {:error, String.t}
   def validate_format_with_type(%{"format" => format, "type" => type}) do
-    if type == "whiteboard" and format != "pdf"   do
+    if type == "whiteboards" and format != "pdf"   do
       {:error, %{format: "pdf is the only format that is available for whiteboard reports"}}
     else
       {:ok}
@@ -96,61 +96,6 @@ defmodule KlziiChat.Services.SessionReportingService do
 
   @spec get_report_name(atom, integer) :: {:ok, String.t}
   def get_report_name(_, report_id), do: {:ok, "STM_Report_" <> to_string(report_id)}
-
-  # @spec save_report_async(integer, Strig.t, atom, integer, boolean) :: {:ok | :error, String.t}
-  # def save_report_async(report_type, report_name, report_format, session_topic_id, include_facilitator) do
-  #   async_func =
-  #     case report_type do
-  #       :all ->
-  #         fn -> SessionTopicReportingService.save_report(report_name, report_format, session_topic_id, false, include_facilitator) end
-  #       :star ->
-  #         fn -> SessionTopicReportingService.save_report(report_name, report_format, session_topic_id, true, include_facilitator) end
-  #       :whiteboard ->
-  #         fn -> WhiteboardReportingService.save_report(report_name, :pdf, session_topic_id) end
-  #       :votes ->
-  #         fn -> MiniSurveysReportingService.save_report(report_name, report_format, session_topic_id, include_facilitator) end
-  #     end
-  #
-  #   async_task =
-  #     Task.async(fn ->
-  #       try do
-  #         async_func.()
-  #       catch
-  #         type, _ -> {:error, %{system: "Error creating report: #{to_string(type)}"}}
-  #       end
-  #     end)
-  #
-  #   case Task.yield(async_task, @save_report_timeout) do
-  #     {:ok, {:ok, report_file_path}} -> {:ok, report_file_path}
-  #     {:ok, {:error, err}} -> {:error, err}
-  #     nil -> {:error, %{system: "Report creation timeout " <> to_string(@save_report_timeout)}}
-  #   end
-  # end
-
-  # @spec upload_report_async(atom, String.t, String.t, integer) :: {:ok | :error, String.t}
-  # def upload_report_async(report_format, report_file_path, report_name, account_user_id) do
-  #   upload_params = %{ "type" => "file",
-  #     "scope" => to_string(report_format),
-  #     "file" => report_file_path,
-  #     "name" => report_name }
-  #
-  #   async_task = Task.async(fn ->
-  #     try do
-  #       ResourceService.upload(upload_params, account_user_id)
-  #     catch
-  #       type, _ -> {:error, %{system: "Error creating report: #{to_string(type)}}"}}
-  #     end
-  #   end)
-  #
-  #   result = Task.yield(async_task, @upload_report_timeout)
-  #   File.rm(report_file_path)
-  #   case result do
-  #     {:ok, {:ok, report_file_path}} -> {:ok, report_file_path}
-  #     {:ok, {:error, err}} -> {:error, err}
-  #     nil -> {:error, %{system: "Report upload timeout " <> to_string(@upload_report_timeout)}}
-  #   end
-  # end
-
 
   @spec set_status({:ok, Map.t} | {:error, String.t}, integer) :: {atom, Map.t}
   def set_status({:ok, resource}, report_id) do

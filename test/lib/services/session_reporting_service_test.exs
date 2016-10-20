@@ -19,7 +19,7 @@ defmodule KlziiChat.Services.SessionReportingServiceTest do
 
   describe "Incorrect report payload" do
     test "file format", %{facilitator: facilitator} do
-      payload =  %{"sessionTopicId" => 1, "format" => "incorrect", "type" => "all" }
+      payload =  %{"sessionTopicId" => 1, "format" => "incorrect", "type" => "messages" }
       assert({:error, %{format: "incorrect report format"}} = SessionReportingService.create_report(facilitator.id, payload))
     end
 
@@ -28,7 +28,7 @@ defmodule KlziiChat.Services.SessionReportingServiceTest do
       assert({:error, %{type: "incorrect report type"}} = SessionReportingService.create_report(facilitator.id, payload))
     end
 
-    test "whiteboard allowed with pdf", %{facilitator: facilitator} do
+    test "whiteboard messagesowed with pdf", %{facilitator: facilitator} do
       payload =  %{"sessionTopicId" => 1, "format" => "txt", "type" => "whiteboard"}
       assert({:error, %{format: "pdf is the only format that is available for whiteboard reports"}} = SessionReportingService.create_report(facilitator.id, payload))
     end
@@ -36,7 +36,7 @@ defmodule KlziiChat.Services.SessionReportingServiceTest do
 
   describe "Create report with scopes" do
     test "facilitator ", %{facilitator: facilitator, session_topic: session_topic} do
-      payload =  %{"sessionTopicId" => session_topic.id, "format" => "pdf", "type" => "all", "scopes" => %{} }
+      payload =  %{"sessionTopicId" => session_topic.id, "format" => "pdf", "type" => "messages", "scopes" => %{} }
       {:ok, report} = SessionReportingService.create_report(facilitator.id, payload)
     end
   end
@@ -46,7 +46,7 @@ defmodule KlziiChat.Services.SessionReportingServiceTest do
       payload =  %{
         "sessionTopicId" => session_topic.id,
         "format" => "pdf",
-        "type" => "all",
+        "type" => "messages",
         "scopes" => %{},
         "includes" => %{
           "defaultFields" => ["name"]
@@ -58,22 +58,22 @@ defmodule KlziiChat.Services.SessionReportingServiceTest do
 
   describe "report with includes and scopes" do
     test "facilitator ", %{facilitator: facilitator, session_topic: session_topic} do
-      payload =  %{"sessionTopicId" => session_topic.id, "format" => "pdf", "type" => "all", "includes" => %{"defaultFields" => [] } }
+      payload =  %{"sessionTopicId" => session_topic.id, "format" => "pdf", "type" => "messages", "includes" => %{"defaultFields" => [] } }
       {:ok, report} = SessionReportingService.create_report(facilitator.id, payload)
     end
   end
 
   describe "report name" do
-    test "all" do
-      {:ok, "STM_Report_1"} = SessionReportingService.get_report_name("all", 1)
+    test "messages" do
+      {:ok, "STM_Report_1"} = SessionReportingService.get_report_name("messages", 1)
     end
 
     test "star" do
-      {:ok, "STM_Report_2"} = SessionReportingService.get_report_name("star", 2)
+      {:ok, "STM_Report_2"} = SessionReportingService.get_report_name("messages", 2)
     end
 
     test "whiteboard" do
-      {:ok, "STW_Report_4"} = SessionReportingService.get_report_name("whiteboard", 4)
+      {:ok, "STW_Report_4"} = SessionReportingService.get_report_name("whiteboards", 4)
     end
 
     test "votes" do
@@ -83,7 +83,7 @@ defmodule KlziiChat.Services.SessionReportingServiceTest do
 
   describe "set status" do
     setup %{session_topic_1: session_topic, facilitator: facilitator, account_user_account_manager: account_user } do
-      payload =  %{"sessionTopicId" => session_topic.id, "format" => "pdf", "type" => "all", "includes" => %{"defaultFields" => []} }
+      payload =  %{"sessionTopicId" => session_topic.id, "format" => "pdf", "type" => "messages", "includes" => %{"defaultFields" => []} }
       {:ok, report} = SessionReportingService.create_report(facilitator.id, payload)
       resource = Ecto.build_assoc(
        account_user.account, :resources,
@@ -110,7 +110,7 @@ defmodule KlziiChat.Services.SessionReportingServiceTest do
 
   describe "recreate report" do
     setup %{session_topic_1: session_topic, facilitator: facilitator, account_user_account_manager: account_user} do
-      payload =  %{"sessionTopicId" => session_topic.id, "format" => "pdf", "type" => "all", "includes" => %{"defaultFields" => []} }
+      payload =  %{"sessionTopicId" => session_topic.id, "format" => "pdf", "type" => "messages", "includes" => %{"defaultFields" => []} }
       {:ok, report} = SessionReportingService.create_report(facilitator.id, payload)
       resource = Ecto.build_assoc(
         account_user.account, :resources,
@@ -128,7 +128,7 @@ defmodule KlziiChat.Services.SessionReportingServiceTest do
       refute(new_report.id == old_report.id)
     end
 
-    test "failed success", %{facilitator: facilitator, report: report, resource: resource} do
+    test "when failed", %{facilitator: facilitator, report: report, resource: resource} do
       {:ok, old_report} = SessionReportingService.set_status({:error, "some error"}, report.id)
       {:ok, new_report} = SessionReportingService.recreate_report(report.id, facilitator.id)
       refute(new_report.id == old_report.id)

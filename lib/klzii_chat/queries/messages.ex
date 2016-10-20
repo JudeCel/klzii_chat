@@ -2,14 +2,18 @@ defmodule KlziiChat.Queries.Messages do
   alias KlziiChat.{Message, SessionMember}
   import Ecto.Query, only: [from: 2]
 
-  @spec base_query(integer) :: Ecto.Query
+  @spec base_query(integer| nil) :: Ecto.Query
+  def base_query(nil) do
+    from message in Message,
+    where: is_nil(message.replyId),
+    order_by: [asc: :createdAt]
+  end
   def base_query(session_topic_id) do
     from message in Message,
     where: message.sessionTopicId == ^session_topic_id,
     where: is_nil(message.replyId),
     order_by: [asc: :createdAt]
   end
-
 
   @spec join_session_member(Ecto.Query) :: Ecto.Query
   def join_session_member(query) do
