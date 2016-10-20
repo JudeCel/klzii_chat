@@ -2,7 +2,7 @@ defmodule KlziiChat.Services.SessionReportingService do
   alias KlziiChat.Services.{SessionTopicReportingService, ResourceService, WhiteboardReportingService, MiniSurveysReportingService}
   alias KlziiChat.{Repo, SessionTopicReport, SessionMember, Endpoint}
   alias KlziiChat.Services.Permissions.SessionReporting, as: SessionReportingPermissions
-
+  import KlziiChat.Helpers.MapHelper, only: [key_to_string: 1]
   import Ecto.Query, only: [from: 2]
 
   @spec get_session_member(integer) :: {atom, String.t}
@@ -21,14 +21,6 @@ defmodule KlziiChat.Services.SessionReportingService do
   @spec check_report_delete_permision(integer) :: :ok | {:error, String.t}
   def check_report_delete_permision(session_member) do
     SessionReportingPermissions.can_delete_report(session_member)
-  end
-
-  def normalize_keys(%SessionTopicReport{} = payload) do
-    Map.from_struct(payload)
-      |> normalize_keys
-  end
-  def normalize_keys(payload) do
-    for {key, val} <- payload, into: %{}, do: {to_string(key), val}
   end
 
   @spec validate_parametrs(Map.t) :: :ok | {:error, String.t}
@@ -68,7 +60,7 @@ defmodule KlziiChat.Services.SessionReportingService do
 
   @spec create_report(Integer, Map.t) :: {:ok, Map.t} | {:error, String.t}
   def create_report(session_member_id, payload)do
-    map = normalize_keys(payload)
+    map = key_to_string(payload)
     case validate_parametrs(map) do
       {:ok} ->
         processed_report(session_member_id, map)
