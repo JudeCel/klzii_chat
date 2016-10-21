@@ -33,7 +33,7 @@ defmodule KlziiChat.Services.Reports.Report do
   def select_type("messages"), do: {:ok, Messages}
   def select_type("votes"), do: {:ok, Votes}
   def select_type("whiteboards"), do: {:ok, Whiteboards}
-  def select_type(type), do: {:error, "module for format #{type} not found"}
+  def select_type(type), do: {:error, "module for type #{type} not found"}
 
   def select_format("pdf"), do: {:ok, Pdf}
   def select_format("csv"), do: {:ok, Csv}
