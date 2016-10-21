@@ -8,7 +8,7 @@ defmodule KlziiChat.Queries.Messages do
     from message in Message,
     where: message.sessionTopicId == ^session_topic_id,
     where: is_nil(message.replyId),
-    where: [replayLevel: 0],
+    where: [replyLevel: 0],
     order_by: [asc: :createdAt]
   end
 
@@ -41,8 +41,8 @@ defmodule KlziiChat.Queries.Messages do
   # this is a hotfix for DE923 should be replaced by TA1330
   @spec join_replies(Ecto.Query) :: Ecto.Query
   def join_replies(query) do
-    replies_query = from(st in Message, where: [replayLevel: 2], order_by: [asc: :createdAt], preload: [:session_member, :votes, :replies])
-    replies_nested_query = from(st in Message, where: [replayLevel: 1], order_by: [asc: :createdAt], preload: [:session_member, :votes, replies: ^replies_query])
+    replies_query = from(st in Message, where: [replyLevel: 2], order_by: [asc: :createdAt], preload: [:session_member, :votes, :replies])
+    replies_nested_query = from(st in Message, where: [replyLevel: 1], order_by: [asc: :createdAt], preload: [:session_member, :votes, replies: ^replies_query])
     from message in query,
     preload: [replies: ^replies_nested_query]
   end
