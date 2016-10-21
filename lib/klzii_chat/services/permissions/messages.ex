@@ -33,7 +33,7 @@ defmodule KlziiChat.Services.Permissions.Messages do
   @spec can_reply(Map.t, Map.t) :: {:ok } | {:error, String.t}
   def can_reply(member, object) do
     roles = ["facilitator", "participant"]
-    (has_role(member.role, roles) and (!object.replyId or (object.sessionMemberId != member.id and object.replayLevel < 2)))
+    (has_role(member.role, roles) and (!object.replyId or (object.sessionMemberId != member.id and object.replyLevel < 2)))
     |> formate_error
   end
 
