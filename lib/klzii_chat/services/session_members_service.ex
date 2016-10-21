@@ -40,6 +40,14 @@ defmodule KlziiChat.Services.SessionMembersService do
     |> update_member
   end
 
+  @spec clean_current_topic(Integer) :: {:ok, %SessionMember{}} | {:error, Ecto.Changeset.t}
+  def clean_current_topic(session_member_id) do
+    session_member =  Repo.get_by!(SessionMember, id: session_member_id)
+    current_topic = %{"id" => nil, "name" => nil, "date" => nil }
+    SessionMember.changeset(session_member, %{currentTopic: current_topic})
+    |> update_member
+  end
+
   @spec merge_session_topic_context(Map.t, Map.t, Integer) :: Map.t
   def merge_session_topic_context(current_context, params, session_topic_id) do
     key = to_string(session_topic_id)
