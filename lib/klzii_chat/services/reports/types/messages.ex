@@ -22,7 +22,7 @@ defmodule KlziiChat.Services.Reports.Types.Messages do
       |> Repo.one
       |> Repo.preload([:account, :brand_logo, :brand_project_preference ])
       |> preload_session_topic(report)
-      |> Phoenix.View.render_one(SessionView, "session.json", as: :session)
+      |> Phoenix.View.render_one(SessionView, "report.json", as: :session)
     {:ok, session}
   end
 

@@ -24,6 +24,11 @@ defmodule KlziiChat.ShapeView do
   end
 
   @spec render(String.t, Map.t) :: Map.t
+  def render("report.json", %{shape: shape}) do
+    render("shape.json", %{shape: shape})
+  end
+
+  @spec render(String.t, Map.t) :: Map.t
   def render("event.json", %{shape: shape}) do
     shape.event
   end

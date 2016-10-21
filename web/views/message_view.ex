@@ -30,4 +30,20 @@ defmodule KlziiChat.MessageView do
       }
     }
   end
+
+  @spec render(String.t, Map.t) :: Map.t
+  def render("report.json", %{message: message}) do
+    %{
+      id: message.id,
+      session_member: SessionMembersView.render("member.json", %{member: message.session_member}),
+      body: message.body,
+      replyId: message.replyId,
+      time: message.createdAt,
+      star: message.star,
+      emotion: message.emotion,
+      replies: Enum.map(message.replies, fn r ->
+        render("report.json", %{message: r})
+      end)
+    }
+  end
 end

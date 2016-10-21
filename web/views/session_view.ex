@@ -10,7 +10,21 @@ defmodule KlziiChat.SessionView do
       endTime: session.endTime,
       colours: brand_project_preference(session.brand_project_preference),
       brand_logo: brand_logo(session.brand_logo),
-      session_topics: session_topics(session.session_topics),
+      session_topics: session_topics(session.session_topics, :default),
+      timeZone: session.timeZone,
+      account: account(session.account)
+    }
+  end
+
+  def render("report.json", %{session: session}) do
+    %{id: session.id,
+      name: session.name,
+      type: session.type,
+      startTime: session.startTime,
+      endTime: session.endTime,
+      colours: brand_project_preference(session.brand_project_preference),
+      brand_logo: brand_logo(session.brand_logo),
+      session_topics: session_topics(session.session_topics, :report),
       timeZone: session.timeZone,
       account: account(session.account)
     }
@@ -28,8 +42,11 @@ defmodule KlziiChat.SessionView do
     }
   end
 
-  defp session_topics(%{__struct__: Ecto.Association.NotLoaded}), do: []
-  defp session_topics(topics) do
+  defp session_topics(%{__struct__: Ecto.Association.NotLoaded},_), do: []
+  defp session_topics(topics, :report) do
+    render_many(topics, SessionTopicView, "report.json", as: :session_topic)
+  end
+  defp session_topics(topics,_) do
     render_many(topics, SessionTopicView, "show.json", as: :session_topic)
   end
 
