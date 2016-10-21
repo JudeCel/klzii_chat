@@ -1,8 +1,7 @@
 defmodule KlziiChat.ChatController do
   use KlziiChat.Web, :controller
-  # import KlziiChat.ErrorHelpers, only: [error_view: 1]
-  import KlziiChat.Services.SessionMembersService, only: [get_member_from_token: 1]
-    alias KlziiChat.{SessionMember, AccountUser, User, Repo}
+  import KlziiChat.Services.SessionMembersService, only: [get_member_from_token: 1, clean_current_topic: 1]
+  alias KlziiChat.{SessionMember, AccountUser, User, Repo}
 
   @doc """
     This index action is only for dev or test env.
@@ -57,6 +56,7 @@ defmodule KlziiChat.ChatController do
     if conn.cookies["redirect_url"] != nil do
       case get_member_from_token(token) do
         {:ok, member, _} ->
+          clean_current_topic(member.session_member.id)
           if (member.session_member.role == "facilitator" or member.account_user.role == "accountManager") do
             redirect(conn, external: conn.cookies["redirect_url"])
           else
@@ -81,7 +81,13 @@ defmodule KlziiChat.ChatController do
 
   def logout_all(conn, _) do
     if conn.cookies["redirect_url"] != nil do
-      url = conn.cookies["redirect_url"] |> URI.parse |> Map.put(:path, "/logout") |> Map.put(:fragment, nil) |> Map.put(:query, nil) |> URI.to_string
+      url =
+        conn.cookies["redirect_url"]
+        |> URI.parse
+        |> Map.put(:path, "/logout")
+        |> Map.put(:fragment, nil)
+        |> Map.put(:query, nil)
+        |> URI.to_string
       redirect(conn, external: url)
     else
       logout_message(conn)
