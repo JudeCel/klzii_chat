@@ -1,7 +1,10 @@
 import React, {PropTypes} from 'react';
+import { connect }        from 'react-redux';
+import mixins             from '../../../../mixins';
 import {OverlayTrigger, Tooltip }         from 'react-bootstrap'
 
 const DeleteAllButton = React.createClass({
+  mixins: [mixins.validations],
   onClick() {
     const { changeButton, parent } = this.props;
 
@@ -13,12 +16,23 @@ const DeleteAllButton = React.createClass({
       <Tooltip id="tooltip"><strong>Delete All</strong></Tooltip>
     );
 
-    return (
-      <OverlayTrigger placement="top" overlay={tooltip}>
-        <i className='btn btn-default fa fa-eraser' aria-hidden='true' onClick={ this.onClick } >*</i>
-      </OverlayTrigger>
-    )
+    if(this.hasPermission(['whiteboard', 'can_erase_all'])) {
+      return (
+        <OverlayTrigger placement="top" overlay={tooltip}>
+          <i className='btn btn-default fa fa-eraser' aria-hidden='true' onClick={ this.onClick } >*</i>
+        </OverlayTrigger>
+      )
+
+    }else {
+      return(false)
+    }
   }
 });
 
-export default DeleteAllButton;
+const mapStateToProps = (state) => {
+  return {
+    currentUser: state.members.currentUser,
+  }
+};
+
+export default connect(mapStateToProps)(DeleteAllButton);

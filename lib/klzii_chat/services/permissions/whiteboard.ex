@@ -24,6 +24,13 @@ defmodule KlziiChat.Services.Permissions.Whiteboard do
     |> formate_error
   end
 
+  @spec can_erase_all(Map.t) :: {:ok } | {:error, String.t}
+  def can_erase_all(member) do
+    roles = ["facilitator"]
+    has_role(member.role, roles)
+    |> formate_error
+  end
+
   @spec can_edit(Map.t, Map.t) :: {:ok } | {:error, String.t}
   def can_edit(member, object) do
     roles = ["facilitator"]
