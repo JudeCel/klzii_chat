@@ -8,6 +8,16 @@ defmodule KlziiChat.Services.Permissions.WhiteboardTest do
     assert({:ok} = Whiteboard.can_delete(member, shape))
   end
 
+  test "#Permissions.Whiteboard facilitator can erase all" do
+    member = %{id: 1, role: "facilitator"}
+    assert({:ok} = Whiteboard.can_erase_all(member))
+  end
+
+  test "#Permissions.Whiteboard participent can't erase all" do
+    member = %{id: 1, role: "participent"}
+    assert({:error, _} = Whiteboard.can_erase_all(member))
+  end
+
   test "#Permissions.Whiteboard facilitator can add image" do
     member = %{id: 1, role: "facilitator"}
     assert({:ok} = Whiteboard.can_add_image(member))
