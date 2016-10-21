@@ -54,13 +54,13 @@ defmodule KlziiChat.Services.ConsoleServiceTest do
 
   describe "Pinboard# " do
    test "can enablable", %{facilitator: facilitator, session_topic_1: session_topic_1} do
-      {:ok, console} = ConsoleService.enable_pinboard(facilitator.id, session_topic_1)
+      {:ok, console} = ConsoleService.enable_pinboard(facilitator.id, session_topic_1, true)
       assert(console.pinboard)
    end
 
    test "when enable then remove all resource", %{facilitator: facilitator, session_topic_1: session_topic_1, resource: resource} do
      {:ok, _} = ConsoleService.set_resource(facilitator.id, session_topic_1, resource.id)
-     {:ok, console} = ConsoleService.enable_pinboard(facilitator.id, session_topic_1)
+     {:ok, console} = ConsoleService.enable_pinboard(facilitator.id, session_topic_1, true)
      assert(%{audioId: nil, pinboard: true, videoId: nil, fileId: nil, miniSurveyId: nil} = console)
    end
  end
