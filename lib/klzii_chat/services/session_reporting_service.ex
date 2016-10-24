@@ -115,11 +115,13 @@ defmodule KlziiChat.Services.SessionReportingService do
     {:ok, session_member} = get_session_member(session_member_id)
     case SessionReportingPermissions.can_get_reports(session_member) do
       {:ok} ->
-        query =
-          from str in SessionTopicReport,
+        reports =
+          from(str in SessionTopicReport,
           where: str.sessionId == ^session_id and is_nil(str.deletedAt),
-          preload: [:resource]
-        {:ok, Repo.all(query)}
+          preload: [:resource, session: [:participant_list]],
+          group_by: [:type, :id], select: str)
+          |> Repo.all
+        {:ok, reports}
       {:error, reason} ->
         {:error, reason}
     end

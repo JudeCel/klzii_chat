@@ -62,9 +62,9 @@ defmodule KlziiChat.SessionChannel do
   end
 
   def handle_in("create_session_topic_report", payload, socket) do
-    case SessionReportingService.create_session_topic_report(payload) do
-      {:ok, repor} ->
-        {:reply, {:ok, SessionTopicsReportView.render("show.json", %{report: repor})}, socket}
+    case SessionReportingService.create_report(get_session_member(socket).id, payload) do
+      {:ok, report} ->
+        {:reply, {:ok, SessionTopicsReportView.render("show.json", %{report: report})}, socket}
       {:error, reason} ->
         {:error, %{reason: reason}}
     end
@@ -80,7 +80,7 @@ defmodule KlziiChat.SessionChannel do
   end
 
   def handle_in("recreate_session_topic_report", %{"id" => session_topic_report_id}, socket) do
-    case SessionReportingService.recreate_session_topic_report(session_topic_report_id, get_session_member(socket).id) do
+    case SessionReportingService.recreate_report(session_topic_report_id, get_session_member(socket).id) do
       {:ok, session_topics_report} ->
         {:reply, {:ok, SessionTopicsReportView.render("show.json", %{report: session_topics_report})}, socket}
       {:error, reason} ->
