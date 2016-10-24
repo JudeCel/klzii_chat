@@ -2,6 +2,23 @@ import React, {PropTypes} from 'react';
 import { connect }        from 'react-redux';
 
 const ReportIcon = React.createClass({
+  getInitialState() {
+    let { type, format, sessionTopicId, facilitator, reports } = this.props
+
+    const report = this.getReport([sessionTopicId, format, type.typeName], reports);
+    const tmpReport = {
+            scopes: type.scopes,
+            format: format,
+            type: type.typeName,
+            sessionTopicId: this.props.sessionTopicId,
+            includes: { facilitator: facilitator }
+          }
+    let state = {
+      render: type.typeData.formats[format],
+      report: {...tmpReport, report }
+    }
+    return state;
+  },
   selectCorrectClassName(status, className) {
     const size = ' fa-2x';
     const pointer = ' cursor-pointer';
@@ -17,51 +34,45 @@ const ReportIcon = React.createClass({
         return className + size + pointer;
     }
   },
-  selectCorrectFormat(status) {
+  selectCorrectFormat() {
     switch (this.props.format) {
       case 'pdf':
-        return this.selectCorrectClassName(status, 'fa fa-file-pdf-o');
+        return this.selectCorrectClassName(this.state.report.status, 'fa fa-file-pdf-o');
       case 'csv':
-        return this.selectCorrectClassName(status, 'fa fa-file-excel-o');
+        return this.selectCorrectClassName(this.state.report.status, 'fa fa-file-excel-o');
       case 'txt':
-        return this.selectCorrectClassName(status, 'fa fa-file-code-o');
+        return this.selectCorrectClassName(this.state.report.status, 'fa fa-file-code-o');
     }
   },
-  onClick(report) {
-    switch (report.status) {
+  onClick() {
+    switch (this.state.report.status) {
       case 'progress':
         return;
       case 'completed':
-        return this.props.changePage('download', report);
+        return this.props.changePage('download', this.state.report);
       case 'failed':
-        return this.props.changePage('failed', report);
+        return this.props.changePage('failed', this.state.report);
       default:
-        return this.props.createReport(report);
+        return this.props.createReport(this.state.report);
     }
   },
-  getReport() {
-    const { sessionTopicId, format, type, reports } = this.props;
-    const flow = [sessionTopicId, format, type];
-
-    let object = reports;
+  getReport(flow, reports) {
+    let object = {...reports};
     for(var i = 0; i < flow.length; i++) {
       object = object[flow[i]];
       if(!object) break;
     }
-
     return object || {};
   },
   render() {
-    const report = this.getReport();
-    const { type, format, sessionTopicId, facilitator } = this.props;
-
-    if(type == 'whiteboard' && format != 'pdf') {
-      return (false);
+    let { type, format } = this.props
+    if(type.typeData.formats[format]) {
+      return (
+        <i className={ this.selectCorrectFormat() } onClick={ this.onClick } />
+      )
     }
     else {
-      return (
-        <i className={ this.selectCorrectFormat(report.status) } onClick={ this.onClick.bind(this, { ...report, type, format, sessionTopicId, facilitator }) } />
-      )
+      return (false);
     }
   }
 });

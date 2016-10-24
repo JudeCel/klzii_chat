@@ -5,7 +5,8 @@ import ReportsActions     from '../../../actions/reports';
 
 const ReportsIndex = React.createClass({
   getInitialState() {
-    return { format: 'pdf', facilitator: true };
+    let { reports } = this.props
+    return { format: 'pdf', facilitator: reports.mapStruct.includes.facilitator };
   },
   onChange(key, value) {
     this.setState({ [key]: value });
@@ -14,7 +15,7 @@ const ReportsIndex = React.createClass({
     const { channel, dispatch } = this.props;
     const { sessionTopicId, format, type, facilitator } = params;
 
-    dispatch(ReportsActions.create(channel, { sessionTopicId, format, type, facilitator }));
+    dispatch(ReportsActions.create(channel, params ));
   },
   componentDidMount() {
     const { channel, dispatch } = this.props;
@@ -22,16 +23,23 @@ const ReportsIndex = React.createClass({
   },
   render() {
     const { sessionTopics, reports, changePage } = this.props;
+    const  { types, includes, scopes } = reports.mapStruct
     const { format, facilitator } = this.state;
-    const reportFormats = ['pdf', 'csv', 'txt'];
-    const reportTypes = ['all', 'star', 'whiteboard', 'votes'];
+
+    const reportFormatsOrder = ['pdf', 'csv', 'txt'];
+    const reportTypes = [
+      {name: 'all', typeName: 'messages', typeData: types['messages'], scopes: {}},
+      {name: 'star', typeName: 'messages', typeData: types['messages'], scopes: { only: { star: true } } },
+      {name: 'whiteboard', typeName: 'whiteboards', typeData: types['whiteboards'], scopes: {}},
+      {name: 'votes', typeName: 'votes', typeData: types['votes'], scopes: {} },
+    ];
     const colMdSizes = { all: 2, star: 3, whiteboard: 3,  votes: 1 };
 
     return (
       <div className='reports-section'>
         <ul className='list-inline'>
           {
-            reportFormats.map((reportFormat, index) =>
+            reportFormatsOrder.map((reportFormat, index) =>
               <li key={ index }>
                 <input id={ 'report-format-' + index }
                   name='active' type='radio' className='with-font'
@@ -88,7 +96,7 @@ const mapStateToProps = (state) => {
   return {
     sessionTopics: state.chat.session.session_topics,
     channel: state.chat.channel,
-    reports: state.reports.data
+    reports: state.reports
   }
 };
 

@@ -1,6 +1,6 @@
 defmodule KlziiChat.Services.SessionReportingService do
   alias KlziiChat.Services.{ResourceService}
-  alias KlziiChat.{Repo, SessionTopicReport, SessionMember}
+  alias KlziiChat.{Repo, SessionTopicReport, SessionMember, Session}
   alias KlziiChat.Services.Permissions.SessionReporting, as: SessionReportingPermissions
   import KlziiChat.Helpers.MapHelper, only: [key_to_string: 1]
   import Ecto.Query, only: [from: 2]
@@ -118,8 +118,7 @@ defmodule KlziiChat.Services.SessionReportingService do
         reports =
           from(str in SessionTopicReport,
           where: str.sessionId == ^session_id and is_nil(str.deletedAt),
-          preload: [:resource, session: [:participant_list]],
-          group_by: [:type, :id], select: str)
+          preload: [:resource, session: [:participant_list]])
           |> Repo.all
         {:ok, reports}
       {:error, reason} ->
@@ -170,5 +169,18 @@ defmodule KlziiChat.Services.SessionReportingService do
     with  {:ok, report} <- delete_session_topic_report(report_id, session_member_id),
           {:ok, new_report} <- create_report(session_member_id, report),
     do:   {:ok, new_report}
+  end
+
+  def get_session_contact_list(session_id) do
+    session =
+      Repo.get(Session, session_id)
+      |>  Repo.preload([:participant_list])
+      |>  case do
+            %{participant_list: nil} ->
+              {:error, %{not_found: "Contact list not found for this session"}}
+            %{participant_list: participant_list} ->
+              {:ok , participant_list}
+          end
+
   end
 end

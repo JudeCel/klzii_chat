@@ -1,28 +1,46 @@
 defmodule KlziiChat.ReportView do
   use KlziiChat.Web, :view
 
-  def render("map.json", %{contact_list: contact_list})do
+  def render("map_struct.json", %{contact_list: contact_list}) do
     %{
-      formats: %{
-        pdf: %{
-          whiteboards: %{ render: true },
-          messages: %{ render: true },
+      types: %{
+        messages: %{
+          selected: true,
+          formats: %{
+            pdf: %{ render: true },
+            csv: %{ render: true },
+            txt: %{ render: true }
+          },
           custom_fields: false,
         },
-        csv: %{
-          whiteboards: %{ render: false },
-          messages: %{ render: true },
-          custom_fields: true
+        votes: %{
+          selected: false,
+          formats: %{
+            pdf: %{ render: true },
+            csv: %{ render: true },
+            txt: %{ render: true }
+          },
+          custom_fields: false,
         },
-        txt: %{
-          whiteboards: %{ render: false },
-          messages: %{ render: true },
+        whiteboards: %{
+          selected: false,
+          formats: %{
+            pdf: %{ render: true },
+            csv: %{ render: false },
+            txt: %{ render: false }
+          },
           custom_fields: false,
         },
       },
       fields: %{
         default: contact_list.defaultFields,
         custom: contact_list.customFields
+      },
+      includes: %{
+        facilitator: true
+      },
+      scopes: %{
+        star_only: %{ star: false }
       }
     }
   end

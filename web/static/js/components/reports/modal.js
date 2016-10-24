@@ -29,7 +29,8 @@ const ReportsModal = React.createClass({
     this.setState({ rendering, report });
   },
   render() {
-    const { rendering, report } = this.state;
+    const { rendering, report} = this.state;
+    const { repors: { mapStruct } } = this.props;
     let show = this.showSpecificModal('reports');
 
     if(show) {
@@ -48,7 +49,7 @@ const ReportsModal = React.createClass({
           <Modal.Body>
             <div className='row'>
               <div className='col-md-12'>
-                <ReportsPages rendering={ rendering } changePage={ this.changePage } report={ report } />
+                <ReportsPages rendering={ rendering } changePage={ this.changePage } report={ report } mapStruct={mapStruct} />
               </div>
             </div>
           </Modal.Body>
@@ -65,6 +66,7 @@ const mapStateToProps = (state) => {
   return {
     modalWindows: state.modalWindows,
     colours: state.chat.session.colours,
+    repors: state.reports
   }
 };
 

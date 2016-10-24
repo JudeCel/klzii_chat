@@ -1,6 +1,6 @@
 defmodule KlziiChat.SessionMemberCase do
   use ExUnit.CaseTemplate
-  alias KlziiChat.{Repo, User, SubscriptionPlan, Session, Account, SessionMember}
+  alias KlziiChat.{Repo, User, SubscriptionPlan, Session, Account, SessionMember, ContactList}
 
   setup do
     user = %User{ email: "dainis@gmail.com", encryptedPassword: "jee" } |> Repo.insert!
@@ -100,6 +100,18 @@ defmodule KlziiChat.SessionMemberCase do
       status: "open",
       type: "focus"
     } |> Repo.insert!
+
+    contact_list = %ContactList{
+      name: "participant list",
+      role: "participant",
+      accountId: account.id,
+      editable: false,
+      active: true,
+      participantsFields: [],
+      visibleFields: [],
+      defaultFields: ~w(firstName lastName gender email postalAddress city state country postCode companyName landlineNumber mobil),
+      customFields: ["kautkas 1", "kautkas 2", "kautkas 3"],
+    }|> Repo.insert!
 
     topic_1 = Ecto.build_assoc(account, :topics,
       name: "cool topic 1",

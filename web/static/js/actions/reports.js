@@ -13,7 +13,6 @@ const Actions = {
     return dispatch => {
       channel.push('get_session_topics_reports')
       .receive('ok', (data) => {
-        console.log(data);
         dispatch({ type: Constants.SET_REPORTS, data: data });
       }).receive('error', (errors) => {
         NotificationActions.showErrorNotification(dispatch, errors);
