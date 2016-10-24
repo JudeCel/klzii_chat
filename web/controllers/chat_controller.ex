@@ -57,20 +57,7 @@ defmodule KlziiChat.ChatController do
       case get_member_from_token(token) do
         {:ok, member, _} ->
           clean_current_topic(member.session_member.id)
-          if (member.session_member.role == "facilitator" or member.account_user.role == "accountManager") do
-            redirect(conn, external: conn.cookies["redirect_url"])
-          else
-            acount = from(a in AccountUser, where: a.id == ^member.session_member.accountUserId, preload: [:user]) |> Repo.one
-            userId = acount.user.id
-            user_accounts = from(a in User, where: a.id == ^userId, preload: [:account_users]) |> Repo.one
-            account_ids = from(e in assoc(user_accounts, :account_users), select: e.id)|> Repo.all
-            sessions_count_as_member = from(st in SessionMember, where: st.accountUserId in ^account_ids and st.sessionId != ^member.session_member.sessionId, select: count("*")) |> Repo.one
-            if sessions_count_as_member > 0 do
-              redirect(conn, external: conn.cookies["redirect_url"])
-            else
-              logout_all(conn, nil)
-            end
-          end
+          redirect(conn, external: conn.cookies["redirect_url"])
         {:error, _} ->
           logout_message(conn)
       end
