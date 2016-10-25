@@ -1,13 +1,23 @@
-defmodule KlziiChat.Services.Reports.Types.Votes do
+defmodule KlziiChat.Services.Reports.Types.Whiteboards.Base do
   @behaviour KlziiChat.Services.Reports.Types.Behavior
-  alias KlziiChat.{Repo, SessionTopicView, SessionView, SessionTopic, Session}
-  alias KlziiChat.Queries.MiniSurvey, as: QueriesMiniSurvey
+  alias KlziiChat.{Repo, SessionView, SessionTopic, Session}
+  alias KlziiChat.Queries.Shapes, as: QueriesShapes
   import Ecto.Query, only: [from: 2]
+
+  @spec default_fields() :: List.t[String.t]
+  def default_fields() do
+    ["Title", "Question", "First Name", "Answer", "Date" ]
+  end
 
   @spec get_data(Map.t) :: {:ok, Map.t} | {:error, Map.t}
   def get_data(report) do
     with {:ok, session} <- get_session(report),
-    do:  {:ok, %{ "session" => session, "header_title" => header_title(session) } }
+    do:  {:ok, %{
+                  "session" => session,
+                  "header_title" =>  header_title(session),
+                  "default_fields" => default_fields()
+                }
+          }
   end
 
   def header_title(%{sessionTopicId: nil} = session), do: "Mini Surveys History - #{session.account.name} / #{session.name}"
@@ -23,19 +33,18 @@ defmodule KlziiChat.Services.Reports.Types.Votes do
   end
 
   def preload_session_topic(query, %{sessionTopicId: nil} = report) do
-    Repo.preload(query, [session_topics: [mini_surveys: preload_mini_survey_query(report)]])
+    Repo.preload(query, [session_topics: [shapes: preload_shapes(report)]])
   end
 
   def preload_session_topic(query, %{sessionTopicId: sessionTopicId} = report) do
     session_topic_query = from(s in SessionTopic,
       where: s.id == ^sessionTopicId,
-      preload: [mini_surveys: ^preload_mini_survey_query(report)]
+      preload: [mini_surveys: ^preload_shapes(report)]
     )
     Repo.preload(query, [session_topics: session_topic_query])
   end
 
-  def preload_mini_survey_query(report) do
-    exclude_facilitator = get_in(report.scopes, ["exclude", "role", "facilitator"]) || false
-    QueriesMiniSurvey.report_query(report.sessionTopicId, exclude_facilitator)
+  def preload_shapes(report) do
+    QueriesShapes.base_query(%{ id: report.sessionTopicId })
   end
 end

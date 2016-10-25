@@ -38,32 +38,32 @@ defmodule KlziiChat.Services.Reports.Types.MessagesTest do
 
   describe "get_data topic report" do
     setup %{topic_report: topic_report} do
-      {:ok, data} = Messages.get_data(topic_report)
+      {:ok, data} = Messages.Base.get_data(topic_report)
       {:ok, data: data}
     end
 
     test "structure", %{data: data} do
       assert(
-      %{"session" => _, "header_title" => _, "session_topics" => [_], "participent_list_data" => _} = data
+      %{"session" => _, "header_title" => _, "session_topics" => [_]} = data
       )
     end
   end
 
   describe "get_data session report" do
     setup %{session_report: session_report} do
-      {:ok, data} = Messages.get_data(session_report)
+      {:ok, data} = Messages.Base.get_data(session_report)
       {:ok, data: data}
     end
 
     test "structure", %{data: data} do
       assert(
-        %{"session" => _, "header_title" => _, "session_topics" => [_,_], "participent_list_data" => _} = data
+        %{"session" => _, "header_title" => _, "session_topics" => [_,_]} = data
       )
     end
 
     test "get_session", %{session_report: session_report, session_topic_1: session_topic_1} do
     sessionId = session_topic_1.sessionId
-    assert({:ok, %{id: ^sessionId}} = Messages.get_session(session_report))
+    assert({:ok, %{id: ^sessionId}} = Messages.Base.get_session(session_report))
     end
   end
 end

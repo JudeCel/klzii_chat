@@ -1,6 +1,11 @@
-defmodule KlziiChat.Services.Reports.Types.MessagesStarOnly do
+defmodule KlziiChat.Services.Reports.Types.Messages.StarOnly do
   @behaviour KlziiChat.Services.Reports.Types.Behavior
-  import KlziiChat.Services.Reports.Types.Messages
+  import KlziiChat.Services.Reports.Types.Messages.Base
+
+  @spec default_fields() :: List.t[String.t]
+  def default_fields() do
+    ["First Name", "Comment", "Date", "Is Star", "Is Reply"]
+  end
 
   def preload_messages_query(report) do
     exclude_facilitator = get_in(report.includes, ["facilitator"]) || false

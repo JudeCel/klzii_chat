@@ -14,7 +14,7 @@ defmodule KlziiChat.ReportView do
             csv: %{ render: true, custom_fields: true },
             txt: %{ render: true, custom_fields: true }
           },
-          defaultFields: ["First Name", "Comment", "Date", "Is Reply"]
+          defaultFields: ["First Name", "Comment", "Date", "Is Star", "Is Reply"]
         },
         messages_stars_only: %{
           multiple_topics: true,
@@ -25,7 +25,7 @@ defmodule KlziiChat.ReportView do
             csv: %{ render: true, custom_fields: true },
             txt: %{ render: true, custom_fields: true }
           },
-          defaultFields: ["First Name", "Comment", "Date", "Is Star", "Is Reply"]
+          defaultFields: ["First Name", "Comment", "Date", "Is Reply"]
         },
         votes: %{
           multiple_topics: true,
@@ -43,11 +43,11 @@ defmodule KlziiChat.ReportView do
           selected: false,
           name: "Whiteboard",
           formats: %{
-            pdf: %{ render: true },
-            csv: %{ render: false },
-            txt: %{ render: false }
+            pdf: %{ render: true, custom_fields: false },
+            csv: %{ render: false, custom_fields: false },
+            txt: %{ render: false, custom_fields: false }
           },
-          custom_fields: false,
+          defaultFields: []
         },
       },
       fields: %{

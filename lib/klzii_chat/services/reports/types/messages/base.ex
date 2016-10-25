@@ -1,20 +1,24 @@
-defmodule KlziiChat.Services.Reports.Types.Messages do
+defmodule KlziiChat.Services.Reports.Types.Messages.Base do
   @behaviour KlziiChat.Services.Reports.Types.Behavior
   alias KlziiChat.{Repo, SessionTopicView, SessionView, SessionTopic, Session}
   alias KlziiChat.Queries.SessionTopic, as: SessionTopicQueries
   import Ecto.Query, only: [from: 2]
+
+  @spec default_fields() :: List.t[String.t]
+  def default_fields() do
+    ["First Name", "Comment", "Date", "Is Star", "Is Reply"]
+  end
 
   @spec get_data(Map.t) :: {:ok, Map.t} | {:error, Map.t}
   def get_data(report) do
     with {:ok, session} <- get_session(report),
          {:ok, header_title} <- get_header_title(session),
          {:ok, session_topics} <- get_session_topics(report),
-         {:ok, participent_list_data} <- get_data_from_participent_list(report, session),
     do:  {:ok, %{
               "session" => session,
               "session_topics" => session_topics,
-              "participent_list_data" => participent_list_data,
-              "header_title" => header_title
+              "header_title" => header_title,
+              "default_fields" => default_fields()
             }
           }
   end
@@ -45,20 +49,6 @@ defmodule KlziiChat.Services.Reports.Types.Messages do
       preload_session_topic(report)
       |> Phoenix.View.render_many(SessionTopicView, "report.json", as: :session_topic)
     {:ok, data}
-  end
-
-  @spec get_participent_list_fields(Map.t) :: {:ok, Map.t} | {:error, Map.t}
-  def get_participent_list_fields(%{participant_list: %{customFields: customFields, defaultFields: defaultFields }}) do
-    {:ok, %{customFields: customFields, defaultFields: defaultFields}}
-  end
-  def get_participent_list_fields(_) do
-    {:error, %{not_reqired: "participant list not preloaded in session"}}
-  end
-
-  @spec get_data_from_participent_list(Map.t, Map.t) :: {:ok, Map.t} | {:error, Map.t}
-  def get_data_from_participent_list(report, session) do
-    with {:ok, participent_list_fields} <- get_participent_list_fields(session),
-    do: {:ok, %{}}
   end
 
   def preload_session_topic(%{sessionTopicId: nil, sessionId: session_id} = report) do

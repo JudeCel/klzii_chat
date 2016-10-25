@@ -41,6 +41,7 @@ defmodule KlziiChat.MessageView do
       time: message.createdAt,
       star: message.star,
       emotion: message.emotion,
+      createdAt: message.createdAt,
       replies: Enum.map(message.replies, fn r ->
         render("report.json", %{message: r})
       end)
