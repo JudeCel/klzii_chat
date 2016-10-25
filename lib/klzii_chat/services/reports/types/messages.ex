@@ -76,8 +76,7 @@ defmodule KlziiChat.Services.Reports.Types.Messages do
   end
 
   def preload_messages_query(report) do
-    only_star = get_in(report.scopes, ["only", "star"]) || false
-    exclude_facilitator = get_in(report.scopes, ["exclude", "role", "facilitator"]) || false
-    KlziiChat.Queries.Messages.session_topic_messages(report.sessionTopicId, [ star: only_star, facilitator: exclude_facilitator ])
+    exclude_facilitator = get_in(report.includes, ["facilitator"]) || false
+    KlziiChat.Queries.Messages.session_topic_messages(report.sessionTopicId, [ star: false, facilitator: exclude_facilitator ])
   end
 end

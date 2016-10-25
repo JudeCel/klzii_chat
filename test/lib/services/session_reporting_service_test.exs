@@ -47,7 +47,6 @@ defmodule KlziiChat.Services.SessionReportingServiceTest do
         "sessionTopicId" => session_topic.id,
         "format" => "pdf",
         "type" => "messages",
-        "scopes" => %{},
         "includes" => %{
           "defaultFields" => ["name"]
         }
@@ -56,9 +55,9 @@ defmodule KlziiChat.Services.SessionReportingServiceTest do
     end
   end
 
-  describe "report with includes and scopes" do
+  describe "report with includes and include fields" do
     test "facilitator ", %{facilitator: facilitator, session_topic: session_topic} do
-      payload =  %{"sessionTopicId" => session_topic.id, "format" => "pdf", "type" => "messages", "includes" => %{"defaultFields" => [] } }
+      payload =  %{"sessionTopicId" => session_topic.id, "format" => "pdf", "type" => "messages", "includes" => %{}, "includeFields" => ["some name"] }
       assert({:ok, _} = SessionReportingService.create_report(facilitator.id, payload))
     end
   end
@@ -83,7 +82,7 @@ defmodule KlziiChat.Services.SessionReportingServiceTest do
 
   describe "set status" do
     setup %{session_topic_1: session_topic, facilitator: facilitator, account_user_account_manager: account_user } do
-      payload =  %{"sessionTopicId" => session_topic.id, "format" => "pdf", "type" => "messages", "includes" => %{"defaultFields" => []} }
+      payload =  %{"sessionTopicId" => session_topic.id, "format" => "pdf", "type" => "messages", "includeFields" => ["some name"], "includes" => %{"facilitator" => false} } 
       {:ok, report} = SessionReportingService.create_report(facilitator.id, payload)
       resource = Ecto.build_assoc(
        account_user.account, :resources,
@@ -110,7 +109,7 @@ defmodule KlziiChat.Services.SessionReportingServiceTest do
 
   describe "recreate report" do
     setup %{session_topic_1: session_topic, facilitator: facilitator, account_user_account_manager: account_user} do
-      payload =  %{"sessionTopicId" => session_topic.id, "format" => "pdf", "type" => "messages", "includes" => %{"defaultFields" => []} }
+      payload =  %{"sessionTopicId" => session_topic.id, "format" => "pdf", "type" => "messages", "includes" => %{"facilitator" => true} }
       {:ok, report} = SessionReportingService.create_report(facilitator.id, payload)
       resource = Ecto.build_assoc(
         account_user.account, :resources,
