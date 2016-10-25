@@ -323,6 +323,7 @@
     transform: scale(0.5) translate(-37.5px, -37.5px);
     margin-left: -20px;
     margin-top: -34px;
+    padding-top: 0px !important;
   }
 
   .facilitator-section .outerbox {
