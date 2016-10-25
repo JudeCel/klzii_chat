@@ -17,6 +17,7 @@
 
   .media-heading {
     margin-bottom: 25px;
+    margin-left: 28px;
   }
 
   .whiteboard-expand, #whiteboard-box, .pinboard-expand, #pinboard-box {
@@ -114,7 +115,7 @@
 
   .emotion-chat-avatar {
     height: 52px;
-    width: 75px;
+    width: 52px;
   }
 
   .direct-message-modal .direct-message-section .messages-section .unread-separator hr {
@@ -202,6 +203,7 @@
     margin-top: 0px !important;
     margin-bottom: 0px !important;
     padding-top: 5px;
+    margin-left: -5px;
   }
 
   body {
@@ -297,6 +299,7 @@
   .room-section .chat-section .message-section .body-section {
     border: 0px !important;
     padding: 5px 15px;
+    margin-left: 28px;
   }
 
   .facilitator-section {
@@ -318,8 +321,8 @@
 
   .message-section svg {
     transform: scale(0.5) translate(-37.5px, -37.5px);
-    margin-left: -25px;
-    margin-top: -35px;
+    margin-left: -20px;
+    margin-top: -34px;
   }
 
   .facilitator-section .outerbox {
@@ -818,17 +821,12 @@
     margin-left: 50px;
   }
 
-  .type-forum .room-section-right .chat-section .media-heading {
-    padding-right: 15px !important;
-    padding-left: 15px !important;
-  }
-
   .type-forum .room-section-left .facilitator-section svg {
     width: 150px !important;
   }
 
   .type-forum .room-section-right {
-    height: calc(100vh - 151px);
+    height: calc(100vh - 152px);
   }
 
   .type-forum .room-section-right .chat-section {
