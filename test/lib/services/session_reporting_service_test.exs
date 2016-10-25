@@ -1,6 +1,5 @@
 defmodule KlziiChat.Services.SessionReportingServiceTest do
   use KlziiChat.{ModelCase, SessionMemberCase}
-  alias KlziiChat.SessionTopicReport
   alias KlziiChat.Services.SessionReportingService
 
   setup %{session_topic_1: session_topic_1} do
@@ -20,24 +19,25 @@ defmodule KlziiChat.Services.SessionReportingServiceTest do
   describe "Incorrect report payload" do
     test "file format", %{facilitator: facilitator} do
       payload =  %{"sessionTopicId" => 1, "format" => "incorrect", "type" => "messages" }
-      assert({:error, %{format: "incorrect report format"}} = SessionReportingService.create_report(facilitator.id, payload))
+      assert({:error, %{format: "incorrect report format: incorrect"}} = SessionReportingService.create_report(facilitator.id, payload))
     end
 
     test "report type", %{facilitator: facilitator} do
       payload =  %{"sessionTopicId" => 1, "format" => "pdf", "type" => "incorrect" }
-      assert({:error, %{type: "incorrect report type"}} = SessionReportingService.create_report(facilitator.id, payload))
+      assert({:error, %{type: "incorrect report type: incorrect"}} = SessionReportingService.create_report(facilitator.id, payload))
     end
 
     test "whiteboard messagesowed with pdf", %{facilitator: facilitator} do
-      payload =  %{"sessionTopicId" => 1, "format" => "txt", "type" => "whiteboard"}
+      payload =  %{"sessionTopicId" => 1, "format" => "txt", "type" => "whiteboards"}
       assert({:error, %{format: "pdf is the only format that is available for whiteboard reports"}} = SessionReportingService.create_report(facilitator.id, payload))
     end
   end
 
-  describe "Create report with scopes" do
+  describe "Create report with include fields" do
     test "facilitator ", %{facilitator: facilitator, session_topic: session_topic} do
-      payload =  %{"sessionTopicId" => session_topic.id, "format" => "pdf", "type" => "messages", "scopes" => %{} }
-      {:ok, report} = SessionReportingService.create_report(facilitator.id, payload)
+      payload =  %{"sessionTopicId" => session_topic.id, "format" => "pdf", "type" => "messages", "includeFields" => ["some name"] }
+      assert({:ok, report} = SessionReportingService.create_report(facilitator.id, payload))
+      assert(report.includeFields == get_in(payload, ["includeFields"]))
     end
   end
 
@@ -52,14 +52,14 @@ defmodule KlziiChat.Services.SessionReportingServiceTest do
           "defaultFields" => ["name"]
         }
       }
-      {:ok, report} = SessionReportingService.create_report(facilitator.id, payload)
+      assert({:ok, _} = SessionReportingService.create_report(facilitator.id, payload))
     end
   end
 
   describe "report with includes and scopes" do
     test "facilitator ", %{facilitator: facilitator, session_topic: session_topic} do
       payload =  %{"sessionTopicId" => session_topic.id, "format" => "pdf", "type" => "messages", "includes" => %{"defaultFields" => [] } }
-      {:ok, report} = SessionReportingService.create_report(facilitator.id, payload)
+      assert({:ok, _} = SessionReportingService.create_report(facilitator.id, payload))
     end
   end
 
@@ -69,7 +69,7 @@ defmodule KlziiChat.Services.SessionReportingServiceTest do
     end
 
     test "star" do
-      {:ok, "STM_Report_2"} = SessionReportingService.get_report_name("messages", 2)
+      {:ok, "STM_Report_2"} = SessionReportingService.get_report_name("messages_stars_only", 2)
     end
 
     test "whiteboard" do
@@ -128,7 +128,7 @@ defmodule KlziiChat.Services.SessionReportingServiceTest do
       refute(new_report.id == old_report.id)
     end
 
-    test "when failed", %{facilitator: facilitator, report: report, resource: resource} do
+    test "when failed", %{facilitator: facilitator, report: report} do
       {:ok, old_report} = SessionReportingService.set_status({:error, "some error"}, report.id)
       {:ok, new_report} = SessionReportingService.recreate_report(report.id, facilitator.id)
       refute(new_report.id == old_report.id)

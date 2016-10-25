@@ -72,7 +72,7 @@ defmodule KlziiChat.Services.FileServiceTest do
 
 
   test "write text report" do
-    report_name = "SessionTopicReportingServiceTest_test_report"
+    report_name = "SessionTopicsReportingServiceTest_test_report"
     txt_message_stream = Stream.map(1..10, &to_string/1)
     {:ok, report_path} = FileService.write_report(report_name, :txt, txt_message_stream)
 
@@ -82,7 +82,7 @@ defmodule KlziiChat.Services.FileServiceTest do
   end
 
   test "write pdf report" do
-    report_name = "SessionTopicReportingServiceTest_test_report"
+    report_name = "SessionTopicsReportingServiceTest_test_report"
     html_report_path = FileService.get_tmp_path() <> "/#{report_name}.html"
     html_text = "<h1>TEST</h1>"
     {:ok, pdf_report_path} = FileService.write_report(report_name, :pdf, html_text)

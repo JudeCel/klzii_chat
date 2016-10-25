@@ -3,7 +3,7 @@ defmodule KlziiChat.Services.Reports.Types.MessagesTest do
   alias KlziiChat.Services.Reports.Types.Messages
   alias KlziiChat.Services.SessionReportingService
 
-  setup %{session_topic_1: session_topic, facilitator: facilitator, participant: participant} do
+  setup %{session_topic_1: session_topic, facilitator: facilitator, participant: participant, contact_list: contact_list} do
     Ecto.build_assoc(
       session_topic, :messages,
       sessionTopicId: session_topic.id,
@@ -24,7 +24,10 @@ defmodule KlziiChat.Services.Reports.Types.MessagesTest do
       replyLevel: 0,
     ) |> Repo.insert!()
 
-    payload_pdf =  %{"sessionTopicId" => session_topic.id, "format" => "pdf", "type" => "messages", "scopes" => %{} }
+    payload_pdf =  %{"sessionTopicId" => session_topic.id, "format" => "pdf",
+      "type" => "messages",
+      "customFildes" =>  Enum.take(contact_list.customFields, 4)
+    }
     {:ok, topic_report} = SessionReportingService.create_report(facilitator.id, payload_pdf)
 
     payload_csv =  %{"format" => "csv", "type" => "messages", "scopes" => %{} }
@@ -41,7 +44,7 @@ defmodule KlziiChat.Services.Reports.Types.MessagesTest do
 
     test "structure", %{data: data} do
       assert(
-        %{"session" => _, "header_title" => _} = data
+      %{"session" => _, "header_title" => _, "session_topics" => [_], "participent_list_data" => _} = data
       )
     end
   end
@@ -54,14 +57,13 @@ defmodule KlziiChat.Services.Reports.Types.MessagesTest do
 
     test "structure", %{data: data} do
       assert(
-        %{"session" => _, "header_title" => _} = data
+        %{"session" => _, "header_title" => _, "session_topics" => [_,_], "participent_list_data" => _} = data
       )
     end
 
     test "get_session", %{session_report: session_report, session_topic_1: session_topic_1} do
-    session_topic_id = session_topic_1.id
-    assert({:ok, %{session_topics: [%{id: ^session_topic_id, messages: _}, _]}} = Messages.get_session(session_report))
-    # assert(length(messages) == 2)
+    sessionId = session_topic_1.sessionId
+    assert({:ok, %{id: ^sessionId}} = Messages.get_session(session_report))
     end
   end
 end

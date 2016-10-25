@@ -11,6 +11,7 @@ defmodule KlziiChat.ContactList do
     field :participantsFields, {:array, :string}
     field :customFields, {:array, :string}
     belongs_to :account, KlziiChat.Account, [foreign_key: :accountId]
+    has_many :contact_list_users, KlziiChat.ContactListUser, [foreign_key: :contactListId]
     timestamps [inserted_at: :createdAt, updated_at: :updatedAt]
   end
 end

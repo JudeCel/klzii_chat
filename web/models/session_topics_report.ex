@@ -1,4 +1,4 @@
-defmodule KlziiChat.SessionTopicReport do
+defmodule KlziiChat.SessionTopicsReport do
   use KlziiChat.Web, :model
 
   schema "SessionTopicsReports" do
@@ -6,11 +6,11 @@ defmodule KlziiChat.SessionTopicReport do
     belongs_to :session_topic, KlziiChat.SessionTopic, [foreign_key: :sessionTopicId]
     belongs_to :resource, KlziiChat.Resource, [foreign_key: :resourceId]
     field :type, :string
-    field :scopes, :map, default: %{}
     field :includes, :map, default: %{}
     field :format, :string
     field :status, :string, default: "progress"
     field :message, :string, default: nil
+    field :includeFields, {:array, :string}, default: []
     field :deletedAt, Timex.Ecto.DateTime, default: nil
     timestamps [inserted_at: :createdAt, updated_at: :updatedAt]
   end
@@ -23,6 +23,7 @@ defmodule KlziiChat.SessionTopicReport do
   """
   def changeset(model, params \\ %{}) do
     model
-    |> cast(params, [:sessionId, :sessionTopicId, :type, :scopes, :includes, :format, :status, :message])
+    |> cast(params, [:sessionId, :sessionTopicId, :type, :includes, :format, :status, :message, :includeFields])
+    |> validate_length(:includeFields, max: 4)
   end
 end

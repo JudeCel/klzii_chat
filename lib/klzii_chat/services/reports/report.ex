@@ -1,6 +1,6 @@
 defmodule KlziiChat.Services.Reports.Report do
-  alias KlziiChat.{Repo, SessionTopicReport}
-  alias KlziiChat.Services.Reports.Types.{Messages, Votes, Whiteboards}
+  alias KlziiChat.{Repo, SessionTopicsReport}
+  alias KlziiChat.Services.Reports.Types.{Messages, MessagesStarOnly, Votes, Whiteboards}
   alias KlziiChat.Services.Reports.Formats.{Pdf, Csv, Txt}
 
   def run(report_id) do
@@ -13,7 +13,7 @@ defmodule KlziiChat.Services.Reports.Report do
   end
 
   defp get_report(report_id) do
-    Repo.get(SessionTopicReport, report_id)
+    Repo.get(SessionTopicsReport, report_id)
     |> Repo.preload([session: [:participant_list]])
   end
 
@@ -31,6 +31,7 @@ defmodule KlziiChat.Services.Reports.Report do
   end
 
   def select_type("messages"), do: {:ok, Messages}
+  def select_type("messages_stars_only"), do: {:ok, MessagesStarOnly}
   def select_type("votes"), do: {:ok, Votes}
   def select_type("whiteboards"), do: {:ok, Whiteboards}
   def select_type(type), do: {:error, "module for type #{type} not found"}

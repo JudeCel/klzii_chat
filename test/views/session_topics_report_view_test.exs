@@ -4,7 +4,7 @@ defmodule KlziiChat.SessionTopicsReportViewTest do
 
   test "Convert report" do
     ecto_report =
-      %KlziiChat.SessionTopicReport{__meta__: ~s(:loaded, "SessionTopicsReports"),
+      %KlziiChat.SessionTopicsReport{__meta__: ~s(:loaded, "SessionTopicsReports"),
       createdAt: Ecto.DateTime.cast("2016-06-20 18:17:36"), facilitator: true,
       format: "pdf", id: 409, message: nil, resource: nil, resourceId: nil,
       session: "association :session is not loaded",
@@ -24,7 +24,7 @@ defmodule KlziiChat.SessionTopicsReportViewTest do
 
   test "Convert reports" do
     ecto_reports =
-      [%KlziiChat.SessionTopicReport{__meta__: ~s(:loaded, "SessionTopicsReports"),
+      [%KlziiChat.SessionTopicsReport{__meta__: ~s(:loaded, "SessionTopicsReports"),
         createdAt: Ecto.DateTime.cast("2016-06-20 18:17:36"), facilitator: true,
         format: "pdf", id: 409, message: nil, resource: nil, resourceId: nil,
         session: "association :session is not loaded",
@@ -32,7 +32,7 @@ defmodule KlziiChat.SessionTopicsReportViewTest do
         session_topic: "association :session_topic is not loaded",
         status: "progress", type: "whiteboard",
         updatedAt: Ecto.DateTime.cast("2016-06-20 18:17:36")},
-       %KlziiChat.SessionTopicReport{__meta__: ~s(:loaded, "SessionTopicsReports"),
+       %KlziiChat.SessionTopicsReport{__meta__: ~s(:loaded, "SessionTopicsReports"),
         createdAt: Ecto.DateTime.cast("2016-06-20 18:17:36"), facilitator: false,
         format: "csv", id: 410, message: nil, resource: nil, resourceId: nil,
         session: "association :session is not loaded",
@@ -40,7 +40,7 @@ defmodule KlziiChat.SessionTopicsReportViewTest do
         session_topic: "association :session_topic is not loaded",
         status: "progress", type: "all",
         updatedAt: Ecto.DateTime.cast("2016-06-20 18:17:36")},
-       %KlziiChat.SessionTopicReport{__meta__: ~s(:loaded, "SessionTopicsReports"),
+       %KlziiChat.SessionTopicsReport{__meta__: ~s(:loaded, "SessionTopicsReports"),
         createdAt: Ecto.DateTime.cast("2016-06-20 18:17:36"), facilitator: false,
         format: "pdf", id: 410, message: nil, resource: nil, resourceId: nil,
         session: "association :session is not loaded",

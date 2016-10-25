@@ -1,4 +1,4 @@
-defmodule KlziiChat.Services.SessionTopicReportingService do
+defmodule KlziiChat.Services.SessionTopicsReportingService do
   alias KlziiChat.Services.{FileService}
   alias KlziiChat.Decorators.MessageDecorator
   alias KlziiChat.{Repo, SessionTopicView}

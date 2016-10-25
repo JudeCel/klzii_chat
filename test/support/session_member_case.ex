@@ -1,6 +1,6 @@
 defmodule KlziiChat.SessionMemberCase do
   use ExUnit.CaseTemplate
-  alias KlziiChat.{Repo, User, SubscriptionPlan, Session, Account, SessionMember, ContactList}
+  alias KlziiChat.{Repo, User, SubscriptionPlan, Session, Account, SessionMember, ContactList, ContactListUser}
 
   setup do
     user = %User{ email: "dainis@gmail.com", encryptedPassword: "jee" } |> Repo.insert!
@@ -110,8 +110,30 @@ defmodule KlziiChat.SessionMemberCase do
       participantsFields: [],
       visibleFields: [],
       defaultFields: ~w(firstName lastName gender email postalAddress city state country postCode companyName landlineNumber mobil),
-      customFields: ["kautkas 1", "kautkas 2", "kautkas 3"],
+      customFields: ["something 1", "something 2", "something 3"],
     }|> Repo.insert!
+
+    Ecto.Changeset.change(session, participantListId: contact_list.id)
+    |> Repo.update()
+
+    [
+      account_user_account_manager,
+      account_user_participant,
+      account_user_participant_2
+    ] |> Enum.each(fn(account_user) ->
+      %ContactListUser{
+        contactListId: contact_list.id,
+        accountId: account_user.account.id,
+        userId: account_user.user.id,
+        accountUserId: account_user.id,
+        customFields: %{
+          "something 1" => "#{account_user.firstName} something 1",
+          "something 2" =>  "#{account_user.lastName} something 2",
+          "something 3" => "#{account_user.role} something 3"}
+        }|> Repo.insert!
+    end)
+
+
 
     topic_1 = Ecto.build_assoc(account, :topics,
       name: "cool topic 1",
@@ -187,6 +209,7 @@ defmodule KlziiChat.SessionMemberCase do
       account_user_participant_2: account_user_participant_2,
       account_user_observer: account_user_observer,
       account: account,
+      contact_list: contact_list,
       admin_account: admin_account,
       account_user_admin: account_user_admin,
       admin_user: admin_user

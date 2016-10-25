@@ -1,6 +1,6 @@
 defmodule KlziiChat.Services.SessionReportingService do
   alias KlziiChat.Services.{ResourceService}
-  alias KlziiChat.{Repo, SessionTopicReport, SessionMember, Session}
+  alias KlziiChat.{Repo, SessionTopicsReport, SessionMember, Session}
   alias KlziiChat.Services.Permissions.SessionReporting, as: SessionReportingPermissions
   import KlziiChat.Helpers.MapHelper, only: [key_to_string: 1]
   import Ecto.Query, only: [from: 2]
@@ -33,10 +33,10 @@ defmodule KlziiChat.Services.SessionReportingService do
 
   @spec validate_type(Map.t) :: :ok | {:error, String.t}
   def validate_type(%{"type" => type}) do
-    if type in ["messages", "whiteboards", "votes"]  do
+    if type in ["messages", "messages_stars_only", "whiteboards", "votes"]  do
       {:ok}
     else
-      {:error, %{type: "incorrect report type"}}
+      {:error, %{type: "incorrect report type: #{type}"}}
     end
   end
 
@@ -45,7 +45,7 @@ defmodule KlziiChat.Services.SessionReportingService do
     if format in ["txt", "csv", "pdf"]  do
       {:ok}
     else
-      {:error, %{format: "incorrect report format"}}
+      {:error, %{format: "incorrect report format: #{format}"}}
     end
   end
 
@@ -83,13 +83,13 @@ defmodule KlziiChat.Services.SessionReportingService do
     params =
       Map.put(%{}, "sessionId", session_id)
       |> Map.merge(payload)
-    SessionTopicReport.changeset(%SessionTopicReport{}, params)
+    SessionTopicsReport.changeset(%SessionTopicsReport{}, params)
     |> Repo.insert
   end
 
 
   @spec get_report_name(atom, integer) :: {:ok, String.t}
-  def get_report_name("whiteboard", report_id), do: {:ok, "STW_Report_" <> to_string(report_id)}
+  def get_report_name("whiteboards", report_id), do: {:ok, "STW_Report_" <> to_string(report_id)}
 
   @spec get_report_name(atom, integer) :: {:ok, String.t}
   def get_report_name("votes", report_id), do: {:ok, "STMS_Report_" <> to_string(report_id)}
@@ -99,12 +99,12 @@ defmodule KlziiChat.Services.SessionReportingService do
 
   @spec set_status({:ok, Map.t} | {:error, String.t}, integer) :: {atom, Map.t}
   def set_status({:ok, resource}, report_id) do
-    Repo.get!(SessionTopicReport, report_id)
+    Repo.get!(SessionTopicsReport, report_id)
     |> Ecto.Changeset.change(status: "completed", resourceId: resource.id, message: nil)
     |> Repo.update()
   end
   def set_status({:error, err}, report_id) do
-    Repo.get!(SessionTopicReport, report_id)
+    Repo.get!(SessionTopicsReport, report_id)
     |> Ecto.Changeset.change(status: "failed", message: Poison.encode!(err) )
     |> Repo.update()
   end
@@ -116,7 +116,7 @@ defmodule KlziiChat.Services.SessionReportingService do
     case SessionReportingPermissions.can_get_reports(session_member) do
       {:ok} ->
         reports =
-          from(str in SessionTopicReport,
+          from(str in SessionTopicsReport,
           where: str.sessionId == ^session_id and is_nil(str.deletedAt),
           preload: [:resource, session: [:participant_list]])
           |> Repo.all
@@ -130,7 +130,7 @@ defmodule KlziiChat.Services.SessionReportingService do
   def delete_session_topic_report(report_id, session_member_id) do
     with  {:ok, session_member} <- get_session_member(session_member_id),
           {:ok} <- check_report_delete_permision(session_member),
-          report = Repo.get(SessionTopicReport, report_id),
+          report = Repo.get(SessionTopicsReport, report_id),
           {ok, deleted_report} <- check_delete_session_topic_report(report, session_member.accountUserId),
     do:   {ok, deleted_report}
   end

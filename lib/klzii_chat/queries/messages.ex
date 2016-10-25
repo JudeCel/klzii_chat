@@ -7,7 +7,7 @@ defmodule KlziiChat.Queries.Messages do
   def base_query(nil) do
     from message in Message,
     where: is_nil(message.replyId),
-    where: [replayLevel: 0],
+    where: [replyLevel: 0],
     order_by: [asc: :createdAt]
   end
   def base_query(session_topic_id) do
