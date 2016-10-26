@@ -39,16 +39,35 @@ defmodule KlziiChat.Services.Reports.Formats.CsvTest do
     {:ok, topic_report_data: topic_report_data, session_report_data: session_report_data}
   end
 
-  describe "messages" do
+  describe "processe_data" do
     test "topic report", %{topic_report_data: topic_report_data} do
-      {:ok,stream} = KlziiChat.Services.Reports.Types.Messages.Formats.Csv.processe_data(topic_report_data)
+      assert({:ok, _} =Messages.Formats.Csv.processe_data(topic_report_data))
     end
 
     test "session report", %{session_report_data: session_report_data} do
-      {:ok, stream} = KlziiChat.Services.Reports.Types.Messages.Formats.Csv.processe_data(session_report_data)
-      Enum.each(stream, fn(data) ->
-        IO.inspect data
-      end)
+      assert({:ok, stream} = Messages.Formats.Csv.processe_data(session_report_data))
+      [ _ | data ] =  Enum.to_list(stream)
+      assert(length(data) == 1)
+    end
+  end
+
+  describe "get_data" do
+    setup %{topic_report_data: data} do
+      session = get_in(data, ["session"])
+      default_fields = get_in(data, ["default_fields"])
+      [session_topic |_ ] = get_in(data, ["session_topics"])
+      [message | _ ] = session_topic.messages
+      result = Messages.Formats.Csv.get_data(message, session, default_fields)
+      {:ok, result: result, default_fields: default_fields}
+    end
+
+    test "is map", %{result: result} do
+      assert(%{} = result)
+    end
+
+    test "is all keys reqired", %{default_fields: default_fields, result: result} do
+      keys = Map.keys(result)
+      assert(length(default_fields) == length(keys))
     end
   end
 end

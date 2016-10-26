@@ -36,7 +36,7 @@ defmodule KlziiChat.Mixfile do
      {:phoenix_html, "~> 2.6"},
      {:phoenix_live_reload, "~> 1.0", only: :dev},
      {:timex_ecto, "~> 3.0"},
-     {:elixlsx, "~> 0.0.7"},
+     {:csv, "~> 1.4"},
      {:boltun, "~> 1.0"},
      {:exq, "~> 0.8.0"},
      {:timex, "~> 3.0"},

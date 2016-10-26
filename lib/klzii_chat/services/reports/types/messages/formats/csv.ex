@@ -1,10 +1,6 @@
 defmodule KlziiChat.Services.Reports.Types.Messages.Formats.Csv do
-
   alias KlziiChat.Decorators.MessageDecorator
-  require Elixlsx
-  alias Elixlsx.Sheet
-  alias Elixlsx.Workbook
-
+  alias KlziiChat.Helpers.DateTimeHelper
 
   @spec processe_data(Map.t) :: {String.t}
   def processe_data(data) do
@@ -14,28 +10,41 @@ defmodule KlziiChat.Services.Reports.Types.Messages.Formats.Csv do
   @spec render_string( Map.t) :: {:ok, String.t} | {:error, Map.t}
   def render_string(data) do
     session = get_in(data, ["session"])
-    sheet1 = Sheet.with_name("First")
-    workbook = %Workbook{sheets: []}
-    Enum.each(enumerable, fun)
+    default_fields = get_in(data, ["default_fields"])
+    [session_topic |_ ] = get_in(data, ["session_topics"])
 
-    # workbook =
-    #   get_in(data, ["session_topics"])
-    #   |> Enum.each(&message_csv_filter(get_in(&1, [:messages]), session.timeZone))
-      Elixlsx.write_to(workbook, "empty.xlsx")
-    {:ok, workbook}
+    stream =
+      session_topic.messages
+      |> Enum.map(&get_data(&1, session, default_fields))
+      |> CSV.encode(headers: default_fields)
+    {:ok, stream}
   end
 
-  @spec message_csv_filter(Map.t,  String.t) :: String.t
-  def message_csv_filter(%{session_member: %{username: username}, body: body, createdAt: createdAt, star: star,
-    replyId: replyId, emotion: emotion}, time_zone) do
+  @spec get_data(Map.t,  Map.t, List.T) :: List.t
+  def get_data(message, session, default_fields) do
+    Enum.map(default_fields, fn(field) ->
+      {field, get_value_for_message(field, message, session)}
+    end)
+    |> Enum.into(%{})
+  end
+
+  def get_value_for_message("First Name", %{session_member: %{username: username}}, _) do
+    username
+  end
+  def get_value_for_message("Comment", %{body: body}, _) do
+    body
+  end
+  def get_value_for_message("Date", %{createdAt: createdAt}, %{timeZone: time_zone}) do
+    DateTimeHelper.report_format(createdAt, time_zone)
+  end
+  def get_value_for_message("Is Reply", %{replyLevel: 0},_), do: to_string(true)
+  def get_value_for_message("Is Reply", _,_), do: to_string(false)
+
+  def get_value_for_message("Emotion", %{emotion: emotion},_) do
     {:ok, emotion_name} = MessageDecorator.emotion_name(emotion)
-
-    %{ "Name" => username,
-       "Comment" => body,
-       "Date" => DateTimeHelper.report_format(createdAt, time_zone),
-       "Is reply" => to_string(replyId != nil),
-       "Emotion" => emotion_name
-      }
+    emotion_name
   end
+  def get_value_for_message("Is Star", %{star: star}, _), do: to_string(star)
+
 
 end
