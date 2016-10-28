@@ -947,3 +947,25 @@
   margin-right: 10px;
   padding: 11px;
 }
+@media (max-device-width: 767px) {
+  body.modal-open {
+      position: fixed;
+  }
+}
+
+@media (max-device-width: 767px) and (orientation: portrait) {
+  .direct-message-modal .direct-message-section {
+    margin-bottom: -215px;
+  }
+
+  .direct-message-modal .input-section {
+    bottom: 30px;
+    position: absolute;
+    background-color: #ffffff;
+    margin-top: 5px;
+  }
+
+  .direct-message-modal .direct-message-section > div.col-md-12 {
+    height: calc(100vh - 60px) !important;
+  }
+}
