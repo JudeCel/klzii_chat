@@ -1,6 +1,7 @@
 defmodule KlziiChat.Services.Reports.Types.Votes.Base do
   @behaviour KlziiChat.Services.Reports.Types.Behavior
   alias KlziiChat.{Repo, SessionTopicView, SessionView, SessionTopic, Session}
+  alias KlziiChat.Services.Reports.Types.Messages.Formats
   alias KlziiChat.Queries.MiniSurvey, as: QueriesMiniSurvey
   import Ecto.Query, only: [from: 2]
 
@@ -8,6 +9,12 @@ defmodule KlziiChat.Services.Reports.Types.Votes.Base do
   def default_fields() do
     ["Title", "Question", "First Name", "Answer", "Date" ]
   end
+
+  @spec format_modeule(String.t) :: Module.t
+  def format_modeule("pdf"), do: {:ok, Formats.Pdf}
+  def format_modeule("csv"), do: {:ok, Formats.Csv}
+  def format_modeule("txt"), do: {:ok, Formats.Txt}
+  def format_modeule(format), do: {:error, "module for format #{format} not found"}
 
   def get_data(report) do
     with {:ok, session} <- get_session(report),

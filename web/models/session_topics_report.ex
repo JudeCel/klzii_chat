@@ -6,6 +6,7 @@ defmodule KlziiChat.SessionTopicsReport do
     belongs_to :session_topic, KlziiChat.SessionTopic, [foreign_key: :sessionTopicId]
     belongs_to :resource, KlziiChat.Resource, [foreign_key: :resourceId]
     field :type, :string
+    field :name, :string
     field :includes, :map, default: %{}
     field :format, :string
     field :status, :string, default: "progress"
@@ -23,7 +24,7 @@ defmodule KlziiChat.SessionTopicsReport do
   """
   def changeset(model, params \\ %{}) do
     model
-    |> cast(params, [:sessionId, :sessionTopicId, :type, :includes, :format, :status, :message, :includeFields])
+    |> cast(params, [:sessionId, :sessionTopicId, :type, :includes, :name, :format, :status, :message, :includeFields])
     |> validate_length(:includeFields, max: 4)
   end
 end

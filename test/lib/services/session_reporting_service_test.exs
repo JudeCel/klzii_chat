@@ -63,26 +63,30 @@ defmodule KlziiChat.Services.SessionReportingServiceTest do
   end
 
   describe "report name" do
-    test "messages" do
-      {:ok, "STM_Report_1"} = SessionReportingService.get_report_name("messages", 1)
+    test "messages", %{session: session} do
+      payload = %{"type" => "messages"}
+      assert {:ok, "Messages_Report_cool_session"} = SessionReportingService.get_report_name(payload, session)
     end
 
-    test "star" do
-      {:ok, "STM_Report_2"} = SessionReportingService.get_report_name("messages_stars_only", 2)
+    test "star", %{session: session} do
+      payload = %{"type" => "messages_stars_only"}
+      assert {:ok, "Messages_Report_cool_session"} = SessionReportingService.get_report_name(payload, session)
     end
 
-    test "whiteboard" do
-      {:ok, "STW_Report_4"} = SessionReportingService.get_report_name("whiteboards", 4)
+    test "whiteboard", %{session: session} do
+      payload = %{"type" => "whiteboards"}
+      assert {:ok, "Whiteboards_Report_cool_session"} = SessionReportingService.get_report_name(payload, session)
     end
 
-    test "votes" do
-      {:ok, "STMS_Report_5"} = SessionReportingService.get_report_name("votes", 5)
+    test "votes", %{session: session} do
+      payload = %{"type" => "votes"}
+      assert {:ok, "Votes_Report_cool_session"} = SessionReportingService.get_report_name(payload, session)
     end
   end
 
   describe "set status" do
     setup %{session_topic_1: session_topic, facilitator: facilitator, account_user_account_manager: account_user } do
-      payload =  %{"sessionTopicId" => session_topic.id, "format" => "pdf", "type" => "messages", "includeFields" => ["some name"], "includes" => %{"facilitator" => false} } 
+      payload =  %{"sessionTopicId" => session_topic.id, "format" => "pdf", "type" => "messages", "includeFields" => ["some name"], "includes" => %{"facilitator" => false} }
       {:ok, report} = SessionReportingService.create_report(facilitator.id, payload)
       resource = Ecto.build_assoc(
        account_user.account, :resources,

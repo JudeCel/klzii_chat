@@ -1,5 +1,6 @@
 defmodule KlziiChat.Services.Reports.Types.Whiteboards.Base do
   @behaviour KlziiChat.Services.Reports.Types.Behavior
+  alias KlziiChat.Services.Reports.Types.Messages.Formats
   alias KlziiChat.{Repo, SessionView, SessionTopic, Session, SessionTopicView}
   alias KlziiChat.Queries.Shapes, as: QueriesShapes
   import Ecto.Query, only: [from: 2]
@@ -8,6 +9,11 @@ defmodule KlziiChat.Services.Reports.Types.Whiteboards.Base do
   def default_fields() do
     []
   end
+
+  @spec format_modeule(String.t) :: Module.t
+  def format_modeule("pdf"), do: {:ok, Formats.Pdf}
+  def format_modeule(format), do: {:error, "module for format #{format} not found"}
+
 
   def get_data(report) do
     with {:ok, session} <- get_session(report),
@@ -22,6 +28,7 @@ defmodule KlziiChat.Services.Reports.Types.Whiteboards.Base do
           }
   end
 
+  @spec get_header_title(Map.t) :: {:ok, String.t}
   def get_header_title(%{sessionTopicId: nil} = session) do
     {:ok, "Whiteboards History - #{session.account.name} / #{session.name}"}
   end
@@ -39,6 +46,7 @@ defmodule KlziiChat.Services.Reports.Types.Whiteboards.Base do
   end
   def get_session(_), do: {:error, %{not_reqired: "session id not reqired"}}
 
+  @spec get_session_topics(Map.t) :: {:ok, Map.t}
   def get_session_topics(report) do
     data =
       preload_session_topic(report)

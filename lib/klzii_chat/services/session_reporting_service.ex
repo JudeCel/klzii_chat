@@ -7,9 +7,10 @@ defmodule KlziiChat.Services.SessionReportingService do
 
   @spec get_session_member(integer) :: {atom, String.t}
   def get_session_member(session_member_id) do
+
     case Repo.get(SessionMember, session_member_id) do
       nil -> {:error, %{not_found: "No session member found with id: " <> session_member_id}}
-      session_member -> {:ok, session_member}
+      session_member -> {:ok, Repo.preload(session_member, [:session])}
     end
   end
 
@@ -73,8 +74,8 @@ defmodule KlziiChat.Services.SessionReportingService do
   def processed_report(session_member_id, payload) do
     with {:ok, session_member} <- get_session_member(session_member_id),
          {:ok} <- check_report_create_permision(session_member),
-         {:ok, report} <- create_record(session_member.sessionId, payload),
-         {:ok, report_name} <- Map.get(payload, "type", "") |> get_report_name(report.id),
+         {:ok, report_name} <- get_report_name(payload, session_member.session),
+         {:ok, report} <- create_record(session_member.sessionId, Map.put(payload, "name", report_name)),
     do:  {:ok, Repo.preload(report, :resource)}
   end
 
@@ -87,15 +88,15 @@ defmodule KlziiChat.Services.SessionReportingService do
     |> Repo.insert
   end
 
-
-  @spec get_report_name(atom, integer) :: {:ok, String.t}
-  def get_report_name("whiteboards", report_id), do: {:ok, "STW_Report_" <> to_string(report_id)}
-
-  @spec get_report_name(atom, integer) :: {:ok, String.t}
-  def get_report_name("votes", report_id), do: {:ok, "STMS_Report_" <> to_string(report_id)}
-
-  @spec get_report_name(atom, integer) :: {:ok, String.t}
-  def get_report_name(_, report_id), do: {:ok, "STM_Report_" <> to_string(report_id)}
+  def normalize_name(name) do
+    String.replace(name, " ", "_")
+  end
+  @spec get_report_name(Map.t, String.t) :: {:ok, String.t}
+  def get_report_name(%{"type" => "messages"}, session), do: {:ok, "Messages Report #{session.name}" |> normalize_name}
+  def get_report_name(%{"type" => "messages_stars_only"}, session), do: {:ok, "Messages Report #{session.name}" |> normalize_name}
+  def get_report_name(%{"type" =>"whiteboards"}, session), do: {:ok, "Whiteboards Report #{session.name}" |> normalize_name}
+  def get_report_name(%{"type" =>"votes"}, session), do: {:ok, "Votes Report #{session.name}" |> normalize_name}
+  def get_report_name(_, _), do: {:ok, "Session_Report" |> normalize_name}
 
   @spec set_status({:ok, Map.t} | {:error, String.t}, integer) :: {atom, Map.t}
   def set_status({:ok, resource}, report_id) do
@@ -172,15 +173,14 @@ defmodule KlziiChat.Services.SessionReportingService do
   end
 
   def get_session_contact_list(session_id) do
-    session =
-      Repo.get(Session, session_id)
-      |>  Repo.preload([:participant_list])
-      |>  case do
-            %{participant_list: nil} ->
-              {:error, %{not_found: "Contact list not found for this session"}}
-            %{participant_list: participant_list} ->
-              {:ok , participant_list}
-          end
+    Repo.get(Session, session_id)
+    |>  Repo.preload([:participant_list])
+    |>  case do
+          %{participant_list: nil} ->
+            {:error, %{not_found: "Contact list not found for this session"}}
+          %{participant_list: participant_list} ->
+            {:ok , participant_list}
+        end
 
   end
 end

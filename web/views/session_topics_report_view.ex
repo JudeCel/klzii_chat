@@ -6,7 +6,6 @@ defmodule KlziiChat.SessionTopicsReportView do
     %{
       id: report.id,
       includes: report.includes,
-      scopes: report.scopes,
       format: report.format,
       message: report.message,
       sessionId: report.sessionId,

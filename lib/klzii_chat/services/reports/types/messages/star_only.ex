@@ -1,10 +1,13 @@
 defmodule KlziiChat.Services.Reports.Types.Messages.StarOnly do
-  @behaviour KlziiChat.Services.Reports.Types.Behavior
-  import KlziiChat.Services.Reports.Types.Messages.Base
+  import KlziiChat.Services.Reports.Types.Messages.Base, only: [
+    get_session: 1,
+    get_header_title: 1,
+    get_session_topics: 1
+  ]
 
   @spec default_fields() :: List.t[String.t]
   def default_fields() do
-    ["First Name", "Comment", "Date", "Is Star", "Is Reply"]
+    ["First Name", "Comment", "Date", "Is Reply"]
   end
 
   def preload_messages_query(report) do
