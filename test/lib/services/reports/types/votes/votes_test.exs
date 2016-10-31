@@ -1,6 +1,6 @@
-defmodule KlziiChat.Services.Reports.Types.VotesTest do
+defmodule KlziiChat.Services.Reports.Types.BaseTest do
   use KlziiChat.{ModelCase, SessionMemberCase}
-  alias KlziiChat.Services.Reports.Types.Votes
+  alias KlziiChat.Services.Reports.Types.Votes.Base
   alias KlziiChat.Services.SessionReportingService
 
   setup %{session_topic_1: session_topic, facilitator: facilitator} do
@@ -15,7 +15,7 @@ defmodule KlziiChat.Services.Reports.Types.VotesTest do
 
   describe "get_data topic report" do
     setup %{topic_report: topic_report} do
-      {:ok, data} = Votes.get_data(topic_report)
+      {:ok, data} = Base.get_data(topic_report)
       {:ok, data: data}
     end
 
@@ -28,7 +28,7 @@ defmodule KlziiChat.Services.Reports.Types.VotesTest do
 
   describe "get_data session report" do
     setup %{session_report: session_report} do
-      {:ok, data} = Votes.get_data(session_report)
+      {:ok, data} = Base.get_data(session_report)
       {:ok, data: data}
     end
 

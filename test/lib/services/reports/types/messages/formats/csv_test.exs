@@ -1,4 +1,4 @@
-defmodule KlziiChat.Services.Reports.Formats.CsvTest do
+defmodule KlziiChat.Services.Reports.Types.Messages.Formats.CsvTest do
   use KlziiChat.{ModelCase, SessionMemberCase}
   alias KlziiChat.Services.Reports.Types.Messages
   alias KlziiChat.Services.SessionReportingService

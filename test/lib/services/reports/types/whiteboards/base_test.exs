@@ -1,6 +1,6 @@
-defmodule KlziiChat.Services.Reports.Types.WhiteboardsTest do
+defmodule KlziiChat.Services.Reports.Types.Whiteboards.BaseTest do
   use KlziiChat.{ModelCase, SessionMemberCase}
-  alias KlziiChat.Services.Reports.Types.Whiteboards
+  alias KlziiChat.Services.Reports.Types.Whiteboards.Base
   alias KlziiChat.Services.SessionReportingService
 
   setup %{session_topic_1: session_topic, facilitator: facilitator} do
@@ -15,7 +15,7 @@ defmodule KlziiChat.Services.Reports.Types.WhiteboardsTest do
 
   describe "get_data topic report" do
     setup %{topic_report: topic_report} do
-      {:ok, data} = Whiteboards.get_data(topic_report)
+      {:ok, data} = Base.get_data(topic_report)
       {:ok, data: data}
     end
 
@@ -28,7 +28,7 @@ defmodule KlziiChat.Services.Reports.Types.WhiteboardsTest do
 
   describe "get_data session report" do
     setup %{session_report: session_report} do
-      {:ok, data} = Whiteboards.get_data(session_report)
+      {:ok, data} = Base.get_data(session_report)
       {:ok, data: data}
     end
 

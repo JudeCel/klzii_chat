@@ -1,4 +1,4 @@
-defmodule KlziiChat.Services.Reports.Formats.TxtTest do
+defmodule KlziiChat.Services.Reports.Types.Messages.Formats.TxtTest do
   use KlziiChat.{ModelCase, SessionMemberCase}
   alias KlziiChat.Services.Reports.Types.Messages
   alias KlziiChat.Services.SessionReportingService
@@ -41,7 +41,7 @@ defmodule KlziiChat.Services.Reports.Formats.TxtTest do
 
   describe "processe_data" do
     test "topic report", %{topic_report_data: topic_report_data} do
-      assert({:ok, _} =Messages.Formats.Txt.processe_data(topic_report_data))
+      assert({:ok, _} = Messages.Formats.Txt.processe_data(topic_report_data))
     end
 
     test "session report", %{session_report_data: session_report_data} do

@@ -12,7 +12,7 @@
           <%= mini_survey_answer.session_member.username %>
         </span>
         <span class='time pull-right'>
-        <%= time_format(mini_survey_answer.createdAt, @time_zone) %>
+        <%= time_format(mini_survey_answer.createdAt, assigns[:session].timeZone) %>
         </span>
       </div>
 

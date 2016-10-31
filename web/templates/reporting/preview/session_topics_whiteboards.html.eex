@@ -1,0 +1,5 @@
+<%= for session_topic <- @session_topics do %>
+    <div class='remove-side-margin pull-right'>
+    <%= render "shapes.html", shapes: session_topic.shapes, conn: assigns[:conn], session: assigns[:session] %>
+  </div>
+<% end %>

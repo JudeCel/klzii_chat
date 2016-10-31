@@ -1,4 +1,4 @@
-defmodule KlziiChat.Services.Reports.Types.Messages.Formats.Pdf do
+defmodule KlziiChat.Services.Reports.Whiteboards.Formats.Pdf do
 
   @spec processe_data(Map.t) :: {String.t}
   def processe_data(data) do
@@ -9,7 +9,7 @@ defmodule KlziiChat.Services.Reports.Types.Messages.Formats.Pdf do
   def render_string(data) do
     try do
       string = Phoenix.View.render_to_string(
-        KlziiChat.Reporting.PreviewView, "session_topics_messages.html",
+        KlziiChat.Reporting.PreviewView, "session_topics_whiteboards.html",
         session_topics: get_in(data, ["session_topics"]),
         session: get_in(data, ["session"]),
         brand_logo: get_in(data, ["session", :brand_logo]),
@@ -19,7 +19,7 @@ defmodule KlziiChat.Services.Reports.Types.Messages.Formats.Pdf do
       {:ok, string}
     catch
       error, reason ->
-      {:error, reason}
+        {:error, reason}
     end
   end
 end

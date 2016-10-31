@@ -14,7 +14,13 @@ defmodule KlziiChat.MiniSurveyView do
 
   @spec render(String.t, Map.t) :: Map.t
   def render("report.json", %{mini_survey: mini_survey}) do
-    render("show.json", %{mini_survey: mini_survey})
+    %{
+      id: mini_survey.id,
+      title: mini_survey.title,
+      question: mini_survey.question,
+      type: mini_survey.type,
+      mini_survey_answers: render_many(mini_survey.mini_survey_answers, MiniSurveyAnswerView, "show.json")
+    }
   end
 
   @spec render(String.t, Map.t) :: Map.t
