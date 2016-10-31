@@ -24,9 +24,10 @@ defmodule KlziiChat.Services.Reports.Types.Messages.Formats.Txt do
 
   @spec get_data(Map.t,  Map.t, List.T) :: List.t
   def get_data(message, session, default_fields) do
-    Enum.map(default_fields, fn(field) ->
-      get_value_for_message(field, message, session) <> "\r\n\r\n"
-    end)
+    row = Enum.map(default_fields, fn(field) ->
+      get_value_for_message(field, message, session)
+    end) |> Enum.join(", ")
+    [row <> "\r\n\r\n"]
   end
 
   def get_value_for_message("First Name", %{session_member: %{username: username}}, _) do

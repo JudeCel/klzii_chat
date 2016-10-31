@@ -66,7 +66,10 @@ defmodule KlziiChat.Services.Reports.Formats.TxtTest do
     end
 
     test "is all keys reqired", %{default_fields: default_fields, result: result} do
-      assert(length(default_fields) == length(result))
+      row =
+        List.first(result)
+        |> String.split(",")
+      assert(length(default_fields) == length(row))
     end
   end
 end
