@@ -954,18 +954,67 @@
 }
 
 @media (max-device-width: 767px) and (orientation: portrait) {
+  body.modal-open {
+    height: 100%;
+  }
+
+  body.modal-open .fade.in.modal {
+    height: calc(100% - 73px) !important;
+    min-height: calc(100% - 73px) !important;
+    overflow: hidden !important;
+  }
+  div.modal-section.direct-message-modal.modal-dialog {
+    height: 100%;
+  }
+
+  body.modal-open .inmplayer-general {
+    display: none;
+  }
+
+  div.modal-body {
+    height: calc(100% - 71px) !important;
+  }
+
+  div.modal-section.direct-message-modal.modal-dialog .modal-content{
+    height: 100%;
+    overflow: hidden !important;
+  }
+
   .direct-message-modal .direct-message-section {
-    margin-bottom: -215px;
+    height: 100% !important;
+    padding-bottom: 0 !important;
+    margin-bottom: 0 !important;
   }
 
   .direct-message-modal .input-section {
-    bottom: 30px;
+    bottom: 0;
     position: absolute;
-    background-color: #ffffff;
-    margin-top: 5px;
+    margin-top: 0;
+    margin-bottom: 0;
+    background: #ffffff;
   }
 
   .direct-message-modal .direct-message-section > div.col-md-12 {
-    height: calc(100vh - 60px) !important;
+    height: calc(100% - 36px) !important;
+    padding-bottom: 0 !important;
+    margin-bottom: 0 !important;
+  }
+
+  .room-section .console-section  {
+    margin-left: 0 !important;
+    width: 100% !important;
+  }
+  .console-section {
+    padding-left: 0;
+  }
+
+  .room-section .console-section ul.icons {
+    margin: 0 auto !important;
+    display: table;
+    width: auto !important;
+  }
+
+  div.inmplayer-launcher.inmplayer-launcher-topic.null {
+    display: none !important;
   }
 }
