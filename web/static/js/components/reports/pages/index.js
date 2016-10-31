@@ -22,15 +22,15 @@ const ReportsIndex = React.createClass({
     dispatch(ReportsActions.index(channel));
   },
   render() {
-    const { sessionTopics, reports, changePage } = this.props;
-    const  { types, includes, scopes } = reports.mapStruct
+    const { sessionTopics, reports, changePage, mapStruct } = this.props;
+    const { types, includes, scopes } = reports.mapStruct
     const { format, facilitator } = this.state;
 
     const reportFormatsOrder = ['pdf', 'csv', 'txt'];
     const reportTypes = [
-      {name: 'all', typeName: 'messages', typeData: types['messages'], scopes: {}},
-      {name: 'star', typeName: 'messages', typeData: types['messages'], scopes: { only: { star: true } } },
-      {name: 'whiteboard', typeName: 'whiteboards', typeData: types['whiteboards'], scopes: {}},
+      {name: 'messages', typeName: 'messages', typeData: types['messages'], scopes: {}},
+      {name: 'messages_stars_only', typeName: 'messages', typeData: types['messages'], scopes: { only: { star: true } } },
+      {name: 'whiteboards', typeName: 'whiteboards', typeData: types['whiteboards'], scopes: {}},
       {name: 'votes', typeName: 'votes', typeData: types['votes'], scopes: {} },
     ];
     const colMdSizes = { all: 2, star: 3, whiteboard: 3,  votes: 1 };
@@ -77,7 +77,7 @@ const ReportsIndex = React.createClass({
                       <td className={ 'col-md-' + colMdSizes[type] } key={ fIndex }>
                         <ReportIcon
                           { ...{ format, type, facilitator, sessionTopicId: topic.id } }
-                          { ...{ createReport: this.createReport, changePage: changePage } }
+                          { ...{ createReport: this.createReport, changePage: changePage, mapStruct: mapStruct } }
                         />
                       </td>
                     )

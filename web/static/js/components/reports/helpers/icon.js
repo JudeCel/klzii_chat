@@ -53,8 +53,19 @@ const ReportIcon = React.createClass({
       case 'failed':
         return this.props.changePage('failed', this.state.report);
       default:
-        return this.props.createReport(this.state.report);
+        if(this.shouldShowCustomFields()) {
+          this.props.changePage('selectCustom', { type: this.props.type.name });
+        }
+        else {
+          return this.props.createReport(this.state.report);
+        }
     }
+  },
+  shouldShowCustomFields() {
+    const { type, format, mapStruct } = this.props;
+
+    let structData = mapStruct.types[type.name];
+    return (format == 'txt' || format == 'csv') && structData.formats[format].render;
   },
   getReport(flow, reports) {
     let object = {...reports};
@@ -66,7 +77,7 @@ const ReportIcon = React.createClass({
   },
   render() {
     let { type, format } = this.props
-    if(type.typeData.formats[format]) {
+    if(type.typeData.formats[format].render) {
       return (
         <i className={ this.selectCorrectFormat() } onClick={ this.onClick } />
       )

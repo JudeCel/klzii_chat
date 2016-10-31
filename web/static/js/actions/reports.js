@@ -48,6 +48,11 @@ const Actions = {
         NotificationActions.showErrorNotification(dispatch, errors);
       });
     }
+  },
+  csvWithCustomFields:(channel, customFields) => {
+    return dispatch => {
+      console.error("+++++++++++++++++ #csvWithCustomFields");
+    }
   }
 }
 
