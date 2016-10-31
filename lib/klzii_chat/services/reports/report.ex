@@ -28,12 +28,18 @@ defmodule KlziiChat.Services.Reports.Report do
     with {:ok, format_modeule } <- type_module.format_modeule(format),
          {:ok, data} <- format_modeule.processe_data(data),
          {:ok, file_path} <- FileService.write_report(name, format, data),
-         {:ok, update_report} <- add_resource(report, file_path),
+         {:ok, resource} <- create_resource(report, file_path),
+         {:ok, update_report} <- add_resource(report, resource),
     do: {:ok, update_report}
   end
 
   @spec add_resource(%SessionTopicsReport{}, String.t) :: {:ok | :error, String.t}
-  def add_resource(report, report_file_path) do
+  def add_resource(report, resource) do
+    SessionTopicsReport.changeset(report, %{resourceId: resource.id, status: "completed"})
+    |> Repo.update
+  end
+
+  def create_resource(report, report_file_path) do
     preload_report = Repo.preload(report, [:session])
     upload_params = %{
       "type" => "file",
@@ -42,11 +48,9 @@ defmodule KlziiChat.Services.Reports.Report do
       "file" => report_file_path,
       "name" => report.name
     }
-
-    with {:ok, resource} <- Resource.report_changeset(%Resource{}, upload_params) |> Repo.insert,
-         {:ok, update_report} <- SessionTopicsReport.changeset(report, %{resourceId: resource.id}) |> Repo.update,
-    do: {:ok, update_report}
-end
+    Resource.report_changeset(%Resource{}, upload_params)
+    |> Repo.insert
+  end
 
   def select_type("messages"), do: {:ok, Messages.Base}
   def select_type("messages_stars_only"), do: {:ok, Messages.StarOnly}
