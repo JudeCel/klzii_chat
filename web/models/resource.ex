@@ -47,6 +47,14 @@ defmodule KlziiChat.Resource do
     |> cast_attachments(params, ["file", "image", "audio", "video"])
   end
 
+  def report_changeset(model, params \\ %{}) do
+    model
+    |> cast(params, [:status, :scope, :type, :accountId, :name])
+    |> validate_required([:status, :scope, :type, :accountId, :name])
+    |> unique_constraint(:name, name: :UniqResourceNameByAccount, message: "Resource name has already been taken")
+    |> cast_attachments(params, ["file"])
+  end
+
   defp parse_link(base_changeset) do
     case base_changeset do
       %Ecto.Changeset{valid?: true, changes: %{link: link}} when is_bitstring(link) ->

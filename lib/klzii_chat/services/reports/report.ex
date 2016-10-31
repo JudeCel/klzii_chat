@@ -1,5 +1,5 @@
 defmodule KlziiChat.Services.Reports.Report do
-  alias KlziiChat.{Repo, SessionTopicsReport}
+  alias KlziiChat.{Repo, SessionTopicsReport, Resource}
   alias KlziiChat.Services.Reports.Types.{Messages, Votes, Whiteboards}
   alias KlziiChat.Services.FileService
 
@@ -7,8 +7,8 @@ defmodule KlziiChat.Services.Reports.Report do
     with  report <- get_report(report_id),
         {:ok, type_module} <- select_type(report.type),
         {:ok, report_data} <- process_data(type_module, report),
-        {:ok} <- process_data(type_module, report, report_data),
-    do: {:ok, get_report(report.id)}
+        {:ok, report_data} <- process_data(type_module, report, report_data),
+    do: {:ok, report_data}
   end
 
   defp get_report(report_id) do
@@ -24,12 +24,29 @@ defmodule KlziiChat.Services.Reports.Report do
     end
   end
 
-  def process_data(type_module, %{format: format, name: name}, data) do
+  def process_data(type_module, %{format: format, name: name} = report, data) do
     with {:ok, format_modeule } <- type_module.format_modeule(format),
          {:ok, data} <- format_modeule.processe_data(data),
-         {:ok, data} <- FileService.write_report(name, format, data),
-    do: {:ok, data}
+         {:ok, file_path} <- FileService.write_report(name, format, data),
+         {:ok, update_report} <- add_resource(report, file_path),
+    do: {:ok, update_report}
   end
+
+  @spec add_resource(%SessionTopicsReport{}, String.t) :: {:ok | :error, String.t}
+  def add_resource(report, report_file_path) do
+    preload_report = Repo.preload(report, [:session])
+    upload_params = %{
+      "type" => "file",
+      "accountId" => preload_report.session.accountId,
+      "scope" => to_string(report.format),
+      "file" => report_file_path,
+      "name" => report.name
+    }
+
+    with {:ok, resource} <- Resource.report_changeset(%Resource{}, upload_params) |> Repo.insert,
+         {:ok, update_report} <- SessionTopicsReport.changeset(report, %{resourceId: resource.id}) |> Repo.update,
+    do: {:ok, update_report}
+end
 
   def select_type("messages"), do: {:ok, Messages.Base}
   def select_type("messages_stars_only"), do: {:ok, Messages.StarOnly}
