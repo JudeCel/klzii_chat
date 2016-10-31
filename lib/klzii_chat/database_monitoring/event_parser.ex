@@ -12,14 +12,14 @@ defmodule KlziiChat.DatabaseMonitoring.EventParser do
 
   @spec session_topics(Integer.t) :: {:ok, String.t} | {:error, String.t}
   def session_topics(session_id) do
-      case Mix.env do
-        :test ->
-          {:ok, "Running in Test ENV"}
-        _ ->
-          spawn_link(fn ->
-            Exq.enqueue(Exq, "notify", SessionTopic, [session_id])
-          end)
-      end
+    case Mix.env do
+      :test ->
+        {:ok, "Running in Test ENV"}
+      _ ->
+        spawn_link(fn ->
+          Exq.enqueue(Exq, "notify", SessionTopic, [session_id])
+        end)
+    end
   end
 
   def processe_event(channel, payload) do

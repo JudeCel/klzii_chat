@@ -70,7 +70,6 @@ defmodule KlziiChat.Services.FileServiceTest do
     assert({:error, _} = FileService.wkhtmltopdf("somethingwrong"))
   end
 
-
   test "write text report" do
     report_name = "SessionTopicsReportingServiceTest_test_report"
     txt_message_stream = Stream.map(1..10, &to_string/1)

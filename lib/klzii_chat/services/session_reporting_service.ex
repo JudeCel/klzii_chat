@@ -76,7 +76,19 @@ defmodule KlziiChat.Services.SessionReportingService do
          {:ok} <- check_report_create_permision(session_member),
          {:ok, report_name} <- get_report_name(payload, session_member.session),
          {:ok, report} <- create_record(session_member.sessionId, Map.put(payload, "name", report_name)),
-    do:  {:ok, Repo.preload(report, :resource)}
+         {:ok, _} <- background_task(report),
+    do:  {:ok, report}
+  end
+
+  def background_task(report) do
+    case Mix.env do
+      :test ->
+        {:ok, "Running in Test ENV"}
+      _ ->
+        Exq.enqueue(Exq, "report", KlziiChat.BackgroundTasks.Reports.SessionTopicReport, [report.id])
+    end
+
+
   end
 
   @spec create_record(Integer, Map.t) :: {atom, Map.t}
@@ -170,6 +182,13 @@ defmodule KlziiChat.Services.SessionReportingService do
     with  {:ok, report} <- delete_session_topic_report(report_id, session_member_id),
           {:ok, new_report} <- create_report(session_member_id, report),
     do:   {:ok, new_report}
+  end
+
+  @spec set_failed(any, integer) :: {atom, Map.t}
+  def set_failed(reason, report_id) do
+    Repo.get!(SessionTopicsReport, report_id)
+    |> Ecto.Changeset.change(status: "failed", message: Poison.encode!(reason) )
+    |> Repo.update()
   end
 
   def get_session_contact_list(session_id) do
