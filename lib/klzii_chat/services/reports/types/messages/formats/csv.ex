@@ -15,7 +15,7 @@ defmodule KlziiChat.Services.Reports.Types.Messages.Formats.Csv do
 
     stream =
       session_topic.messages
-      |> Enum.map(&get_data(&1, session, default_fields))
+      |> Stream.map(&get_data(&1, session, default_fields))
       |> CSV.encode(headers: default_fields)
     {:ok, stream}
   end
@@ -39,12 +39,10 @@ defmodule KlziiChat.Services.Reports.Types.Messages.Formats.Csv do
   end
   def get_value_for_message("Is Reply", %{replyLevel: 0},_), do: to_string(true)
   def get_value_for_message("Is Reply", _,_), do: to_string(false)
-
   def get_value_for_message("Emotion", %{emotion: emotion},_) do
     {:ok, emotion_name} = MessageDecorator.emotion_name(emotion)
     emotion_name
   end
   def get_value_for_message("Is Star", %{star: star}, _), do: to_string(star)
-
 
 end
