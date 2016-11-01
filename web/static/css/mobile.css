@@ -990,9 +990,17 @@
     height: calc(100% - 71px) !important;
   }
 
+  .direct-message-modal .direct-message-section .list-group {
+    border-color: rgba(0, 0, 0, 0) !important;
+  }
+
   div.modal-section.direct-message-modal.modal-dialog .modal-content{
     height: 100%;
     overflow: hidden !important;
+  }
+
+  .modal-dialog, .modal-content, .modal-section .modal-body .uploads-console-section {
+    height: 100%;
   }
 
   .direct-message-modal .direct-message-section {
@@ -1047,5 +1055,9 @@
 
   .mobile-side-menu .mobile-side-menu-content {
     height: 100%;
+  }
+
+  .modal-section .modal-body .uploads-console-section iframe {
+    height: 100% !important;
   }
 }
