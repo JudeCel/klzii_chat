@@ -5,7 +5,7 @@ defmodule KlziiChat.SessionTopicsReportViewTest do
   test "Convert report" do
     ecto_report =
       %KlziiChat.SessionTopicsReport{__meta__: ~s(:loaded, "SessionTopicsReports"),
-      createdAt: Ecto.DateTime.cast("2016-06-20 18:17:36"), facilitator: true,
+      createdAt: Ecto.DateTime.cast("2016-06-20 18:17:36"),
       format: "pdf", id: 409, message: nil, resource: nil, resourceId: nil,
       session: "association :session is not loaded",
       sessionId: 4634, sessionTopicId: 9267,
@@ -14,18 +14,17 @@ defmodule KlziiChat.SessionTopicsReportViewTest do
       updatedAt: Ecto.DateTime.cast("2016-06-20 18:17:36")}
 
     json_report =
-      %{facilitator: true, format: "pdf", id: 409, message: nil, resource: nil,
+      %{format: "pdf", id: 409, message: nil, resource: nil, includes: %{},
       resourceId: nil, sessionId: 4634, sessionTopicId: 9267, status: "progress",
       type: "whiteboard"}
 
     assert(json_report == SessionTopicsReportView.render("show.json", %{report: ecto_report}))
-    Poison
   end
 
   test "Convert reports" do
     ecto_reports =
       [%KlziiChat.SessionTopicsReport{__meta__: ~s(:loaded, "SessionTopicsReports"),
-        createdAt: Ecto.DateTime.cast("2016-06-20 18:17:36"), facilitator: true,
+        createdAt: Ecto.DateTime.cast("2016-06-20 18:17:36"),
         format: "pdf", id: 409, message: nil, resource: nil, resourceId: nil,
         session: "association :session is not loaded",
         sessionId: 4634, sessionTopicId: 9267,
@@ -33,7 +32,7 @@ defmodule KlziiChat.SessionTopicsReportViewTest do
         status: "progress", type: "whiteboard",
         updatedAt: Ecto.DateTime.cast("2016-06-20 18:17:36")},
        %KlziiChat.SessionTopicsReport{__meta__: ~s(:loaded, "SessionTopicsReports"),
-        createdAt: Ecto.DateTime.cast("2016-06-20 18:17:36"), facilitator: false,
+        createdAt: Ecto.DateTime.cast("2016-06-20 18:17:36"),
         format: "csv", id: 410, message: nil, resource: nil, resourceId: nil,
         session: "association :session is not loaded",
         sessionId: 4634, sessionTopicId: 9267,
@@ -41,7 +40,7 @@ defmodule KlziiChat.SessionTopicsReportViewTest do
         status: "progress", type: "all",
         updatedAt: Ecto.DateTime.cast("2016-06-20 18:17:36")},
        %KlziiChat.SessionTopicsReport{__meta__: ~s(:loaded, "SessionTopicsReports"),
-        createdAt: Ecto.DateTime.cast("2016-06-20 18:17:36"), facilitator: false,
+        createdAt: Ecto.DateTime.cast("2016-06-20 18:17:36"),
         format: "pdf", id: 410, message: nil, resource: nil, resourceId: nil,
         session: "association :session is not loaded",
         sessionId: 4634, sessionTopicId: 9267,
@@ -53,15 +52,15 @@ defmodule KlziiChat.SessionTopicsReportViewTest do
       %{
         "9267" => %{
           "csv" => %{
-            "all" => %{facilitator: false, format: "csv", id: 410,
+            "all" => %{includes: %{}, format: "csv", id: 410,
               message: nil, resource: nil, resourceId: nil, sessionId: 4634,
               sessionTopicId: 9267, status: "progress", type: "all"}
           },
           "pdf" => %{
-            "all" => %{facilitator: false, format: "pdf", id: 410,
+            "all" => %{includes: %{}, format: "pdf", id: 410,
               message: nil, resource: nil, resourceId: nil, sessionId: 4634,
               sessionTopicId: 9267, status: "progress", type: "all"},
-            "whiteboard" => %{facilitator: true, format: "pdf", id: 409, message: nil,
+            "whiteboard" => %{includes: %{},format: "pdf", id: 409, message: nil,
               resource: nil, resourceId: nil, sessionId: 4634, sessionTopicId: 9267,
               status: "progress", type: "whiteboard"}
           }

@@ -65,22 +65,22 @@ defmodule KlziiChat.Services.SessionReportingServiceTest do
   describe "report name" do
     test "messages", %{session: session} do
       payload = %{"type" => "messages"}
-      assert {:ok, "Messages_Report_cool_session"} = SessionReportingService.get_report_name(payload, session)
+      assert {:ok, "Messages_Report_cool_session" <> _} = SessionReportingService.get_report_name(payload, session)
     end
 
     test "star", %{session: session} do
       payload = %{"type" => "messages_stars_only"}
-      assert {:ok, "Messages_Report_cool_session"} = SessionReportingService.get_report_name(payload, session)
+      assert {:ok, "Messages_Report_cool_session" <> _} = SessionReportingService.get_report_name(payload, session)
     end
 
     test "whiteboard", %{session: session} do
       payload = %{"type" => "whiteboards"}
-      assert {:ok, "Whiteboards_Report_cool_session"} = SessionReportingService.get_report_name(payload, session)
+      assert {:ok, "Whiteboards_Report_cool_session" <> _} = SessionReportingService.get_report_name(payload, session)
     end
 
     test "votes", %{session: session} do
       payload = %{"type" => "votes"}
-      assert {:ok, "Votes_Report_cool_session"} = SessionReportingService.get_report_name(payload, session)
+      assert {:ok, "Votes_Report_cool_session" <> _} = SessionReportingService.get_report_name(payload, session)
     end
   end
 

@@ -3,8 +3,6 @@ defmodule KlziiChat.SessionChannelTest do
   alias KlziiChat.{Repo, UserSocket, SessionChannel}
   alias KlziiChat.Services.SessionReportingService
 
-  @message_delay 1000
-
   setup %{session_topic_1: session_topic_1, session: session, session: session, facilitator: facilitator, participant: participant} do
     Ecto.Adapters.SQL.Sandbox.mode(Repo, {:shared, self()})
     channel_name =  "sessions:" <> Integer.to_string(session.id)
@@ -103,38 +101,43 @@ defmodule KlziiChat.SessionChannelTest do
     session_topic_1_id = session_topic_1.id
     {:ok, _, socket} = subscribe_and_join(socket, SessionChannel, channel_name)
 
-    ref = push(socket, "create_session_topic_report", %{"sessionTopicId" => session_topic_1_id, "format" => "pdf", "type" => "all", "facilitator" => true})
-    assert_reply(ref, :ok, %{sessionTopicId: ^session_topic_1_id, status: "progress"}, @message_delay)
-    assert_broadcast("session_topics_report_updated", %{sessionTopicId: ^session_topic_1_id, status: "completed"}, @message_delay)
+    payload =  %{"sessionTopicId" => session_topic_1.id, "format" => "pdf", "type" => "messages", "includes" => %{"facilitator"=> true} }
+
+    ref = push(socket, "create_session_topic_report", payload)
+    assert_reply(ref, :ok, %{sessionTopicId: ^session_topic_1_id, status: "progress"})
   end
 
   test "delete session topic report", %{socket: socket, channel_name: channel_name, session: session, session_topic_1: session_topic_1} do
     {:ok, _, socket} = join(socket, SessionChannel, channel_name)
 
-    {:ok, report} = SessionReportingService.create_session_topics_reports_record(session.id, session_topic_1.id, :all, true, :txt)
+    payload =  %{"sessionTopicId" => session_topic_1.id, "format" => "txt", "type" => "messages" }
+    {:ok, report} = SessionReportingService.create_report(socket.assigns.session_member.id, payload)
 
     del_ref = push(socket, "delete_session_topic_report", %{"id" => report.id})
-    assert_reply(del_ref, :ok, _, @message_delay)
+    assert_reply(del_ref, :ok, _)
   end
 
   test "recreate session topic report", %{socket: socket, channel_name: channel_name, session: session, session_topic_1: session_topic_1} do
     {:ok, _, socket} = subscribe_and_join(socket, SessionChannel, channel_name)
 
-    {:ok, report} = SessionReportingService.create_session_topics_reports_record(session.id, session_topic_1.id, :all, true, :txt)
-    {:ok, failed_report} = SessionReportingService.update_session_topics_reports_record({:error, "some error message"}, report.id)
+    payload =  %{"sessionTopicId" => session_topic_1.id, "format" => "txt", "type" => "messages" }
 
-    ref = push(socket, "recreate_session_topic_report", %{"id" => failed_report.id})
-    assert_reply(ref, :ok, %{status: "progress"}, @message_delay)
-    assert_broadcast("session_topics_report_updated", %{status: "completed"}, @message_delay)
+    {:ok, report} = SessionReportingService.create_report(socket.assigns.session_member.id, payload)
+
+    ref = push(socket, "recreate_session_topic_report", %{"id" => report.id})
+    assert_reply(ref, :ok, %{status: "progress"})
   end
 
   test "get session topics reports", %{socket: socket, channel_name: channel_name, session: session, session_topic_1: session_topic_1} do
     {:ok, _, socket} = join(socket, SessionChannel, channel_name)
 
-    {:ok, report} = SessionReportingService.create_session_topics_reports_record(session.id, session_topic_1.id, :all, true, :txt)
+    payload =  %{"sessionTopicId" => session_topic_1.id, "format" => "txt", "type" => "messages" }
+    {:ok, report} = SessionReportingService.create_report(socket.assigns.session_member.id, payload)
+
     ref = push(socket, "get_session_topics_reports", %{"id" => report.id})
     session_topic_1_id = to_string(session_topic_1.id)
-    assert_reply(ref, :ok, %{^session_topic_1_id => %{"txt" => %{"all" => %{status: "progress"}}}}, @message_delay)
+
+    assert_reply(ref, :ok, %{^session_topic_1_id => %{"txt" => %{"messages" => %{status: "progress"}}}})
   end
 
   test "update session topics", %{socket: socket, channel_name: channel_name, session: session} do

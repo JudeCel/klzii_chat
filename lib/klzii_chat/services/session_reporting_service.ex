@@ -101,7 +101,7 @@ defmodule KlziiChat.Services.SessionReportingService do
   def normalize_name(name) do
     String.replace(name, " ", "_") <> to_string(:os.system_time(:second))
   end
-  
+
   @spec get_report_name(Map.t, String.t) :: {:ok, String.t}
   def get_report_name(%{"type" => "messages"}, session), do: {:ok, "Messages Report #{session.name}" |> normalize_name}
   def get_report_name(%{"type" => "messages_stars_only"}, session), do: {:ok, "Messages Report #{session.name}" |> normalize_name}
@@ -142,9 +142,9 @@ defmodule KlziiChat.Services.SessionReportingService do
   def delete_session_topic_report(report_id, session_member_id) do
     with  {:ok, session_member} <- get_session_member(session_member_id),
           {:ok} <- check_report_delete_permision(session_member),
-          report = Repo.get(SessionTopicsReport, report_id),
-          {ok, deleted_report} <- check_delete_session_topic_report(report, session_member.accountUserId),
-    do:   {ok, deleted_report}
+          report = Repo.get!(SessionTopicsReport, report_id),
+          {:ok, deleted_report} <- check_delete_session_topic_report(report, session_member.accountUserId),
+    do:   {:ok, deleted_report}
   end
 
   @spec check_delete_session_topic_report(nil, integer) :: {:error, String.t}
@@ -152,8 +152,9 @@ defmodule KlziiChat.Services.SessionReportingService do
 
   @spec check_delete_session_topic_report(Map.t, integer) :: {atom, String.t}
   def check_delete_session_topic_report(report, account_user_id) do
+    {:ok, deleted_report} = delete_report(report)
     delete_resource_async(account_user_id, report.resourceId)
-    delete_report(report)
+    {:ok, Map.delete(deleted_report, :resourceId)}
   end
 
   @spec delete_resource_async(integer, nil) :: no_return
@@ -163,17 +164,12 @@ defmodule KlziiChat.Services.SessionReportingService do
 
   @spec delete_resource_async(integer, integer) :: {:ok, pid}
   def delete_resource_async(account_user_id, resource_id) do
-    Task.start(fn -> ResourceService.deleteByIds(account_user_id, [resource_id]) end)
+    ResourceService.deleteByIds(account_user_id, [resource_id])
   end
 
   @spec delete_report(Map.t) :: {atom, Map.t}
   def delete_report(report) do
-    case report.status do
-      "failed" ->
-        Ecto.Changeset.change(report, deletedAt: Timex.now, resourceId: nil) |> Repo.update()
-      _ ->
-        Repo.delete(report)
-    end
+    Repo.delete(report)
   end
 
   @spec recreate_report(integer, integer) :: {:ok, Map.t} | {:error, String.t}
