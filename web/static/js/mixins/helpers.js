@@ -78,6 +78,10 @@ const helpers = {
     }
 
     return {};
+  },
+  sort(data, field) {
+    data.sort(function(a,b) {return (a[field] > b[field]) ? 1 : ((b[field] > a[field]) ? -1 : 0);} );
+    return data;
   }
 };
 
