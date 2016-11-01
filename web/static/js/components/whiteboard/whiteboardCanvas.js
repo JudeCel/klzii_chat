@@ -233,9 +233,7 @@ const WhiteboardCanvas = React.createClass({
 
     var polygons = document.getElementsByTagName("polygon");
     var polygonsList = Array.prototype.slice.call(polygons);
-    polygonsList.forEach(function(el){
-      self.fixArrowsForIE(el);
-    });
+    self.fixArrowsForIE();
 
     while (keysToDelete.length) {
       let position = shapesKeys.indexOf(keysToDelete[0]);
@@ -278,16 +276,27 @@ const WhiteboardCanvas = React.createClass({
   shapeTransformed(shape) {
     this.activeShape = shape;
   },
-  fixArrowsForIE(el) {
+  fixArrowsForIE() {
     //arrows fix for IE
     if(window.navigator.userAgent.indexOf("MSIE") > 0 || !!window.navigator.userAgent.match(/Trident.*rv\:11\./)){
-      //IE replaces comma with space
-      if (el.getAttribute && el.getAttribute("points") == "0,10 4,10 2,0 0,10"){
-        el.setAttribute("points", "0,10 4,10 2,5 0,10");
-      }
-      else if (el.attr && el.attr("points") == "0,10 4,10 2,0 0,10"){
-          el.attr("points", "0,10 4,10 2,5 0,10");
-      }
+      let lines = document.querySelectorAll("svg g line");
+      var linesList = Array.prototype.slice.call(lines);
+      linesList.forEach(function(el) {
+        if(el.style.markerStart) {
+          let polygonId = el.style.markerStart.replace('url("', '').replace('")', '');
+          let strokeWidth = parseInt(el.style.strokeWidth);
+          let polygon = document.querySelector(polygonId + " polygon");
+          if (strokeWidth == 2) {
+             polygon.setAttribute("points", "0,10 4,10 2,5 0,10");
+          } else if (strokeWidth == 4) {
+             polygon.setAttribute("points", "0,10 4,10 2,6 0,10");
+             polygon.setAttribute("transform", "matrix(0 -1 1.1 0 -3 7)");
+          } else if (strokeWidth == 6) {
+             polygon.setAttribute("points", "0,10 4,10 2,7 0,10");
+             polygon.setAttribute("transform", "matrix(0 -1 2 0 -5 7)");
+          }
+        }
+      });
     }
   },
   moveDistance(dx, dy) {

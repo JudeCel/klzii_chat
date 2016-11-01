@@ -7,7 +7,7 @@ import Avatar               from '../members/avatar.js';
 const { EditMessage, DeleteMessage, StarMessage, RateMessage, ReplyMessage } = MessageActions;
 
 const Message = React.createClass({
-  mixins: [mixins.helpers],
+  mixins: [mixins.validations, mixins.helpers, mixins.modalWindows],
   mediaImagePosition(message) {
     const className = 'emotion-chat-section push-image ';
     return className + (message.replies.length > 0 ? 'media-top' : 'media-bottom');
@@ -20,12 +20,12 @@ const Message = React.createClass({
     if(message.replies.length == 0) {
       return;
     } else {
-      const { currentUser, participants, facilitator } = this.props;
+      const { currentUser, participants, facilitator, modalWindows } = this.props;
       return (
         <div className='col-md-12 remove-side-margin pull-right'>
           {
             message.replies.map((reply) =>
-              <Message key={ reply.id } message={ reply } currentUser={ currentUser } participants={ participants } facilitator={ facilitator }/>
+              <Message key={ reply.id } message={ reply } currentUser={ currentUser } participants={ participants } facilitator={ facilitator }  modalWindows={ modalWindows } dispatch={this.props.dispatch }/>
             )
           }
         </div>
@@ -58,19 +58,34 @@ const Message = React.createClass({
       };
     return sessionTopicContext;
   },
+  canWritePrivateMessage(member) {
+    const { currentUser } = this.props;
+    return this.isFacilitator(currentUser) && currentUser.id != member.id;
+  },
+  privateMessage(member) {
+    const { currentUser } = this.props;
+    if (this.canWritePrivateMessage(member)) {
+      this.openSpecificModal('directMessage', { member: member });
+    }
+  },
   render() {
-    const { message } = this.props;
+    const { currentUser, message } = this.props;
     const { can_edit, can_delete, can_star, can_vote, can_reply } = message.permissions;
 
     let member = this.getMessageMember();
     let sessionTopicContext = this.getMessageSessionTopicContext();
+    let className = this.canWritePrivateMessage(member) ? 'cursor-pointer' : '';
 
     return (
       <div className='message-section media'>
         <div className={ this.mediaImagePosition(message) }>
           <div className={ 'emotion-chat-' + message.emotion } aria-hidden='true' style={{ backgroundColor: member.colour }}/>
           <div className='emotion-chat-avatar'>
-            <Avatar member={ { id: member.id, username: member.username, colour: member.colour, avatarData: member.avatarData, sessionTopicContext: sessionTopicContext, online: true, edit: false } } specificId={ 'msgAvatar' + message.id } />
+            <span onClick={ this.privateMessage.bind(this, member) } className={className}>
+              <Avatar
+                member={ { id: member.id, username: member.username, colour: member.colour, avatarData: member.avatarData, sessionTopicContext: sessionTopicContext, online: true, edit: false } }
+                specificId={ 'msgAvatar' + message.id }  />
+              </span>
           </div>
         </div>
 
@@ -109,6 +124,7 @@ const mapStateToProps = (state) => {
     currentUser: state.members.currentUser,
     participants: state.members.participants,
     facilitator: state.members.facilitator,
+    modalWindows: state.modalWindows
   }
 };
 
