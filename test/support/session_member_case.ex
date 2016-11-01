@@ -91,16 +91,6 @@ defmodule KlziiChat.SessionMemberCase do
       |> Ecto.build_assoc(:subscription_preference, data: subscription_preference_data)
       |> Repo.insert!
 
-    session = %Session{
-      name: "cool session",
-      startTime: Timex.now,
-      endTime: Timex.shift(Timex.now, days: 7),
-      accountId: account.id,
-      timeZone: Timex.now |> Timex.format!( "%Z", :strftime),
-      status: "open",
-      type: "focus"
-    } |> Repo.insert!
-
     contact_list = %ContactList{
       name: "participant list",
       role: "participant",
@@ -113,8 +103,16 @@ defmodule KlziiChat.SessionMemberCase do
       customFields: ["something 1", "something 2", "something 3"],
     }|> Repo.insert!
 
-    Ecto.Changeset.change(session, participantListId: contact_list.id)
-    |> Repo.update()
+    session = %Session{
+      name: "cool session",
+      startTime: Timex.now,
+      endTime: Timex.shift(Timex.now, days: 7),
+      accountId: account.id,
+      timeZone: Timex.now |> Timex.format!( "%Z", :strftime),
+      status: "open",
+      type: "focus",
+      participantListId: contact_list.id,
+    } |> Repo.insert!
 
     [
       account_user_account_manager,

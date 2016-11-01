@@ -76,7 +76,7 @@ defmodule KlziiChat.Services.Reports.Types.Votes.Formats.TxtTest do
     test "session report", %{session_report_data: session_report_data} do
       assert({:ok, stream} = Votes.Formats.Txt.processe_data(session_report_data))
       data =  Enum.to_list(stream)
-      assert(length(data) == 1)
+      assert(length(data) == 3)
     end
   end
 

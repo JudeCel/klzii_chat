@@ -4,11 +4,14 @@ defmodule KlziiChat.ContactListUserView do
   def render("report.json", %{contact_list_user: contact_list_user})do
     %{
       id: contact_list_user.id,
+      account_user: Phoenix.View.render_one(account_user(contact_list_user.account_user), KlziiChat.AccountUserView, "show.json", as: :account_user),
       customFields: contact_list_user.customFields
     }
   end
 
   defp contact_list_users(%{__struct__: Ecto.Association.NotLoaded}), do: []
   defp contact_list_users(contact_list_users), do: contact_list_users
+  defp account_user(%{__struct__: Ecto.Association.NotLoaded}), do: nil
+  defp account_user(account_user), do: account_user
 
 end

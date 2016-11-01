@@ -1,6 +1,5 @@
 defmodule KlziiChat.Services.Reports.Types.Messages.Formats.Csv do
-  alias KlziiChat.Decorators.MessageDecorator
-  alias KlziiChat.Helpers.DateTimeHelper
+  alias KlziiChat.Services.Reports.Types.Messages.DataContainer
 
   @spec processe_data(Map.t) :: {String.t}
   def processe_data(data) do
@@ -12,37 +11,20 @@ defmodule KlziiChat.Services.Reports.Types.Messages.Formats.Csv do
     session = get_in(data, ["session"])
     default_fields = get_in(data, ["default_fields"])
     [session_topic |_ ] = get_in(data, ["session_topics"])
-
     stream =
       session_topic.messages
-      |> Stream.map(&get_data(&1, session, default_fields))
+      |> Enum.map(&get_data(&1, session, default_fields))
       |> CSV.encode(headers: default_fields)
     {:ok, stream}
   end
 
   @spec get_data(Map.t,  Map.t, List.T) :: List.t
   def get_data(message, session, default_fields) do
+    {:ok, container} = DataContainer.start_link(session.participant_list)
+
     Enum.map(default_fields, fn(field) ->
-      {field, get_value_for_message(field, message, session)}
+      {field, DataContainer.get_value(field, message, session, container)}
     end)
     |> Enum.into(%{})
   end
-
-  def get_value_for_message("First Name", %{session_member: %{username: username}}, _) do
-    username
-  end
-  def get_value_for_message("Comment", %{body: body}, _) do
-    body
-  end
-  def get_value_for_message("Date", %{createdAt: createdAt}, %{timeZone: time_zone}) do
-    DateTimeHelper.report_format(createdAt, time_zone)
-  end
-  def get_value_for_message("Is Reply", %{replyLevel: 0},_), do: to_string(true)
-  def get_value_for_message("Is Reply", _,_), do: to_string(false)
-  def get_value_for_message("Emotion", %{emotion: emotion},_) do
-    {:ok, emotion_name} = MessageDecorator.emotion_name(emotion)
-    emotion_name
-  end
-  def get_value_for_message("Is Star", %{star: star}, _), do: to_string(star)
-
 end

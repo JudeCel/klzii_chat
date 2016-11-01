@@ -1,6 +1,5 @@
 defmodule KlziiChat.Services.Reports.Types.Votes.Formats.Txt do
-  alias KlziiChat.Decorators.MessageDecorator
-  alias KlziiChat.Helpers.DateTimeHelper
+  alias KlziiChat.Services.Reports.Types.Votes.DataContainer
 
   @spec processe_data(Map.t) :: {String.t}
   def processe_data(data) do
@@ -16,34 +15,19 @@ defmodule KlziiChat.Services.Reports.Types.Votes.Formats.Txt do
     header = "#{session.name} / #{session_topic.name}\r\n\r\n"
 
     stream =
-      session_topic.messages
-      |> Stream.map(&get_data(&1, session, default_fields))
+      session_topic.mini_surveys
+      |> Enum.map(&get_data(&1, session, default_fields))
 
-    {:ok, Stream.concat([header], stream)}
+    {:ok, Enum.concat([header], stream)}
   end
 
   @spec get_data(Map.t,  Map.t, List.T) :: List.t
-  def get_data(message, session, default_fields) do
+  def get_data(mini_survey, session, default_fields) do
+    {:ok, container} = DataContainer.start_link(session.participant_list)
+
     row = Enum.map(default_fields, fn(field) ->
-      get_value(field, message, session)
+      DataContainer.get_value(field, mini_survey, session, container)
     end) |> Enum.join(", ")
     [row <> "\r\n\r\n"]
-  end
-
-  def get_value("First Name", _, _) do
-    "First Name"
-  end
-  def get_value("Title", %{title: title}, _) do
-    title
-  end
-  def get_value("Question", %{question: question}, _) do
-    question
-  end
-  def get_value("Answer", _, _) do
-    "Answer"
-  end
-  def get_value("Date", _, %{timeZone: time_zone}) do
-    "Answer createdAt"
-    # DateTimeHelper.report_format(createdAt, time_zone)
   end
 end

@@ -52,7 +52,7 @@ defmodule KlziiChat.ReportView do
       },
       fields: %{
         # custom: contact_list.customFields
-        custom: ["City", "State", "Country", "Random1", "Random2"]
+        custom: ["city", "state", "country", "random1", "random2"]
       },
       includes: %{
         facilitator: true

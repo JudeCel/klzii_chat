@@ -45,7 +45,9 @@ defmodule KlziiChat.Services.Reports.Types.Messages.Base do
   def get_session(%{sessionId: session_id} = report) do
     session = from(s in Session,  where: s.id == ^session_id)
       |> Repo.one
-      |> Repo.preload([:account, :brand_logo, :brand_project_preference, [participant_list: [:contact_list_users]] ])
+      |> Repo.preload([:account, :brand_logo, :brand_project_preference,
+          [participant_list: [contact_list_users: [:account_user]]] ]
+        )
       |> Phoenix.View.render_one(SessionView, "report.json", as: :session)
     {:ok, session}
   end
