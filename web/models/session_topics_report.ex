@@ -24,7 +24,9 @@ defmodule KlziiChat.SessionTopicsReport do
   """
   def changeset(model, params \\ %{}) do
     model
-    |> cast(params, [:sessionId, :sessionTopicId, :type, :includes, :name, :format, :status, :message, :includeFields])
+    |> cast(params, [:resourceId, :sessionId, :sessionTopicId, :type, :includes,
+      :name, :format, :status, :message, :includeFields]
+    )
     |> validate_length(:includeFields, max: 4)
   end
 end

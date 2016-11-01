@@ -99,8 +99,9 @@ defmodule KlziiChat.Services.SessionReportingService do
   end
 
   def normalize_name(name) do
-    String.replace(name, " ", "_")
+    String.replace(name, " ", "_") <> to_string(:os.system_time(:second))
   end
+  
   @spec get_report_name(Map.t, String.t) :: {:ok, String.t}
   def get_report_name(%{"type" => "messages"}, session), do: {:ok, "Messages Report #{session.name}" |> normalize_name}
   def get_report_name(%{"type" => "messages_stars_only"}, session), do: {:ok, "Messages Report #{session.name}" |> normalize_name}

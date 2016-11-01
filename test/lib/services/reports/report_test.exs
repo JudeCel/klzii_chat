@@ -16,10 +16,20 @@ defmodule KlziiChat.Services.Reports.ReportTest do
   end
 
   describe "run " do
-    test "success", %{pdf_report: pdf_report, csv_report: csv_report, txt_report: txt_report} do
-      assert({:ok, _} = Report.run(pdf_report.id))
-      assert({:ok, _} = Report.run(csv_report.id))
-      assert({:ok, _} = Report.run(txt_report.id))
+    test "success pdf", %{pdf_report: pdf_report} do
+      assert({:ok, report} = Report.run(pdf_report.id))
+      assert(is_integer(report.resourceId))
+    end
+
+    test "success csv", %{csv_report: csv_report} do
+      assert({:ok, report} = Report.run(csv_report.id))
+      assert(is_integer(report.resourceId))
+
+    end
+
+    test "success text", %{txt_report: txt_report} do
+      assert({:ok, report} = Report.run(txt_report.id))
+      assert(is_integer(report.resourceId))
     end
   end
 
