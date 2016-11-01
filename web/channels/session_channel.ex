@@ -76,7 +76,6 @@ defmodule KlziiChat.SessionChannel do
   end
 
   def handle_in("create_session_topic_report", payload, socket) do
-    IO.inspect payload
     case SessionReportingService.create_report(get_session_member(socket).id, payload) do
       {:ok, report} ->
         {:reply, {:ok, SessionTopicsReportView.render("show.json", %{report: report})}, socket}

@@ -107,7 +107,7 @@ defmodule KlziiChat.SessionChannelTest do
     assert_reply(ref, :ok, %{sessionTopicId: ^session_topic_1_id, status: "progress"})
   end
 
-  test "delete session topic report", %{socket: socket, channel_name: channel_name, session: session, session_topic_1: session_topic_1} do
+  test "delete session topic report", %{socket: socket, channel_name: channel_name, session_topic_1: session_topic_1} do
     {:ok, _, socket} = join(socket, SessionChannel, channel_name)
 
     payload =  %{"sessionTopicId" => session_topic_1.id, "format" => "txt", "type" => "messages" }
@@ -117,7 +117,7 @@ defmodule KlziiChat.SessionChannelTest do
     assert_reply(del_ref, :ok, _)
   end
 
-  test "recreate session topic report", %{socket: socket, channel_name: channel_name, session: session, session_topic_1: session_topic_1} do
+  test "recreate session topic report", %{socket: socket, channel_name: channel_name, session_topic_1: session_topic_1} do
     {:ok, _, socket} = subscribe_and_join(socket, SessionChannel, channel_name)
 
     payload =  %{"sessionTopicId" => session_topic_1.id, "format" => "txt", "type" => "messages" }
@@ -128,7 +128,7 @@ defmodule KlziiChat.SessionChannelTest do
     assert_reply(ref, :ok, %{status: "progress"})
   end
 
-  test "get session topics reports", %{socket: socket, channel_name: channel_name, session: session, session_topic_1: session_topic_1} do
+  test "get session topics reports", %{socket: socket, channel_name: channel_name, session_topic_1: session_topic_1} do
     {:ok, _, socket} = join(socket, SessionChannel, channel_name)
 
     payload =  %{"sessionTopicId" => session_topic_1.id, "format" => "txt", "type" => "messages" }
