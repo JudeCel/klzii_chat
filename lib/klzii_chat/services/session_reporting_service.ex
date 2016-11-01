@@ -77,7 +77,7 @@ defmodule KlziiChat.Services.SessionReportingService do
          {:ok, report_name} <- get_report_name(payload, session_member.session),
          {:ok, report} <- create_record(session_member.sessionId, Map.put(payload, "name", report_name)),
          {:ok, _} <- background_task(report),
-    do:  {:ok, report}
+    do:  {:ok, Repo.preload(report, [:resource])}
   end
 
   def background_task(report) do
@@ -87,8 +87,6 @@ defmodule KlziiChat.Services.SessionReportingService do
       _ ->
         Exq.enqueue(Exq, "report", KlziiChat.BackgroundTasks.Reports.SessionTopicReport, [report.id])
     end
-
-
   end
 
   @spec create_record(Integer, Map.t) :: {atom, Map.t}
