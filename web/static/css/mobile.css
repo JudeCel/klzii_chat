@@ -954,8 +954,23 @@
 }
 
 @media (max-device-width: 767px) and (orientation: portrait) {
-  body.modal-open {
+  body {
     height: 100%;
+    position: fixed;
+  }
+
+  .container-fluid, #chat-app-container, main#main_container, main#main_container > div, div.col-md-12.room-section, .room-section > div.row {
+    height: 100%;
+  }
+
+  .room-section > div.row > .col-md-4 {
+    height: calc(100% - 185px);
+     padding-bottom: 0;
+     margin-bottom: 0;
+  }
+
+  div.row.room-outerbox {
+    height: calc(100% - 27px);
   }
 
   body.modal-open .fade.in.modal {
@@ -1006,6 +1021,9 @@
   }
   .console-section {
     padding-left: 0;
+    position: fixed;
+    bottom: 55px;
+    top: auto;
   }
 
   .room-section .console-section ul.icons {
@@ -1016,5 +1034,18 @@
 
   div.inmplayer-launcher.inmplayer-launcher-topic.null {
     display: none !important;
+  }
+
+  .room-section {
+    padding-top: 0 !important;
+  }
+
+
+  .mobile-side-menu {
+    height: 100% !important;
+  }
+
+  .mobile-side-menu .mobile-side-menu-content {
+    height: 100%;
   }
 }
