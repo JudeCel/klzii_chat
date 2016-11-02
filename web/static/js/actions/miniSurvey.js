@@ -47,9 +47,11 @@ const Actions = {
   },
   getConsole:(channel, surveyId, callback) => {
     return dispatch => {
+      dispatch({ type: Constants.MODAL_POST_DATA });
       channel.push('show_mini_survey', { id: surveyId })
       .receive('ok', (data) => {
         dispatch({ type: Constants.SET_CONSOLE_SURVEY, data: data });
+        dispatch({ type: Constants.MODAL_POST_DATA_DONE });
         if(callback) callback();
       }).receive('error', (errors) => {
         NotificationActions.showErrorNotification(dispatch, errors);
