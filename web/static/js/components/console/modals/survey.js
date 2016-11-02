@@ -39,9 +39,12 @@ const SurveyConsole = React.createClass({
     this.onEnterModal(e);
     dispatch(MiniSurveyActions.getConsole(channel, sessionTopicConsole.data.mini_survey_id));
   },
+  surveyNotAnswered(survey) {
+    return !(this.props.survey && this.props.survey.mini_survey_answer);
+  },
   showContent(survey) {
     if(survey.id) {
-      if(this.hasPermission(['console', 'can_vote_mini_survey'])) {
+      if(this.hasPermission(['console', 'can_vote_mini_survey']) && this.surveyNotAnswered()) {
         return <SurveyAnswer type={ survey.type } afterChange={ this.afterChange } />
       }
       else {
@@ -55,7 +58,7 @@ const SurveyConsole = React.createClass({
     dispatch(MiniSurveyActions.viewAnswers(channel, survey.id));
   },
   canAnswer() {
-    if(this.hasPermission(['console', 'can_vote_mini_survey'])) {
+    if(this.hasPermission(['console', 'can_vote_mini_survey']) && this.surveyNotAnswered()) {
       return <span className='pull-right fa fa-check' onClick={ this.answer }></span>
     }
   },
