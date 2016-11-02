@@ -12,6 +12,19 @@ defmodule KlziiChat.SessionMembersView do
     }
   end
 
+  def render("memberfull.json", %{member: member}) do
+    %{id: member.id,
+      username: member.username,
+      colour: member.colour,
+      avatarData: member.avatarData,
+      sessionTopicContext: member.sessionTopicContext,
+      role: member.role,
+      currentTopic: member.currentTopic,
+      firstName: member.account_user.firstName,
+      lastName: member.account_user.lastName
+    }
+  end
+
   def render("status.json", %{ member: member}) do
     %{
       id: member.id,
@@ -52,7 +65,7 @@ defmodule KlziiChat.SessionMembersView do
     accumulator = %{"facilitator" => %{}, "observer" =>  [], "participant" => []}
 
     Enum.reduce(members, accumulator, fn (member, acc) ->
-      member_map = render("member.json", %{ member: member})
+      member_map = render("memberfull.json", %{ member: member})
       case Map.get(acc, member.role) do
         value when is_map(value) ->
           Map.put(acc, member.role, member_map)

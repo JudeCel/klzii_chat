@@ -22,6 +22,25 @@ const Select = React.createClass({
       </span>
     )
   },
+  renderIconUsers() {
+
+    const { session } = this.props;
+    if(!this.isFacilitator(this.props.currentUser) || session.type != 'forum') return;
+
+    let onlineParticipantsCount = 0;
+    for (let i=0; i<this.props.participants.length; i++) {
+      if (this.props.participants[i].online) {
+        onlineParticipantsCount++;
+      }
+    }
+
+    return (
+      <span className='users-section' onClick={ this.openSpecificModal.bind(this, 'participantList') }>
+        <span className='fa fa-users' />
+        { onlineParticipantsCount }
+      </span>
+    )
+  },
   renderTopicSign() {
     let current = this.getCurrentSessionTopic();
 
@@ -105,6 +124,7 @@ const Select = React.createClass({
             </li>
           </ul>
           { this.renderIconEye() }
+          { this.renderIconUsers() }
           { this.renderTopicSign() }
         </div>
       </div>
@@ -119,6 +139,7 @@ const mapStateToProps = (state) => {
     unread_messages: state.messages.unreadMessages,
     session: state.chat.session,
     observers: state.members.observers,
+    participants: state.members.participants,
     channel: state.sessionTopic.channel,
     current: state.sessionTopic.current,
     sessionTopics: state.sessionTopic.all,

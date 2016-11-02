@@ -9,6 +9,7 @@ const initialState = {
   whiteboardText: false,
   whiteboardImage: false,
   observerList: false,
+  participantList: false,
   postData: false,
   currentModalData: {}
 };

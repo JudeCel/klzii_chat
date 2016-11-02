@@ -71,7 +71,8 @@ defmodule KlziiChat.Services.SessionMembersService do
     query =
       from sm in SessionMember,
         where: sm.sessionId == ^session_id,
-        order_by: sm.id
+        order_by: sm.id,
+        preload: [:account_user]
     result = Repo.all(query)
     {:ok, group_by_role(result)}
   end

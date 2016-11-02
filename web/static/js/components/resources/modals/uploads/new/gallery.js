@@ -3,62 +3,18 @@ import { connect }        from 'react-redux';
 import Pagination         from "react-js-pagination";
 import Actions            from '../../../../../actions/session_resource';
 import UploadTypes        from './../types/index';
+import mixins             from '../../../../../mixins';
 
 const GalleryNew = React.createClass({
+  mixins: [mixins.paginationHelper],
   getInitialState() {
     return { selected: [], page: 1 };
   },
+  componentDidUpdate() {
+    setTimeout(() => { this.initPaginatorButton('galleryPaginator') }, 0);
+  },
   componentDidMount() {
     this.loadResources();
-  },
-  initPaginatorButton() {
-    let { page } = this.state;
-    const { pages } = this.props;
-
-    var galleryPaginator = document.getElementById('galleryPaginator');
-    if (galleryPaginator) {
-      var el = galleryPaginator.getElementsByClassName('pagination')[0];
-      if (el) {
-        var oldElements = galleryPaginator.getElementsByClassName('paginatorFakeButton');
-        for(var i=oldElements.length-1; i>=0; i--) {
-          el.removeChild(oldElements[i]);
-        }
-        if (el.innerHTML.indexOf('⟨') < 0) {
-          let button = this.createPaginatorButtonElement('⟨', page > 1, 1);
-          el.insertBefore(button, el.firstChild);
-        }
-        if (el.innerHTML.indexOf('«') < 0) {
-          let button = this.createPaginatorButtonElement('«', page > 1, 1);
-          el.insertBefore(button, el.firstChild);
-        }
-        if (el.innerHTML.indexOf('⟩') < 0) {
-          let button = this.createPaginatorButtonElement('⟩', page < pages, pages);
-          el.appendChild(button);
-        }
-        if (el.innerHTML.indexOf('»') < 0) {
-          let button = this.createPaginatorButtonElement('»', page < pages, pages);
-          el.appendChild(button);
-        }
-      }
-    }
-  },
-  createPaginatorButtonElement(text, active, page) {
-    let liEl = document.createElement("li");
-    let aEl = document.createElement("a");
-    aEl.innerHTML = text;
-    if (active) {
-      aEl.href = "#";
-    }
-    liEl.appendChild(aEl);
-    liEl.className = "paginatorFakeButton";
-    if (active) {
-      liEl.onclick = () => {
-        this.pageChange(page);
-      };
-    } else {
-      liEl.className += " unactive"
-    }
-    return liEl;
   },
   isSelected(id) {
     return this.state.selected.includes(id);
@@ -98,7 +54,6 @@ const GalleryNew = React.createClass({
     data.page = page;
 
     dispatch(Actions.getGallery(currentUserJwt, data));
-    this.initPaginatorButton();
   },
   pageChange(pageNumber) {
     if (pageNumber != this.state.page) {

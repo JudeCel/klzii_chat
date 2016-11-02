@@ -17,6 +17,7 @@ import Notifications        from '../actions/notifications';
 import notificationMixin    from '../mixins/notification';
 import ReportsModal         from '../components/reports/modal';
 import ObserverListModal    from '../components/modals/observerList';
+import ParticipantListModal    from '../components/modals/participantList';
 import ReactToastr, { ToastContainer, ToastMessage } from 'react-toastr';
 var ToastMessageFactory     = React.createFactory(ToastMessage.animation);
 
@@ -87,6 +88,7 @@ const ChatView = React.createClass({
             <DirectMessageModal />
             <ReportsModal />
             <ObserverListModal />
+            <ParticipantListModal />
 
             { this.renderMainContent() }
 
