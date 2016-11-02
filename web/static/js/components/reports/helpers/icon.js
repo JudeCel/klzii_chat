@@ -1,5 +1,6 @@
 import React, {PropTypes} from 'react';
 import { connect }        from 'react-redux';
+import _                  from 'lodash';
 
 const ReportIcon = React.createClass({
   selectCorrectClassName(status, className) {
@@ -53,22 +54,15 @@ const ReportIcon = React.createClass({
     const { type, format, sessionTopicId, facilitator, reports } = this.props
     const flow = [sessionTopicId, format, type.typeName];
 
-    let object = {...reports};
-    for(var i = 0; i < flow.length; i++) {
-      object = object[flow[i]];
-      if(!object) break;
+    const tmpObject = {
+      format: format,
+      type: type.typeName,
+      sessionTopicId: sessionTopicId == "all" ? null : sessionTopicId,
+        includes: { facilitator: facilitator }
     }
+    
+    return _.get(reports, flow, tmpObject);
 
-    if (object) {
-      return object;
-    }else {
-      return {
-        format: format,
-        type: type.typeName,
-        sessionTopicId: this.props.sessionTopicId,
-          includes: { facilitator: facilitator }
-      }
-    }
   },
   render() {
     let { type, format } = this.props

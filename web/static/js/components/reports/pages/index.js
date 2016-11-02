@@ -21,9 +21,12 @@ const ReportsIndex = React.createClass({
     dispatch(ReportsActions.index(channel));
   },
   render() {
-    const { sessionTopics, reports, changePage, mapStruct } = this.props;
+    const { sessionTopics, reports, changePage, mapStruct, session } = this.props;
     const { types } = reports.mapStruct
     const { format, facilitator } = this.state;
+
+    let sessionTopicslist = [...sessionTopics];
+    sessionTopicslist.unshift({name: "All topics", id: "all"}); // Hack
 
     const reportFormatsOrder = ['pdf', 'csv', 'txt'];
     const reportTypes = [
@@ -33,7 +36,6 @@ const ReportsIndex = React.createClass({
       {name: 'votes', typeName: 'votes', typeData: types['votes']},
     ];
     const colMdSizes = { all: 2, star: 3, whiteboard: 3,  votes: 1 };
-
     return (
       <div className='reports-section'>
         <ul className='list-inline'>
@@ -68,7 +70,7 @@ const ReportsIndex = React.createClass({
           </thead>
           <tbody>
             {
-              sessionTopics.map((topic, tIndex) =>
+              sessionTopicslist.map((topic, tIndex) =>
                 <tr key={ topic.id }>
                   <td className='col-md-3'>{ topic.name }</td>
                   {
@@ -95,6 +97,7 @@ const mapStateToProps = (state) => {
   return {
     sessionTopics: state.chat.session.session_topics,
     channel: state.chat.channel,
+    session: state.chat.session,
     reports: state.reports
   }
 };

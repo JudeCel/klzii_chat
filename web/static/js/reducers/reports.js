@@ -12,7 +12,7 @@ export default function reducer(state = initialState, action = {}) {
 
     case Constants.SET_REPORT_MAP_STRUCT:
       return { ...state, mapStruct: action.mapStruct };
-      
+
     case Constants.CREATE_REPORT:
     case Constants.UPDATE_REPORT:
       return { ...state, data: { ...state.data, ...formatSingleReport(state, action.data) } };

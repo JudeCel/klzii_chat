@@ -9,7 +9,7 @@ defmodule KlziiChat.SessionTopicsReportView do
       format: report.format,
       message: report.message,
       sessionId: report.sessionId,
-      sessionTopicId: report.sessionTopicId,
+      sessionTopicId: report.sessionTopicId || "all",
       status: report.status,
       type: report.type,
       resourceId: report.resourceId,
@@ -17,29 +17,15 @@ defmodule KlziiChat.SessionTopicsReportView do
     }
   end
 
-  @doc """
-  Transforms ECTO query result (list of structs) into a nested maps for a JSON encoding.
-
-  Returns: Map
-
-  ## Examples
-      Function output:
-      %{
-        "9267" => %{
-          "pdf" => %{
-            "all" => %{facilitator: false, format: "pdf", id: 410,
-              message: nil, resource: nil, resourceId: nil, sessionId: 4634,
-              sessionTopicId: 9267, status: "progress", type: "all"},
-            "whiteboard" => %{facilitator: true, format: "pdf", id: 409, message: nil,
-              resource: nil, resourceId: nil, sessionId: 4634, sessionTopicId: 9267,
-              status: "progress", type: "whiteboard"}
-          }
-        }
-      }
-  """
   def render("reports.json", %{reports: reports}) do
     Enum.reduce(reports, Map.new, fn(report, acc) ->
-      session_topic_id = to_string(report.sessionTopicId)
+      session_topic_id =  case report.sessionTopicId do
+                            nil ->
+                              "all"
+                            id ->
+                              to_string(id)
+                          end
+
       format = report.format
       type = report.type
 
@@ -52,7 +38,7 @@ defmodule KlziiChat.SessionTopicsReportView do
           acc
         end
       else
-          Map.put(acc, session_topic_id, %{format => %{type => render("show.json", %{report: report})}})
+        Map.put(acc, session_topic_id, %{format => %{type => render("show.json", %{report: report})}})
       end
     end)
   end
