@@ -17,7 +17,7 @@ const ParticipantListModal = React.createClass({
       <div className='col-md-3' key={ participant.id }>
         <div className='fa fa-users'></div>
         <div className='participant-name'>
-          <div>{ participant.lastName } { participant.firstName }</div>
+          <div>{ participant.firstName } { participant.lastName }</div>
         </div>
       </div>
     );
