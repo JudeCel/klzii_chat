@@ -36,7 +36,7 @@ const ReportIcon = React.createClass({
         return this.props.changePage('failed', report);
       default:
         if(this.shouldShowCustomFields()) {
-          this.props.changePage('selectCustom', { format: this.props.format, type: this.props.type.name });
+          this.props.changePage('selectCustom', report);
         }
         else {
           return this.props.createReport(report);

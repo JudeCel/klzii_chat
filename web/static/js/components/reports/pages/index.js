@@ -13,7 +13,7 @@ const ReportsIndex = React.createClass({
   },
   createReport(params) {
     const { channel, dispatch } = this.props;
-    
+
     dispatch(ReportsActions.create(channel, params ));
   },
   componentDidMount() {
@@ -28,7 +28,7 @@ const ReportsIndex = React.createClass({
     const reportFormatsOrder = ['pdf', 'csv', 'txt'];
     const reportTypes = [
       {name: 'messages', typeName: 'messages', typeData: types['messages']},
-      {name: 'messages_stars_only', typeName: 'messages', typeData: types['messages']},
+      {name: 'messages_stars_only', typeName: 'messages_stars_only', typeData: types['messages_stars_only']},
       {name: 'whiteboards', typeName: 'whiteboards', typeData: types['whiteboards']},
       {name: 'votes', typeName: 'votes', typeData: types['votes']},
     ];

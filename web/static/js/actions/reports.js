@@ -49,7 +49,8 @@ const Actions = {
       });
     }
   },
-  csvWithCustomFields:(channel, customFields) => {
+  withCustomFields:(channel, report) => {
+    console.log(report);
     return dispatch => {
       console.error("+++++++++++++++++ #csvWithCustomFields");
     }

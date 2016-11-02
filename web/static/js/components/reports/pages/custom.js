@@ -6,8 +6,8 @@ import NotificationActions from '../../../actions/notifications';
 const ReportsCustom = React.createClass({
   onDownload() {
     const customFields = Object.keys(this.state.selected);
-    ReportsActions.csvWithCustomFields(this.props.channel, customFields);
-    console.log(this.props.report);
+    const report = {...this.props.report, customFields: customFields};
+    ReportsActions.withCustomFields(this.props.channel, report);
     this.props.changePage('index', this.props.report);
   },
   onActivate(field, e) {
