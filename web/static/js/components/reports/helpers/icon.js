@@ -36,7 +36,7 @@ const ReportIcon = React.createClass({
         return this.props.changePage('failed', report);
       default:
         if(this.shouldShowCustomFields()) {
-          this.props.changePage('selectCustom', { type: this.props.type.name });
+          this.props.changePage('selectCustom', { format: this.props.format, type: this.props.type.name });
         }
         else {
           return this.props.createReport(report);
@@ -47,7 +47,7 @@ const ReportIcon = React.createClass({
     const { type, format, mapStruct } = this.props;
 
     let structData = mapStruct.types[type.name];
-    return (format == 'txt' || format == 'csv') && structData.formats[format].render;
+    return structData.formats[format].custom_fields && structData.formats[format].render;
   },
   getReport() {
     const { type, format, sessionTopicId, facilitator, reports } = this.props
@@ -63,7 +63,6 @@ const ReportIcon = React.createClass({
       return object;
     }else {
       return {
-        scopes: type.scopes,
         format: format,
         type: type.typeName,
         sessionTopicId: this.props.sessionTopicId,

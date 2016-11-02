@@ -5,16 +5,15 @@ import ReportsActions     from '../../../actions/reports';
 
 const ReportsIndex = React.createClass({
   getInitialState() {
-    let { reports } = this.props
-    return { format: 'pdf', facilitator: reports.mapStruct.includes.facilitator };
+    const { reports, report } = this.props
+    return { format: ((report && report.format) || 'pdf'), facilitator: reports.mapStruct.includes.facilitator };
   },
   onChange(key, value) {
     this.setState({ [key]: value });
   },
   createReport(params) {
     const { channel, dispatch } = this.props;
-    const { sessionTopicId, format, type, facilitator } = params;
-
+    
     dispatch(ReportsActions.create(channel, params ));
   },
   componentDidMount() {
@@ -23,15 +22,15 @@ const ReportsIndex = React.createClass({
   },
   render() {
     const { sessionTopics, reports, changePage, mapStruct } = this.props;
-    const { types, includes, scopes } = reports.mapStruct
+    const { types } = reports.mapStruct
     const { format, facilitator } = this.state;
 
     const reportFormatsOrder = ['pdf', 'csv', 'txt'];
     const reportTypes = [
-      {name: 'messages', typeName: 'messages', typeData: types['messages'], scopes: {}},
-      {name: 'messages_stars_only', typeName: 'messages', typeData: types['messages'], scopes: { only: { star: true } } },
-      {name: 'whiteboards', typeName: 'whiteboards', typeData: types['whiteboards'], scopes: {}},
-      {name: 'votes', typeName: 'votes', typeData: types['votes'], scopes: {} },
+      {name: 'messages', typeName: 'messages', typeData: types['messages']},
+      {name: 'messages_stars_only', typeName: 'messages', typeData: types['messages']},
+      {name: 'whiteboards', typeName: 'whiteboards', typeData: types['whiteboards']},
+      {name: 'votes', typeName: 'votes', typeData: types['votes']},
     ];
     const colMdSizes = { all: 2, star: 3, whiteboard: 3,  votes: 1 };
 

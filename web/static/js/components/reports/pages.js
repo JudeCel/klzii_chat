@@ -10,7 +10,7 @@ const ReportsPages = React.createClass({
 
     switch (rendering) {
       case 'index':
-        return <SelectReport changePage={ changePage } mapStruct={ mapStruct } />
+        return <SelectReport changePage={ changePage } report={ report } mapStruct={ mapStruct } />
       case 'download':
         return <DownloadReport changePage={ changePage } report={ report } />
       case 'failed':

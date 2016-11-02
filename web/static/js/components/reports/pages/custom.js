@@ -3,19 +3,20 @@ import { connect }         from 'react-redux';
 import ReportsActions      from '../../../actions/reports';
 import NotificationActions from '../../../actions/notifications';
 
-const MAX_CUSTOM_FIELDS = 4;
-
 const ReportsCustom = React.createClass({
   onDownload() {
-    let customFields = Object.keys(this.state.selected);
+    const customFields = Object.keys(this.state.selected);
     ReportsActions.csvWithCustomFields(this.props.channel, customFields);
+    console.log(this.props.report);
+    this.props.changePage('index', this.props.report);
   },
   onActivate(field, e) {
     const { selected } = this.state;
+    const { mapStruct } = this.props
+    const selectedCount = Object.keys(selected).length;
 
-    let selectedCount = Object.keys(selected).length;
     if(e.target.checked) {
-      if(selectedCount >= MAX_CUSTOM_FIELDS) {
+      if(selectedCount >= mapStruct.max_default_fileds_count) {
         e.target.checked = false;
         this.setState({ limitReached: true });
       }
@@ -26,7 +27,7 @@ const ReportsCustom = React.createClass({
     }
     else {
       delete selected[field];
-      this.setState({ selected, limitReached: (selectedCount-1) >= MAX_CUSTOM_FIELDS });
+      this.setState({ selected, limitReached: (selectedCount-1) >= mapStruct.max_default_fileds_count });
     }
   },
   showDefaultColumns() {
@@ -41,10 +42,11 @@ const ReportsCustom = React.createClass({
     this.componentDidUpdate();
   },
   componentDidUpdate(props, state) {
-    this.props.reference.title.innerText = 'Manage Columns in View';
+    const { mapStruct, dispatch, reference } = this.props
+    reference.title.innerText = 'Manage Columns in View';
     if(this.state.limitReached && state.limitReached != this.state.limitReached) {
-      let errorMessage = `You can select not more than ${MAX_CUSTOM_FIELDS} additional custom fields in your report`;
-      NotificationActions.showErrorNotification(this.props.dispatch, [errorMessage]);
+      let errorMessage = `You can select not more than ${mapStruct.max_default_fileds_count} additional custom fields in your report`;
+      NotificationActions.showErrorNotification(dispatch, [errorMessage]);
     }
   },
   render() {
@@ -56,7 +58,7 @@ const ReportsCustom = React.createClass({
         <div>Your report will include the following default Columns:</div>
         <div><strong>{ this.showDefaultColumns() }</strong></div>
         <br />
-        <div>You can also select up to 4 additional Columns</div>
+        <div>You can also select up to {mapStruct.max_default_fileds_count} additional Columns</div>
 
         <div>
           {mapStruct.fields.custom.map((field, index) =>

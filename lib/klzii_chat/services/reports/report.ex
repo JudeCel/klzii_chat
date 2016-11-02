@@ -45,11 +45,17 @@ defmodule KlziiChat.Services.Reports.Report do
       "type" => "file",
       "accountId" => preload_report.session.accountId,
       "scope" => to_string(report.format),
-      "file" => report_file_path,
       "name" => report.name
     }
     Resource.report_changeset(%Resource{}, upload_params)
     |> Repo.insert
+    |>  case  do
+          {:ok, resource} ->
+            Resource.report_changeset(resource, %{"file" => report_file_path})
+            |> Repo.update
+          {:error, reason} ->
+            {:error, reason}
+        end
   end
 
   def select_type("messages"), do: {:ok, Messages.Base}
