@@ -240,6 +240,27 @@ body
       padding: 0px
     .message-section
       margin: 0
+      &.unread
+        padding-left: 5px
+        background-color: #669dd3 !important
+        >.media-body
+          >.media-heading
+            .pull-left, .pull-right small
+              color: #fff !important
+            .pull-right
+              padding-right: 5px
+          >.body-section
+            width: calc(100% - 5px)
+            @media (max-width: 767px)
+              width: calc(100% - 32px)
+          >.action-section
+            padding-right: 5px
+            i
+              color: #fff !important
+        >.reply-section
+          margin-left: -5px
+      .message-section
+        margin-left: 55px
       .emotion-chat-section
         display: table-cell
         &.media-top.push-image
@@ -269,9 +290,6 @@ body
             opacity: 0.8
           small
             font-size: 15px
-      .message-section
-        @media (min-width: 992px)
-          margin-left: -29px
   .participants-section
     margin-left: 20px
     margin-top: 20px

@@ -17,6 +17,7 @@ const Messages = React.createClass({
   },
   render() {
     const { messages } = this.props;
+      console.log(this.props);
 
     return (
       <div className='chat-section'>

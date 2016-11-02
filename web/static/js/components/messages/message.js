@@ -20,12 +20,12 @@ const Message = React.createClass({
     if(message.replies.length == 0) {
       return;
     } else {
-      const { currentUser, participants, facilitator, modalWindows } = this.props;
+      const { currentUser, participants, facilitator, modalWindows, mainBackgroundColor } = this.props;
       return (
-        <div className='col-md-12 remove-side-margin pull-right'>
+        <div className='reply-section' style={{ backgroundColor: mainBackgroundColor }}>
           {
             message.replies.map((reply) =>
-              <Message key={ reply.id } message={ reply } currentUser={ currentUser } participants={ participants } facilitator={ facilitator }  modalWindows={ modalWindows } dispatch={this.props.dispatch }/>
+              <Message key={ reply.id } message={ reply } currentUser={ currentUser } participants={ participants } facilitator={ facilitator }  modalWindows={ modalWindows } dispatch={ this.props.dispatch } mainBackgroundColor={ mainBackgroundColor }/>
             )
           }
         </div>
@@ -77,9 +77,9 @@ const Message = React.createClass({
     let className = this.canWritePrivateMessage(member) ? 'cursor-pointer' : '';
 
     return (
-      <div className='message-section media'>
+      <div className={ 'message-section media' + (message.id == 2 || message.id == 10 ? " unread" : "") }>
         <div className={ this.mediaImagePosition(message) }>
-          <div className={ 'emotion-chat-' + message.emotion } aria-hidden='true' style={{ backgroundColor: member.colour }}/>
+          <div className={ 'emotion-chat-' + message.emotion } aria-hidden='true' style={{ backgroundColor: member.colour }}></div>
           <div className='emotion-chat-avatar'>
             <span onClick={ this.privateMessage.bind(this, member) } className={className}>
               <Avatar
@@ -111,9 +111,9 @@ const Message = React.createClass({
             <EditMessage    permission={ can_edit }   message={ message } />
             <DeleteMessage  permission={ can_delete } message={ message } />
           </div>
-
-          { this.shouldShowRepliedMessages(message) }
         </div>
+
+        { this.shouldShowRepliedMessages(message) }
       </div>
     )
   }
@@ -124,7 +124,8 @@ const mapStateToProps = (state) => {
     currentUser: state.members.currentUser,
     participants: state.members.participants,
     facilitator: state.members.facilitator,
-    modalWindows: state.modalWindows
+    modalWindows: state.modalWindows,
+    mainBackgroundColor: state.chat.session.colours.mainBackground || state.mainBackgroundColor
   }
 };
 

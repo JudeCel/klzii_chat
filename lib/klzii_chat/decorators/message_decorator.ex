@@ -13,6 +13,11 @@ defmodule KlziiChat.Decorators.MessageDecorator do
     Enum.count(votes)
   end
 
+  @spec is_unread(List.t, Integer.t) :: Boolean.t
+  def is_unread(unread_messages, session_member_id) do
+    Enum.any?(unread_messages, &(&1.sessionMemberId == session_member_id))
+  end
+
   @spec has_voted(List.t, Integer.t) :: Boolean.t
   def has_voted(votes, session_member_id) do
     Enum.any?(votes, &(&1.sessionMemberId == session_member_id))

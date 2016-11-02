@@ -325,6 +325,7 @@
     margin-left: -20px;
     margin-top: -34px;
     padding-top: 0px !important;
+    margin-bottom: -100px;
   }
 
   .facilitator-section .outerbox {
@@ -832,7 +833,7 @@
   }
 
   .type-forum .room-section-right .chat-section {
-    height: calc(100vh - 265px);
+    height: calc(100vh - 260px);
   }
 
   .type-forum .room-section-left .console-section {
@@ -875,7 +876,7 @@
     padding: 0px;
   }
 
-  .room-section .chat-section .media-body .media-body .message-section .body-section {
+  .room-section .chat-section .message-section .message-section .media-body .message-section .body-section {
     clear: both;
   }
 }

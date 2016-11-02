@@ -20,6 +20,7 @@ defmodule KlziiChat.MessageView do
       end),
       votes_count: MessageDecorator.votes_count(message.votes),
       has_voted: MessageDecorator.has_voted(message.votes, member.id),
+      unread: MessageDecorator.is_unread(message.unread_messages, member.id),
       permissions: %{
         can_edit: MessagePermissions.can_edit(member, message) |> to_boolean,
         can_delete: MessagePermissions.can_delete(member, message) |> to_boolean,
