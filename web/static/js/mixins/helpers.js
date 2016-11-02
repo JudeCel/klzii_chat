@@ -82,6 +82,10 @@ const helpers = {
   sort(data, field) {
     data.sort(function(a,b) {return (a[field] > b[field]) ? 1 : ((b[field] > a[field]) ? -1 : 0);} );
     return data;
+  },
+  sortByString(data, field) {
+    data.sort(function(a,b) {return ((a[field] || '').toLowerCase() > (b[field] || '').toLowerCase()) ? 1 : (((b[field] || '').toLowerCase() > (a[field] || '').toLowerCase()) ? -1 : 0);} );
+    return data;
   }
 };
 

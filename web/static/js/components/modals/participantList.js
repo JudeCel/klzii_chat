@@ -34,7 +34,7 @@ const ParticipantListModal = React.createClass({
     }
 
     if (onlineParticipants.length) {
-      onlineParticipants = this.sort(onlineParticipants, 'lastName');
+      onlineParticipants = this.sortByString(onlineParticipants, 'lastName');
       let startIndex = (this.state.page - 1) * USERS_PER_PAGE;
       let endIndex = startIndex + USERS_PER_PAGE;
       let onlineParticipantsDisplay = onlineParticipants.slice(startIndex, endIndex);
