@@ -23,7 +23,9 @@ const Select = React.createClass({
     )
   },
   renderIconUsers() {
-    if(!this.isFacilitator(this.props.currentUser)) return;
+
+    const { session } = this.props;
+    if(!this.isFacilitator(this.props.currentUser) || session.type != 'forum') return;
 
     let onlineParticipantsCount = 0;
     for (let i=0; i<this.props.participants.length; i++) {
