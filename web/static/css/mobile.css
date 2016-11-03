@@ -116,7 +116,7 @@
   .emotion-chat-avatar {
     height: 52px;
     width: 52px;
-    margin-left: -5px;
+    margin-left: -1px;
   }
 
   .direct-message-modal .direct-message-section .messages-section .unread-separator hr {
@@ -322,8 +322,8 @@
 
   .message-section svg {
     transform: scale(0.5) translate(-37.5px, -37.5px);
-    margin-left: -20px;
-    margin-top: -34px;
+    margin-left: -20px !important;
+    margin-top: -30px !important;
     padding-top: 0px !important;
     margin-bottom: -100px;
   }
