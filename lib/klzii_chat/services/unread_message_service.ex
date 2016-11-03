@@ -114,7 +114,7 @@ defmodule KlziiChat.Services.UnreadMessageService do
   end
   def update_session_topic_map(_, val), do: val
 
-  @spec insert_offline_records(List.t, %Message{}) :: {Iinteger.t, nil | [term]}
+  @spec insert_offline_records(List.t, %Message{}) :: {Integer.t, nil | [term]}
   def insert_offline_records(session_member_ids, message) do
     offline_messages = Enum.map(session_member_ids, fn id ->
       scope = case message.reply do
@@ -135,10 +135,9 @@ defmodule KlziiChat.Services.UnreadMessageService do
     Repo.get_by!(Message, id: message_id) |> Repo.preload([:reply, session_topic: [:session]])
   end
 
-  @spec delete_unread_messages_for_topic(String.t, String.t) :: {Integer.t, nil | [term]}
-  def delete_unread_messages_for_topic(session_mmeber_id, session_topic_id) do
-    from(om in UnreadMessage, where: om.sessionMemberId == ^session_mmeber_id,  where: om.sessionTopicId == ^session_topic_id)
-      |> Repo.delete_all
+  @spec delete(Integer.t, Integer.t) :: :ok
+  def delete(session_member_id, id) do
+    from(um in UnreadMessage, where: um.sessionMemberId == ^session_member_id,  where: um.messageId == ^id)|> Repo.delete_all
   end
 
   @spec get_all_session_members(Integer.t) :: List.t

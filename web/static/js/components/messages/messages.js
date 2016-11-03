@@ -17,10 +17,9 @@ const Messages = React.createClass({
   },
   render() {
     const { messages } = this.props;
-      console.log(this.props);
 
     return (
-      <div className='chat-section'>
+      <div className='chat-section' id='chatSection'>
         {
           messages.map((message) =>
             <Message key={ message.id } message={ message } />

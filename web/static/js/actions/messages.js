@@ -69,6 +69,7 @@ const Actions = {
       channel.on("update_message", (resp) =>{
         return update_message(dispatch, resp);
       });
+      
     }
   },
   sendMessage: (channel, inputState) => {
@@ -90,6 +91,11 @@ const Actions = {
         NotificationActions.showErrorNotification(dispatch, errors);
       });
     };
+  },
+  readMessage:(channel, messageId) => {
+    return dispatch => {
+      channel.push('read_message', { id: messageId });
+    }
   },
   messageStar: (channel, payload) => {
     return dispatch => {

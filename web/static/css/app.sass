@@ -240,25 +240,18 @@ body
       padding: 0px
     .message-section
       margin: 0
-      &.unread
+      .read
+        transition: 0.5s
+      .unread
         padding-left: 5px
+        padding-right: 5px
         background-color: #669dd3 !important
         >.media-body
           >.media-heading
             .pull-left, .pull-right small
               color: #fff !important
-            .pull-right
-              padding-right: 5px
-          >.body-section
-            width: calc(100% - 5px)
-            @media (max-width: 767px)
-              width: calc(100% - 32px)
-          >.action-section
-            padding-right: 5px
-            i
-              color: #fff !important
-        >.reply-section
-          margin-left: -5px
+          >.action-section i
+            color: #fff !important
       .message-section
         margin-left: 55px
       .emotion-chat-section
