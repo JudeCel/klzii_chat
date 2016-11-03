@@ -187,6 +187,9 @@ body.modal-open
       margin-top: 96px !important
     @media (max-width: 1119px)
       margin-top: 94px !important
+.modal-section-confirm
+  .modal-content
+    border: 2px solid #4a9b72 !important
 .modal-section
   margin-top: 130px
   .modal-backdrop
@@ -194,6 +197,18 @@ body.modal-open
   .modal-content
     @extend .no-border-radius
     border: 2px solid
+    .modal-footer
+      .centered-body-text
+        text-align: center
+        padding-bottom: 10px
+      .cancel-button
+        color: $header-red
+        border: 2px solid $header-red
+        padding: 10px
+      .confirm-button
+        color: $green
+        border: 2px solid $green
+        padding: 10px
     .modal-header
       .fa
         @extend .cursor-pointer
