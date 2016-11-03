@@ -23,9 +23,12 @@ defmodule KlziiChat.Services.Reports.Types.Votes.Formats.Csv do
   def get_data(mini_survey, session, fields) do
     {:ok, container} = DataContainer.start_link(session.participant_list)
 
-    Stream.map(fields, fn(field) ->
-      {field, DataContainer.get_value(field, mini_survey, session, container)}
+    Enum.map(mini_survey.mini_survey_answers, fn(answer) ->
+      Enum.map(fields, fn(field) ->
+        {field, DataContainer.get_value(field, mini_survey, answer, session, container)}
+      end)
     end)
+    |> List.flatten
     |> Enum.into(%{})
   end
 end

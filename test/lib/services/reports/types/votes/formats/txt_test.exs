@@ -55,7 +55,7 @@ defmodule KlziiChat.Services.Reports.Types.Votes.Formats.TxtTest do
 
     topic_report_payload =  %{"sessionTopicId" => session_topic.id, "format" => "txt",
       "type" => "votes",
-      "customFildes" =>  Enum.take(contact_list.customFields, 4)
+      "includeFields" => Enum.concat(["city", "state"], Enum.take(contact_list.customFields, 2))
     }
 
     {:ok, topic_report} = SessionReportingService.create_report(facilitator.id, topic_report_payload)
@@ -85,7 +85,7 @@ defmodule KlziiChat.Services.Reports.Types.Votes.Formats.TxtTest do
       session = get_in(data, ["session"])
       fields = get_in(data, ["fields"])
       [session_topic |_ ] = get_in(data, ["session_topics"])
-      [mini_survey | _ ] = session_topic.mini_surveys
+      [_ | [mini_survey] ] = session_topic.mini_surveys
       result = Votes.Formats.Txt.get_data(mini_survey, session, fields)
       {:ok, result: result, fields: fields}
     end

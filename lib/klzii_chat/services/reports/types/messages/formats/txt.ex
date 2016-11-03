@@ -23,7 +23,7 @@ defmodule KlziiChat.Services.Reports.Types.Messages.Formats.Txt do
 
   @spec get_data(Map.t,  Map.t, List.T) :: List.t
   def get_data(message, session, fields) do
-    data_container = DataContainer.start_link(session.participant_list)
+    {:ok, data_container} = DataContainer.start_link(session.participant_list)
 
     row = Enum.map(fields, fn(field) ->
       DataContainer.get_value(field, message, session, data_container)

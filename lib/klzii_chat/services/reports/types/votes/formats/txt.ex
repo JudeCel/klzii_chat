@@ -25,9 +25,14 @@ defmodule KlziiChat.Services.Reports.Types.Votes.Formats.Txt do
   def get_data(mini_survey, session, fields) do
     {:ok, container} = DataContainer.start_link(session.participant_list)
 
-    row = Enum.map(fields, fn(field) ->
-      DataContainer.get_value(field, mini_survey, session, container)
-    end) |> Enum.join(", ")
+    row = Enum.map(mini_survey.mini_survey_answers, fn(answer) ->
+            Enum.map(fields, fn(field) ->
+              DataContainer.get_value(field, mini_survey, answer, session, container)
+            end)
+          end)
+          |> List.flatten
+          |> Enum.join(", ")
+
     [row <> "\r\n\r\n"]
   end
 end

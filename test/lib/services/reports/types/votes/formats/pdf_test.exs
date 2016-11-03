@@ -55,7 +55,7 @@ defmodule KlziiChat.Services.Reports.Types.Votes.Formats.PdfTest do
 
     topic_report_payload =  %{"sessionTopicId" => session_topic.id, "format" => "pdf",
       "type" => "votes",
-      "customFildes" =>  Enum.take(contact_list.customFields, 4)
+      "includeFields" => Enum.concat(["city", "state"], Enum.take(contact_list.customFields, 2))
     }
 
     {:ok, topic_report} = SessionReportingService.create_report(facilitator.id, topic_report_payload)

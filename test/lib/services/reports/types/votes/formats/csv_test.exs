@@ -55,15 +55,14 @@ defmodule KlziiChat.Services.Reports.Types.Votes.Formats.CsvTest do
 
     topic_report_payload =  %{"sessionTopicId" => session_topic.id, "format" => "csv",
       "type" => "votes",
-      "customFildes" =>  Enum.take(contact_list.customFields, 4)
+      "includeFields" => Enum.concat(["city", "state"], Enum.take(contact_list.customFields, 2))
     }
 
     {:ok, topic_report} = SessionReportingService.create_report(facilitator.id, topic_report_payload)
     {:ok, topic_report_data} = Votes.Base.get_data(topic_report)
 
-    session_report_payload =  %{"format" => "csv", "type" => "votes" }
+    session_report_payload =  %{"sessionId" => session_topic.session.id, "format" => "csv", "type" => "votes" }
     {:ok, session_report} = SessionReportingService.create_report(facilitator.id, session_report_payload)
-
     {:ok, session_report_data} = Votes.Base.get_data(session_report)
     {:ok, topic_report_data: topic_report_data, session_report_data: session_report_data}
   end
@@ -85,8 +84,9 @@ defmodule KlziiChat.Services.Reports.Types.Votes.Formats.CsvTest do
       session = get_in(data, ["session"])
       fields = get_in(data, ["fields"])
       [session_topic |_ ] = get_in(data, ["session_topics"])
-      [mini_survey | _ ] = session_topic.mini_surveys
+      [_ | [mini_survey] ] = session_topic.mini_surveys
       result = Votes.Formats.Csv.get_data(mini_survey, session, fields)
+
       {:ok, result: result, fields: fields}
     end
 

@@ -4,7 +4,7 @@ defmodule KlziiChat.Services.Reports.Types.BaseTest do
   alias KlziiChat.Services.SessionReportingService
 
   setup %{session_topic_1: session_topic, facilitator: facilitator} do
-    payload_pdf =  %{"sessionTopicId" => session_topic.id, "format" => "pdf", "type" => "votes", "scopes" => %{} }
+    payload_pdf =  %{"sessionTopicId" => session_topic.id, "format" => "pdf", "type" => "votes", "includeFields" => ["city", "state"] }
     {:ok, topic_report} = SessionReportingService.create_report(facilitator.id, payload_pdf)
 
     payload_csv =  %{"format" => "csv", "type" => "votes", "scopes" => %{} }

@@ -19,7 +19,7 @@ defmodule KlziiChat.MiniSurveyView do
       title: mini_survey.title,
       question: mini_survey.question,
       type: mini_survey.type,
-      mini_survey_answers: render_many(mini_survey.mini_survey_answers, MiniSurveyAnswerView, "show.json")
+      mini_survey_answers: render_many(mini_survey.mini_survey_answers, MiniSurveyAnswerView, "report.json")
     }
   end
 
