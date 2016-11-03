@@ -76,10 +76,10 @@ const Message = React.createClass({
   onVisibilityChange(isVisible) {
     const { currentUser, message, dispatch, channel } = this.props;
 
-    if (isVisible && message.unread) {
-      message.unread = false;
+    let el = document.getElementById('message-' + message.id);
+    if (isVisible && el.className == 'unread') {
       setTimeout(() => {
-        document.getElementById('message-' + message.id).className = 'read';
+        el.className = 'read';
         dispatch(MessagesActions.readMessage(channel, message.id));
       }, 1000);
     }

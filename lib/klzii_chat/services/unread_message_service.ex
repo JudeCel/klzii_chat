@@ -1,5 +1,5 @@
 defmodule KlziiChat.Services.UnreadMessageService do
-  alias KlziiChat.{Repo, Message, SessionMember, UnreadMessage, SessionTopic}
+  alias KlziiChat.{Repo, Message, SessionMember, UnreadMessage, SessionTopic, Endpoint}
   alias KlziiChat.Helpers.ListHelper
   import Ecto.Query, only: [from: 2]
   import KlziiChat.Helpers.Presence, only: [topic_presences_ids: 1, session_presences_ids: 1]
@@ -72,6 +72,13 @@ defmodule KlziiChat.Services.UnreadMessageService do
       group_by: [sm.id, um.scope, um.sessionTopicId],
       select: %{"id" => sm.id, "session_topic" => {um.sessionTopicId, %{um.scope => count(um.scope)}}}
     )|> Repo.all
+  end
+
+  @spec marked_read(Integer.t, Integer.t) :: {:ok}
+  def marked_read(session_member_id, session_topic_id) do
+    messages = sync_state(session_member_id)
+    Endpoint.broadcast!("session_topic:#{session_topic_id}", "unread_messages",  %{messages: messages[session_member_id], session_member_id: session_member_id})
+    {:ok}
   end
 
   @spec calculate_summary(Map.t) :: Map.t

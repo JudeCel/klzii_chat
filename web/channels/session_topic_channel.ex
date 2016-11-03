@@ -14,7 +14,7 @@ defmodule KlziiChat.SessionTopicChannel do
     History for specific session topic
   """
 
-  intercept ["new_message", "update_message", "thumbs_up", "delete_pinboard_resource", "new_pinboard_resource"]
+  intercept ["new_message", "update_message", "thumbs_up", "delete_pinboard_resource", "new_pinboard_resource", "unread_messages"]
 
   def join("session_topic:" <> session_topic_id, _payload, socket) do
     if authorized?(socket, session_topic_id) do
@@ -66,8 +66,10 @@ defmodule KlziiChat.SessionTopicChannel do
     session_member = get_session_member(socket)
     {res, _} = UnreadMessageService.delete(session_member.id, id)
     if res > 0 do
-      messages = UnreadMessageService.sync_state(session_member.id)
-      push socket, "unread_messages", messages[session_member.id]
+      session_topic_id = socket.assigns.session_topic_id
+      Task.Supervisor.start_child(MyApp.TaskSupervisor, fn ->
+        UnreadMessageService.marked_read(session_member.id, session_topic_id)
+      end)
     end
     {:reply, :ok, socket}
   end
@@ -270,6 +272,14 @@ defmodule KlziiChat.SessionTopicChannel do
     end
   end
 
+  def handle_out("unread_messages", payload, socket) do
+    session_member = get_session_member(socket)
+    if session_member.id == payload.session_member_id do
+      push socket, "unread_messages", payload.messages
+    end
+    {:noreply, socket}
+  end
+
   def handle_out(message, payload, socket) when message in ["new_pinboard_resource", "delete_pinboard_resource"] do
     session_member = get_session_member(socket)
     view =
@@ -285,4 +295,5 @@ defmodule KlziiChat.SessionTopicChannel do
     push socket, message, MessageView.render("show.json", %{message: payload, member: session_member})
     {:noreply, socket}
   end
+
 end
