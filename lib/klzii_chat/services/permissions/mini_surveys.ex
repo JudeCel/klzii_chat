@@ -18,7 +18,7 @@ defmodule KlziiChat.Services.Permissions.MiniSurveys do
 
   @spec can_answer(Map.t) :: {:ok } | {:error, String.t}
   def can_answer(member) do
-    roles = ["facilitator", "participant"]
+    roles = ["participant"]
     has_role(member.role, roles)
     |> formate_error
   end

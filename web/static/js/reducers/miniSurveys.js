@@ -20,6 +20,8 @@ export default function reducer(state = initialState, action = {}) {
       return { ...state, list: removeFromState(state, action.data.id) };
     case Constants.TIDY_UP_SURVE:
       return initialState;
+    case Constants.CLOSE_ALL_MODAL_WINDOWS:
+      return {...state, view: { mini_survey_answers: []}, console: {} };
     default:
       return state;
   }
