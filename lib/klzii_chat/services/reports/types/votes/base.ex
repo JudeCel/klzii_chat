@@ -70,7 +70,7 @@ defmodule KlziiChat.Services.Reports.Types.Votes.Base do
   end
 
   def preload_mini_survey_query(report) do
-    exclude_facilitator = get_in(report.includes, ["facilitator"]) || false
-    QueriesMiniSurvey.report_query(report.sessionTopicId, exclude_facilitator)
+    includes_facilitator = !get_in(report.includes, ["facilitator"])
+    QueriesMiniSurvey.report_query(report.sessionTopicId, !includes_facilitator)
   end
 end

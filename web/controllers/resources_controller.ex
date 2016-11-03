@@ -20,7 +20,7 @@ defmodule KlziiChat.ResourcesController do
       |> QueriesResources.stock_query(%{"stock" => false})
       |> Repo.all
     stock_resources =
-      QueriesResources.base_resource_query
+      QueriesResources.base_query
         |> QueriesResources.stock_query(params)
         |> QueriesResources.find_by_params(params)
         |> Repo.all
@@ -33,7 +33,7 @@ defmodule KlziiChat.ResourcesController do
 
   def stock(conn, params) do
     resources =
-      QueriesResources.base_resource_query()
+      QueriesResources.base_query()
       |> QueriesResources.find_by_params(params)
       |> QueriesResources.stock_query(true)
       |> Repo.all

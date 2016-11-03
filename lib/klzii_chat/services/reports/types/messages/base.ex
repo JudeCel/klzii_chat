@@ -30,10 +30,10 @@ defmodule KlziiChat.Services.Reports.Types.Messages.Base do
   end
 
   @spec get_header_title(Map.t, Map.t) :: {:ok, Map.t} | {:error, Map.t}
-  def get_header_title(%{ name: name, account: %{ name: account_name } }, %{sessionTopicId: nil, type: "messages_stars_only"}) do
+  def get_header_title(%{ name: name, account: %{ name: account_name } }, %{type: "messages_stars_only"}) do
     {:ok, "Chat History Stars Only- #{account_name} / #{name}"}
   end
-  def get_header_title(%{ name: name, account: %{ name: account_name } }, %{sessionTopicId: _, type: "messages"}) do
+  def get_header_title(%{ name: name, account: %{ name: account_name } }, %{type: "messages"}) do
     {:ok, "Chat History - #{account_name} / #{name}"}
   end
   def get_header_title(_, _) do
@@ -74,12 +74,12 @@ defmodule KlziiChat.Services.Reports.Types.Messages.Base do
   end
 
   def preload_messages_query(%{type: "messages_stars_only"} = report) do
-    exclude_facilitator = get_in(report.includes, ["facilitator"]) || false
-    KlziiChat.Queries.Messages.session_topic_messages(report.sessionTopicId, [ star: true, facilitator: exclude_facilitator ])
+    includes_facilitator = !!get_in(report.includes, ["facilitator"])
+    KlziiChat.Queries.Messages.session_topic_messages(report.sessionTopicId, [ star: true, facilitator: includes_facilitator ])
   end
 
   def preload_messages_query(report) do
-    exclude_facilitator = get_in(report.includes, ["facilitator"]) || false
-    KlziiChat.Queries.Messages.session_topic_messages(report.sessionTopicId, [ star: false, facilitator: exclude_facilitator ])
+    includes_facilitator = !!get_in(report.includes, ["facilitator"])
+    KlziiChat.Queries.Messages.session_topic_messages(report.sessionTopicId, [ star: false, facilitator: includes_facilitator ])
   end
 end

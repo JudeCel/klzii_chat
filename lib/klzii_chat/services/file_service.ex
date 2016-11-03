@@ -48,6 +48,7 @@ defmodule KlziiChat.Services.FileService do
       {:error, reason} ->
         {:error, reason}
     end
+
   end
 
   def conwert_with_xvfb(path_to_html, path_to_pdf) do

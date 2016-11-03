@@ -121,12 +121,31 @@ defmodule KlziiChat.Services.ResourceService do
           {:error, error} ->
             {:error, error}
           {_count, nil} ->
-             Task.start(fn -> clean_up(result) end)
+            Task.Supervisor.start_child(KlziiChat.BackgroundTasks, fn ->
+              clean_up(result)
+            end)
             {:ok, result}
         end
       {:error, reason} ->
         {:error, reason}
     end
+  end
+
+  def deleteByIds(ids) do
+    query = QueriesResources.base_query
+      |> where([r], r.id in ^ids)
+      |> where([r], r.stock == false)
+
+    case Repo.delete_all(query, :returning) do
+      {:error, error} ->
+        {:error, error}
+      {result, nil} ->
+        Task.Supervisor.start_child(KlziiChat.BackgroundTasks, fn ->
+          clean_up(result)
+        end)
+        {:ok, result}
+    end
+
   end
 
   @spec clean_up(list) :: :ok

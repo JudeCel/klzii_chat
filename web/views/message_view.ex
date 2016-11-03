@@ -42,7 +42,7 @@ defmodule KlziiChat.MessageView do
       star: message.star,
       emotion: message.emotion,
       createdAt: message.createdAt,
-      replies: render_many(message.replies, "report.json", as: :message)
+      replies: Phoenix.View.render_many(message.replies,__MODULE__, "report.json", as: :message)
     }
   end
 end

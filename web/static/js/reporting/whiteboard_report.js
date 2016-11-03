@@ -1,7 +1,7 @@
 var drawElements = function (shapes) {
   shapes.forEach(function(shape) {
     if(shape.event.action == "draw") {
-      draw("whiteboard", shape.event.element.type, shape.event.element.attr)
+      draw("whiteboard_" + shape.sessionTopicId, shape.event.element.type, shape.event.element.attr)
     }
   });
 }

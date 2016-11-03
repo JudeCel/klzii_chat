@@ -9,8 +9,8 @@ defmodule KlziiChat.Queries.Resources do
     from(r in assoc(account_user.account, :resources))
   end
 
-  @spec base_resource_query() :: Ecto.Query.t
-  def base_resource_query() do
+  @spec base_query() :: Ecto.Query.t
+  def base_query() do
     from(r in Resource)
   end
 

@@ -4,15 +4,26 @@ defmodule KlziiChat.Services.Reports.Report do
   alias KlziiChat.Services.FileService
 
   def run(report_id) do
-    with  report <- get_report(report_id),
+    with  {:ok, report} <- get_report(report_id),
         {:ok, type_module} <- select_type(report.type),
         {:ok, report_data} <- process_data(type_module, report),
         {:ok, report_data} <- process_data(type_module, report, report_data),
     do: {:ok, report_data}
   end
 
+  def validate_report(%{status: "failed", resourceId: nil}), do: {:ok}
+  def validate_report(%{status: "failed", resourceId: resourceId}) do
+    KlziiChat.Services.ResourceService.deleteByIds([resourceId])
+  end
+
   defp get_report(report_id) do
     Repo.get(SessionTopicsReport, report_id)
+    |>  case  do
+          nil ->
+            {:error, %{not_found: "Report with id: #{report_id} not found"}}
+          report ->
+            {:ok, report}
+        end
   end
 
   def process_data(type_module, report) do
@@ -53,8 +64,14 @@ defmodule KlziiChat.Services.Reports.Report do
           {:ok, resource} ->
             Resource.report_changeset(resource, %{"file" => report_file_path})
             |> Repo.update
+            |> case do
+                {:ok, resource} ->
+                  {:ok, resource}
+                {:error, reason_update} ->
+                  {:error, KlziiChat.ChangesetView.render("error.json", %{changeset: reason_update})}
+               end
           {:error, reason} ->
-            {:error, reason}
+            {:error, KlziiChat.ChangesetView.render("error.json", %{changeset: reason})}
         end
   end
 
