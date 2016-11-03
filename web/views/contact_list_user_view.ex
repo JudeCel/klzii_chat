@@ -9,8 +9,6 @@ defmodule KlziiChat.ContactListUserView do
     }
   end
 
-  defp contact_list_users(%{__struct__: Ecto.Association.NotLoaded}), do: []
-  defp contact_list_users(contact_list_users), do: contact_list_users
   defp account_user(%{__struct__: Ecto.Association.NotLoaded}), do: nil
   defp account_user(account_user), do: account_user
 

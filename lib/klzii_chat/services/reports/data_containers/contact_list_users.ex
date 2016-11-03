@@ -1,5 +1,4 @@
 defmodule KlziiChat.Services.Report.DataContainers.ContactListUsers do
-  alias(KlziiChat.{ContactListUserView})
   @privateKeys ["lastName", "email", "mobil", "companyName", "postalAddress", "landlineNumber"]
 
   def start_link(data) do

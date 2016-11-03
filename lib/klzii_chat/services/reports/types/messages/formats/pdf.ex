@@ -17,9 +17,9 @@ defmodule KlziiChat.Services.Reports.Types.Messages.Formats.Pdf do
         layout: {KlziiChat.LayoutView, "report.html"}
       )
       {:ok, string}
-    catch
-      error, reason ->
-      {:error, reason}
+    rescue
+      e in RuntimeError ->
+        {:error, e}
     end
   end
 end

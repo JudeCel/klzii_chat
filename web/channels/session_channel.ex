@@ -68,11 +68,10 @@ defmodule KlziiChat.SessionChannel do
         socket = assign(socket, :session_member, Map.merge(get_session_member(socket), SessionMembersView.render("member.json", member: session_member )))
         push(socket, "self_info", get_session_member(socket))
         broadcast(socket, "update_member", session_member)
+        {:noreply, socket}
       {:error, reason} ->
         {:error, %{reason: reason}}
     end
-
-    {:noreply, socket}
   end
 
   def handle_in("create_session_topic_report", payload, socket) do

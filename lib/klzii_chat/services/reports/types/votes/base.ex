@@ -18,7 +18,7 @@ defmodule KlziiChat.Services.Reports.Types.Votes.Base do
 
   def get_data(report) do
     with {:ok, session} <- get_session(report),
-         {:ok, header_title} <- get_header_title(session),
+         {:ok, header_title} <- get_header_title(session, report),
          {:ok, session_topics} <- get_session_topics(report),
     do:  {:ok, %{
               "session" => session,
@@ -29,15 +29,16 @@ defmodule KlziiChat.Services.Reports.Types.Votes.Base do
           }
   end
 
-  def get_header_title(%{sessionTopicId: nil} = session) do
+  @spec get_header_title(Map.t, Map.t) :: {:ok, String.t}
+  def get_header_title(%{sessionTopicId: nil} = session, _) do
     {:ok, "Mini Surveys History - #{session.account.name} / #{session.name}"}
   end
-  def get_header_title(session) do
+  def get_header_title(session, _) do
     {:ok, "Mini Surveys History - #{session.account.name} / #{session.name}"}
   end
 
   @spec get_session(Map.t) :: {:ok, Map.t} | {:error, Map.t}
-  def get_session(%{sessionId: session_id} = report) do
+  def get_session(%{sessionId: session_id}) do
     session = from(s in Session,  where: s.id == ^session_id)
       |> Repo.one
       |> Repo.preload([:account, :brand_logo, :brand_project_preference, [participant_list: [:contact_list_users]] ])
@@ -46,13 +47,6 @@ defmodule KlziiChat.Services.Reports.Types.Votes.Base do
   end
   def get_session(_), do: {:error, %{not_reqired: "session id not reqired"}}
 
-
-  def get_session_topics(report) do
-    data =
-      preload_session_topic(report)
-      |> Phoenix.View.render_many(SessionTopicView, "report.json", as: :session_topic)
-    {:ok, data}
-  end
 
   def get_session_topics(report) do
     data =

@@ -1,6 +1,5 @@
 defmodule KlziiChat.Services.SessionMembersService do
-  alias KlziiChat.{Repo, Message, AccountUser, SessionMember,
-    SessionTopci, SessionMembersView, SessionTopic}
+  alias KlziiChat.{Repo, Message, AccountUser, SessionMember, SessionMembersView, SessionTopic}
   import Ecto.Query, only: [from: 2]
 
   @spec get_member_from_token(String.t) :: {:ok, %AccountUser{}} | {:error, String.t}

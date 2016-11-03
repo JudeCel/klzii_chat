@@ -2,7 +2,6 @@ defmodule KlziiChat.Services.Reports.Types.Messages.Base do
   @behaviour KlziiChat.Services.Reports.Types.Behavior
   alias KlziiChat.{Repo, SessionTopicView, SessionView, SessionTopic, Session}
   alias KlziiChat.Services.Reports.Types.Messages.Formats
-  alias KlziiChat.Queries.SessionTopic, as: SessionTopicQueries
   import Ecto.Query, only: [from: 2]
 
   @spec default_fields() :: List.t[String.t]
@@ -19,7 +18,7 @@ defmodule KlziiChat.Services.Reports.Types.Messages.Base do
   @spec get_data(Map.t) :: {:ok, Map.t} | {:error, Map.t}
   def get_data(report) do
     with {:ok, session} <- get_session(report),
-         {:ok, header_title} <- get_header_title(session),
+         {:ok, header_title} <- get_header_title(session, report),
          {:ok, session_topics} <- get_session_topics(report),
     do:  {:ok, %{
               "session" => session,
@@ -30,19 +29,19 @@ defmodule KlziiChat.Services.Reports.Types.Messages.Base do
           }
   end
 
-  @spec get_header_title(Map.t) :: {:ok, Map.t} | {:error, Map.t}
-  def get_header_title(%{ name: name, account: %{ name: account_name } }) do
+  @spec get_header_title(Map.t, Map.t) :: {:ok, Map.t} | {:error, Map.t}
+  def get_header_title(%{ name: name, account: %{ name: account_name } }, %{sessionTopicId: nil, type: "messages_stars_only"}) do
+    {:ok, "Chat History Stars Only- #{account_name} / #{name}"}
+  end
+  def get_header_title(%{ name: name, account: %{ name: account_name } }, %{sessionTopicId: _, type: "messages"}) do
     {:ok, "Chat History - #{account_name} / #{name}"}
   end
-  def get_header_title(%{ name: name, account: %{ name: account_name } }) do
-    {:ok, "Chat History - #{account_name} / #{name}"}
-  end
-  def get_header_title(_) do
+  def get_header_title(_, _) do
     {:error, %{not_reqired: "session account name or session name not reqired"}}
   end
 
   @spec get_session(Map.t) :: {:ok, Map.t} | {:error, Map.t}
-  def get_session(%{sessionId: session_id} = report) do
+  def get_session(%{sessionId: session_id}) do
     session = from(s in Session,  where: s.id == ^session_id)
       |> Repo.one
       |> Repo.preload([:account, :brand_logo, :brand_project_preference,

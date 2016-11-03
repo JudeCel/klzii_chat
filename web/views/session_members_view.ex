@@ -54,11 +54,17 @@ defmodule KlziiChat.SessionMembersView do
       session_id: member.sessionId,
       permissions: permissions_map
     }
-    if permissions_map.can_redirect.logout do
-      url = KlziiChat.Router.Helpers.chat_path(KlziiChat.Endpoint, :logout)
-      current_member_info = Map.put(current_member_info, :logout_path, url)
-    end
-    Map.merge(member_map, current_member_info)
+
+
+    logout_path =
+      cond do
+        permissions_map.can_redirect.logout ->
+          KlziiChat.Router.Helpers.chat_path(KlziiChat.Endpoint, :logout)
+        true ->
+          nil
+      end
+
+    Map.merge(member_map, Map.put(current_member_info, :logout_path, logout_path))
   end
 
   def render("group_by_role.json", %{ members: members}) do

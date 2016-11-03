@@ -19,7 +19,7 @@ defmodule KlziiChat.Services.Reports.Whiteboards.Formats.Pdf do
       {:ok, string}
     catch
       error, reason ->
-        {:error, reason}
+        {error, reason}
     end
   end
 end
