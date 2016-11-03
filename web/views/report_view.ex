@@ -1,7 +1,7 @@
 defmodule KlziiChat.ReportView do
   use KlziiChat.Web, :view
 
-  @default_field ["city", "state", "country", "postCode"]
+  @default_field ["gender","city", "state", "country", "postCode"]
 
   def render("map_struct.json", %{contact_list: contact_list}) do
     %{
