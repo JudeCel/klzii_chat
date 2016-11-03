@@ -78,10 +78,10 @@ const Message = React.createClass({
 
     if (isVisible && message.unread) {
       message.unread = false;
-      dispatch(MessagesActions.readMessage(channel, message.id));
       setTimeout(() => {
         document.getElementById('message-' + message.id).className = 'read';
-      }, 1500);
+        dispatch(MessagesActions.readMessage(channel, message.id));
+      }, 1000);
     }
   },
   visibilitySensor() {
@@ -100,7 +100,7 @@ const Message = React.createClass({
     }
   },
   render() {
-    const { currentUser, message, channel } = this.props;
+    const { currentUser, message } = this.props;
     const { can_edit, can_delete, can_star, can_vote, can_reply } = message.permissions;
 
     let member = this.getMessageMember();

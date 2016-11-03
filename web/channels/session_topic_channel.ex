@@ -64,10 +64,12 @@ defmodule KlziiChat.SessionTopicChannel do
 
   def handle_in("read_message", %{"id" => id}, socket) do
     session_member = get_session_member(socket)
-    UnreadMessageService.delete(session_member.id, id)
-    messages = UnreadMessageService.sync_state(session_member.id)
-    push socket, "unread_messages", messages[session_member.id]
-    {:noreply, socket}
+    {res, _} = UnreadMessageService.delete(session_member.id, id)
+    if res > 0 do
+      messages = UnreadMessageService.sync_state(session_member.id)
+      push socket, "unread_messages", messages[session_member.id]
+    end
+    {:reply, :ok, socket}
   end
 
   def handle_in("board_message", payload, socket) do
