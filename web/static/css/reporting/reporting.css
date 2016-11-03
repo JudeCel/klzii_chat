@@ -59,7 +59,7 @@
   padding-bottom: 5px;
 }
 
-.report-section .remove-side-margin .body-section {
+.report-section .message-section.media .body-section {
   border-bottom: 1px solid #000;
 }
 
