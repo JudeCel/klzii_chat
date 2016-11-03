@@ -24,7 +24,7 @@ defmodule KlziiChat.Services.Report.DataContainers.ContactListUsers do
 
     (get_in(state, account_user_list) || get_in(state, custom_fields_list))
     |>  case do
-          nil -> {:error, "Key not found: #{key}"}
+          nil -> {:ok, nil}
           value -> {:ok, value }
         end
   end

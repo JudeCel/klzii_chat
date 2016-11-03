@@ -6,9 +6,9 @@ import NotificationActions from '../../../actions/notifications';
 const ReportsCustom = React.createClass({
   onDownload() {
 
-    const customFields = Object.keys(this.state.selected);
+    const includeFields = Object.keys(this.state.selected);
     const { dispatch } = this.props
-    const report = {...this.props.report, customFields: customFields};
+    const report = {...this.props.report, includeFields: includeFields};
     dispatch(ReportsActions.create(this.props.channel, report));
     this.props.changePage('index', this.props.report);
   },

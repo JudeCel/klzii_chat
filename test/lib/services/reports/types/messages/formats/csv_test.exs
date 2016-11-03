@@ -54,20 +54,20 @@ defmodule KlziiChat.Services.Reports.Types.Messages.Formats.CsvTest do
   describe "get_data" do
     setup %{topic_report_data: data} do
       session = get_in(data, ["session"])
-      default_fields = get_in(data, ["default_fields"])
+      fields = get_in(data, ["fields"])
       [session_topic |_ ] = get_in(data, ["session_topics"])
       [message | _ ] = session_topic.messages
-      result = Messages.Formats.Csv.get_data(message, session, default_fields)
-      {:ok, result: result, default_fields: default_fields}
+      result = Messages.Formats.Csv.get_data(message, session, fields)
+      {:ok, result: result, fields: fields}
     end
 
     test "is map", %{result: result} do
       assert(%{} = result)
     end
 
-    test "is all keys reqired", %{default_fields: default_fields, result: result} do
+    test "is all keys reqired", %{fields: fields, result: result} do
       keys = Map.keys(result)
-      assert(length(default_fields) == length(keys))
+      assert(length(fields) == length(keys))
     end
   end
 end

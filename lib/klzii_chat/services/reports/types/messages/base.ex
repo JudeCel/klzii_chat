@@ -25,7 +25,7 @@ defmodule KlziiChat.Services.Reports.Types.Messages.Base do
               "session" => session,
               "session_topics" => session_topics,
               "header_title" => header_title,
-              "default_fields" => default_fields()
+              "fields" => Enum.concat(default_fields(), report.includeFields)
             }
           }
   end

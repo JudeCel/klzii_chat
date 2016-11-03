@@ -83,22 +83,22 @@ defmodule KlziiChat.Services.Reports.Types.Votes.Formats.TxtTest do
   describe "get_data" do
     setup %{topic_report_data: data} do
       session = get_in(data, ["session"])
-      default_fields = get_in(data, ["default_fields"])
+      fields = get_in(data, ["fields"])
       [session_topic |_ ] = get_in(data, ["session_topics"])
       [mini_survey | _ ] = session_topic.mini_surveys
-      result = Votes.Formats.Txt.get_data(mini_survey, session, default_fields)
-      {:ok, result: result, default_fields: default_fields}
+      result = Votes.Formats.Txt.get_data(mini_survey, session, fields)
+      {:ok, result: result, fields: fields}
     end
 
     test "is map", %{result: result} do
       assert(is_list(result))
     end
 
-    test "is all keys reqired", %{default_fields: default_fields, result: result} do
+    test "is all keys reqired", %{fields: fields, result: result} do
       row =
         List.first(result)
         |> String.split(",")
-      assert(length(default_fields) == length(row))
+      assert(length(fields) == length(row))
     end
   end
 end

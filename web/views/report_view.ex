@@ -1,6 +1,8 @@
 defmodule KlziiChat.ReportView do
   use KlziiChat.Web, :view
 
+  @default_field ["city", "state", "country", "postCode"]
+
   def render("map_struct.json", %{contact_list: contact_list}) do
     %{
       max_default_fileds_count: 4,
@@ -51,8 +53,7 @@ defmodule KlziiChat.ReportView do
         },
       },
       fields: %{
-        # custom: contact_list.customFields
-        custom: ["city", "state", "country", "random1", "random2"]
+        custom: Enum.concat(@default_field, contact_list.customFields)
       },
       includes: %{
         facilitator: true
