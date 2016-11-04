@@ -38,10 +38,7 @@ export default function reducer(state = initialState, action = {}) {
 }
 
 function readMessage(message) {
-  let readMessage = {};
-  Object.assign(readMessage, message)
-  readMessage.unread = false;
-  return readMessage;
+  return {...message, unread: false};
 }
 
 function deleteMessage(messages, message) {
