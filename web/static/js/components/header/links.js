@@ -89,7 +89,7 @@ const Links = React.createClass({
           <LogoutLink />
         </ul>
 
-        <ConfirmModal show={this.state.showClearWhiteboardModal} onAccept={this.clearWhiteboardAccepted} onClose={this.clearWhiteboardCanceled} description='Are you sure you want to clear whiteboard?' title="Are you sure?"/>
+        <ConfirmModal show={this.state.showClearWhiteboardModal} onAccept={this.clearWhiteboardAccepted} onClose={this.clearWhiteboardCanceled} description='Are you sure you want to clean the Whiteboard?' title="Are you sure?"/>
       </div>
     )
   }
