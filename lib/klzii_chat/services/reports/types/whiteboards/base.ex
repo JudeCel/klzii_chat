@@ -1,6 +1,6 @@
 defmodule KlziiChat.Services.Reports.Types.Whiteboards.Base do
   @behaviour KlziiChat.Services.Reports.Types.Behavior
-  alias KlziiChat.Services.Reports.Types.Messages.Formats
+  alias KlziiChat.Services.Reports.Types.Whiteboards.{Formats}
   alias KlziiChat.{Repo, SessionView, SessionTopic, Session, SessionTopicView}
   alias KlziiChat.Queries.Shapes, as: QueriesShapes
   import Ecto.Query, only: [from: 2]
@@ -13,7 +13,6 @@ defmodule KlziiChat.Services.Reports.Types.Whiteboards.Base do
   @spec format_modeule(String.t) :: Module.t
   def format_modeule("pdf"), do: {:ok, Formats.Pdf}
   def format_modeule(format), do: {:error, "module for format #{format} not found"}
-
 
   def get_data(report) do
     with {:ok, session} <- get_session(report),

@@ -36,11 +36,11 @@ defmodule KlziiChat.Services.Reports.Types.Formats.Whiteboards.PdfTest do
 
   describe "whiteboards" do
     test "topic report", %{topic_report_data: topic_report_data} do
-      {:ok,_} = KlziiChat.Services.Reports.Whiteboards.Formats.Pdf.processe_data(topic_report_data)
+      {:ok,_} = KlziiChat.Services.Reports.Types.Whiteboards.Formats.Pdf.processe_data(topic_report_data)
     end
 
     test "session report", %{session_report_data: session_report_data} do
-      {:ok, _} = KlziiChat.Services.Reports.Whiteboards.Formats.Pdf.processe_data(session_report_data)
+      {:ok, _} = KlziiChat.Services.Reports.Types.Whiteboards.Formats.Pdf.processe_data(session_report_data)
     end
   end
 end

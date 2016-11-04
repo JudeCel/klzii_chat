@@ -1,7 +1,7 @@
 defmodule KlziiChat.Services.Reports.Types.Votes.Base do
   @behaviour KlziiChat.Services.Reports.Types.Behavior
   alias KlziiChat.{Repo, SessionTopicView, SessionView, SessionTopic, Session}
-  alias KlziiChat.Services.Reports.Types.Messages.Formats
+  alias KlziiChat.Services.Reports.Types.Votes.{Formats}
   alias KlziiChat.Queries.MiniSurvey, as: QueriesMiniSurvey
   import Ecto.Query, only: [from: 2]
 

@@ -26,7 +26,7 @@ defmodule KlziiChat.Services.Reports.Types.MessagesTest do
 
     payload_pdf =  %{"sessionTopicId" => session_topic.id, "format" => "pdf",
       "type" => "messages",
-      "includeFields" => Enum.concat(["city", "state"], Enum.take(contact_list.customFields, 2)) 
+      "includeFields" => Enum.concat(["city", "state"], Enum.take(contact_list.customFields, 2))
     }
     {:ok, topic_report} = SessionReportingService.create_report(facilitator.id, payload_pdf)
 
@@ -49,6 +49,25 @@ defmodule KlziiChat.Services.Reports.Types.MessagesTest do
     end
   end
 
+  describe "format_modeule" do
+    test "pdf" do
+      assert({:ok, Messages.Formats.Pdf} == Messages.Base.format_modeule("pdf"))
+    end
+
+    test "csv" do
+      assert({:ok, Messages.Formats.Csv} == Messages.Base.format_modeule("csv"))
+    end
+
+    test "txt" do
+      assert({:ok, Messages.Formats.Txt} == Messages.Base.format_modeule("txt"))
+    end
+
+    test "not exists" do
+      module = "bar"
+      assert({:error, "module for format #{module} not found"} == Messages.Base.format_modeule(module))
+    end
+  end
+
   describe "get_data session report" do
     setup %{session_report: session_report} do
       {:ok, data} = Messages.Base.get_data(session_report)
@@ -57,8 +76,13 @@ defmodule KlziiChat.Services.Reports.Types.MessagesTest do
 
     test "structure", %{data: data} do
       assert(
-        %{"session" => _, "header_title" => _, "session_topics" => [_,_]} = data
+        %{"session" => session, "header_title" => header_title, "session_topics" => session_topics, "fields" => fields} = data
       )
+
+      assert(is_map(session))
+      assert(is_bitstring(header_title))
+      assert(is_list(session_topics))
+      assert(is_list(fields))
     end
 
     test "get_session", %{session_report: session_report, session_topic_1: session_topic_1} do

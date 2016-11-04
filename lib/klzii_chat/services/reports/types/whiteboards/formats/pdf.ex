@@ -1,4 +1,4 @@
-defmodule KlziiChat.Services.Reports.Whiteboards.Formats.Pdf do
+defmodule KlziiChat.Services.Reports.Types.Whiteboards.Formats.Pdf do
 
   @spec processe_data(Map.t) :: {String.t}
   def processe_data(data) do
