@@ -9,7 +9,10 @@ const SurveyView5StarRating = React.createClass({
       return answers[0].answer.value;
     }
     else {
-      let sum = answers.reduce((a, b) => { return a.answer.value + b.answer.value; });
+      let sum = 0;
+      answers.map(function(item){
+        sum += item.answer.value;
+      });
       return sum / answers.length;
     }
   },
