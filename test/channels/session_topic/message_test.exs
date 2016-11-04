@@ -12,7 +12,22 @@ defmodule KlziiChat.Channels.SessionTopic.MessageTest do
     {:ok, socket} = connect(UserSocket, %{"token" => jwt1})
     {:ok, socket2} = connect(UserSocket, %{"token" => jwt2})
 
-    {:ok, socket: socket, socket2: socket2, session_topic_1_name: session_topic_1_name}
+    message = Ecto.build_assoc(
+      participant, :messages,
+      sessionTopicId: session_topic_1.id,
+      body: "test",
+      emotion: 1
+    ) |> Repo.insert!
+
+    unread_message = Ecto.build_assoc(
+      message, :unread_messages,
+      sessionTopicId: session_topic_1.id,
+      sessionMemberId: facilitator.id,
+      createdAt: DateTime.utc_now,
+      updatedAt: DateTime.utc_now
+    ) |> Repo.insert!
+
+    {:ok, socket: socket, socket2: socket2, session_topic_1_name: session_topic_1_name, message_id: message.id}
   end
 
   test "when unauthorized", %{socket: socket, session_topic_1_name: session_topic_1_name} do
@@ -87,5 +102,11 @@ defmodule KlziiChat.Channels.SessionTopic.MessageTest do
     assert_reply reply_ref, :ok
     assert_push("new_message", %{body: "@cool member replyId body", replyId: message_id })
     assert(message_id == message.id)
+  end
+
+  test "read message", %{socket: socket, session_topic_1_name: session_topic_1_name, message_id: message_id} do
+    {:ok, _, socket} = subscribe_and_join(socket, SessionTopicChannel, session_topic_1_name)
+    read_ref = push socket, "read_message", %{ id: message_id }
+    assert_reply(read_ref, :ok)
   end
 end

@@ -41,7 +41,6 @@ defmodule KlziiChat.SessionTopicChannel do
     {:ok, member} = SessionMembersService.update_current_topic(session_member.id, socket.assigns.session_topic_id)
     Endpoint.broadcast!("sessions:#{session_member.session_id}", "update_member", member)
 
-    UnreadMessageService.delete_unread_messages_for_topic(session_member.id, socket.assigns.session_topic_id)
     messages = UnreadMessageService.sync_state(session_member.id)
     Endpoint.broadcast!("sessions:#{session_member.session_id}", "unread_messages", messages)
 
@@ -61,6 +60,12 @@ defmodule KlziiChat.SessionTopicChannel do
     else
       {:noreply, socket}
     end
+  end
+
+  def handle_in("read_message", %{"id" => id}, socket) do
+    session_member = get_session_member(socket)
+    KlziiChat.BackgroundTasks.Message.read(session_member.id, session_member.session_id, id)
+    {:reply, :ok, socket}
   end
 
   def handle_in("board_message", payload, socket) do
@@ -276,4 +281,5 @@ defmodule KlziiChat.SessionTopicChannel do
     push socket, message, MessageView.render("show.json", %{message: payload, member: session_member})
     {:noreply, socket}
   end
+
 end

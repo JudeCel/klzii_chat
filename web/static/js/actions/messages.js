@@ -19,6 +19,12 @@ function update_message(dispatch, message) {
     message
   });
 }
+function read_message(dispatch, message) {
+  return dispatch({
+    type: Constants.READ_MESSAGE,
+    message
+  });
+}
 
 function selectMessageAction(inputState) {
   switch (inputState.action) {
@@ -69,6 +75,7 @@ const Actions = {
       channel.on("update_message", (resp) =>{
         return update_message(dispatch, resp);
       });
+
     }
   },
   sendMessage: (channel, inputState) => {
@@ -90,6 +97,16 @@ const Actions = {
         NotificationActions.showErrorNotification(dispatch, errors);
       });
     };
+  },
+  readMessage:(channel, message) => {
+    return dispatch => {
+      channel.push('read_message', { id: message.id })
+      .receive('ok', () => {
+        read_message(dispatch, message);
+      }).receive('error', (errors) => {
+        NotificationActions.showErrorNotification(dispatch, errors);
+      });
+    }
   },
   messageStar: (channel, payload) => {
     return dispatch => {

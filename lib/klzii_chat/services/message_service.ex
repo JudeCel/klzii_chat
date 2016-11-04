@@ -1,5 +1,5 @@
 defmodule KlziiChat.Services.MessageService do
-  alias KlziiChat.{Repo, Message, MessageView, SessionMember, Vote, SessionTopic}
+  alias KlziiChat.{Repo, Message, UnreadMessage, MessageView, SessionMember, Vote, SessionTopic}
   alias KlziiChat.Services.Permissions.Messages, as: MessagePermissions
   alias KlziiChat.Helpers.IntegerHelper
   import Ecto
@@ -8,13 +8,13 @@ defmodule KlziiChat.Services.MessageService do
   @spec history(Integer.t, Map.t) :: {:ok, List.t }
   def history(session_topic_id, session_member) do
     session_topic = Repo.get!(SessionTopic, session_topic_id)
-    {:ok, messages} = Repo.all(
+    all_messages = Repo.all(
       from e in assoc(session_topic, :messages),
         where: is_nil(e.replyId),
         order_by: [asc: e.createdAt],
         limit: 200
       )
-      |> preload_dependencies
+    {:ok, messages} = preload_dependencies(all_messages, session_member.id)
     resp = Enum.map(messages, fn message ->
       MessageView.render("show.json", %{message: message, member: session_member})
     end)
@@ -78,11 +78,19 @@ defmodule KlziiChat.Services.MessageService do
     end
   end
 
-  @spec preload_dependencies(%Message{} | [%Message{}] ) :: %Message{} | [%Message{}]
+  @spec preload_dependencies(%Message{} | [%Message{}],  Integer.t) :: %Message{} | [%Message{}]
+  def preload_dependencies(message, session_member_id) do
+    unread_messages_query = from(um in UnreadMessage, where: um.sessionMemberId == ^session_member_id)
+    replies_replies_query = from(rpl in Message, order_by: [asc: :createdAt], preload: [:session_member, :votes, :replies, unread_messages: ^unread_messages_query])
+    replies_query = from(st in Message, order_by: [asc: :createdAt], preload: [:session_member, :votes, unread_messages: ^unread_messages_query, replies: ^replies_replies_query])
+    {:ok, Repo.preload(message, [:session_member, :votes, unread_messages: unread_messages_query, replies: replies_query])}
+  end
+
+  @spec preload_dependencies(%Message{} | [%Message{}]) :: %Message{} | [%Message{}]
   def preload_dependencies(message) do
     replies_replies_query = from(rpl in Message, order_by: [asc: :createdAt], preload: [:session_member, :votes, :replies])
     replies_query = from(st in Message, order_by: [asc: :createdAt], preload: [:session_member, :votes, replies: ^replies_replies_query])
-    {:ok, Repo.preload(message, [:session_member, :votes, replies: replies_query ])}
+    {:ok, Repo.preload(message, [:session_member, :votes, replies: replies_query])}
   end
 
   @spec create(%Message{}) :: %Message{}

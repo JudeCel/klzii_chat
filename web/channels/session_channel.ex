@@ -14,7 +14,7 @@ defmodule KlziiChat.SessionChannel do
     Global messages for session
   """
 
-  intercept ["unread_messages", "session_topics_report_updated", "new_direct_message", "update_member"]
+  intercept ["unread_messages", "session_topics_report_updated", "new_direct_message", "update_member", "read_message"]
 
   def join("sessions:" <> session_id, _, socket) do
     {session_id, _} = Integer.parse(session_id)
@@ -169,6 +169,20 @@ defmodule KlziiChat.SessionChannel do
         push socket, "unread_messages", map
       nil ->
         nil
+    end
+    {:noreply, socket}
+  end
+
+  def handle_out("read_message", payload, socket) do
+    session_member = get_session_member(socket)
+    if session_member.id == payload.session_member_id do
+      id = session_member.id |> to_string
+      case Map.get(payload.messages, id, nil) do
+        map when is_map(map) ->
+          push socket, "unread_messages", map
+        nil ->
+          nil
+      end
     end
     {:noreply, socket}
   end
