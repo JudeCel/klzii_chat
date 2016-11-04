@@ -7,15 +7,16 @@ defmodule KlziiChat.BackgroundTasks.Message do
     General.run_task(fn -> process_new_message(message_id)end)
   end
 
-  def read(session_member_id, session_topic_id)  do
-    General.run_task(fn -> process_read_message(session_member_id, session_topic_id)end)
+  def read(session_member_id, session_topic_id, message_id)  do
+    General.run_task(fn -> process_read_message(session_member_id, session_topic_id, message_id)end)
   end
 
   def delete(session_id, session_topic_id) do
     General.run_task(fn -> process_delete_message(session_id, session_topic_id) end)
   end
 
-  defp process_read_message(session_member_id, session_topic_id) do
+  defp process_read_message(session_member_id, session_topic_id, message_id) do
+    UnreadMessageService.delete(session_member_id, message_id)
     UnreadMessageService.marked_read(session_member_id, session_topic_id)
   end
 

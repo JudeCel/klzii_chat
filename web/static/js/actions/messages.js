@@ -92,13 +92,14 @@ const Actions = {
       });
     };
   },
-  readMessage:(channel, messageId) => {
+  readMessage:(channel, message) => {
     return dispatch => {
-      channel.push('read_message', { id: messageId })
-      .receive('ok', (resp) =>{
-        if (resp && resp.id == messageId) {
-          update_message(dispatch, resp);
-        }
+      channel.push('read_message', { id: message.id })
+      .receive('ok', () => {
+        let readMessage = {};
+        Object.assign(readMessage, message)
+        readMessage.unread = false;
+        update_message(dispatch, readMessage);
       }).receive('error', (errors) => {
         NotificationActions.showErrorNotification(dispatch, errors);
       });

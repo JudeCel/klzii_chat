@@ -77,12 +77,8 @@ const Message = React.createClass({
   },
   onVisibilityChange(isVisible) {
     const { currentUser, message, dispatch, channel } = this.props;
-
-    if (isVisible && this.messageElemet.className == 'unread') {
-      setTimeout(() => {
-        this.messageElemet.className = 'read';
-        dispatch(MessagesActions.readMessage(channel, message.id));
-      }, 1000);
+    if (isVisible) {
+      dispatch(MessagesActions.readMessage(channel, message));
     }
   },
   visibilitySensor() {
@@ -94,6 +90,7 @@ const Message = React.createClass({
           onChange={ this.onVisibilityChange }
           delayedCall={ true }
           containment={ this.props.chatSectionElemet }
+          delay={ 2000 }
           />
       )
     } else {

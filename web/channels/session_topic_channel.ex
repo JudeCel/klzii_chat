@@ -64,15 +64,9 @@ defmodule KlziiChat.SessionTopicChannel do
 
   def handle_in("read_message", %{"id" => id}, socket) do
     session_member = get_session_member(socket)
-    {res, _} = UnreadMessageService.delete(session_member.id, id)
-    if res > 0 do
-      session_topic_id = socket.assigns.session_topic_id
-      KlziiChat.BackgroundTasks.Message.read(session_member.id, session_topic_id)
-      {:ok, message} = MessageService.preload_dependencies(MessageService.get_message(id))
-      {:reply, {:ok, MessageView.render("show.json", %{message: message, member: session_member}) }, socket}
-    else
-      {:reply, {:ok, %{id: nil}}, socket}
-    end
+    session_topic_id = socket.assigns.session_topic_id
+    KlziiChat.BackgroundTasks.Message.read(session_member.id, session_topic_id, id)
+    {:reply, :ok, socket}
   end
 
   def handle_in("board_message", payload, socket) do
