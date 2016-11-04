@@ -68,6 +68,6 @@ defmodule KlziiChat.Services.Reports.Types.Whiteboards.Base do
   end
 
   def preload_shapes(report) do
-    QueriesShapes.base_query(%{ id: report.sessionTopicId })
+    QueriesShapes.base_query(%{ sessionTopicId: report.sessionTopicId })
   end
 end

@@ -5,11 +5,11 @@ defmodule KlziiChat.Queries.Shapes do
   import Ecto.Query
 
   @spec base_query(%SessionTopic{}) :: Ecto.Query
-  def base_query(%{id: nil}) do
+  def base_query(%{sessionTopicId: nil}) do
     from(s in Shape, order_by: [asc: :id])
   end
-  def base_query(%{id: id}) do
-    from(s in Shape, where: [id: ^id],
+  def base_query(%{sessionTopicId: sessionTopicId}) do
+    from(s in Shape, where: [sessionTopicId: ^sessionTopicId],
       order_by: [asc: :id]
     )
   end
