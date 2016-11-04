@@ -95,7 +95,11 @@ const Actions = {
   readMessage:(channel, messageId) => {
     return dispatch => {
       channel.push('read_message', { id: messageId })
-      .receive('error', (errors) => {
+      .receive('ok', (resp) =>{
+        if (resp && resp.id == messageId) {
+          update_message(dispatch, resp);
+        }
+      }).receive('error', (errors) => {
         NotificationActions.showErrorNotification(dispatch, errors);
       });
     }

@@ -107,6 +107,6 @@ defmodule KlziiChat.Channels.SessionTopic.MessageTest do
   test "read message", %{socket: socket, session_topic_1_name: session_topic_1_name, message_id: message_id} do
     {:ok, _, socket} = subscribe_and_join(socket, SessionTopicChannel, session_topic_1_name)
     read_ref = push socket, "read_message", %{ id: message_id }
-    assert_reply(read_ref, :ok, %{ removed: 1 })
+    assert_reply(read_ref, :ok)
   end
 end

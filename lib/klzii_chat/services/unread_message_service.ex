@@ -74,13 +74,6 @@ defmodule KlziiChat.Services.UnreadMessageService do
     )|> Repo.all
   end
 
-  @spec marked_read(Integer.t, Integer.t) :: {:ok}
-  def marked_read(session_member_id, session_topic_id) do
-    messages = sync_state(session_member_id)
-    Endpoint.broadcast!("session_topic:#{session_topic_id}", "unread_messages",  %{messages: messages[session_member_id], session_member_id: session_member_id})
-    {:ok}
-  end
-
   @spec calculate_summary(Map.t) :: Map.t
   def calculate_summary(map) do
     Map.keys(map) |> List.foldl(map, fn id, accumulator ->
@@ -152,5 +145,12 @@ defmodule KlziiChat.Services.UnreadMessageService do
     roles = ["facilitator", "participant", "observer"]
     from(sm in SessionMember, where: sm.sessionId == ^session_id, where: sm.role in ^roles, select: sm.id)
       |> Repo.all
+  end
+
+  @spec marked_read(Integer.t, Integer.t) :: {:ok}
+  def marked_read(session_member_id, session_topic_id) do
+    messages = sync_state(session_member_id)
+    Endpoint.broadcast!("session_topic:#{session_topic_id}", "read_message",  %{messages: messages, session_member_id: session_member_id})
+    {:ok}
   end
 end

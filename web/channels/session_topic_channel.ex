@@ -14,7 +14,7 @@ defmodule KlziiChat.SessionTopicChannel do
     History for specific session topic
   """
 
-  intercept ["new_message", "update_message", "thumbs_up", "delete_pinboard_resource", "new_pinboard_resource", "unread_messages"]
+  intercept ["new_message", "update_message", "thumbs_up", "delete_pinboard_resource", "new_pinboard_resource", "read_message"]
 
   def join("session_topic:" <> session_topic_id, _payload, socket) do
     if authorized?(socket, session_topic_id) do
@@ -67,11 +67,12 @@ defmodule KlziiChat.SessionTopicChannel do
     {res, _} = UnreadMessageService.delete(session_member.id, id)
     if res > 0 do
       session_topic_id = socket.assigns.session_topic_id
-      Task.Supervisor.start_child(MyApp.TaskSupervisor, fn ->
-        UnreadMessageService.marked_read(session_member.id, session_topic_id)
-      end)
+      KlziiChat.BackgroundTasks.Message.read(session_member.id, session_topic_id)
+      {:ok, message} = MessageService.preload_dependencies(MessageService.get_message(id))
+      {:reply, {:ok, MessageView.render("show.json", %{message: message, member: session_member}) }, socket}
+    else
+      {:reply, {:ok, %{id: nil}}, socket}
     end
-    {:reply, {:ok, %{removed: res}}, socket}
   end
 
   def handle_in("board_message", payload, socket) do
@@ -272,14 +273,6 @@ defmodule KlziiChat.SessionTopicChannel do
     end
   end
 
-  def handle_out("unread_messages", payload, socket) do
-    session_member = get_session_member(socket)
-    if session_member.id == payload.session_member_id do
-      push socket, "unread_messages", payload.messages
-    end
-    {:noreply, socket}
-  end
-
   def handle_out(message, payload, socket) when message in ["new_pinboard_resource", "delete_pinboard_resource"] do
     session_member = get_session_member(socket)
     view =
@@ -287,6 +280,20 @@ defmodule KlziiChat.SessionTopicChannel do
       |> Map.put(:permissions, PermissionsBuilder.pinboard_resource(session_member, payload))
 
     push socket, message, view
+    {:noreply, socket}
+  end
+
+  def handle_out("read_message", payload, socket) do
+    session_member = get_session_member(socket)
+    if session_member.id == payload.session_member_id do
+      id = session_member.id |> to_string
+      case Map.get(payload.messages, id, nil) do
+        map when is_map(map) ->
+          push socket, "read_message", map
+        nil ->
+          nil
+      end
+    end
     {:noreply, socket}
   end
 
