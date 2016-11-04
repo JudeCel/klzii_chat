@@ -53,12 +53,6 @@ function tidyUp(dispatch){
 const Actions = {
   subscribeEvents: (channel) => {
       return dispatch => {
-        channel.on("read_message", (messages) =>{
-          return dispatch({
-            type: Constants.SET_UNREAD_MESSAGES,
-            messages
-          });
-        });
         channel.on("board_message", (resp) =>{
           return dispatch({
             type: Constants.UPDATE_SESSION_TOPIC,

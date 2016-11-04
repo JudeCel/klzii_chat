@@ -23,6 +23,9 @@ export default function reducer(state = initialState, action = {}) {
     case Constants.UPDATE_MESSAGE:
       return { ...state, all: updateMessage(state.all, action.message)};
 
+    case Constants.READ_MESSAGE:
+      return { ...state, all: updateMessage(state.all, readMessage(action.message))};
+
     case Constants.SET_MESSAGES_EVENTS:
       return { ...state, ready: true };
 
@@ -32,6 +35,13 @@ export default function reducer(state = initialState, action = {}) {
     default:
       return state;
   }
+}
+
+function readMessage(message) {
+  let readMessage = {};
+  Object.assign(readMessage, message)
+  readMessage.unread = false;
+  return readMessage;
 }
 
 function deleteMessage(messages, message) {

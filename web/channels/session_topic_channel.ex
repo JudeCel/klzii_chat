@@ -14,7 +14,7 @@ defmodule KlziiChat.SessionTopicChannel do
     History for specific session topic
   """
 
-  intercept ["new_message", "update_message", "thumbs_up", "delete_pinboard_resource", "new_pinboard_resource", "read_message"]
+  intercept ["new_message", "update_message", "thumbs_up", "delete_pinboard_resource", "new_pinboard_resource"]
 
   def join("session_topic:" <> session_topic_id, _payload, socket) do
     if authorized?(socket, session_topic_id) do
@@ -64,8 +64,7 @@ defmodule KlziiChat.SessionTopicChannel do
 
   def handle_in("read_message", %{"id" => id}, socket) do
     session_member = get_session_member(socket)
-    session_topic_id = socket.assigns.session_topic_id
-    KlziiChat.BackgroundTasks.Message.read(session_member.id, session_topic_id, id)
+    KlziiChat.BackgroundTasks.Message.read(session_member.id, session_member.session_id, id)
     {:reply, :ok, socket}
   end
 
@@ -274,20 +273,6 @@ defmodule KlziiChat.SessionTopicChannel do
       |> Map.put(:permissions, PermissionsBuilder.pinboard_resource(session_member, payload))
 
     push socket, message, view
-    {:noreply, socket}
-  end
-
-  def handle_out("read_message", payload, socket) do
-    session_member = get_session_member(socket)
-    if session_member.id == payload.session_member_id do
-      id = session_member.id |> to_string
-      case Map.get(payload.messages, id, nil) do
-        map when is_map(map) ->
-          push socket, "read_message", map
-        nil ->
-          nil
-      end
-    end
     {:noreply, socket}
   end
 

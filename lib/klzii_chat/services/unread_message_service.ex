@@ -147,10 +147,10 @@ defmodule KlziiChat.Services.UnreadMessageService do
       |> Repo.all
   end
 
-  @spec marked_read(Integer.t, Integer.t) :: {:ok}
-  def marked_read(session_member_id, session_topic_id) do
+  @spec refresh_unread(Integer.t, Integer.t) :: {:ok}
+  def refresh_unread(session_member_id, session_id) do
     messages = sync_state(session_member_id)
-    Endpoint.broadcast!("session_topic:#{session_topic_id}", "read_message",  %{messages: messages, session_member_id: session_member_id})
+    Endpoint.broadcast!("sessions:#{session_id}", "read_message",  %{messages: messages, session_member_id: session_member_id})
     {:ok}
   end
 end
