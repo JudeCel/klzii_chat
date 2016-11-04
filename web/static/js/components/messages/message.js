@@ -10,6 +10,7 @@ const { EditMessage, DeleteMessage, StarMessage, RateMessage, ReplyMessage } = M
 
 const Message = React.createClass({
   mixins: [mixins.validations, mixins.helpers, mixins.modalWindows],
+  messageElemet: null,
   mediaImagePosition(message) {
     const className = 'emotion-chat-section push-image ';
     return className + (message.replies.length > 0 ? 'media-top' : 'media-bottom');
@@ -30,7 +31,8 @@ const Message = React.createClass({
               <Message key={ reply.id } message={ reply }
                 currentUser={ currentUser } participants={ participants }
                 facilitator={ facilitator }  modalWindows={ modalWindows }
-                dispatch={ this.props.dispatch } channel={ channel } />
+                dispatch={ this.props.dispatch } channel={ channel }
+                chatSectionElemet={ this.props.chatSectionElemet } />
             )
           }
         </div>
@@ -76,10 +78,9 @@ const Message = React.createClass({
   onVisibilityChange(isVisible) {
     const { currentUser, message, dispatch, channel } = this.props;
 
-    let el = document.getElementById('message-' + message.id);
-    if (isVisible && el.className == 'unread') {
+    if (isVisible && this.messageElemet.className == 'unread') {
       setTimeout(() => {
-        el.className = 'read';
+        this.messageElemet.className = 'read';
         dispatch(MessagesActions.readMessage(channel, message.id));
       }, 1000);
     }
@@ -92,7 +93,7 @@ const Message = React.createClass({
         <VisibilitySensor
           onChange={ this.onVisibilityChange }
           delayedCall={ true }
-          containment={ document.getElementById('chatSection') }
+          containment={ this.props.chatSectionElemet }
           />
       )
     } else {
@@ -109,7 +110,7 @@ const Message = React.createClass({
 
     return (
       <div className='message-section media'>
-        <div className={ (message.unread ? "unread" : "") } id={ 'message-' + message.id  }>
+        <div className={ (message.unread ? "unread" : "") } ref={(el) => this.messageElemet = el}>
           { this.visibilitySensor() }
 
           <div className={ this.mediaImagePosition(message) }>

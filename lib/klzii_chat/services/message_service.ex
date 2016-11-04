@@ -86,11 +86,18 @@ defmodule KlziiChat.Services.MessageService do
     {:ok, Repo.preload(message, [:session_member, :votes, unread_messages: unread_messages_query, replies: replies_query])}
   end
 
+  @spec preload_dependencies(%Message{} | [%Message{}]) :: %Message{} | [%Message{}]
+  def preload_dependencies(message) do
+    replies_replies_query = from(rpl in Message, order_by: [asc: :createdAt], preload: [:session_member, :votes, :replies])
+    replies_query = from(st in Message, order_by: [asc: :createdAt], preload: [:session_member, :votes, replies: ^replies_replies_query])
+    {:ok, Repo.preload(message, [:session_member, :votes, replies: replies_query])}
+  end
+
   @spec create(%Message{}) :: %Message{}
   def create(changeset) do
     with {:ok, message} <- Repo.insert(changeset),
          {:ok, _} <- KlziiChat.Services.SessionMembersService.update_emotion(message.id),
-    do: preload_dependencies(message, 0)
+    do: preload_dependencies(message)
   end
 
   @spec get_message(Integer.t) :: %Message{}
@@ -114,7 +121,7 @@ defmodule KlziiChat.Services.MessageService do
   def update_msg(changeset) do
     case Repo.update(changeset) do
       {:ok, message} ->
-         preload_dependencies(message, 0)
+         preload_dependencies(message)
       {:error, changeset} ->
         {:error, changeset}
     end
@@ -142,7 +149,7 @@ defmodule KlziiChat.Services.MessageService do
             changeset = Vote.changeset(%Vote{}, %{sessionMemberId: session_member.id, messageId: id})
             case Repo.insert(changeset) do
               {:ok, _vote} ->
-                preload_dependencies(message, 0)
+                preload_dependencies(message)
               {:error, changeset} ->
                 {:error, changeset}
             end
@@ -151,7 +158,7 @@ defmodule KlziiChat.Services.MessageService do
               {:error, changeset} ->
                 {:error, changeset}
               _ ->
-                preload_dependencies(message, 0)
+                preload_dependencies(message)
             end
         end
       {:error, reason} ->

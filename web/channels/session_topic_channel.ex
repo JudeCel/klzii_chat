@@ -71,7 +71,7 @@ defmodule KlziiChat.SessionTopicChannel do
         UnreadMessageService.marked_read(session_member.id, session_topic_id)
       end)
     end
-    {:reply, :ok, socket}
+    {:reply, {:ok, %{removed: res}}, socket}
   end
 
   def handle_in("board_message", payload, socket) do

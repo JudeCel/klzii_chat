@@ -20,7 +20,7 @@ defmodule KlziiChat.MessageView do
       end),
       votes_count: MessageDecorator.votes_count(message.votes),
       has_voted: MessageDecorator.has_voted(message.votes, member.id),
-      unread: MessageDecorator.is_unread(message.unread_messages, member.id),
+      unread: MessageDecorator.is_unread(unreaded_messages(message.unread_messages), member.id),
       permissions: %{
         can_edit: MessagePermissions.can_edit(member, message) |> to_boolean,
         can_delete: MessagePermissions.can_delete(member, message) |> to_boolean,
@@ -31,4 +31,7 @@ defmodule KlziiChat.MessageView do
       }
     }
   end
+
+  defp unreaded_messages(%{__struct__: Ecto.Association.NotLoaded}), do: []
+  defp unreaded_messages(unreaded_messages), do: unreaded_messages
 end
