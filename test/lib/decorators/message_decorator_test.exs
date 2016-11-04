@@ -43,12 +43,13 @@ defmodule KlziiChat.Decorators.MessageDecoratorTest do
   test "when is unread" do
     id = 2
     list = [%{sessionMemberId: id}, %{sessionMemberId: 4}]
-    MessageDecorator.has_voted(list, id) |> assert
+    MessageDecorator.is_unread(list, id) |> assert
   end
 
   test "when is read" do
     id = 2
     list = [%{sessionMemberId: 4}]
-    MessageDecorator.has_voted(list, id) |> refute
+    MessageDecorator.is_unread(list, id) |> refute
   end
+
 end
