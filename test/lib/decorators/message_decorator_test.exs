@@ -39,4 +39,19 @@ defmodule KlziiChat.Decorators.MessageDecoratorTest do
     assert(MessageDecorator.emotion_name("6a") == {:error, "incorrect emotion id"})
     assert(MessageDecorator.emotion_name("abc") == {:error, "incorrect emotion id"})
   end
+
+describe "is_unread test" do
+  test "when is unread" do
+    id = 2
+    list = [%{sessionMemberId: id}, %{sessionMemberId: 4}]
+    MessageDecorator.is_unread(list, id) |> assert
+  end
+
+  test "when is read" do
+    id = 2
+    list = [%{sessionMemberId: 4}]
+    MessageDecorator.is_unread(list, id) |> refute
+  end
+end
+
 end

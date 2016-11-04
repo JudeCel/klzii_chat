@@ -4,11 +4,10 @@ defmodule KlziiChat.Services.SessionMembersServiceTest do
 
   test "group_by_role" do
 
-    account_user = %{ firstName: "firstName", lastName: "lastName" }
     members = [
-      %{id: 1, account_user: account_user, role: "facilitator", username: "1", colour: "a", online: true, avatarData: "q", sessionTopicContext: %{}, currentTopic: {}},
-      %{id: 2, account_user: account_user, role: "observer", username: "2", colour: "b", online: false, avatarData: "w", sessionTopicContext: %{}, currentTopic: {} },
-      %{id: 3, account_user: account_user, role: "participant", username: "3", colour: "c", online: true, avatarData: "e", sessionTopicContext: %{}, currentTopic: {} }
+      %{id: 1, role: "facilitator", username: "1", colour: "a", online: true, avatarData: "q", sessionTopicContext: %{}, currentTopic: {}, account_user: %{ firstName: "name1", lastName: "name2"}},
+      %{id: 2, role: "observer", username: "2", colour: "b", online: false, avatarData: "w", sessionTopicContext: %{}, currentTopic: {}, account_user: %{ firstName: "name1", lastName: "name2"} },
+      %{id: 3, role: "participant", username: "3", colour: "c", online: true, avatarData: "e", sessionTopicContext: %{}, currentTopic: {}, account_user: %{ firstName: "name1", lastName: "name2"} }
     ]
     resp = SessionMembersService.group_by_role(members)
     assert is_map(resp)

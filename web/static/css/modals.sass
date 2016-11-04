@@ -191,6 +191,9 @@ body.modal-open
 .modal-section-confirm
   .modal-content
     border: 2px solid #4a9b72 !important
+  .modal-header
+    .modal-title
+      text-transform: none !important
 .modal-section
   margin-top: 130px
   .modal-backdrop
@@ -210,6 +213,15 @@ body.modal-open
         color: $green
         border: 2px solid $green
         padding: 10px
+      .confirm-button
+        &:hover
+          color: #fff
+          background: $green !important
+      .cancel-button
+        &:hover
+          color: #fff
+          background: $header-red !important
+
     .modal-header
       .fa
         @extend .cursor-pointer
