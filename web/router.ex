@@ -9,6 +9,20 @@ defmodule KlziiChat.Router do
     plug :put_secure_browser_headers
   end
 
+  pipeline :exq do
+    plug :accepts, ["html"]
+    plug :fetch_session
+    plug :fetch_flash
+    plug :put_secure_browser_headers
+    plug PlugBasicAuth, validation: &KlziiChat.Plugs.ExqUiAuth.is_authorized/2
+    plug ExqUi.RouterPlug, namespace: "exq"
+  end
+
+  scope "/exq", ExqUi do
+    pipe_through :exq
+    forward "/", RouterPlug.Router, :index
+  end
+
   pipeline :api do
     plug :accepts, ["json"]
     plug Guardian.Plug.VerifyHeader
@@ -21,6 +35,14 @@ defmodule KlziiChat.Router do
     get "/logout", ChatController, :logout
     get "/logout_all", ChatController, :logout_all
   end
+
+  scope "/tasks", KlziiChat.Tasks do
+    pipe_through :browser # Use the default browser stack
+    scope "/reports", Reports do
+      resources("/", ReportController)
+    end
+  end
+
   scope "/reporting", KlziiChat.Reporting do
     pipe_through :browser # Use the default browser stack
 

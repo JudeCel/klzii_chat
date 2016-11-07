@@ -51,4 +51,8 @@ config :exq,
   max_retries: 2,
   shutdown_timeout: 5000
 
+config :exq_ui,
+  web_namespace: "exq",
+  server: true
+
 import_config "#{Mix.env}.exs"

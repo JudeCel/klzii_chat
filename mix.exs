@@ -39,6 +39,8 @@ defmodule KlziiChat.Mixfile do
      {:csv, "~> 1.4"},
      {:boltun, "~> 1.0"},
      {:exq, "~> 0.8"},
+     {:exq_ui, "~> 0.8"},
+     {:plug_basic_auth, "~> 1.1"},
      {:timex, "~> 3.0"},
      {:quantum, "~> 1.7"},
      {:poison, "~> 2.2"},
