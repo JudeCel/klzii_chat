@@ -99,7 +99,7 @@ defmodule KlziiChat.Services.SessionReportingService do
   end
 
   def normalize_name(name) do
-    String.replace(name, " ", "_") <> to_string(:os.system_time(:second))
+    String.replace(name, " ", "_") <> to_string(:os.system_time(:millisecond))
   end
 
   @spec get_report_name(Map.t, String.t) :: {:ok, String.t}
