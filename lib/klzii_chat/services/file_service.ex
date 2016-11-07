@@ -48,6 +48,7 @@ defmodule KlziiChat.Services.FileService do
       {:error, reason} ->
         {:error, reason}
     end
+
   end
 
   def conwert_with_xvfb(path_to_html, path_to_pdf) do
@@ -70,8 +71,8 @@ defmodule KlziiChat.Services.FileService do
   end
 
 
-  @spec write_report(String.t, :pdf, String.t | Stream.t) :: {:ok, String.t}
-  def write_report(report_name, :pdf, report_data) do
+  @spec write_report(String.t, String.t, String.t | Stream.t) :: {:ok, String.t}
+  def write_report(report_name, "pdf", report_data) do
     tmp_html_file_path =
         get_tmp_path()
         |> compose_path(report_name, "html")
@@ -79,8 +80,8 @@ defmodule KlziiChat.Services.FileService do
     html_to_pdf(tmp_html_file_path)
   end
 
-  @spec write_report(String.t, atom, String.t | Stream.t) :: {:ok, String.t}
-  def write_report(report_name, report_format, report_data) when report_format in [:txt, :csv]  do
+  @spec write_report(String.t, String.t, String.t | Stream.t) :: {:ok, String.t}
+  def write_report(report_name, report_format, report_data) when report_format in ["txt", "csv"]  do
     report_file_path =
       get_tmp_path()
       |> compose_path(report_name, to_string(report_format))

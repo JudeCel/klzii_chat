@@ -1,13 +1,18 @@
 import Constants from '../constants';
 
 const initialState = {
-  data: {}
+  data: {},
+  mapStruct: null
 };
 
 export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
     case Constants.SET_REPORTS:
       return { ...state, data: action.data };
+
+    case Constants.SET_REPORT_MAP_STRUCT:
+      return { ...state, mapStruct: action.mapStruct };
+
     case Constants.CREATE_REPORT:
     case Constants.UPDATE_REPORT:
       return { ...state, data: { ...state.data, ...formatSingleReport(state, action.data) } };

@@ -21,6 +21,7 @@ defmodule KlziiChat.Session do
     belongs_to :brand_project_preference, KlziiChat.BrandProjectPreference, [foreign_key: :brandProjectPreferenceId]
     belongs_to :brand_logo, KlziiChat.Resource, [foreign_key: :resourceId]
     belongs_to :account, KlziiChat.Account, [foreign_key: :accountId]
+    belongs_to :participant_list, KlziiChat.ContactList, [foreign_key: :participantListId]
     has_many :session_topics, KlziiChat.SessionTopic, [foreign_key: :sessionId]
     has_many :topics, through: [:session_topics, :topic]
     has_many :direct_messages, KlziiChat.DirectMessage, [foreign_key: :sessionId]

@@ -39,7 +39,7 @@ defmodule KlziiChat.Channels.SessionTopic.ConsoleTest do
 
     ref = push socket, "enable_pinboard", %{enable: true}
     assert_reply ref, :ok, %{}
-    
+
     assert_push("console", %{})
   end
 
@@ -48,7 +48,7 @@ defmodule KlziiChat.Channels.SessionTopic.ConsoleTest do
 
     ref = push socket, "enable_pinboard", %{enable: false}
     assert_reply ref, :ok, %{}
-    
+
     assert_push("console", %{})
   end
 
@@ -72,7 +72,7 @@ defmodule KlziiChat.Channels.SessionTopic.ConsoleTest do
     assert_reply push_ref, :ok, %{ mini_surveys: [%{ id: ^mini_survey_id }] }
   end
 
-  test "answere mini surveys", %{socket: socket, session_topic_1_name: session_topic_1_name, mini_survey_id: mini_survey_id} do
+  test "answere mini surveys", %{socket2: socket, session_topic_1_name: session_topic_1_name, mini_survey_id: mini_survey_id} do
     {:ok, _, socket} = subscribe_and_join(socket, SessionTopicChannel, session_topic_1_name)
     push_ref = push socket, "answer_mini_survey", %{ "id"=> mini_survey_id, "answer" => %{"type" => "yesNoMaybe", "value" => "yes" } }
     assert_reply push_ref, :ok, %{id: ^mini_survey_id}

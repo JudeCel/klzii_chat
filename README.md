@@ -46,10 +46,10 @@ Observers users
 
 ### Report Preview URL's
 
-``` :id ``` - is Session topic id  
-``` http://localhost:3000/reporting/whiteboard/:id ```
-``` http://localhost:3000/reporting/messages/:id ```
-``` http://localhost:3000/reporting/mini_survey/:id ```
+``` http://localhost:3000/reporting/messages/:session_id/:session_topic_id ```
+``` http://localhost:3000/reporting/messages_stars_only/:session_id/session_topic_id ```
+``` http://localhost:3000/reporting/whiteboard/:session_id/:session_topic_id ```
+``` http://localhost:3000/reporting/mini_survey/:session_id/:session_topic_id ```
 
 ### Tests
 Run

@@ -6,11 +6,10 @@ defmodule KlziiChat.Services.WhiteboardService do
   import Ecto.Query, only: [from: 2, preload: 2]
 
   def history(session_topic_id, session_member_id) do
-    session_topic = Repo.get!(SessionTopic, session_topic_id)
     session_member = Repo.get!(SessionMember, session_member_id)
 
     resp =
-      ShapesQueries.base_query(session_topic)
+      ShapesQueries.base_query(%{sessionTopicId: session_topic_id})
       |> preload(:session_member)
       |> Repo.all
       |>  Enum.map(fn shape ->

@@ -19,7 +19,7 @@ defmodule KlziiChat.Channels.SessionTopic.MessageTest do
       emotion: 1
     ) |> Repo.insert!
 
-    unread_message = Ecto.build_assoc(
+    Ecto.build_assoc(
       message, :unread_messages,
       sessionTopicId: session_topic_1.id,
       sessionMemberId: facilitator.id,

@@ -28,8 +28,14 @@ const ReportsModal = React.createClass({
   changePage(rendering, report) {
     this.setState({ rendering, report });
   },
+  componentDidUpdate(props, state) {
+    if(state.rendering != this.state.rendering) {
+      this.refs.title.innerText = 'Reports';
+    }
+  },
   render() {
-    const { rendering, report } = this.state;
+    const { rendering, report} = this.state;
+    const { repors: { mapStruct } } = this.props;
     let show = this.showSpecificModal('reports');
 
     if(show) {
@@ -41,14 +47,14 @@ const ReportsModal = React.createClass({
             </div>
 
             <div className='col-md-8 modal-title'>
-              <h4>Reports</h4>
+              <h4 ref='title'>Reports</h4>
             </div>
           </Modal.Header>
 
           <Modal.Body>
             <div className='row'>
               <div className='col-md-12'>
-                <ReportsPages rendering={ rendering } changePage={ this.changePage } report={ report } />
+                <ReportsPages rendering={ rendering } changePage={ this.changePage } report={ report } mapStruct={mapStruct} reference={ this.refs } />
               </div>
             </div>
           </Modal.Body>
@@ -65,6 +71,7 @@ const mapStateToProps = (state) => {
   return {
     modalWindows: state.modalWindows,
     colours: state.chat.session.colours,
+    repors: state.reports
   }
 };
 

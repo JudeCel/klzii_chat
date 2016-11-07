@@ -1,8 +1,6 @@
 defmodule KlziiChat.Presence do
   alias KlziiChat.{SessionMembersView, Repo, SessionMember}
   use Phoenix.Presence, otp_app: :klzii_chat, pubsub_server: KlziiChat.PubSub
-
-  import Ecto
   import Ecto.Query, only: [from: 2]
 
   def fetch("session_topic:" <> _id, entries) do

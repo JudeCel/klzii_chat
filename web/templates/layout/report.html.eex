@@ -18,9 +18,6 @@
           <img class='img-responsive' src="<%= brand_logo_path(assigns[:conn], assigns.brand_logo) %>" />
         </span>
       </div>
-      <div class='report-topic'>
-        <%= @session_topic_name%>
-      </div>
       <%= render @view_module, @view_template, assigns %>
     </div>
   </body>

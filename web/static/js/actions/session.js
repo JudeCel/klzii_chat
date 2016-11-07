@@ -95,6 +95,14 @@ const Actions = {
         currentMember(dispatch, resp);
       });
 
+      channel.on("contact_list_map_struct", (resp) => {
+        dispatch({type: 'SET_REPORT_MAP_STRUCT', mapStruct: resp.mapStruct});
+      });
+
+      channel.on("error_message", (resp) =>{
+        NotificationsActions.showErrorNotification(dispatch, resp);
+      });
+
       channel.on("members", (resp) =>{
         members(dispatch, resp);
       });

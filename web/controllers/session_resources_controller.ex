@@ -68,7 +68,7 @@ defmodule KlziiChat.SessionResourcesController do
       |> Repo.all
 
     stock_resources =
-      QueriesResources.base_resource_query
+      QueriesResources.base_query
         |> QueriesResources.find_by_params(params)
         |> QueriesResources.stock_query(%{"stock" => true})
         |> QueriesResources.exclude_by_ids(session_resources)

@@ -8,6 +8,7 @@ config :klzii_chat, KlziiChat.Endpoint,
 
 # Print only warnings and errors during test
 config :logger, level: :warn
+# config :logger, :console, format: "[$level] $message\n"
 
 # Configure your database
 config :klzii_chat, KlziiChat.Repo,

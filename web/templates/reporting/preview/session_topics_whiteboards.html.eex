@@ -1,0 +1,6 @@
+<%= for session_topic <- @session_topics do %>
+    <div class='report-topic'>
+      <%= session_topic.name %>
+    </div>
+    <%= render "shapes.html", session_topic: session_topic, shapes: session_topic.shapes, conn: assigns[:conn], session: assigns[:session] %>
+<% end %>

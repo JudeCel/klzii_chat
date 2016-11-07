@@ -2,7 +2,7 @@ defmodule KlziiChat.SessionChannel do
   use KlziiChat.Web, :channel
   alias KlziiChat.Services.{SessionService, SessionMembersService, SessionReportingService, DirectMessageService}
   alias KlziiChat.Services.Permissions.SessionReporting, as: SessionReportingPermissions
-  alias KlziiChat.{Presence, SessionMembersView, SessionTopicsReportView, DirectMessageView}
+  alias KlziiChat.{Presence, SessionMembersView, SessionTopicsReportView, DirectMessageView, ReportView}
   import(KlziiChat.Authorisations.Channels.Session, only: [authorized?: 2])
   import(KlziiChat.Helpers.SocketHelper, only: [get_session_member: 1, track: 1])
   import KlziiChat.ErrorHelpers, only: [error_view: 1]
@@ -38,10 +38,23 @@ defmodule KlziiChat.SessionChannel do
       {:ok, members} ->
         push socket, "members", members
       {:error, reason} ->
-        {:error, %{reason: reason}}
+        push(socket, "error_message", reason)
     end
 
     {:ok, _} = track(socket)
+
+    case SessionReportingPermissions.can_get_reports(get_session_member(socket)) do
+      {:ok} ->
+        case SessionReportingService.get_session_contact_list(socket.assigns.session_id) do
+          {:ok, contact_list} ->
+            contact_list_map =  ReportView.render("map_struct.json", %{contact_list: contact_list})
+            push(socket, "contact_list_map_struct", %{mapStruct: contact_list_map})
+          {:error, reason} ->
+            push(socket, "error_message", reason)
+        end
+      {:error, _} ->
+        nil
+    end
 
     push socket, "presence_state", Presence.list(socket)
     push(socket, "self_info", session_member)
@@ -54,18 +67,16 @@ defmodule KlziiChat.SessionChannel do
         socket = assign(socket, :session_member, Map.merge(get_session_member(socket), SessionMembersView.render("member.json", member: session_member )))
         push(socket, "self_info", get_session_member(socket))
         broadcast(socket, "update_member", session_member)
+        {:noreply, socket}
       {:error, reason} ->
         {:error, %{reason: reason}}
     end
-
-    {:noreply, socket}
   end
 
-  def handle_in("create_session_topic_report", %{"sessionTopicId" => session_topic_id, "format" => report_format, "type" => report_type, "facilitator" => include_facilitator}, socket) do
-    case SessionReportingService.create_session_topic_report(socket.assigns.session_id, get_session_member(socket).id, session_topic_id, String.to_atom(report_format), String.to_atom(report_type), include_facilitator) do
-      {:ok, session_topics_report} ->
-
-        {:reply, {:ok, SessionTopicsReportView.render("show.json", %{report: session_topics_report})}, socket}
+  def handle_in("create_session_topic_report", payload, socket) do
+    case SessionReportingService.create_report(get_session_member(socket).id, payload) do
+      {:ok, report} ->
+        {:reply, {:ok, SessionTopicsReportView.render("show.json", %{report: report})}, socket}
       {:error, reason} ->
         {:error, %{reason: reason}}
     end
@@ -81,7 +92,7 @@ defmodule KlziiChat.SessionChannel do
   end
 
   def handle_in("recreate_session_topic_report", %{"id" => session_topic_report_id}, socket) do
-    case SessionReportingService.recreate_session_topic_report(session_topic_report_id, get_session_member(socket).id) do
+    case SessionReportingService.recreate_report(session_topic_report_id, get_session_member(socket).id) do
       {:ok, session_topics_report} ->
         {:reply, {:ok, SessionTopicsReportView.render("show.json", %{report: session_topics_report})}, socket}
       {:error, reason} ->
@@ -169,20 +180,6 @@ defmodule KlziiChat.SessionChannel do
         push socket, "unread_messages", map
       nil ->
         nil
-    end
-    {:noreply, socket}
-  end
-
-  def handle_out("read_message", payload, socket) do
-    session_member = get_session_member(socket)
-    if session_member.id == payload.session_member_id do
-      id = session_member.id |> to_string
-      case Map.get(payload.messages, id, nil) do
-        map when is_map(map) ->
-          push socket, "unread_messages", map
-        nil ->
-          nil
-      end
     end
     {:noreply, socket}
   end
