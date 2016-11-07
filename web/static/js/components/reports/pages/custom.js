@@ -29,7 +29,7 @@ const ReportsCustom = React.createClass({
     }
     else {
       delete selected[field];
-      this.setState({ selected, limitReached: (selectedCount-1) >= mapStruct.max_default_fileds_count });
+      this.setState({ selected, limitReached: (selectedCount -1) >= mapStruct.max_default_fileds_count });
     }
   },
   showDefaultColumns() {
@@ -46,7 +46,8 @@ const ReportsCustom = React.createClass({
   componentDidUpdate(props, state) {
     const { mapStruct, dispatch, reference } = this.props
     reference.title.innerText = 'Manage Columns in View';
-    if(this.state.limitReached && state.limitReached != this.state.limitReached) {
+
+    if(this.state.limitReached) {
       let errorMessage = `You can select not more than ${mapStruct.max_default_fileds_count} additional custom fields in your report`;
       NotificationActions.showErrorNotification(dispatch, [errorMessage]);
     }
