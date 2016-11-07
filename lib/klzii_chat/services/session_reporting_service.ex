@@ -3,7 +3,7 @@ defmodule KlziiChat.Services.SessionReportingService do
   alias KlziiChat.{Repo, SessionTopicsReport, SessionMember, Session}
   alias KlziiChat.Services.Permissions.SessionReporting, as: SessionReportingPermissions
   import KlziiChat.Helpers.MapHelper, only: [key_to_string: 1]
-  import Ecto.Query, only: [from: 2]
+  import Ecto.Query, only: [from: 2, from: 1 ]
 
   @spec get_session_member(integer) :: {atom, String.t}
   def get_session_member(session_member_id) do
@@ -121,6 +121,16 @@ defmodule KlziiChat.Services.SessionReportingService do
     |> Repo.update()
   end
 
+  def delete_all() do
+    query = from(str in SessionTopicsReport)
+
+    Repo.all(query)
+    |> Repo.preload([:resource])
+    |> Enum.map(fn(report) ->
+        ResourceService.deleteByIds([report.resourceId])
+     end)
+     Repo.delete_all(query)
+  end
 
   @spec get_session_topics_reports(integer, integer) :: {:ok, List.t} | {:error, String.t}
   def get_session_topics_reports(session_id, session_member_id) do

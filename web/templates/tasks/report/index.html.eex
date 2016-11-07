@@ -1,0 +1,1 @@
+<a href="<%= report_path(@conn, :delete_all_report) %>">Delete all reports</a>
