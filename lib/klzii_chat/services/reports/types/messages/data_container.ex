@@ -16,8 +16,8 @@ defmodule KlziiChat.Services.Reports.Types.Messages.DataContainer do
   def get_value("Date", %{createdAt: createdAt}, %{timeZone: time_zone},_) do
     DateTimeHelper.report_format(createdAt, time_zone)
   end
-  def get_value("Is Reply", %{replyLevel: 0},_,_), do: to_string(true)
-  def get_value("Is Reply", _,_,_), do: to_string(false)
+  def get_value("Is Reply", %{replyLevel: 0},_,_), do: to_string(false)
+  def get_value("Is Reply", _,_,_), do: to_string(true)
   def get_value("Emotion", %{emotion: emotion},_,_) do
     {:ok, emotion_name} = MessageDecorator.emotion_name(emotion)
     emotion_name

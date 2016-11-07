@@ -44,8 +44,8 @@ defmodule KlziiChat.Queries.Messages do
 
   @spec join_replies(Ecto.Query) :: Ecto.Query
   def join_replies(query) do
-    replies_query = from(st in Message, where: [replyLevel: 2], order_by: [asc: :createdAt], preload: [:session_member, :votes, :replies])
-    replies_nested_query = from(st in Message, where: [replyLevel: 1], order_by: [asc: :createdAt], preload: [:session_member, :votes, replies: ^replies_query])
+    replies_query = from(st in Message, order_by: [asc: :createdAt], preload: [:session_member, :votes])
+    replies_nested_query = from(st in Message, order_by: [asc: :createdAt], preload: [:session_member, :votes, replies: ^replies_query])
     from message in query,
     preload: [replies: ^replies_nested_query]
   end

@@ -1,28 +1,14 @@
 defmodule KlziiChat.Services.Reports.Types.Messages.Formats.TxtTest do
   use KlziiChat.{ModelCase, SessionMemberCase}
   alias KlziiChat.Services.Reports.Types.Messages
-  alias KlziiChat.Services.SessionReportingService
+  alias KlziiChat.Services.{SessionReportingService, MessageService}
 
   setup %{session_topic_1: session_topic, facilitator: facilitator, participant: participant, contact_list: contact_list} do
-    Ecto.build_assoc(
-      session_topic, :messages,
-      sessionTopicId: session_topic.id,
-      sessionMemberId: facilitator.id,
-      body: "test message 1",
-      emotion: 0,
-      star: true,
-      replyLevel: 0,
-    ) |> Repo.insert!()
+    {:ok, message } = MessageService.create_message(participant, session_topic.id, %{"emotion" => 1, "body" => "!!!!1"})
+    {:ok, message1 } = MessageService.create_message(facilitator, session_topic.id, %{"replyId" => message.id, "emotion" => 2, "body" => "!!!!2"})
+    {:ok, message2 } = MessageService.create_message(facilitator, session_topic.id, %{"replyId" => message1.id, "emotion" => 2, "body" => "!!!!3"})
+    {:ok, _ } = MessageService.create_message(participant, session_topic.id, %{"emotion" => 2, "body" => "!!!!5"})
 
-    Ecto.build_assoc(
-      session_topic, :messages,
-      sessionTopicId: session_topic.id,
-      sessionMemberId: participant.id,
-      body: "test message 2",
-      emotion: 1,
-      star: false,
-      replyLevel: 0,
-    ) |> Repo.insert!()
 
     topic_report_payload =  %{"sessionTopicId" => session_topic.id, "format" => "txt",
       "type" => "messages",
@@ -51,24 +37,21 @@ defmodule KlziiChat.Services.Reports.Types.Messages.Formats.TxtTest do
     end
   end
 
-  describe "get_data" do
+  describe "set date in data accumulator" do
     setup %{topic_report_data: data} do
-      session = get_in(data, ["session"])
       fields = get_in(data, ["fields"])
-      [session_topic |_ ] = get_in(data, ["session_topics"])
-      [message | _ ] = session_topic.messages
-      result = Messages.Formats.Txt.get_data(message, session, fields)
+      {:ok, result} = Messages.Formats.Txt.render_string(data)
       {:ok, result: result, fields: fields}
     end
 
-    test "is map", %{result: result} do
-      assert(is_list(result))
+    test "should be list with 4 elements", %{result: result} do
+      data = Agent.get(result.data, &(&1))
+      assert(Enum.count(data) == 4)
     end
 
-    test "is all keys reqired", %{fields: fields, result: result} do
-      row =
-        List.first(result)
-        |> String.split(",")
+    test "one element contains same all elements from fields lis", %{result: result, fields: fields} do
+      data = Agent.get(result.data, &(&1)) |> List.first
+      row = String.split(data, ",")
       assert(length(fields) == length(row))
     end
   end

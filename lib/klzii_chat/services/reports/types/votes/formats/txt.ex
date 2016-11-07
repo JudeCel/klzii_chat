@@ -14,11 +14,12 @@ defmodule KlziiChat.Services.Reports.Types.Votes.Formats.Txt do
 
     header = "#{session.name} / #{session_topic.name}\r\n\r\n"
 
-    stream =
-      session_topic.mini_surveys
-      |> Enum.map(&get_data(&1, session, fields))
+    {:ok, acc} = Agent.start_link(fn -> [] end)
+    {:ok, container} = DataContainer.start_link(session.participant_list)
 
-    {:ok, Enum.concat([header], stream)}
+    Enum.each(session_topic.mini_surveys, &map_data(&1, session, fields, acc, container))
+
+    {:ok, %{data: acc, header: header}}
   end
 
   @spec get_data(Map.t,  Map.t, List.T) :: List.t

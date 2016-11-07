@@ -11,24 +11,31 @@ defmodule KlziiChat.Services.Reports.Types.Votes.Formats.Csv do
     session = get_in(data, ["session"])
     fields = get_in(data, ["fields"])
     [session_topic |_ ] = get_in(data, ["session_topics"])
-
-    stream =
-      session_topic.mini_surveys
-      |> Stream.map(&get_data(&1, session, fields))
-      |> CSV.encode(headers: fields)
-    {:ok, stream}
-  end
-
-  @spec get_data(Map.t,  Map.t, List.T) :: List.t
-  def get_data(mini_survey, session, fields) do
+    {:ok, acc} = Agent.start_link(fn -> [] end)
     {:ok, container} = DataContainer.start_link(session.participant_list)
 
-    Enum.map(mini_survey.mini_survey_answers, fn(answer) ->
-      Enum.map(fields, fn(field) ->
-        {field, DataContainer.get_value(field, mini_survey, answer, session, container)}
+    Enum.each(session_topic.mini_surveys, &map_data(&1, session, fields, acc, container))
+
+    {:ok, %{data: acc, header: fields}}
+  end
+
+  @spec map_data(Map.t,  Map.t, List.t, Process.t, Process.t) :: List.t
+  def map_data(mini_survey, session, fields, acc, container) do
+    Enum.each(mini_survey.mini_survey_answers, fn(answer) ->
+      Enum.each(fields, fn(field) ->
+        map_fields(fields, mini_survey, answer, session, container)
+        |> update_accumulator(acc)
       end)
     end)
-    |> List.flatten
-    |> Enum.into(%{})
+  end
+
+  def update_accumulator(new_data, acc) do
+    :ok = Agent.update(acc, fn(data) -> data ++  [new_data] end)
+  end
+
+  def map_fields(fields, mini_survey, answer, session, container) do
+    Enum.map(fields, fn(field) ->
+      {field,  DataContainer.get_value(field, mini_survey, answer, session, container)}
+    end)
   end
 end

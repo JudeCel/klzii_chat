@@ -23,7 +23,7 @@
     <link rel="stylesheet" href="<%= static_path(@conn, "/css/app.css") %>">
   </head>
 
-  <body>
+    <body>
       <%= render @view_module, @view_template, assigns %>
     </div>
   </body>

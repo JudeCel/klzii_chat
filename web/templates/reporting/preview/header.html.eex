@@ -1,0 +1,11 @@
+<!DOCTYPE HTML>
+<html><head></head>
+  <div class='report-section'>
+    <div class='text-center report-header'>
+      <span class='report-title'><%= @header_title %></span>
+      <span class='pull-right report-logo'>
+        <img class='img-responsive' src="<%= brand_logo_path(assigns[:conn], assigns.brand_logo) %>" />
+      </span>
+    </div>
+  </div>
+</html>
