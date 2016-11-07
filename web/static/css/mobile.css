@@ -416,6 +416,11 @@
     content: '\E80F';
   }
 
+  .modal-section .modal-body .survey-answer-section > ul {
+    overflow-y: auto;
+    height: calc(100vh - 160px) !important;
+  }
+
   .modal-section .modal-body .survey-answer-section .col-md-12 ul li {
     border: 1px solid #aaa !important;
     margin-top: 10px !important;
