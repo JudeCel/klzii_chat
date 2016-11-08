@@ -33,8 +33,7 @@ const ReportsIndex = React.createClass({
       {name: 'votes', typeName: 'votes', typeData: types['votes']},
     ];
       let sessionTopicslist = [...sessionTopics];
-
-      if (format == "pdf") {
+      if (mapStruct.multiple_topics[format]) {
         sessionTopicslist.unshift({name: "All topics", id: "all"}); // Hack
       }
 

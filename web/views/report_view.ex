@@ -8,7 +8,6 @@ defmodule KlziiChat.ReportView do
       max_default_fileds_count: 4,
       types: %{
         messages: %{
-          multiple_topics: true,
           name: "All",
           selected: true,
           formats: %{
@@ -19,7 +18,6 @@ defmodule KlziiChat.ReportView do
           defaultFields: ["First Name", "Comment", "Date", "Is Star", "Is Reply"]
         },
         messages_stars_only: %{
-          multiple_topics: true,
           selected: false,
           name: "star only",
           formats: %{
@@ -30,7 +28,6 @@ defmodule KlziiChat.ReportView do
           defaultFields: ["First Name", "Comment", "Date", "Is Reply"]
         },
         votes: %{
-          multiple_topics: true,
           selected: false,
           name: "Votes",
           formats: %{
@@ -41,7 +38,6 @@ defmodule KlziiChat.ReportView do
           defaultFields: ["Title", "Question", "First Name", "Answer", "Date" ]
         },
         whiteboards: %{
-          multiple_topics: true,
           selected: false,
           name: "Whiteboard",
           formats: %{
@@ -52,6 +48,7 @@ defmodule KlziiChat.ReportView do
           defaultFields: []
         },
       },
+      multiple_topics: %{"pdf" => true},
       fields: %{
         custom: Enum.concat(@default_field, contact_list.customFields)
       },
