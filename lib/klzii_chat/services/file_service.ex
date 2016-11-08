@@ -56,7 +56,7 @@ defmodule KlziiChat.Services.FileService do
   def conwert_with_xvfb(tmp_body, tmp_header, destination_path) do
     options = [
       "--auto-servernum",
-      "wkhtmltopdf",
+      "wkhtmltopdf", "--disable-smart-shrinking", "--page-size", "A4", "--dpi", "100",
       "--footer-html", @footer_path, "--header-html", tmp_header, "file://" <> tmp_body, destination_path
     ]
     case System.cmd("xvfb-run", options , stderr_to_stdout: true) do
@@ -76,7 +76,7 @@ defmodule KlziiChat.Services.FileService do
   end
 
   def create_destination_file(tmp_dir_path, name, format) do
-    path = path = compose_path(tmp_dir_path, to_string(name), format)
+    path = compose_path(tmp_dir_path, to_string(name), format)
     :ok = File.touch(path)
     {:destination, path}
   end
