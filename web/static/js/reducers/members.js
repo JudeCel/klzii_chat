@@ -53,12 +53,16 @@ function onLeave(state) {
 }
 
 function syncState(state, syncData) {
-  state.presences = Presence.syncState(state.presences, syncData, onJoin(state), onLeave(state));
+  if (state && state.presences) {
+    state.presences = Presence.syncState(state.presences, syncData, onJoin(state), onLeave(state));
+  }
   return state;
 }
 
 function syncDiff(state, diff) {
-  state.presences = Presence.syncDiff(state.presences, diff, onJoin(state), onLeave(state));
+  if (state && state.presences) {
+    state.presences = Presence.syncDiff(state.presences, diff, onJoin(state), onLeave(state));
+  }
   return state;
 }
 
