@@ -85,7 +85,7 @@ defmodule KlziiChat.Services.SessionReportingService do
       :test ->
         {:ok, "Running in Test ENV"}
       _ ->
-        Exq.enqueue(Exq, "report", KlziiChat.BackgroundTasks.Reports.SessionTopicReport, [report.id])
+        Exq.enqueue(Exq, "report_#{report.format}", KlziiChat.BackgroundTasks.Reports.SessionTopicReport, [report.id])
     end
   end
 
