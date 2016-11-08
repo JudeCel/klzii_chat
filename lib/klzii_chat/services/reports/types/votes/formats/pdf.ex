@@ -8,7 +8,14 @@ defmodule KlziiChat.Services.Reports.Types.Votes.Formats.Pdf do
   @spec render_string( Map.t) :: {:ok, String.t} | {:error, Map.t}
   def render_string(data) do
     try do
-      string = Phoenix.View.render_to_string(
+      header =
+        Phoenix.View.render_to_string(
+          KlziiChat.Reporting.PreviewView, "header.html",
+          brand_logo: get_in(data, ["session", :brand_logo]),
+          header_title: get_in(data, ["header_title"])
+        )
+
+      body = Phoenix.View.render_to_string(
         KlziiChat.Reporting.PreviewView, "session_topics_mini_surveys.html",
         session_topics: get_in(data, ["session_topics"]),
         session: get_in(data, ["session"]),
@@ -16,7 +23,7 @@ defmodule KlziiChat.Services.Reports.Types.Votes.Formats.Pdf do
         header_title: get_in(data, ["header_title"]),
         layout: {KlziiChat.LayoutView, "report.html"}
       )
-      {:ok, string}
+      {:ok, %{body: body, header: header}}
     catch
       :error, reason ->
         {:error, reason}

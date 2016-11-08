@@ -1,30 +1,16 @@
 defmodule KlziiChat.Services.Reports.Types.Messages.Formats.CsvTest do
   use KlziiChat.{ModelCase, SessionMemberCase}
   alias KlziiChat.Services.Reports.Types.Messages
-  alias KlziiChat.Services.SessionReportingService
+  alias KlziiChat.Services.{SessionReportingService, MessageService}
 
   setup %{session_topic_1: session_topic, facilitator: facilitator, participant: participant, contact_list: contact_list} do
-    Ecto.build_assoc(
-      session_topic, :messages,
-      sessionTopicId: session_topic.id,
-      sessionMemberId: facilitator.id,
-      body: "test message 1",
-      emotion: 0,
-      star: true,
-      replyLevel: 0,
-    ) |> Repo.insert!()
 
-    Ecto.build_assoc(
-      session_topic, :messages,
-      sessionTopicId: session_topic.id,
-      sessionMemberId: participant.id,
-      body: "test message 2",
-      emotion: 1,
-      star: false,
-      replyLevel: 0,
-    ) |> Repo.insert!()
+    {:ok, message } = MessageService.create_message(participant, session_topic.id, %{"emotion" => 1, "body" => "!!!!1"})
+    {:ok, message1 } = MessageService.create_message(facilitator, session_topic.id, %{"replyId" => message.id, "emotion" => 2, "body" => "!!!!2"})
+    {:ok, _ } = MessageService.create_message(facilitator, session_topic.id, %{"replyId" => message1.id, "emotion" => 2, "body" => "!!!!3"})
+    {:ok, _ } = MessageService.create_message(participant, session_topic.id, %{"emotion" => 2, "body" => "!!!!5"})
 
-    topic_report_payload =  %{"sessionTopicId" => session_topic.id, "format" => "pdf",
+    topic_report_payload =  %{"sessionTopicId" => session_topic.id, "format" => "csv",
       "type" => "messages",
       "includeFields" =>  Enum.take(contact_list.customFields, 2)
     }
@@ -32,7 +18,7 @@ defmodule KlziiChat.Services.Reports.Types.Messages.Formats.CsvTest do
     {:ok, topic_report} = SessionReportingService.create_report(facilitator.id, topic_report_payload)
     {:ok, topic_report_data} = Messages.Base.get_data(topic_report)
 
-    session_report_payload =  %{"format" => "pdf", "type" => "messages" }
+    session_report_payload =  %{"format" => "csv", "type" => "messages" }
     {:ok, session_report} = SessionReportingService.create_report(facilitator.id, session_report_payload)
 
     {:ok, session_report_data} = Messages.Base.get_data(session_report)
@@ -51,23 +37,22 @@ defmodule KlziiChat.Services.Reports.Types.Messages.Formats.CsvTest do
     end
   end
 
-  describe "get_data" do
+  describe "set date in data accumulator" do
     setup %{topic_report_data: data} do
-      session = get_in(data, ["session"])
       fields = get_in(data, ["fields"])
-      [session_topic |_ ] = get_in(data, ["session_topics"])
-      [message | _ ] = session_topic.messages
-      result = Messages.Formats.Csv.get_data(message, session, fields)
+      {:ok, result} = Messages.Formats.Csv.render_string(data)
       {:ok, result: result, fields: fields}
     end
 
-    test "is map", %{result: result} do
-      assert(%{} = result)
+    test "should be list with 4 elements", %{result: result} do
+      data = Agent.get(result.data, &(&1))
+      assert(Enum.count(data) == 4)
     end
 
-    test "is all keys reqired", %{fields: fields, result: result} do
-      keys = Map.keys(result)
-      assert(length(fields) == length(keys))
+    test "one element contains same all elements from fields lis", %{result: result, fields: fields} do
+      data = Agent.get(result.data, &(&1)) |> List.first |> Map.keys
+      assert(length(fields) == length(data))
     end
   end
+
 end

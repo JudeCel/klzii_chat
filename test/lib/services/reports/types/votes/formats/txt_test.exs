@@ -68,36 +68,21 @@ defmodule KlziiChat.Services.Reports.Types.Votes.Formats.TxtTest do
     {:ok, topic_report_data: topic_report_data, session_report_data: session_report_data}
   end
 
-  describe "processe_data" do
-    test "topic report", %{topic_report_data: topic_report_data} do
-      assert({:ok, _} = Votes.Formats.Txt.processe_data(topic_report_data))
-    end
-
-    test "session report", %{session_report_data: session_report_data} do
-      assert({:ok, stream} = Votes.Formats.Txt.processe_data(session_report_data))
-      data =  Enum.to_list(stream)
-      assert(length(data) == 3)
-    end
-  end
-
-  describe "get_data" do
+  describe "set date in data accumulator" do
     setup %{topic_report_data: data} do
-      session = get_in(data, ["session"])
       fields = get_in(data, ["fields"])
-      [session_topic |_ ] = get_in(data, ["session_topics"])
-      [_ | [mini_survey] ] = session_topic.mini_surveys
-      result = Votes.Formats.Txt.get_data(mini_survey, session, fields)
+      {:ok, result} = Votes.Formats.Txt.render_string(data)
       {:ok, result: result, fields: fields}
     end
 
-    test "is map", %{result: result} do
-      assert(is_list(result))
+    test "should be list with 4 elements", %{result: result} do
+      data = Agent.get(result.data, &(&1))
+      assert(Enum.count(data) == 1)
     end
 
-    test "is all keys reqired", %{fields: fields, result: result} do
-      row =
-        List.first(result)
-        |> String.split(",")
+    test "one element contains same all elements from fields lis", %{result: result, fields: fields} do
+      data = Agent.get(result.data, &(&1)) |> List.first
+      row = String.split(data, ",")
       assert(length(fields) == length(row))
     end
   end
