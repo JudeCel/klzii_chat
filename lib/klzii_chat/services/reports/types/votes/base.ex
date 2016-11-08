@@ -2,6 +2,7 @@ defmodule KlziiChat.Services.Reports.Types.Votes.Base do
   @behaviour KlziiChat.Services.Reports.Types.Behavior
   alias KlziiChat.{Repo, SessionTopicView, SessionView, SessionTopic, Session}
   alias KlziiChat.Services.Reports.Types.Votes.{Formats}
+  alias KlziiChat.Queries.SessionTopic, as: SessionTopicQueries
   alias KlziiChat.Queries.MiniSurvey, as: QueriesMiniSurvey
   import Ecto.Query, only: [from: 2]
 
@@ -56,10 +57,9 @@ defmodule KlziiChat.Services.Reports.Types.Votes.Base do
   end
 
   def preload_session_topic(%{sessionTopicId: nil, sessionId: session_id} = report) do
-    from(st in SessionTopic,
-      where: st.sessionId == ^session_id,
-      preload: [mini_surveys: ^preload_mini_survey_query(report)]
-    ) |> Repo.all
+    SessionTopicQueries.all(session_id)
+    |> Repo.all
+    |> Repo.preload([mini_surveys: preload_mini_survey_query(report)])
   end
 
   def preload_session_topic(%{sessionTopicId: sessionTopicId} = report) do

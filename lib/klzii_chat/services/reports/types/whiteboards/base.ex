@@ -2,6 +2,7 @@ defmodule KlziiChat.Services.Reports.Types.Whiteboards.Base do
   @behaviour KlziiChat.Services.Reports.Types.Behavior
   alias KlziiChat.Services.Reports.Types.Whiteboards.{Formats}
   alias KlziiChat.{Repo, SessionView, SessionTopic, Session, SessionTopicView}
+  alias KlziiChat.Queries.SessionTopic, as: SessionTopicQueries
   alias KlziiChat.Queries.Shapes, as: QueriesShapes
   import Ecto.Query, only: [from: 2]
 
@@ -54,10 +55,9 @@ defmodule KlziiChat.Services.Reports.Types.Whiteboards.Base do
   end
 
   def preload_session_topic(%{sessionTopicId: nil, sessionId: session_id} = report) do
-    from(st in SessionTopic,
-      where: st.sessionId == ^session_id,
-      preload: [shapes: ^preload_shapes(report)]
-    ) |> Repo.all
+    SessionTopicQueries.all(session_id)
+    |> Repo.all
+    |> Repo.preload([shapes: preload_shapes(report)])
   end
 
   def preload_session_topic(%{sessionTopicId: sessionTopicId} = report) do

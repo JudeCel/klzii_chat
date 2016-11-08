@@ -2,6 +2,7 @@ defmodule KlziiChat.Services.Reports.Types.Messages.Base do
   @behaviour KlziiChat.Services.Reports.Types.Behavior
   alias KlziiChat.{Repo, SessionTopicView, SessionView, SessionTopic, Session}
   alias KlziiChat.Services.Reports.Types.Messages.Formats
+  alias KlziiChat.Queries.SessionTopic, as: SessionTopicQueries
   import Ecto.Query, only: [from: 2]
 
   @spec default_fields() :: List.t[String.t]
@@ -60,10 +61,9 @@ defmodule KlziiChat.Services.Reports.Types.Messages.Base do
   end
 
   def preload_session_topic(%{sessionTopicId: nil, sessionId: session_id} = report) do
-    from(st in SessionTopic,
-      where: st.sessionId == ^session_id,
-      preload: [messages: ^preload_messages_query(report)]
-    ) |> Repo.all
+    SessionTopicQueries.all(session_id)
+    |> Repo.all
+    |> Repo.preload([messages: preload_messages_query(report)])
   end
 
   def preload_session_topic(%{sessionTopicId: sessionTopicId} = report) do
