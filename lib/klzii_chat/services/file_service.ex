@@ -56,7 +56,8 @@ defmodule KlziiChat.Services.FileService do
   def conwert_with_xvfb(tmp_body, tmp_header, destination_path) do
     options = [
       "--auto-servernum",
-      "wkhtmltopdf", "--disable-smart-shrinking", "--page-size", "A4", "--dpi", "100",
+      "wkhtmltopdf", "--page-size", "A4", "--dpi", "100",
+      "--header-spacing", "5",
       "--footer-html", @footer_path, "--header-html", tmp_header, "file://" <> tmp_body, destination_path
     ]
     case System.cmd("xvfb-run", options , stderr_to_stdout: true) do
@@ -81,21 +82,6 @@ defmodule KlziiChat.Services.FileService do
     {:destination, path}
   end
 
-  @spec write_report(Map.t, Stream.t | Map.t) :: {:ok, String.t}
-  def write_report(%{id: id, format: format, name: name}, data) when is_map(data) and format in ["pdf"] do
-    tmp_dir_path = get_tmp_path(id)
-    [
-      fn -> create_and_write_html_tmp_file(tmp_dir_path, :header, data.header) end,
-      fn -> create_and_write_html_tmp_file(tmp_dir_path, :body, data.body) end,
-      fn -> create_destination_file(tmp_dir_path, name, format) end
-    ]
-    |> Enum.map(&Task.async(&1))
-    |> Task.yield_many
-    |> Enum.map(fn({_, {:ok, path}}) -> path end)
-    |> Enum.into(%{})
-    |> html_elements_to_pdf
-  end
-
   def write_data_csv(path, %{data: data, header: header }) do
     data_stream = Agent.get(data, &(&1))
     |> CSV.encode(headers: header)
@@ -115,6 +101,20 @@ defmodule KlziiChat.Services.FileService do
     {:error, %{wrong_data: "path:#{path}, data_map: #{is_map(data)}, data_streem: #{is_function(data)}" }}
   end
 
+  @spec write_report(Map.t, Stream.t | Map.t) :: {:ok, String.t}
+  def write_report(%{id: id, format: format, name: name}, data) when is_map(data) and format in ["pdf"] do
+    tmp_dir_path = get_tmp_path(id)
+    [
+      fn -> create_and_write_html_tmp_file(tmp_dir_path, :header, data.header) end,
+      fn -> create_and_write_html_tmp_file(tmp_dir_path, :body, data.body) end,
+      fn -> create_destination_file(tmp_dir_path, name, format) end
+    ]
+    |> Enum.map(&Task.async(&1))
+    |> Task.yield_many
+    |> Enum.map(fn({_, {:ok, path}}) -> path end)
+    |> Enum.into(%{})
+    |> html_elements_to_pdf
+  end
   def write_report(%{id: id, format: format, name: name}, data) when format in ["csv"]  do
     tmp_dir_path = get_tmp_path(id)
     {_,file_path} = create_destination_file(tmp_dir_path, name, format)

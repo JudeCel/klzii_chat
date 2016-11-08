@@ -1,13 +1,22 @@
+body{
+  border:0;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
 .time {
   font-size: 10px;
 }
 .report-section {
+  overflow: hidden;
+  height: 100%;
   margin: 0 auto;
   color: grey;
 }
 
 .report-section .media-body {
   padding-left: 30px;
+  page-break-inside: avoid !important;
 }
 .report-section .media-left {
   padding-right: 0px;
@@ -92,10 +101,15 @@
   height: 100%;
 }
 
+.mini-survey{
+  page-break-inside: avoid;
+}
+
 .mini-survey .title,
 .mini-survey .answers {
   padding-left: 10px;
   padding-right: 10px;
+  page-break-inside: inherit;
 }
 
 .mini-survey .title {
@@ -114,6 +128,7 @@
 
 .mini-survey .answers .media-body {
   padding-left: inherit;
+  page-break-inside: avoid !important;
 }
 
 .mini-survey .answers .svg_avatar{
