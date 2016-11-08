@@ -11,6 +11,14 @@ defmodule KlziiChat.Queries.Sessions do
     )
   end
 
+  @spec find_for_report(Integer) :: Ecto.Query.t
+  def find_for_report(session_id) do
+    from(s in Session,  where: s.id == ^session_id,
+    preload: [ :account, :brand_logo, :brand_project_preference,
+      [ participant_list: [ contact_list_users: [:account_user] ]] ]
+    )
+  end
+
   @spec get_subscription_preference_session(integer) :: Ecto.Query.t
   def get_subscription_preference_session(sessionId) do
     from(sp in SubscriptionPreference,
