@@ -1,5 +1,5 @@
 defmodule KlziiChat.Queries.Sessions do
-  alias KlziiChat.{Session, SessionTopic, SubscriptionPreference, Account}
+  alias KlziiChat.{Session, SubscriptionPreference, Account}
   import Ecto.Query, only: [from: 2]
 
   @spec find(Integer) :: Ecto.Query.t

@@ -19,8 +19,14 @@ defmodule KlziiChat.ShapeView do
       id: shape.id,
       event: render("event.json", %{shape: shape}),
       time: shape.createdAt,
-      uid: shape.uid
+      uid: shape.uid,
+      sessionTopicId: shape.sessionTopicId
     }
+  end
+
+  @spec render(String.t, Map.t) :: Map.t
+  def render("report.json", %{shape: shape}) do
+    render("shape.json", %{shape: shape})
   end
 
   @spec render(String.t, Map.t) :: Map.t

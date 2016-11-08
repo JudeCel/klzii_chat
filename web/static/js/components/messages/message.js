@@ -108,7 +108,6 @@ const Message = React.createClass({
     return (
       <div className='message-section media'>
         <div className={ (message.unread ? "unread" : "") } ref={(el) => this.messageElemet = el}>
-          { this.visibilitySensor() }
 
           <div className={ this.mediaImagePosition(message) }>
             <div className={ 'emotion-chat-' + message.emotion } aria-hidden='true' style={{ backgroundColor: member.colour }}></div>
@@ -133,6 +132,7 @@ const Message = React.createClass({
             </div>
 
             <div className={ this.bodyClassname(message) }>
+              { this.visibilitySensor() }
               <p className='text-break-all'>{ message.body }</p>
             </div>
 

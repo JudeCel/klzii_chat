@@ -1,7 +1,7 @@
 defmodule KlziiChat.ChatController do
   use KlziiChat.Web, :controller
   import KlziiChat.Services.SessionMembersService, only: [get_member_from_token: 1, clean_current_topic: 1]
-  alias KlziiChat.{SessionMember, AccountUser, User, Repo}
+  alias KlziiChat.{SessionMember, Repo}
 
   @doc """
     This index action is only for dev or test env.
@@ -10,7 +10,7 @@ defmodule KlziiChat.ChatController do
   def index(conn, %{"token_dev" => token}) do
     case Mix.env do
       env when env in [:dev, :test] ->
-        session_member = Repo.get_by!(KlziiChat.SessionMember, token: token)
+        session_member = Repo.get_by!(SessionMember, token: token)
         Guardian.Plug.sign_in(conn, session_member)
         |> render("index.html", session_id: session_member.sessionId)
       _ ->

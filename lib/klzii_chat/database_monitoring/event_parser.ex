@@ -12,14 +12,14 @@ defmodule KlziiChat.DatabaseMonitoring.EventParser do
 
   @spec session_topics(Integer.t) :: {:ok, String.t} | {:error, String.t}
   def session_topics(session_id) do
-      case Mix.env do
-        :test ->
-          {:ok, "Running in Test ENV"}
-        _ ->
-          spawn_link(fn ->
-            Exq.enqueue(Exq, "notify", SessionTopic, [session_id])
-          end)
-      end
+    case Mix.env do
+      :test ->
+        {:ok, "Running in Test ENV"}
+      _ ->
+        spawn_link(fn ->
+          Exq.enqueue(Exq, "notify", SessionTopic, [session_id])
+        end)
+    end
   end
 
   def processe_event(channel, payload) do
@@ -40,7 +40,7 @@ defmodule KlziiChat.DatabaseMonitoring.EventParser do
   @spec select_job(Map.t) :: {:ok, String.t} | {:error, String.t}
   def select_job(job_params) do
     case job_params do
-      %{"table" =>  "SessionTopics", "id" =>  id, "session_id" => session_id} ->
+      %{"table" =>  "SessionTopics", "id" =>  _, "session_id" => session_id} ->
         {:ok, __MODULE__, :session_topics, [session_id]}
       _ ->
         {:error, messages.errors.unhandle_event}

@@ -1,13 +1,13 @@
 var drawElements = function (shapes) {
   shapes.forEach(function(shape) {
     if(shape.event.action == "draw") {
-      draw("whiteboard", shape.event.element.type, shape.event.element.attr)
+      draw("#whiteboard_" + shape.sessionTopicId, shape.event.element.type, shape.event.element.attr)
     }
   });
 }
 
-var draw = function (class_name, type, attr) {
-  var wb = window.Snap('.' + class_name);
+var draw = function (id_name, type, attr) {
+  var wb = window.Snap(id_name);
   var svg_el;
   switch(type){
     case "ellipse":

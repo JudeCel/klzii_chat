@@ -32,6 +32,24 @@ defmodule KlziiChat.MessageView do
     }
   end
 
+  @spec render(String.t, Map.t) :: Map.t
+  def render("report.json", %{message: message}) do
+    %{
+      id: message.id,
+      session_member: SessionMembersView.render("report.json", %{member: message.session_member}),
+      body: message.body,
+      replyId: message.replyId,
+      replyLevel: message.replyLevel,
+      time: message.createdAt,
+      star: message.star,
+      emotion: message.emotion,
+      createdAt: message.createdAt,
+      replies: Phoenix.View.render_many(replies(message.replies),__MODULE__, "report.json", as: :message)
+    }
+  end
+
   defp unreaded_messages(%{__struct__: Ecto.Association.NotLoaded}), do: []
   defp unreaded_messages(unreaded_messages), do: unreaded_messages
+  defp replies(%{__struct__: Ecto.Association.NotLoaded}), do: []
+  defp replies(replies), do: replies
 end

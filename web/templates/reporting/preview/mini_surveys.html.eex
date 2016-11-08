@@ -5,7 +5,7 @@
     </div>
 
     <div class='answers'>
-      <%= render "mini_survey_answer.html", mini_survey_answers: mini_survey.mini_survey_answers, time_zone: assigns[:time_zone] %>
+      <%= render "mini_survey_answer.html", mini_survey_answers: mini_survey.mini_survey_answers, session: assigns[:session] %>
     </div>
   </div>
 <% end %>

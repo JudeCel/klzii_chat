@@ -1,6 +1,6 @@
 defmodule KlziiChat.SessionView do
   use KlziiChat.Web, :view
-  alias KlziiChat.{SessionTopicView, ResourceView, AccountView}
+  alias KlziiChat.{SessionTopicView, ResourceView, AccountView, ContactListView}
 
   def render("session.json", %{session: session}) do
     %{id: session.id,
@@ -10,9 +10,24 @@ defmodule KlziiChat.SessionView do
       endTime: session.endTime,
       colours: brand_project_preference(session.brand_project_preference),
       brand_logo: brand_logo(session.brand_logo),
-      session_topics: session_topics(session.session_topics),
+      session_topics: render_many(session_topics(session.session_topics), SessionTopicView, "show.json", as: :session_topic),
       timeZone: session.timeZone,
-      account: account(session.account)
+      account: render_one(account(session.account), AccountView, "show.json", as: :account)
+    }
+  end
+
+  def render("report.json", %{session: session}) do
+    %{id: session.id,
+      name: session.name,
+      type: session.type,
+      startTime: session.startTime,
+      endTime: session.endTime,
+      colours: brand_project_preference(session.brand_project_preference),
+      brand_logo: brand_logo(session.brand_logo),
+      session_topics: render_many(session_topics(session.session_topics), SessionTopicView, "report.json", as: :session_topic),
+      participant_list: render_one(participant_list(session.participant_list), ContactListView, "report.json", as: :contact_list),
+      timeZone: session.timeZone,
+      account: render_one(account(session.account), AccountView, "show.json", as: :account)
     }
   end
 
@@ -29,14 +44,13 @@ defmodule KlziiChat.SessionView do
   end
 
   defp session_topics(%{__struct__: Ecto.Association.NotLoaded}), do: []
-  defp session_topics(topics) do
-    render_many(topics, SessionTopicView, "show.json", as: :session_topic)
-  end
+  defp session_topics(topics), do: topics
 
-  defp account(%{__struct__: Ecto.Association.NotLoaded}), do: []
-  defp account(account) do
-    render_one(account, AccountView, "show.json", as: :account)
-  end
+  defp account(%{__struct__: Ecto.Association.NotLoaded}), do: nil
+  defp account(account), do: account
+
+  defp participant_list(%{__struct__: Ecto.Association.NotLoaded}), do: nil
+  defp participant_list(contact_list), do: contact_list
 
   defp brand_logo(nil), do: %{url: %{full: "/images/klzii_logo.png"}, static: true}
   defp brand_logo(brand_logo) do

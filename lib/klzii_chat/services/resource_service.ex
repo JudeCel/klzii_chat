@@ -116,16 +116,25 @@ defmodule KlziiChat.Services.ResourceService do
       |> where([r], r.stock == false)
 
     case validations(account_user, ids, query) do
-      {:ok, result} ->
-        case Repo.delete_all(query) do
-          {:error, error} ->
-            {:error, error}
-          {_count, nil} ->
-             Task.start(fn -> clean_up(result) end)
-            {:ok, result}
-        end
+      {:ok, _} ->
+        deleteByIds(ids)
       {:error, reason} ->
         {:error, reason}
+    end
+  end
+
+  def deleteByIds(ids) do
+    query = QueriesResources.base_query
+      |> where([r], r.id in ^ids)
+
+    case Repo.delete_all(query, returning: true) do
+      {:error, error} ->
+        {:error, error}
+      {_count, result} ->
+        Task.Supervisor.start_child(KlziiChat.BackgroundTasks, fn ->
+          clean_up(result)
+        end)
+        {:ok, result}
     end
   end
 

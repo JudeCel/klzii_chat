@@ -1,7 +1,6 @@
 defmodule KlziiChat.Services.Permissions.Messages do
   import KlziiChat.Services.Permissions.Validations
   import KlziiChat.Services.Permissions.ErrorsHelper, only: [formate_error: 1]
-  alias KlziiChat.Services.{MessageService}
 
   @spec can_delete(Map.t, Map.t) :: {:ok } | {:error, String.t}
   def can_delete(member, object) do

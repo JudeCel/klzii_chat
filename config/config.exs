@@ -40,15 +40,19 @@ config :quantum, cron: [
     "@daily":  &KlziiChat.Services.ResourceService.daily_cleanup/0
   ], timezone: :local
 
-  config :exq,
-    name: Exq,
-    namespace: "exq",
-    concurrency: :infinite,
-    queues: ["notify", "report", "file_zip"],
-    poll_timeout: 50,
-    scheduler_poll_timeout: 200,
-    scheduler_enable: true,
-    max_retries: 2,
-    shutdown_timeout: 5000
+config :exq,
+  name: Exq,
+  namespace: "exq",
+  concurrency: 1000,
+  queues: ["notify", {"report_pdf", 3}, "report_csv", "report_txt"],
+  poll_timeout: 50,
+  scheduler_poll_timeout: 200,
+  scheduler_enable: true,
+  max_retries: 2,
+  shutdown_timeout: 5000
+
+config :exq_ui,
+  web_namespace: "exq",
+  server: true
 
 import_config "#{Mix.env}.exs"
