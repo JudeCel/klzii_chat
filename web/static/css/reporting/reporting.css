@@ -73,6 +73,7 @@ body{
 }
 
 .report-section .message-section {
+  page-break-inside: avoid !important;
   margin: 10px;
 }
 
