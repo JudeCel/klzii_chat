@@ -1,5 +1,9 @@
 <!DOCTYPE HTML>
-<html><head></head>
+<html>
+<head>
+  <link rel="stylesheet" type = "text/css" href="<%= KlziiChat.LayoutView.path_to_js_css(assigns[:conn], "/css/reporting/bootstrap.min.css") %>">
+  <link rel="stylesheet" type = "text/css" href="<%= KlziiChat.LayoutView.path_to_js_css(assigns[:conn], "/css/reporting/reporting.css") %>">
+</head>
   <div class='report-section'>
     <div class='text-center report-header'>
       <span class='report-title'><%= @header_title %></span>
