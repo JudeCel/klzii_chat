@@ -67,36 +67,21 @@ defmodule KlziiChat.Services.Reports.Types.Votes.Formats.CsvTest do
     {:ok, topic_report_data: topic_report_data, session_report_data: session_report_data}
   end
 
-  describe "processe_data" do
-    test "topic report", %{topic_report_data: topic_report_data} do
-      assert({:ok, _} =Votes.Formats.Csv.processe_data(topic_report_data))
-    end
-
-    test "session report", %{session_report_data: session_report_data} do
-      assert({:ok, stream} = Votes.Formats.Csv.processe_data(session_report_data))
-      [ _ | data ] =  Enum.to_list(stream)
-      assert(length(data) == 2)
-    end
-  end
-
-  describe "get_data" do
+  describe "set date in data accumulator" do
     setup %{topic_report_data: data} do
-      session = get_in(data, ["session"])
       fields = get_in(data, ["fields"])
-      [session_topic |_ ] = get_in(data, ["session_topics"])
-      [_ | [mini_survey] ] = session_topic.mini_surveys
-      result = Votes.Formats.Csv.get_data(mini_survey, session, fields)
-
+      {:ok, result} = Votes.Formats.Csv.render_string(data)
       {:ok, result: result, fields: fields}
     end
 
-    test "is map", %{result: result} do
-      assert(%{} = result)
+    test "should be list with 1 elements", %{result: result} do
+      data = Agent.get(result.data, &(&1))
+      assert(Enum.count(data) == 1)
     end
 
-    test "is all keys reqired", %{fields: fields, result: result} do
-      keys = Map.keys(result)
-      assert(length(fields) == length(keys))
+    test "one element contains same all elements from fields lis", %{result: result, fields: fields} do
+      data = Agent.get(result.data, &(&1)) |> List.first |> Map.keys
+      assert(length(fields) == length(data))
     end
   end
 end

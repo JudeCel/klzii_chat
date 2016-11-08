@@ -7,7 +7,7 @@ defmodule KlziiChat.Services.Reports.Types.Messages.Formats.CsvTest do
 
     {:ok, message } = MessageService.create_message(participant, session_topic.id, %{"emotion" => 1, "body" => "!!!!1"})
     {:ok, message1 } = MessageService.create_message(facilitator, session_topic.id, %{"replyId" => message.id, "emotion" => 2, "body" => "!!!!2"})
-    {:ok, message2 } = MessageService.create_message(facilitator, session_topic.id, %{"replyId" => message1.id, "emotion" => 2, "body" => "!!!!3"})
+    {:ok, _ } = MessageService.create_message(facilitator, session_topic.id, %{"replyId" => message1.id, "emotion" => 2, "body" => "!!!!3"})
     {:ok, _ } = MessageService.create_message(participant, session_topic.id, %{"emotion" => 2, "body" => "!!!!5"})
 
     topic_report_payload =  %{"sessionTopicId" => session_topic.id, "format" => "csv",
@@ -50,7 +50,7 @@ defmodule KlziiChat.Services.Reports.Types.Messages.Formats.CsvTest do
     end
 
     test "one element contains same all elements from fields lis", %{result: result, fields: fields} do
-      data = Agent.get(result.data, &(&1)) |> List.first
+      data = Agent.get(result.data, &(&1)) |> List.first |> Map.keys
       assert(length(fields) == length(data))
     end
   end

@@ -19,7 +19,7 @@ defmodule KlziiChat.Services.Reports.Types.Messages.Formats.Csv do
   end
 
   @spec map_data(List.t,  Map.t, List.t, Process.t, Process.t) :: List.t
-  def map_data([], session, fields, container, acc), do: acc
+  def map_data([], _, _, _, acc), do: acc
   def map_data([message | tail], session, fields, container, acc) do
     map_fields(fields, message, session, container) |> update_accumulator(acc)
     map_data(message.replies, session, fields, container, acc)
@@ -30,7 +30,7 @@ defmodule KlziiChat.Services.Reports.Types.Messages.Formats.Csv do
   end
 
   def update_accumulator(new_data, acc) do
-    :ok = Agent.update(acc, fn(data) -> data ++  [new_data] end)
+    :ok = Agent.update(acc, fn(data) -> data ++  [Enum.into(new_data, %{})] end)
   end
 
   def map_fields(fields, message, session, container) do

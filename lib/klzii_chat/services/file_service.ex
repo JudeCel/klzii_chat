@@ -98,20 +98,18 @@ defmodule KlziiChat.Services.FileService do
 
   def write_data_csv(path, %{data: data, header: header }) do
     data_stream = Agent.get(data, &(&1))
-    |> Enum.into(%{})
     |> CSV.encode(headers: header)
     :ok = write_data(path, data_stream )
     {:ok, path}
+  end
+  def write_data_csv(path, data) do
+    {:error, %{wrong_data: "path:#{path}, data_map: #{is_map(data)}, data_streem: #{is_function(data)}" }}
   end
 
   def write_data_txt(path, %{data: data, header: header }) do
     data_stream = Agent.get(data, &(&1))
     :ok = write_data(path, Enum.concat([header], data_stream) )
     {:ok, path}
-  end
-
-  def write_data_csv(path, data) do
-    {:error, %{wrong_data: "path:#{path}, data_map: #{is_map(data)}, data_streem: #{is_function(data)}" }}
   end
   def write_data_txt(path, data) do
     {:error, %{wrong_data: "path:#{path}, data_map: #{is_map(data)}, data_streem: #{is_function(data)}" }}
@@ -122,14 +120,11 @@ defmodule KlziiChat.Services.FileService do
     {_,file_path} = create_destination_file(tmp_dir_path, name, format)
     write_data_csv(file_path, data)
   end
-
   def write_report(%{id: id, format: format, name: name}, data) when format in ["txt"]  do
-    IO.inspect data
     tmp_dir_path = get_tmp_path(id)
     {_,file_path} = create_destination_file(tmp_dir_path, name, format)
     write_data_txt(file_path, data)
   end
-
   def write_report(%{id: id, format: format, name: name}, data)  do
     {:error, %{wrong_data: "id:#{id}, format:#{format}, name:#{name}, map: #{is_map(data)}, streem: #{is_function(data)}" }}
   end

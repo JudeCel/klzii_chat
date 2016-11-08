@@ -22,15 +22,13 @@ defmodule KlziiChat.Services.Reports.Types.Votes.Formats.Csv do
   @spec map_data(Map.t,  Map.t, List.t, Process.t, Process.t) :: List.t
   def map_data(mini_survey, session, fields, acc, container) do
     Enum.each(mini_survey.mini_survey_answers, fn(answer) ->
-      Enum.each(fields, fn(field) ->
-        map_fields(fields, mini_survey, answer, session, container)
-        |> update_accumulator(acc)
-      end)
+      map_fields(fields, mini_survey, answer, session, container)
+      |> update_accumulator(acc)
     end)
   end
 
   def update_accumulator(new_data, acc) do
-    :ok = Agent.update(acc, fn(data) -> data ++  [new_data] end)
+    :ok = Agent.update(acc, fn(data) -> data ++  [Enum.into(new_data,%{})] end)
   end
 
   def map_fields(fields, mini_survey, answer, session, container) do

@@ -22,18 +22,23 @@ defmodule KlziiChat.Services.Reports.Types.Votes.Formats.Txt do
     {:ok, %{data: acc, header: header}}
   end
 
-  @spec get_data(Map.t,  Map.t, List.T) :: List.t
-  def get_data(mini_survey, session, fields) do
-    {:ok, container} = DataContainer.start_link(session.participant_list)
+  @spec map_data(Map.t,  Map.t, List.t, Process.t, Process.t) :: {:ok}
+  def map_data(mini_survey, session, fields, acc, container) do
+    Enum.each(mini_survey.mini_survey_answers, fn(answer) ->
+      map_fields(fields, mini_survey, answer, session, container)
+      |> update_accumulator(acc)
+    end)
+  end
 
-    row = Enum.map(mini_survey.mini_survey_answers, fn(answer) ->
-            Enum.map(fields, fn(field) ->
-              DataContainer.get_value(field, mini_survey, answer, session, container)
-            end)
-          end)
-          |> List.flatten
-          |> Enum.join(", ")
 
+  def update_accumulator(new_data, acc) do
+    :ok = Agent.update(acc, fn(data) -> data ++ new_data end)
+  end
+
+  def map_fields(fields, mini_survey, answer, session, container) do
+    row = Enum.map(fields, fn(field) ->
+      DataContainer.get_value(field, mini_survey, answer, session, container)
+    end)|> Enum.join(", ")
     [row <> "\r\n\r\n"]
   end
 end

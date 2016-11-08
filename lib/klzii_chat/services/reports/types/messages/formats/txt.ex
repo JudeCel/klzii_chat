@@ -19,7 +19,7 @@ defmodule KlziiChat.Services.Reports.Types.Messages.Formats.Txt do
   end
 
   @spec map_data(List.t,  Map.t, List.t, Process.t, Process.t) :: List.t
-  def map_data([], session, fields, container, acc), do: acc
+  def map_data([], _, _, _, acc), do: acc
   def map_data([message | tail], session, fields, container, acc) do
     map_fields(fields, message, session, container) |> update_accumulator(acc)
     map_data(message.replies, session, fields, container, acc)

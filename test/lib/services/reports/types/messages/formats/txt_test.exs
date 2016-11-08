@@ -6,7 +6,7 @@ defmodule KlziiChat.Services.Reports.Types.Messages.Formats.TxtTest do
   setup %{session_topic_1: session_topic, facilitator: facilitator, participant: participant, contact_list: contact_list} do
     {:ok, message } = MessageService.create_message(participant, session_topic.id, %{"emotion" => 1, "body" => "!!!!1"})
     {:ok, message1 } = MessageService.create_message(facilitator, session_topic.id, %{"replyId" => message.id, "emotion" => 2, "body" => "!!!!2"})
-    {:ok, message2 } = MessageService.create_message(facilitator, session_topic.id, %{"replyId" => message1.id, "emotion" => 2, "body" => "!!!!3"})
+    {:ok, _ } = MessageService.create_message(facilitator, session_topic.id, %{"replyId" => message1.id, "emotion" => 2, "body" => "!!!!3"})
     {:ok, _ } = MessageService.create_message(participant, session_topic.id, %{"emotion" => 2, "body" => "!!!!5"})
 
 
