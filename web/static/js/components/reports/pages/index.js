@@ -25,9 +25,6 @@ const ReportsIndex = React.createClass({
     const { types } = reports.mapStruct
     const { format, facilitator } = this.state;
 
-    let sessionTopicslist = [...sessionTopics];
-    sessionTopicslist.unshift({name: "All topics", id: "all"}); // Hack
-
     const reportFormatsOrder = ['pdf', 'csv', 'txt'];
     const reportTypes = [
       {name: 'messages', typeName: 'messages', typeData: types['messages']},
@@ -35,6 +32,12 @@ const ReportsIndex = React.createClass({
       {name: 'whiteboards', typeName: 'whiteboards', typeData: types['whiteboards']},
       {name: 'votes', typeName: 'votes', typeData: types['votes']},
     ];
+      let sessionTopicslist = [...sessionTopics];
+
+      if (format == "pdf") {
+        sessionTopicslist.unshift({name: "All topics", id: "all"}); // Hack
+      }
+
     const colMdSizes = { all: 2, star: 3, whiteboard: 3,  votes: 1 };
     return (
       <div className='reports-section'>
