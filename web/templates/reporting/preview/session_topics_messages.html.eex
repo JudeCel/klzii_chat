@@ -5,6 +5,6 @@
 
   <div class='session-topics-container'>
     <%= render "messages.html", messages: session_topic.messages, conn: assigns[:conn], session: assigns[:session] %>
+    <hr/>
   </div>
-  <hr >
 <% end %>

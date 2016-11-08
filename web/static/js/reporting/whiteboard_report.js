@@ -1,13 +1,16 @@
-var drawElements = function (shapes) {
+var drawElements = function (element_id, shapes) {
+  var parent = document.getElementsByClassName('whiteboard-frame')[0]
+  var wb = window.Snap(element_id);
+  wb.transform("S" + 0.75 + "," + 0.75 + ",0,0");
+
   shapes.forEach(function(shape) {
     if(shape.event.action == "draw") {
-      draw("#whiteboard_" + shape.sessionTopicId, shape.event.element.type, shape.event.element.attr)
+      draw(wb, shape.event.element.type, shape.event.element.attr)
     }
   });
 }
 
-var draw = function (id_name, type, attr) {
-  var wb = window.Snap(id_name);
+var draw = function (wb, type, attr) {
   var svg_el;
   switch(type){
     case "ellipse":
@@ -39,6 +42,5 @@ var draw = function (id_name, type, attr) {
       style: attr.style != "undefined" ? attr.style : undefined
     });
   }
-
   svg_el.transform(attr.transform);
 }
