@@ -1066,4 +1066,11 @@
   .modal-section .modal-body .uploads-console-section iframe {
     height: 100% !important;
   }
+
+  .input-section textarea.smallFont {
+    font-size: 14px;
+    padding: 8px;
+    height: 46px;
+  }
+
 }

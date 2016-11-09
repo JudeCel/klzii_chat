@@ -34,7 +34,7 @@ const Input = React.createClass({
   defaultProps() {
     const { currentInput } = this.props;
     let style = currentInput.replyColour ? { borderColor: currentInput.replyColour } : undefined;
-    let className = 'form-control' + (currentInput.replyColour ? ' wider-border' : '');
+    let className = 'form-control' + (currentInput.replyColour ? ' wider-border' : '') + (currentInput.smallFont ? " smallFont" : "");
 
     return {
       onKeyDown: this.onKeyDown,
