@@ -981,13 +981,9 @@
     display: table-row;
     padding-bottom: 0;
     margin-bottom: 0;
-    height: calc(100% - 100px) !important;
+    height: calc(100%) !important;
     max-height: calc(100% - 100px) !important;
   }
-
-  /*.room-section > div.row > .col-md-12, .room-section > div.row > .col-md-8 {
-    display: table-row;
-  }*/
 
   div.row.room-outerbox {
     height: calc(100% - 67px);
@@ -1093,8 +1089,7 @@
   .room-section .chat-section {
     padding-bottom: 0 !important;
     margin-right: 0;
-    height: auto;
-    max-height: 100% !important;
+    height: 100%;
     overflow: scroll;
   }
 }
