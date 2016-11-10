@@ -23,6 +23,7 @@ defmodule KlziiChat.SessionView do
       type: session.type,
       startTime: session.startTime,
       endTime: session.endTime,
+      anonymous: session.anonymous,
       colours: brand_project_preference(session.brand_project_preference),
       brand_logo: brand_logo(session.brand_logo),
       session_topics: render_many(session_topics(session.session_topics), SessionTopicView, "report.json", as: :session_topic),

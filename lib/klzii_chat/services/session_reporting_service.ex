@@ -202,8 +202,8 @@ defmodule KlziiChat.Services.SessionReportingService do
     |>  case do
           %{participant_list: nil} ->
             {:error, %{not_found: "Contact list not found for this session"}}
-          %{participant_list: participant_list} ->
-            {:ok , participant_list}
+          %{participant_list: participant_list} = session ->
+            {:ok , session}
         end
 
   end

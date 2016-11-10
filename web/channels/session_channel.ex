@@ -46,9 +46,9 @@ defmodule KlziiChat.SessionChannel do
     case SessionReportingPermissions.can_get_reports(get_session_member(socket)) do
       {:ok} ->
         case SessionReportingService.get_session_contact_list(socket.assigns.session_id) do
-          {:ok, contact_list} ->
-            contact_list_map =  ReportView.render("map_struct.json", %{contact_list: contact_list})
-            push(socket, "contact_list_map_struct", %{mapStruct: contact_list_map})
+          {:ok, session} ->
+            mapStruct =  ReportView.render("map_struct.json", %{session: session})
+            push(socket, "contact_list_map_struct", %{mapStruct: mapStruct})
           {:error, reason} ->
             push(socket, "error_message", reason)
         end

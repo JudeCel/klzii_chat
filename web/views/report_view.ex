@@ -3,7 +3,7 @@ defmodule KlziiChat.ReportView do
 
   @default_field ["gender","city", "state", "country", "postCode"]
 
-  def render("map_struct.json", %{contact_list: contact_list}) do
+  def render("map_struct.json", %{session: session}) do
     %{
       max_default_fileds_count: 4,
       types: %{
@@ -15,7 +15,7 @@ defmodule KlziiChat.ReportView do
             csv: %{ render: true, custom_fields: true },
             txt: %{ render: true, custom_fields: true }
           },
-          defaultFields: ["First Name", "Comment", "Date", "Is Star", "Is Reply"]
+          defaultFields: default_fileds_list(["First Name", "Comment", "Date", "Is Star", "Is Reply"], session)
         },
         messages_stars_only: %{
           selected: false,
@@ -25,7 +25,7 @@ defmodule KlziiChat.ReportView do
             csv: %{ render: true, custom_fields: true },
             txt: %{ render: true, custom_fields: true }
           },
-          defaultFields: ["First Name", "Comment", "Date", "Is Reply"]
+          defaultFields: default_fileds_list(["First Name", "Comment", "Date", "Is Reply"], session)
         },
         votes: %{
           selected: false,
@@ -35,7 +35,7 @@ defmodule KlziiChat.ReportView do
             csv: %{ render: true, custom_fields: true },
             txt: %{ render: true, custom_fields: true }
           },
-          defaultFields: ["Title", "Question", "First Name", "Answer", "Date" ]
+          defaultFields: default_fileds_list(["Title", "Question", "First Name", "Answer", "Date" ], session)
         },
         whiteboards: %{
           selected: false,
@@ -50,11 +50,20 @@ defmodule KlziiChat.ReportView do
       },
       multiple_topics: %{"pdf" => true},
       fields: %{
-        custom: Enum.concat(@default_field, contact_list.customFields)
+        custom: Enum.concat(@default_field, session.participant_list.customFields)
       },
       includes: %{
         facilitator: true
       }
     }
+  end
+
+  def default_fileds_list(list, session) do
+    case session do
+      %{anonymous: true} ->
+        List.insert_at(list, 0, "Anonymous")
+      _ ->
+        list
+    end
   end
 end
