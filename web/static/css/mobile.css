@@ -301,6 +301,7 @@
     border: 0px !important;
     padding: 5px 15px;
     margin-left: 27px;
+    clear: both;
   }
 
   .facilitator-section {
