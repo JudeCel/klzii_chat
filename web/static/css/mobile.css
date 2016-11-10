@@ -842,7 +842,7 @@
   }
 
   .type-forum .room-section-left .console-section {
-    margin-top: -175px;
+    margin-top: -170px;
   }
 
   .type-forum .room-section-left #whiteboard-box.maximized {
@@ -1073,4 +1073,11 @@
     height: 46px;
   }
 
+}
+
+@media (max-height: 285px) {
+  .type-forum .room-section-left .console-section {
+    top: 115px !important;
+    margin-top: 0px !important;
+  }
 }
