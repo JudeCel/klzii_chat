@@ -974,15 +974,31 @@
   }
 
   .room-section > div.row {
-    display: table;
+    display: flex;
+    flex-direction: column;
+  }
+  .room-section > div.row > .col-md-8 {
+      min-height: 74px;
+      order: 1;
+  }
+
+  .room-section > div.row > .col-md-12 {
+      margin-bottom: 0;
+      min-height: 110px;
+      background: white;
+      order: 3;
+  }
+
+  .room-section > div.row > .col-md-8 > .top-row {
+    background: white;
   }
 
   .room-section > div.row > .col-md-4 {
-    display: table-row;
     padding-bottom: 0;
     margin-bottom: 0;
-    height: calc(100%) !important;
-    max-height: calc(100% - 100px) !important;
+    order: 2;
+    height: 100%;
+    overflow: scroll;
   }
 
   div.row.room-outerbox {
@@ -1053,7 +1069,7 @@
   }
 
   .console-section-no-input {
-    bottom: 5px;
+    bottom: 0;
     background: white;
     padding: 5px;
     margin-bottom: 0;
