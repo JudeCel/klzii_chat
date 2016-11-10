@@ -9,11 +9,24 @@ defmodule KlziiChat.Services.SessionMembersService do
      do: {:ok, member, claims["callback_url"]}
   end
 
+  def validate(session_member, %{"username" => _ }) do
+    KlziiChat.Services.Permissions.Member.can_change_name(session_member, session_member.session)
+  end
+  def validate(_, _), do: {:ok}
+
   @spec update_member(Integer.t, Map.t) :: {:ok, %SessionMember{}} | {:error, Ecto.Changeset.t}
   def update_member(id, params) do
-    session_member =  Repo.get_by!(SessionMember, id: id)
-    SessionMember.changeset(session_member, params)
-    |> update_member
+    session_member =
+      Repo.get_by!(SessionMember, id: id)
+    |> Repo.preload([:session])
+
+    case validate(session_member, params) do
+      {:ok} ->
+        SessionMember.changeset(session_member, params)
+        |> update_member
+      {:error, reason} ->
+        {:error, reason}
+    end
   end
 
   @spec update_emotion(Integer) :: Map.t

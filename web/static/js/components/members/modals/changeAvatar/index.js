@@ -7,7 +7,7 @@ import Avatar             from '../../avatar';
 import AvatarPreview      from './preview';
 
 const ChangeAvatarModal = React.createClass({
-  mixins: [mixins.modalWindows],
+  mixins: [mixins.modalWindows, mixins.validations],
   getInitialState() {
     return { tabActive: 'hair' };
   },
@@ -64,6 +64,18 @@ const ChangeAvatarModal = React.createClass({
   visableTabClass(type) {
     const className = 'row';
     return type == this.state.tabActive ? className : className + ' hidden';
+  },
+  renderUsername(username){
+    console.log(this.props.currentUser);
+    console.log(this.hasPermission(['member', 'can_change_name']));
+    if (this.hasPermission(['member', 'can_change_name'])) {
+      return(
+        <div>
+          <label htmlFor='username' className='control-label'>Username</label>
+          <input type='text' className='form-control no-border-radius' id='username' placeholder='Username' value={ username } onChange={ this.onNameChange } maxLength={15}/>
+        </div>
+      )
+    }
   },
   render() {
     const show = this.showSpecificModal('avatar');
@@ -125,8 +137,7 @@ const ChangeAvatarModal = React.createClass({
               <div className='row selection-section'>
                 <div className='form-inline div-inline-block'>
                   <div className='form-group'>
-                    <label htmlFor='username' className='control-label'>Username</label>
-                    <input type='text' className='form-control no-border-radius' id='username' placeholder='Username' value={ username } onChange={ this.onNameChange } maxLength={15}/>
+                    { this.renderUsername(username) }
                   </div>
                 </div>
 

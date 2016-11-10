@@ -6,6 +6,7 @@ defmodule KlziiChat.SessionView do
     %{id: session.id,
       name: session.name,
       type: session.type,
+      anonymous: session.anonymous,
       startTime: session.startTime,
       endTime: session.endTime,
       colours: brand_project_preference(session.brand_project_preference),

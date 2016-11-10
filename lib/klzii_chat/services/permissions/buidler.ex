@@ -10,6 +10,7 @@ defmodule KlziiChat.Services.Permissions.Builder do
   alias KlziiChat.Services.Permissions.PinboardResource, as: PinboardResourcePermissions
   alias KlziiChat.Services.Permissions.Report, as: ReportPermissions
   alias KlziiChat.Services.Permissions.Redirect, as: RedirectPermissions
+  alias KlziiChat.Services.Permissions.Member, as: MemberPermissions
   alias KlziiChat.Services.Permissions.DirectMessage, as: DirectMessagePermissions
   alias KlziiChat.Services.Permissions.MiniSurveys, as: MiniSurveysPermissions
   alias KlziiChat.Services.Permissions.Validations
@@ -50,6 +51,9 @@ defmodule KlziiChat.Services.Permissions.Builder do
     %{
       can_redirect: %{
         logout: RedirectPermissions.can_redirect(session_member) |> to_boolean
+      },
+      member: %{
+        can_change_name: MemberPermissions.can_change_name(session_member, session) |> to_boolean
       },
       messages: %{
         can_direct_message: DirectMessagePermissions.can_direct_message(session_member) |> to_boolean,
