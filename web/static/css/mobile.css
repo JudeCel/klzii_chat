@@ -196,6 +196,10 @@
     min-height: 100px;
   }
 
+  .room-section > div.row > .col-md-12:empty {
+    display: none;
+  }
+
   .chat-section {
     max-height: 100% !important;
     overflow-y: auto !important;
@@ -969,14 +973,26 @@
     height: 100%;
   }
 
-  .room-section > div.row > .col-md-4 {
-    height: calc(100% - 185px);
-     padding-bottom: 0;
-     margin-bottom: 0;
+  .room-section > div.row {
+    display: table;
   }
 
+  .room-section > div.row > .col-md-4 {
+    display: table-row;
+    padding-bottom: 0;
+    margin-bottom: 0;
+    height: calc(100% - 100px) !important;
+    max-height: calc(100% - 100px) !important;
+  }
+
+  /*.room-section > div.row > .col-md-12, .room-section > div.row > .col-md-8 {
+    display: table-row;
+  }*/
+
   div.row.room-outerbox {
-    height: calc(100% - 27px);
+    height: calc(100% - 67px);
+    margin-top: 0 !important;
+    padding-top: 0 !important;
   }
 
   body.modal-open .fade.in.modal {
@@ -1040,6 +1056,13 @@
     top: auto;
   }
 
+  .console-section-no-input {
+    bottom: 5px;
+    background: white;
+    padding: 5px;
+    margin-bottom: 0;
+  }
+
   .room-section .console-section ul.icons {
     margin: 0 auto !important;
     display: table;
@@ -1065,5 +1088,13 @@
 
   .modal-section .modal-body .uploads-console-section iframe {
     height: 100% !important;
+  }
+
+  .room-section .chat-section {
+    padding-bottom: 0 !important;
+    margin-right: 0;
+    height: auto;
+    max-height: 100% !important;
+    overflow: scroll;
   }
 }
