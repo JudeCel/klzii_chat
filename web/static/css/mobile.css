@@ -990,6 +990,11 @@
       order: 3;
   }
 
+  .room-section > div.row > .col-md-12:empty {
+    display: block;
+    min-height: 50px;
+  }
+
   .room-section > div.row > .col-md-8 > .top-row {
     background: white;
   }
