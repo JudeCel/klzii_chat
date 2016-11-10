@@ -26,17 +26,19 @@ defmodule KlziiChat.Services.Reports.Types.Messages.Base do
               "session" => session,
               "session_topics" => session_topics,
               "header_title" => header_title,
-              "fields" => Enum.concat(default_fields(), report.includeFields) |> fields_list(session)
+              "fields" => fields_list(report.includeFields, session)
             }
           }
   end
 
+  @spec fields_list(List.t, Map.t) :: List.t[String.t]
   def fields_list(list, session) do
+    def_list = Enum.concat(default_fields(), list)
     case session do
       %{anonymous: true} ->
-        List.insert_at(list, 0, "Anonymous")
+        List.insert_at(def_list, 0, "Anonymous")
       _ ->
-        list
+        def_list
     end
   end
 
