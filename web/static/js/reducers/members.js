@@ -20,15 +20,34 @@ export default function reducer(state = initialState, action = {}) {
     case Constants.SET_CURRENT_USER:
       return { ...state, currentUser: action.user };
     case Constants.UPDATE_MEMBER:
-      return updateMember({...state}, action.member);;
+      return updateMember({...state}, action.member);
     case Constants.SET_MEMBERS:
       return { ...state,
         facilitator: action.facilitator,
         participants: action.participant
       };
+    case Constants.NEW_MESSAGE_SOUND:
+      playSound(action.message, state.currentUser.id);
+      return state;
+    case Constants.NEW_MESSAGE_ANIMATION:
+      return animateMember({...state}, action.message, state.currentUser.id);
     default:
       return state;
   }
+}
+
+function playSound(message, currentUserId) {
+  if (message.session_member.id != currentUserId) {
+    new Audio('/sounds/newMessage.mp3').play();
+  }
+}
+
+function animateMember(state, message, currentUserId) {
+  if (message.session_member.id != currentUserId) {
+    //todo:
+    //return updateMember(state, member);
+  }
+  return state;
 }
 
 function onJoin(state) {
