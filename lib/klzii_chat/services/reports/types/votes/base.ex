@@ -1,9 +1,10 @@
 defmodule KlziiChat.Services.Reports.Types.Votes.Base do
   @behaviour KlziiChat.Services.Reports.Types.Behavior
-  alias KlziiChat.{Repo, SessionTopicView, SessionView, SessionTopic, Session}
+  alias KlziiChat.{Repo, SessionTopicView, SessionView, SessionTopic}
   alias KlziiChat.Services.Reports.Types.Votes.{Formats}
   alias KlziiChat.Queries.SessionTopic, as: SessionTopicQueries
   alias KlziiChat.Queries.MiniSurvey, as: QueriesMiniSurvey
+  alias KlziiChat.Queries.Sessions, as: SessionQueries
   import Ecto.Query, only: [from: 2]
 
   @spec default_fields() :: List.t[String.t]
@@ -40,9 +41,8 @@ defmodule KlziiChat.Services.Reports.Types.Votes.Base do
 
   @spec get_session(Map.t) :: {:ok, Map.t} | {:error, Map.t}
   def get_session(%{sessionId: session_id}) do
-    session = from(s in Session,  where: s.id == ^session_id)
+    session = SessionQueries.find_for_report(session_id)
       |> Repo.one
-      |> Repo.preload([:account, :brand_logo, :brand_project_preference, [participant_list: [:contact_list_users]] ])
       |> Phoenix.View.render_one(SessionView, "report.json", as: :session)
     {:ok, session}
   end

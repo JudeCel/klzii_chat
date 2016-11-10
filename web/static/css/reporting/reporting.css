@@ -14,9 +14,12 @@ body{
   color: grey;
 }
 
+.session-topics-container{
+  page-break-inside: avoid;
+}
 .report-section .media-body {
   padding-left: 30px;
-  page-break-inside: avoid !important;
+  page-break-inside: avoid;
 }
 .report-section .media-left {
   padding-right: 0px;
@@ -73,6 +76,7 @@ body{
 }
 
 .report-section .message-section {
+  page-break-inside: avoid;
   margin: 10px;
 }
 
@@ -90,10 +94,11 @@ body{
 }
 
 .whiteboard-frame {
-  width: 950px;
-  height: 460px;
+  width: 700px;
+  height: 305px;
+
   border: 2px solid #aaa;
-  margin: 0 auto;
+  margin: auto;
 }
 
 .whiteboard-frame .whiteboard {
@@ -128,7 +133,7 @@ body{
 
 .mini-survey .answers .media-body {
   padding-left: inherit;
-  page-break-inside: avoid !important;
+  page-break-inside: avoid;
 }
 
 .mini-survey .answers .svg_avatar{

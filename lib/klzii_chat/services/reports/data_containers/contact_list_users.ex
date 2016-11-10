@@ -20,18 +20,20 @@ defmodule KlziiChat.Services.Report.DataContainers.ContactListUsers do
     string_key = to_string(key)
     account_user_list = [string_id, :account_user, string_key]
     custom_fields_list = [string_id, :customFields, string_key]
-
     (get_in(state, account_user_list) || get_in(state, custom_fields_list))
     |>  case do
-          nil -> {:ok, nil}
-          value -> {:ok, value }
-        end
+        nil -> {:ok, nil}
+        value -> {:ok, value }
+      end
   end
 
   def prepare_data(data) do
     for item <- data.contact_list_users, into: %{} do
-      id = get_in(item, [:account_user, "id"]) |> to_string
-      {id, item}
+      case get_in(item, [:account_user, "id"]) do
+        nil -> raise("Account user is missing for contact list with id: #{item.id}")
+        id ->
+          {to_string(id), item}
+      end
     end
   end
 

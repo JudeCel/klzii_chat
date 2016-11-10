@@ -1,9 +1,10 @@
 defmodule KlziiChat.Services.Reports.Types.Whiteboards.Base do
   @behaviour KlziiChat.Services.Reports.Types.Behavior
   alias KlziiChat.Services.Reports.Types.Whiteboards.{Formats}
-  alias KlziiChat.{Repo, SessionView, SessionTopic, Session, SessionTopicView}
+  alias KlziiChat.{Repo, SessionView, SessionTopic, SessionTopicView}
   alias KlziiChat.Queries.SessionTopic, as: SessionTopicQueries
   alias KlziiChat.Queries.Shapes, as: QueriesShapes
+  alias KlziiChat.Queries.Sessions, as: SessionQueries
   import Ecto.Query, only: [from: 2]
 
   @spec default_fields() :: List.t[String.t]
@@ -38,9 +39,8 @@ defmodule KlziiChat.Services.Reports.Types.Whiteboards.Base do
 
   @spec get_session(Map.t) :: {:ok, Map.t} | {:error, Map.t}
   def get_session(%{sessionId: session_id}) do
-    session = from(s in Session,  where: s.id == ^session_id)
+    session = SessionQueries.find_for_report(session_id)
       |> Repo.one
-      |> Repo.preload([:account, :brand_logo, :brand_project_preference, [participant_list: [:contact_list_users]] ])
       |> Phoenix.View.render_one(SessionView, "report.json", as: :session)
     {:ok, session}
   end

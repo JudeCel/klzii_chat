@@ -305,6 +305,7 @@
     border: 0px !important;
     padding: 5px 15px;
     margin-left: 27px;
+    clear: both;
   }
 
   .facilitator-section {
@@ -846,7 +847,7 @@
   }
 
   .type-forum .room-section-left .console-section {
-    margin-top: -175px;
+    margin-top: -170px;
   }
 
   .type-forum .room-section-left #whiteboard-box.maximized {
@@ -1102,10 +1103,25 @@
     height: 100% !important;
   }
 
+
   .room-section .chat-section {
     padding-bottom: 0 !important;
     margin-right: 0;
     height: 100%;
     overflow: scroll;
+  }
+
+  .input-section textarea.smallFont {
+    font-size: 14px;
+    padding: 8px;
+    height: 46px;
+  }
+
+}
+
+@media (max-height: 285px) {
+  .type-forum .room-section-left .console-section {
+    top: 115px !important;
+    margin-top: 0px !important;
   }
 }

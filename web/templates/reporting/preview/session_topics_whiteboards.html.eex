@@ -1,6 +1,9 @@
 <%= for session_topic <- @session_topics do %>
-    <div class='report-topic'>
-      <%= session_topic.name %>
-    </div>
+  <div class='report-topic'>
+    <%= session_topic.name %>
+  </div>
+  <div class='session-topics-container'>
     <%= render "shapes.html", session_topic: session_topic, shapes: session_topic.shapes, conn: assigns[:conn], session: assigns[:session] %>
+    <hr/>
+  </div>
 <% end %>

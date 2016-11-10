@@ -6,13 +6,14 @@ const initialState = {
   id: null,
   replyId: null,
   emotion: 5,
-  inputPrefix: "Message:"
+  inputPrefix: "Message:",
+  smallFont : false
 };
 
 export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
     case Constants.CHANGE_INPUT_VALUE:
-      return { ...state, value: action.value };
+      return { ...state, value: action.value, smallFont: action.value.length >= 20 };
 
     case Constants.SET_INPUT_DEFAULT_STATE:
       return initialState;
