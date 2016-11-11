@@ -75,7 +75,7 @@ const Input = React.createClass({
       )
     }
     else {
-      return (<div className='input-section'></div>)
+      return false;
     }
   }
 });
