@@ -2,7 +2,6 @@ import React, {PropTypes} from 'react';
 import { connect }        from 'react-redux';
 import Snap               from 'snapsvg';
 import mixins             from '../../mixins';
-//import jrumble            from 'jrumble';
 
 const Avatar = React.createClass({
   mixins: [mixins.helpers],
