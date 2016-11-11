@@ -30,7 +30,9 @@ export default function reducer(state = initialState, action = {}) {
       playSound(action.message, state.currentUser.id);
       return state;
     case Constants.NEW_MESSAGE_ANIMATION:
-      return animateMember({...state}, action.message, state.currentUser.id);
+      return animateMember({...state}, action.message.session_member, state.currentUser.id, true);
+    case Constants.NEW_MESSAGE_ANIMATION_STOP:
+      return animateMember({...state}, action.member, state.currentUser.id, false);
     default:
       return state;
   }
@@ -42,12 +44,12 @@ function playSound(message, currentUserId) {
   }
 }
 
-function animateMember(state, message, currentUserId) {
-  if (message.session_member.id != currentUserId) {
+function animateMember(state, member, currentUserId, animate) {
+  if (member.id != currentUserId) {
     let findAndUpdateObj = {
-      id: message.session_member.id,
-      role: message.session_member.role,
-      animate: true,
+      id: member.id,
+      role: member.role,
+      animate: animate,
     };
     return updateMember(state, findAndUpdateObj);
   } else {
