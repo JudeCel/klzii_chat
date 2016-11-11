@@ -44,10 +44,15 @@ function playSound(message, currentUserId) {
 
 function animateMember(state, message, currentUserId) {
   if (message.session_member.id != currentUserId) {
-    //todo:
-    //return updateMember(state, member);
+    let findAndUpdateObj = {
+      id: message.session_member.id,
+      role: message.session_member.role,
+      animate: true,
+    };
+    return updateMember(state, findAndUpdateObj);
+  } else {
+    return state;
   }
-  return state;
 }
 
 function onJoin(state) {

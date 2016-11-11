@@ -2,6 +2,7 @@ import React, {PropTypes} from 'react';
 import { connect }        from 'react-redux';
 import Snap               from 'snapsvg';
 import mixins             from '../../mixins';
+//import jrumble            from 'jrumble';
 
 const Avatar = React.createClass({
   mixins: [mixins.helpers],
@@ -62,10 +63,11 @@ const Avatar = React.createClass({
     this.shouldAddToAvatar(avatar, 'desk', desk);
     this.shouldAddToAvatar(avatar, 'head', head);
   },
-  drawLabelAndText(avatar) {
+  drawLabelAndText(avatar, animate) {
     const { username, colour, currentTopic, online } = this.props.member;
     avatar.rect(25, 125, 100, 20, 1, 1).attr({fill: colour}).addClass('svg-avatar-label');
-    avatar.text(76, 138, username).attr({fill: '#fff', 'font-size': '75%', 'text-anchor': 'middle'}).addClass('svg-avatar-label');
+    //todo: remove (animate ? "!" : "") after debug !!!
+    avatar.text(76, 138, username + (animate ? "!" : "")).attr({fill: '#fff', 'font-size': '75%', 'text-anchor': 'middle'}).addClass('svg-avatar-label');
 
     if(currentTopic && online) {
       avatar.text(76, 158, currentTopic.name).attr({fill: '#000', 'font-size': '75%', 'text-anchor': 'middle'}).addClass('svg-avatar-label');
@@ -85,12 +87,12 @@ const Avatar = React.createClass({
     }
   },
   componentDidMount() {
-    const { avatarData, username, sessionTopicContext, currentTopic } = this.props.member;
+    const { avatarData, username, sessionTopicContext, currentTopic, animate } = this.props.member;
 
     let avatar = this.findAvatar();
     this.clearAvatar(avatar);
     this.drawAvatar(avatar);
-    this.drawLabelAndText(avatar);
+    this.drawLabelAndText(avatar, animate);
 
     let array = [...avatar.selectAll('image'), ...avatar.selectAll('rect'), ...avatar.selectAll('text')]
     let group = avatar.group(...array);
