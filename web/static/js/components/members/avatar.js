@@ -85,8 +85,8 @@ const Avatar = React.createClass({
     }
     anim1();
   },
-  drawLabelAndText(avatar, animate) {
-    const { username, colour, currentTopic, online } = this.props.member;
+  drawLabelAndText(avatar) {
+    const { username, colour, currentTopic, online, animate } = this.props.member;
     var el1 = avatar.rect(25, 125, 100, 20, 1, 1).attr({fill: colour}).addClass('svg-avatar-label');
     var el2 = avatar.text(76, 138, username).attr({fill: '#fff', 'font-size': '75%', 'text-anchor': 'middle'}).addClass('svg-avatar-label');
 
@@ -113,12 +113,12 @@ const Avatar = React.createClass({
     }
   },
   componentDidMount() {
-    const { avatarData, username, sessionTopicContext, currentTopic, animate } = this.props.member;
+    const { avatarData, username, sessionTopicContext, currentTopic } = this.props.member;
 
     let avatar = this.findAvatar();
     this.clearAvatar(avatar);
     this.drawAvatar(avatar);
-    this.drawLabelAndText(avatar, animate);
+    this.drawLabelAndText(avatar);
 
     let array = [...avatar.selectAll('image'), ...avatar.selectAll('rect'), ...avatar.selectAll('text')]
     let group = avatar.group(...array);
