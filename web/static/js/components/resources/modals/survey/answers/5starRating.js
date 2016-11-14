@@ -17,7 +17,7 @@ const SurveyView5StarRating = React.createClass({
     }
   },
   render() {
-    const { answers } = this.props;
+    const { answers, modalWindows } = this.props;
 
     if(answers.length) {
       return (
@@ -48,15 +48,19 @@ const SurveyView5StarRating = React.createClass({
         </ul>
       )
     }
-    else {
+    else if (modalWindows.postData) {
+      return false;
+    } else {
       return (<h4 className='text-center'>There are no answers yet</h4>)
     }
+
   }
 });
 
 const mapStateToProps = (state) => {
   return {
-    answers: state.miniSurveys.view.mini_survey_answers
+    answers: state.miniSurveys.view.mini_survey_answers,
+    modalWindows: state.modalWindows
   }
 };
 

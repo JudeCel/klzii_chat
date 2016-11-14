@@ -16,6 +16,14 @@ const Actions = {
         NotificationActions.showErrorNotification(dispatch, errors);
       });
     };
+  },
+  stopAnimation: (member) => {
+    return dispatch => {
+      dispatch({
+        type: Constants.NEW_MESSAGE_ANIMATION_STOP,
+        member: member
+      });
+    };
   }
 }
 
