@@ -66,8 +66,6 @@ const ChangeAvatarModal = React.createClass({
     return type == this.state.tabActive ? className : className + ' hidden';
   },
   renderUsername(username){
-    console.log(this.props.currentUser);
-    console.log(this.hasPermission(['member', 'can_change_name']));
     if (this.hasPermission(['member', 'can_change_name'])) {
       return(
         <div>
