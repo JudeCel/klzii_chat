@@ -10,7 +10,7 @@ defmodule KlziiChat.Endpoint do
   plug KlziiChat.Corsica.Router
   plug Plug.Static,
     at: "/", from: :klzii_chat, gzip: true,
-    only: ~w(uploads css fonts images js images/avatar favicon.ico robots.txt)
+    only: ~w(uploads css fonts images sounds js images/avatar favicon.ico robots.txt)
 
   # Code reloading can be explicitly enabled under the
   # :code_reloader configuration of your endpoint.

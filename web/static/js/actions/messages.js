@@ -7,6 +7,18 @@ function new_message(dispatch, data) {
     message: data
   });
 }
+function new_message_sound(dispatch, data) {
+  return dispatch({
+    type: Constants.NEW_MESSAGE_SOUND,
+    message: data
+  });
+}
+function new_message_animation(dispatch, data) {
+  return dispatch({
+    type: Constants.NEW_MESSAGE_ANIMATION,
+    message: data
+  });
+}
 function delete_message(dispatch, data) {
   return dispatch({
     type: Constants.DELETE_MESSAGE,
@@ -65,7 +77,9 @@ const Actions = {
     return dispatch => {
       dispatch({ type: Constants.SET_MESSAGES_EVENTS});
       channel.on("new_message", (resp) =>{
-        return new_message(dispatch, resp);
+        new_message(dispatch, resp);
+        new_message_sound(dispatch, resp);
+        new_message_animation(dispatch, resp);
       });
 
       channel.on("delete_message", (resp) =>{
