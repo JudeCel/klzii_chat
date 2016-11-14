@@ -71,7 +71,7 @@ const ChangeAvatarModal = React.createClass({
     if (this.hasPermission(['member', 'can_change_name'])) {
       return(
         <div>
-          <label htmlFor='username' className='control-label'>Username</label>
+          <label htmlFor='username' className='control-label'>Nickname</label>
           <input type='text' className='form-control no-border-radius' id='username' placeholder='Username' value={ username } onChange={ this.onNameChange } maxLength={15}/>
         </div>
       )
