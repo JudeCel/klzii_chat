@@ -7,9 +7,17 @@ defmodule KlziiChat.Services.Reports.Types.Votes.DataContainer do
     ContactListUsersDataContainers.start_link(data)
   end
 
-  def get_value("First Name",_mini_survey, %{session_member: %{username: username}}, _, _container) do
+  def get_value("Anonymous",_mini_survey, %{session_member: %{username: username}}, %{anonymous: true}, _container) do
     username
   end
+  def get_value("First Name",_mini_survey, %{session_member: %{username: username}}, %{anonymous: false}, _container) do
+    username
+  end
+  def get_value("First Name",_mini_survey, %{session_member: %{account_user_id: account_user_id}}, %{anonymous: true}, container) do
+    {:ok, value} = ContactListUsersDataContainers.get_key(container, "firstName", account_user_id)
+    value
+  end
+
   def get_value("Title", %{title: title}, _answer, _session, _container) do
     title
   end
