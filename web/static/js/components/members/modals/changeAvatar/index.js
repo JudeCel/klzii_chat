@@ -23,10 +23,16 @@ const ChangeAvatarModal = React.createClass({
     this.closeAllModals();
   },
   onSave(e) {
+    let payload = {}
     const { dispatch, channel } = this.props;
     const { avatarData, username } = this.state
     this.closeAllModals();
-    dispatch(MemberActions.updateAvatar(channel, { avatarData, username }));
+    payload.avatarData = avatarData;
+
+    if (this.hasPermission(['member', 'can_change_name'])) {
+      payload.username = username
+    }
+    dispatch(MemberActions.updateAvatar(channel, payload));
   },
   onOpen(e) {
     this.setStateBasedOnCurrentUser();
@@ -166,6 +172,7 @@ const mapStateToProps = (state) => {
   return {
     modalWindows: state.modalWindows,
     colours: state.chat.session.colours,
+    session: state.chat.session,
     currentUser: state.members.currentUser,
     channel: state.chat.channel
   }
