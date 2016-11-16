@@ -17,14 +17,52 @@ defmodule KlziiChat.Services.ResourceService do
           Map.put(params, "stock", (params["stock"] || false))
         else
           Map.put(params, "stock", false)
-        end |> save_resource(account_user)
+          |> Map.put("id", nil)
+        end
+        |> save_resource(account_user)
       {:error, reason} ->
         {:error, reason}
     end
   end
 
   @spec save_resource(map, integer) :: {:ok, %Resource{}} | {:error, map}
-  def save_resource(%{"stock" => stock, "type" => type, "scope" => scope, "file" => file, "name"=> name}, account_user) do
+  def save_resource(%{"stock" => stock, "type" => type, "scope" => scope, "file" => file, "name" => name, "id" => id}, account_user) do
+    params = %{
+      type: type,
+      scope: scope,
+      accountId: account_user.account.id,
+      accountUserId: account_user.id,
+      type: type,
+      name: name,
+      stock: stock,
+      id: id
+    }
+
+    case ResourceValidations.validate(file, params) do
+      {:ok} ->
+        find(account_user.id, id)
+        |> case do
+          {:ok, resource} ->
+            Resource.changeset(resource, params)
+            |> Repo.update
+            |> case do
+                {:ok, resource} ->
+                  :ok = clean_up([resource])
+                  add_file(resource, file)
+                {:error, reason} ->
+                  {:error, Map.put(reason, :code, 400)}
+               end
+          {:error, reason} ->
+            {:error, reason}
+         end
+      {:error, reason} ->
+        {:error, reason}
+    end
+
+  end
+
+  @spec save_resource(map, integer) :: {:ok, %Resource{}} | {:error, map}
+  def save_resource(%{"stock" => stock, "type" => type, "scope" => scope, "file" => file, "name" => name}, account_user) do
     params = %{
       type: type,
       scope: scope,
