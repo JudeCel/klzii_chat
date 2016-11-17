@@ -14,7 +14,8 @@ defmodule KlziiChat.ResourceView do
       extension: extension(resource),
       scope: resource.scope,
       stock: resource.stock,
-      static: false
+      static: false,
+      session_statuses: session_statuses(resource.session_resources),
     }
   end
 
@@ -76,4 +77,7 @@ defmodule KlziiChat.ResourceView do
       ""
     end
   end
+
+  defp session_statuses(%{__struct__: Ecto.Association.NotLoaded}), do: []
+  defp session_statuses(session_statuses), do: session_statuses
 end

@@ -18,11 +18,13 @@ defmodule KlziiChat.ResourcesController do
       QueriesResources.base_query(member.account_user)
       |> QueriesResources.find_by_params(params)
       |> QueriesResources.stock_query(%{"stock" => false})
+      |> QueriesResources.preload_session_info
       |> Repo.all
     stock_resources =
       QueriesResources.base_query
         |> QueriesResources.stock_query(params)
         |> QueriesResources.find_by_params(params)
+        |> QueriesResources.preload_session_info
         |> Repo.all
 
       list = Enum.map((stock_resources ++ resources), fn resource ->

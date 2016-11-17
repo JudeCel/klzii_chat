@@ -2,7 +2,7 @@ defmodule KlziiChat.Queries.Resources do
   import Ecto
   import Ecto.Query
 
-  alias KlziiChat.{AccountUser, Resource}
+  alias KlziiChat.{AccountUser, Resource, SessionResource}
 
   @spec base_query(%AccountUser{}) :: Ecto.Query.t
   def base_query(account_user) do
@@ -47,6 +47,12 @@ defmodule KlziiChat.Queries.Resources do
   end
   def build_scope(query, _)  do
     query
+  end
+
+  @spec preload_session_info(Ecto.Query.t) :: Ecto.Query.t
+  def preload_session_info(query) do
+    session_resources_query = from(sr in SessionResource, join: s in assoc(sr, :session), select: s.status, distinct: true)
+    from(r in query, preload: [session_resources: ^session_resources_query])
   end
 
   @spec exclude_by_ids(Ecto.Query.t, [%KlziiChat.SessionResource{}]) :: Ecto.Query.t
