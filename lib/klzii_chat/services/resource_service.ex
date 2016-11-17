@@ -2,7 +2,6 @@ defmodule KlziiChat.Services.ResourceService do
   alias KlziiChat.{Repo, AccountUser, Resource, ResourceView}
   alias KlziiChat.Services.Permissions.Resources, as: ResourcePermissions
   alias KlziiChat.Queries.Resources, as: QueriesResources
-  alias KlziiChat.Queries.SessionResources, as: QueriesSessionResources
   alias KlziiChat.Services.Validations.Resource, as: ResourceValidations
 
   import Ecto
@@ -127,23 +126,10 @@ defmodule KlziiChat.Services.ResourceService do
         end
   end
 
-
-  def validations(account_user, ids, query) do
-    with {:ok} <- if_resource_used(ids),
-         result <- Repo.all(query),
+  def validations(account_user, query) do
+    with result <- Repo.all(query),
          {:ok} <- ResourcePermissions.can_delete(account_user, result),
     do: {:ok, result}
-  end
-
-  def if_resource_used(ids) do
-    QueriesSessionResources.get_by_resource_ids(ids)
-    |> Repo.all
-    |> case  do
-        [] ->
-          {:ok}
-        _ ->
-          {:error, %{code: 415, type: "This file is currently used in a Session, you cannot delete active media files"}}
-      end
   end
 
   @spec deleteByIds(Integer.t, List.t) :: {:ok, %Resource{} } | {:error, String.t}
@@ -153,7 +139,7 @@ defmodule KlziiChat.Services.ResourceService do
       |> where([r], r.id in ^ids)
       |> where([r], r.stock == false)
 
-    case validations(account_user, ids, query) do
+    case validations(account_user, query) do
       {:ok, _} ->
         deleteByIds(ids)
       {:error, reason} ->
@@ -162,8 +148,18 @@ defmodule KlziiChat.Services.ResourceService do
   end
 
   def deleteByIds(ids) do
+    stock = QueriesResources.base_query
+      |> where([r], r.id in ^ids)
+      |> where([r], r.stock == true)
+      |> Repo.all
+
+    used = QueriesResources.get_by_ids_for_open_session(ids)
+    |> Repo.all
+
     query = QueriesResources.base_query
       |> where([r], r.id in ^ids)
+      |> where([r], r.stock == false)
+      |> QueriesResources.exclude(used)
 
     case Repo.delete_all(query, returning: true) do
       {:error, error} ->
@@ -172,7 +168,7 @@ defmodule KlziiChat.Services.ResourceService do
         Task.Supervisor.start_child(KlziiChat.BackgroundTasks, fn ->
           clean_up(result)
         end)
-        {:ok, result}
+        {:ok, result, stock, used}
     end
   end
 

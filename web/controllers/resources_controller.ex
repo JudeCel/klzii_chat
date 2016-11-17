@@ -56,12 +56,18 @@ defmodule KlziiChat.ResourcesController do
   end
 
   def delete(conn, %{"ids" => ids}, member, _) do
-    case ResourceService.deleteByIds(member.account_user.id, ids ) do
-      {:ok, resources} ->
-        resp = Enum.map(resources, fn resource ->
+    case ResourceService.deleteByIds(member.account_user.id, ids) do
+      {:ok, removed, not_removed_stock, not_removed_used} ->
+        removed_resp = Enum.map(removed, fn resource ->
           ResourceView.render("delete.json", %{resource: resource})
         end)
-        json(conn, %{ids: resp, message: "Success deleted!"})
+        not_removed_stock_resp = Enum.map(not_removed_stock, fn resource ->
+          ResourceView.render("delete.json", %{resource: resource})
+        end)
+        not_removed_used_resp = Enum.map(not_removed_used, fn resource ->
+          ResourceView.render("delete.json", %{resource: resource})
+        end)
+        json(conn, %{removed: removed_resp, not_removed_stock: not_removed_stock_resp, not_removed_used: not_removed_used_resp })
       {:error, reason} ->
         put_status(conn, reason.code)
         |> json(error_view(reason))
