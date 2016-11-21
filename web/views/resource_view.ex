@@ -15,7 +15,6 @@ defmodule KlziiChat.ResourceView do
       scope: resource.scope,
       stock: resource.stock,
       static: false,
-      session_statuses: session_statuses(resource.session_resources),
     }
   end
 
@@ -28,9 +27,18 @@ defmodule KlziiChat.ResourceView do
   end
 
   @spec render(String.t, Map.t) :: Map.t
-  def render("delete.json", %{resource: resource}) do
+  def render("delete_items.json", %{data: data, message: message}) do
     %{
-      id: resource.id
+      message: message,
+      items: Phoenix.View.render_many(data, ResourceView, "delete_item.json", as: :resource)
+    }
+  end
+
+  @spec render(String.t, Map.t) :: Map.t
+  def render("delete_item.json", %{resource: resource}) do
+    %{
+      id: resource.id,
+      name: resource.name,
     }
   end
 
@@ -78,6 +86,4 @@ defmodule KlziiChat.ResourceView do
     end
   end
 
-  defp session_statuses(%{__struct__: Ecto.Association.NotLoaded}), do: []
-  defp session_statuses(session_statuses), do: session_statuses
 end

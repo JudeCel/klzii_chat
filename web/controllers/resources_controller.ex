@@ -18,13 +18,11 @@ defmodule KlziiChat.ResourcesController do
       QueriesResources.base_query(member.account_user)
       |> QueriesResources.find_by_params(params)
       |> QueriesResources.stock_query(%{"stock" => false})
-      |> QueriesResources.preload_session_info
       |> Repo.all
     stock_resources =
       QueriesResources.base_query
         |> QueriesResources.stock_query(params)
         |> QueriesResources.find_by_params(params)
-        |> QueriesResources.preload_session_info
         |> Repo.all
 
       list = Enum.map((stock_resources ++ resources), fn resource ->
@@ -55,18 +53,23 @@ defmodule KlziiChat.ResourcesController do
     end
   end
 
+  def closed_session_delete_check(conn, %{"ids" => ids}, member, _) do
+    case ResourceService.closed_session_delete_check_by_ids(member.account_user.id, ids) do
+      {:ok, items} ->
+        items_resp = ResourceView.render("delete_items.json", %{data: items, message: "Selected files: {0} are used in Closed Session. Do you still want to Delete them?"})
+        json(conn, items_resp)
+      {:error, reason} ->
+        put_status(conn, reason.code)
+        |> json(error_view(reason))
+    end
+  end
+
   def delete(conn, %{"ids" => ids}, member, _) do
     case ResourceService.deleteByIds(member.account_user.id, ids) do
       {:ok, removed, not_removed_stock, not_removed_used} ->
-        removed_resp = Enum.map(removed, fn resource ->
-          ResourceView.render("delete.json", %{resource: resource})
-        end)
-        not_removed_stock_resp = Enum.map(not_removed_stock, fn resource ->
-          ResourceView.render("delete.json", %{resource: resource})
-        end)
-        not_removed_used_resp = Enum.map(not_removed_used, fn resource ->
-          ResourceView.render("delete.json", %{resource: resource})
-        end)
+        removed_resp = ResourceView.render("delete_items.json", %{data: removed, message: "Your selected files were successfully deleted"})
+        not_removed_stock_resp = ResourceView.render("delete_items.json", %{data: not_removed_stock, message: "Sorry, we cannot Delete the following because they are Stock file: {0}"})
+        not_removed_used_resp = ResourceView.render("delete_items.json", %{data: not_removed_used, message: "Sorry, we cannot delete the following files as they are currently used in a Chat Session: {0}"})
         json(conn, %{removed: removed_resp, not_removed_stock: not_removed_stock_resp, not_removed_used: not_removed_used_resp })
       {:error, reason} ->
         put_status(conn, reason.code)

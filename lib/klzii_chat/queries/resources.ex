@@ -54,14 +54,19 @@ defmodule KlziiChat.Queries.Resources do
     from(r in Resource, join: sr in assoc(r, :session_resources), join: s in assoc(sr, :session),
       where: sr.resourceId in ^ids,
       where: s.status == "open",
+      where: r.stock == false,
       distinct: true
     )
   end
 
-  @spec preload_session_info(Ecto.Query.t) :: Ecto.Query.t
-  def preload_session_info(query) do
-    session_resources_query = from(sr in SessionResource, join: s in assoc(sr, :session), select: s.status, distinct: true)
-    from(r in query, preload: [session_resources: ^session_resources_query])
+  @spec get_by_ids_for_closed_session(Listr.t) :: Ecto.Query.t
+  def get_by_ids_for_closed_session(ids) do
+    from(r in Resource, join: sr in assoc(r, :session_resources), join: s in assoc(sr, :session),
+      where: sr.resourceId in ^ids,
+      where: s.status == "closed",
+      where: r.stock == false,
+      distinct: true
+    )
   end
 
   @spec exclude(Ecto.Query.t, [%KlziiChat.Resource{}]) :: Ecto.Query.t

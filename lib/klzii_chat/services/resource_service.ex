@@ -57,10 +57,8 @@ defmodule KlziiChat.Services.ResourceService do
       {:error, reason} ->
         {:error, reason}
     end
-
   end
 
-  @spec save_resource(map, integer) :: {:ok, %Resource{}} | {:error, map}
   def save_resource(%{"stock" => stock, "type" => type, "scope" => scope, "file" => file, "name" => name}, account_user) do
     params = %{
       type: type,
@@ -130,6 +128,22 @@ defmodule KlziiChat.Services.ResourceService do
     with result <- Repo.all(query),
          {:ok} <- ResourcePermissions.can_delete(account_user, result),
     do: {:ok, result}
+  end
+
+  @spec closed_session_delete_check_by_ids(Integer.t, List.t) :: {:ok, %Resource{} } | {:error, String.t}
+  def closed_session_delete_check_by_ids(account_user_id, ids) do
+    account_user = Repo.get!(AccountUser, account_user_id) |> Repo.preload([:account])
+    query = QueriesResources.base_query(account_user)
+      |> where([r], r.id in ^ids)
+      |> where([r], r.stock == false)
+
+    case validations(account_user, query) do
+      {:ok, _} ->
+        items = QueriesResources.get_by_ids_for_closed_session(ids) |> Repo.all
+        {:ok, items}
+      {:error, reason} ->
+        {:error, reason}
+    end
   end
 
   @spec deleteByIds(Integer.t, List.t) :: {:ok, %Resource{} } | {:error, String.t}
