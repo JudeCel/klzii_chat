@@ -37,26 +37,11 @@ defmodule KlziiChat.Services.ResourceService do
       id: id
     }
 
-    case ResourceValidations.validate(file, params) do
-      {:ok} ->
-        find(account_user.id, id)
-        |> case do
-          {:ok, resource} ->
-            Resource.changeset(resource, params)
-            |> Repo.update
-            |> case do
-                {:ok, resource} ->
-                  :ok = clean_up([resource])
-                  add_file(resource, file)
-                {:error, reason} ->
-                  {:error, Map.put(reason, :code, 400)}
-               end
-          {:error, reason} ->
-            {:error, reason}
-         end
-      {:error, reason} ->
-        {:error, reason}
-    end
+    with {:ok} <- ResourceValidations.validate(file, params),
+        {:ok, resource} <- find(account_user.id, id),
+        {:ok, updated_resource} <- update_recource(Resource.changeset(resource, params)),
+        {:ok, result} <- clean_up_and_add_file(updated_resource, file),
+      do: {:ok, result}
   end
 
   def save_resource(%{"stock" => stock, "type" => type, "scope" => scope, "file" => file, "name" => name}, account_user) do
@@ -70,19 +55,38 @@ defmodule KlziiChat.Services.ResourceService do
       stock: stock
     }
 
-    case ResourceValidations.validate(file, params) do
-      {:ok} ->
-        Resource.changeset(%Resource{}, params)
-        |> Repo.insert
-        |> case do
-            {:ok, resource} ->
-              add_file(resource, file)
-            {:error, reason} ->
-              {:error, Map.put(reason, :code, 400)}
-           end
-      {:error, reason} ->
-        {:error, reason}
-    end
+    with {:ok} <- ResourceValidations.validate(file, params),
+        {:ok, resource} <- insert_recource(Resource.changeset(%Resource{}, params)),
+        {:ok, result} <- add_file(resource, file),
+      do: {:ok, result}
+  end
+
+  @spec insert_recource(%Resource{}) :: {:ok, %Resource{}} | {:error, map}
+  defp insert_recource(resource) do
+    Repo.insert(resource)
+    |> case do
+        {:ok, resource } ->
+          {:ok, resource}
+        {:error, reason} ->
+          {:error, Map.put(reason, :code, 400)}
+       end
+  end
+
+  @spec update_recource(%Resource{}) :: {:ok, %Resource{}} | {:error, map}
+  defp update_recource(resource) do
+    Repo.update(resource)
+    |> case do
+        {:ok, resource } ->
+          {:ok, resource}
+        {:error, reason} ->
+          {:error, Map.put(reason, :code, 400)}
+       end
+  end
+
+  @spec clean_up_and_add_file(%Resource{}, map) :: {:ok, %Resource{}} | {:error, map}
+  defp clean_up_and_add_file(resource, file) do
+    :ok = clean_up([resource])
+    add_file(resource, file)
   end
 
   @spec add_file(%Resource{}, map) :: {:ok, %Resource{}} | {:error, map}

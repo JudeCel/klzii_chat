@@ -56,8 +56,8 @@ defmodule KlziiChat.ResourcesController do
   def closed_session_delete_check(conn, %{"ids" => ids}, member, _) do
     case ResourceService.closed_session_delete_check_by_ids(member.account_user.id, ids) do
       {:ok, items} ->
-        items_resp = ResourceView.render("delete_items.json", %{data: items, message: "Selected files: {0} are used in Closed Session. Do you still want to Delete them?"})
-        json(conn, items_resp)
+        res = ResourceView.render("delete_check.json", %{used_in_closed_session: items})
+        json(conn, res)
       {:error, reason} ->
         put_status(conn, reason.code)
         |> json(error_view(reason))
@@ -67,10 +67,8 @@ defmodule KlziiChat.ResourcesController do
   def delete(conn, %{"ids" => ids}, member, _) do
     case ResourceService.deleteByIds(member.account_user.id, ids) do
       {:ok, removed, not_removed_stock, not_removed_used} ->
-        removed_resp = ResourceView.render("delete_items.json", %{data: removed, message: "Your selected files were successfully deleted"})
-        not_removed_stock_resp = ResourceView.render("delete_items.json", %{data: not_removed_stock, message: "Sorry, we cannot Delete the following because they are Stock file: {0}"})
-        not_removed_used_resp = ResourceView.render("delete_items.json", %{data: not_removed_used, message: "Sorry, we cannot delete the following files as they are currently used in a Chat Session: {0}"})
-        json(conn, %{removed: removed_resp, not_removed_stock: not_removed_stock_resp, not_removed_used: not_removed_used_resp })
+        res = ResourceView.render("delete.json", %{removed: removed, not_removed_stock: not_removed_stock, not_removed_used: not_removed_used})
+        json(conn, res)
       {:error, reason} ->
         put_status(conn, reason.code)
         |> json(error_view(reason))
