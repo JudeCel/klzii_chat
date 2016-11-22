@@ -58,7 +58,7 @@ const ReportsIndex = React.createClass({
           name='active' type='checkbox' className='with-font'
           onChange={ this.onChange.bind(this, 'facilitator', !facilitator) }
           defaultChecked={ facilitator } />
-        <label htmlFor={ 'report-type-00' }>Include Facilitator Interaction</label>
+        <label htmlFor={ 'report-type-00' }>Include Host Interaction</label>
 
         <table className={ 'table table-hover view-' + format }>
           <thead>

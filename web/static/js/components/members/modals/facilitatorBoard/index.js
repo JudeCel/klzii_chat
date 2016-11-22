@@ -52,7 +52,7 @@ const BoardModal = React.createClass({
             </div>
 
             <div className='col-md-8 modal-title'>
-              <h4>Facilitator Board</h4>
+              <h4>Host Board</h4>
             </div>
 
             <div className='col-md-2'>
