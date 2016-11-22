@@ -16,7 +16,7 @@ defmodule KlziiChat.Services.ResourceService do
           Map.put(params, "stock", (params["stock"] || false))
         else
           Map.put(params, "stock", false)
-          |> Map.put("id", nil)
+          |> Map.delete("id")
         end
         |> save_resource(account_user)
       {:error, reason} ->
