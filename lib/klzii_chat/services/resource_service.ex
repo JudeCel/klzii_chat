@@ -40,7 +40,7 @@ defmodule KlziiChat.Services.ResourceService do
     with {:ok} <- ResourceValidations.validate(file, params),
         {:ok, resource} <- find(account_user.id, id),
         {:ok, updated_resource} <- update_recource(Resource.changeset(resource, params)),
-        {:ok, result} <- clean_up_and_add_file(updated_resource, file),
+        {:ok, result} <- replace_resource_file(updated_resource, file),
       do: {:ok, result}
   end
 
@@ -83,8 +83,8 @@ defmodule KlziiChat.Services.ResourceService do
        end
   end
 
-  @spec clean_up_and_add_file(%Resource{}, map) :: {:ok, %Resource{}} | {:error, map}
-  defp clean_up_and_add_file(resource, file) do
+  @spec replace_resource_file(%Resource{}, map) :: {:ok, %Resource{}} | {:error, map}
+  defp replace_resource_file(resource, file) do
     :ok = clean_up([resource])
     add_file(resource, file)
   end
@@ -118,7 +118,7 @@ defmodule KlziiChat.Services.ResourceService do
     Repo.get!(AccountUser, account_user_id)
       |> Repo.preload([:account])
       |> QueriesResources.base_query
-      |> where([r], r.id in ^[id])
+      |> QueriesResources.get_by_ids([id])
       |> Repo.one
       |> case  do
           nil ->
@@ -138,8 +138,8 @@ defmodule KlziiChat.Services.ResourceService do
   def closed_session_delete_check_by_ids(account_user_id, ids) do
     account_user = Repo.get!(AccountUser, account_user_id) |> Repo.preload([:account])
     query = QueriesResources.base_query(account_user)
-      |> where([r], r.id in ^ids)
-      |> where([r], r.stock == false)
+      |> QueriesResources.get_by_ids(ids)
+      |> QueriesResources.where_stock(false)
 
     case validations(account_user, query) do
       {:ok, _} ->
@@ -154,8 +154,8 @@ defmodule KlziiChat.Services.ResourceService do
   def deleteByIds(account_user_id, ids) do
     account_user = Repo.get!(AccountUser, account_user_id) |> Repo.preload([:account])
     query = QueriesResources.base_query(account_user)
-      |> where([r], r.id in ^ids)
-      |> where([r], r.stock == false)
+      |> QueriesResources.get_by_ids(ids)
+      |> QueriesResources.where_stock(false)
 
     case validations(account_user, query) do
       {:ok, _} ->
@@ -166,18 +166,7 @@ defmodule KlziiChat.Services.ResourceService do
   end
 
   def deleteByIds(ids) do
-    stock = QueriesResources.base_query
-      |> where([r], r.id in ^ids)
-      |> where([r], r.stock == true)
-      |> Repo.all
-
-    used = QueriesResources.get_by_ids_for_open_session(ids)
-    |> Repo.all
-
-    query = QueriesResources.base_query
-      |> where([r], r.id in ^ids)
-      |> where([r], r.stock == false)
-      |> QueriesResources.exclude(used)
+    {:ok, query, stock, used} = get_delete_by_ids_data(ids)
 
     case Repo.delete_all(query, returning: true) do
       {:error, error} ->
@@ -188,6 +177,23 @@ defmodule KlziiChat.Services.ResourceService do
         end)
         {:ok, result, stock, used}
     end
+  end
+
+  defp get_delete_by_ids_data(ids) do
+    stock = QueriesResources.base_query
+      |> QueriesResources.get_by_ids(ids)
+      |> QueriesResources.where_stock(true)
+      |> Repo.all
+
+    used = QueriesResources.get_by_ids_for_open_session(ids)
+      |> Repo.all
+
+    query = QueriesResources.base_query
+      |> QueriesResources.get_by_ids(ids)
+      |> QueriesResources.where_stock(false)
+      |> QueriesResources.exclude(used)
+
+    {:ok, query, stock, used}
   end
 
   @spec clean_up(list) :: :ok

@@ -26,19 +26,35 @@ defmodule KlziiChat.ResourceView do
     }
   end
 
+  defp get_names(items) do
+    Enum.reduce(items, "", fn (map, acc) ->
+      if acc == "" do
+        map.name
+      else
+       acc <> ", " <> map.name
+      end
+    end)
+  end
+
   @spec render(String.t, Map.t) :: Map.t
   def render("delete_check.json", %{used_in_closed_session: used_in_closed_session}) do
+    names = get_names(used_in_closed_session)
+    message = Enum.join(["Selected files:", names, "are used in Closed Session. Do you still want to Delete them?"], " ")
     %{
-      used_in_closed_session: ResourceView.render("delete_items.json", %{data: used_in_closed_session, message: "Selected files: {0} are used in Closed Session. Do you still want to Delete them?"}),
+      used_in_closed_session: ResourceView.render("delete_items.json", %{data: used_in_closed_session, message: message}),
     }
   end
 
   @spec render(String.t, Map.t) :: Map.t
   def render("delete.json", %{removed: removed, not_removed_stock: not_removed_stock, not_removed_used: not_removed_used}) do
+    not_removed_stock_names = get_names(not_removed_stock)
+    not_removed_used_names = get_names(not_removed_used)
+    not_removed_stock_message = Enum.join(["Sorry, we cannot Delete the following because they are Stock file:", not_removed_stock_names], " ")
+    not_removed_used_message = Enum.join(["Sorry, we cannot delete the following files as they are currently used in a Chat Session:", not_removed_used_names], " ")
     %{
       removed: ResourceView.render("delete_items.json", %{data: removed, message: "Your selected files were successfully deleted"}),
-      not_removed_stock: ResourceView.render("delete_items.json", %{data: not_removed_stock, message: "Sorry, we cannot Delete the following because they are Stock file: {0}"}),
-      not_removed_used: ResourceView.render("delete_items.json", %{data: not_removed_used, message: "Sorry, we cannot delete the following files as they are currently used in a Chat Session: {0}"})
+      not_removed_stock: ResourceView.render("delete_items.json", %{data: not_removed_stock, message: not_removed_stock_message}),
+      not_removed_used: ResourceView.render("delete_items.json", %{data: not_removed_used, message: not_removed_used_message})
     }
   end
 
@@ -53,8 +69,7 @@ defmodule KlziiChat.ResourceView do
   @spec render(String.t, Map.t) :: Map.t
   def render("delete_item.json", %{resource: resource}) do
     %{
-      id: resource.id,
-      name: resource.name,
+      id: resource.id
     }
   end
 

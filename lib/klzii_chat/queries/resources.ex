@@ -2,7 +2,7 @@ defmodule KlziiChat.Queries.Resources do
   import Ecto
   import Ecto.Query
 
-  alias KlziiChat.{AccountUser, Resource, SessionResource}
+  alias KlziiChat.{AccountUser, Resource}
 
   @spec base_query(%AccountUser{}) :: Ecto.Query.t
   def base_query(account_user) do
@@ -47,6 +47,16 @@ defmodule KlziiChat.Queries.Resources do
   end
   def build_scope(query, _)  do
     query
+  end
+
+  @spec get_by_ids(Ecto.Query.t,Listr.t) :: Ecto.Query.t
+  def get_by_ids(query, ids) do
+    from(r in query, where: r.id in ^ids)
+  end
+
+  @spec where_stock(Ecto.Query.t, Boolean.t) :: Ecto.Query.t
+  def where_stock(query, stock) do
+    from(r in query, where: r.stock == ^stock)
   end
 
   @spec get_by_ids_for_open_session(Listr.t) :: Ecto.Query.t
