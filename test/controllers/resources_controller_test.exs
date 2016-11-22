@@ -116,9 +116,16 @@ defmodule KlziiChat.ResourcesControllerTest do
       assert json_response(conn, 200)["resource"]["name"] == zip_resource.name
     end
 
-    test "delete", %{conn: conn, zip_resource: zip_resource} do
-      conn = delete conn, resources_path(conn, :delete, ids: [zip_resource.id])
-      assert json_response(conn, 200)["ids"] |> is_list
+    test "closed session delete check", %{conn: conn, image_resource: image_resource} do
+      conn = get conn, resources_path(conn, :closed_session_delete_check, ids: [image_resource.id])
+      assert json_response(conn, 200)["used_in_closed_session"]["items"] |> is_list
+    end
+
+    test "delete", %{conn: conn, image_resource: image_resource} do
+      conn = delete conn, resources_path(conn, :delete, ids: [image_resource.id])
+      assert json_response(conn, 200)["not_removed_stock"]["items"] |> is_list
+      assert json_response(conn, 200)["not_removed_used"]["items"] |> is_list
+      assert json_response(conn, 200)["removed"]["items"] |> is_list
     end
 
     test "delete with resource", %{conn: conn} do
@@ -128,7 +135,9 @@ defmodule KlziiChat.ResourcesControllerTest do
 
       id = resp["resource"]["id"]
       conn = delete conn, resources_path(conn, :delete, ids: [id])
-      assert json_response(conn, 200)["ids"] |> is_list
+      assert json_response(conn, 200)["not_removed_stock"]["items"] |> is_list
+      assert json_response(conn, 200)["not_removed_used"]["items"] |> is_list
+      assert json_response(conn, 200)["removed"]["items"] |> is_list
     end
 
     test "wrong type", %{conn: conn} do

@@ -80,8 +80,8 @@ defmodule KlziiChat.Router do
     options "/zip", ResourcesController, :zip
     options "/upload", ResourcesController, :upload
     options "/delete", ResourcesController, :delete
+    options "/closed_session_delete_check", ResourcesController, :closed_session_delete_check
     options "/:id", ResourcesController, :show
-
 
     # Generic routes for API be call from original domain
     get "/", ResourcesController, :index
@@ -89,6 +89,7 @@ defmodule KlziiChat.Router do
     post "/zip", ResourcesController, :zip
     post "/upload", ResourcesController, :upload
     delete "/delete", ResourcesController, :delete
+    get "/closed_session_delete_check", ResourcesController, :closed_session_delete_check
     get "/:id", ResourcesController, :show
   end
 

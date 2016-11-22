@@ -49,6 +49,42 @@ defmodule KlziiChat.Queries.Resources do
     query
   end
 
+  @spec get_by_ids(Ecto.Query.t,Listr.t) :: Ecto.Query.t
+  def get_by_ids(query, ids) do
+    from(r in query, where: r.id in ^ids)
+  end
+
+  @spec where_stock(Ecto.Query.t, Boolean.t) :: Ecto.Query.t
+  def where_stock(query, stock) do
+    from(r in query, where: r.stock == ^stock)
+  end
+
+  @spec get_by_ids_for_open_session(Listr.t) :: Ecto.Query.t
+  def get_by_ids_for_open_session(ids) do
+    from(r in Resource, join: sr in assoc(r, :session_resources), join: s in assoc(sr, :session),
+      where: sr.resourceId in ^ids,
+      where: s.status == "open",
+      where: r.stock == false,
+      distinct: true
+    )
+  end
+
+  @spec get_by_ids_for_closed_session(Listr.t) :: Ecto.Query.t
+  def get_by_ids_for_closed_session(ids) do
+    from(r in Resource, join: sr in assoc(r, :session_resources), join: s in assoc(sr, :session),
+      where: sr.resourceId in ^ids,
+      where: s.status == "closed",
+      where: r.stock == false,
+      distinct: true
+    )
+  end
+
+  @spec exclude(Ecto.Query.t, [%KlziiChat.Resource{}]) :: Ecto.Query.t
+  def exclude(query, resources) do
+    resource_ids = Enum.map(resources, fn(%{id: id}) -> id end)
+    from(r in query, where: not r.id in ^resource_ids)
+  end
+
   @spec exclude_by_ids(Ecto.Query.t, [%KlziiChat.SessionResource{}]) :: Ecto.Query.t
   def exclude_by_ids(query, session_resources) do
     session_resource_ids = Enum.map(session_resources, fn(%{resourceId: resource_id}) -> resource_id end)
