@@ -59,7 +59,10 @@ defmodule KlziiChat.SessionResourcesControllerTest do
       {:ok, _} = SessionResourcesService.add_session_resources(id, facilitator.id)
 
       conn = delete conn, resources_path(conn, :delete, ids: [id])
-      assert json_response(conn, 415)
+      items = json_response(conn, 200)["not_removed_used"]["items"]
+      
+      assert json_response(conn, 200)
+      assert(items == [%{"id" => id}])
     end
 
   describe("wrong media type") do
