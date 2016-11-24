@@ -5,7 +5,6 @@ defmodule KlziiChat.Services.SessionResourcesService do
   alias KlziiChat.Helpers.ListHelper
   alias KlziiChat.Queries.Resources, as: QueriesResources
 
-
   import Ecto.Query
 
   def add_session_resources(resource_ids, session_member_id) do
@@ -44,7 +43,6 @@ defmodule KlziiChat.Services.SessionResourcesService do
         {:error, reason}
     end
   end
-
 
   @spec delete_related_consoles(%Resource{}, Integer) :: :ok
   def delete_related_consoles(resource, session_member_id) do

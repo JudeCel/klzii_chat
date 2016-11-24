@@ -121,6 +121,11 @@ defmodule KlziiChat.Services.SessionReportingService do
     |> Repo.update()
   end
 
+  def clean_up_by_resource_ids(ids) do
+    from(str in SessionTopicsReport, where: str.resourceId in ^ids )
+    |> Repo.delete_all()
+  end
+
   def delete_all() do
     query = from(str in SessionTopicsReport)
 

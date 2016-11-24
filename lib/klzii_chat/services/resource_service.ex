@@ -3,6 +3,7 @@ defmodule KlziiChat.Services.ResourceService do
   alias KlziiChat.Services.Permissions.Resources, as: ResourcePermissions
   alias KlziiChat.Queries.Resources, as: QueriesResources
   alias KlziiChat.Services.Validations.Resource, as: ResourceValidations
+  alias KlziiChat.Services.{SessionReportingService}
 
   import Ecto
   import Ecto.Query
@@ -168,15 +169,16 @@ defmodule KlziiChat.Services.ResourceService do
   def deleteByIds(ids) do
     {:ok, query, stock, used} = get_delete_by_ids_data(ids)
 
-    case Repo.delete_all(query, returning: true) do
-      {:error, error} ->
-        {:error, error}
-      {_count, result} ->
-        Task.Supervisor.start_child(KlziiChat.BackgroundTasks, fn ->
-          clean_up(result)
-        end)
-        {:ok, result, stock, used}
-    end
+    result = Repo.all(query)
+    KlziiChat.BackgroundTasks.Resources.tidy_up(result)
+
+    {:ok, result, stock, used}
+  end
+
+  def clean_up_all_relations(resource) do
+    SessionReportingService.clean_up_by_resource_ids([resource.id])
+    Repo.delete!(resource)
+    clean_up([resource])
   end
 
   defp get_delete_by_ids_data(ids) do
