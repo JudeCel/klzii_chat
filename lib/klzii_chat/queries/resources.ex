@@ -61,9 +61,9 @@ defmodule KlziiChat.Queries.Resources do
 
   @spec get_by_ids_for_open_session(Listr.t) :: Ecto.Query.t
   def get_by_ids_for_open_session(ids) do
-    from(r in Resource, join: sr in assoc(r, :session_resources), join: s in assoc(sr, :session),
-      where: sr.resourceId in ^ids,
-      where: s.status == "open",
+    from(r in Resource, left_join: sr in assoc(r, :session_resources), left_join: s in assoc(sr, :session), left_join: s2 in assoc(r, :sessions),
+      where: r.id in ^ids,
+      where: s.status == "open" or s2.status == "open",
       where: r.stock == false,
       distinct: true
     )
@@ -71,9 +71,9 @@ defmodule KlziiChat.Queries.Resources do
 
   @spec get_by_ids_for_closed_session(Listr.t) :: Ecto.Query.t
   def get_by_ids_for_closed_session(ids) do
-    from(r in Resource, join: sr in assoc(r, :session_resources), join: s in assoc(sr, :session),
-      where: sr.resourceId in ^ids,
-      where: s.status == "closed",
+    from(r in Resource, left_join: sr in assoc(r, :session_resources), left_join: s in assoc(sr, :session), left_join: s2 in assoc(r, :sessions),
+      where: r.id in ^ids,
+      where: s.status == "closed" or s2.status == "closed",
       where: r.stock == false,
       distinct: true
     )
