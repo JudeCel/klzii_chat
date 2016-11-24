@@ -19,7 +19,7 @@ body{
 }
 .report-section .media-body {
   padding-left: 30px;
-  page-break-inside: avoid;
+  page-break-inside: inherit;
 }
 .report-section .media-left {
   padding-right: 0px;
@@ -76,7 +76,7 @@ body{
 }
 
 .report-section .message-section {
-  page-break-inside: avoid;
+  page-break-inside: inherit;
   margin: 10px;
 }
 
@@ -107,7 +107,7 @@ body{
 }
 
 .mini-survey{
-  page-break-inside: avoid;
+  page-break-inside: inherit;
 }
 
 .mini-survey .title,
@@ -133,7 +133,7 @@ body{
 
 .mini-survey .answers .media-body {
   padding-left: inherit;
-  page-break-inside: avoid;
+  page-break-inside: inherit;
 }
 
 .mini-survey .answers .svg_avatar{

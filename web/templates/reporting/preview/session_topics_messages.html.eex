@@ -1,9 +1,9 @@
 <%= for session_topic <- @session_topics do %>
+<div class='session-topics-container'>
   <div class='report-topic'>
     <%= session_topic.name %>
   </div>
 
-  <div class='session-topics-container'>
     <%= render "messages.html", messages: session_topic.messages, conn: assigns[:conn], session: assigns[:session] %>
     <hr/>
   </div>
