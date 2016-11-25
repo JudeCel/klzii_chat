@@ -3,6 +3,7 @@ import { connect }        from 'react-redux';
 import { Modal }          from 'react-bootstrap';
 import ReportsPages       from './pages';
 import mixins             from '../../mixins';
+import NotificationActions from '../../actions/notifications';
 
 const ReportsModal = React.createClass({
   mixins: [mixins.modalWindows],
@@ -33,12 +34,20 @@ const ReportsModal = React.createClass({
       this.refs.title.innerText = 'Reports';
     }
   },
+  componentDidUpdate() {
+    const { repors: { mapStruct } } = this.props;
+    let show = this.showSpecificModal('reports');
+    const { dispatch } = this.props;
+    if (show && !mapStruct) {
+      NotificationActions.showNotification(dispatch, { message: 'You can\'t generate report, contact list not found for this session', type: 'error' });
+    }
+  },
   render() {
     const { rendering, report} = this.state;
     const { repors: { mapStruct } } = this.props;
     let show = this.showSpecificModal('reports');
 
-    if(show) {
+    if (show && mapStruct) {
       return (
         <Modal dialogClassName='reports-modal modal-section' show={ show } onHide={ this.onClose } onEnter={ this.onShow }>
           <Modal.Header>
@@ -60,8 +69,7 @@ const ReportsModal = React.createClass({
           </Modal.Body>
         </Modal>
       )
-    }
-    else {
+    } else {
       return (false)
     }
   }

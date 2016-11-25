@@ -2,8 +2,8 @@ defmodule KlziiChat.Services.ResourceService do
   alias KlziiChat.{Repo, AccountUser, Resource, ResourceView}
   alias KlziiChat.Services.Permissions.Resources, as: ResourcePermissions
   alias KlziiChat.Queries.Resources, as: QueriesResources
-  alias KlziiChat.Queries.SessionResources, as: QueriesSessionResources
   alias KlziiChat.Services.Validations.Resource, as: ResourceValidations
+  alias KlziiChat.Services.{SessionReportingService}
 
   import Ecto
   import Ecto.Query
@@ -17,14 +17,35 @@ defmodule KlziiChat.Services.ResourceService do
           Map.put(params, "stock", (params["stock"] || false))
         else
           Map.put(params, "stock", false)
-        end |> save_resource(account_user)
+          |> Map.delete("id")
+        end
+        |> save_resource(account_user)
       {:error, reason} ->
         {:error, reason}
     end
   end
 
   @spec save_resource(map, integer) :: {:ok, %Resource{}} | {:error, map}
-  def save_resource(%{"stock" => stock, "type" => type, "scope" => scope, "file" => file, "name"=> name}, account_user) do
+  def save_resource(%{"stock" => stock, "type" => type, "scope" => scope, "file" => file, "name" => name, "id" => id}, account_user) do
+    params = %{
+      type: type,
+      scope: scope,
+      accountId: account_user.account.id,
+      accountUserId: account_user.id,
+      type: type,
+      name: name,
+      stock: stock,
+      id: id
+    }
+
+    with {:ok} <- ResourceValidations.validate(file, params),
+        {:ok, resource} <- find(account_user.id, id),
+        {:ok, updated_resource} <- update_recource(Resource.changeset(resource, params)),
+        {:ok, result} <- replace_resource_file(updated_resource, file),
+      do: {:ok, result}
+  end
+
+  def save_resource(%{"stock" => stock, "type" => type, "scope" => scope, "file" => file, "name" => name}, account_user) do
     params = %{
       type: type,
       scope: scope,
@@ -35,19 +56,38 @@ defmodule KlziiChat.Services.ResourceService do
       stock: stock
     }
 
-    case ResourceValidations.validate(file, params) do
-      {:ok} ->
-        Resource.changeset(%Resource{}, params)
-        |> Repo.insert
-        |> case do
-            {:ok, resource} ->
-              add_file(resource, file)
-            {:error, reason} ->
-              {:error, Map.put(reason, :code, 400)}
-           end
-      {:error, reason} ->
-        {:error, reason}
-    end
+    with {:ok} <- ResourceValidations.validate(file, params),
+        {:ok, resource} <- insert_recource(Resource.changeset(%Resource{}, params)),
+        {:ok, result} <- add_file(resource, file),
+      do: {:ok, result}
+  end
+
+  @spec insert_recource(%Resource{}) :: {:ok, %Resource{}} | {:error, map}
+  defp insert_recource(resource) do
+    Repo.insert(resource)
+    |> case do
+        {:ok, resource } ->
+          {:ok, resource}
+        {:error, reason} ->
+          {:error, Map.put(reason, :code, 400)}
+       end
+  end
+
+  @spec update_recource(%Resource{}) :: {:ok, %Resource{}} | {:error, map}
+  defp update_recource(resource) do
+    Repo.update(resource)
+    |> case do
+        {:ok, resource } ->
+          {:ok, resource}
+        {:error, reason} ->
+          {:error, Map.put(reason, :code, 400)}
+       end
+  end
+
+  @spec replace_resource_file(%Resource{}, map) :: {:ok, %Resource{}} | {:error, map}
+  defp replace_resource_file(resource, file) do
+    :ok = clean_up([resource])
+    add_file(resource, file)
   end
 
   @spec add_file(%Resource{}, map) :: {:ok, %Resource{}} | {:error, map}
@@ -79,7 +119,7 @@ defmodule KlziiChat.Services.ResourceService do
     Repo.get!(AccountUser, account_user_id)
       |> Repo.preload([:account])
       |> QueriesResources.base_query
-      |> where([r], r.id in ^[id])
+      |> QueriesResources.get_by_ids([id])
       |> Repo.one
       |> case  do
           nil ->
@@ -89,33 +129,36 @@ defmodule KlziiChat.Services.ResourceService do
         end
   end
 
-
-  def validations(account_user, ids, query) do
-    with {:ok} <- if_resource_used(ids),
-         result <- Repo.all(query),
+  def validations(account_user, query) do
+    with result <- Repo.all(query),
          {:ok} <- ResourcePermissions.can_delete(account_user, result),
     do: {:ok, result}
   end
 
-  def if_resource_used(ids) do
-    QueriesSessionResources.get_by_resource_ids(ids)
-    |> Repo.all
-    |> case  do
-        [] ->
-          {:ok}
-        _ ->
-          {:error, %{code: 415, type: "This file is currently used in a Session, you cannot delete active media files"}}
-      end
+  @spec closed_session_delete_check_by_ids(Integer.t, List.t) :: {:ok, %Resource{} } | {:error, String.t}
+  def closed_session_delete_check_by_ids(account_user_id, ids) do
+    account_user = Repo.get!(AccountUser, account_user_id) |> Repo.preload([:account])
+    query = QueriesResources.base_query(account_user)
+      |> QueriesResources.get_by_ids(ids)
+      |> QueriesResources.where_stock(false)
+
+    case validations(account_user, query) do
+      {:ok, _} ->
+        items = QueriesResources.get_by_ids_for_closed_session(ids) |> Repo.all
+        {:ok, items}
+      {:error, reason} ->
+        {:error, reason}
+    end
   end
 
   @spec deleteByIds(Integer.t, List.t) :: {:ok, %Resource{} } | {:error, String.t}
   def deleteByIds(account_user_id, ids) do
     account_user = Repo.get!(AccountUser, account_user_id) |> Repo.preload([:account])
     query = QueriesResources.base_query(account_user)
-      |> where([r], r.id in ^ids)
-      |> where([r], r.stock == false)
+      |> QueriesResources.get_by_ids(ids)
+      |> QueriesResources.where_stock(false)
 
-    case validations(account_user, ids, query) do
+    case validations(account_user, query) do
       {:ok, _} ->
         deleteByIds(ids)
       {:error, reason} ->
@@ -124,18 +167,35 @@ defmodule KlziiChat.Services.ResourceService do
   end
 
   def deleteByIds(ids) do
-    query = QueriesResources.base_query
-      |> where([r], r.id in ^ids)
+    {:ok, query, stock, used} = get_delete_by_ids_data(ids)
 
-    case Repo.delete_all(query, returning: true) do
-      {:error, error} ->
-        {:error, error}
-      {_count, result} ->
-        Task.Supervisor.start_child(KlziiChat.BackgroundTasks, fn ->
-          clean_up(result)
-        end)
-        {:ok, result}
-    end
+    result = Repo.all(query)
+    KlziiChat.BackgroundTasks.Resources.tidy_up(result)
+
+    {:ok, result, stock, used}
+  end
+
+  def clean_up_all_relations(resource) do
+    SessionReportingService.clean_up_by_resource_ids([resource.id])
+    Repo.delete!(resource)
+    clean_up([resource])
+  end
+
+  defp get_delete_by_ids_data(ids) do
+    stock = QueriesResources.base_query
+      |> QueriesResources.get_by_ids(ids)
+      |> QueriesResources.where_stock(true)
+      |> Repo.all
+
+    used = QueriesResources.get_by_ids_for_open_session(ids)
+      |> Repo.all
+
+    query = QueriesResources.base_query
+      |> QueriesResources.get_by_ids(ids)
+      |> QueriesResources.where_stock(false)
+      |> QueriesResources.exclude(used)
+
+    {:ok, query, stock, used}
   end
 
   @spec clean_up(list) :: :ok

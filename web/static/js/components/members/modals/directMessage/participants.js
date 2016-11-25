@@ -18,36 +18,44 @@ const Participants = React.createClass({
   render() {
     const { participants, colours, unreadDirectMessages } = this.props;
 
-    return (
-      <div className='list-group no-border-radius' style={{ borderColor: colours.mainBorder }}>
-        {
-          participants.map((participant, index) =>
-            <button type='button' key={ participant.id } className={ this.selectClassname(participant.id) } onClick={ this.selectParticipant.bind(this, participant) }>
-              <div className='avatar'>
-                <Avatar member={ participant } specificId='direct-message-left' />
-              </div>
-
-              <div className='info'>
-                <div className='header'>
-                  <div className='col-md-6'>
-                    <strong>{ participant.username }</strong>
-                  </div>
-
-                  <div className='col-md-6 text-right'>
-                    <span className='badge'>{ unreadDirectMessages[participant.id] }</span>
-                    <span>{ this.formatDate(this.getLastUnread(participant.id).createdAt) }</span>
-                  </div>
+    if (participants.length > 0) {
+      return (
+        <div className='list-group no-border-radius' style={{ borderColor: colours.mainBorder }}>
+          {
+            participants.map((participant, index) =>
+              <button type='button' key={ participant.id } className={ this.selectClassname(participant.id) } onClick={ this.selectParticipant.bind(this, participant) }>
+                <div className='avatar'>
+                  <Avatar member={ participant } specificId='direct-message-left' />
                 </div>
 
-                <div className='body col-md-12'>
-                  <p>{ this.getLastUnread(participant.id).text }</p>
+                <div className='info'>
+                  <div className='header'>
+                    <div className='col-md-6'>
+                      <strong>{ participant.username }</strong>
+                    </div>
+
+                    <div className='col-md-6 text-right'>
+                      <span className='badge'>{ unreadDirectMessages[participant.id] }</span>
+                      <span>{ this.formatDate(this.getLastUnread(participant.id).createdAt) }</span>
+                    </div>
+                  </div>
+
+                  <div className='body col-md-12'>
+                    <p>{ this.getLastUnread(participant.id).text }</p>
+                  </div>
                 </div>
-              </div>
-            </button>
-          )
-        }
-      </div>
-    )
+              </button>
+            )
+          }
+        </div>
+      )
+    } else {
+      return (
+        <div className='list-group no-border-radius' style={{ borderColor: colours.mainBorder }}>
+          <div style={{padding: "10px"}}>There are no users</div>
+        </div>
+      )
+    }
   }
 });
 

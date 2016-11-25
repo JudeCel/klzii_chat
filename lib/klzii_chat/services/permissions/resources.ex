@@ -4,13 +4,17 @@ defmodule KlziiChat.Services.Permissions.Resources do
 
   @spec can_delete(Map.t, Map.t) :: {:ok } | {:error, String.t}
   def can_delete(member, objects) do
+    if objects == [] do
+      {:ok}
+    else
      roles = ~w(facilitator accountManager admin)
      Enum.any?(objects, fn object ->
-      has_owner(member, object, :sessionMemberId) ||
-      has_role(member.role, roles) ||
-      has_owner(member, object, :accountUserId)
-    end)
-    |> formate_error
+       has_owner(member, object, :sessionMemberId) ||
+       has_role(member.role, roles) ||
+       has_owner(member, object, :accountUserId)
+     end)
+     |> formate_error
+    end
   end
 
   @spec can_see_section(Map.t) :: {:ok } | {:error, String.t}
