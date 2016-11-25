@@ -321,7 +321,7 @@ const WhiteboardCanvas = React.createClass({
     this.snapGroup.attr({ pointerEvents: this.minimized ? 'none' : 'all' });
   },
   addText(text) {
-    this.activeShape = this.snap.text(this.MAX_WIDTH/2, this.MAX_HEIGHT/2, text).transform('r0.1');
+    this.activeShape = this.snap.text(this.MAX_WIDTH/2 - text.length * 10, this.MAX_HEIGHT/2, text).transform('r0.1');
     this.setStyle(this.activeShape, this.activeFillColour, this.strokeWidth, this.activeStrokeColour);
     this.activeShape.attr({ 'font-size': '40px', textVal: text });
     this.snapGroup.add(this.activeShape);
