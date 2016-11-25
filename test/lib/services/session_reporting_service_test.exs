@@ -34,7 +34,7 @@ defmodule KlziiChat.Services.SessionReportingServiceTest do
   end
 
   describe "Create report with include fields" do
-    test "facilitator ", %{facilitator: facilitator, session_topic: session_topic} do
+    test "host ", %{facilitator: facilitator, session_topic: session_topic} do
       payload =  %{"sessionTopicId" => session_topic.id, "format" => "pdf", "type" => "messages", "includeFields" => ["some name"] }
       assert({:ok, report} = SessionReportingService.create_report(facilitator.id, payload))
       assert(report.includeFields == get_in(payload, ["includeFields"]))
@@ -42,7 +42,7 @@ defmodule KlziiChat.Services.SessionReportingServiceTest do
   end
 
   describe "report with includes" do
-    test "facilitator ", %{facilitator: facilitator, session_topic: session_topic} do
+    test "host ", %{facilitator: facilitator, session_topic: session_topic} do
       payload =  %{
         "sessionTopicId" => session_topic.id,
         "format" => "pdf",
@@ -56,7 +56,7 @@ defmodule KlziiChat.Services.SessionReportingServiceTest do
   end
 
   describe "report with includes and include fields" do
-    test "facilitator ", %{facilitator: facilitator, session_topic: session_topic} do
+    test "host ", %{facilitator: facilitator, session_topic: session_topic} do
       payload =  %{"sessionTopicId" => session_topic.id, "format" => "pdf", "type" => "messages", "includes" => %{}, "includeFields" => ["some name"] }
       assert({:ok, _} = SessionReportingService.create_report(facilitator.id, payload))
     end

@@ -2,7 +2,7 @@ defmodule KlziiChat.Services.Permissions.MemberTest do
   use ExUnit.Case, async: true
   alias  KlziiChat.Services.Permissions.Member
 
-  describe "facilitator" do
+  describe "host" do
     test "when session is anonymous" do
       member = %{id: 1, role: "facilitator"}
       session = %{id: 1, anonymous: true}
@@ -10,7 +10,7 @@ defmodule KlziiChat.Services.Permissions.MemberTest do
     end
   end
 
-  describe "participant" do
+  describe "guest" do
     test "when session is anonymous" do
       member = %{id: 1, role: "participant"}
       session = %{id: 1, anonymous: true}
@@ -23,7 +23,7 @@ defmodule KlziiChat.Services.Permissions.MemberTest do
     end
   end
 
-  describe "observer" do
+  describe "spectator" do
     test "when session is anonymous" do
       member = %{id: 1, role: "observer"}
       session = %{id: 1, anonymous: true}

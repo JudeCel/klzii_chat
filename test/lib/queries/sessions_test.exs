@@ -3,7 +3,7 @@ defmodule KlziiChat.Services.SessionsTest do
   alias KlziiChat.Queries.Sessions, as: SessionsQueries
   alias KlziiChat.{Repo, SubscriptionPreference}
 
-  test "when participant then select only own shapes for delete in session topic", %{session: session} do
+  test "when guest then select only own shapes for delete in session topic", %{session: session} do
      assert(%SubscriptionPreference{} = SessionsQueries.get_subscription_preference_session(session.id) |> Repo.one!)
   end
 

@@ -3,7 +3,7 @@ defmodule KlziiChat.Services.Permissions.PinboardResourceTest do
   alias KlziiChat.Services.Permissions.PinboardResource
 
 
-  describe("facilitator") do
+  describe("host") do
     test "can't add resource when session type is focus" do
       member = %{id: 1, role: "facilitator"}
       session = %{type: "focus"}
@@ -35,7 +35,7 @@ defmodule KlziiChat.Services.Permissions.PinboardResourceTest do
     end
   end
 
-  describe("participent") do
+  describe("guest") do
     test "can add resource when session type is focus" do
       member = %{id: 1, role: "participant"}
       session = %{type: "focus"}
@@ -73,7 +73,7 @@ defmodule KlziiChat.Services.Permissions.PinboardResourceTest do
     end
   end
 
-  describe("observer") do
+  describe("spectator") do
     test "can't add resource when session type is focus" do
       member = %{id: 1, role: "observer"}
       session = %{type: "focus"}
