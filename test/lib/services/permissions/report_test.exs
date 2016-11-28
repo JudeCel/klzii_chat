@@ -2,7 +2,7 @@ defmodule KlziiChat.Services.Permissions.ReportTest do
   use ExUnit.Case, async: true
   alias KlziiChat.Services.Permissions.Report, as: ReportPermissions
 
-    describe "facilitator" do
+    describe "host" do
       test "can use when preference" do
         preference = %{"reportingFunctions" => true}
         member = %{id: 1, role: "facilitator"}
@@ -16,7 +16,7 @@ defmodule KlziiChat.Services.Permissions.ReportTest do
       end
     end
 
-    describe "participant" do
+    describe "guest" do
       test "can use" do
         preference = %{"reportingFunctions" => true}
         member = %{id: 1, role: "participant"}
@@ -24,7 +24,7 @@ defmodule KlziiChat.Services.Permissions.ReportTest do
       end
     end
 
-    describe "observer" do
+    describe "spectator" do
       test "can use" do
         preference = %{"reportingFunctions" => true}
         member = %{id: 1, role: "observer"}

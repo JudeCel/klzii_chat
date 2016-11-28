@@ -11,7 +11,7 @@ defmodule KlziiChat.Services.Permissions.ResourcePermissionsTest do
     end)
   end
 
-  test "can participant delete only when owner " do
+  test "can guest delete only when owner " do
     member = %{id: 1, role: "participant"}
     events = [%{id: 1, sessionMemberId: 1}]
     assert( {:ok} = Resources.can_delete(member, events))
@@ -31,25 +31,25 @@ defmodule KlziiChat.Services.Permissions.ResourcePermissionsTest do
     assert( {:ok} = Resources.can_zip(member, events, preference))
   end
 
-  test "can't participant delete when not  owner " do
+  test "can't guest delete when not  owner " do
     member = %{id: 1, role: "participant"}
     events = [%{id: 1, sessionMemberId: 2}]
     assert( {:error, _} = Resources.can_delete(member, events))
   end
 
-  test "can facilitator delete when he not owner" do
+  test "can host delete when he not owner" do
     member = %{id: 1, role: "facilitator"}
     events = [%{id: 1, sessionMemberId: 2}]
     assert( {:ok} = Resources.can_delete(member, events))
   end
 
-  test "can facilitator delete when he admin" do
+  test "can host delete when he admin" do
     member = %{id: 1, role: "admin"}
     events = [%{id: 1, sessionMemberId: 2}]
     assert( {:ok} = Resources.can_delete(member, events))
   end
 
-  test "facilitator only can see resource section" do
+  test "host only can see resource section" do
     member = %{id: 1, role: "facilitator"}
     assert( {:ok} = Resources.can_see_section(member))
   end

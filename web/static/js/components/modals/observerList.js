@@ -19,7 +19,7 @@ const ObserverListModal = React.createClass({
       )
     }
     else {
-      return <div className='text-center'>No Observers at this moment</div>
+      return <div className='text-center'>No Spectators at this moment</div>
     }
   },
   render() {
@@ -30,7 +30,7 @@ const ObserverListModal = React.createClass({
         <Modal dialogClassName='observer-list-modal modal-section modal-lg' show={ show } onHide={ this.closeAllModals } onEnter={ this.onEnterModal }>
           <Modal.Header>
             <div className='text-center modal-title'>
-              <h2>Observers</h2>
+              <h2>Spectators</h2>
             </div>
           </Modal.Header>
 

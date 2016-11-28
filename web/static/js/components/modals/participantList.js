@@ -54,7 +54,7 @@ const ParticipantListModal = React.createClass({
         </div>
       )
     } else {
-      return <div className='text-center'>There are currently no Participants logged in.</div>
+      return <div className='text-center'>There are currently no Guests logged in.</div>
     }
   },
   pageChange(pageNumber) {
@@ -70,7 +70,7 @@ const ParticipantListModal = React.createClass({
         <Modal dialogClassName='observer-list-modal modal-section modal-lg' show={ show } onHide={ this.closeAllModals } onEnter={ this.onEnterModal }>
           <Modal.Header>
             <div className='text-center modal-title'>
-              <h2>Participants</h2>
+              <h2>Guests</h2>
             </div>
           </Modal.Header>
 

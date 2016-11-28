@@ -69,7 +69,7 @@ defmodule KlziiChat.Queries.MessagesTest  do
       |> Repo.all
   end
 
-  test "base query joins session member and excludes facilitator - 1 message", %{base_query: base_query} do
+  test "base query joins session member and excludes host - 1 message", %{base_query: base_query} do
     [%{session_member: %{role: "participant"}}] =
       base_query
       |> QueriesMessages.join_session_member()
@@ -94,7 +94,7 @@ defmodule KlziiChat.Queries.MessagesTest  do
     assert(Enum.count(messages) == 2)
   end
 
-  test "empty result for stars only and exlude facilitator request", %{star_true_query: star_true_query} do
+  test "empty result for stars only and exlude host request", %{star_true_query: star_true_query} do
     [] =
       star_true_query
       |> QueriesMessages.join_session_member()

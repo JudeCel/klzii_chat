@@ -23,7 +23,7 @@ defmodule KlziiChat.Services.Permissions.SessionTest do
       }
     end
 
-    test "Session member role facilitator", context do
+    test "Session member role host", context do
       member = %SessionMember{role: "facilitator"}
       assert({:ok} = SessionPermissions.can_access?(context.account_user, member, context.open_session))
       assert({:ok} = SessionPermissions.can_access?(context.account_user, member, context.close_session))
@@ -31,14 +31,14 @@ defmodule KlziiChat.Services.Permissions.SessionTest do
       assert({:ok} = SessionPermissions.can_access?(context.account_user, member, context.pending_session))
     end
 
-    test "Session member role participant", context do
+    test "Session member role guest", context do
       assert({:ok} = SessionPermissions.can_access?(context.account_user, context.participant, context.open_session))
       assert({:ok} = SessionPermissions.can_access?(context.account_user, context.participant, context.close_session))
       assert({:ok} = SessionPermissions.can_access?(context.account_user, context.participant, context.expired_session))
       assert({:ok} = SessionPermissions.can_access?(context.account_user, context.participant, context.pending_session))
     end
 
-    test "Session member role observer", context do
+    test "Session member role spectator", context do
       assert({:ok} = SessionPermissions.can_access?(context.account_user, context.observer, context.open_session))
       assert({:ok} = SessionPermissions.can_access?(context.account_user, context.observer, context.close_session))
       assert({:ok} = SessionPermissions.can_access?(context.account_user, context.observer, context.expired_session))
@@ -46,7 +46,7 @@ defmodule KlziiChat.Services.Permissions.SessionTest do
     end
   end
 
-  describe "No Account Manager and facilitator" do
+  describe "No Account Manager and host" do
     setup do
       open_session = %Session{status: "open", startTime: Timex.shift(Timex.now, days: -1), endTime: Timex.shift(Timex.now, days: 3) }
       close_session = %Session{status: "closed", startTime: Timex.shift(Timex.now, days: -1), endTime: Timex.shift(Timex.now, days: 3)}
@@ -65,21 +65,21 @@ defmodule KlziiChat.Services.Permissions.SessionTest do
       }
     end
 
-    test "Session member role facilitator", context do
+    test "Session member role host", context do
       assert({:ok} = SessionPermissions.can_access?(context.account_user, context.facilitator, context.open_session))
       assert({:ok} = SessionPermissions.can_access?(context.account_user, context.facilitator, context.close_session))
       assert({:ok} = SessionPermissions.can_access?(context.account_user, context.facilitator, context.expired_session))
       assert({:ok} = SessionPermissions.can_access?(context.account_user, context.facilitator, context.pending_session))
   end
 
-    test "Session member role participant", context do
+    test "Session member role guest", context do
       assert({:ok} = SessionPermissions.can_access?(context.account_user, context.participant, context.open_session))
       assert({:error, _} = SessionPermissions.can_access?(context.account_user, context.participant, context.close_session))
       assert({:error, _} = SessionPermissions.can_access?(context.account_user, context.participant, context.expired_session))
       assert({:error, _} = SessionPermissions.can_access?(context.account_user, context.participant, context.pending_session))
     end
 
-    test "Session member role observer", context do
+    test "Session member role spectator", context do
       assert({:ok} = SessionPermissions.can_access?(context.account_user, context.observer, context.open_session))
       assert({:ok} = SessionPermissions.can_access?(context.account_user, context.observer, context.close_session))
       assert({:error, _} = SessionPermissions.can_access?(context.account_user, context.observer, context.expired_session))

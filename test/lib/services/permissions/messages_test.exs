@@ -8,7 +8,7 @@ defmodule KlziiChat.Services.Permissions.MessagesTest do
     assert( {:ok} = Messages.can_delete(member, message))
   end
 
-  test "facilitator can delete" do
+  test "host can delete" do
     member = %{id: 1, role: "facilitator"}
     message = %{id: 1, sessionMemberId: 1}
     assert( {:ok} = Messages.can_delete(member, message))

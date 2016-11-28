@@ -2,27 +2,27 @@ defmodule KlziiChat.Services.Permissions.WhiteboardTest do
   use ExUnit.Case, async: true
   alias  KlziiChat.Services.Permissions.Whiteboard
 
-  test "#Permissions.Whiteboard facilitator can delete shape" do
+  test "#Permissions.Whiteboard host can delete shape" do
     member = %{id: 1, role: "facilitator"}
     shape = %{id: 1, sessionMemberId: 2}
     assert({:ok} = Whiteboard.can_delete(member, shape))
   end
 
-  test "#Permissions.Whiteboard facilitator can erase all" do
+  test "#Permissions.Whiteboard host can erase all" do
     member = %{id: 1, role: "facilitator"}
     assert({:ok} = Whiteboard.can_erase_all(member))
   end
 
-  test "#Permissions.Whiteboard participent can't erase all" do
+  test "#Permissions.Whiteboard guest can't erase all" do
     member = %{id: 1, role: "participent"}
     assert({:error, _} = Whiteboard.can_erase_all(member))
   end
 
-  test "#Permissions.Whiteboard facilitator can add image" do
+  test "#Permissions.Whiteboard host can add image" do
     member = %{id: 1, role: "facilitator"}
     assert({:ok} = Whiteboard.can_add_image(member))
   end
-  test "#Permissions.Whiteboard participent or observer can't add image" do
+  test "#Permissions.Whiteboard guest or observer can't add image" do
     roles = ["observer", "participant"]
     Enum.map(roles, fn role ->
       member = %{role: role}
@@ -42,7 +42,7 @@ defmodule KlziiChat.Services.Permissions.WhiteboardTest do
     assert({:ok} = Whiteboard.can_edit(member, shape))
   end
 
-  test "#Permissions.Whiteboard facilitator can edit shape" do
+  test "#Permissions.Whiteboard host can edit shape" do
     member = %{id: 2, role: "facilitator"}
     shape = %{id: 1, sessionMemberId: 1}
     assert({:ok} = Whiteboard.can_edit(member, shape))

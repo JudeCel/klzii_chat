@@ -23,14 +23,14 @@ defmodule KlziiChat.Services.ShapesTest do
     {:ok, facilitator: facilitator, participant: participant, session_topic: session_topic_1}
   end
 
-  test "when participant then select only own shapes for delete in session topic", %{participant: participant, session_topic: session_topic} do
+  test "when guest then select only own shapes for delete in session topic", %{participant: participant, session_topic: session_topic} do
     count = QueriesShapes.find_shapes_for_delete(participant, session_topic)
       |> Repo.all
       |> Enum.count
     assert(count == 1)
   end
 
-  test "when facilitator then select all shapes for delete in session topic", %{facilitator: facilitator, session_topic: session_topic} do
+  test "when host then select all shapes for delete in session topic", %{facilitator: facilitator, session_topic: session_topic} do
     count = QueriesShapes.find_shapes_for_delete(facilitator, session_topic)
       |> Repo.all
       |> Enum.count
