@@ -91,7 +91,7 @@ const Avatar = React.createClass({
     var el2 = avatar.text(76, 138, username).attr({fill: '#fff', 'font-size': '75%', 'text-anchor': 'middle'}).addClass('svg-avatar-label');
 
     if(currentTopic && online) {
-      avatar.text(76, 158, currentTopic.name).attr({fill: '#000', 'font-size': '75%', 'text-anchor': 'middle'}).addClass('svg-avatar-label');
+      avatar.text(76, 158, currentTopic.name).attr({fill: '#000', 'font-size': '75%', 'text-anchor': 'middle'}).addClass('svg-avatar-label svg-avatar-topic');
     }
 
     if (animate) {
