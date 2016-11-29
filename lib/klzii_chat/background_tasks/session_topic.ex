@@ -18,18 +18,4 @@ defmodule KlziiChat.BackgroundTasks.SessionTopic do
     end
   end
 
-  def update(session_member_id, session_id)  do
-    General.run_task(fn -> update_session_topics_for_member(session_member_id, session_id)end)
-  end
-
-  def update_session_topics_for_member(session_member_id, session_id) do
-    case SessionTopicService.get_related_session_topics(get_num(session_id)) do
-      {:ok, session_topics} ->
-        data = Phoenix.View.render_many(session_topics, KlziiChat.SessionTopicView, "show.json", as: :session_topic)
-        Endpoint.broadcast!("sessions:#{session_id}", "update_session_topics_for_member", %{session_topics: data, session_member_id: session_member_id})
-      {:error, reason} ->
-       {:error, %{reason: reason}}
-    end
-  end
-
 end

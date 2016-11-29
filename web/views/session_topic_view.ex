@@ -7,8 +7,7 @@ defmodule KlziiChat.SessionTopicView do
       boardMessage: session_topic.boardMessage,
       landing: session_topic.landing,
       sign: session_topic.sign,
-      session: session(session_topic.session),
-      members_has_messages: members_has_messages(session_topic.messages)
+      session: session(session_topic.session)
     }
   end
 
@@ -22,9 +21,6 @@ defmodule KlziiChat.SessionTopicView do
       shapes: shapes(session_topic.shapes)
     }
   end
-
-  def members_has_messages(%{__struct__: Ecto.Association.NotLoaded}), do: []
-  def members_has_messages(messages), do: messages
 
   def session(%{__struct__: Ecto.Association.NotLoaded}), do: nil
   def session(session) do

@@ -1,5 +1,6 @@
 defmodule KlziiChat.Services.SessionMembersService do
-  alias KlziiChat.{Repo, Message, AccountUser, SessionMember, SessionMembersView, SessionTopic}
+  alias KlziiChat.{Repo, Message, AccountUser, SessionMember, SessionMembersView, SessionTopic, Endpoint}
+  alias KlziiChat.Services.Permissions.Builder, as: PermissionsBuilder
   import Ecto.Query, only: [from: 2]
 
   @spec get_member_from_token(String.t) :: {:ok, %AccountUser{}} | {:error, String.t}
@@ -34,6 +35,47 @@ defmodule KlziiChat.Services.SessionMembersService do
     message =  Repo.get_by!(Message, id: message_id) |> Repo.preload([:session_member, :session_topic])
     params = %{"avatarData" => %{"face"=> message.emotion}}
     update_session_topic_context(message.session_member, message.session_topic.id, params)
+  end
+
+  @spec update_has_messages(Integer.t, Integer.t, Boolean.t) :: Map.t
+  def update_has_messages(session_member_id, session_topic_id, true) do
+    session_member = Repo.get_by!(SessionMember, id: session_member_id)
+    case get_in(session_member.sessionTopicContext, [Integer.to_string(session_topic_id), "hasMessages"]) do
+      true ->
+        :ok
+      _ ->
+        case update_session_topic_context(session_member, session_topic_id, %{"hasMessages" => true}) do
+          {:ok, session_member_updated} ->
+            update_current_member(session_member_updated)
+          {:error, _} ->
+            :ok
+        end
+    end
+  end 
+  def update_has_messages(session_member_id, session_topic_id, false) do
+    session_member = Repo.get_by!(SessionMember, id: session_member_id)
+    case get_in(session_member.sessionTopicContext, [Integer.to_string(session_topic_id), "hasMessages"]) do
+      false ->
+        :ok
+      _ ->
+        case Repo.one(from(m in Message, where: m.sessionMemberId == ^session_member.id, where: m.sessionTopicId == ^session_topic_id, select: true, limit: 1)) do
+          true -> 
+            :ok
+          nil -> 
+            case update_session_topic_context(session_member, session_topic_id, %{"hasMessages" => false}) do
+              {:ok, session_member_updated} ->
+                update_current_member(session_member_updated)
+              {:error, _} ->
+                :ok
+            end
+        end
+    end
+  end 
+
+  defp update_current_member(session_member) do
+    {:ok, permissions_map} = PermissionsBuilder.session_member_permissions(session_member.id)
+    Endpoint.broadcast!("sessions:#{session_member.sessionId}", "self_info", SessionMembersView.render("current_member.json", member: session_member, permissions_map: permissions_map))
+    :ok
   end
 
   @spec update_session_topic_context(%SessionMember{}, Integer, Map.t) :: {:ok, %SessionMember{}} | {:error, Ecto.Changeset.t}

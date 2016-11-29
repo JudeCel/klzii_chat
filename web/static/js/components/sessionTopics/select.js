@@ -79,7 +79,11 @@ const Select = React.createClass({
   },
   getHasMessagesClassName(topic) {
     const { currentUser } = this.props;
-    return currentUser.role == "observer" || topic.members_has_messages.includes(currentUser.id) ? "" : " has-no-messages";
+    if (currentUser.role == "observer") {
+      return "";
+    } else {
+      return currentUser.sessionTopicContext[topic.id] && currentUser.sessionTopicContext[topic.id].hasMessages ? "" : " has-no-messages";
+    }
   },
   render() {
     const { sessionTopics, unread_messages } = this.props;
@@ -147,9 +151,7 @@ const mapStateToProps = (state) => {
     channel: state.sessionTopic.channel,
     current: state.sessionTopic.current,
     sessionTopics: state.sessionTopic.all,
-    whiteboardChannel: state.whiteboard.channel,
-    //need messages to rerender on new message
-    messages: state.messages.all
+    whiteboardChannel: state.whiteboard.channel
   };
 };
 

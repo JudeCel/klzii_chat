@@ -216,9 +216,9 @@ defmodule KlziiChat.SessionTopicChannel do
       case MessageService.create_message(session_member, session_topic_id, payload) do
         {:ok, message} ->
           KlziiChat.BackgroundTasks.Message.new(message.id)
-          broadcast!(socket, "new_message",  message)
-          Endpoint.broadcast!("sessions:#{message.session_member.sessionId}", "update_member", SessionMembersView.render("member.json", member: message.session_member))
-          KlziiChat.BackgroundTasks.SessionTopic.update(session_member.id, session_member.session_id)
+          broadcast!(socket, "new_message", message)
+          Endpoint.broadcast!("sessions:#{message.session_member.sessionId}", "update_member", SessionMembersView.render("member.json", member: session_member))
+          KlziiChat.BackgroundTasks.Message.update_has_messages(session_member.id, session_topic_id, true)
           {:reply, :ok, socket}
         {:error, reason} ->
           {:reply, {:error, error_view(reason)}, socket}
@@ -229,9 +229,10 @@ defmodule KlziiChat.SessionTopicChannel do
     case MessageService.deleteById(get_session_member(socket), id) do
       {:ok, resp} ->
         session_member = get_session_member(socket)
+        session_topic_id = socket.assigns.session_topic_id
         KlziiChat.BackgroundTasks.Message.delete(session_member.session_id, socket.assigns.session_topic_id)
         broadcast! socket, "delete_message", resp
-        KlziiChat.BackgroundTasks.SessionTopic.update(session_member.id, session_member.session_id)
+        KlziiChat.BackgroundTasks.Message.update_has_messages(session_member.id, session_topic_id, false)
         {:reply, :ok, socket}
       {:error, reason} ->
         {:reply, {:error, error_view(reason)}, socket}
