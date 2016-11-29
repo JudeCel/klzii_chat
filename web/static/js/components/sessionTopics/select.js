@@ -77,8 +77,12 @@ const Select = React.createClass({
     }
     return current;
   },
+  getHasMessagesClassName(topic) {
+    const { currentUser } = this.props;
+    return topic.members_has_messages.includes(currentUser.id) ? "" : " has-no-messages";
+  },
   render() {
-    const { sessionTopics, session, unread_messages } = this.props;
+    const { sessionTopics, unread_messages } = this.props;
     let current = this.getCurrentSessionTopic();
 
     return (
@@ -88,7 +92,7 @@ const Select = React.createClass({
 
           <Dropdown id='topic-selector'>
             <Dropdown.Toggle className='no-border-radius' noCaret>
-              <div className='no-border-radius btn btn-default name'>
+              <div className={ 'no-border-radius btn btn-default name' + this.getHasMessagesClassName(current)}>
                 { current.name }
               </div>
               <div className='no-border-radius btn btn-default dropcaret'>
@@ -102,7 +106,7 @@ const Select = React.createClass({
                   return (
                     <MenuItem onSelect={ this.changeSessionTopic.bind(this, sessionTopic.id) } key={ 'sessionTopic-' + sessionTopic.id } active={ current.id == sessionTopic.id }>
                       <div className='clearfix'>
-                        <span className='pull-left'>{ sessionTopic.name }</span>
+                        <span className={'pull-left' + this.getHasMessagesClassName(sessionTopic)}>{ sessionTopic.name }</span>
                         <span className='pull-right'>
                           <Badge type='reply' data={ unread_messages.session_topics[sessionTopic.id] } />
                           <Badge type='normal' data={ unread_messages.session_topics[sessionTopic.id] } />
@@ -143,7 +147,9 @@ const mapStateToProps = (state) => {
     channel: state.sessionTopic.channel,
     current: state.sessionTopic.current,
     sessionTopics: state.sessionTopic.all,
-    whiteboardChannel: state.whiteboard.channel
+    whiteboardChannel: state.whiteboard.channel,
+    //need messages to rerender on new message
+    messages: state.messages.all
   };
 };
 
