@@ -55,6 +55,8 @@ body
         font-size: 50%
     .topic-select-box
       order: 1
+      .has-no-messages
+        color: #f9f10d !important
       .session-name
         margin-top: 5px
       .dropdown-menu
@@ -341,6 +343,8 @@ body
     padding-bottom: 15px
     .topic-select-section
       .topic-select-box
+        @media (max-width: 1499px)
+          margin-left: 8px
         .dropdown.btn-group
           #topic-selector
            margin-left: 0px
