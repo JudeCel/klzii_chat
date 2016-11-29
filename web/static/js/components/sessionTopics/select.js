@@ -79,7 +79,7 @@ const Select = React.createClass({
   },
   getHasMessagesClassName(topic) {
     const { currentUser } = this.props;
-    return topic.members_has_messages.includes(currentUser.id) ? "" : " has-no-messages";
+    return currentUser.role == "observer" || topic.members_has_messages.includes(currentUser.id) ? "" : " has-no-messages";
   },
   render() {
     const { sessionTopics, unread_messages } = this.props;
