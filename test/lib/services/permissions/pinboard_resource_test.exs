@@ -60,10 +60,10 @@ defmodule KlziiChat.Services.Permissions.PinboardResourceTest do
       assert({:error, _} = PinboardResource.can_enable(member, session))
     end
 
-    test "can remove resource when owner" do
+    test "can't remove resource when owner" do
       member = %{id: 1, role: "participant"}
       object = %{id: 1, sessionMemberId: member.id}
-      assert({:ok} = PinboardResource.can_remove_resource(member, object))
+      assert({:error, _} = PinboardResource.can_remove_resource(member,object))
     end
 
     test "can't remove resource if not owner" do

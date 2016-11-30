@@ -9,4 +9,10 @@ defmodule KlziiChat.PinboardResourceView do
       resource: Phoenix.View.render_one(pinboard_resource.resource, ResourceView, "resource.json")
     }
   end
+
+  def render("delete.json", %{pinboard_resource: pinboard_resource}) do
+    %{
+      id: pinboard_resource.id
+    }
+  end
 end

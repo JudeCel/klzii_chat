@@ -31,9 +31,8 @@ const builder = {
     semi.add(rect, image);
 
     if(item.permissions.can_delete) {
-      // Disable by https://rally1.rallydev.com/#/9459752931d/detail/task/60306650946
-      // let remove = this.createDeleteImage(svg, data, item);
-      // group.add(semi, remove);
+       let remove = this.createDeleteImage(svg, data, item);
+       group.add(semi, remove);
     }
     else {
       group.add(semi);
@@ -46,9 +45,8 @@ const builder = {
     return svg.image(item.resource.url.thumb, data.x + data.border/2, data.y + data.border/2, data.width, data.height);
   },
   createDeleteImage(svg, data, item) {
-    let remove = svg.image('/images/svgControls/remove.png', data.x-data.border, data.y-data.border, 25, 25);
-    let frame = svg.rect(data.x - data.border, data.y - data.border, 15 + data.border, 15 + data.border).attr({ fill: 'white', stroke: 'black', strokeWidth: 1 });
-    return svg.group(frame, remove).addClass('cursor-pointer remove-button').click(this.removePinboardResource.bind(this, item.id));
+    let remove = svg.image('/images/svgControls/remove.png', data.x+data.width-data.border+4, data.y-data.border, 26, 26);
+    return svg.group(remove).addClass('cursor-pointer remove-button').click(this.removePinboardResource.bind(this, item.id));
   },
   setNextPositionForPinboard(startX, data, item) {
     let itemsInRow = this.isVerticalMobile() ? 3 : 4;

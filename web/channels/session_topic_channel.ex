@@ -269,12 +269,18 @@ defmodule KlziiChat.SessionTopicChannel do
     end
   end
 
-  def handle_out(message, payload, socket) when message in ["new_pinboard_resource", "delete_pinboard_resource"] do
+  def handle_out(message, payload, socket) when message in ["new_pinboard_resource"] do
     session_member = get_session_member(socket)
     view =
       Phoenix.View.render_one(payload, PinboardResourceView, "show.json", as: :pinboard_resource)
       |> Map.put(:permissions, PermissionsBuilder.pinboard_resource(session_member, payload))
+    push socket, message, view
+    {:noreply, socket}
+  end
 
+  def handle_out(message, payload, socket) when message in ["delete_pinboard_resource"] do
+    session_member = get_session_member(socket)
+    view = Phoenix.View.render_one(payload, PinboardResourceView, "delete.json", as: :pinboard_resource)
     push socket, message, view
     {:noreply, socket}
   end
