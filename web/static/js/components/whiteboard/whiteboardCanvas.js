@@ -315,8 +315,9 @@ const WhiteboardCanvas = React.createClass({
   },
   scaleWhiteboard() {
     let whiteboard = ReactDOM.findDOMNode(this);
-    let scaleX = this.minimized ? (whiteboard.scrollWidth)/(this.MAX_WIDTH) : 1.0;
-    let scaleY = this.minimized ? (whiteboard.scrollHeight)/(this.MAX_HEIGHT) : 1.0;
+    let shouldScale = this.minimized || window.innerWidth <= this.MAX_WIDTH + 50;
+    let scaleX = shouldScale ? (whiteboard.scrollWidth - (this.minimized ? 11 : 0))/(this.MAX_WIDTH) : 1.0;
+    let scaleY = shouldScale ? (whiteboard.scrollHeight)/(this.MAX_HEIGHT) : 1.0;
     this.snapGroup.transform(`S${scaleX},${scaleY},0,0`);
     this.snapGroup.attr({ pointerEvents: this.minimized ? 'none' : 'all' });
   },

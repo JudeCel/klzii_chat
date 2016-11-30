@@ -27,7 +27,7 @@
         @extend #circleShapes
       &.maximized
         padding-bottom: 45px
-        max-width: 100%
+        max-width: 950px
         left: 25%
       &.minimized
         height: 100%
@@ -58,7 +58,16 @@
         left: calc((100vw - 950px) / 2)
       @media (min-width: 1500px)
         left: calc((100vw - 950px) / 4)
-
+    .whiteboard-section.maximized
+      @media (min-width: 768px)
+        @media (max-width: 1020px)
+          max-width: 95vw
+          left: 1vw
+      @media (min-width: 1021px)
+        max-width: 950px
+        left: calc((100vw - 950px) / 2)
+      @media (min-width: 1500px)
+        left: calc((100vw - 950px) / 4)
 
 
 #circleShapes, #scribleShapes, #lineWidthShapes, #eraserShapes
@@ -76,7 +85,7 @@
 .room-section-left
   .top-row
     .whiteboard-section
-      max-width: 100%
+      max-width: 950px
       margin-top: 70px
     .whiteboard-section.minimized
       .whiteboard-title
