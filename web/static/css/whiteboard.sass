@@ -85,7 +85,7 @@
 .room-section-left
   .top-row
     .whiteboard-section
-      max-width: 950px
+      max-width: 100%
       margin-top: 70px
     .whiteboard-section.minimized
       .whiteboard-title
@@ -97,8 +97,17 @@
         right: 20px
         margin-top: -5px
     .whiteboard-section.maximized
-      max-width: 265%
+      max-width: 950px
       left: 80%
       margin-top: 10px
       .whiteboard-title
         left: 10px
+      @media (min-width: 768px)
+        @media (max-width: 1020px)
+          max-width: 95vw
+          left: 1vw
+      @media (min-width: 1021px)
+        max-width: 950px
+        left: calc((100vw - 950px) / 2)
+      @media (min-width: 1500px)
+        left: calc((100vw - 950px) / 4)
