@@ -36,10 +36,10 @@ defmodule KlziiChat.Services.Permissions.Messages do
     |> formate_error
   end
 
-  @spec can_star(Map.t) :: {:ok } | {:error, String.t}
-  def can_star(member) do
+  @spec can_star(Map.t, Map.t) :: {:ok } | {:error, String.t}
+  def can_star(member, object) do
     roles = ["facilitator"]
-    has_role(member.role, roles)
+    (has_role(member.role, roles) && !has_owner(member, object, :sessionMemberId))
     |> formate_error
   end
 end
