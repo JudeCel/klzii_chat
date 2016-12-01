@@ -38,7 +38,7 @@ const Board = React.createClass({
     let newContentText = this.strip(newContent);
 
     if (newContentText.length <= contentText.length || newContentText.length <= maxLength) {
-      fixDeleteOnIE(newContent, editor);
+      this.fixDeleteOnIE(newContent, editor);
       this.setState({ content: newContent });
       this.props.setContent(newContent);
     } else {
