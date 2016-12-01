@@ -104,6 +104,8 @@ const Message = React.createClass({
     let member = this.getMessageMember();
     let sessionTopicContext = this.getMessageSessionTopicContext();
     let className = this.canWritePrivateMessage(member) ? 'cursor-pointer' : '';
+    let isFacilitatorsMessage = this.isFacilitator(message.session_member);
+    let starPermission = !isFacilitatorsMessage && can_star;
 
     return (
       <div className='message-section media'>
@@ -137,7 +139,7 @@ const Message = React.createClass({
             </div>
 
             <div className='action-section col-md-12 text-right'>
-              <StarMessage    permission={ can_star }   message={ message } />
+              <StarMessage    permission={ starPermission }   message={ message } />
               <ReplyMessage   permission={ can_reply }  message={ message } />
               <RateMessage    permission={ can_vote }   message={ message } />
               <EditMessage    permission={ can_edit }   message={ message } />
