@@ -14,7 +14,7 @@ config :logger, level: :warn
 config :klzii_chat, KlziiChat.Repo,
   adapter: Ecto.Adapters.Postgres,
   username: "postgres",
-  password: "dNtVsN78",
+  password: "postgres",
   database: "kliiko_test",
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox,
@@ -26,7 +26,7 @@ config :guardian, Guardian,
 config :klzii_chat, KlziiChat.DatabaseMonitoring.Listener,
   database: "kliiko_test",
   username: "postgres",
-  password: "dNtVsN78",
+  password: "postgres",
   hostname: "localhost"
 
 config :exq,
