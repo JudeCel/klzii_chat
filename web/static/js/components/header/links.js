@@ -4,7 +4,7 @@ import mixins             from '../../mixins';
 import WhiteboardActions  from './../../actions/whiteboard';
 import LogoutLink         from './logout';
 import PinboardActions    from './../../actions/pinboard';
-import ConfirmModal from './../modals/confirmModal'
+import ConfirmModal       from './../modals/confirmModal'
 
 const Links = React.createClass({
   mixins: [mixins.modalWindows, mixins.validations],
