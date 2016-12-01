@@ -9,7 +9,7 @@ const Actions = {
         dispatch({ type: Constants.CHANGE_PINBOARD_RESOURCE, data: data });
       });
       channel.on('delete_pinboard_resource', (data) =>{
-        dispatch({ type: Constants.CHANGE_PINBOARD_RESOURCE, data: data });
+        dispatch({ type: Constants.DELETE_PINBOARD_RESOURCE, data: data });
       });
       channel.on('pinboard_resources', (data) =>{
         dispatch({ type: Constants.GET_PINBOARD_RESOURCES, data: data.list });
