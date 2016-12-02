@@ -133,6 +133,7 @@
     top: 0px !important;
     position: fixed !important;
     height: 100vh !important;
+    width: 100vw !important;
     padding: 0px;
     border-radius: 0px;
     padding-bottom: 124px;
@@ -157,7 +158,6 @@
   }
 
   #whiteboard-box svg {
-    margin-left: -45vw;
     width: 145% !important;
     padding-top: 70px;
   }
@@ -969,6 +969,10 @@
     height: 100%;
     width: 100%;
     position: fixed;
+  }
+
+  .facilitator-section {
+    margin-top: 12px;
   }
 
   .container-fluid, #chat-app-container, main#main_container, main#main_container > div, div.col-md-12.room-section, .room-section > div.row {
