@@ -118,7 +118,7 @@ defmodule KlziiChat.Services.ResourceService do
   def find(account_user_id, id) do
     Repo.get!(AccountUser, account_user_id)
       |> Repo.preload([:account])
-      |> QueriesResources.base_query
+      |> QueriesResources.by_account_or_stock_query
       |> QueriesResources.get_by_ids([id])
       |> Repo.one
       |> case  do

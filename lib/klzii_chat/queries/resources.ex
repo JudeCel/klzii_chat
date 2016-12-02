@@ -9,6 +9,12 @@ defmodule KlziiChat.Queries.Resources do
     from(r in assoc(account_user.account, :resources))
   end
 
+  @spec by_account_or_stock_query(%AccountUser{}) :: Ecto.Query.t
+  def by_account_or_stock_query(account_user) do
+    account_id = account_user.account.id
+    from(r in Resource, join: a in assoc(r, :account), where: a.id == ^account_id or r.stock)
+  end
+
   @spec base_query() :: Ecto.Query.t
   def base_query() do
     from(r in Resource)
