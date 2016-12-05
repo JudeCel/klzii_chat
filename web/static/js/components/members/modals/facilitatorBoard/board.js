@@ -10,7 +10,14 @@ const Board = React.createClass({
       options: {
         toolbar: { buttons: ['bold', 'italic', 'anchor'] }
       },
-      showEmojiPicker: false
+      showEmojiPicker: false,
+      emojiPickerOptions: {
+        title: "Pick your emoji",
+        emojiSize: 28,
+        perLine: 13,
+        skin: 1,
+        set: 'twitter'
+      }
     };
   },
   strip(html) {
@@ -69,12 +76,12 @@ const Board = React.createClass({
     return this.state.showEmojiPicker ? null : { display: 'none' };
   },
   render() {
-    const { content, options } = this.state;
+    const { content, options, emojiPickerOptions } = this.state;
 
     return (
       <div className='col-md-12'>
         <div className="emoji-picker-container">
-            <Picker title="Pick your emoji" emojiSize={28} perLine={13} skin={1} set='twitter' onClick={ this.onEmojiClick } ref="emojiPicker" style={ this.emojiPickerDisplayStyle() } />
+            <Picker title={emojiPickerOptions.title} emojiSize={emojiPickerOptions.emojiSize} perLine={emojiPickerOptions.perLine} skin={emojiPickerOptions.skin} set={emojiPickerOptions.set} onClick={ this.onEmojiClick } ref="emojiPicker" style={ this.emojiPickerDisplayStyle() } />
           </div>
         <div>
           <span onClick={ this.toggleEmojiPicker } className="emoji-picker-button"></span>
