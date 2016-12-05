@@ -97,7 +97,7 @@ defmodule KlziiChat.Services.Permissions.MessagesTest do
     roles = ["facilitator"]
     Enum.map(roles, fn role ->
       member = %{id: 1, role: role}
-      message = %{sessionMemberId: 1}
+      message = %{sessionMemberId: 2}
       assert( {:ok} = Messages.can_star(member, message))
     end)
   end
