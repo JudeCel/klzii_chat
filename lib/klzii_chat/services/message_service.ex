@@ -129,10 +129,10 @@ defmodule KlziiChat.Services.MessageService do
 
   @spec star(Integer.t, Map.t) :: %Message{} | {:error, String.t}
   def star(id, session_member) do
-    case MessagePermissions.can_star(session_member) do
+    message = Repo.get_by!(Message, id: id)
+    case MessagePermissions.can_star(session_member, message) do
       {:ok} ->
-        event = Repo.get_by!(Message, id: id)
-        Ecto.Changeset.change(event, star: !event.star)
+        Ecto.Changeset.change(message, star: !message.star)
           |> update_msg
       {:error, reason} ->
         {:error, reason}

@@ -24,7 +24,7 @@ defmodule KlziiChat.MessageView do
       permissions: %{
         can_edit: MessagePermissions.can_edit(member, message) |> to_boolean,
         can_delete: MessagePermissions.can_delete(member, message) |> to_boolean,
-        can_star: MessagePermissions.can_star(member) |> to_boolean,
+        can_star: MessagePermissions.can_star(member, message) |> to_boolean,
         can_vote: MessagePermissions.can_vote(member, message) |> to_boolean,
         can_reply: MessagePermissions.can_reply(member, message) |> to_boolean,
         can_new_message: MessagePermissions.can_new_message(member) |> to_boolean
