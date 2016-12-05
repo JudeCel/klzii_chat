@@ -18,21 +18,6 @@ const Board = React.createClass({
     tmp.innerHTML = html;
     return tmp.textContent || tmp.innerText || "";
   },
-  fixDeleteOnIE(newContent, editor) {
-    if(window.navigator.userAgent.indexOf("MSIE") > 0 || !!window.navigator.userAgent.match(/Trident.*rv\:11\./)) {
-      const { content } = this.state;
-      if (newContent.length == content.length-1) {
-        let pos = newContent.length;
-        for (let i=0; i<newContent.length; i++) {
-          if (content[i] != newContent[i]) {
-            pos = i;
-            break;
-          }
-        }
-        editor.importSelection({start: pos, end: pos}, false);
-      }
-    }
-  },
   onChange(newContent, editor) {
     const { content } = this.state;
     const maxLength = 150;
@@ -40,7 +25,6 @@ const Board = React.createClass({
     let newContentText = this.strip(newContent);
 
     if (newContentText.length <= contentText.length || newContentText.length <= maxLength) {
-      this.fixDeleteOnIE(newContent, editor);
       this.setState({ content: newContent });
       this.props.setContent(newContent);
     } else {
