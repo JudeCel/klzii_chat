@@ -207,7 +207,7 @@
     margin-right: -15px;
     margin-top: 0px !important;
     margin-bottom: 0px !important;
-    padding-top: 5px;
+    padding-top: 15px;
     margin-left: -5px;
   }
 
@@ -680,13 +680,13 @@
 
   .customize-avatar-section .elements-section {
     width: auto !important;
-    margin-top: 25px !important;
+    margin-top: 40px !important;
     display: block;
     border: 0px !important;
     padding: 0px 5px !important;
     overflow-x: hidden;
     overflow-y: auto;
-    bottom: 60px;
+    bottom: 55px;
     position: absolute;
     right: 15px;
     left: 5px;
@@ -700,6 +700,10 @@
     margin-top: -20px !important;
     display: block;
     border: 0px !important;
+  }
+
+  .customize-avatar-section .preview-section .svg-avatar{
+    margin-top: -10px;
   }
 
   .customize-avatar-section .preview-section svg text, .customize-avatar-section .preview-section svg rect {
@@ -769,12 +773,13 @@
     width: 90vw;
     text-align: center;
     white-space: nowrap;
-    top: calc(-100vh + 332px);
+    top: calc(-100vh + 315px);
+    margin-left: 5vw;
   }
 
   @media (max-height: 512px) {
     .customize-avatar-section .selection-section > div:first-child {
-      top: -180px;
+      top: -197px;
     }
   }
 
@@ -844,6 +849,7 @@
 
   .type-forum .room-section-right .chat-section {
     height: calc(100vh - 260px);
+    padding-top: 5px;
   }
 
   .type-forum .room-section-left .console-section {
