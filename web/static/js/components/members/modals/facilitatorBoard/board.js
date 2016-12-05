@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import Editor             from 'react-medium-editor';
 import ReactDOM           from 'react-dom';
-import { Picker } from 'emoji-mart';
+import { Picker }         from 'emoji-mart';
 
 const Board = React.createClass({
   getInitialState() {
