@@ -1,6 +1,7 @@
 import React, {PropTypes} from 'react';
 import Editor             from 'react-medium-editor';
 import ReactDOM           from 'react-dom';
+import { Picker } from 'emoji-mart';
 
 const Board = React.createClass({
   getInitialState() {
@@ -49,12 +50,57 @@ const Board = React.createClass({
       editor.importSelection(selection, false);
     }
   },
+  onEmojiClick(emoji) {
+    const { content, selection } = this.state;
+    let contentText = this.strip(content);
+    let newContent = "";
+
+    if (selection) {
+      let front = "";
+      let back = "";
+
+      if (selection.start === selection.end) {
+        front = contentText.substr(0, selection.start);
+        back = contentText.substr(selection.start);
+      } else {
+        front = contentText.substr(0, selection.start);
+        back = contentText.substr(selection.end, contentText.length);
+      }
+
+      newContent = front + emoji.native + back;
+    } else {
+      newContent = contentText + emoji.native;
+    }
+
+    this.onChange(newContent, this.refs.textEditor.medium);
+  },
+  setEditorSelection() {
+    this.state.selection = this.refs.textEditor.medium.exportSelection();
+  },
+  toggleEmojiPicker() {
+    const hiddenClass = ' hidden';
+    let emojiPicker = ReactDOM.findDOMNode(this.refs.emojiPicker);
+    if(emojiPicker.className.includes(hiddenClass)) {
+      emojiPicker.className = emojiPicker.className.replace(hiddenClass, '');
+    } else {
+      emojiPicker.className += hiddenClass;
+    }
+  },
+  componentDidMount() {
+    ReactDOM.findDOMNode(this.refs.emojiPicker).className += " hidden";
+  },
   render() {
     const { content, options } = this.state;
 
     return (
       <div className='col-md-12'>
-        <Editor className='input-box' text={ content } onChange={ this.onChange } options={ options }/>
+        <div className="emoji-picker-container">
+          <Picker emojiSize={27} perLine={9} skin={1} set='twitter' onClick={ this.onEmojiClick } ref="emojiPicker" />
+        </div>
+        <div>
+          <span onClick={ this.toggleEmojiPicker } className="emoji-picker-button"></span>
+          <Editor className='input-box' text={ content } onChange={ this.onChange } options={ options } ref="textEditor" onClick={ this.setEditorSelection } onKeyUp={ this.setEditorSelection  }/>
+        </div>
       </div>
     )
   }
