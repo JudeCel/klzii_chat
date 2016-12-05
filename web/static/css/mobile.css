@@ -120,7 +120,7 @@
   }
 
   .direct-message-modal .direct-message-section .messages-section .unread-separator hr {
-    width: 33% !important;
+    width: calc(100% / 2 - 110px) !important;
   }
 
   .facilitator-name-mobile {
