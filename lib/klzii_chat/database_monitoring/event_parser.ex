@@ -37,6 +37,10 @@ defmodule KlziiChat.DatabaseMonitoring.EventParser do
     apply(module, fun, arrgs)
   end
 
+  def save_event({:error, message}) do
+    {:error, message}
+  end
+
   @spec select_job(Map.t) :: {:ok, String.t} | {:error, String.t}
   def select_job(job_params) do
     case job_params do

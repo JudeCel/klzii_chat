@@ -42,17 +42,18 @@ config :quantum, cron: [
 
 config :exq,
   name: Exq,
-  namespace: "exq",
+  namespace: "resque",
   concurrency: 1000,
   queues: ["notify", {"report_pdf", 3}, "report_csv", "report_txt"],
   poll_timeout: 50,
   scheduler_poll_timeout: 200,
   scheduler_enable: true,
   max_retries: 2,
+  database: 7,
   shutdown_timeout: 5000
 
 config :exq_ui,
-  web_namespace: "exq",
+  web_namespace: "resque",
   server: true
 
 import_config "#{Mix.env}.exs"
