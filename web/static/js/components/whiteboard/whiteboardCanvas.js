@@ -313,12 +313,23 @@ const WhiteboardCanvas = React.createClass({
     }, function(x, y, mEl) {
     } );
   },
+  isMobile() {
+    return screen.width < 768 && screen.height < 768;
+  },
   scaleWhiteboard() {
     let whiteboard = ReactDOM.findDOMNode(this);
-    let scale = whiteboard.clientWidth / this.MAX_WIDTH;
-    whiteboard.style.height = (scale * this.MAX_HEIGHT) + "px";
+    let isMobile = this.isMobile();
+    let scaleW = (whiteboard.clientWidth - (this.minimized ? 8 : (isMobile ? -10 : 0))) / this.MAX_WIDTH;
+    if (!isMobile) {
+      whiteboard.style.height = (scaleW * this.MAX_HEIGHT) + "px";
+    }
+    let scaleH = (whiteboard.clientHeight - (isMobile ? 190 : 0)) / this.MAX_HEIGHT;
+    let scale = Math.min(scaleW, scaleH);
+    if (scale == scaleH && isMobile) {
+      whiteboard.childNodes[3].style.paddingLeft = ((whiteboard.clientWidth) * (1 - scale) / 2 - 10) + "px";
+    }
     let shouldScale = this.minimized || window.innerWidth <= this.MAX_WIDTH + 50;
-    let scaleX = shouldScale ? (whiteboard.clientWidth - (this.minimized ? 11 : 0))/(this.MAX_WIDTH) : 1.0;
+    let scaleX = shouldScale ? scale : 1.0;
     let scaleY = shouldScale ? scale : 1.0;
     this.snapGroup.transform(`S${scaleX},${scaleY},0,0`);
     this.snapGroup.attr({ pointerEvents: this.minimized ? 'none' : 'all' });
