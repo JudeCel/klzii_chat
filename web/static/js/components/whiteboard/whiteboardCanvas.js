@@ -319,7 +319,7 @@ const WhiteboardCanvas = React.createClass({
   scaleWhiteboard() {
     let whiteboard = ReactDOM.findDOMNode(this);
     let isMobile = this.isMobile();
-    let scaleW = (whiteboard.clientWidth - (this.minimized ? 8 : (isMobile ? -10 : 0))) / this.MAX_WIDTH;
+    let scaleW = (whiteboard.clientWidth - (this.minimized ? 6 : (isMobile ? -10 : 0))) / this.MAX_WIDTH;
     if (!isMobile) {
       whiteboard.style.height = (scaleW * this.MAX_HEIGHT) + "px";
     }
