@@ -317,21 +317,37 @@ const WhiteboardCanvas = React.createClass({
     return screen.width < 768 && screen.height < 768;
   },
   scaleWhiteboard() {
+    let scale = 1.0;
+    let shouldScale = this.minimized || window.innerWidth <= this.MAX_WIDTH + 50;
     let whiteboard = ReactDOM.findDOMNode(this);
     let isMobile = this.isMobile();
-    let scaleW = (whiteboard.clientWidth - (this.minimized ? 6 : (isMobile ? -10 : 0))) / this.MAX_WIDTH;
+    let scaleW = (whiteboard.clientWidth - (this.minimized ? 10 : (isMobile ? -10 : 0))) / this.MAX_WIDTH;
     if (!isMobile) {
-      whiteboard.style.height = (scaleW * this.MAX_HEIGHT) + "px";
+      whiteboard.style.height = (scaleW * this.MAX_HEIGHT - (this.minimized ? 5 : 0) ) + "px";
     }
-    let scaleH = (whiteboard.clientHeight - (isMobile ? 190 : 0)) / this.MAX_HEIGHT;
-    let scale = Math.min(scaleW, scaleH);
-    if (scale == scaleH && isMobile) {
-      whiteboard.childNodes[3].style.paddingLeft = ((whiteboard.clientWidth) * (1 - scale) / 2 - 10) + "px";
+    if (shouldScale) {
+      let scaleH = (whiteboard.clientHeight - (isMobile ? 190 : 0)) / (this.MAX_HEIGHT - 60);
+      scale = Math.min(scaleW, scaleH);
+      if (isMobile) {
+        let svgElement = whiteboard.childNodes[3];
+        if (scale == scaleH) {
+          let width = (this.MAX_WIDTH - 20) * scale;
+          let height = whiteboard.clientHeight - 190;
+          svgElement.style.width = width + "px";
+          svgElement.style.marginLeft = ((whiteboard.clientWidth - width) / 2) + "px";
+          svgElement.style.height = height + "px";
+          svgElement.style.marginBottom = null;
+        } else {
+          let height = (this.MAX_HEIGHT - 60) * scale;
+          svgElement.style.width = null;
+          svgElement.style.marginLeft = null;
+          svgElement.style.height = height + "px";
+          svgElement.style.marginBottom = (whiteboard.clientHeight - 190 - height) + "px";
+        }
+        svgElement.style.marginTop = "60px";
+      }
     }
-    let shouldScale = this.minimized || window.innerWidth <= this.MAX_WIDTH + 50;
-    let scaleX = shouldScale ? scale : 1.0;
-    let scaleY = shouldScale ? scale : 1.0;
-    this.snapGroup.transform(`S${scaleX},${scaleY},0,0`);
+    this.snapGroup.transform(`S${scale},${scale},0,0`);
     this.snapGroup.attr({ pointerEvents: this.minimized ? 'none' : 'all' });
   },
   addText(text) {
