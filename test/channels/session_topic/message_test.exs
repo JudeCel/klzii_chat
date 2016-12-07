@@ -43,22 +43,22 @@ defmodule KlziiChat.Channels.SessionTopic.MessageTest do
       assert(message.body == body)
   end
 
-  test "can start message and unstart message", %{socket: socket1, socket2: socket2, session_topic_1_name: session_topic_1_name} do
-    {:ok, _, socket} = subscribe_and_join(socket2, SessionTopicChannel, session_topic_1_name)
-    body = "hey!!"
-    ref = push socket, "new_message", %{"emotion" => "1", "body" => body}
-    assert_reply ref, :ok
-    assert_push "new_message", message
-    {:ok, _, socket} = subscribe_and_join(socket1, SessionTopicChannel, session_topic_1_name)
+  test "can start message and unstart message", %{socket: socket, socket2: socket2, session_topic_1_name: session_topic_1_name} do
+    {:ok, _, socket} = subscribe_and_join(socket, SessionTopicChannel, session_topic_1_name)
+    {:ok, _, socket2} = subscribe_and_join(socket2, SessionTopicChannel, session_topic_1_name)
+      body = "hey!!"
+      ref = push socket2, "new_message", %{"emotion" => "1", "body" => body}
+      assert_reply ref, :ok
+      assert_push "new_message", message
 
-    # star message
-    ref_star = push socket, "message_star", %{"id" => message.id}
-    assert_reply ref_star, :ok, message_star
-    assert(message_star.star)
-    # unstar message
-    ref_star = push socket, "message_star", %{"id" => message.id}
-    assert_reply ref_star, :ok, message_star
-    refute(message_star.star)
+      # star message
+      ref_star = push socket, "message_star", %{"id" => message.id}
+      assert_reply ref_star, :ok, message_star
+      assert(message_star.star)
+      # unstar message
+      ref_star = push socket, "message_star", %{"id" => message.id}
+      assert_reply ref_star, :ok, message_star
+      refute(message_star.star)
   end
 
   test "can push delete message", %{socket: socket, session_topic_1_name: session_topic_1_name} do
