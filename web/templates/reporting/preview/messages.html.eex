@@ -11,7 +11,9 @@
         <span class='pull-left username' style='<%= facilitator_color(message) %>'>
           <%= message.session_member.username %>
         </span>
-
+        <%= if(message.star) do %>
+          <span class="message-star">★</span>
+        <%end%>
         <span class='time pull-right'>
           <%= time_format(message.createdAt, assigns[:session].timeZone) %>
         </span>
