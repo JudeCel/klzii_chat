@@ -99,7 +99,7 @@ const MobileHeader = React.createClass({
                   <div>Click on Avatar to Customize Your Biizu</div>
                 </li>
                 <li onClick={this.toggleTopics}>
-                    <span className='fa fa-coffee'></span>Morning Story
+                    <span className='fa fa-coffee'></span>Topic Menu
                     <span className='fa fa-angle-right'></span>
                     <Badge type='normal' data={ unread_messages.summary } />
                     <Badge type='reply' data={ unread_messages.summary } />
