@@ -43,10 +43,11 @@ defmodule KlziiChat.Channels.SessionTopic.MessageTest do
       assert(message.body == body)
   end
 
-  test "can start message and unstart message", %{socket: socket, session_topic_1_name: session_topic_1_name} do
+  test "can start message and unstart message", %{socket: socket, socket2: socket2, session_topic_1_name: session_topic_1_name} do
     {:ok, _, socket} = subscribe_and_join(socket, SessionTopicChannel, session_topic_1_name)
+    {:ok, _, socket2} = subscribe_and_join(socket2, SessionTopicChannel, session_topic_1_name)
       body = "hey!!"
-      ref = push socket, "new_message", %{"emotion" => "1", "body" => body}
+      ref = push socket2, "new_message", %{"emotion" => "1", "body" => body}
       assert_reply ref, :ok
       assert_push "new_message", message
 

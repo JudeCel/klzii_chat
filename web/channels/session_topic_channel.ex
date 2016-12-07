@@ -217,7 +217,7 @@ defmodule KlziiChat.SessionTopicChannel do
         {:ok, message} ->
           KlziiChat.BackgroundTasks.Message.new(message.id)
           broadcast!(socket, "new_message", message)
-          Endpoint.broadcast!("sessions:#{message.session_member.sessionId}", "update_member", SessionMembersView.render("member.json", member: session_member))
+          Endpoint.broadcast!("sessions:#{message.session_member.sessionId}", "update_member", SessionMembersView.render("member.json", member: message.session_member))
           KlziiChat.BackgroundTasks.Message.update_has_messages(session_member.id, session_topic_id, true)
           {:reply, :ok, socket}
         {:error, reason} ->

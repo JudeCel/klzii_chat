@@ -23,7 +23,6 @@ defmodule KlziiChat.Services.MessageService do
 
   @spec create_message(Map.t, Integer.t, Map.t) :: {:ok, Map.t }
   def create_message(session_member, session_topic_id, %{"replyId" => replyId, "emotion" => emotion, "body" => body}) do
-
     case MessagePermissions.can_new_message(session_member) do
       {:ok} ->
         {reply_message, reply_level} = reply_message_data(replyId)

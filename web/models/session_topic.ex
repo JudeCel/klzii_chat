@@ -32,7 +32,7 @@ defmodule KlziiChat.SessionTopic do
     model
     |> cast(params, [:boardMessage] )
     |> set_board_message_text
-    |> validate_length(:board_message_text, max: 170, message: "Host Board Message is too long, max 150 characters")
+    |> validate_length(:board_message_text, max: 150, message: "Host Board Message is too long, max 150 characters")
   end
 
 
