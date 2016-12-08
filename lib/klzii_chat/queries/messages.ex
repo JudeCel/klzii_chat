@@ -17,7 +17,6 @@ defmodule KlziiChat.Queries.Messages do
     order_by: [asc: :createdAt]
   end
 
-
   @spec join_session_member(Ecto.Query) :: Ecto.Query
   def join_session_member(query) do
     from message in query,
@@ -29,7 +28,7 @@ defmodule KlziiChat.Queries.Messages do
   @spec filter_star(Ecto.Query, true) :: Ecto.Query
   def filter_star(query, true) do
     from message in query,
-    where: message.childrenStars != []
+    where: fragment("? != '{}'", message.childrenStars) 
   end
 
   @spec filter_star(Ecto.Query, false) :: Ecto.Query
