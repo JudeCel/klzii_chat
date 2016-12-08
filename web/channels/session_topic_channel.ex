@@ -279,7 +279,6 @@ defmodule KlziiChat.SessionTopicChannel do
   end
 
   def handle_out(message, payload, socket) when message in ["delete_pinboard_resource"] do
-    session_member = get_session_member(socket)
     view = Phoenix.View.render_one(payload, PinboardResourceView, "delete.json", as: :pinboard_resource)
     push socket, message, view
     {:noreply, socket}
