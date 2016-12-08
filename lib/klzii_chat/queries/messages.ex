@@ -29,7 +29,7 @@ defmodule KlziiChat.Queries.Messages do
   @spec filter_star(Ecto.Query, true) :: Ecto.Query
   def filter_star(query, true) do
     from message in query,
-    where: message.star == true
+    where: message.childrenStars != []
   end
 
   @spec filter_star(Ecto.Query, false) :: Ecto.Query

@@ -12,6 +12,7 @@ defmodule KlziiChat.Message do
     field :replyLevel, :integer, default: 0
     field :emotion, :integer
     field :star, :boolean, default: false
+    field :childrenStars, {:array, :integer}, default: []
     timestamps [inserted_at: :createdAt, updated_at: :updatedAt]
   end
 
@@ -23,7 +24,7 @@ defmodule KlziiChat.Message do
   """
   def changeset(model, params \\ %{}) do
     model
-    |> cast(params, [:sessionTopicId, :sessionMemberId, :body, :emotion, :star, :replyId, :replyLevel ])
+    |> cast(params, [:sessionTopicId, :childrenStars, :sessionMemberId, :body, :emotion, :star, :replyId, :replyLevel ])
     |> validate_required([:sessionTopicId, :sessionMemberId, :body, :emotion])
     |> validate_length(:body, min: 1)
   end

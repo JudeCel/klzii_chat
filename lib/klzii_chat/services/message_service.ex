@@ -120,7 +120,7 @@ defmodule KlziiChat.Services.MessageService do
   def update_msg(changeset) do
     case Repo.update(changeset) do
       {:ok, message} ->
-         preload_dependencies(message)
+        preload_dependencies(message)
       {:error, changeset} ->
         {:error, changeset}
     end
@@ -133,10 +133,47 @@ defmodule KlziiChat.Services.MessageService do
       {:ok} ->
         Ecto.Changeset.change(message, star: !message.star)
           |> update_msg
+          |>  case do
+                {:ok, message} ->
+                  KlziiChat.BackgroundTasks.General.run_task(fn() -> processed_message_data(message) end)
+                  {:ok, message}
+                {:error, reason} ->
+                  {:error, reason}
+              end
       {:error, reason} ->
         {:error, reason}
     end
   end
+
+  def preload_parent(message) do
+    Repo.preload(message, [reply: [:reply]])
+  end
+
+  def processed_message_data(message) do
+    main_message =
+      preload_parent(message)
+      |> find_main_message
+
+    childrenStars =
+      Map.get(main_message, :childrenStars)
+      |> update_list_with_value(message.id, message.star)
+
+    Ecto.Changeset.change(main_message, childrenStars: childrenStars)
+      |> update_msg
+  end
+
+  def update_list_with_value(list, value, true) do
+    (list ++ [value])
+    |> Enum.uniq()
+  end
+  def update_list_with_value(list, value, false) do
+    Enum.reject(list, fn (i) ->  i == value end)
+  end
+
+  def find_main_message(%Message{replyId: nil} = message), do: message
+  def find_main_message(%Message{reply: nil} = message), do: message
+  def find_main_message(%Message{reply: %{__struct__: Ecto.Association.NotLoaded}}), do: {:error, "need preload parent"}
+  def find_main_message(message), do: find_main_message(message.reply)
 
   @spec thumbs_up(Integer.t, Map.t) :: Map.t | {:error, String.t}
   def thumbs_up(id, session_member) do
