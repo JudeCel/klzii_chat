@@ -149,7 +149,7 @@
   #whiteboard-box .panel-buttons-section {
     background-color: #e1d8d8;
     height: 50px;
-    padding-top: 10px; 
+    padding-top: 10px;
   }
 
   #pinboard-box.maximized {
@@ -995,7 +995,7 @@
     flex-direction: column;
   }
   .room-section > div.row > .col-md-8 {
-      min-height: 74px;
+      min-height: 85px;
       order: 1;
   }
 
