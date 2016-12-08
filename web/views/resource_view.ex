@@ -17,26 +17,12 @@ defmodule KlziiChat.ResourceView do
       static: false
     }
   end
-
-  @spec render(String.t, Map.t) :: Map.t
   def render("resources.json", %{data: data}) do
     %{
       pages: data.pages,
       resources: Phoenix.View.render_many(data.resources, ResourceView, "resource.json", as: :resource)
     }
   end
-
-  defp get_names(items) do
-    Enum.reduce(items, "", fn (map, acc) ->
-      if acc == "" do
-        map.name
-      else
-       acc <> ", " <> map.name
-      end
-    end)
-  end
-
-  @spec render(String.t, Map.t) :: Map.t
   def render("delete_check.json", %{used_in_closed_session: used_in_closed_session}) do
     names = get_names(used_in_closed_session)
     message = Enum.join(["Selected files:", names, "are used in Closed Session. Do you still want to Delete them?"], " ")
@@ -44,8 +30,6 @@ defmodule KlziiChat.ResourceView do
       used_in_closed_session: ResourceView.render("delete_items.json", %{data: used_in_closed_session, message: message}),
     }
   end
-
-  @spec render(String.t, Map.t) :: Map.t
   def render("delete.json", %{removed: removed, not_removed_stock: not_removed_stock, not_removed_used: not_removed_used}) do
     not_removed_stock_names = get_names(not_removed_stock)
     not_removed_used_names = get_names(not_removed_used)
@@ -57,16 +41,12 @@ defmodule KlziiChat.ResourceView do
       not_removed_used: ResourceView.render("delete_items.json", %{data: not_removed_used, message: not_removed_used_message})
     }
   end
-
-  @spec render(String.t, Map.t) :: Map.t
   def render("delete_items.json", %{data: data, message: message}) do
     %{
       message: message,
       items: Phoenix.View.render_many(data, ResourceView, "delete_item.json", as: :resource)
     }
   end
-
-  @spec render(String.t, Map.t) :: Map.t
   def render("delete_item.json", %{resource: resource}) do
     %{
       id: resource.id
@@ -117,4 +97,13 @@ defmodule KlziiChat.ResourceView do
     end
   end
 
+  defp get_names(items) do
+    Enum.reduce(items, "", fn (map, acc) ->
+      if acc == "" do
+        map.name
+      else
+       acc <> ", " <> map.name
+      end
+    end)
+  end
 end

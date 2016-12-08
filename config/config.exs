@@ -38,7 +38,7 @@ config :phoenix, :generators,
 config :quantum, cron: [
     # Runs every midnight:
     "@daily":  &KlziiChat.Services.ResourceService.daily_cleanup/0
-  ], timezone: :local
+  ]
 
 config :exq,
   name: Exq,

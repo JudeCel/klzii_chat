@@ -2,7 +2,6 @@ defmodule KlziiChat.BackgroundTasks.SessionTopic do
   alias KlziiChat.Services.{SessionTopicService}
   import KlziiChat.Helpers.IntegerHelper
   alias KlziiChat.{Endpoint}
-  alias KlziiChat.BackgroundTasks.{General}
 
   def perform(session_id) do
     update_session_topics(session_id)
