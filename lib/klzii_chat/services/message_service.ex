@@ -145,10 +145,12 @@ defmodule KlziiChat.Services.MessageService do
     end
   end
 
+  @spec preload_parent(%Message{}) :: %Message{}
   def preload_parent(message) do
     Repo.preload(message, [reply: [:reply]])
   end
 
+  @spec processed_message_data(%Message{}) :: {:ok, %Message{}} | {:error, Ecto.Changeset.t}
   def processed_message_data(message) do
     main_message =
       preload_parent(message)
@@ -162,6 +164,7 @@ defmodule KlziiChat.Services.MessageService do
       |> update_msg
   end
 
+  @spec update_list_with_value(List.t, Integer.t, Boolean.t) :: List.t
   def update_list_with_value(list, value, true) do
     (list ++ [value])
     |> Enum.uniq()
@@ -170,6 +173,7 @@ defmodule KlziiChat.Services.MessageService do
     Enum.reject(list, fn (i) ->  i == value end)
   end
 
+  @spec find_main_message(%Message{}) :: %Message{}
   def find_main_message(%Message{replyId: nil} = message), do: message
   def find_main_message(%Message{reply: nil} = message), do: message
   def find_main_message(%Message{reply: %{__struct__: Ecto.Association.NotLoaded}}), do: {:error, "need preload parent"}
