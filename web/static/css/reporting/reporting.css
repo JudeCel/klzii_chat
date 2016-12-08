@@ -69,12 +69,19 @@ body{
 .report-section .heading-section .username {
   font-size: 16px;
   padding-bottom: 5px;
+  margin-top: 3px;
 }
 
 .report-section .message-section.media .body-section {
   border-bottom: 1px solid #000;
 }
-
+.message-section.media .media-body span.message-star{
+  content: "\2605";
+  font-size: 20px;
+  color: #f0e935;
+  position: relative;
+  /*background-size: contain;*/
+}
 .report-section .message-section {
   page-break-inside: inherit;
   margin: 10px;
