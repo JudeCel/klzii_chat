@@ -1005,6 +1005,39 @@
       background: white;
       order: 3;
   }
+  .room-outerbox > div {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  div.col-md-3.room-section.room-section-left {
+    order: 1;
+    min-height: 85px;
+  }
+
+  .col-md-9.room-section.room-section-right {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    order: 2;
+  }
+
+  .col-md-9.room-section.room-section-right .chat-section.add-overflow-y {
+    order: 1;
+    height: calc(100% - 110px) !important;
+  }
+
+  .col-md-9.room-section.room-section-right .input-section {
+    min-height: 110px;
+    background: white;
+    order: 2;
+  }
+
+  .col-md-9.room-section.room-section-right .input-section .form-group {
+    margin-top: 50px;
+  }
+
 
   .room-section > div.row > .col-md-12:empty {
     display: block;
@@ -1136,6 +1169,14 @@
     font-size: 14px;
     padding: 8px;
     height: 46px;
+  }
+
+
+  .room-section .input-section {
+    margin-left: -5px;
+    margin-right: -5px;
+    padding-top: 0 !important;
+    margin-top: 44px;
   }
 
 }
