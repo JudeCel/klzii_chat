@@ -30,17 +30,19 @@ const Resources = React.createClass({
     });
   },
   activatePinboard() {
-    const { tConsole, channel, dispatch } = this.props;
+    const { sessionTopicConsole, channel, dispatch, session, currentUser } = this.props;
 
-    if(!tConsole.pinboard) {
+    if(!sessionTopicConsole.data.pinboard && currentUser.permissions.pinboard.can_enable) {
       let confirmed = true;
       if(this.isOtherItemsActive('pinboard')) {
         confirmed = confirm('Enabling pinboard will remove other active console items, are you sure?');
       }
 
       if(confirmed) {
-        dispatch(PinboardActions.enable(channel));
+        dispatch(PinboardActions.enable(channel, true));
       }
+    } else if(sessionTopicConsole.data.pinboard && currentUser.permissions.pinboard.can_enable) {
+      dispatch(PinboardActions.enable(channel, false));
     }
   },
   componentDidUpdate(prevProps) {
@@ -48,14 +50,22 @@ const Resources = React.createClass({
       this.setState({ currentModal: 'image' });
     }
   },
+  canShowResourceButton(buttonType) {
+    const { currentUser } = this.props;
+    switch (buttonType) {
+      case 'pinboard': return currentUser.permissions.pinboard.can_enable;
+      default: return true;
+    }
+  },
   render() {
+    const { session } = this.props;
+
     const resourceButtons = [
-      { type: 'video',    className: 'icon-video-1'    },
-      { type: 'audio',    className: 'icon-volume-up'  },
-      { type: 'image',    className: 'icon-picture'    },
-      { type: 'pinboard', className: 'icon-camera'     },
-      { type: 'survey',   className: 'icon-ok-squared' },
-      { type: 'file',     className: 'icon-pdf'        },
+      { type: 'video',    className: 'icon-video-1'},
+      { type: 'audio',    className: 'icon-volume-up'},
+      { type: 'pinboard', className: 'icon-camera'},
+      { type: 'survey',   className: 'icon-ok-squared'},
+      { type: 'file',     className: 'icon-pdf'},
     ];
 
     if(this.hasPermission(['resources', 'can_see_section'])) {
@@ -63,11 +73,15 @@ const Resources = React.createClass({
         <div className='resources-section'>
           <ul className='icons'>
             {
-              resourceButtons.map((button, index) =>
-                <li key={ index } onClick={ this.openModal.bind(this, button.type) }>
-                  <i className={ button.className } />
-                </li>
-              )
+              resourceButtons.map((button, index) => {
+                if (this.canShowResourceButton(button.type)) {
+                  return (
+                    <li key={ index } onClick={ this.openModal.bind(this, button.type) }>
+                      <i className={ button.className } />
+                    </li>
+                  )
+                }
+              })
             }
           </ul>
 
@@ -85,10 +99,11 @@ const Resources = React.createClass({
 const mapStateToProps = (state) => {
   return {
     channel: state.sessionTopic.channel,
-    tConsole: state.sessionTopic.console,
+    sessionTopicConsole: state.sessionTopicConsole,
     currentUser: state.members.currentUser,
     modalWindows: state.modalWindows,
     whiteboardImage: state.modalWindows.whiteboardImage,
+    session: state.chat.session
   }
 };
 

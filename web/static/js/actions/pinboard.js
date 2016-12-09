@@ -9,16 +9,16 @@ const Actions = {
         dispatch({ type: Constants.CHANGE_PINBOARD_RESOURCE, data: data });
       });
       channel.on('delete_pinboard_resource', (data) =>{
-        dispatch({ type: Constants.CHANGE_PINBOARD_RESOURCE, data: data });
+        dispatch({ type: Constants.DELETE_PINBOARD_RESOURCE, data: data });
       });
       channel.on('pinboard_resources', (data) =>{
         dispatch({ type: Constants.GET_PINBOARD_RESOURCES, data: data.list });
       });
     }
   },
-  enable:(channel) => {
+  enable:(channel, enable) => {
     return dispatch => {
-      channel.push('enable_pinboard')
+      channel.push('enable_pinboard', { enable })
       .receive('ok', (data) => {
       }).receive('error', (errors) => {
         NotificationActions.showErrorNotification(dispatch, errors);
@@ -45,27 +45,31 @@ const Actions = {
   },
   upload:(data, jwt) => {
     return (dispatch) => {
-      let csrf_token = localStorage.getItem("csrf_token");
-      dispatch({ type: Constants.MODAL_POST_DATA });
-      let req = request.post('/api/pinboard_resource/upload')
-         .set('X-CSRF-Token', csrf_token)
-         .set('Authorization', jwt);
+      if (data.files) {
+        let csrf_token = localStorage.getItem("csrf_token");
+        dispatch({ type: Constants.MODAL_POST_DATA });
+        let req = request.post('/api/pinboard_resource/upload')
+           .set('X-CSRF-Token', csrf_token)
+           .set('Authorization', jwt);
 
-      data.files.map((file) => {
-        req.attach('file', file)
-           .field('type', data.type)
-           .field('sessionTopicId', data.sessionTopicId)
-           .field('scope', data.scope)
-           .field('name', data.name);
-      });
+        data.files.map((file) => {
+          req.attach('file', file)
+             .field('type', data.type)
+             .field('sessionTopicId', data.sessionTopicId)
+             .field('scope', data.scope)
+             .field('name', data.name);
+        });
 
-      req.end((errors, result) => {
-        if(errors) {
-          NotificationActions.showErrorNotification(dispatch, errors);
-        }else {
-          dispatch({ type: Constants.MODAL_POST_DATA_DONE_AND_CLOSE });
-        }
-      });
+        req.end((errors, result) => {
+          if(errors) {
+            NotificationActions.showErrorNotification(dispatch, errors);
+          } else {
+            dispatch({ type: Constants.MODAL_POST_DATA_DONE_AND_CLOSE });
+          }
+        });
+      } else {
+        dispatch({ type: Constants.MODAL_POST_DATA_DONE_AND_CLOSE });
+      }
     }
   }
 }

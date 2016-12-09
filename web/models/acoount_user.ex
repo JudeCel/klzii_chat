@@ -15,6 +15,13 @@ defmodule KlziiChat.AccountUser do
     field :gender, :string
     field :role, :string
     field :email, :string
+    field :state, :string
+    field :postalAddress, :string
+    field :city, :string
+    field :country, :string
+    field :postCode, :string
+    field :companyName, :string
+    field :landlineNumber, :string
     timestamps [inserted_at: :createdAt, updated_at: :updatedAt]
   end
 end

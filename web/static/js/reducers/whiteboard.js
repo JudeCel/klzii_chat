@@ -25,6 +25,9 @@ export default function reducer(state = initialState, action = {}) {
     case Constants.DELETE_ALL_WHITEBOARD_SHAPES:
       return { ...state, shapes: findAndDelete({...state.shapes}, action.shapes)};
 
+    case Constants.TIDY_UP_WHITEBOARD:
+      return { ...state, shapes: {} };
+
     default:
       return state;
   }

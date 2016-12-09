@@ -1,12 +1,16 @@
 import React, { PropTypes } from 'react';
+import { connect }          from 'react-redux';
+import VisibilitySensor     from "react-visibility-sensor";
 import MessageActions       from './actions';
+import MessagesActions      from '../../actions/messages';
 import mixins               from '../../mixins';
 import Avatar               from '../members/avatar.js';
 
 const { EditMessage, DeleteMessage, StarMessage, RateMessage, ReplyMessage } = MessageActions;
 
 const Message = React.createClass({
-  mixins: [mixins.helpers],
+  mixins: [mixins.validations, mixins.helpers, mixins.modalWindows],
+  messageElemet: null,
   mediaImagePosition(message) {
     const className = 'emotion-chat-section push-image ';
     return className + (message.replies.length > 0 ? 'media-top' : 'media-bottom');
@@ -16,67 +20,146 @@ const Message = React.createClass({
     return className + (message.session_member.role == 'facilitator' ? ' facilitator' : ' participant');
   },
   shouldShowRepliedMessages(message) {
-    if(message.replyId) {
+    if(message.replies.length == 0) {
+      return;
+    } else {
+      const { currentUser, participants, facilitator, modalWindows, channel } = this.props;
+      return (
+        <div className='reply-section'>
+          {
+            message.replies.map((reply) =>
+              <Message key={ reply.id } message={ reply }
+                currentUser={ currentUser } participants={ participants }
+                facilitator={ facilitator }  modalWindows={ modalWindows }
+                dispatch={ this.props.dispatch } channel={ channel }
+                chatSectionElemet={ this.props.chatSectionElemet } />
+            )
+          }
+        </div>
+      )
+    }
+  },
+  getMessageMember() {
+    const { message, currentUser, participants, facilitator } = this.props;
+
+    if (currentUser && message.session_member.id == currentUser.id) {
+      return currentUser;
+    } else if (facilitator && message.session_member.id == facilitator.id) {
+      return facilitator;
+    } else if (participants) {
+      for (let i=0; i<participants.length; i++) {
+        if (participants[i].id == message.session_member.id) {
+          return participants[i];
+        }
+      }
+    }
+    return message.session_member;
+  },
+  getMessageSessionTopicContext() {
+    const { message } = this.props;
+    let sessionTopicContext = { };
+    sessionTopicContext[message.session_member.currentTopic.id] = {
+        avatarData: {
+          face: message.emotion
+        }
+      };
+    return sessionTopicContext;
+  },
+  canWritePrivateMessage(member) {
+    const { currentUser } = this.props;
+    return this.isFacilitator(currentUser) && currentUser.id != member.id;
+  },
+  privateMessage(member) {
+    const { currentUser } = this.props;
+    if (this.canWritePrivateMessage(member)) {
+      this.openSpecificModal('directMessage', { member: member });
+    }
+  },
+  onVisibilityChange(isVisible) {
+    const { currentUser, message, dispatch, channel } = this.props;
+    if (isVisible) {
+      dispatch(MessagesActions.readMessage(channel, message));
+    }
+  },
+  visibilitySensor() {
+    const { message } = this.props;
+
+    if (message.unread) {
+      return (
+        <VisibilitySensor
+          onChange={ this.onVisibilityChange }
+          delayedCall={ true }
+          containment={ this.props.chatSectionElemet }
+          delay={ 2000 }
+          />
+      )
+    } else {
       return;
     }
-
-    return (
-      <div className='col-md-12 remove-side-margin pull-right'>
-        {
-          message.replies.map((reply) =>
-            <Message key={ reply.id } message={ reply } />
-          )
-        }
-      </div>
-    )
   },
   render() {
-    const { message } = this.props;
+    const { currentUser, message } = this.props;
     const { can_edit, can_delete, can_star, can_vote, can_reply } = message.permissions;
-    
-    let member = message.session_member;
-    if (member.sessionTopicContext[member.currentTopic.id]) {
-      member.sessionTopicContext[member.currentTopic.id].avatarData.face = message.emotion;
-    }
-    member.online = true;
+
+    let member = this.getMessageMember();
+    let sessionTopicContext = this.getMessageSessionTopicContext();
+    let className = this.canWritePrivateMessage(member) ? 'cursor-pointer' : '';
 
     return (
       <div className='message-section media'>
-        <div className={ this.mediaImagePosition(message) }>
-          <div className={ 'emotion-chat-' + message.emotion } aria-hidden='true' style={{ backgroundColor: message.session_member.colour }}/>
-          <div className='emotion-chat-avatar'>
-            <Avatar member={ member } specificId={ 'msgAvatar' + message.id } />
+        <div className={ (message.unread ? "unread" : "") } ref={(el) => this.messageElemet = el}>
+
+          <div className={ this.mediaImagePosition(message) }>
+            <div className={ 'emotion-chat-' + message.emotion } aria-hidden='true' style={{ backgroundColor: member.colour }}></div>
+            <div className='emotion-chat-avatar'>
+              <span onClick={ this.privateMessage.bind(this, member) } className={className}>
+                <Avatar
+                  member={ { id: member.id, username: member.username, colour: member.colour, avatarData: member.avatarData, sessionTopicContext: sessionTopicContext, online: true, edit: false } }
+                  specificId={ 'msgAvatar' + message.id }  />
+                </span>
+            </div>
+          </div>
+
+          <div className='media-body'>
+            <div className='media-heading heading-section col-md-12'>
+              <span className='pull-left' style={{ color: member.colour }}>
+                { member.username }
+              </span>
+
+              <span className='pull-right'>
+                <small>{ this.formatDate(message.time) }</small>
+              </span>
+            </div>
+
+            <div className={ this.bodyClassname(message) }>
+              { this.visibilitySensor() }
+              <p className='text-break-all'>{ message.body }</p>
+            </div>
+
+            <div className='action-section col-md-12 text-right'>
+              <StarMessage    permission={ can_star }   message={ message } />
+              <ReplyMessage   permission={ can_reply }  message={ message } />
+              <RateMessage    permission={ can_vote }   message={ message } />
+              <EditMessage    permission={ can_edit }   message={ message } />
+              <DeleteMessage  permission={ can_delete } message={ message } />
+            </div>
           </div>
         </div>
 
-        <div className='media-body'>
-          <div className='media-heading heading-section col-md-12'>
-            <span className='pull-left' style={{ color: message.session_member.colour }}>
-              { message.session_member.username }
-            </span>
-
-            <span className='pull-right'>
-              <small>{ this.formatDate(message.time) }</small>
-            </span>
-          </div>
-
-          <div className={ this.bodyClassname(message) }>
-            <p className='text-break-all'>{ message.body }</p>
-          </div>
-
-          <div className='action-section col-md-12 text-right'>
-            <StarMessage    permission={ can_star }   message={ message } />
-            <ReplyMessage   permission={ can_reply }  message={ message } />
-            <RateMessage    permission={ can_vote }   message={ message } />
-            <EditMessage    permission={ can_edit }   message={ message } />
-            <DeleteMessage  permission={ can_delete } message={ message } />
-          </div>
-
-          { this.shouldShowRepliedMessages(message) }
-        </div>
+        { this.shouldShowRepliedMessages(message) }
       </div>
     )
   }
 });
 
-export default Message;
+const mapStateToProps = (state) => {
+  return {
+    currentUser: state.members.currentUser,
+    participants: state.members.participants,
+    facilitator: state.members.facilitator,
+    modalWindows: state.modalWindows,
+    channel: state.sessionTopic.channel
+  }
+};
+
+export default connect(mapStateToProps)(Message);

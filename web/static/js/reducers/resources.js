@@ -6,10 +6,14 @@ const initialState = {
   audios: [],
   files: [],
   gallery: [],
-  fetch: false
+  fetch: false,
+  pages: 0
 };
 
 export default function reducer(state = initialState, action = {}) {
+  if(action.resources && action.resources[0] && action.resources[0].resource == null) {
+    return state;
+  }
   switch (action.type) {
     case Constants.GET_RESOURCE:
       return { ...state, fetch: true, videos: [], images: [], audio: [], file: [] };
@@ -26,7 +30,7 @@ export default function reducer(state = initialState, action = {}) {
     case Constants.SET_FILE_RESOURCES:
       return { ...state, fetch: false, files: action.resources };
     case Constants.SET_GALLERY_RESOURCES:
-      return { ...state, fetch: false, gallery: action.gallery};
+      return { ...state, fetch: false, gallery: action.gallery, pages: action.pages};
     default:
       return state;
   }

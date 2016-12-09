@@ -62,8 +62,9 @@ function loadOne(data) {
 }
 
 function createShape(e) {
-  if(e.buttons == 1) {
+  if(e.buttons == 1 || (e.touches && e.touches.length)) {
     self.shapeData.shape = buildShape(e);
+    console.log("_aaaa__", self.shapeData.shape);
     if(self.shapeData.shape) {
       self.shapeData.shape.on('drawstop', self.deps.Events.shapeWasCreated);
       initShapeEvents(self.shapeData.shape);
@@ -77,6 +78,7 @@ function createShape(e) {
 function initShapeEvents(shape) {
   self.shapeData.added[shape.id()] = shape;
   shape.mousedown(selectShape);
+  shape.touchstart(selectShape);
   shape.on('resizestart', self.deps.Events.shapeWillUpdate);
   shape.on('resizedone', self.deps.Events.shapeWasUpdated);
   shape.on('dragstart', self.deps.Events.shapeWillUpdate);
@@ -85,7 +87,6 @@ function initShapeEvents(shape) {
 
 function buildShape(e) {
   var element = self.deps.Elements.shapes[self.drawData.current];
-
   if(element) {
     var nested = self.mainGroup.nested();
     var attrs = { fill: self.drawData.color, 'stroke-width': self.drawData.strokeWidth, stroke: self.drawData.color };
@@ -102,7 +103,7 @@ function selectShape(e) {
 
     if(shape && (!selected || selected && selected.id() != shape.id())) { // IE fix
       deselectShape();
-      self.mouseData.selected = shape.selectize().resize(self.drawData.minsMaxs).draggable();
+      self.mouseData.selected = shape.selectize({radius: 10}).resize(self.drawData.minsMaxs).draggable();
       self.mouseData.selected.remember('_draggable').start(e);
       _moveSelectizeToParent();
     }

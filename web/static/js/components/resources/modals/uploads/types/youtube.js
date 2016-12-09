@@ -12,12 +12,12 @@ const UploadTypeYoutube = React.createClass({
 
     if(this.state.iframe || autoPlay) {
       return (
-        <iframe type='text/html' src={ 'http://www.youtube.com/embed/' + url +"?autoplay=1" } frameBorder='0' allowFullScreen="1" />
+        <iframe type='text/html' src={  `${window.location.protocol}//www.youtube.com/embed/` + url +"?autoplay=1" } frameBorder='0' allowFullScreen="1" />
       )
     }
     else {
       return (
-        <img className='cursor-pointer' src={ `http://img.youtube.com/vi/${ url }/hqdefault.jpg` } onClick={ this.loadIframe } />
+        <img className='img-responsive youtube-preview cursor-pointer' src={ `${window.location.protocol}//img.youtube.com/vi/${ url }/hqdefault.jpg` } onClick={ this.loadIframe } />
       )
     }
   }

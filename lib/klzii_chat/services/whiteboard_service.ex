@@ -1,21 +1,21 @@
 defmodule KlziiChat.Services.WhiteboardService do
-  alias KlziiChat.{Repo, Shape, ShapeView, SessionMember, SessionTopic}
+  alias KlziiChat.{Repo, Shape, ShapeView, SessionMember, SessionTopic, Session}
   alias KlziiChat.Services.Permissions.Whiteboard, as: WhiteboardPermissions
   alias KlziiChat.Queries.Shapes, as: ShapesQueries
   import Ecto
-  import Ecto.Query, only: [from: 2]
+  import Ecto.Query, only: [from: 2, preload: 2]
 
   def history(session_topic_id, session_member_id) do
-    session_topic = Repo.get!(SessionTopic, session_topic_id)
     session_member = Repo.get!(SessionMember, session_member_id)
-    shapes = Repo.all(
-      from e in assoc(session_topic, :shapes),
-      order_by: [asc: e.id],
-      preload: [:session_member]
-    )
-    resp = Enum.map(shapes, fn shape ->
-      ShapeView.render("show.json", %{shape: shape, member: session_member})
-    end)
+
+    resp =
+      ShapesQueries.base_query(%{sessionTopicId: session_topic_id})
+      |> preload(:session_member)
+      |> Repo.all
+      |>  Enum.map(fn shape ->
+            ShapeView.render("show.json", %{shape: shape, member: session_member})
+          end)
+
     {:ok, resp}
   end
 
@@ -51,7 +51,8 @@ defmodule KlziiChat.Services.WhiteboardService do
 
   def create_object(session_member_id, session_topic_id, params) do
     session_member = Repo.get!(SessionMember, session_member_id)
-    if WhiteboardPermissions.can_new_shape(session_member) do
+    session = Repo.get!(Session, session_member.sessionId)
+    if WhiteboardPermissions.can_new_shape(session_member, session) do
       changeset = build_assoc(
         session_member, :shapes,
         sessionId: session_member.sessionId,

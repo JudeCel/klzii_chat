@@ -8,7 +8,7 @@ defmodule KlziiChat.Services.ConsoleServiceTest do
      resource = Ecto.build_assoc(
       account_user.account, :resources,
       accountUserId: account_user.id,
-      name: "test image 1",
+      name: "test video 1",
       type: "video",
       scope: "collage"
     ) |> Repo.insert!
@@ -21,6 +21,14 @@ defmodule KlziiChat.Services.ConsoleServiceTest do
       scope: "collage"
     ) |> Repo.insert!
 
+     image_resource = Ecto.build_assoc(
+      account_user.account, :resources,
+      accountUserId: account_user.id,
+      name: "iamge test",
+      type: "image",
+      scope: "collage"
+    ) |> Repo.insert!
+
      mini_survey = Ecto.build_assoc(
       session, :mini_surveys,
       sessionTopicId: session_topic_1.id,
@@ -29,7 +37,10 @@ defmodule KlziiChat.Services.ConsoleServiceTest do
       title: "cool title"
     ) |> Repo.insert!
 
-    {:ok, session_id: session.id, youtube_resource: youtube_resource, resource: resource, session_topic_1: session_topic_1.id, mini_survey: mini_survey}
+    {:ok, session_id: session.id, youtube_resource: youtube_resource,
+      resource: resource, session_topic_1: session_topic_1.id, mini_survey: mini_survey,
+      image_resource: image_resource
+    }
   end
 
   describe "Console" do
@@ -43,13 +54,13 @@ defmodule KlziiChat.Services.ConsoleServiceTest do
 
   describe "Pinboard# " do
    test "can enablable", %{facilitator: facilitator, session_topic_1: session_topic_1} do
-      {:ok, console} = ConsoleService.enable_pinboard(facilitator.id, session_topic_1)
+      {:ok, console} = ConsoleService.enable_pinboard(facilitator.id, session_topic_1, true)
       assert(console.pinboard)
    end
 
    test "when enable then remove all resource", %{facilitator: facilitator, session_topic_1: session_topic_1, resource: resource} do
      {:ok, _} = ConsoleService.set_resource(facilitator.id, session_topic_1, resource.id)
-     {:ok, console} = ConsoleService.enable_pinboard(facilitator.id, session_topic_1)
+     {:ok, console} = ConsoleService.enable_pinboard(facilitator.id, session_topic_1, true)
      assert(%{audioId: nil, pinboard: true, videoId: nil, fileId: nil, miniSurveyId: nil} = console)
    end
  end
@@ -62,9 +73,15 @@ defmodule KlziiChat.Services.ConsoleServiceTest do
      assert(%Console{} = console )
    end
 
-   test "can add only one  resource", context do
+   test "can change same type of reource", context do
      {:ok, %Console{}} = ConsoleService.set_resource(context.facilitator.id, context.session_topic_1, context.resource.id)
-     {:error, %{system: _ }} = ConsoleService.set_resource(context.facilitator.id, context.session_topic_1, context.youtube_resource.id)
+     {:ok, %Console{}} = ConsoleService.set_resource(context.facilitator.id, context.session_topic_1, context.youtube_resource.id)
+     {:ok, %Console{}} = ConsoleService.set_resource(context.facilitator.id, context.session_topic_1, context.resource.id)
+   end
+
+   test "can add only one resource", context do
+     {:ok, %Console{}} = ConsoleService.set_resource(context.facilitator.id, context.session_topic_1, context.resource.id)
+     {:error, %{system: _ }} = ConsoleService.set_resource(context.facilitator.id, context.session_topic_1, context.image_resource.id)
    end
 
    test "add resource #youtube", %{facilitator: facilitator, session_topic_1: session_topic_1, youtube_resource: resource} do
@@ -82,7 +99,7 @@ defmodule KlziiChat.Services.ConsoleServiceTest do
    end
 
    test "when pinboard enable then cen't add resource", %{facilitator: facilitator, session_topic_1: session_topic_1, resource: resource} do
-     {:ok, _} = ConsoleService.enable_pinboard(facilitator.id, session_topic_1)
+     {:ok, _} = ConsoleService.enable_pinboard(facilitator.id, session_topic_1, true)
      {:error, %{system: error_message}} = ConsoleService.set_resource(facilitator.id, session_topic_1, resource.id)
      assert(ConsoleService.error_messages.pinboard_is_enable == error_message)
    end

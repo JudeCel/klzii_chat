@@ -1,6 +1,8 @@
 @mixin emotion-chat($image, $time, $steps)
   width: 55px
   height: 55px
+  margin-top: 5px
+  margin-bottom: -5px
   background-image: url($image) !important
   transform: scale($chat-emotion-default-scale) translate(-7px, -7px)
 
@@ -9,6 +11,10 @@
   -ms-animation: play-chat $time steps($steps) infinite
   -o-animation: play-chat $time steps($steps) infinite
   animation: play-chat $time steps($steps) infinite
+
+  &#emotion-selector
+    margin-top: 0px
+    margin-bottom: 0px
 
 @mixin keyframe-chat
   from

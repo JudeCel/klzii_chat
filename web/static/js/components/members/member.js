@@ -26,7 +26,7 @@ const Member = React.createClass({
   },
   render() {
     const { member } = this.props;
-    
+
     return (
       <div className={ this.eventClass(member) } onClick={ this.onClickEvent.bind(this, member) }>
         <Avatar member={ member } />

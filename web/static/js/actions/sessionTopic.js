@@ -41,6 +41,15 @@ function leave_channal(dispatch, channal) {
   dispatch({ type: Constants.SET_SESSION_TOPIC });
 }
 
+function tidyUp(dispatch){
+  dispatch({ type: Constants.TIDY_UP_CONSOLE });
+  dispatch({ type: Constants.TIDY_UP_WHITEBOARD });
+  dispatch({ type: Constants.TIDY_UP_PINBOARD });
+  dispatch({ type: Constants.TIDY_UP_MESSAGES });
+  dispatch({ type: Constants.TIDY_UP_SURVE });
+  dispatch({ type: Constants.CLOSE_ALL_MODAL_WINDOWS });
+}
+
 const Actions = {
   subscribeEvents: (channel) => {
       return dispatch => {
@@ -52,13 +61,14 @@ const Actions = {
         });
       }
   },
-  selectCurrent: (socket, sessionTopics) =>{
+  selectCurrent: (socket, sessionTopics, currentTopic) =>{
     return dispatch => {
       dispatch({
         type: Constants.SET_SESSION_TOPICS,
         all: sessionTopics
       });
-      let sessionTopicId = selectLandingTopic(sessionTopics);
+
+      let sessionTopicId = selectTopic(sessionTopics, currentTopic);
 
       if (sessionTopicId) {
         joinChannal(dispatch, socket, sessionTopicId.id);
@@ -74,13 +84,23 @@ const Actions = {
     return dispatch => {
       whiteboardChannel.leave();
       leave_channal(dispatch, currentChannal);
+      tidyUp(dispatch);
       joinChannal(dispatch, currentChannal.socket, sessionTopicId);
     }
   }
 }
 
+function selectTopic(topics, currentTopic) {
+  return(selectCurrenTopic(topics,currentTopic) || selectLandingTopic(topics))
+}
 
-export default Actions;
+function selectCurrenTopic(topics, currentTopic) {
+  for(var i in topics) {
+    if(topics[i].id == currentTopic.id) {
+      return topics[i];
+    }
+  }
+}
 
 function selectLandingTopic(topics) {
   for(var i in topics) {
@@ -88,6 +108,7 @@ function selectLandingTopic(topics) {
       return topics[i];
     }
   }
-
   return topics[0];
 }
+
+export default Actions;

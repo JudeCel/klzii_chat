@@ -23,6 +23,9 @@ function plugins() {
     new webpack.optimize.OccurenceOrderPlugin(),
     new webpack.NoErrorsPlugin(),
     new CopyWebpackPlugin([{ from: 'web/static/assets/images', to: "images" }]),
+    new CopyWebpackPlugin([{ from: 'web/static/assets/sounds', to: "sounds" }]),
+    new CopyWebpackPlugin([{ from: 'web/static/css/reporting', to: "css/reporting" }]),
+    new CopyWebpackPlugin([{ from: 'web/static/js/reporting', to: "js/reporting" }]),
     new webpack.optimize.DedupePlugin()
   ]
 

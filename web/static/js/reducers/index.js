@@ -13,6 +13,7 @@ import directMessages      from './directMessages';
 import reports             from './reports';
 import utility             from './utility';
 import pinboard            from './pinboard';
+import sessionTopicConsole from './sessionTopicConsole';
 
 export default combineReducers({
   chat: chat,
@@ -29,4 +30,5 @@ export default combineReducers({
   directMessages: directMessages,
   utility: utility,
   pinboard: pinboard,
+  sessionTopicConsole: sessionTopicConsole
 });

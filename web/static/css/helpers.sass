@@ -63,6 +63,8 @@
     margin-top: 60px
     margin-right: 10px
     margin-bottom: -10px;
+  .type-forum .header-section .resources-section
+    margin-top: 70px
 
 .dropshadow
   $x: 0px
@@ -79,7 +81,8 @@
   white-space: -pre-wrap
   white-space: -o-pre-wrap
   word-wrap: break-word
-  -ms-word-break: break-all
+  -ms-word-break: break-word
+  word-break: break-word
 
 .cursor-pointer
   cursor: pointer
@@ -107,10 +110,8 @@
   video, audio, img, iframe
     display: block
     width: 100%
-  video, img
+  video, img, iframe
     min-height: 120px
-  iframe
-    height: 450px
 
 #small-screen
   display: none
@@ -130,3 +131,9 @@
     border-color: rgb(204, 204, 204)
     margin: 0px auto
     padding: 30px
+
+.badge
+  &.normal
+    background-color: $header-red
+  &.reply
+    background-color: black

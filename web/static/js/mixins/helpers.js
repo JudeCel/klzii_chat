@@ -2,13 +2,15 @@ import moment               from 'moment';
 
 const helpers = {
   getConsoleResourceId(type) {
+    if (this.props.sessionTopicConsole.postingData) { return false}
+
     switch (type) {
       case "link":
-        return this.props.console['video_id'];
+        return this.props.sessionTopicConsole.data['video_id'];
       case "pinboard":
-        return this.props.console[type];
+        return this.props.sessionTopicConsole.data[type];
       default:
-        return this.props.console[type + '_id'];
+        return this.props.sessionTopicConsole.data[type + '_id'];
     }
   },
   get_session_resource_types(modalName){
@@ -43,7 +45,7 @@ const helpers = {
   },
   formatDate(date) {
     if(date) {
-      return moment(new Date(date + "Z")).format('ddd H:m MMM D,YYYY');
+      return moment(new Date(date + "Z")).format('ddd MMM D YYYY H:mm');
     }
   },
   addOrRemoveScrollbarY(element, _this) {
@@ -76,6 +78,14 @@ const helpers = {
     }
 
     return {};
+  },
+  sort(data, field) {
+    data.sort(function(a,b) {return (a[field] > b[field]) ? 1 : ((b[field] > a[field]) ? -1 : 0);} );
+    return data;
+  },
+  sortByString(data, field) {
+    data.sort(function(a,b) {return ((a[field] || '').toLowerCase() > (b[field] || '').toLowerCase()) ? 1 : (((b[field] || '').toLowerCase() > (a[field] || '').toLowerCase()) ? -1 : 0);} );
+    return data;
   }
 };
 

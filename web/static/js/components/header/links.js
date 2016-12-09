@@ -3,13 +3,26 @@ import { connect }        from 'react-redux';
 import mixins             from '../../mixins';
 import WhiteboardActions  from './../../actions/whiteboard';
 import LogoutLink         from './logout';
+import PinboardActions    from './../../actions/pinboard';
+import ConfirmModal       from './../modals/confirmModal'
 
 const Links = React.createClass({
   mixins: [mixins.modalWindows, mixins.validations],
+  getInitialState() {
+    return {showClearWhiteboardModal: false};
+  },
   clearWhiteboard() {
-    if(confirm('Are you sure you want to clear whiteboard?')) {
-      const { dispatch, whiteboardChannel } = this.props;
-      dispatch(WhiteboardActions.deleteAll(whiteboardChannel));
+    this.setState({ showClearWhiteboardModal: true });
+  },
+  clearWhiteboardCanceled() {
+    this.setState({ showClearWhiteboardModal: false });
+  },
+  clearWhiteboardAccepted() {
+    this.setState({ showClearWhiteboardModal: false });
+    const { sessionTopicConsole, currentUser, channel, dispatch, whiteboardChannel } = this.props;
+    dispatch(WhiteboardActions.deleteAll(whiteboardChannel));
+    if(sessionTopicConsole.data.pinboard && currentUser.permissions.pinboard.can_enable) {
+      dispatch(PinboardActions.enable(channel, false));
     }
   },
   reportsFunction(style) {
@@ -75,6 +88,8 @@ const Links = React.createClass({
           </li>
           <LogoutLink />
         </ul>
+
+        <ConfirmModal show={this.state.showClearWhiteboardModal} onAccept={this.clearWhiteboardAccepted} onClose={this.clearWhiteboardCanceled} description='Are you sure you want to clean the Whiteboard?' title="Are you sure?"/>
       </div>
     )
   }
@@ -88,7 +103,9 @@ const mapStateToProps = (state) => {
     firstParticipant: state.members.participants[0],
     facilitator: state.members.facilitator,
     currentUser: state.members.currentUser,
-    colours: state.chat.session.colours
+    colours: state.chat.session.colours,
+    sessionTopicConsole: state.sessionTopicConsole,
+    channel: state.sessionTopic.channel,
   };
 };
 

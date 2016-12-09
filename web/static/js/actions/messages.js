@@ -7,6 +7,18 @@ function new_message(dispatch, data) {
     message: data
   });
 }
+function new_message_sound(dispatch, data) {
+  return dispatch({
+    type: Constants.NEW_MESSAGE_SOUND,
+    message: data
+  });
+}
+function new_message_animation(dispatch, data) {
+  return dispatch({
+    type: Constants.NEW_MESSAGE_ANIMATION,
+    message: data
+  });
+}
 function delete_message(dispatch, data) {
   return dispatch({
     type: Constants.DELETE_MESSAGE,
@@ -16,6 +28,12 @@ function delete_message(dispatch, data) {
 function update_message(dispatch, message) {
   return dispatch({
     type: Constants.UPDATE_MESSAGE,
+    message
+  });
+}
+function read_message(dispatch, message) {
+  return dispatch({
+    type: Constants.READ_MESSAGE,
     message
   });
 }
@@ -59,7 +77,9 @@ const Actions = {
     return dispatch => {
       dispatch({ type: Constants.SET_MESSAGES_EVENTS});
       channel.on("new_message", (resp) =>{
-        return new_message(dispatch, resp);
+        new_message(dispatch, resp);
+        new_message_sound(dispatch, resp);
+        new_message_animation(dispatch, resp);
       });
 
       channel.on("delete_message", (resp) =>{
@@ -69,6 +89,7 @@ const Actions = {
       channel.on("update_message", (resp) =>{
         return update_message(dispatch, resp);
       });
+
     }
   },
   sendMessage: (channel, inputState) => {
@@ -90,6 +111,16 @@ const Actions = {
         NotificationActions.showErrorNotification(dispatch, errors);
       });
     };
+  },
+  readMessage:(channel, message) => {
+    return dispatch => {
+      channel.push('read_message', { id: message.id })
+      .receive('ok', () => {
+        read_message(dispatch, message);
+      }).receive('error', (errors) => {
+        NotificationActions.showErrorNotification(dispatch, errors);
+      });
+    }
   },
   messageStar: (channel, payload) => {
     return dispatch => {

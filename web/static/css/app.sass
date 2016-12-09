@@ -15,6 +15,7 @@ $input-size: 1.5em
 @import 'emotion-avatar.sass'
 @import 'helpers.sass'
 @import 'inputs.sass'
+@import 'buttons.sass'
 @import 'modals.sass'
 @import 'whiteboard_new.sass'
 @import '../../../node_modules/medium-editor/dist/css/medium-editor.css'
@@ -23,6 +24,8 @@ $input-size: 1.5em
 @import 'dependencies/toastr/toastr.min.css'
 @import 'util/loading.sass'
 @import 'mobile.css'
+@import '../../../node_modules/emoji-mart/css/emoji-mart.css'
+@import 'emoji-picker.sass'
 
 body
   font-family: 'Source Sans Pro', Arial, sans-serif
@@ -38,6 +41,7 @@ body
   @extend .dropshadow
   vertical-align: middle
   text-align: right
+  position: relative
   .header-innerbox
     display: flex
     justify-content: space-between
@@ -53,6 +57,8 @@ body
         font-size: 50%
     .topic-select-box
       order: 1
+      .has-no-messages
+        color: #f9f10d !important
       .session-name
         margin-top: 5px
       .dropdown-menu
@@ -77,11 +83,46 @@ body
         margin: 0
         padding-left: 2px
         display: inline-block
-      .badge
-        &.normal
-          background-color: $header-red
-        &.reply
-          background-color: black
+      .eye-section
+        cursor: pointer
+        color: $header-red
+        font-size: 10px
+        .icon-eye
+          font-size: 25px
+      .users-section
+        cursor: pointer
+        color: black
+        font-size: 12px
+        margin-left: 5px
+        .fa
+          font-size: 21px
+          padding-right: 2px
+      .topic-sign
+        padding: 0px 10px
+        max-width: 280px
+        width: 280px
+        display: inline-block
+        color: #373737
+        font-size: 18px
+        vertical-align: top
+        margin-top: 5px
+        &.topic-landing
+          background: url("/images/arrow-landing-topic.png")
+          background-repeat: no-repeat
+          background-position: left
+          padding-left: 65px
+          margin-left: 10px
+          min-height: 34px
+          background-size: 60px 30px
+          @media (min-width: 1200px)
+            padding-top: 20px
+        @media (max-width: 1199px)
+          margin-top: 4px
+          max-width: 200px
+          width: 200px
+          font-size: 16px
+        @media (max-width: 1119px)
+          font-size: 15px
       .dropdown.btn-group
         vertical-align: top
         #topic-selector
@@ -89,6 +130,10 @@ body
           padding: 0px
           background-color: none
           border: none
+          >div
+            position: relative
+            top: 0
+            left: 0
           .btn-default
             color: white
             border-color: transparent
@@ -130,7 +175,21 @@ body
   .logo-section
     line-height: 3
     order: 4
-    width: 5%
+    max-width: 120px
+    .img-responsive
+      min-height: 55px
+      max-height: 55px
+      height: 55px
+      width: auto
+      max-width: 120px
+      @media (max-width: 1199px)
+        min-height: 50px
+        max-height: 50px
+        height: 50px
+      @media (max-width: 1119px)
+        min-height: 48px
+        max-height: 48px
+        height: 48px
 
 .room-outerbox
   padding: 0 15px
@@ -177,13 +236,44 @@ body
           border: 1px solid #ccc
     textarea
       resize: none
+    .avatar-section
+      display: none
+      background-color: #fff
+      padding: 0px
+      border: 0px
+      width: 80px
+      svg
+        transform: scale(0.5) translate(-37.5px, -37.5px)
+        margin: -45px -95px -90px -45px
+        cursor: pointer
+        padding-top: 3px
+        rect
+          display: none
+        text
+          display: none
   .chat-section
     padding-bottom: 20px
     margin-top: 20px
     margin-bottom: 20px
     max-height: 550px
+    .media-heading
+      padding: 0px
+    .action-section
+      padding: 0px
     .message-section
       margin: 0
+      .unread
+        padding-left: 5px
+        padding-right: 5px
+        background-color: #669dd3 !important
+        >.media-body
+          >.media-heading
+            .pull-left, .pull-right small
+              color: #fff !important
+          >.action-section i
+            color: #fff !important
+      .message-section
+        margin-left: 55px
       .emotion-chat-section
         display: table-cell
         &.media-top.push-image
@@ -215,6 +305,7 @@ body
             font-size: 15px
   .participants-section
     margin-left: 20px
+    margin-top: 20px
     .avatar-even
       margin-top: -5%
     .avatar-odd
@@ -248,11 +339,107 @@ body
             display: inline-block
             background-color: $message-facilitator
             min-height: 4em
-            max-height: 17em
             width: 15vw
             p
               margin: 2px 5px
               font-size: 18px
+
+.type-forum
+  .header-section
+    padding-bottom: 15px
+    .topic-select-section
+      .topic-select-box
+        @media (max-width: 1499px)
+          margin-left: 8px
+        .dropdown.btn-group
+          #topic-selector
+           margin-left: 0px
+        .dropdown-menu
+          margin-left: 0px
+        .session-name
+          margin-bottom: 5px
+          margin-top: -10px
+  .room-section-left
+    width: 25%
+    float: left
+    text-align: center
+    padding-bottom: 15px
+    .aboutThisTopic
+      margin: 0px -15px
+      margin-top: calc(-1px - 4%)
+      padding: 10px
+      color: #fff
+      margin-bottom: 15px
+      font-size: 16px
+      text-align: left
+      padding-left: 8%
+    .facilitator-section
+      > div.div-inline-block
+        display: block
+      svg
+        @media (max-width: 1199px)
+          width: 13vw
+          height: 14vw
+      svg text.svg-avatar-topic
+        display: none
+      .outerbox
+        margin-left: 20px !important
+        left: 0
+        position: inherit
+        .triangle
+          margin-top: -40px !important
+          border-width: 0 15px 15px 15px !important
+          border-color: transparent transparent $message-facilitator transparent !important
+          _border-color: #000000 #000000 $message-facilitator #000000 !important
+          margin-right: -50px
+        .innerbox
+          width: 17vw !important
+          @media (max-width: 1499px)
+            width: 20vw !important
+    .console-section
+      @media (min-width: 768px)
+        margin-left: 0px
+        white-space: nowrap
+        float: right
+        position: relative
+        left: -50%
+        text-align: left
+        ul
+          list-style: none
+          position: relative
+          left: 50%
+          li
+           font-size: calc(10px + (100vw / 120))
+           padding: calc(5px + (100vw / 400)) calc(0px + (100vw / 400))
+      .icon-type-pinboard
+        display: none
+    .top-row
+      display: block
+  .room-section-right
+    margin-left: 20px
+    width: calc(75% - 20px)
+    float: left
+    .chat-section
+      margin-top: 0px
+      .message-section
+        .emotion-chat-section
+          .emotion-chat-avatar
+            display: block !important
+            svg
+              transform: scale(0.5) translate(-37.5px, -37.5px)
+              margin: -22px -45px -75px -20px
+              padding-top: 3px
+              rect
+                display: none
+              text
+                display: none
+          div:first-child
+            display: none !important
+    .input-section
+      .avatar-section
+        background-color: transparent
+        @media (min-width: 768px)
+          display: table-cell
 
 @media (min-width: 1500px)
   .room-outerbox, .header-innerbox, .direct-message-modal
@@ -280,3 +467,20 @@ body
 
 .toast-top-right
   top: 130px
+
+.paginator
+  text-align: center
+  clear: both
+  ul.pagination
+    margin-bottom: 0px
+    li
+      a
+        color: #2F9F69
+    li.active
+      a
+        color: #fff
+        background-color: #2F9F69
+        border-color: #2F9F69
+    li.unactive
+      a
+        color: #ddd

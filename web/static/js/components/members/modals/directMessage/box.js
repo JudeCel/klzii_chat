@@ -18,10 +18,12 @@ const MessageBox = React.createClass({
     this.loadMemberMessages(reciever);
   },
   loadMemberMessages(reciever) {
-    const { dispatch, channel } = this.props;
-    dispatch(DirectMessageActions.index(channel, reciever.id));
-    dispatch(DirectMessageActions.read(channel, reciever.id));
-    dispatch(DirectMessageActions.last(channel));
+    if (reciever) {
+      const { dispatch, channel } = this.props;
+      dispatch(DirectMessageActions.index(channel, reciever.id));
+      dispatch(DirectMessageActions.read(channel, reciever.id));
+      dispatch(DirectMessageActions.last(channel));
+    }
   },
   render() {
     const { reciever } = this.state;
@@ -31,7 +33,7 @@ const MessageBox = React.createClass({
       return (
         <div className='row direct-message-section'>
           <div className='col-md-4'>
-            <Participants selectParticipant={ this.selectParticipant } memberId={ reciever.id } />
+            <Participants selectParticipant={ this.selectParticipant } memberId={ reciever ? reciever.id : null } />
           </div>
 
           <div className='col-md-8'>

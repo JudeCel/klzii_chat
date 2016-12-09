@@ -6,9 +6,10 @@ import EmotionPicker      from './emotionPicker';
 import InputActions       from '../../actions/currentInput';
 import MessagesActions    from '../../actions/messages';
 import mixins             from '../../mixins';
+import Avatar             from '../members/avatar.js';
 
 const Input = React.createClass({
-  mixins: [mixins.validations],
+  mixins: [mixins.modalWindows, mixins.validations],
   handleChange(e) {
     const { dispatch } = this.props;
     dispatch(InputActions.changeValue(e.target.value));
@@ -24,10 +25,16 @@ const Input = React.createClass({
       dispatch(MessagesActions.sendMessage(topicChannel, currentInput));
     }
   },
+  changeAvatar() {
+    const { currentUser } = this.props;
+    if (currentUser.role != "observer") {
+      this.openSpecificModal('avatar');
+    }
+  },
   defaultProps() {
     const { currentInput } = this.props;
     let style = currentInput.replyColour ? { borderColor: currentInput.replyColour } : undefined;
-    let className = 'form-control' + (currentInput.replyColour ? ' wider-border' : '');
+    let className = 'form-control' + (currentInput.replyColour ? ' wider-border' : '') + (currentInput.smallFont ? " smallFont" : "");
 
     return {
       onKeyDown: this.onKeyDown,
@@ -47,7 +54,7 @@ const Input = React.createClass({
     }
   },
   render() {
-    const { currentInput } = this.props;
+    const { currentInput, currentUser } = this.props;
 
     if(this.hasPermission(['messages', 'can_new_message'])) {
       return (
@@ -57,13 +64,18 @@ const Input = React.createClass({
               <div className='input-group-addon no-border-radius emotion-picker-section'><EmotionPicker /></div>
               <TextareaAutosize { ...this.defaultProps() } />
               <div className='input-group-addon no-border-radius cursor-pointer' onClick={ this.sendMessage }>POST</div>
+              <div className='input-group-addon no-border-radius avatar-section'>
+                <span onClick={this.changeAvatar}>
+                  <Avatar member={ { id: currentUser.id, username: currentUser.username, colour: currentUser.colour, avatarData: currentUser.avatarData, online: true, edit: false } } specificId={ 'message-avatar' } />
+                </span>
+              </div>
             </div>
           </div>
         </div>
       )
     }
     else {
-      return (<div></div>)
+      return false;
     }
   }
 });

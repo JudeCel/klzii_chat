@@ -1,5 +1,5 @@
 defmodule KlziiChat.Services.PinboardResourceService do
-  alias KlziiChat.{Repo, PinboardResource, SessionTopic, SessionMember, Resource}
+  alias KlziiChat.{Repo, PinboardResource, SessionTopic, SessionMember, Resource, Session}
   alias KlziiChat.Services.Permissions.PinboardResource, as: PinboardResourcePermissions
   alias KlziiChat.Helpers.IntegerHelper
   import Ecto.Query, only: [from: 2]
@@ -70,7 +70,8 @@ defmodule KlziiChat.Services.PinboardResourceService do
   def add(session_member_id, session_topic_id, resource_id) do
     session_topic_id = IntegerHelper.get_num(session_topic_id)
     session_member = Repo.get!(SessionMember, session_member_id)
-    PinboardResourcePermissions.can_add_resource(session_member)
+    session = Repo.get!(Session, session_member.sessionId)
+    PinboardResourcePermissions.can_add_resource(session_member, session)
     |> validations(session_topic_id, resource_id)
     |> case do
         {:ok} ->

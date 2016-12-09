@@ -9,8 +9,10 @@ defmodule KlziiChat.Message do
     has_many :unread_messages, KlziiChat.UnreadMessage, [foreign_key: :messageId, on_delete: :delete_all]
     has_many :votes, KlziiChat.Vote, [foreign_key: :messageId, on_delete: :delete_all]
     field :body, :string
+    field :replyLevel, :integer, default: 0
     field :emotion, :integer
     field :star, :boolean, default: false
+    field :childrenStars, {:array, :integer}, default: []
     timestamps [inserted_at: :createdAt, updated_at: :updatedAt]
   end
 
@@ -22,9 +24,8 @@ defmodule KlziiChat.Message do
   """
   def changeset(model, params \\ %{}) do
     model
-    |> cast(params, [:sessionTopicId, :sessionMemberId, :body, :emotion, :star, :replyId ])
+    |> cast(params, [:sessionTopicId, :childrenStars, :sessionMemberId, :body, :emotion, :star, :replyId, :replyLevel ])
     |> validate_required([:sessionTopicId, :sessionMemberId, :body, :emotion])
     |> validate_length(:body, min: 1)
-    |> validate_length(:body, max: 255, message: "Max length of message is 255 characters")
   end
 end

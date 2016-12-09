@@ -41,7 +41,6 @@ defmodule KlziiChat.SessionTopicChannel do
     {:ok, member} = SessionMembersService.update_current_topic(session_member.id, socket.assigns.session_topic_id)
     Endpoint.broadcast!("sessions:#{session_member.session_id}", "update_member", member)
 
-    UnreadMessageService.delete_unread_messages_for_topic(session_member.id, socket.assigns.session_topic_id)
     messages = UnreadMessageService.sync_state(session_member.id)
     Endpoint.broadcast!("sessions:#{session_member.session_id}", "unread_messages", messages)
 
@@ -61,6 +60,12 @@ defmodule KlziiChat.SessionTopicChannel do
     else
       {:noreply, socket}
     end
+  end
+
+  def handle_in("read_message", %{"id" => id}, socket) do
+    session_member = get_session_member(socket)
+    KlziiChat.BackgroundTasks.Message.read(session_member.id, session_member.session_id, id)
+    {:reply, :ok, socket}
   end
 
   def handle_in("board_message", payload, socket) do
@@ -140,10 +145,21 @@ defmodule KlziiChat.SessionTopicChannel do
     end
   end
 
-  def handle_in("enable_pinboard", _, socket) do
-    case ConsoleService.enable_pinboard(get_session_member(socket).id, socket.assigns.session_topic_id) do
+  def handle_in("enable_pinboard", %{"enable" => enable}, socket) do
+    case ConsoleService.enable_pinboard(get_session_member(socket).id, socket.assigns.session_topic_id, enable) do
       {:ok, console} ->
         broadcast! socket, "console",  ConsoleView.render("show.json", %{console: console})
+        if enable do
+          case PinboardResourceService.all(socket.assigns.session_topic_id) do
+            {:ok, pinboard_resources} ->
+              list = Enum.map(pinboard_resources, fn item->
+                view = Phoenix.View.render_one(item, PinboardResourceView, "show.json", as: :pinboard_resource)
+                permissions = PermissionsBuilder.pinboard_resource(get_session_member(socket), item)
+                Map.put(view, :permissions, permissions)
+              end)
+              broadcast! socket, "pinboard_resources", %{list: list}
+          end
+        end
         {:reply, :ok, socket}
       {:error, reason} ->
         {:reply, {:error, error_view(reason)}, socket}
@@ -200,8 +216,9 @@ defmodule KlziiChat.SessionTopicChannel do
       case MessageService.create_message(session_member, session_topic_id, payload) do
         {:ok, message} ->
           KlziiChat.BackgroundTasks.Message.new(message.id)
-          broadcast!(socket, "new_message",  message)
+          broadcast!(socket, "new_message", message)
           Endpoint.broadcast!("sessions:#{message.session_member.sessionId}", "update_member", SessionMembersView.render("member.json", member: message.session_member))
+          KlziiChat.BackgroundTasks.Message.update_has_messages(session_member.id, session_topic_id, true)
           {:reply, :ok, socket}
         {:error, reason} ->
           {:reply, {:error, error_view(reason)}, socket}
@@ -212,8 +229,10 @@ defmodule KlziiChat.SessionTopicChannel do
     case MessageService.deleteById(get_session_member(socket), id) do
       {:ok, resp} ->
         session_member = get_session_member(socket)
+        session_topic_id = socket.assigns.session_topic_id
         KlziiChat.BackgroundTasks.Message.delete(session_member.session_id, socket.assigns.session_topic_id)
         broadcast! socket, "delete_message", resp
+        KlziiChat.BackgroundTasks.Message.update_has_messages(session_member.id, session_topic_id, false)
         {:reply, :ok, socket}
       {:error, reason} ->
         {:reply, {:error, error_view(reason)}, socket}
@@ -250,12 +269,17 @@ defmodule KlziiChat.SessionTopicChannel do
     end
   end
 
-  def handle_out(message, payload, socket) when message in ["new_pinboard_resource", "delete_pinboard_resource"] do
+  def handle_out(message, payload, socket) when message in ["new_pinboard_resource"] do
     session_member = get_session_member(socket)
     view =
       Phoenix.View.render_one(payload, PinboardResourceView, "show.json", as: :pinboard_resource)
       |> Map.put(:permissions, PermissionsBuilder.pinboard_resource(session_member, payload))
+    push socket, message, view
+    {:noreply, socket}
+  end
 
+  def handle_out(message, payload, socket) when message in ["delete_pinboard_resource"] do
+    view = Phoenix.View.render_one(payload, PinboardResourceView, "delete.json", as: :pinboard_resource)
     push socket, message, view
     {:noreply, socket}
   end
@@ -265,4 +289,5 @@ defmodule KlziiChat.SessionTopicChannel do
     push socket, message, MessageView.render("show.json", %{message: payload, member: session_member})
     {:noreply, socket}
   end
+
 end

@@ -3,46 +3,26 @@ import { connect }          from 'react-redux';
 import Constants            from './../constants';
 import sessionActions       from '../actions/session';
 import sessionTopicActions  from '../actions/sessionTopic';
-import Messages             from '../components/messages/messages.js';
-import Input                from '../components/messages/input.js';
-import Facilitator          from '../components/members/facilitator.js';
-import Participants         from '../components/members/participants.js';
 import ChangeAvatarModal    from '../components/members/modals/changeAvatar/index.js';
 import DirectMessageModal   from '../components/members/modals/directMessage/index.js';
 import SessionTopicSelect   from '../components/sessionTopics/select.js';
 import Resources            from '../components/resources/resources.js';
 import HeaderLinks          from '../components/header/links.js';
-import Console              from '../components/console/index';
 import MobileHeader         from '../components/header/mobile.js';
-
-import Pinboard             from '../components/pinboard/index.js';
-import Loading             from '../components/util/loading.js';
-import WhiteboardCanvas     from '../components/whiteboard/whiteboardCanvas';
-import Whiteboard           from '../components/whiteboard_new/whiteboard';
+import Forum                from '../components/chatRoom/forum';
+import Focus                from '../components/chatRoom/focus';
+import Loading              from '../components/util/loading.js';
+import SessionExpire        from '../components/util/sessionExpire.js';
 import Notifications        from '../actions/notifications';
 import notificationMixin    from '../mixins/notification';
-import ReportsModal       from '../components/reports/modal';
+import ReportsModal         from '../components/reports/modal';
+import ObserverListModal    from '../components/modals/observerList';
+import ParticipantListModal    from '../components/modals/participantList';
 import ReactToastr, { ToastContainer, ToastMessage } from 'react-toastr';
 var ToastMessageFactory     = React.createFactory(ToastMessage.animation);
 
 const ChatView = React.createClass({
   mixins: [notificationMixin],
-  styles() {
-    const { colours } = this.props;
-    return {
-      backgroundColor: colours.mainBackground,
-      borderColor: colours.mainBorder
-    };
-  },
-  renderWhiteboard() {
-    if(this.props.pinboardActive) {
-      return <Pinboard />;
-    }
-    else {
-      return <Whiteboard />
-      // return <WhiteboardCanvas member={ this.props }/>;
-    }
-  },
   componentDidUpdate() {
     const { notifications, dispatch, colours } = this.props;
 
@@ -58,8 +38,8 @@ const ChatView = React.createClass({
     this.props.dispatch(sessionActions.connectToChannel());
   },
   componentWillReceiveProps(nextProps){
-    if(nextProps.sessionReady && !nextProps.sessionTopicReady) {
-      this.props.dispatch(sessionTopicActions.selectCurrent(nextProps.socket, nextProps.session_topics));
+    if(nextProps.sessionReady && !nextProps.sessionTopicReady && nextProps.currentUser.currentTopic) {
+      this.props.dispatch(sessionTopicActions.selectCurrent(nextProps.socket, nextProps.session_topics, nextProps.currentUser.currentTopic));
     }
   },
   getScreenWidthForAvatar(targetInnerWidth) {
@@ -70,16 +50,24 @@ const ChatView = React.createClass({
       this.props.dispatch({ type: Constants.SCREEN_SIZE_CHANGED, window: { width: this.getScreenWidthForAvatar(e.target.innerWidth), height: e.target.innerHeight } });
     });
     this.props.dispatch({ type: Constants.SCREEN_SIZE_CHANGED, window: { width: this.getScreenWidthForAvatar(window.innerWidth), height: window.innerHeight } });
+    SessionExpire.init();
+  },
+  renderMainContent() {
+    const { type } = this.props;
+    switch(type) {
+      case 'forum': return <Forum/>;
+      case 'focus': return <Focus/>;
+    }
   },
   render() {
-    const { error, sessionReady, sessionTopicReady, brand_logo, role } = this.props;
+    const { error, sessionReady, sessionTopicReady, brand_logo, role, type } = this.props;
 
     if(error) {
       return (<div>{error}</div>)
     }
     else if(sessionReady && sessionTopicReady) {
       return (
-        <div id='chat-app-container' className={ 'role-' + role }>
+        <div id='chat-app-container' className={ 'role-' + role + ' type-' + type }>
           <Loading />
           <ToastContainer ref='notification' className='toast-top-right' toastMessageFactory={ ToastMessageFactory } />
 
@@ -96,36 +84,14 @@ const ChatView = React.createClass({
           </nav>
 
           <div className='row room-outerbox'>
-            <div className='col-md-12 room-section' style={ this.styles() }>
-              <ChangeAvatarModal />
-              <DirectMessageModal />
-              <ReportsModal />
+            <ChangeAvatarModal />
+            <DirectMessageModal />
+            <ReportsModal />
+            <ObserverListModal />
+            <ParticipantListModal />
 
-              <div className='row'>
-                <div className='col-md-8'>
-                  <div className='row top-row'>
-                    <Facilitator />
-                    { this.renderWhiteboard() }
-                  </div>
+            { this.renderMainContent() }
 
-                  <div className='row'>
-                    <Console />
-                  </div>
-
-                  <div className='row'>
-                    <Participants />
-                  </div>
-                </div>
-
-                <div className='col-md-4'>
-                  <Messages/>
-                </div>
-
-                <div className='col-md-12'>
-                  <Input/>
-                </div>
-              </div>
-            </div>
           </div>
           <div className="footer text-center">
             <span>Powered by <a href="//www.klzii.com" target="_blank"> <b>klzii.</b> </a> </span>
@@ -145,7 +111,8 @@ const ChatView = React.createClass({
 
 const mapStateToProps = (state) => {
   return {
-    pinboardActive: state.sessionTopic.console.pinboard,
+    pinboardActive: state.sessionTopicConsole.data.pinboard,
+    currentUser: state.members.currentUser,
     colours: state.chat.session.colours,
     brand_logo: state.chat.session.brand_logo,
     sessionReady: state.chat.ready,
@@ -154,7 +121,8 @@ const mapStateToProps = (state) => {
     sessionTopicReady: state.sessionTopic.ready,
     socket: state.chat.socket,
     notifications: state.notifications,
-    role: state.members.currentUser.role
+    role: state.members.currentUser.role,
+    type: state.chat.session.type
   };
 };
 

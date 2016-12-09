@@ -4,10 +4,14 @@ defmodule KlziiChat.SessionResourcesController do
   alias KlziiChat.{SessionResourcesView, ResourceView}
   alias KlziiChat.Services.{ SessionResourcesService, ResourceService}
   alias KlziiChat.Queries.Resources, as: QueriesResources
+  alias KlziiChat.Helpers.{PagesHelper}
   use Guardian.Phoenix.Controller
 
   plug Guardian.Plug.EnsureAuthenticated, handler: KlziiChat.Guardian.AuthErrorHandler
   plug :if_current_member
+
+  @galery_items_on_page 9
+  @default_page 1
 
   def index(conn, params, member, _) do
     case SessionResourcesService.get_session_resources(member.session_member.id, params) do
@@ -56,7 +60,7 @@ defmodule KlziiChat.SessionResourcesController do
 
   def gallery(conn, params, member, _) do
     {:ok, session_resources} = SessionResourcesService.get_session_resources(member.session_member.id, params)
-    resources =
+    account_resources =
       QueriesResources.base_query(member.account_user)
       |> QueriesResources.find_by_params(params)
       |> QueriesResources.stock_query(%{"stock" => false})
@@ -64,13 +68,22 @@ defmodule KlziiChat.SessionResourcesController do
       |> Repo.all
 
     stock_resources =
-      QueriesResources.base_resource_query
+      QueriesResources.base_query
         |> QueriesResources.find_by_params(params)
         |> QueriesResources.stock_query(%{"stock" => true})
         |> QueriesResources.exclude_by_ids(session_resources)
         |> Repo.all
-        
-    json(conn, Phoenix.View.render_many((stock_resources ++ resources), ResourceView, "resource.json", as: :resource))
+
+    all_resources = (stock_resources ++ account_resources)
+    page = case Integer.parse(params["page"] || "1") do
+      :error ->
+        @default_page
+      {integer, _} ->
+        integer
+    end
+    {data, pages} = PagesHelper.paginate(all_resources, page, @galery_items_on_page)
+
+    json(conn, Phoenix.View.render_one(%{resources: data, pages: pages}, ResourceView, "resources.json", as: :data))
   end
 
   defp if_current_member(conn, opts) do

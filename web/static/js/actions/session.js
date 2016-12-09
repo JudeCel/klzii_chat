@@ -43,7 +43,7 @@ export function joinChannal(dispatch) {
   let whenConnectionCrash = (event) =>{
     dispatch({
       type: Constants.SOCKET_CONNECTION_ERROR,
-      error: "Socket connection error"
+      error: "Connection error, reconnecting"
     });
     dispatch({
       type: Constants.CLOSE_ALL_MODAL_WINDOWS
@@ -95,6 +95,14 @@ const Actions = {
         currentMember(dispatch, resp);
       });
 
+      channel.on("contact_list_map_struct", (resp) => {
+        dispatch({type: 'SET_REPORT_MAP_STRUCT', mapStruct: resp.mapStruct});
+      });
+
+      channel.on("error_message", (resp) =>{
+        NotificationsActions.showErrorNotification(dispatch, resp);
+      });
+
       channel.on("members", (resp) =>{
         members(dispatch, resp);
       });
@@ -103,6 +111,13 @@ const Actions = {
         return dispatch({
           type: Constants.SET_UNREAD_MESSAGES,
           messages
+        });
+      });
+
+      channel.on("update_session_topics", (resp) =>{
+        return dispatch({
+          type: Constants.CHANGE_SESSION_TOPICS,
+          all: resp.session_topics
         });
       });
 

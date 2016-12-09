@@ -2,7 +2,7 @@ defmodule KlziiChat.Services.Permissions.SessionReportingTest do
   use KlziiChat.{ModelCase, SessionMemberCase}
   alias KlziiChat.Services.Permissions.SessionReporting, as: SessionReportingPermissions
 
-  describe "facilitator" do
+  describe "host" do
     test "can create session reports", %{facilitator: facilitator} do
       assert({:ok} = SessionReportingPermissions.can_create_report(facilitator))
     end
@@ -16,7 +16,7 @@ defmodule KlziiChat.Services.Permissions.SessionReportingTest do
     end
   end
 
-  describe "participant" do
+  describe "guest" do
     test "can't create session reports", %{participant: participant} do
       assert({:error, _} = SessionReportingPermissions.can_create_report(participant))
     end
@@ -30,7 +30,7 @@ defmodule KlziiChat.Services.Permissions.SessionReportingTest do
     end
   end
 
-  describe "observer" do
+  describe "spectator" do
     test "can't create session reports", %{observer: observer} do
       assert({:error, _} = SessionReportingPermissions.can_create_report(observer))
     end

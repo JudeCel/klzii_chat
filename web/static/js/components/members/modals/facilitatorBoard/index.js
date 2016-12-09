@@ -16,6 +16,9 @@ const BoardModal = React.createClass({
   },
   onOpen(e) {
     this.onEnterModal(e);
+    if (this.props.boardContent != this.state.content) {
+      this.setContent(this.props.boardContent);
+    }
 
     let preview = document.getElementsByClassName('medium-editor-anchor-preview')[0];
     let toolbar = document.getElementsByClassName('medium-editor-toolbar medium-editor-stalker-toolbar')[0];
@@ -49,7 +52,7 @@ const BoardModal = React.createClass({
             </div>
 
             <div className='col-md-8 modal-title'>
-              <h4>Facilitator Board</h4>
+              <h4>Host Board</h4>
             </div>
 
             <div className='col-md-2'>

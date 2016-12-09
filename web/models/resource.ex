@@ -7,6 +7,8 @@ defmodule KlziiChat.Resource do
   schema "Resources" do
     belongs_to :account_user, KlziiChat.AccountUser, [foreign_key: :accountUserId]
     belongs_to :account, KlziiChat.Account, [foreign_key: :accountId]
+    has_many :session_resources, KlziiChat.SessionResource, [foreign_key: :resourceId]
+    has_many :sessions, KlziiChat.Session, [foreign_key: :resourceId]
     field :image, Image.Type
     field :audio, Audio.Type
     field :file, File.Type
@@ -45,6 +47,14 @@ defmodule KlziiChat.Resource do
     |> validate_length(:name, max: 30, message: "Max length of file name is 30 characters")
     |> unique_constraint(:name, name: :UniqResourceNameByAccount, message: "Resource name has already been taken")
     |> cast_attachments(params, ["file", "image", "audio", "video"])
+  end
+
+  def report_changeset(model, params \\ %{}) do
+    model
+    |> cast(params, [:status, :scope, :type, :accountId, :name])
+    |> validate_required([:status, :scope, :type, :accountId, :name])
+    |> unique_constraint(:name, name: :UniqResourceNameByAccount, message: "Resource name has already been taken")
+    |> cast_attachments(params, ["file"])
   end
 
   defp parse_link(base_changeset) do

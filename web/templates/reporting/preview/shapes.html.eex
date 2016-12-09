@@ -1,0 +1,8 @@
+<div class="whiteboard-frame">
+  <svg class="whiteboard">
+    <g id="whiteboard_<%= @session_topic.id %>"></g>
+  </svg>
+</div>
+<script>
+  drawElements("#whiteboard_<%= @session_topic.id %>", <%= {:safe, Poison.encode!(@shapes)} %>);
+</script>

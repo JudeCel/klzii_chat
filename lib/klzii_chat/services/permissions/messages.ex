@@ -32,14 +32,14 @@ defmodule KlziiChat.Services.Permissions.Messages do
   @spec can_reply(Map.t, Map.t) :: {:ok } | {:error, String.t}
   def can_reply(member, object) do
     roles = ["facilitator", "participant"]
-    (!object.replyId and has_role(member.role, roles))
+    (has_role(member.role, roles) and (!object.replyId or (object.sessionMemberId != member.id and object.replyLevel < 2)))
     |> formate_error
   end
 
-  @spec can_star(Map.t) :: {:ok } | {:error, String.t}
-  def can_star(member) do
+  @spec can_star(Map.t, Map.t) :: {:ok } | {:error, String.t}
+  def can_star(member, object) do
     roles = ["facilitator"]
-    has_role(member.role, roles)
+    (has_role(member.role, roles) && !has_owner(member, object, :sessionMemberId))
     |> formate_error
   end
 end

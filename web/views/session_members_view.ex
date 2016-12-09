@@ -12,10 +12,36 @@ defmodule KlziiChat.SessionMembersView do
     }
   end
 
+  def render("memberfull.json", %{member: member}) do
+    %{id: member.id,
+      username: member.username,
+      colour: member.colour,
+      avatarData: member.avatarData,
+      sessionTopicContext: member.sessionTopicContext,
+      role: member.role,
+      currentTopic: member.currentTopic,
+      firstName: member.account_user.firstName,
+      lastName: member.account_user.lastName
+    }
+  end
+
   def render("status.json", %{ member: member}) do
     %{
       id: member.id,
       role: member.role
+    }
+  end
+
+  def render("report.json", %{ member: member}) do
+    %{
+      id: member.id,
+      username: member.username,
+      colour: member.colour,
+      avatarData: member.avatarData,
+      sessionTopicContext: member.sessionTopicContext,
+      role: member.role,
+      currentTopic: member.currentTopic,
+      account_user_id: member.accountUserId,
     }
   end
 
@@ -28,18 +54,24 @@ defmodule KlziiChat.SessionMembersView do
       session_id: member.sessionId,
       permissions: permissions_map
     }
-    if permissions_map.can_redirect.logout do
-      url = KlziiChat.Router.Helpers.chat_path(KlziiChat.Endpoint, :logout)
-      current_member_info = Map.put(current_member_info, :logout_path, url)
-    end
-    Map.merge(member_map, current_member_info)
+
+
+    logout_path =
+      cond do
+        permissions_map.can_redirect.logout ->
+          KlziiChat.Router.Helpers.chat_path(KlziiChat.Endpoint, :logout)
+        true ->
+          nil
+      end
+
+    Map.merge(member_map, Map.put(current_member_info, :logout_path, logout_path))
   end
 
   def render("group_by_role.json", %{ members: members}) do
     accumulator = %{"facilitator" => %{}, "observer" =>  [], "participant" => []}
 
     Enum.reduce(members, accumulator, fn (member, acc) ->
-      member_map = render("member.json", %{ member: member})
+      member_map = render("memberfull.json", %{ member: member})
       case Map.get(acc, member.role) do
         value when is_map(value) ->
           Map.put(acc, member.role, member_map)

@@ -18,7 +18,7 @@ function dispatchByType(dispatch, resp) {
       dispatch({type: Constants.SET_FILE_RESOURCES, resources: resp.resources });
       break;
     case "gallery":
-      dispatch({type: Constants.SET_GALLERY_RESOURCES, gallery: resp.resources });
+      dispatch({type: Constants.SET_GALLERY_RESOURCES, gallery: resp.resources, pages: resp.pages });
       break;
     default:
   }
@@ -61,6 +61,13 @@ const Actions = {
     }
   },
   index:(jwt, data) => {
+    if (data.type[0] && !data.type[1]) {
+      if (data.type[0] == "video") {
+        data.type.push("link");
+      } else if (data.type[0] == "link") {
+        data.type.push("video");
+      }
+    }
     return dispatch => {
       let csrf_token = localStorage.getItem('csrf_token');
       request
@@ -83,7 +90,7 @@ const Actions = {
       let csrf_token = localStorage.getItem('csrf_token');
       request
         .get('/api/session_resources/gallery')
-        .query({ 'type[]': data.type, 'scope[]': data.scope })
+        .query({ 'type[]': data.type, 'scope[]': data.scope, 'page': data.page  })
         .set('X-CSRF-Token', csrf_token)
         .set('Authorization', jwt)
         .end(function(error, result) {
@@ -91,7 +98,7 @@ const Actions = {
             NotificationActions.showErrorNotification(dispatch, error);
           }
           else {
-            dispatchByType(dispatch, { type: 'gallery', resources: result.body });
+            dispatchByType(dispatch, { type: 'gallery', resources: result.body.resources, pages: result.body.pages });
           }
         });
     }
@@ -99,6 +106,7 @@ const Actions = {
   getConsoleResource:(jwt, resourceId) => {
     return dispatch => {
      let csrf_token = localStorage.getItem('csrf_token');
+     dispatch({ type: Constants.MODAL_POST_DATA });
      request
        .get('/api/resources/' + resourceId)
        .set('X-CSRF-Token', csrf_token)
@@ -108,11 +116,12 @@ const Actions = {
            NotificationActions.showErrorNotification(dispatch, error);
          }
          else {
+           dispatch({ type: Constants.MODAL_POST_DATA_DONE });
           dispatch({ type: Constants.SET_CONSOLE_RESOURCE, data: result.body.resource });
          }
        });
     }
- },
+  },
   youtube:(data, jwt) => {
     return dispatch => {
       let csrf_token = localStorage.getItem('csrf_token');
@@ -124,7 +133,7 @@ const Actions = {
         .end(function(error, result) {
           if(error) {
             NotificationActions.showErrorNotification(dispatch, error);
-          }else {
+          } else {
             dispatch(Actions.index(jwt, { type: [data.type] }));
           }
         });

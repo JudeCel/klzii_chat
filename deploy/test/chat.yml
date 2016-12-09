@@ -30,6 +30,8 @@ spec:
         - name: docker-hub-secret
       containers:
       - env:
+        - name: REDIS_HOST
+          value: "redis-master"
         - name: AWS_ACCESS_KEY_ID
           value: "AKIAJV2UHLF355DYBP6A"
         - name: AWS_SECRET_ACCESS_KEY
@@ -64,6 +66,7 @@ spec:
           - name: postgres-credentials
             mountPath: /etc/postgres-credentials
         image: index.docker.io/klzii/klzii_chat:latest
+        imagePullPolicy: Always
         name: chat
         ports:
         - containerPort: 3000

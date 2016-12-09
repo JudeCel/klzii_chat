@@ -20,7 +20,7 @@ defmodule KlziiChat.ResourcesController do
       |> QueriesResources.stock_query(%{"stock" => false})
       |> Repo.all
     stock_resources =
-      QueriesResources.base_resource_query
+      QueriesResources.base_query
         |> QueriesResources.stock_query(params)
         |> QueriesResources.find_by_params(params)
         |> Repo.all
@@ -33,7 +33,7 @@ defmodule KlziiChat.ResourcesController do
 
   def stock(conn, params) do
     resources =
-      QueriesResources.base_resource_query()
+      QueriesResources.base_query()
       |> QueriesResources.find_by_params(params)
       |> QueriesResources.stock_query(true)
       |> Repo.all
@@ -53,13 +53,22 @@ defmodule KlziiChat.ResourcesController do
     end
   end
 
+  def closed_session_delete_check(conn, %{"ids" => ids}, member, _) do
+    case ResourceService.closed_session_delete_check_by_ids(member.account_user.id, ids) do
+      {:ok, items} ->
+        res = ResourceView.render("delete_check.json", %{used_in_closed_session: items})
+        json(conn, res)
+      {:error, reason} ->
+        put_status(conn, reason.code)
+        |> json(error_view(reason))
+    end
+  end
+
   def delete(conn, %{"ids" => ids}, member, _) do
-    case ResourceService.deleteByIds(member.account_user.id, ids ) do
-      {:ok, resources} ->
-        resp = Enum.map(resources, fn resource ->
-          ResourceView.render("delete.json", %{resource: resource})
-        end)
-        json(conn, %{ids: resp, message: "Success deleted!"})
+    case ResourceService.deleteByIds(member.account_user.id, ids) do
+      {:ok, removed, not_removed_stock, not_removed_used} ->
+        res = ResourceView.render("delete.json", %{removed: removed, not_removed_stock: not_removed_stock, not_removed_used: not_removed_used})
+        json(conn, res)
       {:error, reason} ->
         put_status(conn, reason.code)
         |> json(error_view(reason))

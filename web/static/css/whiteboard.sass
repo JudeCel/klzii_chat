@@ -27,13 +27,19 @@
         @extend #circleShapes
       &.maximized
         padding-bottom: 45px
-        max-width: 100%
+        max-width: 950px
         left: 25%
       &.minimized
         height: 100%
         position: inherit
         .panel-buttons-section, .remove-button
           display: none
+        #pinboard-svg
+          @media (min-width: 768px)
+            height: 21vw
+          @media (min-width: 992px)
+            height: 14vw
+            max-height: 220px
       .whiteboard-title, .whiteboard-expand, .pinboard-title, .pinboard-expand
         position: absolute
         top: 0
@@ -41,12 +47,28 @@
       .whiteboard-expand, .pinboard-expand
         right: 3px
       #pinboard-svg
-        background-image: url('/images/corkboard960x460.png')
+        background-image: url('/images/corkboard.jpg')
         background-size: 100% auto
         image
           position: sticky
     .pinboard-section.maximized
       padding-bottom: 10px
+      @media (min-width: 992px)
+        max-width: 950px
+        left: calc((100vw - 950px) / 2)
+      @media (min-width: 1500px)
+        left: calc((100vw - 950px) / 4)
+    .whiteboard-section.maximized
+      @media (min-width: 768px)
+        @media (max-width: 1020px)
+          max-width: 95vw
+          left: 1vw
+      @media (min-width: 1021px)
+        max-width: 950px
+        left: calc((100vw - 950px) / 2)
+      @media (min-width: 1500px)
+        left: calc((100vw - 950px) / 4)
+
 
 #circleShapes, #scribleShapes, #lineWidthShapes, #eraserShapes
   .btn.btn-default
@@ -59,3 +81,33 @@
       border-color: #bbb
     &:focus
       outline: none
+
+.room-section-left
+  .top-row
+    .whiteboard-section
+      max-width: 100%
+      margin-top: 70px
+    .whiteboard-section.minimized
+      .whiteboard-title
+        top: auto
+        left: 26px
+        margin-top: -10px
+      .whiteboard-expand
+        top: auto
+        right: 20px
+        margin-top: -5px
+    .whiteboard-section.maximized
+      max-width: 950px
+      left: 80%
+      margin-top: 10px
+      .whiteboard-title
+        left: 10px
+      @media (min-width: 768px)
+        @media (max-width: 1020px)
+          max-width: 95vw
+          left: 1vw
+      @media (min-width: 1021px)
+        max-width: 950px
+        left: calc((100vw - 950px) / 2)
+      @media (min-width: 1500px)
+        left: calc((100vw - 950px) / 4)

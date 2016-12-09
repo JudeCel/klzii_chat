@@ -33,7 +33,7 @@ const TextButtonModal = React.createClass({
           </Modal.Header>
 
           <Modal.Body>
-            <input type='text' className='form-control no-border-radius' id='text' placeholder='Text' onChange={ this.handleTextChange } />
+            <input type='text' className='form-control no-border-radius' id='text' placeholder='Text' maxLength='50' onChange={ this.handleTextChange } />
           </Modal.Body>
         </Modal>
       )

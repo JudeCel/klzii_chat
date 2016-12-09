@@ -54,6 +54,11 @@ const Whiteboard = React.createClass({
     this.board.mousedown(Events.boardMouseDown);
     document.addEventListener('mousemove', Events.boardMouseMove);
     document.addEventListener('mouseup', Events.boardMouseUp);
+
+
+    this.board.on('touchstart', Events.boardMouseDown);
+    this.board.on('touchmove', Events.boardMouseMove);
+    this.board.on('touchend', Events.boardMouseUp);
   },
   getInitialState() {
     this.mouseData = { type: 'select', prevType: null, selected: null };

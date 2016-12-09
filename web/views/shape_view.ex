@@ -5,15 +5,32 @@ defmodule KlziiChat.ShapeView do
 
   @spec render(String.t, Map.t) :: Map.t
   def render("show.json", %{shape: shape, member: member}) do
+    shape_map = render("shape.json", %{shape: shape})
+    permissions = %{
+      can_edit: WhiteboardcPermissions.can_edit(member, shape) |> to_boolean,
+      can_delete: WhiteboardcPermissions.can_delete(member, shape) |> to_boolean
+    }
+    Map.put(shape_map, :permissions, permissions)
+  end
+
+  @spec render(String.t, Map.t) :: Map.t
+  def render("shape.json", %{shape: shape}) do
     %{
       id: shape.id,
-      event: shape.event,
+      event: render("event.json", %{shape: shape}),
       time: shape.createdAt,
       uid: shape.uid,
-      permissions: %{
-        can_edit: WhiteboardcPermissions.can_edit(member, shape) |> to_boolean,
-        can_delete: WhiteboardcPermissions.can_delete(member, shape) |> to_boolean
-      }
+      sessionTopicId: shape.sessionTopicId
     }
+  end
+
+  @spec render(String.t, Map.t) :: Map.t
+  def render("report.json", %{shape: shape}) do
+    render("shape.json", %{shape: shape})
+  end
+
+  @spec render(String.t, Map.t) :: Map.t
+  def render("event.json", %{shape: shape}) do
+    shape.event
   end
 end

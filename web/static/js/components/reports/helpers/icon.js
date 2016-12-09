@@ -1,11 +1,11 @@
 import React, {PropTypes} from 'react';
 import { connect }        from 'react-redux';
+import _                  from 'lodash';
 
 const ReportIcon = React.createClass({
   selectCorrectClassName(status, className) {
     const size = ' fa-2x';
     const pointer = ' cursor-pointer';
-
     switch (status) {
       case 'progress':
         return 'fa fa-spinner fa-pulse fa-fw' + size;
@@ -36,32 +36,44 @@ const ReportIcon = React.createClass({
       case 'failed':
         return this.props.changePage('failed', report);
       default:
-        return this.props.createReport(report);
+        if(this.shouldShowCustomFields()) {
+          this.props.changePage('selectCustom', report);
+        }
+        else {
+          return this.props.createReport(report);
+        }
     }
+  },
+  shouldShowCustomFields() {
+    const { type, format, mapStruct } = this.props;
+
+    let structData = mapStruct.types[type.name];
+    return structData.formats[format].custom_fields && structData.formats[format].render;
   },
   getReport() {
-    const { sessionTopicId, format, type, reports } = this.props;
-    const flow = [sessionTopicId, format, type];
+    const { type, format, sessionTopicId, facilitator, reports } = this.props
+    const flow = [sessionTopicId, format, type.typeName];
 
-    let object = reports;
-    for(var i = 0; i < flow.length; i++) {
-      object = object[flow[i]];
-      if(!object) break;
+    const tmpObject = {
+      format: format,
+      type: type.typeName,
+      sessionTopicId: sessionTopicId == "all" ? null : sessionTopicId,
+        includes: { facilitator: facilitator }
     }
+    
+    return _.get(reports, flow, tmpObject);
 
-    return object || {};
   },
   render() {
+    let { type, format } = this.props
     const report = this.getReport();
-    const { type, format, sessionTopicId, facilitator } = this.props;
-
-    if(type == 'whiteboard' && format != 'pdf') {
-      return (false);
+    if(type.typeData.formats[format].render) {
+      return (
+        <i className={ this.selectCorrectFormat(report.status) } onClick={ this.onClick.bind(this, report) } />
+      )
     }
     else {
-      return (
-        <i className={ this.selectCorrectFormat(report.status) } onClick={ this.onClick.bind(this, { ...report, type, format, sessionTopicId, facilitator }) } />
-      )
+      return (false);
     }
   }
 });

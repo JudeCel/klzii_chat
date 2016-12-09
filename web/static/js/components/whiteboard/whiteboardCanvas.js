@@ -233,9 +233,7 @@ const WhiteboardCanvas = React.createClass({
 
     var polygons = document.getElementsByTagName("polygon");
     var polygonsList = Array.prototype.slice.call(polygons);
-    polygonsList.forEach(function(el){
-      self.fixArrowsForIE(el);
-    });
+    self.fixArrowsForIE();
 
     while (keysToDelete.length) {
       let position = shapesKeys.indexOf(keysToDelete[0]);
@@ -278,16 +276,27 @@ const WhiteboardCanvas = React.createClass({
   shapeTransformed(shape) {
     this.activeShape = shape;
   },
-  fixArrowsForIE(el) {
+  fixArrowsForIE() {
     //arrows fix for IE
     if(window.navigator.userAgent.indexOf("MSIE") > 0 || !!window.navigator.userAgent.match(/Trident.*rv\:11\./)){
-      //IE replaces comma with space 
-      if (el.getAttribute && el.getAttribute("points") == "0,10 4,10 2,0 0,10"){
-        el.setAttribute("points", "0,10 4,10 2,5 0,10");
-      }
-      else if (el.attr && el.attr("points") == "0,10 4,10 2,0 0,10"){
-          el.attr("points", "0,10 4,10 2,5 0,10");
-      }
+      let lines = document.querySelectorAll("svg g line");
+      var linesList = Array.prototype.slice.call(lines);
+      linesList.forEach(function(el) {
+        if(el.style.markerStart) {
+          let polygonId = el.style.markerStart.replace('url("', '').replace('")', '');
+          let strokeWidth = parseInt(el.style.strokeWidth);
+          let polygon = document.querySelector(polygonId + " polygon");
+          if (strokeWidth == 2) {
+             polygon.setAttribute("points", "0,10 4,10 2,5 0,10");
+          } else if (strokeWidth == 4) {
+             polygon.setAttribute("points", "0,10 4,10 2,6 0,10");
+             polygon.setAttribute("transform", "matrix(0 -1 1.1 0 -3 7)");
+          } else if (strokeWidth == 6) {
+             polygon.setAttribute("points", "0,10 4,10 2,7 0,10");
+             polygon.setAttribute("transform", "matrix(0 -1 2 0 -5 7)");
+          }
+        }
+      });
     }
   },
   moveDistance(dx, dy) {
@@ -304,15 +313,45 @@ const WhiteboardCanvas = React.createClass({
     }, function(x, y, mEl) {
     } );
   },
+  isMobile() {
+    return screen.width < 768 && screen.height < 768;
+  },
   scaleWhiteboard() {
+    let scale = 1.0;
+    let shouldScale = this.minimized || window.innerWidth <= this.MAX_WIDTH + 50;
     let whiteboard = ReactDOM.findDOMNode(this);
-    let scaleX = this.minimized ? (whiteboard.scrollWidth)/(this.MAX_WIDTH) : 1.0;
-    let scaleY = this.minimized ? (whiteboard.scrollHeight)/(this.MAX_HEIGHT) : 1.0;
-    this.snapGroup.transform(`S${scaleX},${scaleY},0,0`);
+    let isMobile = this.isMobile();
+    let scaleW = (whiteboard.clientWidth - (this.minimized ? 10 : (isMobile ? -10 : 0))) / this.MAX_WIDTH;
+    if (!isMobile) {
+      whiteboard.style.height = (scaleW * this.MAX_HEIGHT - (this.minimized ? 5 : 0) ) + "px";
+    }
+    if (shouldScale) {
+      let scaleH = (whiteboard.clientHeight - (isMobile ? 190 : 0)) / (this.MAX_HEIGHT - 60);
+      scale = Math.min(scaleW, scaleH);
+      if (isMobile) {
+        let svgElement = whiteboard.childNodes[3];
+        if (scale == scaleH) {
+          let width = (this.MAX_WIDTH - 20) * scale;
+          let height = whiteboard.clientHeight - 190;
+          svgElement.style.width = width + "px";
+          svgElement.style.marginLeft = ((whiteboard.clientWidth - width) / 2) + "px";
+          svgElement.style.height = height + "px";
+          svgElement.style.marginBottom = null;
+        } else {
+          let height = (this.MAX_HEIGHT - 60) * scale;
+          svgElement.style.width = null;
+          svgElement.style.marginLeft = null;
+          svgElement.style.height = height + "px";
+          svgElement.style.marginBottom = (whiteboard.clientHeight - 190 - height) + "px";
+        }
+        svgElement.style.marginTop = "60px";
+      }
+    }
+    this.snapGroup.transform(`S${scale},${scale},0,0`);
     this.snapGroup.attr({ pointerEvents: this.minimized ? 'none' : 'all' });
   },
   addText(text) {
-    this.activeShape = this.snap.text(this.MAX_WIDTH/2, this.MAX_HEIGHT/2, text).transform('r0.1');
+    this.activeShape = this.snap.text(this.MAX_WIDTH/2 - text.length * 10, this.MAX_HEIGHT/2, text).transform('r0.1');
     this.setStyle(this.activeShape, this.activeFillColour, this.strokeWidth, this.activeStrokeColour);
     this.activeShape.attr({ 'font-size': '40px', textVal: text });
     this.snapGroup.add(this.activeShape);
@@ -354,7 +393,7 @@ const WhiteboardCanvas = React.createClass({
     return 'Whiteboard_';
   },
   eventCoords(e) {
-    return({x: Number(e.clientX), y: Number(e.clientY)});
+    return this.isTouch(e) ? {x: Number(e.touches[0].pageX), y: Number(e.touches[0].pageY)} : {x: Number(e.clientX), y: Number(e.clientY)};
   },
   sendObjectData(action, mainAction) {
     let message = this.prepareMessage(this.activeShape, action, mainAction)
@@ -394,6 +433,12 @@ const WhiteboardCanvas = React.createClass({
     if (!this.isValidButton(e)) return;
     if (this.minimized) return;
     this.handleObjectCreated();
+    /*if(this.isTouch(e)) {
+      this.activeShape = null;
+    }*/
+  },
+  isTouch(e) {
+    return e.type.includes("touch");
   },
   getArrowShape(colour) {
     var arrow = this.snap.polygon([0,10, 4,10, 2,0, 0,10]).attr({fill: colour}).transform('r270');
@@ -487,7 +532,7 @@ const WhiteboardCanvas = React.createClass({
     }
   },
   isValidButton(e) {
-    return (e && e.button == 0);
+    return (e && e.button == 0 || this.isTouch(e) && !e.button);
   },
   expand() {
     this.minimized = !this.minimized;

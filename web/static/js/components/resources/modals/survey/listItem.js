@@ -29,7 +29,7 @@ const SurveyListItem = React.createClass({
     this.props.onView(this.getValuesFromObject(this.state));
   },
   render() {
-    const { justInput, topicConsole } = this.props;
+    const { justInput, sessionTopicConsole } = this.props;
     const { id, question, title, type } = this.state;
 
     if(justInput) {
@@ -55,7 +55,7 @@ const SurveyListItem = React.createClass({
             </div>
 
             <div className='col-md-6 text-right'>
-              <input id={ 'question' + id } name='active' type='radio' className='with-font' onChange={ this.onChange } defaultChecked={ id == topicConsole.mini_survey_id } />
+              <input id={ 'question' + id } name='active' type='radio' className='with-font' onChange={ this.onChange } defaultChecked={ id == sessionTopicConsole.data.mini_survey_id } />
               <label htmlFor={ 'question' + id }></label>
               <span className='fa fa-times' onClick={ this.onDelete }></span>
             </div>
@@ -68,7 +68,7 @@ const SurveyListItem = React.createClass({
 
 const mapStateToProps = (state) => {
   return {
-    topicConsole: state.sessionTopic.console,
+    sessionTopicConsole: state.sessionTopicConsole,
     channel: state.sessionTopic.channel
   }
 };

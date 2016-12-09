@@ -1,0 +1,36 @@
+$btn-green: #2F9F69
+$btn-blue: #4DC0E9
+$btn-red: #E51D39
+$btn-yellow: #e6df33
+
+.btn-standart
+  display: initial
+  padding: 8px
+  border: 2px solid lightgrey
+  border-radius: 0px
+  cursor: pointer
+  background: white
+  height: 36px
+  line-height: 26px
+  padding-top: 3px
+
+  @mixin buttonColor($color)
+    color: $color
+    border-color: $color !important
+    &.active,
+    &:hover,
+    &:focus
+      color: white
+      background: $color !important
+
+  &.btn-red
+    @include buttonColor($btn-red)
+  &.btn-blue
+    @include buttonColor($btn-blue)
+  &.btn-green
+    @include buttonColor($btn-green)
+  &.btn-yellow
+    @include buttonColor($btn-yellow)
+  &.btn-padding-24
+    padding-left: 24px
+    padding-right: 24px

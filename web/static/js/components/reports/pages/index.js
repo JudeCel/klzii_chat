@@ -5,33 +5,44 @@ import ReportsActions     from '../../../actions/reports';
 
 const ReportsIndex = React.createClass({
   getInitialState() {
-    return { format: 'pdf', facilitator: true };
+    const { reports, report } = this.props
+    return { format: ((report && report.format) || 'pdf'), facilitator: reports.mapStruct.includes.facilitator };
   },
   onChange(key, value) {
     this.setState({ [key]: value });
   },
   createReport(params) {
     const { channel, dispatch } = this.props;
-    const { sessionTopicId, format, type, facilitator } = params;
 
-    dispatch(ReportsActions.create(channel, { sessionTopicId, format, type, facilitator }));
+    dispatch(ReportsActions.create(channel, params ));
   },
   componentDidMount() {
     const { channel, dispatch } = this.props;
     dispatch(ReportsActions.index(channel));
   },
   render() {
-    const { sessionTopics, reports, changePage } = this.props;
+    const { sessionTopics, reports, changePage, mapStruct, session } = this.props;
+    const { types } = reports.mapStruct
     const { format, facilitator } = this.state;
-    const reportFormats = ['pdf', 'csv', 'txt'];
-    const reportTypes = ['all', 'star', 'whiteboard', 'votes'];
-    const colMdSizes = { all: 2, star: 3, whiteboard: 3,  votes: 1 };
 
+    const reportFormatsOrder = ['pdf', 'csv', 'txt'];
+    const reportTypes = [
+      {name: 'messages', typeName: 'messages', typeData: types['messages']},
+      {name: 'messages_stars_only', typeName: 'messages_stars_only', typeData: types['messages_stars_only']},
+      {name: 'whiteboards', typeName: 'whiteboards', typeData: types['whiteboards']},
+      {name: 'votes', typeName: 'votes', typeData: types['votes']},
+    ];
+      let sessionTopicslist = [...sessionTopics];
+      if (mapStruct.multiple_topics[format]) {
+        sessionTopicslist.unshift({name: "All topics", id: "all"}); // Hack
+      }
+
+    const colMdSizes = { all: 2, star: 3, whiteboard: 3,  votes: 1 };
     return (
       <div className='reports-section'>
         <ul className='list-inline'>
           {
-            reportFormats.map((reportFormat, index) =>
+            reportFormatsOrder.map((reportFormat, index) =>
               <li key={ index }>
                 <input id={ 'report-format-' + index }
                   name='active' type='radio' className='with-font'
@@ -47,7 +58,7 @@ const ReportsIndex = React.createClass({
           name='active' type='checkbox' className='with-font'
           onChange={ this.onChange.bind(this, 'facilitator', !facilitator) }
           defaultChecked={ facilitator } />
-        <label htmlFor={ 'report-type-00' }>Include Facilitator Interaction</label>
+        <label htmlFor={ 'report-type-00' }>Include Host Interaction</label>
 
         <table className={ 'table table-hover view-' + format }>
           <thead>
@@ -61,7 +72,7 @@ const ReportsIndex = React.createClass({
           </thead>
           <tbody>
             {
-              sessionTopics.map((topic, tIndex) =>
+              sessionTopicslist.map((topic, tIndex) =>
                 <tr key={ topic.id }>
                   <td className='col-md-3'>{ topic.name }</td>
                   {
@@ -69,7 +80,7 @@ const ReportsIndex = React.createClass({
                       <td className={ 'col-md-' + colMdSizes[type] } key={ fIndex }>
                         <ReportIcon
                           { ...{ format, type, facilitator, sessionTopicId: topic.id } }
-                          { ...{ createReport: this.createReport, changePage: changePage } }
+                          { ...{ createReport: this.createReport, changePage: changePage, mapStruct: mapStruct } }
                         />
                       </td>
                     )
@@ -88,7 +99,8 @@ const mapStateToProps = (state) => {
   return {
     sessionTopics: state.chat.session.session_topics,
     channel: state.chat.channel,
-    reports: state.reports.data
+    session: state.chat.session,
+    reports: state.reports
   }
 };
 

@@ -7,7 +7,7 @@ import Avatar             from '../../avatar';
 import AvatarPreview      from './preview';
 
 const ChangeAvatarModal = React.createClass({
-  mixins: [mixins.modalWindows],
+  mixins: [mixins.modalWindows, mixins.validations],
   getInitialState() {
     return { tabActive: 'hair' };
   },
@@ -23,10 +23,16 @@ const ChangeAvatarModal = React.createClass({
     this.closeAllModals();
   },
   onSave(e) {
+    let payload = {}
     const { dispatch, channel } = this.props;
     const { avatarData, username } = this.state
     this.closeAllModals();
-    dispatch(MemberActions.updateAvatar(channel, { avatarData, username }));
+    payload.avatarData = avatarData;
+
+    if (this.hasPermission(['member', 'can_change_name'])) {
+      payload.username = username
+    }
+    dispatch(MemberActions.updateAvatar(channel, payload));
   },
   onOpen(e) {
     this.setStateBasedOnCurrentUser();
@@ -64,6 +70,16 @@ const ChangeAvatarModal = React.createClass({
   visableTabClass(type) {
     const className = 'row';
     return type == this.state.tabActive ? className : className + ' hidden';
+  },
+  renderUsername(username){
+    if (this.hasPermission(['member', 'can_change_name'])) {
+      return(
+        <div>
+          <label htmlFor='username' className='control-label'>Nickname</label>
+          <input type='text' className='form-control no-border-radius' id='username' placeholder='Username' value={ username } onChange={ this.onNameChange } maxLength={15}/>
+        </div>
+      )
+    }
   },
   render() {
     const show = this.showSpecificModal('avatar');
@@ -125,8 +141,7 @@ const ChangeAvatarModal = React.createClass({
               <div className='row selection-section'>
                 <div className='form-inline div-inline-block'>
                   <div className='form-group'>
-                    <label htmlFor='username' className='control-label'>Username</label>
-                    <input type='text' className='form-control no-border-radius' id='username' placeholder='Username' value={ username } onChange={ this.onNameChange } />
+                    { this.renderUsername(username) }
                   </div>
                 </div>
 
@@ -157,6 +172,7 @@ const mapStateToProps = (state) => {
   return {
     modalWindows: state.modalWindows,
     colours: state.chat.session.colours,
+    session: state.chat.session,
     currentUser: state.members.currentUser,
     channel: state.chat.channel
   }

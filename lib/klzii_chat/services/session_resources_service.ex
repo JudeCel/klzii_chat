@@ -5,7 +5,6 @@ defmodule KlziiChat.Services.SessionResourcesService do
   alias KlziiChat.Helpers.ListHelper
   alias KlziiChat.Queries.Resources, as: QueriesResources
 
-
   import Ecto.Query
 
   def add_session_resources(resource_ids, session_member_id) do
@@ -45,7 +44,6 @@ defmodule KlziiChat.Services.SessionResourcesService do
     end
   end
 
-
   @spec delete_related_consoles(%Resource{}, Integer) :: :ok
   def delete_related_consoles(resource, session_member_id) do
     session_member = Repo.get!(SessionMember, session_member_id)
@@ -81,10 +79,15 @@ defmodule KlziiChat.Services.SessionResourcesService do
     case SessionResourcesPermissions.can_get_resources(session_member) do
       {:ok} ->
         resource_query =
-          QueriesResources.base_resource_query
+          QueriesResources.base_query
           |> QueriesResources.find_by_params(params)
+          resource_ids = Repo.all(from r in resource_query, select: r.id)
           session_resources =
-            from(sr in SessionResource, where: sr.sessionId == ^session_member.sessionId, preload: [resource: ^resource_query])
+            from(sr in SessionResource,
+              where: sr.sessionId == ^session_member.sessionId and
+                sr.resourceId in ^resource_ids,
+                preload: [:resource]
+              )
             |> Repo.all
           {:ok, session_resources}
       {:error, reason} ->

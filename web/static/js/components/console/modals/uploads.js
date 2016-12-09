@@ -14,7 +14,7 @@ const UploadsConsole = React.createClass({
     dispatch(Actions.getConsoleResource(currentUserJwt, this.getConsoleResourceId(modalName)));
   },
   render() {
-    const { modalName, show, consoleResource } = this.props;
+    const { modalName, show, sessionTopicConsole } = this.props;
 
     if(show) {
       return (
@@ -25,13 +25,13 @@ const UploadsConsole = React.createClass({
             </div>
 
             <div className='col-md-8 modal-title'>
-              <h4>{ consoleResource.name }</h4>
+              <h4>{ sessionTopicConsole.consoleResource.name }</h4>
             </div>
           </Modal.Header>
 
           <Modal.Body>
             <div className='row uploads-console-section'>
-              <UploadTypes modalName={ modalName } { ...consoleResource } youtube={ consoleResource.scope == 'youtube' } autoPlay={true} />
+              <UploadTypes modalName={ modalName } { ...sessionTopicConsole.consoleResource } youtube={ sessionTopicConsole.consoleResource.scope == 'youtube' } autoPlay={true} />
             </div>
           </Modal.Body>
         </Modal>
@@ -48,8 +48,7 @@ const mapStateToProps = (state) => {
     modalWindows: state.modalWindows,
     currentUserJwt: state.members.currentUser.jwt,
     colours: state.chat.session.colours,
-    console: state.sessionTopic.console,
-    consoleResource: state.sessionTopic.consoleResource
+    sessionTopicConsole: state.sessionTopicConsole,
   }
 };
 

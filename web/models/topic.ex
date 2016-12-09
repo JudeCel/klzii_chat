@@ -10,6 +10,7 @@ defmodule KlziiChat.Topic do
     has_many :sessions, through: [:session_topics, :sessionId]
     belongs_to :account, KlziiChat.Account, [foreign_key: :accountId]
     field :name, :string
+    field :sign, :string
     field :boardMessage, :string
 
     timestamps [inserted_at: :createdAt, updated_at: :updatedAt]

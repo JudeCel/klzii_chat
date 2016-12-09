@@ -27,6 +27,13 @@ const Console = React.createClass({
     const color = this.props.colours.consoleButtonActive;
     return this.isConsoleActive(type) ? { color: color, borderColor: color, opacity: 1, cursor: permission ? 'pointer' : '' } : {};
   },
+  consoleSectionStyle() {
+    let sectionStyle = 'console-section';
+    if(this.hasPermission(['messages', 'can_new_message']) == false) {
+      sectionStyle += " console-section-no-input";
+    }
+    return sectionStyle;
+  },
   render() {
     const { modalName } = this.state;
     const consoleButtons = [
@@ -39,11 +46,11 @@ const Console = React.createClass({
 
     return (
       <div>
-        <div className='console-section'>
+        <div className={this.consoleSectionStyle()}>
           <ul className='icons'>
             {
               consoleButtons.map((button, index) =>
-                <li key={ index } onClick={ this.openModal.bind(this, button.type, button.permission) } style={ this.consoleButtonStyle(button.type, button.permission) } >
+                <li key={ index } onClick={ this.openModal.bind(this, button.type, button.permission) } style={ this.consoleButtonStyle(button.type, button.permission) } className={'icon-type-' + button.type}>
                   <i className={ button.className } />
                 </li>
               )
@@ -64,7 +71,7 @@ const mapStateToProps = (state) => {
     currentUser: state.members.currentUser,
     colours: state.chat.session.colours,
     modalWindows: state.modalWindows,
-    console: state.sessionTopic.console
+    sessionTopicConsole: state.sessionTopicConsole
   }
 };
 

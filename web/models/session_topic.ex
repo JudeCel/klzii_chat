@@ -16,6 +16,7 @@ defmodule KlziiChat.SessionTopic do
     field :board_message_text, :string, virtual: true
     field :order, :integer
     field :name, :string
+    field :sign, :string
     field :landing, :boolean, default: false
     field :active, :boolean, default: true
     timestamps [inserted_at: :createdAt, updated_at: :updatedAt]
@@ -30,10 +31,8 @@ defmodule KlziiChat.SessionTopic do
   def changeset(model, params \\ %{}) do
     model
     |> cast(params, [:boardMessage] )
-    |> validate_required([:boardMessage])
     |> set_board_message_text
-    |> validate_length(:board_message_text, min: 1, message: "Facilitator Board Message is too shor, min  1 character")
-    |> validate_length(:board_message_text, max: 150, message: "Facilitator Board Message is too long, max 150 characters")
+    |> validate_length(:board_message_text, max: 150, message: "Host Board Message is too long, max 150 characters")
   end
 
 

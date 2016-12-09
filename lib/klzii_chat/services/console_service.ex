@@ -7,7 +7,7 @@ defmodule KlziiChat.Services.ConsoleService do
   def error_messages do
     %{
       pinboard_is_enable: "Sorry, can't add a resource when Pinboard enabled",
-      other_resource_is_enable: "Can't activate resource because other resource is enable: "
+      other_resource_is_enable: "You can only load one media file per Topic"
     }
   end
 
@@ -22,11 +22,11 @@ defmodule KlziiChat.Services.ConsoleService do
     end
   end
 
-  @spec resource_validations(boolean, %Console{}) :: {:ok} | {:error, String.t}
-  def resource_validations(has_permission, console) do
+  @spec resource_validations(boolean, %Console{}, %Resource{}) :: {:ok} | {:error, String.t}
+  def resource_validations(has_permission, console, resource) do
     with {:ok} <- is_pinboard_enable?(console, :resource),
          {:ok} <- has_permission,
-         {:ok} <- has_enable_resource(console),
+         {:ok} <- has_enable_resource(console, resource),
     do:  {:ok}
   end
 
@@ -38,42 +38,54 @@ defmodule KlziiChat.Services.ConsoleService do
   @spec set_resource(Integer, Integer, Integer) :: {:ok, %Console{}} | {:error, String.t}
   def set_resource(member_id, session_topic_id, resource_id) do
     session_member = Repo.get!(SessionMember, member_id)
+    resource = Repo.get!(Resource, resource_id)
+
     {:ok, console} = get(session_member.sessionId, session_topic_id)
 
     ConsolePermissions.can_set_resource(session_member)
-    |> resource_validations(console)
+    |> resource_validations(console, resource)
     |> case do
         {:ok} ->
-          set_id_by_type(resource_id, :resource)
+          set_id_by_type(resource, :resource)
           |> update_console(console)
         {:error, reason} ->
           {:error, reason}
       end
   end
 
-  @spec enable_pinboard(Integer, Integer) :: {:ok, %Console{}} | {:error, String.t}
-  def enable_pinboard(member_id, session_topic_id) do
+  @spec enable_pinboard(Integer, Integer, Boolean) :: {:ok, %Console{}} | {:error, String.t}
+  def enable_pinboard(member_id, session_topic_id, enable) do
     session_member = Repo.get!(SessionMember, member_id)
     case ConsolePermissions.can_enable_pinboard(session_member) do
       {:ok} ->
         {:ok, console} = get(session_member.sessionId, session_topic_id)
-        update_console(pinboard_setings, console)
+        update_console(pinboard_setings(enable), console)
       {:error, reason} ->
         {:error, reason}
     end
   end
 
-  @spec pinboard_setings() :: Map.t
-  defp pinboard_setings do
-    %{audioId: nil, videoId: nil,  fileId: nil, pinboard: true }
-  end
+  @spec pinboard_setings(Boolean.t) :: Map.t
+  defp pinboard_setings(true), do:  %{audioId: nil, videoId: nil,  fileId: nil, pinboard: true }
+  defp pinboard_setings(false), do:  %{pinboard: false }
 
-  @spec has_enable_resource(%Console{}) :: {:ok}
-  def has_enable_resource(%Console{audioId: nil, videoId: nil,  fileId: nil}) do
+  @spec has_enable_resource(%Console{}, %Resource{}) :: {:ok} | {:error, map}
+  def has_enable_resource(%Console{audioId: nil, videoId: nil, fileId: nil }, _) do
     {:ok}
   end
-  def has_enable_resource(%Console{} = console) do
-    {:error, %{system: "#{error_messages.other_resource_is_enable} #{find_enable_resource(console)}" }}
+  def has_enable_resource(console, resource) do
+    field_id = get_field_from_type(resource.type)
+
+    result=
+      ~w(audioId videoId fileId)a
+      |> Enum.reject(fn(x) -> x == field_id end)
+      |> Enum.any?(fn(key) -> Map.get(console, key) |> is_integer end)
+
+      if result do
+        {:error, %{system: error_messages.other_resource_is_enable}}
+      else
+        {:ok}
+      end
   end
 
   def find_enable_resource(%Console{audioId: id}) when is_integer(id), do: "audio"
@@ -97,7 +109,8 @@ defmodule KlziiChat.Services.ConsoleService do
     case ConsolePermissions.can_enable_pinboard(session_member) do
       {:ok} ->
         {:ok, console} = get(session_member.sessionId, session_topic_id)
-        set_id_by_type(mini_survey_id, :mini_survey)
+        mini_survey = Repo.get!(MiniSurvey, mini_survey_id)
+        set_id_by_type(mini_survey, :mini_survey)
         |> update_console(console)
       {:error, reason} ->
         {:error, reason}
@@ -123,15 +136,13 @@ defmodule KlziiChat.Services.ConsoleService do
     |> Repo.update
   end
 
-  @spec set_id_by_type(Integer, Atom) :: Map
-  defp set_id_by_type(mini_survey_id, :mini_survey) when is_integer(mini_survey_id) do
-    mini_survey = Repo.get!(MiniSurvey, mini_survey_id)
+  @spec set_id_by_type(%MiniSurvey{}, Atom) :: Map
+  defp set_id_by_type(mini_survey, :mini_survey) do
     Map.put(%{},get_field_from_type("miniSurvey"), mini_survey.id)
   end
 
-  @spec set_id_by_type(Integer, Atom) :: Map
-  defp set_id_by_type(resource_id, :resource) when is_integer(resource_id) do
-    resource = Repo.get!(Resource, resource_id)
+  @spec set_id_by_type(%Resource{}, Atom) :: Map
+  defp set_id_by_type(resource, :resource) do
     Map.put(%{}, get_field_from_type(resource.type), resource.id)
   end
 

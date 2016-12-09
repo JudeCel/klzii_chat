@@ -34,14 +34,17 @@ const SurveyConsole = React.createClass({
     }
   },
   onShow(e) {
-    const { dispatch, channel, topicConsole } = this.props;
+    const { dispatch, channel, sessionTopicConsole } = this.props;
 
     this.onEnterModal(e);
-    dispatch(MiniSurveyActions.getConsole(channel, topicConsole.mini_survey_id));
+    dispatch(MiniSurveyActions.getConsole(channel, sessionTopicConsole.data.mini_survey_id));
+  },
+  surveyNotAnswered(survey) {
+    return !(this.props.survey && this.props.survey.mini_survey_answer);
   },
   showContent(survey) {
     if(survey.id) {
-      if(this.hasPermission(['console', 'can_vote_mini_survey'])) {
+      if(this.hasPermission(['console', 'can_vote_mini_survey']) && this.surveyNotAnswered()) {
         return <SurveyAnswer type={ survey.type } afterChange={ this.afterChange } />
       }
       else {
@@ -55,7 +58,7 @@ const SurveyConsole = React.createClass({
     dispatch(MiniSurveyActions.viewAnswers(channel, survey.id));
   },
   canAnswer() {
-    if(this.hasPermission(['console', 'can_vote_mini_survey'])) {
+    if(this.hasPermission(['console', 'can_vote_mini_survey']) && this.surveyNotAnswered()) {
       return <span className='pull-right fa fa-check' onClick={ this.answer }></span>
     }
   },
@@ -100,7 +103,7 @@ const mapStateToProps = (state) => {
     colours: state.chat.session.colours,
     survey: state.miniSurveys.console,
     channel: state.sessionTopic.channel,
-    topicConsole: state.sessionTopic.console
+    sessionTopicConsole: state.sessionTopicConsole
   }
 };
 

@@ -3,6 +3,7 @@ import { connect }        from 'react-redux';
 import mixins             from '../../mixins';
 import Badge              from '../sessionTopics/badge';
 import Avatar             from '../members/avatar.js';
+import Constants          from '../../constants';
 
 const MobileHeader = React.createClass({
   mixins: [mixins.modalWindows, mixins.validations, mixins.headerActions],
@@ -25,7 +26,7 @@ const MobileHeader = React.createClass({
   },
   getMenuItemStyle(object, action) {
     let canShow = this.hasPermission([object, action]);
-    return { 
+    return {
       display: (canShow ? "block" : "none")
     };
   },
@@ -36,16 +37,18 @@ const MobileHeader = React.createClass({
     this.setState({mobileSideMenuTopicsVisibility: !this.state.mobileSideMenuTopicsVisibility});
   },
   getMobileSideMenuStyle() {
-    return { 
+    return {
       display: (this.state.mobileSideMenuVisibility ? "block" : "none")
     };
   },
   getMobileSideMenuTopicsStyle() {
-    return { 
+    return {
       display: (this.state.mobileSideMenuTopicsVisibility ? "block" : "none")
     };
   },
   changeSessionTopic(id) {
+    const { dispatch } = this.props;
+    dispatch({ type: Constants.SET_INPUT_REPLY, replyId: null });
     this.setSessionTopic(id);
     this.toggleMenu();
   },
@@ -60,13 +63,17 @@ const MobileHeader = React.createClass({
     );
   },
   changeAvatar() {
+    const { currentUser } = this.props;
     this.toggleMenu();
-    this.openSpecificModal('avatar');
+    if (currentUser.role != "observer") {
+      this.openSpecificModal('avatar');
+    }
   },
   render() {
-    const { sessionTopics, unread_messages, currentUser, brand_logo } = this.props;
+    const { sessionTopics, unread_messages, currentUser, brand_logo, colours, session } = this.props;
 
     if (currentUser && currentUser.avatarData) {
+
       return (
         <div className='header-innerbox header-innerbox-mobile'>
           <div className='navbar-header'>
@@ -76,21 +83,23 @@ const MobileHeader = React.createClass({
               <span className='icon-bar'></span>
             </button>
             <span className='navbar-brand'><img src={brand_logo.url.full}/></span>
-            <span className='navbar-whiteboard' onClick={this.whiteboardIconClick}><img src='/images/whiteboard-icon.png'/></span>
+            <span className='navbar-whiteboard' onClick={this.whiteboardIconClick} style={{ backgroundColor: colours.headerButton }}>
+              <img src='/images/whiteboard-icon.png'/>
+            </span>
           </div>
           <div className='mobile-side-menu' style={ this.getMobileSideMenuStyle() }>
             <div className='mobile-side-menu-bg'></div>
             <div className='mobile-side-menu-content'>
               <ul>
-                <li className='navbar-title'>Talk Radio</li>
-                <li className='navbar-avatar'>
+                <li className='navbar-title'>{ session.name }</li>
+                <li className={ "navbar-avatar " + currentUser.role } >
                   <span onClick={this.changeAvatar}>
-                    <Avatar member={ currentUser } specificId={ 'mobile-menu-avatar' } />
+                    <Avatar member={ { id: currentUser.id, username: currentUser.username, colour: currentUser.colour, avatarData: currentUser.avatarData, online: true, edit: false } } specificId={ 'mobile-menu-avatar' } />
                   </span>
                   <div>Click on Avatar to Customize Your Biizu</div>
                 </li>
                 <li onClick={this.toggleTopics}>
-                    <span className='fa fa-coffee'></span>Morning Story
+                    <span className='fa fa-coffee'></span>Topic Menu
                     <span className='fa fa-angle-right'></span>
                     <Badge type='normal' data={ unread_messages.summary } />
                     <Badge type='reply' data={ unread_messages.summary } />
@@ -106,7 +115,7 @@ const MobileHeader = React.createClass({
                 </li>
               </ul>
               <div className='powered-by'>
-                Powered by <a href='http://www.klzii.com' target='_blank'>klsii</a>
+                Powered by <a href='http://www.klzii.com' target='_blank'>klzii</a>
               </div>
             </div>
             <div className='mobile-side-menu-topics' style={ this.getMobileSideMenuTopicsStyle() }>
@@ -151,7 +160,8 @@ const mapStateToProps = (state) => {
     unreadDirectMessages: state.directMessages.unreadCount,
     firstParticipant: state.members.participants[0],
     facilitator: state.members.facilitator,
-    sessionConsole: state.sessionTopic.console
+    sessionConsole: state.sessionTopicConsole.data,
+    colours: state.chat.session.colours
   };
 };
 export default connect(mapStateToProps)(MobileHeader);

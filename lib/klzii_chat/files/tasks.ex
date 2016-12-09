@@ -70,7 +70,7 @@ defmodule KlziiChat.Files.Tasks do
     else
       try do
         Enum.map(list, fn {name, url} ->
-          resp = HTTPotion.get(url)
+          resp = HTTPoison.get(url)
           File.write(current_dir <> name, resp.body)
         end)
         {:ok}

@@ -1,13 +1,21 @@
 defmodule KlziiChat.Queries.Sessions do
-  alias KlziiChat.{Session, SessionTopic, SubscriptionPreference, Account}
+  alias KlziiChat.{Session, SubscriptionPreference, Account}
   import Ecto.Query, only: [from: 2]
 
   @spec find(Integer) :: Ecto.Query.t
   def find(session_id) do
-    session_topic_query = from(st in SessionTopic, where: st.active == true, order_by: [ asc: st.order])
+    session_topic_query = KlziiChat.Queries.SessionTopic.all(session_id)
     from(s in Session,
       where: s.id == ^session_id,
       preload: [:brand_logo, :brand_project_preference, session_topics: ^session_topic_query]
+    )
+  end
+
+  @spec find_for_report(Integer) :: Ecto.Query.t
+  def find_for_report(session_id) do
+    from(s in Session,  where: s.id == ^session_id,
+    preload: [ :account, :brand_logo, :brand_project_preference,
+      [ participant_list: [ contact_list_users: [:account_user] ]] ]
     )
   end
 
