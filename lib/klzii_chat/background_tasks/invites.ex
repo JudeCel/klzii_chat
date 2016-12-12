@@ -11,7 +11,7 @@ defmodule KlziiChat.BackgroundTasks.Invites do
     Endpoint.broadcast!("sessionsBuilder:#{session_id}", "inviteDelete", %{id: invite_id})
     {:ok}
   end
-  def notify_listeners(invite_id, _) do
+  def notify_listeners(invite_id, _, _) do
     Repo.get(Invite, invite_id)
     |> case  do
         nil ->
