@@ -1,9 +1,9 @@
-defmodule KlziiChat.UserDashboardSocket do
+defmodule KlziiChat.Dashboard.UserSocket do
   use Phoenix.Socket
   import Guardian.Phoenix.Socket
 
   ## Channels
-  channel "sessionsBuilder:*", KlziiChat.SessionsBuilderChannel
+  channel "sessionsBuilder:*", KlziiChat.Dashboard.SessionsBuilderChannel
 
   ## Transports
   transport :websocket, Phoenix.Transports.WebSocket
