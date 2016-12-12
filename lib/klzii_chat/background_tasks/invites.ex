@@ -20,7 +20,7 @@ defmodule KlziiChat.BackgroundTasks.Invites do
           # Handle only session invites.
           {:error, "unsuported Invite"}
         invite ->
-          data = %{id: invite.id, emailStatus: invite.emailStatus, status: invite.status}
+          data = %{role: invite.role, id: invite.id, emailStatus: invite.emailStatus, status: invite.status}
           Endpoint.broadcast!("sessionsBuilder:#{invite.sessionId}", "inviteUpdate", data)
           {:ok}
       end
