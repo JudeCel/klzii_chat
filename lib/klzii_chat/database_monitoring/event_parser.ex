@@ -50,10 +50,10 @@ defmodule KlziiChat.DatabaseMonitoring.EventParser do
   @spec select_job(Map.t) :: {:ok, String.t} | {:error, String.t}
   def select_job(job_params) do
     case job_params do
-      %{"table" =>  "SessionTopics", "data" =>  %{"sessionId" => session_id}} ->
+      %{"table" =>  "SessionTopics", "data" =>  %{"sessionId" => session_id}, "type" => _} ->
         {:ok, :session_topics, [session_id]}
-      %{"table" =>  "Invites", "data" =>  %{"id" =>  id }} ->
-        {:ok, :invites, [id]}
+      %{"table" =>  "Invites", "data" =>  %{"id" =>  id, "sessionId" => sessionId}, "type" => type} ->
+        {:ok, :invites, [id, sessionId, type]}
       _ ->
         {:error, messages.errors.unhandle_event}
     end

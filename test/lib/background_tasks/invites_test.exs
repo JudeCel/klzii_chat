@@ -22,12 +22,15 @@ defmodule KlziiChat.BackgroundTasks.InvitesTest do
   end
 
   describe "notify_listeners" do
-    test "brodcast to channel", %{invite: invite} do
-      assert({:ok} == Invites.notify_listeners(invite.id))
+    test "brodcast to channel update", %{invite: invite, session: session} do
+      assert({:ok} == Invites.notify_listeners(invite.id, session.id))
+    end
+    test "brodcast to channel delete", %{invite: invite, session: session} do
+      assert({:ok} == Invites.notify_listeners(invite.id, session.id, "DELETE"))
     end
 
-    test "return error if not found ", %{invite: invite} do
-      assert({:error, _} = Invites.notify_listeners(invite.id + 99))
+    test "return error if not found ", %{invite: invite, session: session} do
+      assert({:error, _} = Invites.notify_listeners(invite.id + 99, session.id))
     end
   end
 end

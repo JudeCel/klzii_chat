@@ -16,15 +16,17 @@ defmodule KlziiChat.DatabaseMonitoring.EventParserTest do
       assert(%{"data" => %{"id" => @id}} = EventParser.decode_message("table_update", @payloade))
     end
 
-    test "when event select_job  for SessionTopics" do
-      map = %{"table" =>  "SessionTopics", "data" =>  %{"id" => @id, "sessionId" => @session_id }}
+    test "when event select_job for SessionTopics" do
+      map = %{"table" =>  "SessionTopics", "data" =>  %{"id" => @id, "sessionId" => @session_id }, "type" => "DELETE"}
       assert({:ok, :session_topics, [@session_id]} = EventParser.select_job(map))
     end
 
     test "when event select_job  for Invites" do
       invite_id = 2
-      map = %{"table" =>  "Invites", "data" =>  %{"id" => invite_id}}
-      assert({:ok, :invites, [^invite_id]} = EventParser.select_job(map))
+      session_id = 4
+      type =  "INSERT"
+      map = %{"table" =>  "Invites", "data" =>  %{"id" => invite_id, "sessionId" => session_id}, "type" => type}
+      assert({:ok, :invites, [^invite_id, ^session_id, ^type]} = EventParser.select_job(map))
     end
 
     test "when unhandle event select_job" do
