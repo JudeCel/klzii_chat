@@ -61,7 +61,8 @@ defmodule KlziiChat.Resource do
   defp parse_link(base_changeset) do
     case base_changeset do
       %Ecto.Changeset{valid?: true, changes: %{link: link}} when is_bitstring(link) ->
-        put_change(base_changeset, :link, UrlHelpers.youtube_id(link))
+        put_change(base_changeset, :link, UrlHelpers.video_service_id(link))
+        |> put_change(:source, UrlHelpers.video_service_source(link))
       _ ->
         base_changeset
     end
