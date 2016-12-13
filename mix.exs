@@ -42,7 +42,7 @@ defmodule KlziiChat.Mixfile do
      {:exq_ui, "~> 0.8"},
      {:plug_basic_auth, "~> 1.1"},
      {:timex, "~> 3.0"},
-     {:quantum, "~> 1.7"},
+     {:quantum, "~> 1.8"},
      {:poison, "~> 2.2"},
      {:arc_ecto, "~> 0.4"},
      {:arc, "~> 0.5.3"},

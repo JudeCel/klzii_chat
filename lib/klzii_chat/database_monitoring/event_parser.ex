@@ -1,5 +1,5 @@
 defmodule KlziiChat.DatabaseMonitoring.EventParser do
-  alias KlziiChat.BackgroundTasks.{SessionTopic}
+  alias KlziiChat.BackgroundTasks.{SessionTopic, Invites}
 
   @spec messages() :: Map.t
   def messages do
@@ -10,21 +10,25 @@ defmodule KlziiChat.DatabaseMonitoring.EventParser do
     }
   end
 
-  @spec session_topics(Integer.t) :: {:ok, String.t} | {:error, String.t}
-  def session_topics(session_id) do
+  @spec save_event(Tuple.t) :: {:ok, String.t} | {:error, String.t}
+  def save_event({:ok, queue, module, arrgs}) do
     case Mix.env do
       :test ->
         {:ok, "Running in Test ENV"}
       _ ->
         spawn_link(fn ->
-          Exq.enqueue(Exq, "notify", SessionTopic, [session_id])
+          Exq.enqueue(Exq, queue, module, arrgs)
         end)
     end
+  end
+  def save_event({:error, message}) do
+    {:error, message}
   end
 
   def processe_event(channel, payload) do
     decode_message(channel, payload)
     |> select_job
+    |> build_enqueue
     |> save_event
   end
 
@@ -33,19 +37,23 @@ defmodule KlziiChat.DatabaseMonitoring.EventParser do
     Poison.decode!(payload)
   end
 
-  def save_event({:ok, module, fun, arrgs}) do
-    apply(module, fun, arrgs)
+  def build_enqueue({:ok, :session_topics, arrgs}) do
+    {:ok, "notify", SessionTopic, arrgs}
   end
-
-  def save_event({:error, message}) do
+  def build_enqueue({:ok, :invites, arrgs}) do
+    {:ok, "notify", Invites, arrgs}
+  end
+  def build_enqueue({:error, message}) do
     {:error, message}
   end
 
   @spec select_job(Map.t) :: {:ok, String.t} | {:error, String.t}
   def select_job(job_params) do
     case job_params do
-      %{"table" =>  "SessionTopics", "id" =>  _, "session_id" => session_id} ->
-        {:ok, __MODULE__, :session_topics, [session_id]}
+      %{"table" =>  "SessionTopics", "data" =>  %{"sessionId" => session_id}, "type" => _} ->
+        {:ok, :session_topics, [session_id]}
+      %{"table" =>  "Invites", "data" =>  %{"id" =>  id, "sessionId" => sessionId}, "type" => type} ->
+        {:ok, :invites, [id, sessionId, type]}
       _ ->
         {:error, messages.errors.unhandle_event}
     end
