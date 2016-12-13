@@ -32,7 +32,7 @@ defmodule KlziiChat.Dashboard.SessionsBuilderChannel do
         _ -> can_accses?(socket.assigns.account_user)
        end
   end
-  def can_accses?(%{role: role }) when role in ["accountManager", "facilitator"], do: true
+  def can_accses?(%{role: role }) when role in ["accountManager", "facilitator", "admin"], do: true
   def can_accses?(_), do: false
 
 end
