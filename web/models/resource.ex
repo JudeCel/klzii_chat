@@ -17,6 +17,7 @@ defmodule KlziiChat.Resource do
     field :type, :string
     field :scope, :string
     field :name, :string
+    field :source, :string
     field :status, :string, default: "completed"
     field :properties, :map, default: %{}
     field :stock, :boolean, default: false
