@@ -4,7 +4,7 @@ defmodule KlziiChat.DatabaseMonitoring.ListenerTest do
 
   @id 3
   @session_id 3
-  @payloade "{\"table\" : \"SessionTopics\", \"id\" : #{@id}, \"session_id\" : #{@session_id}, \"type\" : \"UPDATE\"}"
+  @payloade "{\"table\" : \"SessionTopics\", \"data\" : {\"id\": #{@id}, \"name\": \"Cool Session Topic1\", \"sessionId\":  #{@session_id} }, \"type\" : \"DELETE\"}"
 
   describe "succses"  do
     test "processe_event" do
