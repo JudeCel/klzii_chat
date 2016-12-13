@@ -25,12 +25,12 @@ const Uploads = React.createClass({
     if(url) {
       let data = {
         type: 'link',
-        scope: 'youtube',
+        scope: 'videoService',
         name: name,
         file: url
       };
 
-      dispatch(Actions.youtube(data, currentUserJwt));
+      dispatch(Actions.videoService(data, currentUserJwt));
     }
     else if(files) {
       let data = {

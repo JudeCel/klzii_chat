@@ -1,13 +1,13 @@
 import React, {PropTypes} from 'react';
-import Youtube            from './youtube';
+import VideoService            from './videoService';
 
 const UploadTypeVideo = React.createClass({
   render() {
-    const { url, youtube, autoPlay } = this.props;
+    const { url, videoService, autoPlay, source } = this.props;
 
-    if(youtube) {
+    if(videoService) {
       return (
-        <Youtube url={ url.full } autoPlay={autoPlay} />
+        <VideoService url={ url.full } autoPlay={autoPlay} source={ source } />
       )
     }
     else {
