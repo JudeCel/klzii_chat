@@ -24,5 +24,5 @@ defmodule KlziiChat.BackgroundTasks.Invites do
           Endpoint.broadcast!("sessionsBuilder:#{invite.sessionId}", "inviteUpdate", data)
           {:ok}
       end
-  end\
+  end
 end
