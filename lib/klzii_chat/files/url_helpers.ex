@@ -14,10 +14,20 @@ defmodule KlziiChat.Files.UrlHelpers do
     base_url <> "/"<> Path.relative_to(path, "priv/static")
   end
 
-  @spec youtube_id(String) :: {:ok} | {:error, String.t}
-  def youtube_id(url) do
+  @spec video_service_id(String) :: {:ok} | {:error, String.t}
+  def video_service_id(url) do
     ~r{^.*(?:youtu\.be/|\w+/|v=)(?<id>[^#&?]*)}
     |> Regex.named_captures(url)
     |> get_in(["id"])
   end
+
+  @spec video_service_source(String) :: String.t
+  def video_service_source(url) do
+    if String.contains?(url, "vimeo.com") do
+      "vimeo"
+    else
+      "youtube"
+    end
+  end
+
 end

@@ -39,10 +39,10 @@ defmodule KlziiChat.Services.ResourceService do
     }
 
     with {:ok} <- ResourceValidations.validate(file, params),
-        {:ok, resource} <- find(account_user.id, id),
-        {:ok, updated_resource} <- update_recource(Resource.changeset(resource, params)),
-        {:ok, result} <- replace_resource_file(updated_resource, file),
-      do: {:ok, result}
+      {:ok, resource} <- find(account_user.id, id),
+      {:ok, updated_resource} <- update_recource(Resource.changeset(resource, params)),
+      {:ok, result} <- replace_resource_file(updated_resource, file),
+    do: {:ok, result}
   end
 
   def save_resource(%{"stock" => stock, "type" => type, "scope" => scope, "file" => file, "name" => name}, account_user) do
@@ -57,9 +57,9 @@ defmodule KlziiChat.Services.ResourceService do
     }
 
     with {:ok} <- ResourceValidations.validate(file, params),
-        {:ok, resource} <- insert_recource(Resource.changeset(%Resource{}, params)),
-        {:ok, result} <- add_file(resource, file),
-      do: {:ok, result}
+      {:ok, resource} <- insert_recource(Resource.changeset(%Resource{}, params)),
+      {:ok, result} <- add_file(resource, file),
+    do: {:ok, result}
   end
 
   @spec insert_recource(%Resource{}) :: {:ok, %Resource{}} | {:error, map}

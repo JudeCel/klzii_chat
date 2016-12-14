@@ -6,7 +6,7 @@ import UploadTypePdf      from './pdf';
 
 const UploadTypeIndex = React.createClass({
   render() {
-    const { modalName, url, youtube, autoPlay } = this.props;
+    const { modalName, url, videoService, autoPlay, source } = this.props;
 
     if(!url) {
       return (<div>Not found</div>)
@@ -16,7 +16,7 @@ const UploadTypeIndex = React.createClass({
       return (<UploadTypeImage url={ url } />)
     }
     else if(modalName == 'video') {
-      return (<UploadTypeVideo url={ url } youtube={ youtube } autoPlay={autoPlay} />)
+      return (<UploadTypeVideo url={ url } videoService={ videoService } autoPlay={autoPlay} source={ source }/>)
     }
     else if(modalName == 'audio') {
       return (<UploadTypeAudio url={ url } />)

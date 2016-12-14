@@ -14,6 +14,7 @@ defmodule KlziiChat.ResourceView do
       extension: extension(resource),
       scope: resource.scope,
       stock: resource.stock,
+      source: resource.source,
       static: false
     }
   end

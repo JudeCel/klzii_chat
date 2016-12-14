@@ -46,12 +46,13 @@ const UploadListItem = React.createClass({
   },
   render() {
     const { justInput, modalName, resource } = this.props;
-    const { sessionResourceId, id, active, name, type, url, scope } = this.state;
+    const { sessionResourceId, id, active, name, type, url, scope, source } = this.state;
 
     let resourceName = name || !resource ? name : resource.name;
     let resourceUrl = url || !resource ? url : resource.url;
     let resourceScope = scope || !resource ? scope : resource.scope;
     let resourceId = id || !resource ? id : resource.id;
+    let resourceSource = source || !resource ? source : resource.source;
 
     if(justInput && modalName != 'image') {
       return (
@@ -72,7 +73,7 @@ const UploadListItem = React.createClass({
             <div className='col-md-6' onClick={ this.onSelect.bind(this, resourceUrl) }>
               { resourceName }
               <br />
-              <UploadTypes modalName={ modalName } url={ resourceUrl } youtube={ resourceScope == 'youtube' }/>
+              <UploadTypes modalName={ modalName } url={ resourceUrl } videoService={ resourceScope == 'videoService' } source={ source }/>
             </div>
 
             <div className='col-md-6 text-right'>

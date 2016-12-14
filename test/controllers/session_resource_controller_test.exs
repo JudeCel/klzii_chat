@@ -28,7 +28,14 @@ defmodule KlziiChat.SessionResourcesControllerTest do
 
     test "upload youtube link", %{conn: conn} do
       file = "http://youtu.be/0zM3nApSvMg"
-      %{"status" => status} = post(conn, session_resources_path(conn, :upload, private: false, name: "youtubeLink", type: "link", scope: "youtube", file: file))
+      %{"status" => status} = post(conn, session_resources_path(conn, :upload, private: false, name: "youtubeLink", type: "link", scope: "videoService", file: file))
+      |> json_response(200)
+      assert(status == "ok")
+    end
+
+    test "upload vimeo link", %{conn: conn} do
+      file = "https://vimeo.com/193358188"
+      %{"status" => status} = post(conn, session_resources_path(conn, :upload, private: false, name: "vimeoLink", type: "link", scope: "videoService", file: file))
       |> json_response(200)
       assert(status == "ok")
     end
