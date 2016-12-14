@@ -1,5 +1,5 @@
 import React, {PropTypes} from 'react';
-import VideoService            from './videoService';
+import VideoService       from './videoService/index';
 
 const UploadTypeVideo = React.createClass({
   render() {
