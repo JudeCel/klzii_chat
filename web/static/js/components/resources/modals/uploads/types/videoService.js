@@ -28,11 +28,9 @@ const UploadTypeVideoService = React.createClass({
           <img className='img-responsive youtube-preview cursor-pointer' src={ `${window.location.protocol}//img.youtube.com/vi/${ url }/hqdefault.jpg` } onClick={ this.loadIframe } />
         )
       } else if (source == "vimeo") {
-        //todo:
-        /*return (
-          <img className='img-responsive youtube-preview cursor-pointer' src={ `${window.location.protocol}//img.youtube.com/vi/${ url }/hqdefault.jpg` } onClick={ this.loadIframe } />
-        )*/
-        return (<span>vimeo</span>);
+        return (
+          <iframe type='text/html' src={ `${window.location.protocol}//player.vimeo.com/video/` + url } frameBorder='0' />
+        )
       } else {
         return;
       }
