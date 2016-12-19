@@ -58,7 +58,7 @@ defmodule KlziiChat.Services.Validations.Resource do
   def validate_file_type(file, %{type: type}) when is_bitstring(file) and type in ["link"] do
     cond do
       type in ["link"] ->
-        youtube_url_validator(file)
+        video_service_url_validator(file)
       true ->
         {:error, %{code: 415, type: "Accept only links"}}
     end
@@ -75,13 +75,13 @@ defmodule KlziiChat.Services.Validations.Resource do
     {:error, %{code: 415, type: "File not valid"}}
   end
 
-  @spec youtube_url_validator(String) :: {:ok} | {:error, String.t}
-  def youtube_url_validator(url) do
-    valid_paterns = ~r{(youtu.be/|youtube.com/embed|youtube.com/watch|youtube.com/v/|youtube.com)}
+  @spec video_service_url_validator(String) :: {:ok} | {:error, String.t}
+  def video_service_url_validator(url) do
+    valid_paterns = ~r{(youtu.be/|youtube.com/embed|youtube.com/watch|youtube.com/v/|youtube.com|player.vimeo.com/video/|vimeo.com/)}
     if String.match?(url, valid_paterns) do
       {:ok}
     else
-      {:error, %{code: 415, type: "Youtube url not valid"}}
+      {:error, %{code: 415, type: "Youtube or Vimeo url not valid"}}
     end
   end
 end

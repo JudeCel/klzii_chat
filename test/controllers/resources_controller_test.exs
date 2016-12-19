@@ -75,11 +75,22 @@ defmodule KlziiChat.ResourcesControllerTest do
 
     test "upload youtube link", %{conn: conn} do
       file = "http://youtu.be/0zM3nApSvMg"
-      conn = post conn, resources_path(conn, :upload, name: "youtubeLink", type: "link", scope: "youtube", file: file)
+      conn = post conn, resources_path(conn, :upload, name: "youtubeLink", type: "link", scope: "videoService", file: file)
       assert json_response(conn, 200)["resource"] |> Map.get("name") == "youtubeLink"
-      assert json_response(conn, 200)["resource"] |> Map.get("scope") == "youtube"
+      assert json_response(conn, 200)["resource"] |> Map.get("scope") == "videoService"
       assert json_response(conn, 200)["resource"] |> Map.get("type") == "link"
+      assert json_response(conn, 200)["resource"] |> Map.get("source") == "youtube"
       assert json_response(conn, 200)["resource"] |> Map.get("url") |> Map.get("full") == "0zM3nApSvMg"
+    end
+
+    test "upload vimeo link", %{conn: conn} do
+      file = "https://vimeo.com/193358188"
+      conn = post conn, resources_path(conn, :upload, name: "vimeoLink", type: "link", scope: "videoService", file: file)
+      assert json_response(conn, 200)["resource"] |> Map.get("name") == "vimeoLink"
+      assert json_response(conn, 200)["resource"] |> Map.get("scope") == "videoService"
+      assert json_response(conn, 200)["resource"] |> Map.get("type") == "link"
+      assert json_response(conn, 200)["resource"] |> Map.get("source") == "vimeo"
+      assert json_response(conn, 200)["resource"] |> Map.get("url") |> Map.get("full") == "193358188"
     end
 
     test "upload image", %{conn: conn} do

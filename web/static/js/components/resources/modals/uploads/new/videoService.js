@@ -34,7 +34,7 @@ const UploadNew = React.createClass({
           </div>
 
           <div className='col-md-10'>
-            <input type='text' className='form-control no-border-radius' id='url' placeholder='Youtube URL' onChange={ this.onDataChange } />
+            <input type='text' className='form-control no-border-radius' id='url' placeholder='Youtube or Vimeo URL' onChange={ this.onDataChange } />
           </div>
         </div>
       </div>

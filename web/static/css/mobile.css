@@ -707,10 +707,6 @@
     border: 0px !important;
   }
 
-  .customize-avatar-section .preview-section .svg-avatar{
-    margin-top: -10px;
-  }
-
   .customize-avatar-section .preview-section svg text, .customize-avatar-section .preview-section svg rect {
     display: none;
   }
@@ -778,7 +774,7 @@
     width: 90vw;
     text-align: center;
     white-space: nowrap;
-    top: calc(-100vh + 315px);
+    top: calc(-100vh + 320px);
     margin-left: 5vw;
   }
 

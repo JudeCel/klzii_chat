@@ -14,8 +14,8 @@ defmodule KlziiChat.MessageTest do
   end
 
   test "with invalid attrs" do
-    assert {:body, {"can't be blank", []}} in errors_on(%Message{}, %{})
-    assert {:sessionTopicId, {"can't be blank", []}} in errors_on(%Message{}, %{})
-    assert {:sessionMemberId, {"can't be blank", []}} in errors_on(%Message{}, %{})
+    assert {:body, {"can't be blank", [validation: :required]}} in errors_on(%Message{}, %{})
+    assert {:sessionTopicId, {"can't be blank", [validation: :required]}} in errors_on(%Message{}, %{})
+    assert {:sessionMemberId, {"can't be blank", [validation: :required]}} in errors_on(%Message{}, %{})
   end
 end

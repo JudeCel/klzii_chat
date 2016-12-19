@@ -42,7 +42,7 @@ const GalleryNew = React.createClass({
 
     if(modalName == 'video') {
       data.type = ['video', 'link'];
-      data.scope = ['collage', 'youtube'];
+      data.scope = ['collage', 'videoService'];
     }
     else if(modalName == 'file') {
       data.type = [modalName];
@@ -87,7 +87,7 @@ const GalleryNew = React.createClass({
                     </div>
 
                     <div className='row'>
-                      <UploadTypes modalName={ modalName } url={ resource.url } youtube={ resource.scope == 'youtube' } />
+                      <UploadTypes modalName={ modalName } url={ resource.url } videoService={ resource.scope == 'videoService' } source={ resource.source } />
                     </div>
                   </div>
                 )

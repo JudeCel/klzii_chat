@@ -122,7 +122,7 @@ const Actions = {
        });
     }
   },
-  youtube:(data, jwt) => {
+  videoService:(data, jwt) => {
     return dispatch => {
       let csrf_token = localStorage.getItem('csrf_token');
       request

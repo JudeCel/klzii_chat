@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
 import NewUpload          from './new/upload';
-import NewYoutube         from './new/youtube';
+import NewVideoService        from './new/videoService';
 import NewGallery         from './new/gallery';
 
 const UploadNew = React.createClass({
@@ -30,7 +30,7 @@ const UploadNew = React.createClass({
     else if(tabs[2]) {
       return (
         <div className={ this.activeClass(2) }>
-          <NewYoutube { ...{ afterChange }} />
+          <NewVideoService { ...{ afterChange }} />
         </div>
       )
     }
