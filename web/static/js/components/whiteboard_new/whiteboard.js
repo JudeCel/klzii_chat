@@ -17,6 +17,7 @@ import Elements     from './elements';
 import History      from './history';
 import Actions      from './actions';
 import Helpers      from './helpers';
+import ReactDOM     from 'react-dom';
 
 const Whiteboard = React.createClass({
   mixins:[Design, mixins.validations],
@@ -39,6 +40,43 @@ const Whiteboard = React.createClass({
     scaleY = scaleY > 1 ? 1 : scaleY;
     this.mainGroup.scale(scaleX, scaleY).translate(0, 0);
     this.board.attr({ 'pointer-events': minimized ? 'none' : 'all' });
+  //  this.scaleWhiteboard();
+  },
+  isMobile() {
+    return screen.width < 768 && screen.height < 768;
+  },
+  scaleWhiteboard() {
+    let scale = 1.0;
+    let shouldScale = this.minimized || window.innerWidth <= this.MAX_WIDTH + 50;
+    let whiteboard = ReactDOM.findDOMNode(this);
+    let isMobile = this.isMobile();
+    let scaleW = (whiteboard.clientWidth - (this.minimized ? 10 : (isMobile ? -10 : 0))) / this.MAX_WIDTH;
+    if (!isMobile) {
+      whiteboard.style.height = (scaleW * this.MAX_HEIGHT - (this.minimized ? 5 : 0) ) + "px";
+    }
+    if (shouldScale) {
+      let scaleH = (whiteboard.clientHeight - (isMobile ? 190 : 0)) / (this.MAX_HEIGHT - 60);
+      scale = Math.min(scaleW, scaleH);
+      if (isMobile) {
+        let svgElement = whiteboard.childNodes[3];
+        if (scale == scaleH) {
+          let width = (this.MAX_WIDTH - 20) * scale;
+          let height = whiteboard.clientHeight - 190;
+          svgElement.style.width = width + "px";
+          svgElement.style.marginLeft = ((whiteboard.clientWidth - width) / 2) + "px";
+          svgElement.style.height = height + "px";
+          svgElement.style.marginBottom = null;
+        } else {
+          let height = (this.MAX_HEIGHT - 60) * scale;
+          svgElement.style.width = null;
+          svgElement.style.marginLeft = null;
+          svgElement.style.height = height + "px";
+          svgElement.style.marginBottom = (whiteboard.clientHeight - 190 - height) + "px";
+        }
+        svgElement.style.marginTop = "60px";
+      }
+    }
+    this.mainGroup.scale(scale, scale);
   },
   initDependencies() {
     this.deps = {};
