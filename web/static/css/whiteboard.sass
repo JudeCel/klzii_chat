@@ -40,6 +40,16 @@
           @media (min-width: 992px)
             height: 14vw
             max-height: 220px
+      .svg_select_points_rot
+        stroke-width: 1
+        stroke:black
+        fill: #F9FFED
+      .svg_select_boundingRect
+        stroke-width: 1
+        stroke-dasharray: 10 10
+        stroke: black
+        fill-opacity: 0
+        pointer-events: none
       .whiteboard-title, .whiteboard-expand, .pinboard-title, .pinboard-expand
         position: absolute
         top: 0
@@ -111,3 +121,15 @@
         left: calc((100vw - 950px) / 2)
       @media (min-width: 1500px)
         left: calc((100vw - 950px) / 4)
+#wb-buttons-width
+  padding: 9px 12px
+
+#wb-buttons-width + .dropdown-menu
+  width: 47px
+  min-width: 47px
+  border-radius: 0
+  padding: 0
+  li > a
+    padding: 3px 19px
+  li.active > a
+    background-color: orange

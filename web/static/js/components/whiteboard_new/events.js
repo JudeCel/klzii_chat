@@ -27,7 +27,6 @@ function checkTouches(e) {
 
 function boardMouseDown(e) {
   checkTouches(e);
-  console.log("__1__", self.mouseData.holding, self.mouseData.type );
   switch(self.mouseData.type) {
     case 'select':
       //self.deps.Shape.deselectShape();
@@ -41,12 +40,9 @@ function boardMouseDown(e) {
 }
 
 function boardMouseMove(e) {
-  //console.log("__2__", self.mouseData.holding, self.mouseData.type );
   checkTouches(e);
-  console.log("_+__", e, self.mouseData.type);
   if(self.mouseData.holding && self.mouseData.type == 'stop') {
     if(['scribbleEmpty', 'scribbleFilled'].includes(self.drawData.current)) {
-      console.log("_++_", e);
       self.shapeData.shape.draw('point', e);
     }
   }
@@ -55,8 +51,6 @@ function boardMouseMove(e) {
 function boardMouseUp(e) {
   checkTouches(e);
   self.mouseData.holding = false;
-  // console.log("___3_", self.mouseData.holding, self.mouseData.type );
-  // console.log("_+__", e, self.mouseData.type);
   switch(self.mouseData.type) {
     case 'draw':
 

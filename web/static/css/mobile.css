@@ -225,8 +225,8 @@
     padding-left: 5px;
   }
 
-  #whiteboard-box .panel-buttons-section {
-    padding-left: 50% !important;
+  #whiteboard-box .panel-buttons-section .btn{
+    height: 30px;
   }
 
   #whiteboard-box .panel-buttons-section div:first-child {

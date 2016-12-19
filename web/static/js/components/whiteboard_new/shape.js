@@ -64,7 +64,6 @@ function loadOne(data) {
 function createShape(e) {
   if(e.buttons == 1 || (e.touches && e.touches.length)) {
     self.shapeData.shape = buildShape(e);
-    console.log("_aaaa__", self.shapeData.shape);
     if(self.shapeData.shape) {
       self.shapeData.shape.on('drawstop', self.deps.Events.shapeWasCreated);
       initShapeEvents(self.shapeData.shape);
