@@ -1175,6 +1175,11 @@
     margin-top: 44px;
   }
 
+  .whiteboard-section.maximized {
+    z-index: 1000 !important;
+    padding-bottom: 0 !important;
+    max-width: 100% !important;
+  }
 }
 
 @media (max-height: 285px) {

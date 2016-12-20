@@ -29,14 +29,14 @@ function boardMouseDown(e) {
   checkTouches(e);
   switch(self.mouseData.type) {
     case 'select':
-      //self.deps.Shape.deselectShape();
+      self.deps.Shape.deselectShape();
       break;
     case 'draw':
       self.deps.Shape.createShape(e);
       break;
   }
   self.mouseData.holding = true;
-  //e.preventDefault();
+  e.preventDefault();
 }
 
 function boardMouseMove(e) {
