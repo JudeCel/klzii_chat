@@ -132,12 +132,12 @@
   #whiteboard-box.maximized, #pinboard-box.maximized {
     top: 0px !important;
     position: fixed !important;
-    height: 100vh !important;
+    height: calc(100% - 68px) !important;
     width: 100vw !important;
     padding: 0px;
     border-radius: 0px;
     padding-bottom: 124px;
-    margin-top: 80px;
+    margin-top: 68px;
     z-index: 888;
     border: 0px !important;
   }
@@ -1194,10 +1194,7 @@
   .whiteboard-section .panel-buttons-section {
     position: absolute;
     bottom: 0;
-  }
-
-  .whiteboard-section .panel-buttons-section .btn {
-    margin: 2px !important;
+    width: 100%;
   }
 }
 

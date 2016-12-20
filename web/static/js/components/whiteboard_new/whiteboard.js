@@ -106,7 +106,7 @@ const Whiteboard = React.createClass({
   render() {
     if(this.props.channel) {
       return (
-        <div className={ 'whiteboard-section' + this.expandButtonClass() }>
+        <div id='whiteboard-box' className={'whiteboard-section' + this.expandButtonClass() }>
           <span className="icon-whiteboard-hide-mobile" onClick={ this.expandWhiteboard }></span>
           <img className='whiteboard-title' src='/images/title_whiteboard.png' />
           <img className='whiteboard-expand' src={ this.getExpandButtonImage() } onClick={ this.expandWhiteboard } />
