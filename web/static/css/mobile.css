@@ -1177,8 +1177,27 @@
 
   .whiteboard-section.maximized {
     z-index: 1000 !important;
-    padding-bottom: 0 !important;
+    padding: 0 !important;
     max-width: 100% !important;
+  }
+
+  .inline-board-section {
+    height: auto !important;
+    text-align: center;
+  	position: relative;
+  	top: 50% !important;
+  	-webkit-transform: translateY(-50%);
+  	-o-transform: translateY(-50%);
+  	transform: translateY(-50%);
+  }
+
+  .whiteboard-section .panel-buttons-section {
+    position: absolute;
+    bottom: 0;
+  }
+
+  .whiteboard-section .panel-buttons-section .btn {
+    margin: 2px !important;
   }
 }
 

@@ -36,7 +36,6 @@ function boardMouseDown(e) {
       break;
   }
   self.mouseData.holding = true;
-  e.preventDefault();
 }
 
 function boardMouseMove(e) {
