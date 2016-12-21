@@ -95,6 +95,10 @@ function buildShape(e) {
   }
 }
 
+function scaleFactor() {
+  return window.innerWidth<700 ?3:1;
+}
+
 function selectShape(e) {
   if(self.mouseData.type == 'select') {
     var shape = e.target.instance;
@@ -102,7 +106,7 @@ function selectShape(e) {
 
     if(shape && (!selected || selected && selected.id() != shape.id())) { // IE fix
       deselectShape();
-      self.mouseData.selected = shape.selectize({radius: 10}).resize(self.drawData.minsMaxs).draggable();
+      self.mouseData.selected = shape.selectize({radius: 10 * scaleFactor()}).resize(self.drawData.minsMaxs).draggable();
       self.mouseData.selected.remember('_draggable').start(e);
       _moveSelectizeToParent();
     }

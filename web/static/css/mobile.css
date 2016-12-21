@@ -1185,7 +1185,7 @@
     height: auto !important;
     text-align: center;
   	position: relative;
-  	top: 50% !important;
+  	top: 40% !important;
   	-webkit-transform: translateY(-50%);
   	-o-transform: translateY(-50%);
   	transform: translateY(-50%);

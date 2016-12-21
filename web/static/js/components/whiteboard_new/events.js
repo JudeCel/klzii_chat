@@ -15,7 +15,9 @@ function init(data) {
 }
 
 function checkTouches(e) {
+  let evt;
   if (e.touches && e.touches.length>0) {
+  //  evt = ...e;
     e.x = e.touches[0].pageX;
     e.y = e.touches[0].pageY;
     e.pageX = e.touches[0].pageX;
@@ -23,23 +25,27 @@ function checkTouches(e) {
     e.clientX = e.touches[0].clientX;
     e.clientY = e.touches[0].clientY;
   }
+  //return evt;
 }
 
 function boardMouseDown(e) {
-  checkTouches(e);
+  e.preventDefault();
+//  checkTouches(e);
+  // console.log("____", e);
   switch(self.mouseData.type) {
     case 'select':
-      self.deps.Shape.deselectShape();
+      //self.deps.Shape.deselectShape();
       break;
     case 'draw':
       self.deps.Shape.createShape(e);
       break;
   }
   self.mouseData.holding = true;
+
 }
 
 function boardMouseMove(e) {
-  checkTouches(e);
+  //checkTouches(e);
   if(self.mouseData.holding && self.mouseData.type == 'stop') {
     if(['scribbleEmpty', 'scribbleFilled'].includes(self.drawData.current)) {
       self.shapeData.shape.draw('point', e);
@@ -48,7 +54,7 @@ function boardMouseMove(e) {
 }
 
 function boardMouseUp(e) {
-  checkTouches(e);
+  //checkTouches(e);
   self.mouseData.holding = false;
   switch(self.mouseData.type) {
     case 'draw':
