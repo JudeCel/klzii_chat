@@ -25,12 +25,12 @@ defmodule KlziiChat.Services.MessageService do
   def create_message(session_member, session_topic_id, %{"replyId" => replyId, "emotion" => emotion, "body" => body}) do
     case MessagePermissions.can_new_message(session_member) do
       {:ok} ->
-        {reply_message, reply_level} = reply_message_data(replyId)
+        {reply_level} = reply_message_data(replyId)
         session_member = Repo.get!(SessionMember, session_member.id)
         map = %{
           replyId: IntegerHelper.get_num(replyId),
           sessionId: session_member.sessionId,
-          body: (reply_message <> body),
+          body: (body),
           emotion: IntegerHelper.get_num(emotion),
           sessionTopicId: IntegerHelper.get_num(session_topic_id),
           replyLevel: reply_level
@@ -211,9 +211,9 @@ defmodule KlziiChat.Services.MessageService do
     Repo.one(from m in Message, where: m.id == ^replyId, preload: [:session_member])
       |> case  do
         nil ->
-          {"", 0}
+          {0}
         message ->
-          {"@" <> message.session_member.username <> " ", message.replyLevel + 1}
+          {message.replyLevel + 1}
       end
   end
 end
