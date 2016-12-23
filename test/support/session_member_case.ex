@@ -66,7 +66,7 @@ defmodule KlziiChat.SessionMemberCase do
       accessKlzziForum: true,
       accessKlzziFocus: true,
       canInviteObserversToSession: true,
-      paidSmsCount: 75,
+      planSmsCount: 75,
       surveyCount: 20,
       discussionGuideTips: true,
       whiteboardFunctionality: true,
