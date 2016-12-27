@@ -100,7 +100,6 @@ const Message = React.createClass({
   render() {
     const { currentUser, message } = this.props;
     const { can_edit, can_delete, can_star, can_vote, can_reply } = message.permissions;
-
     let member = this.getMessageMember();
     let sessionTopicContext = this.getMessageSessionTopicContext();
     let className = this.canWritePrivateMessage(member) ? 'cursor-pointer' : '';
@@ -133,7 +132,7 @@ const Message = React.createClass({
 
             <div className={ this.bodyClassname(message) }>
               { this.visibilitySensor() }
-              <p className='text-break-all'>{ message.body }</p>
+              <p className='text-break-all'>{ message.reply_prefix + " "+ message.body }</p>
             </div>
 
             <div className='action-section col-md-12 text-right'>
