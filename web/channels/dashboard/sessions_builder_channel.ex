@@ -18,7 +18,6 @@ defmodule KlziiChat.Dashboard.SessionsBuilderChannel do
 
   def handle_info(:after_join, socket) do
     {:ok, _} = track_dashboard(socket)
-    #IO.inspect(Presence.list(socket))
     push socket, "presence_state", Presence.list(socket)
 
     {:noreply, socket}

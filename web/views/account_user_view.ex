@@ -18,4 +18,13 @@ defmodule KlziiChat.AccountUserView do
       "email" => account_user.email
     }
   end
+
+  def render("short.json", %{account_user: account_user})do
+    %{
+      "id" => account_user.id,
+      "firstName" => account_user.firstName,
+      "lastName" => account_user.lastName,
+      "email" => account_user.email
+    }
+  end
 end

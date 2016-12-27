@@ -6,7 +6,7 @@ defmodule KlziiChat.Dashboard.Presence do
   def fetch("sessionsBuilder:"<> _id, entries) do
     account_users = get_account_users(entries) |> Enum.into(%{})
     for {key, %{metas: metas}} <- entries, into: %{} do
-      {key, %{metas: metas, accountUser: AccountUserView.render("show.json", %{account_user: account_users[String.to_integer(key)]})}}
+      {key, %{metas: metas, accountUser: AccountUserView.render("short.json", %{account_user: account_users[String.to_integer(key)]})}}
     end
   end
 
