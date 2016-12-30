@@ -24,6 +24,7 @@ export default function reducer(state = initialState, action = {}) {
     case Constants.CREATE_DIRECT_MESSAGE:
       return { ...state, ...createDirectMessage(state, action.data) };
     case Constants.NEW_DIRECT_MESSAGE:
+      console.log(1, action.data);
       return { ...state, ...newDirectMessage(state, action.data) };
     case Constants.CLEAR_DIRECT_MESSAGES:
       return { ...state, ...initialState };

@@ -16,13 +16,21 @@ const Participants = React.createClass({
     return this.props.lastDirectMessages[participantId] || {};
   },
   render() {
-    const { participants, colours, unreadDirectMessages } = this.props;
+    const { participants, observers, colours, unreadDirectMessages } = this.props;
 
-    if (participants.length > 0) {
+    let users = [];
+    observers.map((observer) => {
+      if (observer.sessionTopicContext.hasDirectMessages) {
+        users.push(observer);
+      }
+    });
+    users = users.concat(participants);
+
+    if (users.length > 0) {
       return (
         <div className='list-group no-border-radius' style={{ borderColor: colours.mainBorder }}>
           {
-            participants.map((participant, index) =>
+            users.map((participant, index) =>
               <button type='button' key={ participant.id } className={ this.selectClassname(participant.id) } onClick={ this.selectParticipant.bind(this, participant) }>
                 <div className='avatar'>
                   <Avatar member={ participant } specificId='direct-message-left' />
@@ -64,7 +72,8 @@ const mapStateToProps = (state) => {
     unreadDirectMessages: state.directMessages.unreadCount,
     lastDirectMessages: state.directMessages.last,
     colours: state.chat.session.colours,
-    participants: state.members.participants
+    participants: state.members.participants,
+    observers: state.members.observers
   }
 };
 

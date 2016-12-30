@@ -131,6 +131,14 @@ defmodule KlziiChat.Services.SessionMembersService do
     {:ok, group_by_role(result)}
   end
 
+  @spec by_id(Integer.t) :: {:ok, Map.t}
+  def by_id(member_id) do
+    query =
+      from sm in SessionMember,
+        where: sm.id == ^member_id
+    Repo.one(query)
+  end
+
   @spec group_by_role(List.t) :: Map.t
   def group_by_role(members) do
     Phoenix.View.render(SessionMembersView, "group_by_role.json", %{ members: members})

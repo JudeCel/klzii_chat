@@ -68,10 +68,9 @@ function onLeave(state) {
   return (id, current, leftPres) => {
     if (current.metas.length == 0) {
       leftPres.member.online = false;
-      if(leftPres.member.role == 'observer') {
+      if (leftPres.member.role == 'observer' && !leftPres.member.sessionTopicContext.hasDirectMessages) {
         removeObserver(state, leftPres.member);
-      }
-      else {
+      } else {
         updateMember(state, leftPres.member);
       }
     }

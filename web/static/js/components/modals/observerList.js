@@ -8,8 +8,15 @@ const ObserverListModal = React.createClass({
   renderObservers() {
     const { observers } = this.props;
 
-    if(observers.length) {
-      return observers.map((observer) =>
+    let onlineObservers = [];
+    observers.map((observer) => {
+      if(observer.online) {
+        onlineObservers.push(observer);
+      }
+    });
+
+    if (onlineObservers.length) {
+      return onlineObservers.map((observer) =>
         <div className='col-md-3' key={ observer.id }>
           <div className='icon-eye'></div>
           <div className='observer-name'>

@@ -22,12 +22,30 @@ defmodule KlziiChat.Services.DirectMessageService do
     |> validations
     |> case do
         {:ok} ->
-          build_assoc(session, :direct_messages)
+          {:ok, member1_id} = set_has_direct_messages_flag(current_member_id)
+          {:ok, member2_id} = set_has_direct_messages_flag(other_member_id)
+          changeset = build_assoc(session, :direct_messages)
           |> DirectMessage.changeset(%{senderId: current_member_id, recieverId: other_member_id, text: text})
-          |> Repo.insert
+          case Repo.insert(changeset) do
+            {:ok, message} ->
+              {:ok, message, member1_id || member2_id}
+            {:error, reason} ->
+              {:error, reason}
+          end
         {:error, reason} ->
           {:error, reason}
       end
+  end
+
+  defp set_has_direct_messages_flag(member_id) do
+    member = Repo.get!(SessionMember, member_id)
+    if member.role == "observer" && !Map.has_key?(member.sessionTopicContext, "hasDirectMessages") do
+      sessionTopicContext = Map.put(member.sessionTopicContext, :hasDirectMessages, true)  
+      SessionMember.changeset(member, %{"sessionTopicContext" => sessionTopicContext}) |> Repo.update
+      {:ok, member_id}
+    else
+      {:ok, nil}
+    end
   end
 
   @spec get_all_direct_messages(Integer.t, Integer.t, Integer.t) :: List.t

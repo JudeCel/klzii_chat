@@ -11,7 +11,8 @@ defmodule KlziiChat.Services.Permissions.DirectMessage do
     current_member.id != other_member.id && (
       has_role(current_member.role, participant) && has_role(other_member.role, facilitator) ||
       has_role(current_member.role, facilitator) && has_role(other_member.role, participant) ||
-      has_role(current_member.role, observer) && has_role(other_member.role, facilitator) 
+      has_role(current_member.role, observer) && has_role(other_member.role, facilitator) ||
+      has_role(current_member.role, facilitator) && has_role(other_member.role, observer)
     ) |> formate_error
   end
 
