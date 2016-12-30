@@ -20,7 +20,7 @@ const Participants = React.createClass({
 
     let users = [];
     observers.map((observer) => {
-      if (observer.sessionTopicContext.hasDirectMessages) {
+      if (observer.sessionContext.hasDirectMessages) {
         users.push(observer);
       }
     });

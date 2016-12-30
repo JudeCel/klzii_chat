@@ -85,7 +85,7 @@ defmodule KlziiChat.Services.DirectMessageTest do
 
     assert(update_member_id == observer.id)
     session_member = SessionMembersService.by_id(update_member_id)
-    hasDirectMessages = Map.get(session_member.sessionTopicContext, "hasDirectMessages")
+    hasDirectMessages = Map.get(session_member.sessionContext, "hasDirectMessages")
     assert(hasDirectMessages == true)
   end
 end

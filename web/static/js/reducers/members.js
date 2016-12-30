@@ -42,7 +42,7 @@ export default function reducer(state = initialState, action = {}) {
 function getActiveObservers(observers) {
   let res = [];
   observers.map((observer) => {
-    if (observer.online || observer.sessionTopicContext.hasDirectMessages) {
+    if (observer.online || observer.sessionContext.hasDirectMessages) {
       res.push(observer);
     }
   });
@@ -79,7 +79,7 @@ function onLeave(state) {
   return (id, current, leftPres) => {
     if (current.metas.length == 0) {
       leftPres.member.online = false;
-      if (leftPres.member.role == 'observer' && !leftPres.member.sessionTopicContext.hasDirectMessages) {
+      if (leftPres.member.role == 'observer' && !leftPres.member.sessionContext.hasDirectMessages) {
         removeObserver(state, leftPres.member);
       } else {
         updateMember(state, leftPres.member);

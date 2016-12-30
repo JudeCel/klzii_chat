@@ -7,6 +7,7 @@ defmodule KlziiChat.SessionMembersView do
       colour: member.colour,
       avatarData: member.avatarData,
       sessionTopicContext: member.sessionTopicContext,
+      sessionContext: member.sessionContext,
       role: member.role,
       currentTopic: member.currentTopic
     }
@@ -18,6 +19,7 @@ defmodule KlziiChat.SessionMembersView do
       colour: member.colour,
       avatarData: member.avatarData,
       sessionTopicContext: member.sessionTopicContext,
+      sessionContext: member.sessionContext,
       role: member.role,
       currentTopic: member.currentTopic,
       firstName: member.account_user.firstName,
@@ -39,6 +41,7 @@ defmodule KlziiChat.SessionMembersView do
       colour: member.colour,
       avatarData: member.avatarData,
       sessionTopicContext: member.sessionTopicContext,
+      sessionContext: member.sessionContext,
       role: member.role,
       currentTopic: member.currentTopic,
       account_user_id: member.accountUserId,

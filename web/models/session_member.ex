@@ -2,7 +2,7 @@ defmodule KlziiChat.SessionMember do
   use KlziiChat.Web, :model
 
   @moduledoc """
-    For this model allow insert only: username, avatarData, sessionTopicContext  fields
+    For this model allow insert only: username, avatarData, sessionTopicContext, sessionContext  fields
   """
 
   schema "SessionMembers" do
@@ -18,6 +18,7 @@ defmodule KlziiChat.SessionMember do
     field :colour, :string
     field :avatarData, :map, default: %{ base: 0, face: 3, body: 0, hair: 0, desk: 0, head: 0 }
     field :sessionTopicContext, :map, default: %{}
+    field :sessionContext, :map, default: %{}
     field :currentTopic, :map, default: %{"id" => nil, "name" => nil, "date" => nil}
     field :token, :string
     field :role, :string
@@ -33,7 +34,7 @@ defmodule KlziiChat.SessionMember do
   """
   def changeset(model, params \\ %{}) do
     model
-    |> cast(params, [:username, :avatarData, :sessionTopicContext, :currentTopic])
+    |> cast(params, [:username, :avatarData, :sessionTopicContext, :sessionContext, :currentTopic])
     |> validate_required([:username])
     |> validate_length(:username, min: 1)
   end

@@ -39,9 +39,9 @@ defmodule KlziiChat.Services.DirectMessageService do
 
   defp set_has_direct_messages_flag(member_id) do
     member = Repo.get!(SessionMember, member_id)
-    if member.role == "observer" && !Map.has_key?(member.sessionTopicContext, "hasDirectMessages") do
-      sessionTopicContext = Map.put(member.sessionTopicContext, :hasDirectMessages, true)  
-      SessionMember.changeset(member, %{"sessionTopicContext" => sessionTopicContext}) |> Repo.update
+    if member.role == "observer" && !Map.has_key?(member.sessionContext, "hasDirectMessages") do
+      sessionContext = Map.put(member.sessionContext, :hasDirectMessages, true)  
+      SessionMember.changeset(member, %{"sessionContext" => sessionContext}) |> Repo.update
       {:ok, member_id}
     else
       {:ok, nil}
