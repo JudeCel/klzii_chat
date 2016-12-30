@@ -24,7 +24,8 @@ export default function reducer(state = initialState, action = {}) {
     case Constants.SET_MEMBERS:
       return { ...state,
         facilitator: action.facilitator,
-        participants: action.participant
+        participants: action.participant,
+        observers: getActiveObservers(action.observer),
       };
     case Constants.NEW_MESSAGE_SOUND:
       playSound(action.message, state.currentUser.id);
@@ -36,6 +37,16 @@ export default function reducer(state = initialState, action = {}) {
     default:
       return state;
   }
+}
+
+function getActiveObservers(observers) {
+  let res = [];
+  observers.map((observer) => {
+    if (observer.online || observer.sessionTopicContext.hasDirectMessages) {
+      res.push(observer);
+    }
+  });
+  return res;
 }
 
 function playSound(message, currentUserId) {
