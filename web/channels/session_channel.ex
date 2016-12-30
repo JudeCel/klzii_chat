@@ -2,7 +2,7 @@ defmodule KlziiChat.SessionChannel do
   use KlziiChat.Web, :channel
   alias KlziiChat.Services.{SessionService, SessionMembersService, SessionReportingService, DirectMessageService}
   alias KlziiChat.Services.Permissions.SessionReporting, as: SessionReportingPermissions
-  alias KlziiChat.{Presence, SessionMembersView, SessionTopicsReportView, DirectMessageView, ReportView}
+  alias KlziiChat.{Presence, SessionMembersView, SessionTopicsReportView, DirectMessageView, ReportView, SessionView}
   import(KlziiChat.Authorisations.Channels.Session, only: [authorized?: 2])
   import(KlziiChat.Helpers.SocketHelper, only: [get_session_member: 1, track: 1])
   import KlziiChat.ErrorHelpers, only: [error_view: 1]
@@ -14,7 +14,9 @@ defmodule KlziiChat.SessionChannel do
     Global messages for session
   """
 
-  intercept ["unread_messages", "session_topics_report_updated", "new_direct_message", "update_member", "read_message", "self_info"]
+  intercept ["unread_messages", "session_topics_report_updated",
+    "new_direct_message", "update_member", "read_message",
+    "self_info"]
 
   def join("sessions:" <> session_id, _, socket) do
     {session_id, _} = Integer.parse(session_id)
@@ -169,7 +171,7 @@ defmodule KlziiChat.SessionChannel do
   end
 
   def handle_out("update_member", payload, socket) do
-    push socket, "update_member", SessionMembersView.render("member.json", member: payload)
+    push socket, "update_member", SessionMembersView.render("member.json", %{member: payload})
     {:noreply, socket}
   end
 
