@@ -41,19 +41,18 @@ const Message = React.createClass({
   },
   getMessageMember() {
     const { message, currentUser, participants, facilitator } = this.props;
-
-    if (currentUser && message.session_member.id == currentUser.id) {
-      return currentUser;
-    } else if (facilitator && message.session_member.id == facilitator.id) {
-      return facilitator;
-    } else if (participants) {
-      for (let i=0; i<participants.length; i++) {
-        if (participants[i].id == message.session_member.id) {
-          return participants[i];
+    switch (message.session_member_role) {
+      case 'facilitator':
+        return facilitator;
+        break;
+      case 'participant':
+        for (let i=0; i<participants.length; i++) {
+          if (participants[i].id == message.session_member_id) {
+            return participants[i];
+          }
         }
-      }
+        break;
     }
-    return message.session_member;
   },
   getMessageSessionTopicContext() {
     const { message } = this.props;

@@ -10,6 +10,8 @@ defmodule KlziiChat.MessageView do
     %{
       id: message.id,
       session_member: SessionMembersView.render("member.json", %{member: message.session_member}),
+      session_member_id: message.sessionMemberId,
+      session_member_role: message.session_member.role,
       body: message.body,
       replyId: message.replyId,
       time: message.createdAt,
