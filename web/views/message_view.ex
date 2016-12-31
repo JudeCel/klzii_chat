@@ -9,12 +9,12 @@ defmodule KlziiChat.MessageView do
   def render("show.json", %{message: message, member: member}) do
     %{
       id: message.id,
-      session_member: %{ id: message.sessionMemberId, role: message.session_member.role},
+      session_member: SessionMembersView.render("status.json", %{member: message.session_member}),
       body: message.body,
       replyId: message.replyId,
       time: message.createdAt,
       star: message.star,
-      reply_session_member: nil,
+      reply_session_member: reply_session_member(message.reply),
       emotion: message.emotion,
       replies: Enum.map(message.replies, fn r ->
         reply_info = %{ member: message.session_member}
@@ -35,7 +35,8 @@ defmodule KlziiChat.MessageView do
   end
   def render("reply.json", %{message: message, member: member, reply_info: reply_info}) do
     map = render("show.json", %{message: message, member: member})
-    Map.put(map, :reply_session_member, %{ id: reply_info.member.id, role: reply_info.member.role})
+    reply_session_member = SessionMembersView.render("status.json", %{member: reply_info.member})
+    Map.put(map, :reply_session_member, reply_session_member)
   end
 
   @spec render(String.t, Map.t) :: Map.t
@@ -69,5 +70,10 @@ defmodule KlziiChat.MessageView do
 
   defp prefix_name(reply_info) do
     "@" <> reply_info.prefix
+  end
+
+  defp reply_session_member(%{__struct__: Ecto.Association.NotLoaded}), do: nil
+  defp reply_session_member(message) do
+    SessionMembersView.render("status.json", %{member: message.session_member});
   end
 end

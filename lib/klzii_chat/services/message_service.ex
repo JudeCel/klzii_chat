@@ -89,7 +89,7 @@ defmodule KlziiChat.Services.MessageService do
   def preload_dependencies(message) do
     replies_replies_query = from(rpl in Message, order_by: [asc: :createdAt], preload: [:session_member, :votes, :replies])
     replies_query = from(st in Message, order_by: [asc: :createdAt], preload: [:session_member, :votes, replies: ^replies_replies_query])
-    {:ok, Repo.preload(message, [:session_member, :votes, replies: replies_query])}
+    {:ok, Repo.preload(message, [:session_member, :votes, replies: replies_query, reply: [:session_member]])}
   end
 
   @spec create(%Message{}) :: %Message{}
