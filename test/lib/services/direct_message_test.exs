@@ -1,7 +1,7 @@
 defmodule KlziiChat.Services.DirectMessageTest do
   use KlziiChat.{ ModelCase, SessionMemberCase }
   alias KlziiChat.Services.{ DirectMessageService, SessionMembersService }
-  alias KlziiChat.{DirectMessage}
+  alias KlziiChat.{DirectMessage, SessionMember}
 
   @message_text1 "AAA"
   @message_text2 "BBB"
@@ -84,7 +84,7 @@ defmodule KlziiChat.Services.DirectMessageTest do
     { :ok, _, update_member_id } = DirectMessageService.create_message(session.id, %{ "senderId" => facilitator.id, "recieverId" => observer.id, "text" => @message_text1 })
 
     assert(update_member_id == observer.id)
-    session_member = SessionMembersService.by_id(update_member_id)
+    session_member = Repo.get!(SessionMember, update_member_id)
     hasDirectMessages = Map.get(session_member.sessionContext, "hasDirectMessages")
     assert(hasDirectMessages == true)
   end

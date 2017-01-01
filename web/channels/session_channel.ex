@@ -121,13 +121,12 @@ defmodule KlziiChat.SessionChannel do
 
     DirectMessageService.create_message(current_member.session_id, %{ "recieverId" => other_member_id, "text" => text, "senderId" => current_member.id })
     |> case  do
-      { :ok, message, update_member_id } ->
+      { :ok, message, updated_member } ->
         encoded = DirectMessageView.render("show.json", message: message);
         key = message.recieverId |> to_string
         broadcast(socket, "new_direct_message", %{ key => encoded })
-        if update_member_id != nil do
-          session_member = SessionMembersService.by_id(update_member_id)
-          broadcast(socket, "update_member", session_member)
+        if updated_member != nil do
+          broadcast(socket, "update_member", updated_member)
         end
         {:reply, { :ok, %{ message: encoded } }, socket}
       { :error, reason} ->
