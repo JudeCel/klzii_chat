@@ -22,13 +22,12 @@ defmodule KlziiChat.Services.DirectMessageService do
     |> validations
     |> case do
         {:ok} ->
-          {:ok, member1} = set_has_direct_messages_flag(current_member)
-          {:ok, member2} = set_has_direct_messages_flag(other_member)
           changeset = build_assoc(session, :direct_messages)
           |> DirectMessage.changeset(%{senderId: current_member_id, recieverId: other_member_id, text: text})
           case Repo.insert(changeset) do
             {:ok, message} ->
-              {:ok, message, member1 || member2}
+              updated_member = set_has_direct_messages_flag(current_member) || set_has_direct_messages_flag(other_member)
+              {:ok, message, updated_member}
             {:error, reason} ->
               {:error, reason}
           end
@@ -41,10 +40,9 @@ defmodule KlziiChat.Services.DirectMessageService do
     if member.role == "observer" && !Map.has_key?(member.sessionContext, "hasDirectMessages") do
       sessionContext = Map.put(member.sessionContext, :hasDirectMessages, true)  
       SessionMember.changeset(member, %{"sessionContext" => sessionContext}) |> Repo.update
-      member_res = Repo.get!(SessionMember, member.id)
-      {:ok, member_res}
+      Repo.get!(SessionMember, member.id)
     else
-      {:ok, nil}
+      nil
     end
   end
 
