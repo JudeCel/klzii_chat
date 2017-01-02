@@ -95,6 +95,13 @@ const Actions = {
         currentMember(dispatch, resp);
       });
 
+      channel.on("update_session", (resp) =>{
+        dispatch({
+          type: Constants.UPDATE_SESSION,
+          session: resp,
+        });
+      });
+
       channel.on("contact_list_map_struct", (resp) => {
         dispatch({type: 'SET_REPORT_MAP_STRUCT', mapStruct: resp.mapStruct});
       });

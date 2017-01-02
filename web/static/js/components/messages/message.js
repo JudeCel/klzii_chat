@@ -39,26 +39,29 @@ const Message = React.createClass({
       )
     }
   },
-  getMessageMember() {
-    const { message, currentUser, participants, facilitator } = this.props;
-
-    if (currentUser && message.session_member.id == currentUser.id) {
-      return currentUser;
-    } else if (facilitator && message.session_member.id == facilitator.id) {
+  getSessionMember(session_member) {
+    const { participants, facilitator } = this.props;
+    if (session_member.role == 'facilitator') {
       return facilitator;
-    } else if (participants) {
-      for (let i=0; i<participants.length; i++) {
-        if (participants[i].id == message.session_member.id) {
+    }else {
+      for (let i=0; i < participants.length; i++) {
+        if (participants[i].id == session_member.id) {
           return participants[i];
         }
       }
     }
-    return message.session_member;
   },
-  getMessageSessionTopicContext() {
+  reply_prefix(message){
+    if (message.reply_session_member) {
+      let member = this.getSessionMember(message.reply_session_member)
+      return `@${member.username} `
+    }
+    return ""
+  },
+  getMessageSessionTopicContext(member) {
     const { message } = this.props;
     let sessionTopicContext = { };
-    sessionTopicContext[message.session_member.currentTopic.id] = {
+    sessionTopicContext[member.currentTopic.id] = {
         avatarData: {
           face: message.emotion
         }
@@ -98,10 +101,10 @@ const Message = React.createClass({
     }
   },
   render() {
-    const { currentUser, message } = this.props;
+    const { message } = this.props;
     const { can_edit, can_delete, can_star, can_vote, can_reply } = message.permissions;
-    let member = this.getMessageMember();
-    let sessionTopicContext = this.getMessageSessionTopicContext();
+    let member = this.getSessionMember(message.session_member);
+    let sessionTopicContext = this.getMessageSessionTopicContext(member);
     let className = this.canWritePrivateMessage(member) ? 'cursor-pointer' : '';
 
     return (
@@ -132,7 +135,7 @@ const Message = React.createClass({
 
             <div className={ this.bodyClassname(message) }>
               { this.visibilitySensor() }
-              <p className='text-break-all'>{ message.reply_prefix + " "+ message.body }</p>
+              <p className='text-break-all'>{ this.reply_prefix(message) + " "+ message.body }</p>
             </div>
 
             <div className='action-section col-md-12 text-right'>

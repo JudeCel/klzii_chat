@@ -9,15 +9,16 @@ defmodule KlziiChat.MessageView do
   def render("show.json", %{message: message, member: member}) do
     %{
       id: message.id,
-      session_member: SessionMembersView.render("member.json", %{member: message.session_member}),
+      session_member: SessionMembersView.render("status.json", %{member: message.session_member}),
       body: message.body,
       replyId: message.replyId,
       time: message.createdAt,
       star: message.star,
-      reply_prefix: "",
+      reply_session_member: reply_session_member(message.reply),
       emotion: message.emotion,
       replies: Enum.map(message.replies, fn r ->
-        render("reply.json", %{message: r, member: member, reply_info: %{prefix: message.session_member.username }})
+        reply_info = %{ member: message.session_member}
+        render("reply.json", %{message: r, member: member, reply_info: reply_info})
       end),
       votes_count: MessageDecorator.votes_count(message.votes),
       has_voted: MessageDecorator.has_voted(message.votes, member.id),
@@ -34,7 +35,8 @@ defmodule KlziiChat.MessageView do
   end
   def render("reply.json", %{message: message, member: member, reply_info: reply_info}) do
     map = render("show.json", %{message: message, member: member})
-    Map.put(map, :reply_prefix, prefix_name(reply_info))
+    reply_session_member = SessionMembersView.render("status.json", %{member: reply_info.member})
+    Map.put(map, :reply_session_member, reply_session_member)
   end
 
   @spec render(String.t, Map.t) :: Map.t
@@ -68,5 +70,10 @@ defmodule KlziiChat.MessageView do
 
   defp prefix_name(reply_info) do
     "@" <> reply_info.prefix
+  end
+
+  defp reply_session_member(%{__struct__: Ecto.Association.NotLoaded}), do: nil
+  defp reply_session_member(message) do
+    SessionMembersView.render("status.json", %{member: message.session_member});
   end
 end
