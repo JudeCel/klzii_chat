@@ -8,12 +8,7 @@ const ObserverListModal = React.createClass({
   renderObservers() {
     const { observers } = this.props;
 
-    let onlineObservers = [];
-    observers.map((observer) => {
-      if(observer.online) {
-        onlineObservers.push(observer);
-      }
-    });
+    let onlineObservers = observers.filter((item) => { if(item.online) { return item } });
 
     if (onlineObservers.length) {
       return onlineObservers.map((observer) =>

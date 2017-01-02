@@ -77,9 +77,8 @@ const helpers = {
       if(array[i].id == memberId) return array[i];
     }
 
-    let array2 = this.props.observers;
-    for(let i = 0; i < array2.length; i++) {
-      if(array2[i].id == memberId) return array2[i];
+    for(let i = 0; i < this.props.observers.length; i++) {
+      if(this.props.observers[i].id == memberId) return this.props.observers[i];
     }
 
     return {};

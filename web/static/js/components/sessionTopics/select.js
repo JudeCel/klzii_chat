@@ -15,12 +15,7 @@ const Select = React.createClass({
   renderIconEye() {
     if(!this.isFacilitator(this.props.currentUser)) return;
 
-    let onlineObservers = [];
-    this.props.observers.map((observer) => {
-      if(observer.online) {
-        onlineObservers.push(observer);
-      }
-    });
+    let onlineObservers = this.props.observers.filter((item) => { if(item.online) { return item } });
 
     return (
       <span className='eye-section' onClick={ this.openSpecificModal.bind(this, 'observerList') }>
