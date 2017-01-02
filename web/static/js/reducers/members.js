@@ -25,7 +25,7 @@ export default function reducer(state = initialState, action = {}) {
       return { ...state,
         facilitator: action.facilitator,
         participants: action.participant,
-        observers: getActiveObservers(action.observer),
+        observers: action.observer,
       };
     case Constants.NEW_MESSAGE_SOUND:
       playSound(action.message, state.currentUser.id);
@@ -37,16 +37,6 @@ export default function reducer(state = initialState, action = {}) {
     default:
       return state;
   }
-}
-
-function getActiveObservers(observers) {
-  let res = [];
-  observers.map((observer) => {
-    if (observer.online || observer.sessionContext.hasDirectMessages) {
-      res.push(observer);
-    }
-  });
-  return res;
 }
 
 function playSound(message, currentUserId) {
@@ -79,11 +69,7 @@ function onLeave(state) {
   return (id, current, leftPres) => {
     if (current.metas.length == 0) {
       leftPres.member.online = false;
-      if (leftPres.member.role == 'observer' && !leftPres.member.sessionContext.hasDirectMessages) {
-        removeObserver(state, leftPres.member);
-      } else {
-        updateMember(state, leftPres.member);
-      }
+      updateMember(state, leftPres.member);
     }
   }
 }
@@ -102,16 +88,6 @@ function syncDiff(state, diff) {
   return state;
 }
 
-
-function removeObserver(state, member) {
-  let newState = [];
-  state.observers.map((observer) => {
-    if(observer.id != member.id) {
-      newState.push(observer);
-    }
-  });
-  return state.observers = newState;
-}
 function updateMember(state, member) {
   switch (member.role) {
     case "facilitator":

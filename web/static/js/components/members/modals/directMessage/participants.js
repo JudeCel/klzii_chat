@@ -16,11 +16,11 @@ const Participants = React.createClass({
     return this.props.lastDirectMessages[participantId] || {};
   },
   render() {
-    const { participants, observers, colours, unreadDirectMessages } = this.props;
+    const { participants, observers, colours, unreadDirectMessages, lastDirectMessages } = this.props;
 
     let users = [];
     observers.map((observer) => {
-      if (observer.sessionContext.hasDirectMessages) {
+      if (lastDirectMessages[observer.id]) {
         users.push(observer);
       }
     });
