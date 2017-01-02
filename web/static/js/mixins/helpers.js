@@ -77,6 +77,10 @@ const helpers = {
       if(array[i].id == memberId) return array[i];
     }
 
+    for(let i = 0; i < this.props.observers.length; i++) {
+      if(this.props.observers[i].id == memberId) return this.props.observers[i];
+    }
+
     return {};
   },
   sort(data, field) {

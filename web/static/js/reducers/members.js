@@ -24,7 +24,8 @@ export default function reducer(state = initialState, action = {}) {
     case Constants.SET_MEMBERS:
       return { ...state,
         facilitator: action.facilitator,
-        participants: action.participant
+        participants: action.participant,
+        observers: action.observer,
       };
     case Constants.NEW_MESSAGE_SOUND:
       playSound(action.message, state.currentUser.id);
@@ -68,12 +69,7 @@ function onLeave(state) {
   return (id, current, leftPres) => {
     if (current.metas.length == 0) {
       leftPres.member.online = false;
-      if(leftPres.member.role == 'observer') {
-        removeObserver(state, leftPres.member);
-      }
-      else {
-        updateMember(state, leftPres.member);
-      }
+      updateMember(state, leftPres.member);
     }
   }
 }
@@ -92,16 +88,6 @@ function syncDiff(state, diff) {
   return state;
 }
 
-
-function removeObserver(state, member) {
-  let newState = [];
-  state.observers.map((observer) => {
-    if(observer.id != member.id) {
-      newState.push(observer);
-    }
-  });
-  return state.observers = newState;
-}
 function updateMember(state, member) {
   switch (member.role) {
     case "facilitator":
