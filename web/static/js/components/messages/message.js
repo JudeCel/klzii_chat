@@ -41,17 +41,14 @@ const Message = React.createClass({
   },
   getSessionMember(session_member) {
     const { participants, facilitator } = this.props;
-    switch (session_member.role) {
-      case 'facilitator':
-        return facilitator;
-        break;
-      case 'participant':
-        for (let i=0; i<participants.length; i++) {
-          if (participants[i].id == session_member.id) {
-            return participants[i];
-          }
+    if (session_member.role == 'facilitator') {
+      return facilitator;
+    }else {
+      for (let i=0; i < participants.length; i++) {
+        if (participants[i].id == session_member.id) {
+          return participants[i];
         }
-        break;
+      }
     }
   },
   reply_prefix(message){
