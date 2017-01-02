@@ -56,7 +56,7 @@ const Message = React.createClass({
       let member = this.getSessionMember(message.reply_session_member)
       return `@${member.username} `
     }
-    return " "
+    return ""
   },
   getMessageSessionTopicContext(member) {
     const { message } = this.props;
