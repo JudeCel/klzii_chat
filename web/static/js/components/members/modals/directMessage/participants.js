@@ -16,11 +16,11 @@ const Participants = React.createClass({
     return this.props.lastDirectMessages[participantId] || {};
   },
   render() {
-    const { participants, observers, colours, unreadDirectMessages, lastDirectMessages } = this.props;
+    const { participants, observers, colours, unreadDirectMessages, lastDirectMessages, lastSentDirectMessages } = this.props;
 
     let users = [];
     observers.map((observer) => {
-      if (lastDirectMessages[observer.id]) {
+      if (lastDirectMessages[observer.id] || lastSentDirectMessages[observer.id]) {
         users.push(observer);
       }
     });
@@ -71,6 +71,7 @@ const mapStateToProps = (state) => {
   return {
     unreadDirectMessages: state.directMessages.unreadCount,
     lastDirectMessages: state.directMessages.last,
+    lastSentDirectMessages: state.directMessages.lastSent,
     colours: state.chat.session.colours,
     participants: state.members.participants,
     observers: state.members.observers
