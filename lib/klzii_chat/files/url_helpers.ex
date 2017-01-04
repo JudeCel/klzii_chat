@@ -11,7 +11,7 @@ defmodule KlziiChat.Files.UrlHelpers do
 
   @spec add_asset_path(String, String) :: String
   def add_asset_path(base_url, path) do
-    base_url <> "/"<> Path.relative_to(path, "priv/static")
+    base_url <> "/"<> Path.relative_to(path, "/priv/static")
   end
 
   @spec video_service_id(String) :: {:ok} | {:error, String.t}

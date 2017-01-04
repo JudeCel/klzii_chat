@@ -21,6 +21,7 @@ config :ex_aws,
   region: System.get_env("AWS_REGION")
 
 config :arc,
+  storage: Arc.Storage.S3,
   bucket: System.get_env("ARC_BUCKET"),
   virtual_host: true
 

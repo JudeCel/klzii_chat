@@ -18,8 +18,12 @@ defmodule KlziiChat.Mixfile do
   # Type `mix help compile.app` for more information.
   def application do
     [mod: {KlziiChat, []},
-     applications: [:phoenix, :phoenix_html, :cowboy, :logger, :gettext, :quantum, :phoenix_pubsub,
-                    :phoenix_ecto, :postgrex, :ex_aws, :arc, :httpotion, :timex_ecto, :httpoison, :exq]]
+      applications: [
+        :phoenix, :phoenix_html, :cowboy, :logger, :gettext,:quantum,
+        :phoenix_pubsub, :phoenix_ecto, :postgrex, :ex_aws, :hackney,
+        :timex_ecto, :exq
+      ]
+    ]
   end
 
   # Specifies which paths to compile per environment.
@@ -32,10 +36,10 @@ defmodule KlziiChat.Mixfile do
   defp deps do
     [{:phoenix, "~> 1.2"},
      {:phoenix_pubsub, "~> 1.0"},
-     {:phoenix_ecto, "~> 3.1"},
-     {:phoenix_html, "~> 2.8"},
+     {:phoenix_ecto, "~> 3.2"},
+     {:phoenix_html, "~> 2.9"},
      {:phoenix_live_reload, "~> 1.0", only: :dev},
-     {:timex_ecto, "~> 3.0"},
+     {:timex_ecto, "~> 3.1"},
      {:csv, "~> 1.4"},
      {:boltun, "~> 1.0"},
      {:exq, "~> 0.8"},
@@ -44,16 +48,18 @@ defmodule KlziiChat.Mixfile do
      {:timex, "~> 3.1"},
      {:quantum, "~> 1.8"},
      {:poison, "~> 2.2"},
-     {:arc_ecto, "~> 0.4"},
-     {:arc, "~> 0.5.3"},
-     {:ex_aws, "~> 0.5"},
-     {:httpotion, "~> 3.0"},
-     {:postgrex, "~> 0.12"},
-     {:gettext, "0.11.0"},
-     {:guardian, "~> 0.13"},
+
+     {:arc_ecto, "~> 0.5.0-rc1"},
+     {:arc, "~> 0.6.0"},
+     {:ex_aws, "~> 1.0.0"},
+     {:hackney, "1.6.1"},
+     {:sweet_xml, "~> 0.5"},
+
+     {:postgrex, "~> 0.13"},
+     {:gettext, "0.13.0"},
+     {:guardian, "0.14.0"},
      {:cowboy, "~> 1.0"},
      {:corsica, "~> 0.5"},
-     {:httpoison, "~> 0.9"},
      {:mogrify, "~> 0.5.1"},
      {:earmark, "~> 1.0", only: :dev},
      {:ex_doc, "~> 0.13", only: :dev},

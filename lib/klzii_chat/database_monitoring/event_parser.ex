@@ -60,7 +60,7 @@ defmodule KlziiChat.DatabaseMonitoring.EventParser do
         {:ok, :session_topics, [session_id]}
       %{"table" =>  "Invites", "data" =>  %{"id" =>  id, "sessionId" => sessionId}, "type" => type} ->
         {:ok, :invites, [id, sessionId, type]}
-      %{"table" =>  "SessionMembers", "data" =>  %{"id" =>  id, "sessionId" => sessionId}, "type" => type} ->
+      %{"table" =>  "SessionMembers", "data" =>  %{"id" =>  id}, "type" => type} ->
         {:ok, :session_members, [id, type]}
       %{"table" =>  "Sessions", "data" =>  %{"id" =>  id}, "type" => type} ->
         {:ok, :sessions, [id, type]}

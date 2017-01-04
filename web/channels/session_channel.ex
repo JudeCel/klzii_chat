@@ -2,7 +2,7 @@ defmodule KlziiChat.SessionChannel do
   use KlziiChat.Web, :channel
   alias KlziiChat.Services.{SessionService, SessionMembersService, SessionReportingService, DirectMessageService}
   alias KlziiChat.Services.Permissions.SessionReporting, as: SessionReportingPermissions
-  alias KlziiChat.{Presence, SessionMembersView, SessionTopicsReportView, DirectMessageView, ReportView, SessionView}
+  alias KlziiChat.{Presence, SessionMembersView, SessionTopicsReportView, DirectMessageView, ReportView}
   import(KlziiChat.Authorisations.Channels.Session, only: [authorized?: 2])
   import(KlziiChat.Helpers.SocketHelper, only: [get_session_member: 1, track: 1])
   import KlziiChat.ErrorHelpers, only: [error_view: 1]

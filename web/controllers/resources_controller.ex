@@ -43,16 +43,6 @@ defmodule KlziiChat.ResourcesController do
     json(conn, %{resources: resources})
   end
 
-  def zip(conn, %{"ids" => ids, "name" => name}, member, _) do
-    case ResourceService.create_new_zip(member.account_user.id, name, ids ) do
-      {:ok, resource} ->
-        json(conn, %{resource: ResourceView.render("resource.json", %{resource: resource}) })
-      {:error, reason} ->
-        put_status(conn, reason.code)
-        |> json(error_view(reason))
-    end
-  end
-
   def closed_session_delete_check(conn, %{"ids" => ids}, member, _) do
     case ResourceService.closed_session_delete_check_by_ids(member.account_user.id, ids) do
       {:ok, items} ->
