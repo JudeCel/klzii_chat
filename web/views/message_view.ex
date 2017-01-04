@@ -14,7 +14,7 @@ defmodule KlziiChat.MessageView do
       replyId: message.replyId,
       time: message.createdAt,
       star: message.star,
-      reply_session_member: reply_session_member(message.reply),
+      reply_session_member: reply_message(message.reply),
       emotion: message.emotion,
       replies: Enum.map(message.replies, fn r ->
         reply_info = %{ member: message.session_member}
@@ -72,9 +72,9 @@ defmodule KlziiChat.MessageView do
     "@" <> reply_info.prefix
   end
 
-  defp reply_session_member(nil), do: nil
-  defp reply_session_member(%{__struct__: Ecto.Association.NotLoaded}), do: nil
-  defp reply_session_member(message) do
+  defp reply_message(nil), do: nil
+  defp reply_message(%{__struct__: Ecto.Association.NotLoaded}), do: nil
+  defp reply_message(message) do
     SessionMembersView.render("status.json", %{member: message.session_member});
   end
 end
