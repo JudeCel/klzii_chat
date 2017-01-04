@@ -72,6 +72,7 @@ defmodule KlziiChat.MessageView do
     "@" <> reply_info.prefix
   end
 
+  defp reply_session_member(nil), do: nil
   defp reply_session_member(%{__struct__: Ecto.Association.NotLoaded}), do: nil
   defp reply_session_member(message) do
     SessionMembersView.render("status.json", %{member: message.session_member});
