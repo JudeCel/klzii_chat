@@ -74,6 +74,7 @@ body{
 
 .report-section .message-section.media .body-section {
   border-bottom: 1px solid #000;
+  margin-right: 10px;
 }
 .message-section.media .media-body span.message-star{
   content: "\2605";

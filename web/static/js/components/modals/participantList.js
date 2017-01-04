@@ -18,6 +18,7 @@ const ParticipantListModal = React.createClass({
         <div className='fa fa-users'></div>
         <div className='participant-name'>
           <div>{ participant.firstName } { participant.lastName }</div>
+          <div>{ participant.currentTopic.name }</div>
         </div>
       </div>
     );

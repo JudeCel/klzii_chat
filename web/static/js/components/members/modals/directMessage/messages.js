@@ -87,6 +87,7 @@ const mapStateToProps = (state) => {
     channel: state.chat.channel,
     facilitator: state.members.facilitator,
     participants: state.members.participants,
+    observers: state.members.observers,
     colours: state.chat.session.colours,
     messages: state.directMessages,
     currentPage: state.directMessages.currentPage,

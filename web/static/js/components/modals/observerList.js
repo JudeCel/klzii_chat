@@ -8,19 +8,24 @@ const ObserverListModal = React.createClass({
   renderObservers() {
     const { observers } = this.props;
 
-    if(observers.length) {
-      return observers.map((observer) =>
-        <div className='col-md-3' key={ observer.id }>
+    let onlineObservers = observers.filter((item) => { if(item.online) { return item } });
+
+    if (onlineObservers.length) {
+      return onlineObservers.map((observer) =>
+        <div className='col-md-3 cursor-pointer' key={ observer.id } onClick={ this.writeToObserver.bind(this, observer) }>
           <div className='icon-eye'></div>
           <div className='observer-name'>
             <div style={{ backgroundColor: observer.colour }}>{ observer.username }</div>
           </div>
         </div>
       )
-    }
-    else {
+    } else {
       return <div className='text-center'>No Spectators at this moment</div>
     }
+  },
+  writeToObserver(observer) {
+    this.closeAllModals();
+    this.openSpecificModal('directMessage', { member: observer });
   },
   render() {
     let show = this.showSpecificModal('observerList');

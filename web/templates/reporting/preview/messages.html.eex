@@ -20,7 +20,7 @@
       </div>
 
       <div class='row body-section' style='<%= facilitator_color(message) %>'>
-        <p class='text-break-all'><%= message.body %></p>
+        <p class='text-break-all'><%= message.reply_prefix <>" "<> message.body %></p>
       </div>
 
       <div class='remove-side-margin pull-right'>

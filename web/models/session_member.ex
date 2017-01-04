@@ -2,7 +2,7 @@ defmodule KlziiChat.SessionMember do
   use KlziiChat.Web, :model
 
   @moduledoc """
-    For this model allow insert only: username, avatarData, sessionTopicContext  fields
+    For this model allow insert only: username, avatarData, sessionTopicContext fields
   """
 
   schema "SessionMembers" do

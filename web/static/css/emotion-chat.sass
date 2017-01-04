@@ -6,11 +6,11 @@
   background-image: url($image) !important
   transform: scale($chat-emotion-default-scale) translate(-7px, -7px)
 
-  -webkit-animation: play-chat $time steps($steps) infinite
-  -moz-animation: play-chat $time steps($steps) infinite
-  -ms-animation: play-chat $time steps($steps) infinite
-  -o-animation: play-chat $time steps($steps) infinite
-  animation: play-chat $time steps($steps) infinite
+  -webkit-animation: play-chat $time steps($steps) 3
+  -moz-animation: play-chat $time steps($steps) 3
+  -ms-animation: play-chat $time steps($steps) 3
+  -o-animation: play-chat $time steps($steps) 3
+  animation: play-chat $time steps($steps) 3
 
   &#emotion-selector
     margin-top: 0px
@@ -29,7 +29,7 @@ $emotion-chat-max: 6
 
 @for $i from $emotion-chat-min through $emotion-chat-max
   .emotion-chat-#{$i}
-    @include emotion-chat("/images/emotions/emoticon_#{$i}_sprite.svg", 1.5s, 6)
+    @include emotion-chat("/images/emotions/emoticon_#{$i}_sprite.svg", 3s, 6)
 
 @-webkit-keyframes play-chat
   @include keyframe-chat

@@ -74,7 +74,7 @@ defmodule KlziiChat.Services.DirectMessageService do
   def get_last_messages(current_member_id) do
     current_member = Repo.get!(SessionMember, current_member_id)
 
-    Repo.all(from dm in DirectMessage,
+    recieved = Repo.all(from dm in DirectMessage,
       where: dm.sessionId == ^current_member.sessionId and dm.senderId != ^current_member.id,
       distinct: dm.senderId,
       order_by: [desc: dm.id],
@@ -84,6 +84,19 @@ defmodule KlziiChat.Services.DirectMessageService do
       new_map = %{ to_string(map.senderId) => %{ createdAt: map.createdAt, text: map.text } }
       Map.merge(acc, new_map)
     end)
+
+    sent = Repo.all(from dm in DirectMessage,
+      where: dm.sessionId == ^current_member.sessionId and dm.senderId == ^current_member.id,
+      distinct: dm.recieverId,
+      order_by: [desc: dm.id],
+      select: %{ recieverId: dm.recieverId, text: dm.text, createdAt: dm.createdAt }
+    )
+    |> Enum.reduce(%{}, fn (map, acc) ->
+      new_map = %{ to_string(map.recieverId) => %{ createdAt: map.createdAt, text: map.text } }
+      Map.merge(acc, new_map)
+    end)
+
+    %{ recieved: recieved, sent: sent }
   end
 
   def group_by_read(messages, current_member_id) do

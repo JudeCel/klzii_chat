@@ -6,7 +6,6 @@ defmodule KlziiChat.BackgroundTasks.Invites do
     notify_listeners(invite_id, sessionId, type)
   end
 
-
   def notify_listeners(invite_id, session_id, "DELETE") do
     Endpoint.broadcast!("sessionsBuilder:#{session_id}", "inviteDelete", %{id: invite_id})
     {:ok}
@@ -20,7 +19,13 @@ defmodule KlziiChat.BackgroundTasks.Invites do
           # Handle only session invites.
           {:error, "unsuported Invite"}
         invite ->
-          data = %{role: invite.role, id: invite.id, emailStatus: invite.emailStatus, status: invite.status}
+          data = %{
+            id: invite.id,
+            accountUserId: invite.accountUserId,
+            role: invite.role,
+            emailStatus: invite.emailStatus,
+            status: invite.status
+          }
           Endpoint.broadcast!("sessionsBuilder:#{invite.sessionId}", "inviteUpdate", data)
           {:ok}
       end

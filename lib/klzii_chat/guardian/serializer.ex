@@ -3,8 +3,8 @@ defmodule KlziiChat.Guardian.Serializer do
 
   alias KlziiChat.{Repo, SessionMember, AccountUser}
 
-  def for_token(session_member = %SessionMember{}), do: { :ok, "SessionMember:#{session_member.id}" }
-  def for_token(account_user = %AccountUser{}), do: { :ok, "AccountUser:#{account_user.id}" }
+  def for_token(%{id: id} = %SessionMember{}), do: { :ok, "SessionMember:#{id}" }
+  def for_token(%{id: id} = %AccountUser{}), do: { :ok, "AccountUser:#{id}" }
   def for_token(_), do: { :error, "Unknown resource type" }
 
   def from_token("SessionMember:" <> id) do

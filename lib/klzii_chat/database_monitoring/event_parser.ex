@@ -1,5 +1,5 @@
 defmodule KlziiChat.DatabaseMonitoring.EventParser do
-  alias KlziiChat.BackgroundTasks.{SessionTopic, Invites}
+  alias KlziiChat.BackgroundTasks.{SessionTopic, Invites, SessionMembers, Sessions}
 
   @spec messages() :: Map.t
   def messages do
@@ -43,6 +43,12 @@ defmodule KlziiChat.DatabaseMonitoring.EventParser do
   def build_enqueue({:ok, :invites, arrgs}) do
     {:ok, "notify", Invites, arrgs}
   end
+  def build_enqueue({:ok, :session_members, arrgs}) do
+    {:ok, "notify", SessionMembers, arrgs}
+  end
+  def build_enqueue({:ok, :sessions, arrgs}) do
+    {:ok, "notify", Sessions, arrgs}
+  end
   def build_enqueue({:error, message}) do
     {:error, message}
   end
@@ -54,6 +60,10 @@ defmodule KlziiChat.DatabaseMonitoring.EventParser do
         {:ok, :session_topics, [session_id]}
       %{"table" =>  "Invites", "data" =>  %{"id" =>  id, "sessionId" => sessionId}, "type" => type} ->
         {:ok, :invites, [id, sessionId, type]}
+      %{"table" =>  "SessionMembers", "data" =>  %{"id" =>  id}, "type" => type} ->
+        {:ok, :session_members, [id, type]}
+      %{"table" =>  "Sessions", "data" =>  %{"id" =>  id}, "type" => type} ->
+        {:ok, :sessions, [id, type]}
       _ ->
         {:error, messages.errors.unhandle_event}
     end

@@ -5,7 +5,7 @@ defmodule KlziiChat.SubscriptionPlan do
     This Mode is read only!
     Not use for insert!
   """
-  
+
   schema "SubscriptionPlans" do
     field :sessionCount, :integer
     field :contactListCount, :integer
@@ -19,7 +19,7 @@ defmodule KlziiChat.SubscriptionPlan do
     field :accessKlzziForum, :boolean
     field :accessKlzziFocus, :boolean
     field :canInviteObserversToSession, :boolean
-    field :paidSmsCount, :integer
+    field :planSmsCount, :integer
     field :discussionGuideTips, :boolean
     field :whiteboardFunctionality, :boolean
     field :uploadToGallery, :boolean

@@ -11,6 +11,7 @@ config :klzii_chat,
 # Configures the endpoint
 config :klzii_chat, KlziiChat.Endpoint,
   url: [host: "localhost"],
+  check_origin: false,
   root: Path.dirname(__DIR__),
   secret_key_base: "64dHOpQEe+vNCIA3GwVYoFf2PguXQcLcIyETM23XasBSHFnks64zTu8zsySDxJqI",
   render_errors: [accepts: ~w(html json)],

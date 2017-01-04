@@ -19,11 +19,7 @@ const DeleteMessage = React.createClass({
   },
   deleteMessage() {
     const { currentUser, message } = this.props;
-    if (message.session_member.id != currentUser.id) {
-      this.setState({ showDeleteModal: true });
-    } else {
-      this.deleteAccepted();
-    }
+    this.setState({ showDeleteModal: true });
   },
   render() {
     const { permission } = this.props;

@@ -14,7 +14,9 @@ defmodule KlziiChat.SessionChannel do
     Global messages for session
   """
 
-  intercept ["unread_messages", "session_topics_report_updated", "new_direct_message", "update_member", "read_message", "self_info"]
+  intercept ["unread_messages", "session_topics_report_updated",
+    "new_direct_message", "update_member", "read_message",
+    "self_info"]
 
   def join("sessions:" <> session_id, _, socket) do
     {session_id, _} = Integer.parse(session_id)
@@ -169,7 +171,7 @@ defmodule KlziiChat.SessionChannel do
   end
 
   def handle_out("update_member", payload, socket) do
-    push socket, "update_member", SessionMembersView.render("member.json", member: payload)
+    push socket, "update_member", SessionMembersView.render("member.json", %{member: payload})
     {:noreply, socket}
   end
 
