@@ -186,7 +186,7 @@ defmodule KlziiChat.Services.ResourceService do
       |> QueriesResources.where_stock(true)
       |> Repo.all
 
-    used = QueriesResources.get_by_ids_for_open_session(ids)
+    used = QueriesResources.get_by_ids_used(ids)
       |> Repo.all
 
     query = QueriesResources.base_query
