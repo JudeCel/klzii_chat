@@ -26,10 +26,13 @@ const Whiteboard = React.createClass({
 
     let array = [this.props.facilitator, ...this.props.participants];
     array.map(function(member) {
-      let marker = this.board.defs().marker(10, 10).attr({ id: 'marker-arrow-' + member.id });
-      marker.polygon('0,2 0,8 10,5').attr({ fill: member.colour });
-      this.markers.arrows[member.id] = marker;
+      this.createArrowTip(member.id, member.colour);
     }, this);
+  },
+  createArrowTip(id, color) {
+    let marker = this.board.defs().marker(10, 10).attr({ id: 'marker-arrow-' + id});
+    marker.polygon('0,2 0,8 10,5').attr({ fill: color });
+    this.markers.arrows[id] = marker;
   },
   initScale() {
     const { minimized } = this.state;
@@ -114,9 +117,8 @@ const Whiteboard = React.createClass({
       }
       this.initScale();
     }
-    else if(JSON.stringify(prevProps.participants) != JSON.stringify(this.props.participants)) {
-      this.initDefs();
-    }
+
+    this.initDefs();
   },
   componentDidMount() {
     this.board = SVG('whiteboard-draw').size(this.drawData.initialWidth, this.drawData.initialHeight);
