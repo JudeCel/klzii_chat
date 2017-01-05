@@ -35,7 +35,7 @@ defmodule KlziiChat.ResourceView do
     not_removed_stock_names = get_names(not_removed_stock)
     not_removed_used_names = get_names(not_removed_used)
     not_removed_stock_message = Enum.join(["Sorry, we cannot Delete the following because they are Stock files:", not_removed_stock_names], " ")
-    not_removed_used_message = Enum.join(["Sorry, we cannot delete the following files as they are currently used in a Chat Session:", not_removed_used_names], " ")
+    not_removed_used_message = Enum.join(["Sorry, we cannot delete the following files as they are currently used in a Chat Session or Mail Templates:", not_removed_used_names], " ")
     %{
       removed: ResourceView.render("delete_items.json", %{data: removed, message: "Your selected files were successfully deleted"}),
       not_removed_stock: ResourceView.render("delete_items.json", %{data: not_removed_stock, message: not_removed_stock_message}),
