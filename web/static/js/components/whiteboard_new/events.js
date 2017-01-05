@@ -15,9 +15,8 @@ function init(data) {
 }
 
 function boardMouseDown(e) {
-  //e.preventDefault();
+  e.preventDefault();
   self.mouseData.holding = true;
-  console.log("__?__", self.mouseData.type);
   switch(self.mouseData.type) {
     case 'select':
       //self.deps.Shape.deselectShape();
@@ -43,7 +42,6 @@ function boardMouseUp(e) {
   console.log("finish");
   switch(self.mouseData.type) {
     case 'draw':
-    console.log("self.shapeData.shape", self.shapeData.shape);
       if(self.shapeData.shape.draw) {
         self.shapeData.shape.draw(e);
       }

@@ -65,30 +65,19 @@ const Whiteboard = React.createClass({
         simulatedEvent.initMouseEvent(type, true, true, window, 1,
                                       first.screenX, first.screenY,
                                       first.clientX, first.clientY, false,
-                                      false, false, false, 1/*left*/, null);
+                                      false, false, false, 1, null);
 
+        event.target.dispatchEvent (simulatedEvent);
 
-        return simulatedEvent;
-      } else {
-        return event;
       }
-  },
-  processTouchDown(e) {
-    Events.boardMouseDown(this.processInput(e));
-  },
-  processTouchMove(e) {
-    Events.boardMouseMove(this.processInput(e));
-  },
-  processTouchUp(e) {
-    Events.boardMouseUp(this.processInput(e));
   },
   initBoardEvents() {
     this.board.on('mousedown', Events.boardMouseDown);
     this.board.on('mouseup', Events.boardMouseUp);
     this.board.on('mousemove', Events.boardMouseMove);
-    this.board.on('touchmove', this.processTouchMove);
-    this.board.on('touchstart', this.processTouchDown);
-    this.board.on('touchend', this.processTouchUp);
+    this.board.on('touchmove', this.processInput);
+    this.board.on('touchstart', this.processInput);
+    this.board.on('touchend', this.processInput);
   },
   getInitialState() {
     this.mouseData = { type: 'select', prevType: null, selected: null };

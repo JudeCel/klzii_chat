@@ -63,7 +63,7 @@ function loadOne(data) {
 
 function createShape(e) {
   console.log("eeeee", e);
-  if(e.button == 1) {
+  if(e) {
     self.shapeData.shape = buildShape(e);
     console.log("self.shapeData.shape", self.shapeData.shape);
     if(self.shapeData.shape) {
@@ -87,12 +87,10 @@ function initShapeEvents(shape) {
 }
 
 function buildShape(e) {
-  console.log("-+-", self.drawData.current);
   var element = self.deps.Elements.shapes[self.drawData.current];
   if(element) {
     var nested = self.mainGroup.nested();
     var attrs = { fill: self.drawData.color, 'stroke-width': self.drawData.strokeWidth, stroke: self.drawData.color };
-    console.log("-----", element);
     var build = element(e, nested, attrs);
     attrs.id = nested.id() + build.type + Date.now();
     return build.attr(attrs);
@@ -100,7 +98,11 @@ function buildShape(e) {
 }
 
 function scaleFactor() {
-  return window.innerWidth<700 ?3:1;
+  let screenScale = 1;
+  if ((screen && screen.width < 700) || (window.innerWidth < 700)) {
+    screenScale = 5;
+  }
+  return screenScale;
 }
 
 function selectShape(e) {
