@@ -4,7 +4,6 @@ defmodule KlziiChat.MailTemplateResource do
 
   schema "MailTemplateResources" do
     belongs_to :resource, KlziiChat.Resource, [foreign_key: :resourceId]
-    #belongs_to :session, KlziiChat.MailTemplate, [foreign_key: :mailTemplateId]
     field :mailTemplateId, :integer
     field :createdAt, Timex.Ecto.DateTime
     field :updatedAt, Timex.Ecto.DateTime

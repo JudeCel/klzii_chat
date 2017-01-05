@@ -69,7 +69,7 @@ defmodule KlziiChat.Queries.Resources do
   def get_by_ids_used(ids) do
     from(r in Resource, left_join: sr in assoc(r, :session_resources), left_join: s in assoc(sr, :session), left_join: s2 in assoc(r, :sessions), left_join: mtr in assoc(r, :mail_template_resources),
       where: r.id in ^ids,
-      where: s.status == "open" or s2.status == "open" or mtr.mailTemplateId > 0,
+      where: s.status == "open" or s2.status == "open" or not is_nil(mtr.mailTemplateId),
       where: r.stock == false,
       distinct: true
     )
