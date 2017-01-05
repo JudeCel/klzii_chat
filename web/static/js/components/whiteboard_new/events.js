@@ -14,24 +14,10 @@ function init(data) {
   return this;
 }
 
-function checkTouches(e) {
-  let evt;
-  if (e.touches && e.touches.length>0) {
-  //  evt = ...e;
-    e.x = e.touches[0].pageX;
-    e.y = e.touches[0].pageY;
-    e.pageX = e.touches[0].pageX;
-    e.pageY = e.touches[0].pageY;
-    e.clientX = e.touches[0].clientX;
-    e.clientY = e.touches[0].clientY;
-  }
-  //return evt;
-}
-
 function boardMouseDown(e) {
-  e.preventDefault();
-//  checkTouches(e);
-  // console.log("____", e);
+  //e.preventDefault();
+  self.mouseData.holding = true;
+  console.log("__?__", self.mouseData.type);
   switch(self.mouseData.type) {
     case 'select':
       //self.deps.Shape.deselectShape();
@@ -40,12 +26,11 @@ function boardMouseDown(e) {
       self.deps.Shape.createShape(e);
       break;
   }
-  self.mouseData.holding = true;
 
 }
 
 function boardMouseMove(e) {
-  //checkTouches(e);
+  console.log("self.mouseData.type", self.mouseData.type);
   if(self.mouseData.holding && self.mouseData.type == 'stop') {
     if(['scribbleEmpty', 'scribbleFilled'].includes(self.drawData.current)) {
       self.shapeData.shape.draw('point', e);
@@ -54,11 +39,11 @@ function boardMouseMove(e) {
 }
 
 function boardMouseUp(e) {
-  //checkTouches(e);
   self.mouseData.holding = false;
+  console.log("finish");
   switch(self.mouseData.type) {
     case 'draw':
-
+    console.log("self.shapeData.shape", self.shapeData.shape);
       if(self.shapeData.shape.draw) {
         self.shapeData.shape.draw(e);
       }

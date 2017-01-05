@@ -8,7 +8,7 @@ module.exports = {
   deleteShape,
   deleteAllShapes,
   loadOne,
-  setMouseType,
+  setMouseType
 };
 
 var self;
@@ -62,8 +62,10 @@ function loadOne(data) {
 }
 
 function createShape(e) {
-  if(e.buttons == 1 || (e.touches && e.touches.length)) {
+  console.log("eeeee", e);
+  if(e.button == 1) {
     self.shapeData.shape = buildShape(e);
+    console.log("self.shapeData.shape", self.shapeData.shape);
     if(self.shapeData.shape) {
       self.shapeData.shape.on('drawstop', self.deps.Events.shapeWasCreated);
       initShapeEvents(self.shapeData.shape);
@@ -85,10 +87,12 @@ function initShapeEvents(shape) {
 }
 
 function buildShape(e) {
+  console.log("-+-", self.drawData.current);
   var element = self.deps.Elements.shapes[self.drawData.current];
   if(element) {
     var nested = self.mainGroup.nested();
     var attrs = { fill: self.drawData.color, 'stroke-width': self.drawData.strokeWidth, stroke: self.drawData.color };
+    console.log("-----", element);
     var build = element(e, nested, attrs);
     attrs.id = nested.id() + build.type + Date.now();
     return build.attr(attrs);

@@ -34,12 +34,5 @@ SVG.Element.prototype.draw.extend({
       // draw the element
       this.el.attr(text);
     }
-  },
-
-  // 'line': {
-  //   calc:function (e) {
-  //     console.log("line drawing", e);
-  //   }
-  //
-  // }
+  }
 });

@@ -45,15 +45,50 @@ const Whiteboard = React.createClass({
     this.deps.Actions = Actions.init(this);
     this.deps.Helpers = Helpers.init(this);
   },
+  processInput(event) {
+      let touches = event.changedTouches;
+      let type = "";
+      if (touches) {
+        let first = touches[0];
+        type = "";
+        switch(event.type)
+        {
+        case "touchstart": type = "mousedown"; break;
+        case "touchmove":  type = "mousemove"; break;
+        case "touchend":
+        case "touchcancel":
+        default:
+          type = "mouseup";
+          break;
+        }
+        let simulatedEvent = document.createEvent("MouseEvent");
+        simulatedEvent.initMouseEvent(type, true, true, window, 1,
+                                      first.screenX, first.screenY,
+                                      first.clientX, first.clientY, false,
+                                      false, false, false, 1/*left*/, null);
+
+
+        return simulatedEvent;
+      } else {
+        return event;
+      }
+  },
+  processTouchDown(e) {
+    Events.boardMouseDown(this.processInput(e));
+  },
+  processTouchMove(e) {
+    Events.boardMouseMove(this.processInput(e));
+  },
+  processTouchUp(e) {
+    Events.boardMouseUp(this.processInput(e));
+  },
   initBoardEvents() {
-    this.board.mousedown(Events.boardMouseDown);
-    document.addEventListener('mousemove', Events.boardMouseMove);
-    document.addEventListener('mouseup', Events.boardMouseUp);
-
-
-    this.board.on('touchstart', Events.boardMouseDown);
-    this.board.on('touchmove', Events.boardMouseMove);
-    this.board.on('touchend', Events.boardMouseUp);
+    this.board.on('mousedown', Events.boardMouseDown);
+    this.board.on('mouseup', Events.boardMouseUp);
+    this.board.on('mousemove', Events.boardMouseMove);
+    this.board.on('touchmove', this.processTouchMove);
+    this.board.on('touchstart', this.processTouchDown);
+    this.board.on('touchend', this.processTouchUp);
   },
   getInitialState() {
     this.mouseData = { type: 'select', prevType: null, selected: null };
