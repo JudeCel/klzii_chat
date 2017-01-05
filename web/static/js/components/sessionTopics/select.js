@@ -13,9 +13,13 @@ const Select = React.createClass({
     this.setSessionTopic(id);
   },
   renderIconEye() {
-    if(!this.isFacilitator(this.props.currentUser)) return;
+    if(this.hasNoIconEye()) return;
 
-    let onlineObservers = this.props.observers.filter((item) => { if(item.online) { return item } });
+    let onlineObservers = this.props.observers.filter((item) => {
+      if(item.online && item.username != this.props.currentUser.username) {
+        return item;
+      }
+    });
 
     return (
       <span className='eye-section' onClick={ this.openSpecificModal.bind(this, 'observerList') }>
@@ -27,7 +31,7 @@ const Select = React.createClass({
   renderIconUsers() {
 
     const { session } = this.props;
-    if(!this.isFacilitator(this.props.currentUser) || session.type != 'forum') return;
+    if(this.hasNoParticipantsIcon()) return;
 
     let onlineParticipantsCount = 0;
     for (let i=0; i<this.props.participants.length; i++) {
@@ -139,6 +143,19 @@ const Select = React.createClass({
         </div>
       </div>
     )
+  },
+  hasNoIconEye() {
+    var isForumObserver = this.isObserver() && this.isForum();
+    return !isForumObserver && !this.isFacilitator(this.props.currentUser);
+  },
+  hasNoParticipantsIcon() {
+    return !this.isFacilitator(this.props.currentUser) && !this.isObserver() || !this.isForum();
+  },
+  isObserver() {
+    return this.props.currentUser.role == "observer";
+  },
+  isForum() {
+    return this.props.session.type == "forum";
   }
 });
 

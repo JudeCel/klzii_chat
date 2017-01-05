@@ -20,6 +20,14 @@ const MobileHeader = React.createClass({
     this.toggleMenu();
     this.openSpecificModal('directMessage', { member: member });
   },
+  spectatorsClick() {
+    this.toggleMenu();
+    this.openSpecificModal('observerList');
+  },
+  guestsClick() {
+    this.toggleMenu();
+    this.openSpecificModal('participantList');
+  },
   logoutClick() {
     this.toggleMenu();
     this.logOut();
@@ -29,6 +37,18 @@ const MobileHeader = React.createClass({
     return {
       display: (canShow ? "block" : "none")
     };
+  },
+  getSpectatorOrOGuestsMenuItemStyle() {
+    let canShow = this.isObserver() && this.isForum();
+    return {
+      display: (canShow ? "block" : "none")
+    };
+  },
+  isForum() {
+    return this.props.session.type == "forum";
+  },
+  isObserver() {
+    return this.props.currentUser.role == "observer";
   },
   toggleMenu() {
     this.setState({mobileSideMenuVisibility: !this.state.mobileSideMenuVisibility, mobileSideMenuTopicsVisibility: false});
@@ -106,6 +126,12 @@ const MobileHeader = React.createClass({
                 </li>
                 <li onClick={this.messagesClick} style={ this.getMenuItemStyle('messages', 'can_direct_message') }>
                   <span className='fa fa-comment'></span>Messages { this.directMessageBadge() }
+                </li>
+                <li onClick={ this.spectatorsClick } style={ this.getSpectatorOrOGuestsMenuItemStyle() }>
+                  <span className='fa fa-eye'></span>Spectators
+                </li>
+                <li onClick={ this.guestsClick } style={ this.getSpectatorOrOGuestsMenuItemStyle() }>
+                  <span className='fa fa-users'></span>Guests
                 </li>
                 <li onClick={this.toggleMenu}>
                   <span className='fa fa-question'></span>Help
