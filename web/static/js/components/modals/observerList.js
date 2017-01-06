@@ -9,7 +9,7 @@ const ObserverListModal = React.createClass({
     const { observers } = this.props;
 
     let onlineObservers = observers.filter((item) => {
-      if(item.online && item.username != this.props.currentUser.username) {
+      if(item.online && item.id != this.props.currentUser.id) {
         return item;
       }
     });

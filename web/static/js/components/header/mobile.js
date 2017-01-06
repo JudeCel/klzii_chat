@@ -39,16 +39,10 @@ const MobileHeader = React.createClass({
     };
   },
   getSpectatorOrOGuestsMenuItemStyle() {
-    let canShow = this.isObserver() && this.isForum();
+    let canShow = this.isObserver(this.props.currentUser) && this.isForum();
     return {
       display: (canShow ? "block" : "none")
     };
-  },
-  isForum() {
-    return this.props.session.type == "forum";
-  },
-  isObserver() {
-    return this.props.currentUser.role == "observer";
   },
   toggleMenu() {
     this.setState({mobileSideMenuVisibility: !this.state.mobileSideMenuVisibility, mobileSideMenuTopicsVisibility: false});

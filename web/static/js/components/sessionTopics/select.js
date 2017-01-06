@@ -13,10 +13,12 @@ const Select = React.createClass({
     this.setSessionTopic(id);
   },
   renderIconEye() {
-    if(this.hasNoIconEye()) return;
+    const { currentUser } = this.props;
+
+    if(this.hasNoIconEye(currentUser)) return;
 
     let onlineObservers = this.props.observers.filter((item) => {
-      if(item.online && item.username != this.props.currentUser.username) {
+      if(item.online && item.id != currentUser.id) {
         return item;
       }
     });
@@ -30,8 +32,8 @@ const Select = React.createClass({
   },
   renderIconUsers() {
 
-    const { session } = this.props;
-    if(this.hasNoParticipantsIcon()) return;
+    const { session, currentUser } = this.props;
+    if(this.hasNoParticipantsIcon(currentUser)) return;
 
     let onlineParticipantsCount = 0;
     for (let i=0; i<this.props.participants.length; i++) {
@@ -143,19 +145,6 @@ const Select = React.createClass({
         </div>
       </div>
     )
-  },
-  hasNoIconEye() {
-    var isForumObserver = this.isObserver() && this.isForum();
-    return !isForumObserver && !this.isFacilitator(this.props.currentUser);
-  },
-  hasNoParticipantsIcon() {
-    return !this.isFacilitator(this.props.currentUser) && !this.isObserver() || !this.isForum();
-  },
-  isObserver() {
-    return this.props.currentUser.role == "observer";
-  },
-  isForum() {
-    return this.props.session.type == "forum";
   }
 });
 
