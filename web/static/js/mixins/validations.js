@@ -28,12 +28,25 @@ const validations = {
 
     return permission || false;
   },
+  hasNoIconEye(member) {
+    var isForumObserver = this.isObserver(member) && this.isForum(member);
+    return !isForumObserver && !this.isFacilitator(member);
+  },
+  hasNoParticipantsIcon(member) {
+    return !this.isFacilitator(member) && !this.isObserver(member) || !this.isForum();
+  },
   isFacilitator(member) {
     return member.role == 'facilitator';
   },
   isParticipant(member) {
     return member.role == 'participant';
-  }
+  },
+  isObserver(member) {
+    return member.role == "observer";
+  },
+  isForum() {
+    return this.props.session.type == "forum";
+  },
 }
 
 export default validations;

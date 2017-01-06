@@ -41,7 +41,7 @@ const ParticipantListModal = React.createClass({
       let onlineParticipantsDisplay = onlineParticipants.slice(startIndex, endIndex);
 
       return (
-        <div>
+        <div className="participants-container">
           { onlineParticipantsDisplay.map((participant) => this.renderParticipant(participant) ) }
           <div className="paginator" id="participantsPaginator">
             <Pagination
