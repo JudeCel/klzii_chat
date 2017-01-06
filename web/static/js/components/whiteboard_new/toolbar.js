@@ -56,6 +56,8 @@ const Buttons = React.createClass({
   setText(type, text) {
     this.setType(type, type);
     self.drawData.text = text;
+    self.createShapeWithDefaultCoords();
+    this.setType('none', 'none');
   },
   tooltipFormat(text) {
     return <Tooltip id='tooltip'><strong>{ text }</strong></Tooltip>

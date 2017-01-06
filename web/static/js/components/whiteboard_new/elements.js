@@ -26,7 +26,7 @@ function circleEmpty(e, nested, attrs) {
 }
 
 function circleFilled(e, nested, attrs) {
-  return nested.circle().draw(e);
+  return nested.ellipse().draw(e);
 }
 
 function rectEmpty(e, nested, attrs) {

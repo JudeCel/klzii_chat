@@ -48,6 +48,14 @@ const Whiteboard = React.createClass({
     this.deps.Actions = Actions.init(this);
     this.deps.Helpers = Helpers.init(this);
   },
+  createShapeWithDefaultCoords() {
+    let simulatedEvent = document.createEvent("MouseEvent");
+    simulatedEvent.initMouseEvent("mousedown", true, true, window, 1,
+                                  this.drawData.initialWidth/2, this.drawData.initialHeight/2,
+                                  this.drawData.initialWidth/2, this.drawData.initialHeight/2, false,
+                                  false, false, false, 1, null);
+    Events.createShapeWithEvent(simulatedEvent);
+  },
   processInput(event) {
       let touches = event.changedTouches;
       let type = "";
@@ -95,8 +103,8 @@ const Whiteboard = React.createClass({
       text: ''
     };
     this.drawData.minsMaxs = {
-      minX: 0,
-      minY: 0,
+      minX: 10,
+      minY: 10,
       maxX: this.drawData.initialWidth,
       maxY: this.drawData.initialHeight
     };

@@ -5,13 +5,19 @@ module.exports = {
   boardMouseUp,
   shapeWasCreated,
   shapeWillUpdate,
-  shapeWasUpdated
+  shapeWasUpdated,
+  createShapeWithEvent
 };
 
 var self;
 function init(data) {
   self = data;
   return this;
+}
+
+function createShapeWithEvent(e) {
+  self.deps.Shape.createShape(e);
+  self.shapeData.shape.draw('stop', e);
 }
 
 function boardMouseDown(e) {
@@ -29,7 +35,6 @@ function boardMouseDown(e) {
 }
 
 function boardMouseMove(e) {
-  console.log("self.mouseData.type", self.mouseData.type);
   if(self.mouseData.holding && self.mouseData.type == 'stop') {
     if(['scribbleEmpty', 'scribbleFilled'].includes(self.drawData.current)) {
       self.shapeData.shape.draw('point', e);
@@ -39,7 +44,6 @@ function boardMouseMove(e) {
 
 function boardMouseUp(e) {
   self.mouseData.holding = false;
-  console.log("finish");
   switch(self.mouseData.type) {
     case 'draw':
       if(self.shapeData.shape.draw) {

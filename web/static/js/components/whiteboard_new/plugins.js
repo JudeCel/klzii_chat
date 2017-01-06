@@ -1,8 +1,11 @@
 SVG.Element.prototype.draw.extend({
   'text': {
     init:function(e){
+      this.startPoint.x = e.clientX;
+      this.startPoint.y = e.clientY;
       var p = this.startPoint;
-      this.el.attr({ x: p.x, y: p.y, 'font-size': 1 });
+
+      this.el.attr({ x: p.x, y: p.y, 'font-size': 24 });
     },
     calc:function (e) {
       var text = {
@@ -12,14 +15,12 @@ SVG.Element.prototype.draw.extend({
 
       text.width = p.x - text.x;
       text.height = p.y - text.y;
-
-      // Snap the params to the grid we specified
-      this.snapToGrid(text);
+      this.snapToGrid(1);
 
       // When width is less than one, we have to draw to the left
       // which means we have to move the start-point to the left
       if(text.width < 1) {
-        text.x = text.x + text.width;
+        text.x = text.x + text.width/2;
         text.width = -text.width;
       }
 
@@ -28,10 +29,6 @@ SVG.Element.prototype.draw.extend({
         text.y = text.y + text.height;
         text.height = -text.height;
       }
-
-      var size = (text.width + text.height)/2;
-      text['font-size'] = size > 1 ? size : 1;
-      // draw the element
       this.el.attr(text);
     }
   }
