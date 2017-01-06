@@ -3,8 +3,8 @@ defmodule KlziiChat.Services.ConsoleService do
   alias KlziiChat.Services.Permissions.Console, as: ConsolePermissions
   import Ecto
 
-  @spec error_messages :: Map.t
-  def error_messages do
+  @spec error_messages() :: Map.t
+  def error_messages() do
     %{
       pinboard_is_enable: "Sorry, can't add a resource when Pinboard enabled",
       other_resource_is_enable: "You can only load one media file per Topic"
@@ -32,7 +32,7 @@ defmodule KlziiChat.Services.ConsoleService do
 
   @spec is_pinboard_enable?(%Console{}, Atom) :: {:ok} | {:error, String.t}
   defp is_pinboard_enable?(console, :resource) do
-    if console.pinboard, do: {:error, %{system: error_messages.pinboard_is_enable}}, else: {:ok}
+    if console.pinboard, do: {:error, %{system: error_messages().pinboard_is_enable}}, else: {:ok}
   end
 
   @spec set_resource(Integer, Integer, Integer) :: {:ok, %Console{}} | {:error, String.t}
@@ -82,7 +82,7 @@ defmodule KlziiChat.Services.ConsoleService do
       |> Enum.any?(fn(key) -> Map.get(console, key) |> is_integer end)
 
       if result do
-        {:error, %{system: error_messages.other_resource_is_enable}}
+        {:error, %{system: error_messages().other_resource_is_enable}}
       else
         {:ok}
       end

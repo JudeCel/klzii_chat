@@ -1,7 +1,6 @@
 defmodule KlziiChat.Uploaders.Video do
-  use KlziiChat.Uploaders.StoreDefinition
-
   use Arc.Definition
+  use KlziiChat.Uploaders.StoreDefinition
 
   # Include ecto support (requires package arc_ecto installed):
   use Arc.Ecto.Definition
