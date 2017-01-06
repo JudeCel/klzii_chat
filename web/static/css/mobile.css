@@ -972,12 +972,6 @@
 }
 
 @media (max-device-width: 767px) and (orientation: portrait) {
-  body {
-    height: 100%;
-    width: 100%;
-    position: fixed;
-  }
-
   .facilitator-section {
     margin-top: 12px;
   }
@@ -1197,7 +1191,31 @@
     width: 100%;
   }
 }
+@media (max-device-width: 767px) and (orientation: landscape) {
+  #whiteboard-box.maximized {
+    height: 100% !important;
+  }
+  #whiteboard-box #whiteboard-draw {
+    margin: 0 auto;
+    width: auto;
+  }
+}
 
+
+@media (max-device-width: 767px) and (orientation: landscape) {
+  body {
+    height: 100%;
+    width: 100%;
+    position: fixed;
+  }
+}
+@media (max-device-width: 767px) and (orientation: portrait) {
+  body {
+    height: 100%;
+    width: 100%;
+    position: fixed;
+  }
+}
 @media (max-height: 285px) {
   .type-forum .room-section-left .console-section {
     top: 115px !important;
