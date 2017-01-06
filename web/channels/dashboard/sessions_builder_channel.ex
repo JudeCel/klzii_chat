@@ -8,7 +8,7 @@ defmodule KlziiChat.Dashboard.SessionsBuilderChannel do
   def join("sessionsBuilder:" <> session_id, _, socket) do
     if authorized?(socket, session_id) do
       {session_id, _} = Integer.parse(session_id)
-        send(self, :after_join)
+        send(self(), :after_join)
         {:ok, assign(socket, :session_id, session_id)}
     else
       {:error, %{reason: "unauthorized"}}

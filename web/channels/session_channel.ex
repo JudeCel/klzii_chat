@@ -22,7 +22,7 @@ defmodule KlziiChat.SessionChannel do
     {session_id, _} = Integer.parse(session_id)
     case authorized?(socket, session_id) do
       {:ok} ->
-        send(self, :after_join)
+        send(self(), :after_join)
         case SessionService.find_active(session_id) do
           {:ok, session} ->
             {:ok, session, assign(socket, :session_id, session_id)}
