@@ -42,10 +42,12 @@
           @media (min-width: 992px)
             height: 14vw
             max-height: 220px
+      .svg_select_points
+        cursor: move
       .svg_select_points_rot
         stroke-width: 1
         stroke:black
-        fill: #F9FFED
+        fill: gray
       .svg_select_boundingRect
         stroke-width: 1
         stroke-dasharray: 10 10
@@ -80,7 +82,9 @@
         left: calc((100vw - 950px) / 2)
       @media (min-width: 1500px)
         left: calc((100vw - 950px) / 4)
-
+    .toolbar-section
+      display: table
+      margin: 0 auto
 
 #circleShapes, #scribleShapes, #lineWidthShapes, #eraserShapes
   .btn.btn-default

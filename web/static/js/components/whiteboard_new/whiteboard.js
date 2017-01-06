@@ -129,7 +129,7 @@ const Whiteboard = React.createClass({
     this.initDefs();
   },
   componentDidMount() {
-    this.board = SVG('whiteboard-draw').size(this.drawData.initialWidth, this.drawData.initialHeight);
+    this.board = SVG('whiteboard-draw');
     this.mainGroup = this.board.group();
 
     let boxSize = "0 0 " + this.drawData.initialWidth + " " + this.drawData.initialHeight;
