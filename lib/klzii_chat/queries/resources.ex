@@ -65,11 +65,11 @@ defmodule KlziiChat.Queries.Resources do
     from(r in query, where: r.stock == ^stock)
   end
 
-  @spec get_by_ids_for_open_session(Listr.t) :: Ecto.Query.t
-  def get_by_ids_for_open_session(ids) do
-    from(r in Resource, left_join: sr in assoc(r, :session_resources), left_join: s in assoc(sr, :session), left_join: s2 in assoc(r, :sessions),
+  @spec get_by_ids_used(Listr.t) :: Ecto.Query.t
+  def get_by_ids_used(ids) do
+    from(r in Resource, left_join: sr in assoc(r, :session_resources), left_join: s in assoc(sr, :session), left_join: s2 in assoc(r, :sessions), left_join: mtr in assoc(r, :mail_template_resources),
       where: r.id in ^ids,
-      where: s.status == "open" or s2.status == "open",
+      where: s.status == "open" or s2.status == "open" or not is_nil(mtr.mailTemplateId),
       where: r.stock == false,
       distinct: true
     )
