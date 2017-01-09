@@ -24,9 +24,6 @@ function boardMouseDown(e) {
   e.preventDefault();
   self.mouseData.holding = true;
   switch(self.mouseData.type) {
-    case 'select':
-      //self.deps.Shape.deselectShape();
-      break;
     case 'draw':
       self.deps.Shape.createShape(e);
       break;

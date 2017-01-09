@@ -62,16 +62,11 @@ function loadOne(data) {
 }
 
 function createShape(e) {
-  console.log("eeeee", e);
   if(e) {
     self.shapeData.shape = buildShape(e);
-    console.log("self.shapeData.shape", self.shapeData.shape);
     if(self.shapeData.shape) {
       self.shapeData.shape.on('drawstop', self.deps.Events.shapeWasCreated);
       initShapeEvents(self.shapeData.shape);
-    }
-    else {
-      console.error('Shape is not found:', self.drawData.current);
     }
   }
 }
