@@ -28,14 +28,16 @@ defmodule KlziiChat.Services.SessionTopicService do
 
   @spec session_topic_board_message(Integer, String) :: {:ok, Map} | {:error, String.t}
   defp session_topic_board_message(session_topic_id, message) do
-    session_topic = Repo.get!(SessionTopic, session_topic_id)
-    SessionTopic.changeset(session_topic, %{ boardMessage: message}) |> Repo.update
+    Repo.get!(SessionTopic, session_topic_id)
+    |> SessionTopic.changeset(%{ boardMessage: message}) 
+    |> Repo.update
   end
 
   @spec topic_board_message(Integer, String) :: {:ok, Map} | {:error, String.t}
   defp topic_board_message(topic_id, message) do
-    topic = Repo.get!(Topic, topic_id)
-    Topic.changeset(topic, %{ boardMessage: message}) |> Repo.update
+    Repo.get!(Topic, topic_id)
+    |> Topic.changeset(%{ boardMessage: message}) 
+    |> Repo.update
   end
 
   @spec get_related_session_topics(Integer) :: {:ok, Map} | {:error, String.t}
