@@ -22,7 +22,7 @@ import ReactDOM     from 'react-dom';
 const Whiteboard = React.createClass({
   mixins:[Design, mixins.validations],
   initDefs() {
-    this.markers = { arrows: {} };
+    this.markers = this.markers || { arrows: {} };
 
     let array = [this.props.facilitator, ...this.props.participants];
     array.map(function(member) {
@@ -30,9 +30,11 @@ const Whiteboard = React.createClass({
     }, this);
   },
   createArrowTip(id, color) {
-    let marker = this.board.defs().marker(10, 10).attr({ id: 'marker-arrow-' + id});
-    marker.polygon('0,2 0,8 10,5').attr({ fill: color });
-    this.markers.arrows[id] = marker;
+    if (!this.markers.arrows[id]) {
+      let marker = this.board.defs().marker(10, 10).attr({ id: 'marker-arrow-' + id, 'stroke': 'none', orient: 'auto', fill: color, 'viewBox': "0 0 10 10" , strokeWidth: '0 !important'} );
+      marker.path('M 0 0 L 10 5 L 0 10 z');
+      this.markers.arrows[id] = marker;
+    }
   },
   initScale() {
     const { minimized } = this.state;
