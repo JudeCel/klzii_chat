@@ -4,8 +4,7 @@ import Input                from '../messages/input.js';
 import Facilitator          from '../members/facilitator.js';
 import Messages             from '../messages/messages.js';
 import Console              from '../console/index';
-import WhiteboardCanvas     from '../whiteboard/whiteboardCanvas';
-import Whiteboard           from '../whiteboard_new/whiteboard';
+import Whiteboard           from '../whiteboard/whiteboard';
 
 const Forum = React.createClass({
   getInitialState: function() {

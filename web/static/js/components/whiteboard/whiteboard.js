@@ -61,7 +61,6 @@ const Whiteboard = React.createClass({
       let type = "";
       if (touches) {
         let first = touches[0];
-        type = "";
         switch(event.type)
         {
         case "touchstart": type = "mousedown"; break;
