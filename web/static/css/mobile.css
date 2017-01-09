@@ -1194,6 +1194,7 @@
 @media (max-device-width: 767px) and (orientation: landscape) {
   #whiteboard-box.maximized {
     height: 100% !important;
+    padding-bottom: 118px;
   }
   #whiteboard-box #whiteboard-draw {
     margin: 0 auto;
