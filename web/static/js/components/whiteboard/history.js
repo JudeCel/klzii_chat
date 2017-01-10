@@ -7,15 +7,15 @@ module.exports = {
   redo
 };
 
-var self;
+var whiteboardDelegate;
 function init(data) {
-  self = data;
-  self.historyData = { undo: [], redo: [] };
+  whiteboardDelegate = data;
+  whiteboardDelegate.historyData = { undo: [], redo: [] };
   return this;
 }
 
 function last(type) {
-  return self.historyData[type][self.historyData[type].length - 1]
+  return whiteboardDelegate.historyData[type][whiteboardDelegate.historyData[type].length - 1]
 }
 
 function add(object, type, when) {
@@ -29,33 +29,33 @@ function add(object, type, when) {
       for(var id in object) {
         elements.push(_paramsFormat(object[id], 'remove'));
       }
-      self.historyData.undo.push({ type, elements });
+      whiteboardDelegate.historyData.undo.push({ type, elements });
     }
     else {
-      self.historyData.undo.push(_paramsFormat(object, type));
+      whiteboardDelegate.historyData.undo.push(_paramsFormat(object, type));
     }
-    self.historyData.redo = [];
+    whiteboardDelegate.historyData.redo = [];
   }
 }
 
 function remove(type) {
-  return self.historyData[type].pop();
+  return whiteboardDelegate.historyData[type].pop();
 }
 
 function undo() {
-  if(self.historyData.undo.length) {
+  if(whiteboardDelegate.historyData.undo.length) {
     var object = remove('undo');
-    self.deps.Shape.deselectShape();
-    self.historyData.redo.push(object);
+    whiteboardDelegate.deps.Shape.deselectShape();
+    whiteboardDelegate.historyData.redo.push(object);
     _actionUndo(object);
   }
 }
 
 function redo() {
-  if(self.historyData.redo.length) {
+  if(whiteboardDelegate.historyData.redo.length) {
     var object = remove('redo');
-    self.deps.Shape.deselectShape();
-    self.historyData.undo.push(object);
+    whiteboardDelegate.deps.Shape.deselectShape();
+    whiteboardDelegate.historyData.undo.push(object);
     _actionRedo(object);
   }
 }
@@ -63,11 +63,11 @@ function redo() {
 function _actionUndo(object) {
   switch(object.type) {
     case 'draw':
-      self.deps.Actions.undoShapeDelete(object);
+      whiteboardDelegate.deps.Actions.undoShapeDelete(object);
       break;
     case 'remove':
-      self.deps.Shape.loadOne(object.element);
-      self.deps.Actions.shapeCreate(object);
+      whiteboardDelegate.deps.Shape.loadOne(object.element);
+      whiteboardDelegate.deps.Actions.shapeCreate(object);
       break;
     case 'removeAll':
       object.elements.map(_actionUndo);
@@ -83,15 +83,15 @@ function _actionUndo(object) {
 function _actionRedo(object) {
   switch(object.type) {
     case 'draw':
-      self.deps.Shape.loadOne(object.element);
-      self.deps.Actions.shapeCreate(object);
+      whiteboardDelegate.deps.Shape.loadOne(object.element);
+      whiteboardDelegate.deps.Actions.shapeCreate(object);
       break;
     case 'remove':
       var shape = SVG.get(object.id);
-      self.deps.Actions.shapeDelete(shape);
+      whiteboardDelegate.deps.Actions.shapeDelete(shape);
       break;
     case 'removeAll':
-      self.deps.Actions.shapeDeleteAll();
+      whiteboardDelegate.deps.Actions.shapeDeleteAll();
       break;
     case 'update':
       _update({ id: object.id, element: object.endElement, type: object.type });
@@ -102,11 +102,11 @@ function _actionRedo(object) {
 }
 
 function _update(object) {
-  self.deps.Actions.shapeUpdate(object);
+  whiteboardDelegate.deps.Actions.shapeUpdate(object);
 }
 
 function _paramsFormat(object, type) {
-  var params = self.deps.Helpers.shapeParams(object);
+  var params = whiteboardDelegate.deps.Helpers.shapeParams(object);
   return { ...params, type };
 }
 

@@ -13,16 +13,16 @@ module.exports = {
   setMouseType
 };
 
-var self;
-function init(data) {
-  self = data;
+var whiteboardDelegate;
+function init(delegate) {
+  whiteboardDelegate = delegate;
   return this;
 }
 
 function loadShapes() {
-  var newKeys = Object.keys(self.props.shapes);
+  var newKeys = Object.keys(whiteboardDelegate.props.shapes);
   var newLength = newKeys.length;
-  var oldKeys = Object.keys(self.shapeData.added);
+  var oldKeys = Object.keys(whiteboardDelegate.shapeData.added);
   var oldLength = oldKeys.length;
 
   if(!newLength && oldLength) {
@@ -36,16 +36,16 @@ function loadShapes() {
 
 function removeOld(oldKeys) {
   oldKeys.map(function(key) {
-    if(!self.props.shapes[key]) {
+    if(!whiteboardDelegate.props.shapes[key]) {
       deleteShape(key);
     }
   });
 }
 
 function addNewOrChange() {
-  for(var id in self.props.shapes) {
-    var object = self.props.shapes[id];
-    var existing = self.shapeData.added[object.uid];
+  for(var id in whiteboardDelegate.props.shapes) {
+    var object = whiteboardDelegate.props.shapes[id];
+    var existing = whiteboardDelegate.shapeData.added[object.uid];
 
     if(!existing) {
       loadOne(object.event.element);
@@ -58,36 +58,36 @@ function addNewOrChange() {
 }
 
 function loadOne(data) {
-  var nested = self.mainGroup.nested();
+  var nested = whiteboardDelegate.mainGroup.nested();
   nested.svg(data);
   initShapeEvents(nested.first());
 }
 
 function createShape(e) {
   if(e) {
-    self.shapeData.shape = buildShape(e);
-    if(self.shapeData.shape) {
-      self.shapeData.shape.on('drawstop', self.deps.Events.shapeWasCreated);
-      initShapeEvents(self.shapeData.shape);
+    whiteboardDelegate.shapeData.shape = buildShape(e);
+    if(whiteboardDelegate.shapeData.shape) {
+      whiteboardDelegate.shapeData.shape.on('drawstop', whiteboardDelegate.deps.Events.shapeWasCreated);
+      initShapeEvents(whiteboardDelegate.shapeData.shape);
     }
   }
 }
 
 function initShapeEvents(shape) {
-  self.shapeData.added[shape.id()] = shape;
+  whiteboardDelegate.shapeData.added[shape.id()] = shape;
   shape.mousedown(selectShape);
   shape.touchstart(selectShape);
-  shape.on('resizestart', self.deps.Events.shapeWillUpdate);
-  shape.on('resizedone', self.deps.Events.shapeWasUpdated);
-  shape.on('dragstart', self.deps.Events.shapeWillUpdate);
-  shape.on('dragend', self.deps.Events.shapeWasUpdated);
+  shape.on('resizestart', whiteboardDelegate.deps.Events.shapeWillUpdate);
+  shape.on('resizedone', whiteboardDelegate.deps.Events.shapeWasUpdated);
+  shape.on('dragstart', whiteboardDelegate.deps.Events.shapeWillUpdate);
+  shape.on('dragend', whiteboardDelegate.deps.Events.shapeWasUpdated);
 }
 
 function buildShape(e) {
-  var element = self.deps.Elements.shapes[self.drawData.current];
+  var element = whiteboardDelegate.deps.Elements.shapes[whiteboardDelegate.drawData.current];
   if(element) {
-    var nested = self.mainGroup.nested();
-    var attrs = { fill: self.drawData.color, 'stroke-width': self.drawData.strokeWidth, stroke: self.drawData.color };
+    var nested = whiteboardDelegate.mainGroup.nested();
+    var attrs = { fill: whiteboardDelegate.drawData.color, 'stroke-width': whiteboardDelegate.drawData.strokeWidth, stroke: whiteboardDelegate.drawData.color };
     var build = element(e, nested, attrs);
     attrs.id = nested.id() + build.type + Date.now();
     return build.attr(attrs);
@@ -99,45 +99,45 @@ function scaleFactor() {
 }
 
 function selectShape(e) {
-  if(self.mouseData.type == 'select') {
+  if(whiteboardDelegate.mouseData.type == 'select') {
     var shape = e.target.instance;
-    var selected = self.mouseData.selected;
+    var selected = whiteboardDelegate.mouseData.selected;
 
     if(shape && (!selected || selected && selected.id() != shape.id())) { // IE fix
       deselectShape();
-      self.mouseData.selected = shape
+      whiteboardDelegate.mouseData.selected = shape
         .selectize({ radius: 10 * scaleFactor() })
-        .resize(self.drawData.minsMaxs)
+        .resize(whiteboardDelegate.drawData.minsMaxs)
         .draggable();
-      self.mouseData.selected.remember('_draggable').start(e);
+      whiteboardDelegate.mouseData.selected.remember('_draggable').start(e);
       _moveSelectizeToParent();
     }
   }
 }
 
 function deselectShape() {
-  if(self.mouseData.selected) {
-    self.mouseData.selected.selectize(false).resize('stop').draggable(false);
-    self.mouseData.selected = null;
+  if(whiteboardDelegate.mouseData.selected) {
+    whiteboardDelegate.mouseData.selected.selectize(false).resize('stop').draggable(false);
+    whiteboardDelegate.mouseData.selected = null;
   }
 }
 
 function deleteShape(id) {
-  self.shapeData.added[id].parent().remove();
-  delete self.shapeData.added[id];
+  whiteboardDelegate.shapeData.added[id].parent().remove();
+  delete whiteboardDelegate.shapeData.added[id];
 }
 
 function deleteAllShapes() {
-  self.mainGroup.clear();
-  self.shapeData.added = {};
+  whiteboardDelegate.mainGroup.clear();
+  whiteboardDelegate.shapeData.added = {};
 }
 
 function setMouseType(type) {
-  self.mouseData.prevType = self.mouseData.type;
-  self.mouseData.type = type;
+  whiteboardDelegate.mouseData.prevType = whiteboardDelegate.mouseData.type;
+  whiteboardDelegate.mouseData.type = type;
 }
 
 function _moveSelectizeToParent() {
-  let selectize = self.mouseData.selected.remember('_selectHandler').nested;
-  self.mainGroup.add(selectize);
+  let selectize = whiteboardDelegate.mouseData.selected.remember('_selectHandler').nested;
+  whiteboardDelegate.mainGroup.add(selectize);
 }

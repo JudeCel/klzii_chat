@@ -9,70 +9,70 @@ module.exports = {
   createShapeWithEvent
 };
 
-var self;
+var whiteboardDelegate;
 function init(data) {
-  self = data;
+  whiteboardDelegate = data;
   return this;
 }
 
 function createShapeWithEvent(e) {
-  self.deps.Shape.createShape(e);
-  self.shapeData.shape.draw('stop', e);
+  whiteboardDelegate.deps.Shape.createShape(e);
+  whiteboardDelegate.shapeData.shape.draw('stop', e);
 }
 
 function boardMouseDown(e) {
   e.preventDefault();
-  self.mouseData.holding = true;
-  if(self.mouseData.type == 'draw') {
-      self.deps.Shape.createShape(e);
+  whiteboardDelegate.mouseData.holding = true;
+  if(whiteboardDelegate.mouseData.type == 'draw') {
+      whiteboardDelegate.deps.Shape.createShape(e);
   }
 }
 
 function boardMouseMove(e) {
-  if(self.mouseData.holding && self.mouseData.type == 'stop') {
-    if(['scribbleEmpty', 'scribbleFilled'].includes(self.drawData.current)) {
-      self.shapeData.shape.draw('point', e);
+  if(whiteboardDelegate.mouseData.holding && whiteboardDelegate.mouseData.type == 'stop') {
+    if(['scribbleEmpty', 'scribbleFilled'].includes(whiteboardDelegate.drawData.current)) {
+      whiteboardDelegate.shapeData.shape.draw('point', e);
     }
   }
 }
 
 function boardMouseUp(e) {
-  self.mouseData.holding = false;
-  switch(self.mouseData.type) {
+  whiteboardDelegate.mouseData.holding = false;
+  switch(whiteboardDelegate.mouseData.type) {
     case 'draw':
-      if(self.shapeData.shape.draw) {
-        self.shapeData.shape.draw(e);
+      if(whiteboardDelegate.shapeData.shape.draw) {
+        whiteboardDelegate.shapeData.shape.draw(e);
       }
       break;
     case 'stop':
-      self.shapeData.shape.draw('stop', e);
-      self.deps.Shape.setMouseType(self.mouseData.prevType);
+      whiteboardDelegate.shapeData.shape.draw('stop', e);
+      whiteboardDelegate.deps.Shape.setMouseType(whiteboardDelegate.mouseData.prevType);
       break;
   }
 }
 
 function shapeWasCreated(e) {
   var shape = e.target.instance;
-  self.deps.History.add(shape, 'draw');
-  self.deps.Actions.shapeCreate(_shapeParams(shape));
+  whiteboardDelegate.deps.History.add(shape, 'draw');
+  whiteboardDelegate.deps.Actions.shapeCreate(_shapeParams(shape));
 }
 
 function shapeWillUpdate(e) {
   var shape = e.target.instance;
-  self.deps.History.add(shape, 'update', 'start');
+  whiteboardDelegate.deps.History.add(shape, 'update', 'start');
 }
 
 function shapeWasUpdated(e) {
   var shape = e.target.instance;
-  if(self.deps.History.last('undo').element == shape.svg()) {
-    self.deps.History.remove('undo');
+  if(whiteboardDelegate.deps.History.last('undo').element == shape.svg()) {
+    whiteboardDelegate.deps.History.remove('undo');
   }
   else {
-    self.deps.History.add(shape, 'update', 'end');
-    self.deps.Actions.shapeUpdate(_shapeParams(shape));
+    whiteboardDelegate.deps.History.add(shape, 'update', 'end');
+    whiteboardDelegate.deps.Actions.shapeUpdate(_shapeParams(shape));
   }
 }
 
 function _shapeParams(shape) {
-  return self.deps.Helpers.shapeParams(shape);
+  return whiteboardDelegate.deps.Helpers.shapeParams(shape);
 }

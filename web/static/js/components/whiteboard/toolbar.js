@@ -2,9 +2,9 @@ import React from 'react';
 import ToolbarButtons from './toolbar/index';
 import { ButtonToolbar, Tooltip } from 'react-bootstrap';
 
-var self;
+var whiteboardDelegate;
 function init(data) {
-  self = data;
+  whiteboardDelegate = data;
   return this;
 }
 
@@ -17,46 +17,46 @@ const Buttons = React.createClass({
   },
   setType(buttonType, shapeType) {
     this.setState({ activeType: buttonType });
-    self.drawData.current = shapeType;
+    whiteboardDelegate.drawData.current = shapeType;
 
     if(buttonType == 'none') {
-      self.deps.Shape.setMouseType('select');
+      whiteboardDelegate.deps.Shape.setMouseType('select');
     }
     else {
-      self.deps.Shape.deselectShape();
-      self.deps.Shape.setMouseType('draw');
+      whiteboardDelegate.deps.Shape.deselectShape();
+      whiteboardDelegate.deps.Shape.setMouseType('draw');
     }
   },
   setWidth(value) {
-    if(self.mouseData.selected) {
-      self.mouseData.selected.stroke({ width: value, color: self.props.currentUser.colour });
-      self.deps.Actions.shapeUpdate(self.deps.Helpers.shapeParams(self.mouseData.selected));
+    if(whiteboardDelegate.mouseData.selected) {
+      whiteboardDelegate.mouseData.selected.stroke({ width: value, color: whiteboardDelegate.props.currentUser.colour });
+      whiteboardDelegate.deps.Actions.shapeUpdate(whiteboardDelegate.deps.Helpers.shapeParams(whiteboardDelegate.mouseData.selected));
     }
-    self.drawData.strokeWidth = value;
+    whiteboardDelegate.drawData.strokeWidth = value;
     this.forceUpdate();
   },
   setHistory(type) {
-    let action = self.deps.History[type];
+    let action = whiteboardDelegate.deps.History[type];
     action();
   },
   setDelete(all) {
     if(all) {
-      self.deps.History.add(self.shapeData.added, 'removeAll');
-      self.deps.Actions.shapeDeleteAll();
+      whiteboardDelegate.deps.History.add(whiteboardDelegate.shapeData.added, 'removeAll');
+      whiteboardDelegate.deps.Actions.shapeDeleteAll();
     }
     else {
-      self.deps.History.add(self.mouseData.selected, 'remove');
-      self.deps.Actions.shapeDelete(self.mouseData.selected);
+      whiteboardDelegate.deps.History.add(whiteboardDelegate.mouseData.selected, 'remove');
+      whiteboardDelegate.deps.Actions.shapeDelete(whiteboardDelegate.mouseData.selected);
     }
   },
   setImage(type, url) {
     this.setType(type, type);
-    self.drawData.imageUrl = url;
+    whiteboardDelegate.drawData.imageUrl = url;
   },
   setText(type, text) {
     this.setType(type, type);
-    self.drawData.text = text;
-    self.createShapeWithDefaultCoords();
+    whiteboardDelegate.drawData.text = text;
+    whiteboardDelegate.createShapeWithDefaultCoords();
     this.setType('none', 'none');
   },
   tooltipFormat(text) {
@@ -70,7 +70,7 @@ const Buttons = React.createClass({
       setDelete: this.setDelete,
       setHistory: this.setHistory,
       setWidth: this.setWidth,
-      strokeWidth: self.drawData.strokeWidth,
+      strokeWidth: whiteboardDelegate.drawData.strokeWidth,
       getClassnameParent: this.getClassnameParent,
       tooltipFormat: this.tooltipFormat,
       activeType: this.state.activeType

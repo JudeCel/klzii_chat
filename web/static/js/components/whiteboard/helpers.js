@@ -3,9 +3,9 @@ module.exports = {
   shapeParams
 };
 
-var self;
+var whiteboardDelegate;
 function init(data) {
-  self = data;
+  whiteboardDelegate = data;
   return this;
 }
 

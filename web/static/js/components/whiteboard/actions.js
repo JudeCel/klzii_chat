@@ -9,19 +9,19 @@ module.exports = {
   undoShapeDelete
 };
 
-var self;
+var whiteboardDelegate;
 function init(data) {
-  self = data;
+  whiteboardDelegate = data;
   return this;
 }
 
 function shapeCreate(params) {
-  const { dispatch, channel } = self.props;
+  const { dispatch, channel } = whiteboardDelegate.props;
   dispatch(Actions.create(channel, params));
 }
 
 function shapeUpdate(params) {
-  const { dispatch, channel } = self.props;
+  const { dispatch, channel } = whiteboardDelegate.props;
   dispatch(Actions.update(channel, params));
 }
 
@@ -33,7 +33,7 @@ function undoShapeDelete(shapeObject) {
 function shapeDelete(shape) {
   if(shape) {
     var id = shape.id();
-    const { dispatch, channel } = self.props;
+    const { dispatch, channel } = whiteboardDelegate.props;
 
     shape.selectize(false);
     dispatch(Actions.delete(channel, id));
@@ -41,6 +41,6 @@ function shapeDelete(shape) {
 }
 
 function shapeDeleteAll() {
-  const { dispatch, channel } = self.props;
+  const { dispatch, channel } = whiteboardDelegate.props;
   dispatch(Actions.deleteAll(channel));
 }
