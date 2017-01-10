@@ -115,7 +115,7 @@ const Whiteboard = React.createClass({
   },
   componentDidUpdate(prevProps, prevState) {
     this.drawData.color = this.props.currentUser.colour;
-    let screenChange = JSON.stringify(prevProps.utilityWindow) != JSON.stringify(this.props.utilityWindow);
+    let screenChange = prevProps.utilityWindow != this.props.utilityWindow;
 
     if(prevProps.shapes != this.props.shapes) {
       this.deps.Shape.loadShapes();
