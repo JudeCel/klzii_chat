@@ -1,3 +1,5 @@
+import mobileScreenHelpers from '../../mixins/mobileHelpers';
+
 module.exports = {
   init,
   createShape,
@@ -93,11 +95,7 @@ function buildShape(e) {
 }
 
 function scaleFactor() {
-  let screenScale = 1;
-  if ((screen && screen.width < 700) || (window.innerWidth < 700)) {
-    screenScale = 5;
-  }
-  return screenScale;
+  return mobileScreenHelpers.isMobile() ? 5 : 1;
 }
 
 function selectShape(e) {
