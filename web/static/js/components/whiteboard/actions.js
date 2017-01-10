@@ -31,12 +31,10 @@ function shapeDelete(shape) {
 
     shape.selectize(false);
     dispatch(Actions.delete(channel, id));
-    self.deps.Shape.deleteShape(id);
   }
 }
 
 function shapeDeleteAll() {
   const { dispatch, channel } = self.props;
   dispatch(Actions.deleteAll(channel));
-  self.deps.Shape.deleteAllShapes();
 }
