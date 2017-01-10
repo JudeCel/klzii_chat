@@ -105,7 +105,10 @@ function selectShape(e) {
 
     if(shape && (!selected || selected && selected.id() != shape.id())) { // IE fix
       deselectShape();
-      self.mouseData.selected = shape.selectize({radius: 10 * scaleFactor()}).resize(self.drawData.minsMaxs).draggable();
+      self.mouseData.selected = shape
+        .selectize({ radius: 10 * scaleFactor() })
+        .resize(self.drawData.minsMaxs)
+        .draggable();
       self.mouseData.selected.remember('_draggable').start(e);
       _moveSelectizeToParent();
     }
