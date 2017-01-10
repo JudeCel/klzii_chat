@@ -23,12 +23,9 @@ function createShapeWithEvent(e) {
 function boardMouseDown(e) {
   e.preventDefault();
   self.mouseData.holding = true;
-  switch(self.mouseData.type) {
-    case 'draw':
+  if(self.mouseData.type == 'draw') {
       self.deps.Shape.createShape(e);
-      break;
   }
-
 }
 
 function boardMouseMove(e) {

@@ -71,9 +71,7 @@ function _actionUndo(object) {
       self.deps.Actions.shapeCreate(object);
       break;
     case 'removeAll':
-      object.elements.map(function(element) {
-        _actionUndo(element);
-      });
+      object.elements.map(_actionUndo);
       break;
     case 'update':
       _update({ id: object.id, element: object.element, type: object.type });
