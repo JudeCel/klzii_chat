@@ -63,8 +63,7 @@ function redo() {
 function _actionUndo(object) {
   switch(object.type) {
     case 'draw':
-      var shape = SVG.get(object.id);
-      self.deps.Actions.shapeDelete(shape);
+      self.deps.Actions.undoShapeDelete(object);
       break;
     case 'remove':
       self.deps.Shape.loadOne(object.element);

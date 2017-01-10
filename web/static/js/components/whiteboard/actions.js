@@ -6,6 +6,7 @@ module.exports = {
   shapeUpdate,
   shapeDelete,
   shapeDeleteAll,
+  undoShapeDelete
 };
 
 var self;
@@ -22,6 +23,11 @@ function shapeCreate(params) {
 function shapeUpdate(params) {
   const { dispatch, channel } = self.props;
   dispatch(Actions.update(channel, params));
+}
+
+function undoShapeDelete(shapeObject) {
+  var shape = SVG.get(shapeObject.id);
+  shapeDelete(shape);
 }
 
 function shapeDelete(shape) {
