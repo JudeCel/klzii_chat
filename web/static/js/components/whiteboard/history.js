@@ -108,7 +108,7 @@ function _update(object) {
 
 function _paramsFormat(object, type) {
   var params = self.deps.Helpers.shapeParams(object);
-  return { ...params, type: type };
+  return { ...params, type };
 }
 
 //           undo  |  redo
