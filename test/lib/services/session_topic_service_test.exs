@@ -1,5 +1,6 @@
 defmodule KlziiChat.Services.SessionTopicServiceTest do
   use KlziiChat.{ModelCase, SessionMemberCase}
+  alias KlziiChat.{Repo, Topic}
   alias KlziiChat.Services.SessionTopicService
 
   setup %{session: session, session_topic_1: session_topic_1, facilitator: facilitator, participant: participant} do
@@ -36,6 +37,13 @@ defmodule KlziiChat.Services.SessionTopicServiceTest do
     message = " jeee"
     {:ok, session_topic} = SessionTopicService.board_message(facilitator.id, session_topic_1.id, %{"message" => message})
     assert(message == session_topic.boardMessage)
+  end
+  
+  test "#SessionTopicService - update board message will update Topic", %{facilitator: facilitator, session_topic_1: session_topic_1} do
+    message = " jeee"
+    {:ok, _} = SessionTopicService.board_message(facilitator.id, session_topic_1.id, %{"message" => message})
+    topic = Repo.get!(Topic, session_topic_1.topicId)
+    assert(message == topic.boardMessage)
   end
 
   test "#SessionTopicService - participent can't update board message ", %{participant: participant, session_topic_1: session_topic_1} do
