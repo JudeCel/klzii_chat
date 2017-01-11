@@ -16,7 +16,7 @@ const Answer5StarRating = React.createClass({
     return (
       <div className='col-md-12'>
         <div className='text-center'>
-          { survey.question }
+          <h3>{ survey.question }</h3>
         </div>
 
         <div className='text-center star-rating-section'>

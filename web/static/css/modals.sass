@@ -335,8 +335,7 @@ body.modal-open
             padding-left: 30px
           .col-md-6.text-right
             float: right
-            padding: 5px
-            padding-right: 30px
+            padding: 0px 30px 5px 5px
     .survey-create-section, .uploads-section
       @extend .no-border-radius
       .icon-pdf
@@ -386,6 +385,17 @@ body.modal-open
       @extend .no-border-radius
       @extend .cursor-pointer
       padding: 0 10px
+  &.survey-modal
+    .modal-header
+      border-bottom: 1px solid #ddd
+    h2, h3
+      margin-top: 10px
+    h5
+      font-size: 16px
+      margin-top: 20px
+    .survey-answer
+     font-size: 16px
+      
 
 @media screen and (min-width: 768px)
   .reports-modal

@@ -17,35 +17,41 @@ const SurveyView5StarRating = React.createClass({
     }
   },
   render() {
-    const { answers, modalWindows } = this.props;
+    const { answers,survey, modalWindows } = this.props;
 
     if(answers.length) {
       return (
-        <ul className='list-group'>
-          <li key={ -1 } className='list-group-item'>
-            <div className='row'>
-              <div className='col-md-6'>
-                Average
-              </div>
-              <div className='col-md-6 star-rating-section text-right'>
-                <Rating placeholder='fa fa-star' empty='fa fa-star-o' full='fa fa-star' initialRate={ this.getAvarageCount() } readonly={ true } />
-              </div>
-            </div>
-          </li>
-
-          {
-            answers.map((answer, index) =>
-              <li key={ index } className='list-group-item'>
-                <div className='row'>
-                  <div className='col-md-6'>{ answer.session_member.username }</div>
-                  <div className='col-md-6 star-rating-section text-right'>
-                    <Rating placeholder='fa fa-star' empty='fa fa-star-o' full='fa fa-star' initialRate={ answer.answer.value } readonly={ true } />
-                  </div>
+        <div>
+          <div className='text-center'>
+            <h3>{ survey.question }</h3>
+            <h5>Current Vote Result</h5>
+          </div>
+          <ul className='list-group'>
+            <li key={ -1 } className='list-group-item'>
+              <div className='row'>
+                <div className='col-md-6 survey-answer'>
+                  <b>Average</b>
                 </div>
-              </li>
-            )
-          }
-        </ul>
+                <div className='col-md-6 star-rating-section text-right'>
+                  <Rating placeholder='fa fa-star' empty='fa fa-star-o' full='fa fa-star' initialRate={ this.getAvarageCount() } readonly={ true } />
+                </div>
+              </div>
+            </li>
+
+            {
+              answers.map((answer, index) =>
+                <li key={ index } className='list-group-item'>
+                  <div className='row'>
+                    <div className='col-md-6 survey-answer'><b>{ answer.session_member.username }</b></div>
+                    <div className='col-md-6 star-rating-section text-right'>
+                      <Rating placeholder='fa fa-star' empty='fa fa-star-o' full='fa fa-star' initialRate={ answer.answer.value } readonly={ true } />
+                    </div>
+                  </div>
+                </li>
+              )
+            }
+          </ul>
+        </div>
       )
     }
     else if (modalWindows.postData) {
@@ -59,6 +65,7 @@ const SurveyView5StarRating = React.createClass({
 
 const mapStateToProps = (state) => {
   return {
+    survey: state.miniSurveys.console,
     answers: state.miniSurveys.view.mini_survey_answers,
     modalWindows: state.modalWindows
   }
