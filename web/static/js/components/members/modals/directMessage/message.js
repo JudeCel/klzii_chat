@@ -16,7 +16,7 @@ const Message = React.createClass({
         <div className='info'>
           <div className='header'>
             <div className='col-md-6'>
-              <strong>{ sender.username }</strong>
+              <strong>{ sender.role == 'observer' ? sender.firstName + ' ' + sender.lastName : sender.username }</strong>
             </div>
 
             <div className='col-md-6 text-right'>

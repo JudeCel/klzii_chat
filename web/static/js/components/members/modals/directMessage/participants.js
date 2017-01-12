@@ -39,7 +39,7 @@ const Participants = React.createClass({
                 <div className='info'>
                   <div className='header'>
                     <div className='col-md-6'>
-                      <strong>{ participant.username }</strong>
+                      <strong>{ participant.role == 'observer' ? participant.firstName + ' ' + participant.lastName : participant.username }</strong>
                     </div>
 
                     <div className='col-md-6 text-right'>
