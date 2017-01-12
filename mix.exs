@@ -21,7 +21,7 @@ defmodule KlziiChat.Mixfile do
       applications: [
         :phoenix, :phoenix_html, :cowboy, :logger, :gettext,:quantum,
         :phoenix_pubsub, :phoenix_ecto, :postgrex, :ex_aws, :hackney,
-        :timex_ecto, :exq
+        :timex_ecto, :exq, :sweet_xml
       ]
     ]
   end
