@@ -57,7 +57,7 @@ defmodule KlziiChat.Mixfile do
 
      {:postgrex, "~> 0.13"},
      {:gettext, "0.13.0"},
-     {:guardian, "0.14.0"},
+     {:guardian, "~> 0.14.2"},
      {:cowboy, "~> 1.0"},
      {:corsica, "~> 0.5"},
      {:mogrify, "~> 0.5.1"},
