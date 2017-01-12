@@ -4,14 +4,16 @@ const initialState = {
   socket: null,
   channel: null,
   error: null,
-  ready: false
+  ready: false,
+  jwtToken: null,
 };
 
 export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
     case Constants.SET_SOCKET_EVENTS:
       return { ...state, ready: true };
-
+    case Constants.SET_JWT_TOKEN:
+      return { ...state, jwtToken: action.token };
     case Constants.SET_SESSION_CHANNEL:
       return {  ...state, socket: action.socket, channel: action.channel };
 

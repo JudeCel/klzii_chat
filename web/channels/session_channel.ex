@@ -60,6 +60,13 @@ defmodule KlziiChat.SessionChannel do
 
     push socket, "presence_state", Presence.list(socket)
     push(socket, "self_info", session_member)
+    send(self(), :jwt_token)
+    {:noreply, socket}
+  end
+  def handle_info(:jwt_token, socket) do
+    session_member = get_session_member(socket)
+    { :ok, jwt, _encoded_claims } =  Guardian.encode_and_sign(%KlziiChat.AccountUser{id: session_member.account_user_id}, :token )
+    push(socket, "jwt_token", %{token: jwt})
     {:noreply, socket}
   end
 

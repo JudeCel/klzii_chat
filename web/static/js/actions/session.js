@@ -94,6 +94,13 @@ const Actions = {
       channel.on("self_info", (resp) =>{
         currentMember(dispatch, resp);
       });
+      
+      channel.on("jwt_token", (resp) =>{
+        dispatch({
+          type: Constants.SET_JWT_TOKEN,
+          token: resp.token,
+        });
+      });
 
       channel.on("update_session", (resp) =>{
         dispatch({

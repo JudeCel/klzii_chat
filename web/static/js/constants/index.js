@@ -1,5 +1,6 @@
 const Constants = {
   SET_SESSION:             'SET_SESSION',
+  SET_JWT_TOKEN:           'SET_JWT_TOKEN',
   UPDATE_SESSION:          'UPDATE_SESSION',
   SET_CURRENT_USER:        'SET_CURRENT_USER',
   SOCKET_CONNECTED:        'SOCKET_CONNECTED',
