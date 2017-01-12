@@ -40,17 +40,20 @@ const ParticipantListModal = React.createClass({
       let endIndex = startIndex + USERS_PER_PAGE;
       let onlineParticipantsDisplay = onlineParticipants.slice(startIndex, endIndex);
 
+      let paginator = onlineParticipants.length > USERS_PER_PAGE ? 
+        <Pagination
+          activePage={this.state.page}
+          itemsCountPerPage={USERS_PER_PAGE}
+          totalItemsCount={onlineParticipants.length}
+          pageRangeDisplayed={5}
+          onChange={this.pageChange}
+        /> : null;
+
       return (
         <div className="participants-container">
           { onlineParticipantsDisplay.map((participant) => this.renderParticipant(participant) ) }
           <div className="paginator" id="participantsPaginator">
-            <Pagination
-              activePage={this.state.page}
-              itemsCountPerPage={USERS_PER_PAGE}
-              totalItemsCount={onlineParticipants.length}
-              pageRangeDisplayed={5}
-              onChange={this.pageChange}
-            />
+            {paginator}
           </div>
         </div>
       )
