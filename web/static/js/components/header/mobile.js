@@ -83,6 +83,14 @@ const MobileHeader = React.createClass({
       this.openSpecificModal('avatar');
     }
   },
+  getHasMessagesClassName(topic) {
+    const { currentUser } = this.props;
+    if (currentUser.role == "observer") {
+      return "";
+    } else {
+      return currentUser.sessionTopicContext[topic.id] && currentUser.sessionTopicContext[topic.id].hasMessages ? "" : " has-no-messages";
+    }
+  },
   render() {
     const { sessionTopics, unread_messages, currentUser, brand_logo, colours, session } = this.props;
 
@@ -147,7 +155,7 @@ const MobileHeader = React.createClass({
                     sessionTopics.map((sessionTopic) => {
                       return (
                         <li key={ 'sessionTopic-' + sessionTopic.id } className='clearfix' onClick={ this.changeSessionTopic.bind(this, sessionTopic.id) }>
-                          <span className='pull-left'>{ sessionTopic.name }</span>
+                          <span className={'pull-left' + this.getHasMessagesClassName(sessionTopic)}>{ sessionTopic.name }</span>
                           <span className='pull-right'>
                             <Badge type='normal' data={ unread_messages.session_topics[sessionTopic.id] } />
                             <Badge type='reply' data={ unread_messages.session_topics[sessionTopic.id] } />
