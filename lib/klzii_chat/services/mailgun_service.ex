@@ -6,7 +6,7 @@ defmodule KlziiChat.Services.MailgunService do
   def mailgun_webhooks(params) do
     with  {:ok, update_params} <- detect_event(params),
           {:ok, message_id} <- get_messasge_id(params),
-          {:ok, _} <- update_invite(params, message_id),
+          {:ok, _} <- update_invite(update_params, message_id),
     do: {:ok, update_params}
   end
 
@@ -39,10 +39,10 @@ defmodule KlziiChat.Services.MailgunService do
   end
   def detect_event(%{"event" => "delivered"} = params) do
     resp = %{
-      webhookMessage: Map.get(params, "description"),
+      webhookMessage: "delivered",
       webhookEvent: Map.get(params, "event"),
       webhookTime: Timex.now,
-      emailStatus: "delivered"
+      emailStatus: "sent"
     }
     {:ok, resp}
   end
