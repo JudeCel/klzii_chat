@@ -19,16 +19,22 @@ defmodule KlziiChat.Services.Reports.ReportTest do
     test "pdf", %{pdf_report: pdf_report} do
       assert({:ok, report} = Report.run(pdf_report.id))
       assert(is_integer(report.resourceId))
+      report = Repo.preload(report, [:resource])
+      assert(report.resource.file)
     end
 
     test "csv", %{csv_report: csv_report} do
       assert({:ok, report} = Report.run(csv_report.id))
       assert(is_integer(report.resourceId))
+      report = Repo.preload(report, [:resource])
+      assert(report.resource.file)
     end
 
     test "txt", %{txt_report: txt_report} do
       assert({:ok, report} = Report.run(txt_report.id))
       assert(is_integer(report.resourceId))
+      report = Repo.preload(report, [:resource])
+      assert(report.resource.file)
     end
   end
 
@@ -49,16 +55,22 @@ defmodule KlziiChat.Services.Reports.ReportTest do
     test "pdf", %{pdf_report: pdf_report} do
       assert({:ok, report} = Report.run(pdf_report.id))
       assert(is_integer(report.resourceId))
+      report = Repo.preload(report, [:resource])
+      assert(report.resource.file)
     end
 
     test "csv", %{csv_report: csv_report} do
       assert({:ok, report} = Report.run(csv_report.id))
       assert(is_integer(report.resourceId))
+      report = Repo.preload(report, [:resource])
+      assert(report.resource.file)
     end
 
     test "txt", %{txt_report: txt_report} do
       assert({:ok, report} = Report.run(txt_report.id))
       assert(is_integer(report.resourceId))
+      report = Repo.preload(report, [:resource])
+      assert(report.resource.file)
     end
   end
 
@@ -73,6 +85,8 @@ defmodule KlziiChat.Services.Reports.ReportTest do
     test "pdf", %{pdf_report: pdf_report} do
       assert({:ok, report} = Report.run(pdf_report.id))
       assert(is_integer(report.resourceId))
+      report = Repo.preload(report, [:resource])
+      assert(report.resource.file)
     end
   end
 end
