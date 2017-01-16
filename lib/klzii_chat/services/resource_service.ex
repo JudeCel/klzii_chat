@@ -5,7 +5,6 @@ defmodule KlziiChat.Services.ResourceService do
   alias KlziiChat.Services.Validations.Resource, as: ResourceValidations
   alias KlziiChat.Services.{SessionReportingService}
 
-  import Ecto
   import Ecto.Query
 
   @spec upload(map, integer) ::  {:ok, %Resource{}} | {:error, map}
@@ -187,7 +186,7 @@ defmodule KlziiChat.Services.ResourceService do
       |> QueriesResources.where_stock(true)
       |> Repo.all
 
-    used = QueriesResources.get_by_ids_for_open_session(ids)
+    used = QueriesResources.get_by_ids_used(ids)
       |> Repo.all
 
     query = QueriesResources.base_query
@@ -239,40 +238,5 @@ defmodule KlziiChat.Services.ResourceService do
       where: e.type == "file",
       where: e.scope == "zip")
     |> Repo.delete_all
-  end
-
-  @spec create_new_zip(Integer.t, String.t, List.t) :: {:ok, %Resource{} } | %{status: :error, reason: String.t}
-  def create_new_zip(account_user_id, name, ids) do
-    account_user = Repo.get!(AccountUser, account_user_id) |> Repo.preload([:account])
-    query =
-      from e in assoc(account_user.account, :resources),
-      where: e.id in ^ids,
-      where: e.type in ~w(image audio file video)
-    result = Repo.all(query)
-
-    case ResourcePermissions.can_zip(account_user, result) do
-      {:ok} ->
-        params = %{
-          accountUserId: account_user.id,
-          scope: "zip",
-          type: "file",
-          name: name,
-          status: "progress",
-          expiryDate: Timex.shift(Timex.now, days: 1),
-          properties: %{zip_ids: ids}
-        }
-
-        Resource.changeset(Ecto.build_assoc( account_user.account, :resources), params)
-        |> Repo.insert
-        |> case  do
-            {:ok, resource} ->
-              Task.async(fn -> KlziiChat.Files.Tasks.run(resource, ids) end)
-              {:ok, resource }
-            {:error, reason} ->
-              {:error, Map.put(reason, :code, 400)}
-          end
-        {:error, reason} ->
-          {:error, reason}
-      end
   end
 end

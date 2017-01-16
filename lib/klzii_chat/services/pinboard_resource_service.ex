@@ -5,8 +5,8 @@ defmodule KlziiChat.Services.PinboardResourceService do
   import Ecto.Query, only: [from: 2]
   import Ecto
 
-  @spec error_messages :: Map.t
-  def error_messages do
+  @spec error_messages() :: Map.t
+  def error_messages() do
     %{
       pinboard_is_disable: "Can't add new resource to Pinboard is disable",
       not_a_image: "Resource not an image"
@@ -45,7 +45,7 @@ defmodule KlziiChat.Services.PinboardResourceService do
     ) |> Repo.one
       |> case do
           nil ->
-            {:error, %{code: 413, not_found: error_messages.not_a_image}}
+            {:error, %{code: 413, not_found: error_messages().not_a_image}}
             _ ->
             {:ok}
          end
@@ -60,7 +60,7 @@ defmodule KlziiChat.Services.PinboardResourceService do
     ) |> Repo.one
       |> case do
           nil ->
-            {:error, %{code: 403, system: error_messages.pinboard_is_disable}}
+            {:error, %{code: 403, system: error_messages().pinboard_is_disable}}
             _ ->
             {:ok}
          end

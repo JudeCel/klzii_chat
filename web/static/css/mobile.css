@@ -1183,3 +1183,7 @@
     margin-top: 0px !important;
   }
 }
+
+.mobile-side-menu-topics .has-no-messages {
+  color: #b25019 !important;
+}

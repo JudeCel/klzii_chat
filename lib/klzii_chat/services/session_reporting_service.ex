@@ -1,6 +1,6 @@
 defmodule KlziiChat.Services.SessionReportingService do
   alias KlziiChat.Services.{ResourceService}
-  alias KlziiChat.{Repo, SessionTopicsReport, SessionMember, Session}
+  alias KlziiChat.{Repo, SessionTopicsReport, SessionMember, Session, SessionTopic}
   alias KlziiChat.Services.Permissions.SessionReporting, as: SessionReportingPermissions
   import KlziiChat.Helpers.MapHelper, only: [key_to_string: 1]
   import Ecto.Query, only: [from: 2, from: 1 ]
@@ -72,6 +72,7 @@ defmodule KlziiChat.Services.SessionReportingService do
 
   @spec processed_report(Integer, Map.t) :: {:ok, Map.t} | {:error, String.t}
   def processed_report(session_member_id, payload) do
+
     with {:ok, session_member} <- get_session_member(session_member_id),
          {:ok} <- check_report_create_permision(session_member),
          {:ok, report_name} <- get_report_name(payload, session_member.session),
@@ -103,11 +104,21 @@ defmodule KlziiChat.Services.SessionReportingService do
   end
 
   @spec get_report_name(Map.t, String.t) :: {:ok, String.t}
-  def get_report_name(%{"type" => "messages"}, session), do: {:ok, "Messages Report #{session.name}" |> normalize_name}
-  def get_report_name(%{"type" => "messages_stars_only"}, session), do: {:ok, "Messages Report #{session.name}" |> normalize_name}
-  def get_report_name(%{"type" =>"whiteboards"}, session), do: {:ok, "Whiteboards Report #{session.name}" |> normalize_name}
-  def get_report_name(%{"type" =>"votes"}, session), do: {:ok, "Votes Report #{session.name}" |> normalize_name}
-  def get_report_name(_, _), do: {:ok, "Session_Report" |> normalize_name}
+  def get_report_name(%{"sessionTopicId" => sessionTopicId} = payload, session) when is_nil(sessionTopicId) do
+    generate_fiele_name(payload, session)
+  end
+  def get_report_name(%{"sessionTopicId" => sessionTopicId} = payload, _session) do
+    sessionTopic = Repo.get(SessionTopic, sessionTopicId)
+    generate_fiele_name(payload, sessionTopic)
+  end
+  def get_report_name(payload, session), do: generate_fiele_name(payload, session)
+
+  @spec get_report_name(Map.t, String.t) :: {:ok, String.t}
+  def generate_fiele_name(%{"type" => "messages"}, %{name: name}), do: {:ok, "Messages Report #{name}_" |> normalize_name}
+  def generate_fiele_name(%{"type" => "messages_stars_only"}, %{name: name}), do: {:ok, "Messages Report #{name}_" |> normalize_name}
+  def generate_fiele_name(%{"type" =>"whiteboards"}, %{name: name}), do: {:ok, "Whiteboards Report #{name}_" |> normalize_name}
+  def generate_fiele_name(%{"type" =>"votes"}, %{name: name}), do: {:ok, "Votes Report #{name}_" |> normalize_name}
+  def generate_fiele_name(_, _), do: {:ok, "Session_Report" |> normalize_name}
 
   @spec set_status({:ok, Map.t} | {:error, String.t}, integer) :: {atom, Map.t}
   def set_status({:ok, resource}, report_id) do

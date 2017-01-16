@@ -16,7 +16,7 @@ const AnswerYesNoMaybe = React.createClass({
     return (
       <div className='col-md-12'>
         <div className='text-center'>
-          { survey.question }
+          <h3>{ survey.question }</h3>
         </div>
 
         <ul className='list-group'>

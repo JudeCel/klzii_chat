@@ -101,7 +101,7 @@ defmodule KlziiChat.Channels.SessionTopic.MessageTest do
     reply_body = "replyId body"
     reply_ref = push socket, "new_message", %{"emotion" => "1", "replyId" => message.id, "body" => reply_body}
     assert_reply reply_ref, :ok
-    assert_push("new_message", %{body: "@cool member replyId body", replyId: message_id })
+    assert_push("new_message", %{body: "replyId body", replyId: message_id })
     assert(message_id == message.id)
   end
 

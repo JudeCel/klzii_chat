@@ -94,6 +94,20 @@ const Actions = {
       channel.on("self_info", (resp) =>{
         currentMember(dispatch, resp);
       });
+      
+      channel.on("jwt_token", (resp) =>{
+        dispatch({
+          type: Constants.SET_JWT_TOKEN,
+          token: resp.token,
+        });
+      });
+
+      channel.on("update_session", (resp) =>{
+        dispatch({
+          type: Constants.UPDATE_SESSION,
+          session: resp,
+        });
+      });
 
       channel.on("contact_list_map_struct", (resp) => {
         dispatch({type: 'SET_REPORT_MAP_STRUCT', mapStruct: resp.mapStruct});

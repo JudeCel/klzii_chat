@@ -70,6 +70,9 @@ defmodule KlziiChat.Router do
 
   scope "/", KlziiChat do
     get "/ping", PingController, :index
+    post "/mailgun/webhooks", MailgunController, :webhooks
+    post "/mailgun/webhooks_info", MailgunController, :info
+    get "/mailgun/webhooks_info", MailgunController, :info
   end
 
   scope "/api/resources", KlziiChat do
@@ -77,7 +80,6 @@ defmodule KlziiChat.Router do
     # CORS Routes
     options "/", ResourcesController, :index
     options "/ping", ResourcesController, :ping
-    options "/zip", ResourcesController, :zip
     options "/upload", ResourcesController, :upload
     options "/delete", ResourcesController, :delete
     options "/closed_session_delete_check", ResourcesController, :closed_session_delete_check
@@ -86,7 +88,6 @@ defmodule KlziiChat.Router do
     # Generic routes for API be call from original domain
     get "/", ResourcesController, :index
     get "/ping", ResourcesController, :ping
-    post "/zip", ResourcesController, :zip
     post "/upload", ResourcesController, :upload
     delete "/delete", ResourcesController, :delete
     get "/closed_session_delete_check", ResourcesController, :closed_session_delete_check

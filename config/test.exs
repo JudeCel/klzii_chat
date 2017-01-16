@@ -21,7 +21,10 @@ config :klzii_chat, KlziiChat.Repo,
   sql_sandbox: true
 
 config :guardian, Guardian,
-    secret_key: "SttPra/cddsnX+Vko2i8KA=="
+  secret_key: "SttPra/cddsnX+Vko2i8KA=="
+
+config :arc,
+  storage: Arc.Storage.Local
 
 config :klzii_chat, KlziiChat.DatabaseMonitoring.Listener,
   database: "kliiko_test",

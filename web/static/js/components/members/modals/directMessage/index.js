@@ -24,7 +24,7 @@ const DirectMessage = React.createClass({
             </div>
 
             <div className='col-md-8 modal-title'>
-              <h4>Direct Messages</h4>
+              <h4>Private Message</h4>
             </div>
           </Modal.Header>
 

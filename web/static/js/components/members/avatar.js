@@ -44,6 +44,10 @@ const Avatar = React.createClass({
       image.addClass('svg-avatar-element');
     }
   },
+  shouldAddObserverAvatar(avatar) {
+    let image = avatar.image(`/images/observer.png`, 10, 10, 123, 80);
+    image.addClass('svg-avatar-element');
+  },
   findAvatar() {
     return Snap('#' + this.pickId());
   },
@@ -55,13 +59,17 @@ const Avatar = React.createClass({
   },
   drawAvatar(avatar) {
     const { sessionTopicId, member } = this.props;
+    if (member.role != "observer") {
     const { base, face, body, hair, desk, head } = this.avatarDataBySessionContext(member.avatarData, member.sessionTopicContext, sessionTopicId);
-    this.shouldAddToAvatar(avatar, 'base', base);
-    this.shouldAddToAvatar(avatar, 'face', face, true);
-    this.shouldAddToAvatar(avatar, 'body', body);
-    this.shouldAddToAvatar(avatar, 'hair', hair);
-    this.shouldAddToAvatar(avatar, 'desk', desk);
-    this.shouldAddToAvatar(avatar, 'head', head);
+      this.shouldAddToAvatar(avatar, 'base', base);
+      this.shouldAddToAvatar(avatar, 'face', face, true);
+      this.shouldAddToAvatar(avatar, 'body', body);
+      this.shouldAddToAvatar(avatar, 'hair', hair);
+      this.shouldAddToAvatar(avatar, 'desk', desk);
+      this.shouldAddToAvatar(avatar, 'head', head);
+    } else {
+      this.shouldAddObserverAvatar(avatar);
+    }
   },
   shakeElement(el, member) {
     const { dispatch } = this.props;

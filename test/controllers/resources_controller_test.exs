@@ -30,14 +30,6 @@ defmodule KlziiChat.ResourcesControllerTest do
       { :ok, jwt, _encoded_claims } =  Guardian.encode_and_sign(account_user)
       conn = put_req_header(conn, "authorization", jwt)
 
-      zip_resource = Ecto.build_assoc(
-        account_user.account, :resources,
-        accountUserId: account_user.id,
-        name: "cool",
-        type: "file",
-        scope: "zip"
-      ) |> Repo.insert!
-
       image_resource = Ecto.build_assoc(
         account_user.account, :resources,
         accountUserId: account_user.id,
@@ -52,7 +44,6 @@ defmodule KlziiChat.ResourcesControllerTest do
 
       {:ok,
         conn: put_req_header(conn, "accept", "application/json"),
-        zip_resource: zip_resource,
         image_resource: image_resource
       }
     end
@@ -111,20 +102,6 @@ defmodule KlziiChat.ResourcesControllerTest do
       conn = post(conn, "api/resources/upload", %{stock: true, name: "hamster", type: "image", scope: "collage", file: file })
       assert json_response(conn, 200)["resource"]["name"] == "hamster"
       assert json_response(conn, 200)["resource"]["stock"] == false
-    end
-
-    test "init zip action", %{conn: conn, zip_resource: zip_resource, image_resource: image_resource} do
-      Ecto.Adapters.SQL.Sandbox.mode(Repo, {:shared, self()})
-      file = %Plug.Upload{ content_type: "image/jpg", path: @image, filename: "hamster.jpg"}
-      post(conn, "api/resources/upload", %{name: "hamster", type: "image", scope: "collage", file: file })
-
-      conn = post conn, resources_path(conn, :zip, %{"ids" => [zip_resource.id,image_resource.id], "name"=> "newZpi"})
-      assert json_response(conn, 200)["resource"]["name"] == "newZpi"
-    end
-
-    test "show", %{conn: conn, zip_resource: zip_resource} do
-      conn = get conn, resources_path(conn, :show, zip_resource.id)
-      assert json_response(conn, 200)["resource"]["name"] == zip_resource.name
     end
 
     test "closed session delete check", %{conn: conn, image_resource: image_resource} do

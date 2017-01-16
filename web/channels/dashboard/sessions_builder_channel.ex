@@ -1,12 +1,14 @@
 defmodule KlziiChat.Dashboard.SessionsBuilderChannel do
   use KlziiChat.Web, :channel
   alias KlziiChat.{Repo}
+  alias KlziiChat.Dashboard.{Presence}
   import Ecto.Query, only: [from: 2]
+  import(KlziiChat.Helpers.SocketHelper, only: [track_dashboard: 1])
 
   def join("sessionsBuilder:" <> session_id, _, socket) do
     if authorized?(socket, session_id) do
       {session_id, _} = Integer.parse(session_id)
-        send(self, :after_join)
+        send(self(), :after_join)
         {:ok, assign(socket, :session_id, session_id)}
     else
       {:error, %{reason: "unauthorized"}}
@@ -15,6 +17,9 @@ defmodule KlziiChat.Dashboard.SessionsBuilderChannel do
   end
 
   def handle_info(:after_join, socket) do
+    {:ok, _} = track_dashboard(socket)
+    push socket, "presence_state", Presence.list(socket)
+
     {:noreply, socket}
   end
 
@@ -32,7 +37,7 @@ defmodule KlziiChat.Dashboard.SessionsBuilderChannel do
         _ -> can_accses?(socket.assigns.account_user)
        end
   end
-  
+
   def can_accses?(%{role: role }) when role in ["accountManager", "facilitator", "admin"], do: true
   def can_accses?(_), do: false
 

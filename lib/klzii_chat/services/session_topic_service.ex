@@ -1,5 +1,5 @@
 defmodule KlziiChat.Services.SessionTopicService do
-  alias KlziiChat.{Repo, SessionMember, SessionTopic}
+  alias KlziiChat.{Repo, SessionMember, SessionTopic, Topic}
   alias KlziiChat.Services.Permissions.SessionTopic, as: SessionTopicPermissions
 
   def errors_messages do
@@ -8,20 +8,39 @@ defmodule KlziiChat.Services.SessionTopicService do
     }
   end
 
-  @spec board_message(Integer, Integer, Map) :: {:ok, Map } | {:error, String.t}
+  @spec board_message(Integer, Integer, Map) :: {:ok, Map} | {:error, String.t}
   def board_message(session_member_id, session_topic_id, %{"message" => message}) do
     session_member = Repo.get!(SessionMember, session_member_id)
-    session_topic = Repo.get!(SessionTopic, session_topic_id)
 
     case SessionTopicPermissions.can_board_message(session_member) do
       {:ok} ->
-        SessionTopic.changeset(session_topic, %{ boardMessage: message}) |> Repo.update
+        Repo.transaction(fn ->
+          with {:ok, session_topic} <- session_topic_board_message(session_topic_id, message),
+            {:ok, _} <- topic_board_message(session_topic.topicId, message) do session_topic
+          else
+            error -> Repo.rollback(error)
+          end
+        end)
       {:error, reason} ->
         {:error, reason}
     end
   end
 
-  @spec get_related_session_topics(Integer) :: {:ok, Map } | {:error, String.t}
+  @spec session_topic_board_message(Integer, String) :: {:ok, Map} | {:error, String.t}
+  defp session_topic_board_message(session_topic_id, message) do
+    Repo.get!(SessionTopic, session_topic_id)
+    |> SessionTopic.changeset(%{ boardMessage: message}) 
+    |> Repo.update
+  end
+
+  @spec topic_board_message(Integer, String) :: {:ok, Map} | {:error, String.t}
+  defp topic_board_message(topic_id, message) do
+    Repo.get!(Topic, topic_id)
+    |> Topic.changeset(%{ boardMessage: message}) 
+    |> Repo.update
+  end
+
+  @spec get_related_session_topics(Integer) :: {:ok, Map} | {:error, String.t}
   def get_related_session_topics(session_id) do
     session_topics =
       KlziiChat.Queries.SessionTopic.all(session_id)

@@ -4,9 +4,6 @@ defmodule KlziiChat.ConsoleTest do
   alias KlziiChat.Console
 
   @valid_attrs %{sessionTopicId: 1, audioId: 1, videoId: 2, pinboard: true, fileId: 4, miniSurveyId: 4}
-  @invalid_attrs %{}
-
-  @fields %{sessionTopicId: 1, audioId: 1, videoId: 2, pinboard: true, fileId: 4, miniSurveyId: 4}
 
   test "with valid attrs" do
     changeset = Console.changeset(%Console{}, @valid_attrs)
@@ -14,6 +11,6 @@ defmodule KlziiChat.ConsoleTest do
   end
 
   test "with invalid attrs" do
-    assert {:sessionTopicId, {"can't be blank", []}} in errors_on(%Console{}, %{})
+    assert {:sessionTopicId, {"can't be blank", [validation: :required]}} in errors_on(%Console{}, %{})
   end
 end

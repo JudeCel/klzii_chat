@@ -20,12 +20,26 @@ const MobileHeader = React.createClass({
     this.toggleMenu();
     this.openSpecificModal('directMessage', { member: member });
   },
+  spectatorsClick() {
+    this.toggleMenu();
+    this.openSpecificModal('observerList');
+  },
+  guestsClick() {
+    this.toggleMenu();
+    this.openSpecificModal('participantList');
+  },
   logoutClick() {
     this.toggleMenu();
     this.logOut();
   },
   getMenuItemStyle(object, action) {
     let canShow = this.hasPermission([object, action]);
+    return {
+      display: (canShow ? "block" : "none")
+    };
+  },
+  getSpectatorOrOGuestsMenuItemStyle() {
+    let canShow = this.isObserver(this.props.currentUser) && this.isForum();
     return {
       display: (canShow ? "block" : "none")
     };
@@ -69,6 +83,14 @@ const MobileHeader = React.createClass({
       this.openSpecificModal('avatar');
     }
   },
+  getHasMessagesClassName(topic) {
+    const { currentUser } = this.props;
+    if (currentUser.role == "observer") {
+      return "";
+    } else {
+      return currentUser.sessionTopicContext[topic.id] && currentUser.sessionTopicContext[topic.id].hasMessages ? "" : " has-no-messages";
+    }
+  },
   render() {
     const { sessionTopics, unread_messages, currentUser, brand_logo, colours, session } = this.props;
 
@@ -107,6 +129,12 @@ const MobileHeader = React.createClass({
                 <li onClick={this.messagesClick} style={ this.getMenuItemStyle('messages', 'can_direct_message') }>
                   <span className='fa fa-comment'></span>Messages { this.directMessageBadge() }
                 </li>
+                <li onClick={ this.spectatorsClick } style={ this.getSpectatorOrOGuestsMenuItemStyle() }>
+                  <span className='fa fa-eye'></span>Spectators
+                </li>
+                <li onClick={ this.guestsClick } style={ this.getSpectatorOrOGuestsMenuItemStyle() }>
+                  <span className='fa fa-users'></span>Guests
+                </li>
                 <li onClick={this.toggleMenu}>
                   <span className='fa fa-question'></span>Help
                 </li>
@@ -127,7 +155,7 @@ const MobileHeader = React.createClass({
                     sessionTopics.map((sessionTopic) => {
                       return (
                         <li key={ 'sessionTopic-' + sessionTopic.id } className='clearfix' onClick={ this.changeSessionTopic.bind(this, sessionTopic.id) }>
-                          <span className='pull-left'>{ sessionTopic.name }</span>
+                          <span className={'pull-left' + this.getHasMessagesClassName(sessionTopic)}>{ sessionTopic.name }</span>
                           <span className='pull-right'>
                             <Badge type='normal' data={ unread_messages.session_topics[sessionTopic.id] } />
                             <Badge type='reply' data={ unread_messages.session_topics[sessionTopic.id] } />

@@ -5,6 +5,7 @@ const initialState = {
   unread: [],
   unreadCount: {},
   last: {},
+  lastSent: {},
   currentReciever: null,
   currentPage: 0,
   fetching: false,
@@ -28,7 +29,7 @@ export default function reducer(state = initialState, action = {}) {
     case Constants.CLEAR_DIRECT_MESSAGES:
       return { ...state, ...initialState };
     case Constants.LAST_DIRECT_MESSAGES:
-      return { ...state, last: action.data };
+      return { ...state, last: action.data.recieved, lastSent: action.data.sent };
     case Constants.FETCHING_DIRECT_MESSAGES:
       return { ...state, fetching: true };
     default:
@@ -44,6 +45,10 @@ function createDirectMessage(state, message) {
 
   object.read = [...object.read, ...object.unread, message];
   object.unread = [];
+
+  object.lastSent = { ...state.lastSent };
+  object.lastSent[message.recieverId] = message.text;
+
   return object;
 }
 
