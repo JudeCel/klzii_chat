@@ -7,6 +7,16 @@ defmodule KlziiChat.ReportView do
     %{
       max_default_fileds_count: 4,
       types: %{
+        statistic: %{
+          name: "statistic",
+          selected: false,
+          formats: %{
+            pdf: %{ render: false, custom_fields: false },
+            csv: %{ render: true, custom_fields: false },
+            txt: %{ render: false, custom_fields: false }
+          },
+          defaultFields: []
+        },
         messages: %{
           name: "All",
           selected: true,

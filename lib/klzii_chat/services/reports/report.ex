@@ -76,6 +76,7 @@ defmodule KlziiChat.Services.Reports.Report do
   end
 
   def select_type("messages"), do: {:ok, Messages.Base}
+  def select_type("statistic"), do: {:ok, Messages.Base}
   def select_type("messages_stars_only"), do: {:ok, Messages.Base}
   def select_type("votes"), do: {:ok, Votes.Base}
   def select_type("whiteboards"), do: {:ok, Whiteboards.Base}

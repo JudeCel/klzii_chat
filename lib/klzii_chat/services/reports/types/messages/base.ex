@@ -49,6 +49,9 @@ defmodule KlziiChat.Services.Reports.Types.Messages.Base do
   def get_header_title(%{ name: name, account: %{ name: account_name } }, %{type: "messages"}) do
     {:ok, "Chat History - #{account_name} / #{name}"}
   end
+  def get_header_title(%{ name: name, account: %{ name: account_name } }, %{type: "statistic"}) do
+    {:ok, "Chat Room Statistics - #{account_name} / #{name}"}
+  end
   def get_header_title(_, _) do
     {:error, %{not_reqired: "session account name or session name not reqired"}}
   end

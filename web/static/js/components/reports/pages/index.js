@@ -20,6 +20,21 @@ const ReportsIndex = React.createClass({
     const { channel, dispatch } = this.props;
     dispatch(ReportsActions.index(channel));
   },
+  statisticReport(){
+    const { reports, mapStruct, changePage } = this.props;
+    const { format, facilitator } = this.state;
+    let type = {name: 'statistic', typeName: 'statistic', typeData: mapStruct.types.statistic}
+    if (mapStruct.types.statistic.formats[format].render) {
+      return(
+        <ReportIcon
+          { ...{ format, type, facilitator, sessionTopicId: null } }
+          { ...{ createReport: this.createReport, changePage: changePage, mapStruct: mapStruct } }
+        />
+      )
+    }else{
+      return ""
+    }
+  },
   render() {
     const { sessionTopics, reports, changePage, mapStruct, session } = this.props;
     const { types } = reports.mapStruct
@@ -90,6 +105,8 @@ const ReportsIndex = React.createClass({
             }
           </tbody>
         </table>
+        <hr/>
+        {this.statisticReport()}
       </div>
     )
   }
