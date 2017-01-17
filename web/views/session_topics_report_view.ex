@@ -9,7 +9,7 @@ defmodule KlziiChat.SessionTopicsReportView do
       format: report.format,
       message: report.message,
       sessionId: report.sessionId,
-      sessionTopicId: report.sessionTopicId || "all",
+      sessionTopicId: get_session_topic_id(report),
       status: report.status,
       type: report.type,
       resourceId: report.resourceId,
@@ -17,14 +17,20 @@ defmodule KlziiChat.SessionTopicsReportView do
     }
   end
 
+  def get_session_topic_id(report) do
+    case report do
+      %{type: "statistic"} ->
+        "statistic"
+      %{sessionTopicId: nil} ->
+        "all"
+      id ->
+        to_string(id)
+    end
+  end
+
   def render("reports.json", %{reports: reports}) do
     Enum.reduce(reports, Map.new, fn(report, acc) ->
-      session_topic_id =  case report.sessionTopicId do
-                            nil ->
-                              "all"
-                            id ->
-                              to_string(id)
-                          end
+      session_topic_id = get_session_topic_id(report)
 
       format = report.format
       type = report.type
