@@ -25,6 +25,13 @@ defmodule KlziiChat.SessionMembersView do
     }
   end
 
+  def render("message_info.json", %{ member: member}) do
+    %{
+      id: member.id,
+      role: member.role,
+      colour: member.colour
+    }
+  end
   def render("status.json", %{ member: member}) do
     %{
       id: member.id,

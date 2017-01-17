@@ -7,7 +7,8 @@ const initialState = {
   replyId: null,
   emotion: 5,
   inputPrefix: "Message:",
-  smallFont : false
+  smallFont : false,
+  replyColour: ""
 };
 
 export default function reducer(state = initialState, action = {}) {
