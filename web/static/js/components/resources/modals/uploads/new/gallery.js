@@ -76,10 +76,11 @@ const GalleryNew = React.createClass({
           <div className='col-md-12 gallery-section'>
             {
               gallery.map((resource, index) => {
+                let resourceName = resource.name.length <= 22 ? resource.name : resource.name.substr(0, 20) + "...";
                 return (
                   <div className='col-md-4' key={ resource.id }>
                     <div className='row top-row'>
-                      <div className='resource-title pull-left'>{ resource.name }</div>
+                      <div className='resource-title pull-left'>{ resourceName }</div>
                       <div className='pull-right'>
                         <input id={ 'gallery-' + resource.id } type='checkbox' className='with-font' onClick={ this.onActivate } data-id={ resource.id } />
                         <label htmlFor={ 'gallery-' + resource.id }></label>
