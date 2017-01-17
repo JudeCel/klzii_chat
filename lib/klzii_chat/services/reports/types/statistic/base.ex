@@ -8,7 +8,7 @@ defmodule KlziiChat.Services.Reports.Types.Statistic.Base do
 
   @spec default_fields() :: List.t[String.t]
   def default_fields() do
-    []
+    ["First Name"]
   end
 
   @spec format_modeule(String.t) :: Module.t
@@ -19,19 +19,20 @@ defmodule KlziiChat.Services.Reports.Types.Statistic.Base do
   def get_data(report) do
     with {:ok, session} <- get_session(report),
          {:ok, header_title} <- get_header_title(session, report),
-         {:ok, session_topics} <- get_session_topics(report),
+         {:ok, statistic} <- get_statistic(report),
     do:  {:ok, %{
               "session" => session,
-              "session_topics" => session_topics,
+              "statistic" => statistic,
               "header_title" => header_title,
-              "fields" => fields_list(report.includeFields, session)
+              "fields" => fields_list([], session)
             }
           }
   end
 
   @spec fields_list(List.t, Map.t) :: List.t[String.t]
   def fields_list(list, session) do
-    def_list = Enum.concat(default_fields(), list)
+    def_list =
+      Enum.concat(default_fields(), list)
     case session do
       %{anonymous: true} ->
         List.insert_at(def_list, 0, "Anonymous")
@@ -49,28 +50,27 @@ defmodule KlziiChat.Services.Reports.Types.Statistic.Base do
 
   @spec get_session(Map.t) :: {:ok, Map.t} | {:error, Map.t}
   def get_session(%{sessionId: session_id}) do
-    session = SessionQueries.find_for_report(session_id)
+    session = SessionQueries.find_for_report_statistic(session_id)
       |> Repo.one
-      |> Phoenix.View.render_one(SessionView, "report.json", as: :session)
+      |> Phoenix.View.render_one(SessionView, "report_statistic.json", as: :session)
     {:ok, session}
   end
   def get_session(_), do: {:error, %{not_reqired: "session id not reqired"}}
 
-  def get_session_topics(report) do
-    preload_statistic(report)
+  def get_statistic(report) do
+    {:ok, preload_statistic(report)}
   end
-
-  # from(p in Post, group_by: :category, select: {p.category, count(p.id)})
 
   def preload_statistic(%{sessionId: session_id} = report) when is_integer(session_id) do
     from(sm in SessionMember,
       left_join: st in SessionTopic, on: st.sessionId == sm.sessionId,
       left_join: m in Message, on: sm.id == m.sessionMemberId,
       where: sm.sessionId == ^session_id,
-      group_by: [sm.id, m.id, st.name],
-      select: {sm.id, count(m.id), st.name }
+      group_by: [st.id, sm.accountUserId, m.id, st.name, sm.username],
+      select: {sm.accountUserId, st.name, count(m.id), sm.username}
     )
     |> Repo.all
+    |> Enum.group_by(fn({id, _, _, _}) -> id end)
   end
-  def preload_statistic(_) do: {:error, "no session Id for statisitc in report"}
+  def preload_statistic(_), do: {:error, "no session Id for statisitc in report"}
 end

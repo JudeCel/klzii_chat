@@ -11,6 +11,13 @@ defmodule KlziiChat.SessionTopicView do
     }
   end
 
+  def render("report_statistic.json", %{session_topic: session_topic}) do
+    %{
+      id: session_topic.id,
+      name: session_topic.name,
+    }
+  end
+
   def render("report.json", %{session_topic: session_topic}) do
     %{
       id: session_topic.id,
