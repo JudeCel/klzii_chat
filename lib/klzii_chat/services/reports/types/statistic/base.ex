@@ -1,8 +1,7 @@
 defmodule KlziiChat.Services.Reports.Types.Statistic.Base do
   @behaviour KlziiChat.Services.Reports.Types.Behavior
-  alias KlziiChat.{Repo, SessionTopicView, SessionView, SessionTopic, SessionMember, Message}
+  alias KlziiChat.{Repo, SessionView, SessionMember, Message}
   alias KlziiChat.Services.Reports.Types.Statistic.Formats
-  alias KlziiChat.Queries.SessionTopic, as: SessionTopicQueries
   alias KlziiChat.Queries.Sessions, as: SessionQueries
   import Ecto.Query, only: [from: 2]
 
@@ -61,7 +60,7 @@ defmodule KlziiChat.Services.Reports.Types.Statistic.Base do
     {:ok, preload_statistic(report)}
   end
 
-  def preload_statistic(%{sessionId: session_id} = report) when is_integer(session_id) do
+  def preload_statistic(%{sessionId: session_id}) when is_integer(session_id) do
     from(sm in SessionMember,
       left_join: m in Message, on: sm.id == m.sessionMemberId,
       where: sm.sessionId == ^session_id,

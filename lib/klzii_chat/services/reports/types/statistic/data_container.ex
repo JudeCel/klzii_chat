@@ -1,6 +1,4 @@
 defmodule KlziiChat.Services.Reports.Types.Statistic.DataContainer do
-  alias KlziiChat.Decorators.MessageDecorator
-  alias KlziiChat.Helpers.DateTimeHelper
   alias KlziiChat.Services.Report.DataContainers.ContactListUsers, as: ContactListUsersDataContainers
 
   def start_link(data) do
