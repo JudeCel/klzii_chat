@@ -26,10 +26,17 @@ const ReportsIndex = React.createClass({
     let type = {name: 'statistic', typeName: 'statistic', typeData: mapStruct.types.statistic}
     if (mapStruct.types.statistic.formats[format].render) {
       return(
-        <ReportIcon
-          { ...{ format, type, facilitator, sessionTopicId: null } }
-          { ...{ createReport: this.createReport, changePage: changePage, mapStruct: mapStruct } }
-        />
+        <div className="chat-room-statistics">
+          <div className="title">
+            Chat Room Statistics
+          </div>
+          <div className="report-icon">
+            <ReportIcon
+              { ...{ format, type, facilitator, sessionTopicId: null } }
+              { ...{ createReport: this.createReport, changePage: changePage, mapStruct: mapStruct } }
+            />
+          </div>
+        </div>
       )
     }else{
       return ""

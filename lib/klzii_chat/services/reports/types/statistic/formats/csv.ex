@@ -13,22 +13,37 @@ defmodule KlziiChat.Services.Reports.Types.Statistic.Formats.Csv do
     statistic = get_in(data, ["statistic"])
     {:ok, acc} = Agent.start_link(fn -> [] end)
     {:ok, container} = DataContainer.start_link(session.participant_list)
-    topic_names = session.session_topics
-    |> Enum.map(&(&1.name))
+
+    topic_list =
+      session.session_topics
+      |> Enum.map(&({&1.id, &1.name}))
+
+    topic_map = Enum.into(topic_list, %{})
+    topic_names = Enum.map(topic_list, fn({_, name}) -> name end)
+
     Map.keys(statistic)
     |> Enum.each(fn(id) ->
-      map_data(Map.get(statistic, id), topic_names, session, fields, container, acc)
-     end)
-
+      map_data(Map.get(statistic, id), topic_map, topic_names, session, fields, container, acc)
+    end)
 
     {:ok, %{header: fields ++ topic_names , data: acc}}
   end
 
-  @spec map_data(List.t, List.t, Map.t, List.t, Process.t, Process.t) :: List.t
-  def map_data(list, topic_names, session, fields, container, acc) when is_list(list) do
+  @spec map_data(List.t, List.t, List.t, Map.t, List.t, Process.t, Process.t) :: List.t
+  def map_data(list, topic_map, topic_names, session, fields, container, acc) when is_list(list) do
+
+    topics =
+      Enum.map(topic_names, &({&1, 0}))
+      |> Enum.into(%{})
+
     topics_data =
-      Enum.reduce(list, %{}, fn({_,name, message_count, _}, acc) ->
-        Map.put(acc, name, message_count)
+      Enum.reduce(list, topics, fn({_, message_count, _,sessionTopicId}, acc) ->
+        name = Map.get(topic_map, sessionTopicId)
+        if name do
+          Map.put(acc, name, message_count)
+        else
+          acc
+        end
       end)
 
     map_fields(fields, List.first(list), session, container)

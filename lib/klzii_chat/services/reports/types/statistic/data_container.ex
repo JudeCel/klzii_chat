@@ -7,14 +7,14 @@ defmodule KlziiChat.Services.Reports.Types.Statistic.DataContainer do
     ContactListUsersDataContainers.start_link(data)
   end
 
-  def get_value("First Name", {_, _, _, username}, %{anonymous: false},_) do
+  def get_value("First Name", {_, _, username, _}, %{anonymous: false},_) do
     username
   end
-  def get_value("First Name", {account_user_id, _, _, _}, _, container) do
+  def get_value("First Name", {account_user_id, _, _}, _, container) do
     {:ok, value} = ContactListUsersDataContainers.get_key(container, "firstName", account_user_id)
     value
   end
-  def get_value("Anonymous", {_, _, _, username},_ ,_) do
+  def get_value("Anonymous", {_, _, username, _},_, _) do
     username
   end
   def get_value(key,{account_user_id, _, _, _}, _session, container) do

@@ -63,11 +63,10 @@ defmodule KlziiChat.Services.Reports.Types.Statistic.Base do
 
   def preload_statistic(%{sessionId: session_id} = report) when is_integer(session_id) do
     from(sm in SessionMember,
-      left_join: st in SessionTopic, on: st.sessionId == sm.sessionId,
       left_join: m in Message, on: sm.id == m.sessionMemberId,
       where: sm.sessionId == ^session_id,
-      group_by: [st.id, sm.accountUserId, m.id, st.name, sm.username],
-      select: {sm.accountUserId, st.name, count(m.id), sm.username}
+      group_by: [sm.accountUserId, m.sessionTopicId, sm.username],
+      select: {sm.accountUserId, count(m.id), sm.username, m.sessionTopicId}
     )
     |> Repo.all
     |> Enum.group_by(fn({id, _, _, _}) -> id end)
