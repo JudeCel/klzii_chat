@@ -38,7 +38,7 @@ defmodule KlziiChat.Services.Reports.ReportTest do
   end
 
   describe "statistic" do
-    setup %{session_topic_1: session_topic, facilitator: facilitator} do
+    setup %{facilitator: facilitator} do
       payload_csv =  %{
           "sessionTopicId" => nil,
           "format" => "csv",
