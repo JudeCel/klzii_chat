@@ -51,6 +51,12 @@ defmodule KlziiChat.SessionMembersView do
       account_user_id: member.accountUserId,
     }
   end
+  def render("report_statistic.json", %{ member: member}) do
+    %{
+      id: member.id,
+      username: member.username,
+    }
+  end
 
   def render("current_member.json", %{ member: member, permissions_map: permissions_map}) do
     member_map = render("member.json", %{ member: member})

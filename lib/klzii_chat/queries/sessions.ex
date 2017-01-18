@@ -19,6 +19,14 @@ defmodule KlziiChat.Queries.Sessions do
     )
   end
 
+  @spec find_for_report_statistic(Integer) :: Ecto.Query.t
+  def find_for_report_statistic(session_id) do
+    from(s in Session,  where: s.id == ^session_id,
+    preload: [:session_topics, :account, :session_members,
+    [ participant_list: [ contact_list_users: [:account_user] ]]]
+    )
+  end
+
   @spec get_subscription_preference_session(integer) :: Ecto.Query.t
   def get_subscription_preference_session(sessionId) do
     from(sp in SubscriptionPreference,
