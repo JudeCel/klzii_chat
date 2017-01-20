@@ -58,11 +58,14 @@ const Avatar = React.createClass({
     }
   },
   drawAvatar(avatar) {
-    const { sessionTopicId, member } = this.props;
+    const { sessionTopicId, member, isDirectMessage } = this.props;
+    const defaultAvatarFace = 5;
     if (member.role != "observer") {
-    const { base, face, body, hair, desk, head } = this.avatarDataBySessionContext(member.avatarData, member.sessionTopicContext, sessionTopicId);
+      const { base, face, body, hair, desk, head } = this.avatarDataBySessionContext(member.avatarData, member.sessionTopicContext, sessionTopicId);
+      let avatarFace = isDirectMessage ? defaultAvatarFace : face;
+      let showFace = !isDirectMessage;
       this.shouldAddToAvatar(avatar, 'base', base);
-      this.shouldAddToAvatar(avatar, 'face', face, true);
+      this.shouldAddToAvatar(avatar, 'face', avatarFace, showFace);
       this.shouldAddToAvatar(avatar, 'body', body);
       this.shouldAddToAvatar(avatar, 'hair', hair);
       this.shouldAddToAvatar(avatar, 'desk', desk);
@@ -158,6 +161,8 @@ const Avatar = React.createClass({
     }
   },
   render() {
+    // console.log("PICK ID:", this.pickId());
+    console.log();
     return (
       <svg id={ this.pickId() } className='svg-avatar' width='150px' height='160px'/>
     )

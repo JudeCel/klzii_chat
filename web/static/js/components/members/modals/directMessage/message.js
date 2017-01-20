@@ -10,7 +10,7 @@ const Message = React.createClass({
     return (
       <div className='message'>
         <div className='avatar'>
-          <Avatar member={ sender } specificId={ 'direct-message-right' + message.id } />
+          <Avatar member={ sender } specificId={ 'direct-message-right' + message.id } isDirectMessage={ true }/>
         </div>
 
         <div className='info'>
