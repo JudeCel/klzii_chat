@@ -161,8 +161,6 @@ const Avatar = React.createClass({
     }
   },
   render() {
-    // console.log("PICK ID:", this.pickId());
-    console.log();
     return (
       <svg id={ this.pickId() } className='svg-avatar' width='150px' height='160px'/>
     )
