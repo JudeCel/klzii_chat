@@ -5,8 +5,7 @@ module.exports = {
   shapeCreate,
   shapeUpdate,
   shapeDelete,
-  shapeDeleteAll,
-  undoShapeDelete
+  shapeDeleteAll
 };
 
 var whiteboardDelegate;
@@ -23,11 +22,6 @@ function shapeCreate(params) {
 function shapeUpdate(params) {
   const { dispatch, channel } = whiteboardDelegate.props;
   dispatch(Actions.update(channel, params));
-}
-
-function undoShapeDelete(shapeObject) {
-  var shape = SVG.get(shapeObject.id);
-  shapeDelete(shape);
 }
 
 function shapeDelete(shape) {
