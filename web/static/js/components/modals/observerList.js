@@ -8,7 +8,11 @@ const ObserverListModal = React.createClass({
   renderObservers() {
     const { observers } = this.props;
 
-    let onlineObservers = observers.filter((item) => { if(item.online) { return item } });
+    let onlineObservers = observers.filter((item) => {
+      if(item.online && item.id != this.props.currentUser.id) {
+        return item;
+      }
+    });
 
     if (onlineObservers.length) {
       return onlineObservers.map((observer) =>
@@ -61,7 +65,8 @@ const mapStateToProps = (state) => {
   return {
     modalWindows: state.modalWindows,
     observers: state.members.observers,
-    colours: state.chat.session.colours
+    colours: state.chat.session.colours,
+    currentUser: state.members.currentUser,
   }
 };
 

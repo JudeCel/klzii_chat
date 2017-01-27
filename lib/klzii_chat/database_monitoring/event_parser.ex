@@ -65,7 +65,7 @@ defmodule KlziiChat.DatabaseMonitoring.EventParser do
       %{"table" =>  "Sessions", "data" =>  %{"id" =>  id}, "type" => type} ->
         {:ok, :sessions, [id, type]}
       _ ->
-        {:error, messages.errors.unhandle_event}
+        {:error, messages().errors.unhandle_event}
     end
   end
 end

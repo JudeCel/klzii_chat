@@ -52,7 +52,7 @@ const ReportIcon = React.createClass({
   },
   getReport() {
     const { type, format, sessionTopicId, facilitator, reports } = this.props
-    const flow = [sessionTopicId, format, type.typeName];
+    let flow = [sessionTopicId, format, type.typeName];
 
     const tmpObject = {
       format: format,
@@ -60,7 +60,11 @@ const ReportIcon = React.createClass({
       sessionTopicId: sessionTopicId == "all" ? null : sessionTopicId,
         includes: { facilitator: facilitator }
     }
-    
+
+    if (type.name == "statistic") {
+      flow = ["statistic", format, type.typeName];
+    }
+
     return _.get(reports, flow, tmpObject);
 
   },

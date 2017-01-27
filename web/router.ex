@@ -70,8 +70,9 @@ defmodule KlziiChat.Router do
 
   scope "/", KlziiChat do
     get "/ping", PingController, :index
-    post "/info", PingController, :info
-    get "/info", PingController, :info
+    post "/mailgun/webhooks", MailgunController, :webhooks
+    post "/mailgun/webhooks_info", MailgunController, :info
+    get "/mailgun/webhooks_info", MailgunController, :info
   end
 
   scope "/api/resources", KlziiChat do

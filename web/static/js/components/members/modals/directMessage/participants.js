@@ -33,13 +33,13 @@ const Participants = React.createClass({
             users.map((participant, index) =>
               <button type='button' key={ participant.id } className={ this.selectClassname(participant.id) } onClick={ this.selectParticipant.bind(this, participant) }>
                 <div className='avatar'>
-                  <Avatar member={ participant } specificId='direct-message-left' />
+                  <Avatar member={ participant } specificId='direct-message-left' isDirectMessage={ true }/>
                 </div>
 
                 <div className='info'>
                   <div className='header'>
                     <div className='col-md-6'>
-                      <strong>{ participant.username }</strong>
+                      <strong>{ participant.role == 'observer' ? participant.firstName + ' ' + participant.lastName : participant.username }</strong>
                     </div>
 
                     <div className='col-md-6 text-right'>

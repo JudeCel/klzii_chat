@@ -10,7 +10,8 @@ const Member = React.createClass({
 
     let clickParticipantAsFacilitator = this.isFacilitator(currentUser) && this.isParticipant(member);
     let clickFacilitatorAsParticipant = this.isParticipant(currentUser) && this.isFacilitator(member);
-    return clickParticipantAsFacilitator || clickFacilitatorAsParticipant;
+    let clickFacilitatorAsObserver = this.isObserver(currentUser) && this.isFacilitator(member);
+    return clickParticipantAsFacilitator || clickFacilitatorAsParticipant || clickFacilitatorAsObserver;
   },
   onClickEvent(member) {
     if(this.isOwner(member.id)) {

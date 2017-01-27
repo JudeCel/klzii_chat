@@ -9,7 +9,7 @@ defmodule KlziiChat.MessageView do
   def render("show.json", %{message: message, member: member}) do
     %{
       id: message.id,
-      session_member: SessionMembersView.render("status.json", %{member: message.session_member}),
+      session_member: SessionMembersView.render("message_info.json", %{member: message.session_member}),
       body: message.body,
       replyId: message.replyId,
       time: message.createdAt,
@@ -35,7 +35,7 @@ defmodule KlziiChat.MessageView do
   end
   def render("reply.json", %{message: message, member: member, reply_info: reply_info}) do
     map = render("show.json", %{message: message, member: member})
-    reply_session_member = SessionMembersView.render("status.json", %{member: reply_info.member})
+    reply_session_member = SessionMembersView.render("message_info.json", %{member: reply_info.member})
     Map.put(map, :reply_session_member, reply_session_member)
   end
 
@@ -75,6 +75,6 @@ defmodule KlziiChat.MessageView do
   defp reply_message(nil), do: nil
   defp reply_message(%{__struct__: Ecto.Association.NotLoaded}), do: nil
   defp reply_message(message) do
-    SessionMembersView.render("status.json", %{member: message.session_member});
+    SessionMembersView.render("message_info.json", %{member: message.session_member});
   end
 end

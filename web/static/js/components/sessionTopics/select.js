@@ -13,9 +13,15 @@ const Select = React.createClass({
     this.setSessionTopic(id);
   },
   renderIconEye() {
-    if(!this.isFacilitator(this.props.currentUser)) return;
+    const { currentUser } = this.props;
 
-    let onlineObservers = this.props.observers.filter((item) => { if(item.online) { return item } });
+    if(this.hasNoIconEye(currentUser)) return;
+
+    let onlineObservers = this.props.observers.filter((item) => {
+      if(item.online && item.id != currentUser.id) {
+        return item;
+      }
+    });
 
     return (
       <span className='eye-section' onClick={ this.openSpecificModal.bind(this, 'observerList') }>
@@ -26,8 +32,8 @@ const Select = React.createClass({
   },
   renderIconUsers() {
 
-    const { session } = this.props;
-    if(!this.isFacilitator(this.props.currentUser) || session.type != 'forum') return;
+    const { session, currentUser } = this.props;
+    if(this.hasNoParticipantsIcon(currentUser)) return;
 
     let onlineParticipantsCount = 0;
     for (let i=0; i<this.props.participants.length; i++) {

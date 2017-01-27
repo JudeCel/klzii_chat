@@ -17,7 +17,7 @@ defmodule KlziiChat.Authorisations.Channels.Session do
     if session_member.session_id == sesssion_id do
       {:ok}
     else
-      {:error, error_messages.dont_have_access}
+      {:error, error_messages().dont_have_access}
     end
   end
 
@@ -31,5 +31,5 @@ defmodule KlziiChat.Authorisations.Channels.Session do
 
   @spec is_subscription_preferencen(map) :: {:ok} | {:error, String.t}
   defp is_subscription_preferencen(preference) when is_map(preference), do: {:ok}
-  defp is_subscription_preferencen(_), do: {:error, error_messages.subscription_not_found}
+  defp is_subscription_preferencen(_), do: {:error, error_messages().subscription_not_found}
 end

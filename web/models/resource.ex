@@ -9,6 +9,7 @@ defmodule KlziiChat.Resource do
     belongs_to :account, KlziiChat.Account, [foreign_key: :accountId]
     has_many :session_resources, KlziiChat.SessionResource, [foreign_key: :resourceId]
     has_many :sessions, KlziiChat.Session, [foreign_key: :resourceId]
+    has_many :mail_template_resources, KlziiChat.MailTemplateResource, [foreign_key: :resourceId]
     field :image, Image.Type
     field :audio, Audio.Type
     field :file, File.Type
@@ -55,7 +56,7 @@ defmodule KlziiChat.Resource do
     |> cast(params, [:status, :scope, :type, :accountId, :name])
     |> validate_required([:status, :scope, :type, :accountId, :name])
     |> unique_constraint(:name, name: :UniqResourceNameByAccount, message: "Resource name has already been taken")
-    |> cast_attachments(params, ["file"])
+    |> cast_attachments(params, ["file"], allow_paths: true)
   end
 
   defp parse_link(base_changeset) do

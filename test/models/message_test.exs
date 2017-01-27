@@ -4,8 +4,6 @@ defmodule KlziiChat.MessageTest do
   alias KlziiChat.Message
 
   @valid_attrs %{sessionTopicId: 1, sessionMemberId: 2, body: "test", emotion: 1 }
-  @invalid_attrs %{}
-
 
   test "with valid attrs" do
     changeset = Message.changeset(%Message{}, @valid_attrs)

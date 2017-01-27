@@ -4,9 +4,6 @@ defmodule KlziiChat.ConsoleTest do
   alias KlziiChat.Console
 
   @valid_attrs %{sessionTopicId: 1, audioId: 1, videoId: 2, pinboard: true, fileId: 4, miniSurveyId: 4}
-  @invalid_attrs %{}
-
-  @fields %{sessionTopicId: 1, audioId: 1, videoId: 2, pinboard: true, fileId: 4, miniSurveyId: 4}
 
   test "with valid attrs" do
     changeset = Console.changeset(%Console{}, @valid_attrs)

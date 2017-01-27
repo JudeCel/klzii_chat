@@ -92,7 +92,7 @@ defmodule KlziiChat.Services.Permissions.Builder do
           if is_admin(AccountUserQueries.is_admin(account_user_id)) do
             {:ok, %{admin: true}}
           else
-            {:error, error_messages.subscription_not_found}
+            {:error, error_messages().subscription_not_found}
           end
         preference ->
           {:ok, Map.get(preference, :data, %{})}
@@ -108,7 +108,7 @@ defmodule KlziiChat.Services.Permissions.Builder do
         if is_admin(SessionQueries.is_admin(session_id)) do
           {:ok, %{admin: true}}
         else
-          {:error, error_messages.subscription_not_found}
+          {:error, error_messages().subscription_not_found}
         end
       preference ->
           {:ok, Map.get(preference, :data, %{})}
@@ -120,7 +120,7 @@ defmodule KlziiChat.Services.Permissions.Builder do
     |> Repo.one
     |> case do
       nil ->
-          {:error, error_messages.session_not_found}
+          {:error, error_messages().session_not_found}
       session ->
           {:ok, session}
       end

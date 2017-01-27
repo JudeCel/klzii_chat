@@ -9,8 +9,8 @@ defmodule KlziiChat.Mixfile do
      compilers: [:phoenix, :gettext] ++ Mix.compilers,
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
-     aliases: aliases,
-     deps: deps]
+     aliases: aliases(),
+     deps: deps()]
   end
 
   # Configuration for the OTP application.
@@ -49,15 +49,15 @@ defmodule KlziiChat.Mixfile do
      {:quantum, "~> 1.8"},
      {:poison, "~> 2.2"},
 
-     {:arc_ecto, "~> 0.5.0-rc1"},
+     {:arc_ecto, "~> 0.5.0"},
      {:arc, "~> 0.6.0"},
      {:ex_aws, "~> 1.0.0"},
-     {:hackney, "1.6.1"},
-     {:sweet_xml, "~> 0.5"},
+     {:hackney, "~>1.6"},
+     {:sweet_xml, "~> 0.6"},
 
      {:postgrex, "~> 0.13"},
      {:gettext, "0.13.0"},
-     {:guardian, "0.14.0"},
+     {:guardian, "~> 0.14.2"},
      {:cowboy, "~> 1.0"},
      {:corsica, "~> 0.5"},
      {:mogrify, "~> 0.5.1"},

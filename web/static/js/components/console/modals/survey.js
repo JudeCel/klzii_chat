@@ -67,14 +67,14 @@ const SurveyConsole = React.createClass({
 
     if(show) {
       return (
-        <Modal dialogClassName='modal-section' show={ show } onHide={ this.closeAllModals } onEnter={ this.onShow }>
+        <Modal dialogClassName='modal-section survey-modal' show={ show } onHide={ this.closeAllModals } onEnter={ this.onShow }>
           <Modal.Header>
             <div className='col-md-2'>
               <span className='pull-left fa icon-reply' onClick={ this.closeAllModals }></span>
             </div>
 
             <div className='col-md-8 modal-title'>
-              <h4>{ survey.title }</h4>
+              <h2>{ survey.title }</h2>
             </div>
 
             <div className='col-md-2'>

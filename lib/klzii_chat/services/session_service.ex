@@ -2,8 +2,8 @@ defmodule KlziiChat.Services.SessionService do
   alias KlziiChat.{Repo, SessionView}
   alias KlziiChat.Queries.Sessions, as: SessionsQueries
 
-  @spec error_messages :: Map.t
-  def error_messages do
+  @spec error_messages() :: Map.t
+  def error_messages() do
     %{
       session_not_found:  "Session not found"
     }
@@ -15,7 +15,7 @@ defmodule KlziiChat.Services.SessionService do
     |> Repo.one
     |> case  do
         nil ->
-          {:error, error_messages.session_not_found}
+          {:error, error_messages().session_not_found}
         session ->
           {:ok, Phoenix.View.render_one(session, SessionView, "session.json", as: :session)}
        end

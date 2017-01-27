@@ -2,7 +2,6 @@ defmodule KlziiChat.Services.FileServiceTest do
   use ExUnit.Case, async: true
   alias KlziiChat.Services.FileService
 
-  @report_name "file_service_test_report"
   @test_sub_dir  "test_sub_dir"
 
   describe "get_tmp_path" do

@@ -1,8 +1,6 @@
 defmodule KlziiChat.Uploaders.Image do
-  use KlziiChat.Uploaders.StoreDefinition
-
   use Arc.Definition
-
+  use KlziiChat.Uploaders.StoreDefinition
   # Include ecto support (requires package arc_ecto installed):
   use Arc.Ecto.Definition
 
@@ -17,7 +15,7 @@ defmodule KlziiChat.Uploaders.Image do
 
   # Whitelist file extensions:
   def validate({file, _}) do
-    allowed_extensions |> Enum.member?(Path.extname(file.file_name))
+    allowed_extensions() |> Enum.member?(Path.extname(file.file_name))
   end
 
   # Define a thumbnail transformation:

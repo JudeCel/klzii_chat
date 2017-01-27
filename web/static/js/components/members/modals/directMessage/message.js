@@ -10,13 +10,13 @@ const Message = React.createClass({
     return (
       <div className='message'>
         <div className='avatar'>
-          <Avatar member={ sender } specificId={ 'direct-message-right' + message.id } />
+          <Avatar member={ sender } specificId={ 'direct-message-right' + message.id } isDirectMessage={ true }/>
         </div>
 
         <div className='info'>
           <div className='header'>
             <div className='col-md-6'>
-              <strong>{ sender.username }</strong>
+              <strong>{ sender.role == 'observer' ? sender.firstName + ' ' + sender.lastName : sender.username }</strong>
             </div>
 
             <div className='col-md-6 text-right'>
