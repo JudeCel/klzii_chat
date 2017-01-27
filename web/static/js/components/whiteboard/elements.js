@@ -66,5 +66,6 @@ function image(e, nested, attrs) {
 }
 
 function text(e, nested, attrs) {
+  attrs['font-size'] = 25;
   return nested.plain(whiteboardDelegate.drawData.text).draw(e);
 }

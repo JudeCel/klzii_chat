@@ -56,7 +56,7 @@ const Buttons = React.createClass({
   setText(type, text) {
     this.setType(type, type);
     whiteboardDelegate.drawData.text = text;
-    whiteboardDelegate.createShapeWithDefaultCoords();
+    whiteboardDelegate.deps.Shape.createShapeWithDefaultCoords();
     this.setType('none', 'none');
   },
   tooltipFormat(text) {

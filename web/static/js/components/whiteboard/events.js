@@ -5,19 +5,13 @@ module.exports = {
   boardMouseUp,
   shapeWasCreated,
   shapeWillUpdate,
-  shapeWasUpdated,
-  createShapeWithEvent
+  shapeWasUpdated
 };
 
 var whiteboardDelegate;
 function init(data) {
   whiteboardDelegate = data;
   return this;
-}
-
-function createShapeWithEvent(e) {
-  whiteboardDelegate.deps.Shape.createShape(e);
-  whiteboardDelegate.shapeData.shape.draw('stop', e);
 }
 
 function boardMouseDown(e) {

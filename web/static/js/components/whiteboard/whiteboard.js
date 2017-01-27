@@ -8,7 +8,6 @@ import svgSelect    from 'svg.select.js';
 
 import mixins       from '../../mixins';
 
-import Plugins      from './plugins';
 import Events       from './events';
 import Shape        from './shape';
 import Design       from './design';
@@ -49,14 +48,6 @@ const Whiteboard = React.createClass({
     this.deps.History = History.init(this);
     this.deps.Actions = Actions.init(this);
     this.deps.Helpers = Helpers.init(this);
-  },
-  createShapeWithDefaultCoords() {
-    let simulatedEvent = document.createEvent("MouseEvent");
-    simulatedEvent.initMouseEvent("mousedown", true, true, window, 1,
-                                  this.drawData.initialWidth/2, this.drawData.initialHeight/2,
-                                  this.drawData.initialWidth/2, this.drawData.initialHeight/2, false,
-                                  false, false, false, 1, null);
-    Events.createShapeWithEvent(simulatedEvent);
   },
   processInput(event) {
       let touches = event.changedTouches;
