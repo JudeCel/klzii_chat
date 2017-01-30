@@ -56,7 +56,7 @@ defmodule KlziiChat.Resource do
     |> cast(params, [:status, :scope, :type, :accountId, :name])
     |> validate_required([:status, :scope, :type, :accountId, :name])
     |> unique_constraint(:name, name: :UniqResourceNameByAccount, message: "Resource name has already been taken")
-    |> cast_attachments(params, ["file"])
+    |> cast_attachments(params, ["file"], allow_paths: true)
   end
 
   defp parse_link(base_changeset) do

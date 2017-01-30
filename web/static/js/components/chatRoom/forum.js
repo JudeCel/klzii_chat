@@ -4,7 +4,7 @@ import Input                from '../messages/input.js';
 import Facilitator          from '../members/facilitator.js';
 import Messages             from '../messages/messages.js';
 import Console              from '../console/index';
-import WhiteboardCanvas     from '../whiteboard/whiteboardCanvas';
+import Whiteboard           from '../whiteboard/whiteboard';
 
 const Forum = React.createClass({
   getInitialState: function() {
@@ -31,7 +31,7 @@ const Forum = React.createClass({
           </div>
           <Console />
           <div className='top-row'>
-            <WhiteboardCanvas member={ this.props }/>
+            <Whiteboard member={ this.props }/>
           </div>
         </div>
         <div className='col-md-9 room-section room-section-right' style={ this.state.mainBlockStyles }>

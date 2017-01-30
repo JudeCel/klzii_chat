@@ -25,6 +25,13 @@ defmodule KlziiChat.SessionMembersView do
     }
   end
 
+  def render("message_info.json", %{ member: member}) do
+    %{
+      id: member.id,
+      role: member.role,
+      colour: member.colour
+    }
+  end
   def render("status.json", %{ member: member}) do
     %{
       id: member.id,
@@ -42,6 +49,12 @@ defmodule KlziiChat.SessionMembersView do
       role: member.role,
       currentTopic: member.currentTopic,
       account_user_id: member.accountUserId,
+    }
+  end
+  def render("report_statistic.json", %{ member: member}) do
+    %{
+      id: member.id,
+      username: member.username,
     }
   end
 

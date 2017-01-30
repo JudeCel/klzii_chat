@@ -5,8 +5,9 @@ import Facilitator          from '../members/facilitator.js';
 import Participants         from '../members/participants.js';
 import Messages             from '../messages/messages.js';
 import Console              from '../console/index';
-import WhiteboardCanvas     from '../whiteboard/whiteboardCanvas';
 import Pinboard             from '../pinboard/index.js';
+
+import Whiteboard           from '../whiteboard/whiteboard';
 
 const Focus = React.createClass({
   getInitialState: function() {
@@ -22,7 +23,7 @@ const Focus = React.createClass({
     if(this.props.pinboardActive) {
       return <Pinboard />;
     } else {
-      return <WhiteboardCanvas member={ this.props }/>;
+      return <Whiteboard member={ this.props }/>;
     }
   },
   render() {

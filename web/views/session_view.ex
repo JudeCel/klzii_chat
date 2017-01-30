@@ -32,6 +32,17 @@ defmodule KlziiChat.SessionView do
       account: render_one(account(session.account), AccountView, "show.json", as: :account)
     }
   end
+  def render("report_statistic.json", %{session: session}) do
+    %{id: session.id,
+      name: session.name,
+      type: session.type,
+      anonymous: session.anonymous,
+      participant_list: render_one(participant_list(session.participant_list), ContactListView, "report.json", as: :contact_list),
+      session_topics: render_many(session_topics(session.session_topics), SessionTopicView, "report_statistic.json", as: :session_topic),
+      session_members: render_many(session.session_members, KlziiChat.SessionMembersView, "report_statistic.json", as: :member),
+      account: render_one(account(session.account), AccountView, "show.json", as: :account)
+    }
+  end
 
   defp brand_project_preference(brand_project_preference) when is_map(brand_project_preference), do: brand_project_preference.colours
   defp brand_project_preference(_) do
