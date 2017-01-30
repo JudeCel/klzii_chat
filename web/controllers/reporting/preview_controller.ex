@@ -94,7 +94,7 @@ defmodule KlziiChat.Reporting.PreviewController do
       put_layout("report.html") |>
       render("recruiter_survey_stats.html", %{
         recruiter_survey: get_in(data, ["recruiter_survey"]),
-        stats: get_in(data, ["stats"]),
+        survey_questions_stats: get_in(data, ["survey_questions_stats"]),
         header_title: get_in(data, ["header_title"]),
       })
   end

@@ -14,7 +14,7 @@ defmodule KlziiChat.Services.Reports.Types.RecruiterSurvey.Base do
          {:ok, header_title} <- get_header_title(survey),
     do:  {:ok, %{
               "recruiter_survey" => survey,
-              "stats" => calculate_stats(survey),
+              "survey_questions_stats" => calculate_stats(survey),
               "header_title" => header_title,
             }
           }
@@ -35,30 +35,32 @@ defmodule KlziiChat.Services.Reports.Types.RecruiterSurvey.Base do
   def get_recruiter_survey(_), do: {:error, %{not_reqired: "recruiter survey id not reqired"}}
 
   def calculate_stats(survey) do
-    %{questions: []}
+    survey_questions = survey.survey_questions
+    survey_answers = survey.survey_answers
+
+    # IO.inspect survey_questions
+    survey_questions =
+      survey.survey_questions
+      |> Enum.map(&default_question_stats/1)
+      |> IO.inspect
+
+    %{questions: survey_questions, total_count: Enum.count(survey_answers)}
   end
-  # def get_session_topics(report) do
-  #   data =
-  #     preload_session_topic(report)
-  #     |> Phoenix.View.render_many(SessionTopicView, "report.json", as: :session_topic)
-  #   {:ok, data}
-  # end
-  #
-  # def preload_session_topic(%{sessionTopicId: nil, sessionId: session_id} = report) do
-  #   SessionTopicQueries.all(session_id)
-  #   |> Repo.all
-  #   |> Repo.preload([mini_surveys: preload_mini_survey_query(report)])
-  # end
-  #
-  # def preload_session_topic(%{sessionTopicId: sessionTopicId} = report) do
-  #   from(st in SessionTopic,
-  #     where: st.id == ^sessionTopicId,
-  #     preload: [mini_surveys: ^preload_mini_survey_query(report)]
-  #   ) |> Repo.all
-  # end
-  #
-  # def preload_mini_survey_query(report) do
-  #   includes_facilitator = !get_in(report.includes, ["facilitator"])
-  #   QueriesMiniSurvey.report_query(report.sessionTopicId, !includes_facilitator)
-  # end
+
+  def default_question_stats(%{id: id, type: type, name: name, answers: answers}) do
+    %{id: id, type: type, name: name, answers: map_answers(answers, %{}, type)}
+  end
+
+  def map_answers([head| tail], acc, type) do
+    map_answers(head, acc, type)
+    map_answers(tail, acc, type)
+  end
+
+  def map_answers(%{"contactDetails" => %{"age" => %{"options" => options}}} = answer, acc, type) do
+    answer
+  end
+  def map_answers(answer, acc, type) do
+    IO.inspect answer
+    answer
+  end
 end
