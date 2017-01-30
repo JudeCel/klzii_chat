@@ -151,11 +151,7 @@ const Whiteboard = React.createClass({
 
           <img className='whiteboard-title' src='/images/title_whiteboard.png' />
           <img className='whiteboard-expand' src={ this.getExpandButtonImage() } onClick={ this.expandWhiteboard } />
-          <ReactIScroll iScroll={iScroll} options={this.props.options}
-          onRefresh={(iscroll)=> {
-            //iscroll.disable();
-            console.log("woohoo", iscroll);
-          }}>
+          <ReactIScroll iScroll={iScroll} options={this.props.options} >
           <div className="full-height-width">
             <svg id='whiteboard-draw' className='inline-board-section'/>
           </div>
