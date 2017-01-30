@@ -1,0 +1,9 @@
+<div class='mini-survey'>
+  <div class='title'>
+    <strong><%= @recruiter_survey.name %></strong>
+  </div>
+
+  <div class='questions'>
+    <%= render "recruiter_survey_answer_stats.html", stats: @stats %>
+  </div>
+</div>

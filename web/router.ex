@@ -54,6 +54,7 @@ defmodule KlziiChat.Router do
 
   scope "/reporting", KlziiChat.Reporting do
     pipe_through :browser # Use the default browser stack
+    get "/recruiter_survey_stats/:id/", PreviewController, :recruiter_survey_stats
 
     get "/messages/:session_id/:session_topic_id", PreviewController, :messages
     get "/messages/:session_id/", PreviewController, :messages

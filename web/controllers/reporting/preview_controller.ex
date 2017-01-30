@@ -83,6 +83,22 @@ defmodule KlziiChat.Reporting.PreviewController do
       })
   end
 
+  def recruiter_survey_stats(conn, %{"id" => id} = params) do
+    report = %{
+      id: id,
+      type: "recruiter_survey_stats"
+    }
+    {:ok, data } = KlziiChat.Services.Reports.Types.RecruiterSurvey.Base.get_data(report)
+
+    conn |>
+      put_layout("report.html") |>
+      render("recruiter_survey_stats.html", %{
+        recruiter_survey: get_in(data, ["recruiter_survey"]),
+        stats: get_in(data, ["stats"]),
+        header_title: get_in(data, ["header_title"]),
+      })
+  end
+
 
   def filter_access(conn, opts) do
     case Mix.env do

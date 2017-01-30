@@ -10,6 +10,7 @@ defmodule KlziiChat.Survey do
     belongs_to :resource, KlziiChat.Resource, [foreign_key: :resourceId]
     belongs_to :account, KlziiChat.Account, [foreign_key: :accountId]
     has_many :survey_questions, KlziiChat.SurveyQuestion, [foreign_key: :surveyId]
+    has_many :survey_answers, KlziiChat.SurveyAnswer, [foreign_key: :surveyId]
     field :name, :string
     field :description, :string
     field :thanks, :string

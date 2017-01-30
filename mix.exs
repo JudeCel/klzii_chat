@@ -57,12 +57,12 @@ defmodule KlziiChat.Mixfile do
 
      {:postgrex, "~> 0.13"},
      {:gettext, "0.13.0"},
-     {:guardian, "~> 0.14.2"},
+     {:guardian, "~> 0.14"},
      {:cowboy, "~> 1.0"},
      {:corsica, "~> 0.5"},
-     {:mogrify, "~> 0.5.1"},
-     {:earmark, "~> 1.0", only: :dev},
-     {:ex_doc, "~> 0.13", only: :dev},
+     {:mogrify, "~> 0.5"},
+     {:earmark, "~> 1.1", only: :dev},
+     {:ex_doc, "~> 0.14", only: :dev},
      {:credo, "~> 0.4", only: :dev}
     ]
   end

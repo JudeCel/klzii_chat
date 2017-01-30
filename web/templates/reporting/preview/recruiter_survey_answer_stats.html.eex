@@ -1,0 +1,15 @@
+<%= for question <- @stats do %>
+  <div class='media'>
+    <div class='media-left media-top'>
+    </div>
+
+    <div class='media-body'>
+      <div class='media-heading'>
+        <span class='pull-left username'>
+        </span>
+        <span class='time pull-right'>
+        </span>
+      </div>
+    </div>
+  </div>
+<% end %>
