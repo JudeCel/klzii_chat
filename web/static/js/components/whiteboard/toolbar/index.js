@@ -6,6 +6,7 @@ import Delete  from './delete';
 import History from './history';
 import Image   from './image';
 import Text    from './text';
+import Zoom    from './zoom';
 
 export default {
   Hand,
@@ -15,5 +16,6 @@ export default {
   Delete,
   History,
   Image,
-  Text
+  Text,
+  Zoom
 };

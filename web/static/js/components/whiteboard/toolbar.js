@@ -86,6 +86,7 @@ const Buttons = React.createClass({
           <ToolbarButtons.Text    { ...params } />
           <ToolbarButtons.Width   { ...params } />
           <ToolbarButtons.Delete  { ...params } />
+          <ToolbarButtons.Zoom    { ...params } />
           <ToolbarButtons.History { ...params } />
         </span>
       </ButtonToolbar>
