@@ -1,0 +1,14 @@
+module.exports = {
+  init,
+  shapeParams
+};
+
+var whiteboardDelegate;
+function init(data) {
+  whiteboardDelegate = data;
+  return this;
+}
+
+function shapeParams(shape) {
+  return { id: shape.id(), element: shape.svg() };
+}

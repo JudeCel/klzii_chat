@@ -132,12 +132,12 @@
   #whiteboard-box.maximized, #pinboard-box.maximized {
     top: 0px !important;
     position: fixed !important;
-    height: 100vh !important;
+    height: calc(100% - 68px) !important;
     width: 100vw !important;
     padding: 0px;
     border-radius: 0px;
     padding-bottom: 124px;
-    margin-top: 80px;
+    margin-top: 68px;
     z-index: 888;
     border: 0px !important;
   }
@@ -225,8 +225,8 @@
     padding-left: 5px;
   }
 
-  #whiteboard-box .panel-buttons-section {
-    padding-left: 50% !important;
+  #whiteboard-box .panel-buttons-section .btn{
+    height: 30px;
   }
 
   #whiteboard-box .panel-buttons-section div:first-child {
@@ -972,12 +972,6 @@
 }
 
 @media (max-device-width: 767px) and (orientation: portrait) {
-  body {
-    height: 100%;
-    width: 100%;
-    position: fixed;
-  }
-
   .facilitator-section {
     margin-top: 12px;
   }
@@ -1175,8 +1169,54 @@
     margin-top: 44px;
   }
 
+  .whiteboard-section.maximized {
+    z-index: 1000 !important;
+    padding: 0 !important;
+    max-width: 100% !important;
+  }
+
+  .inline-board-section {
+    height: auto !important;
+    text-align: center;
+  	position: relative;
+  	top: 40% !important;
+  	-webkit-transform: translateY(-50%);
+  	-o-transform: translateY(-50%);
+  	transform: translateY(-50%);
+  }
+
+  .whiteboard-section .panel-buttons-section {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+  }
+}
+@media (max-device-width: 767px) and (orientation: landscape) {
+  #whiteboard-box.maximized {
+    height: 100% !important;
+    padding-bottom: 118px;
+  }
+  #whiteboard-box #whiteboard-draw {
+    margin: 0 auto;
+    width: auto;
+  }
 }
 
+
+@media (max-device-width: 767px) and (orientation: landscape) {
+  body {
+    height: 100%;
+    width: 100%;
+    position: fixed;
+  }
+}
+@media (max-device-width: 767px) and (orientation: portrait) {
+  body {
+    height: 100%;
+    width: 100%;
+    position: fixed;
+  }
+}
 @media (max-height: 285px) {
   .type-forum .room-section-left .console-section {
     top: 115px !important;

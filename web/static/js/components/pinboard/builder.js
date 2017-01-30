@@ -1,3 +1,5 @@
+import mobileScreenHelpers from '../../mixins/mobileHelpers';
+
 const builder = {
   addImageAndFrame(svg, group, data, item) {
     if(item.resource) {
@@ -66,18 +68,9 @@ const builder = {
       callback(this.width, this.height);
     }
   },
-  isMobile() {
-    return screen.width < 768 && screen.height < 768;
-  },
-  isVerticalMobile() {
-    return this.isMobile() && screen.height > screen.width;
-  },
-  isHorizontalMobile() {
-    return this.isMobile() && screen.height < screen.width;
-  },
   startingData() {
-    let width = this.isVerticalMobile() ? 270 : 180;
-    let height = this.isHorizontalMobile() ? width / 3 : width / 1.45;
+    let width = mobileScreenHelpers.isVerticalMobile() ? 270 : 180;
+    let height = mobileScreenHelpers.isHorizontalMobile() ? width / 3 : width / 1.45;
     return {
       x: 45,
       y: 55,
