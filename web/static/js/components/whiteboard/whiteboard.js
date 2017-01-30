@@ -18,8 +18,22 @@ import Actions      from './actions';
 import Helpers      from './helpers';
 import ReactDOM     from 'react-dom';
 
+import ReactIScroll from 'react-iscroll';
+var iScroll = require('iscroll/build/iscroll-zoom');
+
 const Whiteboard = React.createClass({
   mixins:[Design, mixins.validations],
+
+  getDefaultProps() {
+    return ({
+      options: {
+        scrollbars: true,
+        scrollX: true,
+        zoom: true,
+        //preventDefault: false
+      }
+    })
+  },
   initDefs() {
     this.markers = this.markers || { arrows: {} };
 
@@ -134,11 +148,19 @@ const Whiteboard = React.createClass({
       return (
         <div id='whiteboard-box' className={'whiteboard-section' + this.expandButtonClass() }>
           <span className="icon-whiteboard-hide-mobile" onClick={ this.expandWhiteboard }></span>
+
           <img className='whiteboard-title' src='/images/title_whiteboard.png' />
           <img className='whiteboard-expand' src={ this.getExpandButtonImage() } onClick={ this.expandWhiteboard } />
-
-          <svg id='whiteboard-draw' className='inline-board-section'/>
-          { this.showToolbar() }
+          <ReactIScroll iScroll={iScroll} options={this.props.options}
+          onRefresh={(iscroll)=> {
+            //iscroll.disable();
+            console.log("woohoo", iscroll);
+          }}>
+          <div className="full-height-width">
+            <svg id='whiteboard-draw' className='inline-board-section'/>
+          </div>
+          </ReactIScroll>
+          { this.showToolbar()}
         </div>
       );
     }
