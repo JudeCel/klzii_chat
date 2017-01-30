@@ -4,5 +4,5 @@
   </svg>
 </div>
 <script>
-  drawElements("#whiteboard_<%= @session_topic.id %>", <%= {:safe, Poison.encode!(@shapes)} %>);
+  drawElements("whiteboard_<%= @session_topic.id %>", <%= {:safe, Poison.encode!(@shapes)} %>);
 </script>

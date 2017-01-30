@@ -10,5 +10,15 @@ function init(data) {
 }
 
 function shapeParams(shape) {
-  return { id: shape.id(), element: shape.svg() };
+  let attrs =  {
+    id: shape.id(),
+    element: shape.svg(),
+    type: shape.type
+  };
+
+  console.log(shape);
+  console.log(attrs, "params");
+
+  return attrs;
+
 }
