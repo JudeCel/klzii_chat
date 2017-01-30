@@ -18,6 +18,9 @@ import notificationMixin    from '../mixins/notification';
 import ReportsModal         from '../components/reports/modal';
 import ObserverListModal    from '../components/modals/observerList';
 import ParticipantListModal    from '../components/modals/participantList';
+import ContactDetailsModal  from '../components/modals/contactDetails';
+import ChangePasswordModal  from '../components/modals/changePassword';
+import CreateNewAccountModal  from '../components/modals/createNewAccount';
 import ReactToastr, { ToastContainer, ToastMessage } from 'react-toastr';
 var ToastMessageFactory     = React.createFactory(ToastMessage.animation);
 
@@ -89,6 +92,9 @@ const ChatView = React.createClass({
             <ReportsModal />
             <ObserverListModal />
             <ParticipantListModal />
+            <ContactDetailsModal />
+            <ChangePasswordModal />
+            <CreateNewAccountModal />
 
             { this.renderMainContent() }
 

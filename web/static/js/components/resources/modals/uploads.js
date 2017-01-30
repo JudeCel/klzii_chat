@@ -225,6 +225,7 @@ const mapStateToProps = (state) => {
     colours: state.chat.session.colours,
     currentUserJwt: state.members.currentUser.jwt,
     channel: state.sessionTopic.channel,
+    jwtToken: state.chat.jwtToken
   }
 };
 
