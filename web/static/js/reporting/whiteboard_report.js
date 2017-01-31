@@ -4,7 +4,7 @@ var wb;
 var drawElements = function (element_id, shapes) {
   wb = SVG(element_id);
   shapes.forEach(function(shape) {
-    createArrowTip(shape.event.ownerId, shape.event.colour);
+    createArrowTip(shape.sessionMemberId, shape.colour);
     draw(wb, shape.event.type, shape.event.element)
   });
 }

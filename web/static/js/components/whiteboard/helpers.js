@@ -13,9 +13,7 @@ function shapeParams(shape) {
   let attrs =  {
     id: shape.id(),
     element: shape.svg(),
-    type: shape.type,
-    ownerId: whiteboardDelegate.props.currentUser.id,
-    colour: whiteboardDelegate.props.currentUser.colour
+    type: shape.type
   };
 
   return attrs;

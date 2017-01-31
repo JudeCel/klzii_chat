@@ -20,6 +20,8 @@ defmodule KlziiChat.ShapeView do
       event: render("event.json", %{shape: shape}),
       time: shape.createdAt,
       uid: shape.uid,
+      colour: shape.session_member.colour,
+      sessionMemberId: shape.sessionMemberId,
       sessionTopicId: shape.sessionTopicId
     }
   end
