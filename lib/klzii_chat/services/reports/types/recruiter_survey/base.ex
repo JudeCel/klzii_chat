@@ -38,7 +38,6 @@ defmodule KlziiChat.Services.Reports.Types.RecruiterSurvey.Base do
     survey_questions = survey.survey_questions
     survey_answers = survey.survey_answers
 
-    # IO.inspect survey_questions
     survey_questions =
       survey.survey_questions
       |> Enum.map(&default_question_stats/1)
@@ -48,19 +47,35 @@ defmodule KlziiChat.Services.Reports.Types.RecruiterSurvey.Base do
   end
 
   def default_question_stats(%{id: id, type: type, name: name, answers: answers}) do
-    %{id: id, type: type, name: name, answers: map_answers(answers, %{}, type)}
+    %{
+      id: id,
+      type: type,
+      name: name,
+      answers: map_answers(answers, %{}, type) |> IO.inspect
+    }
   end
 
+  def map_answers([], acc, type) do
+    acc
+  end
   def map_answers([head| tail], acc, type) do
-    map_answers(head, acc, type)
+    acc = map_answers(head, acc, type)
     map_answers(tail, acc, type)
   end
 
   def map_answers(%{"contactDetails" => %{"age" => %{"options" => options}}} = answer, acc, type) do
-    answer
+    option_map =
+      Enum.reduce(options, %{}, fn(option, option_acc) ->
+        Map.put(option_acc, option, %{count: 0, percent: 0 })
+      end)
+
+    Map.put(acc, answer["order"], option_map)
   end
   def map_answers(answer, acc, type) do
-    IO.inspect answer
-    answer
+    if answer["order"] do
+      Map.put(acc, answer["order"], %{ name: answer["name"], count: 0, percent: 0 })
+    else
+      acc
+    end
   end
 end
