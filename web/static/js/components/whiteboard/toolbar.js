@@ -52,6 +52,8 @@ const Buttons = React.createClass({
   setImage(type, url) {
     this.setType(type, type);
     whiteboardDelegate.drawData.imageUrl = url;
+    whiteboardDelegate.deps.Shape.createShapeWithDefaultCoords();
+    this.setType('none', 'none');
   },
   setText(type, text) {
     this.setType(type, type);

@@ -66,21 +66,26 @@ function loadOne(data) {
 
 function createShape(e) {
   if(e) {
-    whiteboardDelegate.shapeData.shape = buildShape(e);
-    if(whiteboardDelegate.shapeData.shape) {
-      whiteboardDelegate.shapeData.shape.on('drawstop', whiteboardDelegate.deps.Events.shapeWasCreated);
-      initShapeEvents(whiteboardDelegate.shapeData.shape);
-    }
+    buildShape(e, function(shape) {
+      whiteboardDelegate.shapeData.shape = shape;
+      if(whiteboardDelegate.shapeData.shape) {
+        whiteboardDelegate.shapeData.shape.on('drawstop', whiteboardDelegate.deps.Events.shapeWasCreated);
+        initShapeEvents(whiteboardDelegate.shapeData.shape);
+      }
+    });
   }
 }
 
 function createShapeWithDefaultCoords() {
-  whiteboardDelegate.shapeData.shape = buildShape();
-  if(whiteboardDelegate.shapeData.shape) {
-    whiteboardDelegate.shapeData.shape.on('drawstop', whiteboardDelegate.deps.Events.shapeWasCreated);
-    initShapeEvents(whiteboardDelegate.shapeData.shape);
-    whiteboardDelegate.shapeData.shape.draw('stop');
-  }
+  buildShape(null, function(shape) {
+    whiteboardDelegate.shapeData.shape = shape;
+    if(whiteboardDelegate.shapeData.shape) {
+      whiteboardDelegate.shapeData.shape.on('drawstop', whiteboardDelegate.deps.Events.shapeWasCreated);
+      initShapeEvents(whiteboardDelegate.shapeData.shape);
+      whiteboardDelegate.shapeData.shape.draw('stop');
+    }
+  });
+
 }
 
 
@@ -94,18 +99,18 @@ function initShapeEvents(shape) {
   shape.on('dragend', whiteboardDelegate.deps.Events.shapeWasUpdated);
 }
 
-function buildShape(e) {
+function buildShape(e, callback) {
   var element = whiteboardDelegate.deps.Elements.shapes[whiteboardDelegate.drawData.current];
   if(element) {
     var nested = whiteboardDelegate.mainGroup.nested();
     var attrs = { fill: whiteboardDelegate.drawData.color, 'stroke-width': whiteboardDelegate.drawData.strokeWidth, stroke: whiteboardDelegate.drawData.color };
-    var build = element(e, nested, attrs);
-    if (!e) {
-      build.center(whiteboardDelegate.drawData.initialWidth/2, whiteboardDelegate.drawData.initialHeight/2);
-    }
-
-    attrs.id = nested.id() + build.type + Date.now();
-    return build.attr(attrs);
+    element(e, nested, attrs, function(build) {
+      if (!e) {
+        build.center(whiteboardDelegate.drawData.initialWidth/2, whiteboardDelegate.drawData.initialHeight/2);
+      }
+      attrs.id = nested.id() + build.type + Date.now();
+      callback(build.attr(attrs));
+    });
   }
 }
 

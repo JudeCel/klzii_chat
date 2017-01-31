@@ -20,52 +20,57 @@ function init(data) {
   return this;
 }
 
-function circleEmpty(e, nested, attrs) {
+function circleEmpty(e, nested, attrs, callback) {
   attrs.fill = 'none';
-  return circleFilled(e, nested, attrs);
+  callback(circleFilled(e, nested, attrs));
 }
 
-function circleFilled(e, nested, attrs) {
-  return nested.ellipse().draw(e);
+function circleFilled(e, nested, attrs, callback) {
+  callback(nested.ellipse().draw(e));
 }
 
-function rectEmpty(e, nested, attrs) {
+function rectEmpty(e, nested, attrs, callback) {
   attrs.fill = 'none';
-  return rectFilled(e, nested, attrs);
+  rectFilled(e, nested, attrs, callback);
 }
 
-function rectFilled(e, nested, attrs) {
-  return nested.rect().draw(e);
+function rectFilled(e, nested, attrs, callback) {
+  callback(nested.rect().draw(e));
 }
 
-function scribbleEmpty(e, nested, attrs) {
+function scribbleEmpty(e, nested, attrs, callback) {
   attrs.fill = 'none';
-  return scribbleFilled(e, nested, attrs);
+  scribbleFilled(e, nested, attrs, callback);
 }
 
-function scribbleFilled(e, nested, attrs) {
+function scribbleFilled(e, nested, attrs, callback) {
   attrs['pointer-events'] = 'all';
   whiteboardDelegate.deps.Shape.setMouseType('stop');
   var build = nested.polyline().draw(e);
   build.remember('_paintHandler').drawCircles = function() {};
-  return build;
+  callback(build);
 }
 
-function line(e, nested, attrs) {
-  return nested.line(0, 0, 0, 0).draw(e);
+function line(e, nested, attrs, callback) {
+  callback(nested.line(0, 0, 0, 0).draw(e));
 }
 
-function arrow(e, nested, attrs) {
+function arrow(e, nested, attrs, callback) {
   attrs['marker-end'] = whiteboardDelegate.markers.arrows[whiteboardDelegate.props.currentUser.id];
-  return nested.line(0, 0, 0, 0).draw(e);
+  callback(nested.line(0, 0, 0, 0).draw(e));
 }
 
-function image(e, nested, attrs) {
+function image(e, nested, attrs, callback) {
   attrs.fill = 'none';
-  return nested.image(whiteboardDelegate.drawData.imageUrl).draw(e);
+  
+  let image = nested.image(whiteboardDelegate.drawData.imageUrl);
+  image.loaded(function(loader) {
+    this.size(loader.width, loader.height);
+    callback(image);
+  });
 }
 
-function text(e, nested, attrs) {
+function text(e, nested, attrs, callback) {
   attrs['font-size'] = 25;
-  return nested.plain(whiteboardDelegate.drawData.text).draw(e);
+  callback(nested.plain(whiteboardDelegate.drawData.text).draw(e));
 }
