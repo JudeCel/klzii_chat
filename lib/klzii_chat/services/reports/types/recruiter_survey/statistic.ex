@@ -1,6 +1,31 @@
 defmodule KlziiChat.Services.Reports.Types.RecruiterSurvey.Statistic do
   @countable_contact_list_fields  ["age", "gender"]
 
+
+  def map_question_list_answers(list, answer_map) do
+    Enum.reduce(list, [], fn(question, acc) ->
+      update_answers =
+        Map.get(answer_map, to_string(question.id))
+        |> processed_question_answers(question.answers)
+
+      acc ++ [Map.put(question, :answers, update_answers)]
+      |> IO.inspect
+    end)
+  end
+
+  def processed_question_answers(qestion_statistic, answers) do
+    Enum.reduce(answers, [], fn(answer, acc) ->
+      processed_qestion_answer(answer)
+    end )
+  end
+
+  def processed_qestion_answer(%{"name" => name, "order" => order}) do
+    %{name: name, count: 1, percents: 75}
+  end
+  def processed_qestion_answer(answer) do
+    IO.inspect answer
+  end
+
   @spec map_answers(List.t) :: Map.t
   def map_answers(list) do
     Enum.reduce(list, %{}, fn(sub_list, acc) ->

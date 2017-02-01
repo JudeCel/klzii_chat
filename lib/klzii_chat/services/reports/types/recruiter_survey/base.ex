@@ -38,10 +38,10 @@ defmodule KlziiChat.Services.Reports.Types.RecruiterSurvey.Base do
     survey_questions = survey.survey_questions
     survey_answers = survey.survey_answers
 
-
-    survey_answers
-    |> Enum.map(&(&1.answers))
-    |> IO.inspect 
+    survey_questions
+    |> Enum.map(&(%{id: &1.id, question: &1.question, answers: &1.answers}))
+    |> IO.inspect
+    # |> Enum.map(&(&1.answers))
     # survey_questions =
     #   survey.survey_questions
     #   |> Enum.map(&default_question_stats/1)
