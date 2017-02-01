@@ -224,8 +224,7 @@ const mapStateToProps = (state) => {
     modalData: state.modalWindows.currentModalData,
     colours: state.chat.session.colours,
     currentUserJwt: state.members.currentUser.jwt,
-    channel: state.sessionTopic.channel,
-    jwtToken: state.chat.jwtToken
+    channel: state.sessionTopic.channel
   }
 };
 
