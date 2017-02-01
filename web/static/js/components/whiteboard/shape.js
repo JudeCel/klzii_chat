@@ -47,21 +47,23 @@ function addNewOrChange() {
   for(var id in whiteboardDelegate.props.shapes) {
     var object = whiteboardDelegate.props.shapes[id];
     var existing = whiteboardDelegate.shapeData.added[object.uid];
-
     if(!existing) {
+      console.log("1");
       loadOne(object.event.element);
-    }
-    else if(object.event.element != existing.svg()) {
+    } else if(object.event.element != existing.svg()) {
+      console.log("2");
       existing.parent().remove();
       loadOne(object.event.element);
     }
+    initShapeEvents(whiteboardDelegate.shapeData.shape, object.permissions);
   }
 }
 
 function loadOne(data) {
   var nested = whiteboardDelegate.mainGroup.nested();
   nested.svg(data);
-  initShapeEvents(nested.first());
+  whiteboardDelegate.shapeData.shape = nested.first();
+  //initShapeEvents(nested.first(), permissions);
 }
 
 function createShape(e) {
@@ -70,7 +72,7 @@ function createShape(e) {
       whiteboardDelegate.shapeData.shape = shape;
       if(whiteboardDelegate.shapeData.shape) {
         whiteboardDelegate.shapeData.shape.on('drawstop', whiteboardDelegate.deps.Events.shapeWasCreated);
-        initShapeEvents(whiteboardDelegate.shapeData.shape);
+        //initShapeEvents(whiteboardDelegate.shapeData.shape);
       }
     });
   }
@@ -89,14 +91,17 @@ function createShapeWithDefaultCoords() {
 }
 
 
-function initShapeEvents(shape) {
+function initShapeEvents(shape, permissions) {
+  console.log("aaaa", permissions);
   whiteboardDelegate.shapeData.added[shape.id()] = shape;
-  shape.mousedown(selectShape);
-  shape.touchstart(selectShape);
-  shape.on('resizestart', whiteboardDelegate.deps.Events.shapeWillUpdate);
-  shape.on('resizedone', whiteboardDelegate.deps.Events.shapeWasUpdated);
-  shape.on('dragstart', whiteboardDelegate.deps.Events.shapeWillUpdate);
-  shape.on('dragend', whiteboardDelegate.deps.Events.shapeWasUpdated);
+  if (permissions && permissions.can_edit) {
+    shape.mousedown(selectShape);
+    shape.touchstart(selectShape);
+    shape.on('resizestart', whiteboardDelegate.deps.Events.shapeWillUpdate);
+    shape.on('resizedone', whiteboardDelegate.deps.Events.shapeWasUpdated);
+    shape.on('dragstart', whiteboardDelegate.deps.Events.shapeWillUpdate);
+    shape.on('dragend', whiteboardDelegate.deps.Events.shapeWasUpdated);
+  }
 }
 
 function buildShape(e, callback) {
