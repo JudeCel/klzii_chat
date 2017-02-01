@@ -15,7 +15,7 @@ const headerActions = {
     }
   },
   dashboardLogout() {
-    window.location.href = "http://insider.focus.com:8080/logout";
+    window.location.href = this.props.resourcesConf.dashboard_url + "/logout";
   }
 };
 
