@@ -44,7 +44,7 @@ const Buttons = React.createClass({
       whiteboardDelegate.deps.History.add(whiteboardDelegate.shapeData.added, 'removeAll');
       whiteboardDelegate.deps.Actions.shapeDeleteAll();
     }
-    else {
+    else if (whiteboardDelegate.mouseData.selected){
       whiteboardDelegate.deps.History.add(whiteboardDelegate.mouseData.selected, 'remove');
       whiteboardDelegate.deps.Actions.shapeDelete(whiteboardDelegate.mouseData.selected);
     }
@@ -52,6 +52,8 @@ const Buttons = React.createClass({
   setImage(type, url) {
     this.setType(type, type);
     whiteboardDelegate.drawData.imageUrl = url;
+    whiteboardDelegate.deps.Shape.createShapeWithDefaultCoords();
+    this.setType('none', 'none');
   },
   setText(type, text) {
     this.setType(type, type);
