@@ -60,12 +60,24 @@ function arrow(e, nested, attrs, callback) {
   callback(nested.line(0, 0, 0, 0).draw(e));
 }
 
+function adjustImageSize(loadedImageInfo) {
+  let scale = 1;
+  //restrict image size to whiteboard screen size (Max it's height)
+  if (loadedImageInfo.width >= whiteboardDelegate.drawData.initialHeight) {
+    scale = whiteboardDelegate.drawData.initialHeight/loadedImageInfo.width;
+  } else if (loadedImageInfo.height >= whiteboardDelegate.drawData.initialHeight) {
+    scale = whiteboardDelegate.drawData.initialHeight/loadedImageInfo.height;
+  }
+  loadedImageInfo.width *= scale;
+  loadedImageInfo.height *= scale;
+}
+
 function image(e, nested, attrs, callback) {
   attrs.fill = 'none';
-  
   let image = nested.image(whiteboardDelegate.drawData.imageUrl);
-  image.loaded(function(loader) {
-    this.size(loader.width, loader.height);
+  image.loaded(function(loadedImageInfo) {
+    adjustImageSize(loadedImageInfo);
+    this.size(loadedImageInfo.width, loadedImageInfo.height);
     callback(image);
   });
 }
