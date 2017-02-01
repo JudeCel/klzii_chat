@@ -66,7 +66,13 @@ defmodule KlziiChat.SessionChannel do
   def handle_info(:jwt_token, socket) do
     session_member = get_session_member(socket)
     { :ok, jwt, _encoded_claims } =  Guardian.encode_and_sign(%KlziiChat.AccountUser{id: session_member.account_user_id}, :token )
+    send(self(), :resources_conf)
     push(socket, "jwt_token", %{token: jwt})
+    {:noreply, socket}
+  end
+  def handle_info(:resources_conf, socket) do
+    {:ok, resource_conf} = Application.fetch_env(:klzii_chat, :resources_conf)
+    push(socket, "resources_conf", %{resources_conf: resource_conf})
     {:noreply, socket}
   end
 

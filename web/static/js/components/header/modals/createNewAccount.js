@@ -1,8 +1,8 @@
 import React       from 'react';
 import { connect } from 'react-redux';
 import { Modal }   from 'react-bootstrap';
-import mixins      from '../../mixins';
-import Actions     from '../../actions/account'
+import mixins      from '../../../mixins';
+import Actions     from '../../../actions/account';
 
 const CreateNewAccount = React.createClass({
   mixins: [mixins.modalWindows],
@@ -13,8 +13,8 @@ const CreateNewAccount = React.createClass({
       this.setState({ newAccountName: event.target.value });
   },
   createNewAccountConfirm() {
-      const { dispatch, jwtToken } = this.props;
-      dispatch(Actions.createNewUser(jwtToken, this.state.newAccountName));
+      const { dispatch, jwtToken, resourcesConf } = this.props;
+      dispatch(Actions.createNewUser(resourcesConf.dashboard_url, jwtToken, this.state.newAccountName));
   },
   render() {
     let show = this.showSpecificModal('createNewAccount');
@@ -52,7 +52,8 @@ const mapStateToProps = (state) => {
   return {
     modalWindows: state.modalWindows,
     colours: state.chat.session.colours,
-    jwtToken: state.chat.jwtToken
+    jwtToken: state.chat.jwtToken,
+    resourcesConf: state.chat.resourcesConf,
   }
 };
 

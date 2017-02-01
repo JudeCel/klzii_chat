@@ -2,11 +2,13 @@ import Constants from '../constants';
 import request   from 'superagent';
 import NotificationActions from './notifications';
 
+const ACCOUNT_API_PATH = '/api/account';
+
 const Actions = {
-    createNewUser:(jwt, accountName) => {
+    createNewUser:(dashboardUrl, jwt, accountName) => {
     return dispatch => {
       request
-        .post('http://insider.focus.com:8080/api/account')
+        .post(getAccountApiUrl(dashboardUrl))
         .set('Authorization', jwt)
         .send({ accountName: accountName })
         .end(function(error, result) {
@@ -23,6 +25,10 @@ const Actions = {
         });
     }
   }
+}
+
+function getAccountApiUrl(mainUrl) {
+    return mainUrl + ACCOUNT_API_PATH;
 }
 
 export default Actions;

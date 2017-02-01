@@ -1,8 +1,8 @@
 import React       from 'react';
 import { connect } from 'react-redux';
 import { Modal }   from 'react-bootstrap';
-import mixins      from '../../mixins';
-import Actions     from '../../actions/user'
+import mixins      from '../../../mixins';
+import Actions     from '../../../actions/user'
 
 const ChangePassword = React.createClass({
   mixins: [mixins.modalWindows],
@@ -12,17 +12,14 @@ const ChangePassword = React.createClass({
           repassword: ""
       };
   },
-  componentDidMount() {
-    console.log("CHANGE PASSWORD MODAL MOUNT!");
-  },
   passwordChangeConfirm() {
-      const { dispatch, jwtToken } = this.props;
+      const { dispatch, jwtToken, resourcesConf } = this.props;
       let password = {
         password: this.state.password,
         repassword: this.state.repassword
       };
       
-      dispatch(Actions.changePassword(jwtToken, password));
+      dispatch(Actions.changePassword(resourcesConf.dashboard_url, jwtToken, password));
   },
   setPassword(event) {
     this.setState({ password: event.target.value});    
@@ -71,7 +68,8 @@ const mapStateToProps = (state) => {
   return {
     modalWindows: state.modalWindows,
     colours: state.chat.session.colours,
-    jwtToken: state.chat.jwtToken
+    jwtToken: state.chat.jwtToken,
+    resourcesConf: state.chat.resourcesConf
   }
 };
 
