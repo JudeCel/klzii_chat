@@ -48,14 +48,15 @@ function addNewOrChange() {
     var object = whiteboardDelegate.props.shapes[id];
     var existing = whiteboardDelegate.shapeData.added[object.uid];
     if(!existing) {
-      console.log("1");
       loadOne(object.event.element);
+      initShapeEvents(whiteboardDelegate.shapeData.shape, object.permissions);
     } else if(object.event.element != existing.svg()) {
-      console.log("2");
       existing.parent().remove();
       loadOne(object.event.element);
+      initShapeEvents(whiteboardDelegate.shapeData.shape, object.permissions);
     }
-    initShapeEvents(whiteboardDelegate.shapeData.shape, object.permissions);
+
+
   }
 }
 
@@ -63,16 +64,16 @@ function loadOne(data) {
   var nested = whiteboardDelegate.mainGroup.nested();
   nested.svg(data);
   whiteboardDelegate.shapeData.shape = nested.first();
-  //initShapeEvents(nested.first(), permissions);
 }
 
 function createShape(e) {
   if(e) {
     buildShape(e, function(shape) {
       whiteboardDelegate.shapeData.shape = shape;
+      whiteboardDelegate.shapeData.added[shape.id()] = shape;
+      initShapeEvents(whiteboardDelegate.shapeData.shape, {can_edit: true});
       if(whiteboardDelegate.shapeData.shape) {
         whiteboardDelegate.shapeData.shape.on('drawstop', whiteboardDelegate.deps.Events.shapeWasCreated);
-        //initShapeEvents(whiteboardDelegate.shapeData.shape);
       }
     });
   }
@@ -81,6 +82,7 @@ function createShape(e) {
 function createShapeWithDefaultCoords() {
   buildShape(null, function(shape) {
     whiteboardDelegate.shapeData.shape = shape;
+    whiteboardDelegate.shapeData.added[shape.id()] = shape;
     if(whiteboardDelegate.shapeData.shape) {
       whiteboardDelegate.shapeData.shape.on('drawstop', whiteboardDelegate.deps.Events.shapeWasCreated);
       initShapeEvents(whiteboardDelegate.shapeData.shape);
@@ -92,11 +94,16 @@ function createShapeWithDefaultCoords() {
 
 
 function initShapeEvents(shape, permissions) {
-  console.log("aaaa", permissions);
   whiteboardDelegate.shapeData.added[shape.id()] = shape;
   if (permissions && permissions.can_edit) {
+    shape.off();
     shape.mousedown(selectShape);
     shape.touchstart(selectShape);
+    shape.off('resizestart');
+    shape.off('resizedone');
+    shape.off('dragstart');
+    shape.off('dragend');
+
     shape.on('resizestart', whiteboardDelegate.deps.Events.shapeWillUpdate);
     shape.on('resizedone', whiteboardDelegate.deps.Events.shapeWasUpdated);
     shape.on('dragstart', whiteboardDelegate.deps.Events.shapeWillUpdate);
