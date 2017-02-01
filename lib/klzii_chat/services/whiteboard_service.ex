@@ -20,9 +20,9 @@ defmodule KlziiChat.Services.WhiteboardService do
   end
 
   def update(changeset) do
-    case Repo.update changeset do
+    case Repo.update changeset, preload: [:session_member] do
       {:ok, shape} ->
-        {:ok, shape}
+        {:ok, Repo.preload(shape, [:session_member])}
       {:error, changeset} ->
         {:error, changeset}
     end
@@ -31,7 +31,7 @@ defmodule KlziiChat.Services.WhiteboardService do
   def create(changeset) do
     case Repo.insert(changeset) do
       {:ok, shape} ->
-        {:ok, shape}
+        {:ok, Repo.preload(shape, [:session_member])}
       {:error, changeset} ->
         {:error, changeset}
     end
@@ -40,7 +40,6 @@ defmodule KlziiChat.Services.WhiteboardService do
   def update_object(session_member_id, _, params) do
     session_member = Repo.get!(SessionMember, session_member_id)
     shape = Repo.get_by!(Shape, uid: params["id"])
-
     if WhiteboardPermissions.can_edit(session_member, shape) do
       Ecto.Changeset.change(shape, event: params)
       |> update
