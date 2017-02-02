@@ -47,65 +47,82 @@ function addNewOrChange() {
   for(var id in whiteboardDelegate.props.shapes) {
     var object = whiteboardDelegate.props.shapes[id];
     var existing = whiteboardDelegate.shapeData.added[object.uid];
-
     if(!existing) {
       loadOne(object.event.element);
-    }
-    else if(object.event.element != existing.svg()) {
+      initShapeEvents(whiteboardDelegate.shapeData.shape, object.permissions);
+    } else if(object.event.element != existing.svg()) {
       existing.parent().remove();
       loadOne(object.event.element);
+      initShapeEvents(whiteboardDelegate.shapeData.shape, object.permissions);
     }
+
+
   }
 }
 
 function loadOne(data) {
   var nested = whiteboardDelegate.mainGroup.nested();
   nested.svg(data);
-  initShapeEvents(nested.first());
+  whiteboardDelegate.shapeData.shape = nested.first();
 }
 
 function createShape(e) {
   if(e) {
-    whiteboardDelegate.shapeData.shape = buildShape(e);
-    if(whiteboardDelegate.shapeData.shape) {
-      whiteboardDelegate.shapeData.shape.on('drawstop', whiteboardDelegate.deps.Events.shapeWasCreated);
-      initShapeEvents(whiteboardDelegate.shapeData.shape);
-    }
+    buildShape(e, function(shape) {
+      whiteboardDelegate.shapeData.shape = shape;
+      whiteboardDelegate.shapeData.added[shape.id()] = shape;
+      initShapeEvents(whiteboardDelegate.shapeData.shape, {can_edit: true});
+      if(whiteboardDelegate.shapeData.shape) {
+        whiteboardDelegate.shapeData.shape.on('drawstop', whiteboardDelegate.deps.Events.shapeWasCreated);
+      }
+    });
   }
 }
 
 function createShapeWithDefaultCoords() {
-  whiteboardDelegate.shapeData.shape = buildShape();
-  if(whiteboardDelegate.shapeData.shape) {
-    whiteboardDelegate.shapeData.shape.on('drawstop', whiteboardDelegate.deps.Events.shapeWasCreated);
-    initShapeEvents(whiteboardDelegate.shapeData.shape);
-    whiteboardDelegate.shapeData.shape.draw('stop');
+  buildShape(null, function(shape) {
+    whiteboardDelegate.shapeData.shape = shape;
+    whiteboardDelegate.shapeData.added[shape.id()] = shape;
+    if(whiteboardDelegate.shapeData.shape) {
+      whiteboardDelegate.shapeData.shape.on('drawstop', whiteboardDelegate.deps.Events.shapeWasCreated);
+      initShapeEvents(whiteboardDelegate.shapeData.shape);
+      whiteboardDelegate.shapeData.shape.draw('stop');
+    }
+  });
+
+}
+
+
+function initShapeEvents(shape, permissions) {
+  whiteboardDelegate.shapeData.added[shape.id()] = shape;
+  if (permissions && permissions.can_edit) {
+    shape.off();
+    shape.mousedown(selectShape);
+    shape.touchstart(selectShape);
+    shape.off('resizestart');
+    shape.off('resizedone');
+    shape.off('dragstart');
+    shape.off('dragend');
+
+    shape.on('resizestart', whiteboardDelegate.deps.Events.shapeWillUpdate);
+    shape.on('resizedone', whiteboardDelegate.deps.Events.shapeWasUpdated);
+    shape.on('dragstart', whiteboardDelegate.deps.Events.shapeWillUpdate);
+    shape.on('dragend', whiteboardDelegate.deps.Events.shapeWasUpdated);
   }
 }
 
-
-function initShapeEvents(shape) {
-  whiteboardDelegate.shapeData.added[shape.id()] = shape;
-  shape.mousedown(selectShape);
-  shape.touchstart(selectShape);
-  shape.on('resizestart', whiteboardDelegate.deps.Events.shapeWillUpdate);
-  shape.on('resizedone', whiteboardDelegate.deps.Events.shapeWasUpdated);
-  shape.on('dragstart', whiteboardDelegate.deps.Events.shapeWillUpdate);
-  shape.on('dragend', whiteboardDelegate.deps.Events.shapeWasUpdated);
-}
-
-function buildShape(e) {
+function buildShape(e, callback) {
   var element = whiteboardDelegate.deps.Elements.shapes[whiteboardDelegate.drawData.current];
   if(element) {
     var nested = whiteboardDelegate.mainGroup.nested();
     var attrs = { fill: whiteboardDelegate.drawData.color, 'stroke-width': whiteboardDelegate.drawData.strokeWidth, stroke: whiteboardDelegate.drawData.color };
-    var build = element(e, nested, attrs);
-    if (!e) {
-      build.center(whiteboardDelegate.drawData.initialWidth/2, whiteboardDelegate.drawData.initialHeight/2);
-    }
-
-    attrs.id = nested.id() + build.type + Date.now();
-    return build.attr(attrs);
+    element(e, nested, attrs, function(build) {
+      if (!e) {
+        build.center(whiteboardDelegate.drawData.initialWidth/2, whiteboardDelegate.drawData.initialHeight/2);
+      }
+      attrs.id = nested.id() + build.type + Date.now();
+      callback(build.attr(attrs));
+    });
   }
 }
 
