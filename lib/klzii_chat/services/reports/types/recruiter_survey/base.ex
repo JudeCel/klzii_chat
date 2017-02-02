@@ -70,13 +70,13 @@ defmodule KlziiChat.Services.Reports.Types.RecruiterSurvey.Base do
   def map_answers(%{"contactDetails" => %{"age" => %{"options" => options, "order" => order}}} = answer, acc, type) do
     option_map =
       Enum.reduce(options, %{}, fn(option, option_acc) ->
-        Map.put(option_acc, option, %{count: 0, percent: 0 })
+        Map.put(option_acc, option, %{count: 0, percents: 0 })
       end)
     Map.put(acc, order, option_map)
   end
   def map_answers(answer, acc, type) do
     if answer["order"] do
-      Map.put(acc, answer["order"], %{ name: answer["name"], count: 0, percent: 0 })
+      Map.put(acc, answer["order"], %{ name: answer["name"], count: 0, percents: 0 })
     else
       acc
     end
