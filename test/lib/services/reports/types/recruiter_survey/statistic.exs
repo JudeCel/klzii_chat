@@ -128,9 +128,9 @@ defmodule KlziiChat.Services.Reports.Types.RecruiterSurvey.StatisticTest do
           question: "e.g. What advice would you like to give to (Brand Name) to improve (product/service)?"
         },
         %{
-          question: "Age",
           id: 10,
           model: "age",
+          name: "Age",
             answers: [
               %{count: 0, name: "Under 18", percents: 0, order: "Under 18", type: "number"},
               %{count: 0, name: "18-19", percents: 0,  order: "18-19", type: "number"},
@@ -148,16 +148,16 @@ defmodule KlziiChat.Services.Reports.Types.RecruiterSurvey.StatisticTest do
             ]
         },
         %{
-          question: "Gender",
           id: 10,
           model: "gender",
+          name: "Gender",
             answers: [
               %{name: "male", type: "number", count: 0, percents: 0, order: "male"},
               %{name: "female", type: "number", count: 0, percents: 0, order: "female"},
             ]
         },
       ]
-      resp = Statistic.build_qestions(question_list)
+      resp = Statistic.build_questions(question_list)
       assert(expect_result == resp)
     end
 
@@ -279,17 +279,17 @@ defmodule KlziiChat.Services.Reports.Types.RecruiterSurvey.StatisticTest do
             %{count: 0, name: "60-64", percents: 0.0,  order: "60-64", type: "number"},
             %{count: 0, name: "65-69", percents: 0.0,  order: "65-69", type: "number"},
             %{count: 0, name: "70+", percents: 0.0,  order: "70+", type: "number"}],
-            id: 10, model: "age", question: "Age"
+            id: 10, model: "age", name: "Age"
           },
           %{answers: [
             %{count: 1, name: "male", percents: 50.0, type: "number", order: "male"},
             %{count: 1, name: "female", percents: 50.0, type: "number", order: "female"}],
             id: 10,
             model: "gender",
-            question: "Gender"
+            name: "Gender",
           }
         ]
-        question_list_resp = Statistic.build_qestions(question_list)
+        question_list_resp = Statistic.build_questions(question_list)
         resp = Statistic.map_question_list_answers(question_list_resp, map_answers_result)
         assert(expect_result == resp)
     end

@@ -53,7 +53,7 @@ defmodule KlziiChat.Services.Reports.Types.RecruiterSurvey.Statistic do
   def processed_question_answers(%{"name" => name, "order" => order}, _, _) do
     %{name: name, type: "number", count: 0, percents: 0, order: order}
   end
-  def processed_question_answers(%{"order" => order}, _, _) do
+  def processed_question_answers(%{"order" => order}, _, question) do
     %{order: order, count: 0, type: "list", values: []}
   end
   def processed_question_answers(%{}, _, _), do: :skip

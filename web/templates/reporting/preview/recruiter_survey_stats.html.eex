@@ -1,9 +1,9 @@
-<div class='mini-survey'>
+<div class='recruiter-rurvey'>
   <div class='title'>
     <strong>Name <%= @recruiter_survey.name %></strong>
     <br/>
-    <strong>Total Surveys Completed <%= @survey_questions_stats.total_count %></strong>
   </div>
+  <div class="total-count">Total Surveys Completed <%= @survey_questions_stats.total_count %></div>
 
   <div class='questions'>
     <%= render "recruiter_survey_answer_stats.html", survey_questions: @survey_questions_stats.questions %>

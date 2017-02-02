@@ -9,8 +9,8 @@ defmodule KlziiChat.Services.Reports.Types.RecruiterSurvey.Base do
   def format_modeule("xlsx"), do: {:ok, Formats.Csv}
   def format_modeule(format), do: {:error, "module for format #{format} not found"}
 
-  def get_data(report) do
-    with {:ok, survey} <- get_recruiter_survey(report),
+  def get_data(%{id: id}) do
+    with {:ok, survey} <- get_recruiter_survey(%{id: id}),
          {:ok, header_title} <- get_header_title(survey),
     do:  {:ok, %{
               "recruiter_survey" => survey,
@@ -28,9 +28,9 @@ defmodule KlziiChat.Services.Reports.Types.RecruiterSurvey.Base do
   @spec get_recruiter_survey(Map.t) :: {:ok, Map.t} | {:error, Map.t}
   def get_recruiter_survey(%{id: id}) do
       survey =
-        from(s in Survey, where: [id: ^id], preload: [:survey_questions, :survey_answers])
+        from(s in Survey, where: [id: ^id], preload: [:survey_answers, :resource, survey_questions: [:resource]])
         |> Repo.one
-    {:ok, survey}
+    {:ok, Phoenix.View.render( KlziiChat.SurveyView,"report.json", %{survey: survey})}
   end
   def get_recruiter_survey(_), do: {:error, %{not_reqired: "recruiter survey id not reqired"}}
 

@@ -1,5 +1,5 @@
 <%= for question <- @survey_questions do %>
-  <div class='media'>
+  <div class='question media'>
     <div class='media-left media-top'>
       <div class='media-heading'>
       </div>
