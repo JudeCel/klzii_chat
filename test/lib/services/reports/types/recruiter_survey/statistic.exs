@@ -70,9 +70,9 @@ defmodule KlziiChat.Services.Reports.Types.RecruiterSurvey.StatisticTest do
       question_list = [
         %{
           answers: [
-            %{"name" => "Brand Name", "order" => 0},
-            %{"name" => "Brand Name", "order" => 1},
-            %{"name" => "Brand Name", "order" => 2},
+            %{"name" => "Brand Name1", "order" => 0},
+            %{"name" => "Brand Name2", "order" => 1},
+            %{"name" => "Brand Name3", "order" => 2},
             %{"name" => "Don't Know", "order" => 3}],
           id: 6,
           question: "e.g. Which ONE of these is your FIRST choice for (product/service type)?"
@@ -92,18 +92,18 @@ defmodule KlziiChat.Services.Reports.Types.RecruiterSurvey.StatisticTest do
             id: 8,
             question: "e.g. What advice would you like to give to (Brand Name) to improve (product/service)?"
           },
-        %{
-          answers: [
-            %{"link" => %{
-                "name" => "Privace Policy",
-                "url" => "/privacy_policy"},
-              "name" => "Yes - I am aged 18 or over & give you permission to contact me in future about a discussion group",
-              "order" => 0,
-              "tag" => "InterestYesTag"
-            },
-            %{"name" => "No", "order" => 1}],
-            id: 9,
-            question: "e.g. Are you interested in taking part in a future online discussion group"},
+        # %{
+        #   answers: [
+        #     %{"link" => %{
+        #         "name" => "Privace Policy",
+        #         "url" => "/privacy_policy"},
+        #       "name" => "Yes - I am aged 18 or over & give you permission to contact me in future about a discussion group",
+        #       "order" => 0,
+        #       "tag" => "InterestYesTag"
+        #     },
+        #     %{"name" => "No", "order" => 1}],
+        #     id: 9,
+        #     question: "e.g. Are you interested in taking part in a future online discussion group"},
         # %{answers: [
         #   %{"contactDetails" => %{
         #     "age" => %{
@@ -140,13 +140,27 @@ defmodule KlziiChat.Services.Reports.Types.RecruiterSurvey.StatisticTest do
         expect_result = [
           %{
             answers: [
-              %{"name" => "Brand Name", "count" => 1, "percents": 100},
-              %{"name" => "Brand Name", "count" => 1, "percents": 100},
-              %{"name" => "Brand Name", "count" => 1, "percents": 100},
-              %{"name" => "Don't Know", "count" => 1, "percents": 100}],
+              %{name: "Brand Name1", count: 0, percents: 0.0},
+              %{name: "Brand Name2", count: 2, percents: 67.0},
+              %{name: "Brand Name3", count: 1, percents: 33.0},
+              %{name: "Don't Know", count: 0, percents: 0.0}],
             id: 6,
             question: "e.g. Which ONE of these is your FIRST choice for (product/service type)?"
-          }
+          },
+          %{
+            answers: [
+              %{name: "Brand Name", count: 2, percents: 67.0},
+              %{name: "Brand Name", count: 0, percents: 0.0},
+              %{name: "Brand Name", count: 1, percents: 33.0},
+              %{name: "Don't Know", count: 0, percents: 0.0}],
+            id: 7,
+            question: "e.g. Which ONE of these is your SECOND choice for (product/service type)?"
+          },
+           %{
+             answers: [
+               %{count: 3, percents: 100.0, valuse: ["xfcb", "xfcb", "pff"]}],
+              id: 8,
+              question: "e.g. What advice would you like to give to (Brand Name) to improve (product/service)?"}
         ]
         resp = Statistic.map_question_list_answers(question_list, map_answers_result)
         assert(expect_result == resp)

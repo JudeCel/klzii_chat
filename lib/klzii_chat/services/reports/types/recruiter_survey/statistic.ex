@@ -9,21 +9,34 @@ defmodule KlziiChat.Services.Reports.Types.RecruiterSurvey.Statistic do
         |> processed_question_answers(question.answers)
 
       acc ++ [Map.put(question, :answers, update_answers)]
-      |> IO.inspect
+      # |> IO.inspect
     end)
   end
 
   def processed_question_answers(qestion_statistic, answers) do
     Enum.reduce(answers, [], fn(answer, acc) ->
-      processed_qestion_answer(answer)
+      acc ++ [processed_qestion_answer(qestion_statistic, answer)]
     end )
   end
 
-  def processed_qestion_answer(%{"name" => name, "order" => order}) do
-    %{name: name, count: 1, percents: 75}
+  def processed_qestion_answer(qestion_statistic, %{"name" => name, "order" => order}) do
+    count =
+      Map.get(qestion_statistic, :values)
+      |> Map.get(order, 0)
+      percents =  calculate_statistic_percents(count, qestion_statistic.count)
+    %{name: name, count: count, percents: percents}
   end
-  def processed_qestion_answer(answer) do
-    IO.inspect answer
+  def processed_qestion_answer(qestion_statistic, _) do
+    count =
+      Map.get(qestion_statistic, :values)
+      |> Enum.count
+      percents =  calculate_statistic_percents(count, qestion_statistic.count)
+
+    %{count: count, percents: percents, valuse: qestion_statistic.values}
+  end
+
+  def calculate_statistic_percents(count, total_count) do
+      percents = (100 * count / total_count) |> Float.round
   end
 
   @spec map_answers(List.t) :: Map.t
