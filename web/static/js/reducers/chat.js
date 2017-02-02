@@ -23,7 +23,8 @@ export default function reducer(state = initialState, action = {}) {
       return {  ...state, session: action.session};
     case Constants.SOCKET_CONNECTION_ERROR:
       return { ...state, error: action.error };
-
+    case Constants.SET_RESOURCES_CONF:
+      return { ...state, resourcesConf: action.resources_conf };
     default:
       return state;
   }

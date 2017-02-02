@@ -62,6 +62,8 @@ spec:
           value: chat.klzii.chat
         - name: GUARDIAN_SECRET_KEY
           value: "SttPra/cddsnX+Vko2i8KA=="
+        - name: DASHBOARD_URL
+          value: "https://www.klzii.chat"
         volumeMounts:
           - name: postgres-credentials
             mountPath: /etc/postgres-credentials

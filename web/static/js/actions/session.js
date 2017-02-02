@@ -102,6 +102,13 @@ const Actions = {
         });
       });
 
+      channel.on("resources_conf", (resp) =>{
+        dispatch({
+          type: Constants.SET_RESOURCES_CONF,
+          resources_conf: resp.resources_conf,
+        });
+      });
+
       channel.on("update_session", (resp) =>{
         dispatch({
           type: Constants.UPDATE_SESSION,

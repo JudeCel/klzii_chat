@@ -2,9 +2,9 @@ import React, {PropTypes} from 'react';
 import { connect }        from 'react-redux';
 import mixins             from '../../mixins';
 import WhiteboardActions  from './../../actions/whiteboard';
-import LogoutLink         from './logout';
 import PinboardActions    from './../../actions/pinboard';
-import ConfirmModal       from './../modals/confirmModal'
+import ConfirmModal       from './../modals/confirmModal';
+import LeaveOrDetails     from './leaveOrDetails';
 
 const Links = React.createClass({
   mixins: [mixins.modalWindows, mixins.validations],
@@ -86,7 +86,7 @@ const Links = React.createClass({
           <li style={ style }>
             <i className='icon-help' />
           </li>
-          <LogoutLink />
+          <LeaveOrDetails />
         </ul>
 
         <ConfirmModal show={this.state.showClearWhiteboardModal} onAccept={this.clearWhiteboardAccepted} onClose={this.clearWhiteboardCanceled} description='Are you sure you want to clean the Whiteboard?' title="Are you sure?"/>
