@@ -30,7 +30,7 @@ defmodule KlziiChat.Services.Reports.Types.RecruiterSurvey.Statistic do
     Agent.get(questions_buffer, &(&1))
   end
 
-  def processed_question_answers(%{"contactDetails" => contactDetails} = answer, questions_buffer, %{id: id}) do
+  def processed_question_answers(%{"contactDetails" => contactDetails}, questions_buffer, %{id: id}) do
     questions =
       Enum.map(@countable_contact_list_fields, fn(key) ->
       answer_model =
@@ -43,7 +43,7 @@ defmodule KlziiChat.Services.Reports.Types.RecruiterSurvey.Statistic do
       }
       answers =
         Enum.map(answer_model["options"], fn(option) ->
-          %{name: option, type: "number", count: 0, percents: 0}
+          %{name: option, order: option, type: "number", count: 0, percents: 0}
         end)
       Map.put(new_question, :answers, answers)
     end)
@@ -65,11 +65,22 @@ defmodule KlziiChat.Services.Reports.Types.RecruiterSurvey.Statistic do
 
   def map_question_answers_with_stats(qestion_statistic, %{answers: answers} = question) do
     Enum.map(answers, fn(answe) ->
-      map_question_answer(answe, qestion_statistic)
+      map_question_answer(answe, qestion_statistic, question)
     end)
   end
 
-  def map_question_answer(%{type: "number"} = answe , qestion_statistic) do
+  def map_question_answer(%{type: "number"} = answe , qestion_statistic, %{model: model}) do
+    qestion_statistic_values =
+      Map.get(qestion_statistic, :values)
+      |> Map.get(model)
+    qestion_statistic_count = Map.get(qestion_statistic, :count)
+    order = Map.get(answe, :order)
+    answer_value = Map.get(qestion_statistic_values, order, 0)
+    percents =  calculate_statistic_percents(answer_value, qestion_statistic_count)
+    Map.put(answe, :count, answer_value)
+    |> Map.put(:percents, percents)
+  end
+  def map_question_answer(%{type: "number"} = answe , qestion_statistic, _) do
     qestion_statistic_values = Map.get(qestion_statistic, :values)
     qestion_statistic_count = Map.get(qestion_statistic, :count)
     order = Map.get(answe, :order)
@@ -78,7 +89,7 @@ defmodule KlziiChat.Services.Reports.Types.RecruiterSurvey.Statistic do
     Map.put(answe, :count, answer_value)
     |> Map.put(:percents, percents)
   end
-  def map_question_answer(%{type: "list"} = answe , qestion_statistic) do
+  def map_question_answer(%{type: "list"} = answe , qestion_statistic, _) do
     qestion_statistic_values = Map.get(qestion_statistic, :values)
     qestion_statistic_count = Map.get(qestion_statistic, :count)
     count = Enum.count(qestion_statistic_values)
@@ -89,7 +100,7 @@ defmodule KlziiChat.Services.Reports.Types.RecruiterSurvey.Statistic do
   end
 
   def calculate_statistic_percents(count, total_count) do
-    percents = (100 * count / total_count) |> Float.round
+    (100 * count / total_count) |> Float.round
   end
 
 

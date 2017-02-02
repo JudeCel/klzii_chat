@@ -132,19 +132,19 @@ defmodule KlziiChat.Services.Reports.Types.RecruiterSurvey.StatisticTest do
           id: 10,
           model: "age",
             answers: [
-              %{name: "Under 18", type: "number", count: 0, percents: 0},
-              %{name: "18-19", type: "number", count: 0, percents: 0},
-              %{name: "20-24", type: "number", count: 0, percents: 0},
-              %{name: "25-29", type: "number", count: 0, percents: 0},
-              %{name: "30-34", type: "number", count: 0, percents: 0},
-              %{name: "35-39", type: "number", count: 0, percents: 0},
-              %{name: "40-44", type: "number", count: 0, percents: 0},
-              %{name: "45-49", type: "number", count: 0, percents: 0},
-              %{name: "50-54", type: "number", count: 0, percents: 0},
-              %{name: "55-59", type: "number", count: 0, percents: 0},
-              %{name: "60-64", type: "number", count: 0, percents: 0},
-              %{name: "65-69", type: "number", count: 0, percents: 0},
-              %{name: "70+", type: "number", count: 0, percents: 0},
+              %{count: 0, name: "Under 18", percents: 0, order: "Under 18", type: "number"},
+              %{count: 0, name: "18-19", percents: 0,  order: "18-19", type: "number"},
+              %{count: 0, name: "20-24", percents: 0,  order: "20-24", type: "number"},
+              %{count: 0, name: "25-29", percents: 0,  order: "25-29", type: "number"},
+              %{count: 0, name: "30-34", percents: 0,  order: "30-34", type: "number"},
+              %{count: 0, name: "35-39", percents: 0,  order: "35-39", type: "number"},
+              %{count: 0, name: "40-44", percents: 0,  order: "40-44", type: "number"},
+              %{count: 0, name: "45-49", percents: 0,  order: "45-49", type: "number"},
+              %{count: 0, name: "50-54", percents: 0,  order: "50-54", type: "number"},
+              %{count: 0, name: "55-59", percents: 0,  order: "55-59", type: "number"},
+              %{count: 0, name: "60-64", percents: 0,  order: "60-64", type: "number"},
+              %{count: 0, name: "65-69", percents: 0,  order: "65-69", type: "number"},
+              %{count: 0, name: "70+", percents: 0,  order: "70+", type: "number"}
             ]
         },
         %{
@@ -152,8 +152,8 @@ defmodule KlziiChat.Services.Reports.Types.RecruiterSurvey.StatisticTest do
           id: 10,
           model: "gender",
             answers: [
-              %{name: "male", type: "number", count: 0, percents: 0},
-              %{name: "female", type: "number", count: 0, percents: 0},
+              %{name: "male", type: "number", count: 0, percents: 0, order: "male"},
+              %{name: "female", type: "number", count: 0, percents: 0, order: "female"},
             ]
         },
       ]
@@ -187,46 +187,46 @@ defmodule KlziiChat.Services.Reports.Types.RecruiterSurvey.StatisticTest do
             id: 8,
             question: "e.g. What advice would you like to give to (Brand Name) to improve (product/service)?"
           },
-        # %{
-        #   answers: [
-        #     %{"link" => %{
-        #         "name" => "Privace Policy",
-        #         "url" => "/privacy_policy"},
-        #       "name" => "Yes - I am aged 18 or over & give you permission to contact me in future about a discussion group",
-        #       "order" => 0,
-        #       "tag" => "InterestYesTag"
-        #     },
-        #     %{"name" => "No", "order" => 1}],
-        #     id: 9,
-        #     question: "e.g. Are you interested in taking part in a future online discussion group"},
-        # %{answers: [
-        #   %{"contactDetails" => %{
-        #     "age" => %{
-        #       "model" => "age",
-        #       "name" => "Age",
-        #       "options" => [
-        #         "Under 18", "18-19", "20-24", "25-29", "30-34", "35-39",
-        #         "40-44", "45-49", "50-54", "55-59", "60-64", "65-69", "70+"],
-        #       "order" => 3,
-        #       "select" => true},
-        #     "email" => %{"input" => true, "model" => "email", "name" => "Email",
-        #     "order" => 4},
-        #     "firstName" => %{"input" => true, "model" => "firstName",
-        #     "name" => "First Name", "order" => 0},
-        #     "gender" => %{"model" => "gender", "name" => "Gender",
-        #     "options" => ["male", "female"], "order" => 2, "select" => true},
-        #     "lastName" => %{"input" => true, "model" => "lastName",
-        #     "name" => "Last Name", "order" => 1},
-        #     "mobile" => %{"canDisable" => true, "model" => "mobile",
-        #     "name" => "Mobile", "number" => true, "order" => 5}},
-        #     "handleTag" => "InterestYesTag"}, %{}, %{}, %{}, %{}, %{}],
-        #     id: 10,
-        #     question: "If you answered Yes, please complete your Contact Details"
-        #   }
+        %{
+          answers: [
+            %{"link" => %{
+                "name" => "Privace Policy",
+                "url" => "/privacy_policy"},
+              "name" => "Yes - I am aged 18 or over & give you permission to contact me in future about a discussion group",
+              "order" => 0,
+              "tag" => "InterestYesTag"
+            },
+            %{"name" => "No", "order" => 1}],
+            id: 9,
+            question: "e.g. Are you interested in taking part in a future online discussion group"},
+        %{answers: [
+          %{"contactDetails" => %{
+            "age" => %{
+              "model" => "age",
+              "name" => "Age",
+              "options" => [
+                "Under 18", "18-19", "20-24", "25-29", "30-34", "35-39",
+                "40-44", "45-49", "50-54", "55-59", "60-64", "65-69", "70+"],
+              "order" => 3,
+              "select" => true},
+            "email" => %{"input" => true, "model" => "email", "name" => "Email",
+            "order" => 4},
+            "firstName" => %{"input" => true, "model" => "firstName",
+            "name" => "First Name", "order" => 0},
+            "gender" => %{"model" => "gender", "name" => "Gender",
+            "options" => ["male", "female"], "order" => 2, "select" => true},
+            "lastName" => %{"input" => true, "model" => "lastName",
+            "name" => "Last Name", "order" => 1},
+            "mobile" => %{"canDisable" => true, "model" => "mobile",
+            "name" => "Mobile", "number" => true, "order" => 5}},
+            "handleTag" => "InterestYesTag"}, %{}, %{}, %{}, %{}, %{}],
+            id: 10,
+            question: "If you answered Yes, please complete your Contact Details"
+          }
         ]
 
         map_answers_result = %{
-          "10" => %{count: 3,type: "object", values: %{"age" => %{"18-19" => 1, "50-54" => 1}, "gender" => %{"male" => 1, "female" => 1}}},
+          "10" => %{count: 2,type: "object", values: %{"age" => %{"18-19" => 1, "50-54" => 1}, "gender" => %{"male" => 1, "female" => 1}}},
           "9" => %{count: 3, type: "number", values: %{0 => 2, 1 => 1}},
           "8" => %{count: 3, type: "string",  values: ["xfcb", "xfcb", "pff"]},
           "7" => %{count: 3, type: "number", values: %{0 => 2, 2 => 1}},
@@ -258,12 +258,36 @@ defmodule KlziiChat.Services.Reports.Types.RecruiterSurvey.StatisticTest do
             id: 8,
             question: "e.g. What advice would you like to give to (Brand Name) to improve (product/service)?"
           },
-        #    %{
-        #      answers: [
-        #       %{count: 2, name: "Yes - I am aged 18 or over & give you permission to contact me in future about a discussion group", percents: 67.0},
-        #       %{count: 1, name: "No", percents: 33.0}],
-        #     question: "e.g. Are you interested in taking part in a future online discussion group"
-        #   }
+           %{
+             answers: [
+              %{count: 2, order: 0, type: "number", name: "Yes - I am aged 18 or over & give you permission to contact me in future about a discussion group", percents: 67.0},
+              %{count: 1, order: 1, type: "number",name: "No", percents: 33.0}],
+            id: 9,
+            question: "e.g. Are you interested in taking part in a future online discussion group"
+          },
+          %{answers: [
+            %{count: 0, name: "Under 18", percents: 0.0, order: "Under 18", type: "number"},
+            %{count: 1, name: "18-19", percents: 50.0,  order: "18-19", type: "number"},
+            %{count: 0, name: "20-24", percents: 0.0,  order: "20-24", type: "number"},
+            %{count: 0, name: "25-29", percents: 0.0,  order: "25-29", type: "number"},
+            %{count: 0, name: "30-34", percents: 0.0,  order: "30-34", type: "number"},
+            %{count: 0, name: "35-39", percents: 0.0,  order: "35-39", type: "number"},
+            %{count: 0, name: "40-44", percents: 0.0,  order: "40-44", type: "number"},
+            %{count: 0, name: "45-49", percents: 0.0,  order: "45-49", type: "number"},
+            %{count: 1, name: "50-54", percents: 50.0,  order: "50-54", type: "number"},
+            %{count: 0, name: "55-59", percents: 0.0,  order: "55-59", type: "number"},
+            %{count: 0, name: "60-64", percents: 0.0,  order: "60-64", type: "number"},
+            %{count: 0, name: "65-69", percents: 0.0,  order: "65-69", type: "number"},
+            %{count: 0, name: "70+", percents: 0.0,  order: "70+", type: "number"}],
+            id: 10, model: "age", question: "Age"
+          },
+          %{answers: [
+            %{count: 1, name: "male", percents: 50.0, type: "number", order: "male"},
+            %{count: 1, name: "female", percents: 50.0, type: "number", order: "female"}],
+            id: 10,
+            model: "gender",
+            question: "Gender"
+          }
         ]
         resp = Statistic.map_question_list_answers(question_list, map_answers_result)
         assert(expect_result == resp)
