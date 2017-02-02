@@ -23,14 +23,15 @@ var iScroll = require('iscroll/build/iscroll-zoom');
 
 const Whiteboard = React.createClass({
   mixins:[Design, mixins.validations],
-
+  getDefaultState() {
+    zoomEnabled: false;
+  },
   getDefaultProps() {
     return ({
       options: {
         scrollbars: true,
         scrollX: true,
-        zoom: true,
-        //preventDefault: false
+        zoom: true
       }
     })
   },
@@ -145,13 +146,17 @@ const Whiteboard = React.createClass({
   },
   onRefresh: function(iScrollInstance) {
     this.zoomView = iScrollInstance;
-    this.zoomView.disable();
+    this.zoomEnabled(this.state.zoomEnabled);
   },
   zoomEnabled (enabled) {
     if (enabled) {
       this.zoomView.enable();
     } else {
       this.zoomView.disable();
+    }
+
+    if (enabled != this.state.zoomEnabled) {
+      this.setState({zoomEnabled: enabled});
     }
   },
   render() {
