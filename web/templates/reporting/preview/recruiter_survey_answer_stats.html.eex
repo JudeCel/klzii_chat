@@ -9,15 +9,15 @@
           <%= question.name %>
         </span>
         <div class='col-md-8'>
-          <%= for answer <- question.answers do %>
+          <%= for answer <- get_answers(question) do %>
             <div class='col-md-4 answere-name'>
-              <%= answer["name"] %>
+              <%= answer.name %>
             </div>
             <div class='col-md-4 answere-count'>
-              <%= answer["count"] || 2 %>
+              <%= answer.count %>
             </div>
             <div class='col-md-4 answere-percents'>
-              <%= answer["percents"] || 100 %>
+              <%= answer.percents %>
             </div>
           <% end %>
         </div>

@@ -1,7 +1,7 @@
 defmodule KlziiChat.Services.Reports.Types.RecruiterSurvey.Base do
-
   alias KlziiChat.{Repo, Survey}
   alias KlziiChat.Services.Reports.Types.RecruiterSurvey.{Formats}
+  alias KlziiChat.Services.Reports.Types.RecruiterSurvey.Statistic
   import Ecto.Query, only: [from: 2]
 
   @spec format_modeule(String.t) :: Module.t
@@ -35,50 +35,9 @@ defmodule KlziiChat.Services.Reports.Types.RecruiterSurvey.Base do
   def get_recruiter_survey(_), do: {:error, %{not_reqired: "recruiter survey id not reqired"}}
 
   def calculate_stats(survey) do
-    survey_questions = survey.survey_questions
-    survey_answers = survey.survey_answers
-
-    survey_questions
-    |> Enum.map(&(%{id: &1.id, question: &1.question, answers: &1.answers}))
-    |> IO.inspect
-    # |> Enum.map(&(&1.answers))
-    # survey_questions =
-    #   survey.survey_questions
-    #   |> Enum.map(&default_question_stats/1)
-    #   # |> IO.inspect
-
-    %{questions: [], total_count: Enum.count(survey_answers)}
-  end
-
-  def default_question_stats(%{id: id, type: type, name: name, answers: answers}) do
-    %{
-      id: id,
-      type: type,
-      name: name,
-      answers: map_answers(answers, %{}, type)
-    }
-  end
-
-  def map_answers([], acc, type) do
-    acc
-  end
-  def map_answers([head| tail], acc, type) do
-    acc = map_answers(head, acc, type)
-    map_answers(tail, acc, type)
-  end
-
-  def map_answers(%{"contactDetails" => %{"age" => %{"options" => options, "order" => order}}} = answer, acc, type) do
-    option_map =
-      Enum.reduce(options, %{}, fn(option, option_acc) ->
-        Map.put(option_acc, option, %{count: 0, percents: 0 })
-      end)
-    Map.put(acc, order, option_map)
-  end
-  def map_answers(answer, acc, type) do
-    if answer["order"] do
-      Map.put(acc, answer["order"], %{ name: answer["name"], count: 0, percents: 0 })
-    else
-      acc
-    end
+    survey_questions = Statistic.build_questions(survey.survey_questions)
+    survey_answers = Statistic.map_answers(Enum.map(survey.survey_answers, &(&1.answers)) )
+    questions= Statistic.map_question_list_answers(survey_questions, survey_answers)
+    %{questions: questions, total_count: Enum.count(survey_answers)}
   end
 end

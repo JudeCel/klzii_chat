@@ -1,8 +1,8 @@
 defmodule KlziiChat.Services.Reports.Types.RecruiterSurvey.Statistic do
   @countable_contact_list_fields  ["age", "gender"]
 
-  def map_question_list_answers(list, answer_map) do
-    questions = build_qestions(list)
+  def map_question_list_answers(questions, answer_map) do
+    # questions = build_questions(list)
     Enum.reduce(questions, [], fn(question, acc) ->
       update_answers =
         Map.get(answer_map, to_string(question.id))
@@ -12,7 +12,7 @@ defmodule KlziiChat.Services.Reports.Types.RecruiterSurvey.Statistic do
     end)
   end
 
-  def build_qestions(list) do
+  def build_questions(list) do
     {:ok, questions_buffer} = Agent.start_link(fn -> [] end)
     Enum.each(list, fn(question) ->
       Enum.map(question.answers, fn(answer) ->
@@ -38,7 +38,7 @@ defmodule KlziiChat.Services.Reports.Types.RecruiterSurvey.Statistic do
 
       new_question = %{
         id: id,
-        question: answer_model["name"],
+        name: answer_model["name"],
         model: answer_model["model"]
       }
       answers =

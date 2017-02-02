@@ -29,4 +29,16 @@ defmodule KlziiChat.Reporting.PreviewView do
     result
   end
 
+  def get_answers(%{answers: answers, type: "textarea" }) do
+    List.first(answers)
+    |> IO.inspect
+    |> Map.get(:values)
+    |> Enum.map(fn(answer) ->
+      %{name: answer, count: nil, percents: nil}
+     end)
+  end
+  def get_answers(%{answers: answers}) do
+    answers
+  end
+
 end

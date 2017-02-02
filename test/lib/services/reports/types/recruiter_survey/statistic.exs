@@ -289,7 +289,8 @@ defmodule KlziiChat.Services.Reports.Types.RecruiterSurvey.StatisticTest do
             question: "Gender"
           }
         ]
-        resp = Statistic.map_question_list_answers(question_list, map_answers_result)
+        question_list_resp = Statistic.build_qestions(question_list)
+        resp = Statistic.map_question_list_answers(question_list_resp, map_answers_result)
         assert(expect_result == resp)
     end
   end
