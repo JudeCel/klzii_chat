@@ -18,6 +18,7 @@ const Buttons = React.createClass({
   setType(buttonType, shapeType) {
     this.setState({ activeType: buttonType });
     whiteboardDelegate.drawData.current = shapeType;
+    whiteboardDelegate.zoomEnabled(buttonType == 'zoom');
 
     if(buttonType == 'none') {
       whiteboardDelegate.deps.Shape.setMouseType('select');

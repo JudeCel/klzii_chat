@@ -143,6 +143,17 @@ const Whiteboard = React.createClass({
     this.initScale();
     this.initBoardEvents();
   },
+  onRefresh: function(iScrollInstance) {
+    this.zoomView = iScrollInstance;
+    this.zoomView.disable();
+  },
+  zoomEnabled (enabled) {
+    if (enabled) {
+      this.zoomView.enable();
+    } else {
+      this.zoomView.disable();
+    }
+  },
   render() {
     if(this.props.channel) {
       return (
@@ -151,7 +162,7 @@ const Whiteboard = React.createClass({
 
           <img className='whiteboard-title' src='/images/title_whiteboard.png' />
           <img className='whiteboard-expand' src={ this.getExpandButtonImage() } onClick={ this.expandWhiteboard } />
-          <ReactIScroll iScroll={iScroll} options={this.props.options} >
+          <ReactIScroll iScroll={iScroll} options={this.props.options} onRefresh={this.onRefresh} >
           <div className="full-height-width">
             <svg id='whiteboard-draw' className='inline-board-section'/>
           </div>
