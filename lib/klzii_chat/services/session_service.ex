@@ -17,7 +17,7 @@ defmodule KlziiChat.Services.SessionService do
         nil ->
           {:error, error_messages().session_not_found}
         session ->
-          {:ok, Phoenix.View.render_one(session, SessionView, "session.json", as: :session)}
+          {:ok, SessionView.render("session.json", %{session: session})}
        end
   end
 end
