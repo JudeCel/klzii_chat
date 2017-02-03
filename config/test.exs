@@ -38,5 +38,5 @@ config :exq,
 
 config :klzii_chat,
    resources_conf: %{
-   dashboard_url: System.get_env("DASHBOARD_URL") 
+   dashboard_url: "http://www.test.klzii.com"
 }
