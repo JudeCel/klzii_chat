@@ -107,7 +107,6 @@ const Whiteboard = React.createClass({
   componentDidUpdate(prevProps, prevState) {
     this.drawData.color = this.props.currentUser.colour;
     let screenChange = prevProps.utilityWindow != this.props.utilityWindow;
-
     if(prevProps.shapes != this.props.shapes) {
       this.deps.Shape.loadShapes();
     }
@@ -128,6 +127,7 @@ const Whiteboard = React.createClass({
     this.board.attr({viewBox: boxSize});
     this.initScale();
     this.initBoardEvents();
+    this.deps.Shape.loadShapes();
   },
   render() {
     if(this.props.channel) {
