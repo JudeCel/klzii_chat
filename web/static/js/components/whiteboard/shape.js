@@ -83,6 +83,7 @@ function createShapeWithDefaultCoords() {
   buildShape(null, function(shape) {
     whiteboardDelegate.shapeData.shape = shape;
     whiteboardDelegate.shapeData.added[shape.id()] = shape;
+    initShapeEvents(whiteboardDelegate.shapeData.shape, {can_edit: true});
     if(whiteboardDelegate.shapeData.shape) {
       whiteboardDelegate.shapeData.shape.on('drawstop', whiteboardDelegate.deps.Events.shapeWasCreated);
       initShapeEvents(whiteboardDelegate.shapeData.shape);
