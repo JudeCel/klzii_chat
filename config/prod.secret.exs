@@ -37,3 +37,6 @@ config :klzii_chat, KlziiChat.DatabaseMonitoring.Listener,
 
 config :exq,
   host: System.get_env("REDIS_HOST")
+
+config :resources_conf,
+  dashboard_url: System.get_env("DASHBOARD_URL") 

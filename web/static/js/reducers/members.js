@@ -19,6 +19,8 @@ export default function reducer(state = initialState, action = {}) {
       return syncDiff({...state}, action.diff)
     case Constants.SET_CURRENT_USER:
       return { ...state, currentUser: action.user };
+    case Constants.SET_CONTACT_DETAILS:
+      return { ...state, currentUser: getUserWithContactDetails(state.currentUser, action.contactDetails) };
     case Constants.UPDATE_MEMBER:
       return updateMember({...state}, action.member);
     case Constants.SET_MEMBERS:
@@ -37,6 +39,10 @@ export default function reducer(state = initialState, action = {}) {
     default:
       return state;
   }
+}
+
+function getUserWithContactDetails(currentUser, contactDetails) {
+  return  Object.assign(currentUser, { contactDetails: contactDetails });
 }
 
 function playSound(message, currentUserId) {
