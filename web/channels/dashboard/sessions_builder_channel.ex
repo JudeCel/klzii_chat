@@ -29,7 +29,6 @@ defmodule KlziiChat.Dashboard.SessionsBuilderChannel do
       update_payload =
         payload
         |> Map.put(:emailStatus, "sent")
-        |> Map.put(:status, "pending")
         |> Map.put(:repeat, false)
       broadcast!(socket, "inviteUpdate", update_payload)
     end
@@ -38,7 +37,7 @@ defmodule KlziiChat.Dashboard.SessionsBuilderChannel do
 
   def handle_out("inviteUpdate", payload, socket) do
     if (Map.get(payload, :repeat, true) && Mix.env == :dev) do
-      Process.send_after(self(), {:inviteUpdate, payload}, 500)
+      Process.send_after(self(), {:inviteUpdate, payload}, 3000)
     end
 
     push socket, "inviteUpdate", payload
