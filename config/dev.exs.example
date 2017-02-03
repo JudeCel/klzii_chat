@@ -44,12 +44,13 @@ config :klzii_chat, KlziiChat.Repo,
   pool_size: 10
 
 config :ex_aws,
-  access_key_id: "AKIAJV2UHLF355DYBP6A",
-  secret_access_key: "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",
-  region: "eu-west-1"
-
+    access_key_id: "AKIAJV2UHLF355DYBP6A",
+    secret_access_key: "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",
+    region: "us-west-2",
+    debug_requests: true
 config :arc,
-  bucket: "klzii-development"
+  storage: Arc.Storage.Local,
+  bucket: "klzii-test"
 
 config :guardian, Guardian,
     secret_key: "SttPra/cddsnX+Vko2i8KA=="
