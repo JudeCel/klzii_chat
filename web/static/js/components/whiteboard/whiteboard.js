@@ -80,11 +80,14 @@ const Whiteboard = React.createClass({
           break;
         }
         let simulatedEvent = document.createEvent("MouseEvent");
+        let x = (this.zoomView.x + first.screenX);
+        let y = (first.screenY - this.zoomView.y );
         simulatedEvent.initMouseEvent(type, true, true, window, 1,
-                                      first.screenX, first.screenY,
-                                      first.clientX, first.clientY, false,
+                                      x/this.zoomView.scale, y/this.zoomView.scale,
+                                      x/this.zoomView.scale, y/this.zoomView.scale, false,
                                       false, false, false, 1, null);
 
+        console.log("+", event);
         event.target.dispatchEvent (simulatedEvent);
 
       }
