@@ -263,6 +263,14 @@ body
       padding: 0px
     .message-section
       margin: 0
+      >div
+        display: table
+        table-layout: fixed
+        width: 100%
+      .emotion-chat-section
+        width: 55px
+      .media-body
+        width: auto
       .unread
         padding-left: 5px
         padding-right: 5px
@@ -424,6 +432,8 @@ body
       margin-top: 0px
       .message-section
         .emotion-chat-section
+          @media (min-width: 768px)
+            width: 85px
           .emotion-chat-avatar
             display: block !important
             svg
