@@ -38,5 +38,5 @@ config :exq,
 
 config :klzii_chat,
    resources_conf: %{
-   dashboard_url: "http://www.test.klzii.com"
+   dashboard_url: "http://localhost:3000"
 }
