@@ -13,12 +13,16 @@ defmodule KlziiChat.SurveysController do
         json(conn, %{survey: SurveyView.render("survey.json", %{survey: survey}) })
     end
   end
-  
-  def export(conn, %{"id" => id, format: format}) do
+
+  def export(conn, %{"id" => id, "format" => format}) do
     data = KlziiChat.Services.Reports.Types.RecruiterSurvey.Base.get_data(%{id: id})
+
     case format do
       "pdf" ->
-        json(conn, %{ok: format})
+        conn
+        |> put_resp_content_type("application/pdf")
+        |> put_resp_header("content-disposition", "attachment; filename=\"A Real Pdf_pff.pdf\"")
+        |> send_resp(200, "")
       "xlsx" ->
           json(conn, %{ok: format})
       _ ->

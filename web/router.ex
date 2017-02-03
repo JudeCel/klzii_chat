@@ -116,7 +116,7 @@ defmodule KlziiChat.Router do
     options "/:id/:format", SurveysController, :export
     # Generic routes for API be call from original domain
     get "/:id", SurveysController, :show
-    get "/:id/:format", SurveysController, :export
+    get "/report/:id/:format", SurveysController, :export
   end
 
   scope "/api/banners", KlziiChat do
