@@ -51,7 +51,7 @@ const builder = {
     return svg.group(remove).addClass('cursor-pointer remove-button').click(this.removePinboardResource.bind(this, item.id));
   },
   setNextPositionForPinboard(startX, data, item) {
-    let itemsInRow = this.isVerticalMobile() ? 3 : 4;
+    let itemsInRow = mobileScreenHelpers.isVerticalMobile() ? 3 : 4;
     if(data.item % itemsInRow == 0) {
       data.x = startX;
       data.y += data.spaceTop + data.height + data.border*2;
