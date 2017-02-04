@@ -15,14 +15,17 @@ defmodule KlziiChat.SurveysController do
   end
 
   def export(conn, %{"id" => id, "format" => format}) do
-    data = KlziiChat.Services.Reports.Types.RecruiterSurvey.Base.get_data(%{id: id})
-
+    {:ok, format_modeule} = KlziiChat.Services.Reports.Types.RecruiterSurvey.Base.format_modeule(format)
+    {:ok, data} = KlziiChat.Services.Reports.Types.RecruiterSurvey.Base.get_data(%{id: id})
+    {:ok, html} = format_modeule.processe_data(data)
+    {:ok, binary} = KlziiChat.Services.FileService.write_report(%{id: id, format: format, name: "some_name_now"},html, [binary: true])
+    
     case format do
       "pdf" ->
         conn
         |> put_resp_content_type("application/pdf")
         |> put_resp_header("content-disposition", "attachment; filename=\"A Real Pdf_pff.pdf\"")
-        |> send_resp(200, "")
+        |> send_resp(200, binary)
       "xlsx" ->
           json(conn, %{ok: format})
       _ ->

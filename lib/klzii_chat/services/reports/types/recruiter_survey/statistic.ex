@@ -2,7 +2,6 @@ defmodule KlziiChat.Services.Reports.Types.RecruiterSurvey.Statistic do
   @countable_contact_list_fields  ["age", "gender"]
 
   def map_question_list_answers(questions, answer_map) do
-    # questions = build_questions(list)
     Enum.reduce(questions, [], fn(question, acc) ->
       update_answers =
         Map.get(answer_map, to_string(question.id))
@@ -63,6 +62,7 @@ defmodule KlziiChat.Services.Reports.Types.RecruiterSurvey.Statistic do
     Map with cliemt answers
   """
 
+  def map_question_answers_with_stats(nil, %{answers: answers} = question), do: answers
   def map_question_answers_with_stats(qestion_statistic, %{answers: answers} = question) do
     Enum.map(answers, fn(answe) ->
       map_question_answer(answe, qestion_statistic, question)

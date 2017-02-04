@@ -30,24 +30,30 @@ defmodule KlziiChat.Services.FileService do
     File.close(file)
   end
 
-  @spec html_elements_to_pdf(Keyword.t) :: {:ok | :error, String.t}
-  def html_elements_to_pdf(paths) do
+  @spec html_elements_to_pdf(Keyword.t, boolean) :: {:ok | :error, String.t}
+  def html_elements_to_pdf(paths, binary) do
     Map.to_list(paths)
     |> Enum.all?(fn({_, path}) ->
       File.exists?(path)
     end)
     |>  case do
-          true -> wkhtmltopdf(paths)
+          true -> wkhtmltopdf(paths, binary)
           false -> {:error, "HTML file not found"}
         end
 
   end
 
-  @spec wkhtmltopdf(Map.t) :: {:ok | :error, String.t}
-  def wkhtmltopdf(%{body: body, header: header, destination: destination}) do
+  @spec wkhtmltopdf(Map.t, binary) :: {:ok | :error, String.t}
+  def wkhtmltopdf(%{body: body, header: header, destination: destination}, binary) do
     case conwert_with_xvfb(body, header, destination) do
       {:ok, path} ->
-        {:ok, path}
+        if binary do
+          binary_data = File.read!(path)
+          File.rm(path)
+          {:ok, binary_data}
+        else
+          {:ok, path}
+        end
       {:error, reason} ->
         {:error, reason}
     end
@@ -101,8 +107,8 @@ defmodule KlziiChat.Services.FileService do
     {:error, %{wrong_data: "path:#{path}, data_map: #{is_map(data)}, data_streem: #{is_function(data)}" }}
   end
 
-  @spec write_report(Map.t, Stream.t | Map.t) :: {:ok, String.t}
-  def write_report(%{id: id, format: format, name: name}, data) when is_map(data) and format in ["pdf"] do
+  @spec write_report(Map.t, Stream.t | Map.t, Keyword.t) :: {:ok, String.t}
+  def write_report(%{id: id, format: format, name: name}, data, [binary: binary]) when is_map(data) and format in ["pdf"] do
     tmp_dir_path = get_tmp_path(id)
     [
       fn -> create_and_write_html_tmp_file(tmp_dir_path, :header, data.header) end,
@@ -113,19 +119,19 @@ defmodule KlziiChat.Services.FileService do
     |> Task.yield_many
     |> Enum.map(fn({_, {:ok, path}}) -> path end)
     |> Enum.into(%{})
-    |> html_elements_to_pdf
+    |> html_elements_to_pdf(binary)
   end
-  def write_report(%{id: id, format: format, name: name}, data) when format in ["csv"]  do
+  def write_report(%{id: id, format: format, name: name}, data, [binary: _]) when format in ["csv"]  do
     tmp_dir_path = get_tmp_path(id)
     {_,file_path} = create_destination_file(tmp_dir_path, name, format)
     write_data_csv(file_path, data)
   end
-  def write_report(%{id: id, format: format, name: name}, data) when format in ["txt"]  do
+  def write_report(%{id: id, format: format, name: name}, data, [binary: _]) when format in ["txt"]  do
     tmp_dir_path = get_tmp_path(id)
     {_,file_path} = create_destination_file(tmp_dir_path, name, format)
     write_data_txt(file_path, data)
   end
-  def write_report(%{id: id, format: format, name: name}, data)  do
+  def write_report(%{id: id, format: format, name: name}, data, [binary: _])  do
     {:error, %{wrong_data: "id:#{id}, format:#{format}, name:#{name}, map: #{is_map(data)}, streem: #{is_function(data)}" }}
   end
 end
