@@ -154,8 +154,16 @@ body{
   width: 100%;
   height: 100%;
 }
+
+/* recruiter-rurvey style*/
 .recruiter-rurvey .total-count{
   background-color: #C5E0B3;
+}
+.recruiter-rurvey .question-name{
+  width: 15%;
+}
+.recruiter-rurvey .answers{
+  width: 15%;
 }
 .recruiter-rurvey .question{
   background-color: #E2EFD9;
