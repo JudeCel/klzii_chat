@@ -35,9 +35,14 @@ defmodule KlziiChat.Services.Reports.Types.RecruiterSurvey.Base do
   def get_recruiter_survey(_), do: {:error, %{not_reqired: "recruiter survey id not reqired"}}
 
   def calculate_stats(survey) do
-    survey_questions = Statistic.build_questions(survey.survey_questions)
-    survey_answers = Statistic.map_answers(Enum.map(survey.survey_answers, &(&1.answers)))
-    questions= Statistic.map_question_list_answers(survey_questions, survey_answers)
+    survey_questions_task = Task.async(fn -> Statistic.build_questions(survey.survey_questions) end)
+    survey_answers_task = Task.async(fn -> Statistic.map_answers(Enum.map(survey.survey_answers, &(&1.answers))) end)
+
+    survey_questions = Task.await(survey_questions_task)
+    survey_answers = Task.await(survey_answers_task)
+
+    questions = Statistic.map_question_list_answers(survey_questions, survey_answers)
+
     %{questions: questions, total_count: Enum.count(survey.survey_answers), total_count_percents: 100 }
   end
 end
