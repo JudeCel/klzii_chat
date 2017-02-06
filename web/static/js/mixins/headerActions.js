@@ -14,6 +14,9 @@ const headerActions = {
       window.location.href = url;
     }
   },
+  dashboardLogout() {
+    window.location.href = this.props.resourcesConf.dashboard_url + "/logout";
+  }
 };
 
 export default headerActions;

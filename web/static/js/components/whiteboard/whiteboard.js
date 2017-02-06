@@ -33,7 +33,8 @@ const Whiteboard = React.createClass({
         scrollX: true,
         zoom: true,
         click: true,
-        momentum: false
+        momentum: false,
+        disableMouse: true
       }
     })
   },
@@ -82,21 +83,11 @@ const Whiteboard = React.createClass({
           break;
         }
 
-        // let simulatedEvent = new MouseEvent(type, {
-        //   clientX: first.clientX/this.zoomView.scale,
-        //   clientY: first.clientY/this.zoomView.scale
-        // });
         let simulatedEvent = document.createEvent("MouseEvent");
-        // let x = (first.clientX/this.zoomView.scale );
-        // let y = (first.screenY/this.zoomView.scale  );
-        let x = (first.clientX/this.zoomView.scale ) / (this.zoomView.scroller.clientWidth/window.innerWidth) + this.zoomView.x/2;
-        let y = ((first.screenY)/this.zoomView.scale) / (this.zoomView.scroller.clientHeight/window.innerHeight) - this.zoomView.y;
+        let x = first.clientX/this.zoomView.scale;
+        let y = first.clientY/this.zoomView.scale;
 
-
-        //console.log("---", this.zoomView.scroller.clientWidth, this.zoomView.scroller.clientHeight/window.innerWidth);
         simulatedEvent.initMouseEvent(type, true, true, window, 1,
-                                      // x/this.zoomView.scale - this.zoomView.x, y/this.zoomView.scale - this.zoomView.y ,
-                                      // x/this.zoomView.scale - this.zoomView.x, y/this.zoomView.scale - this.zoomView.y, false,
                                       x, y,
                                       x , y , false,
                                       false, false, false, 1, null);
@@ -108,14 +99,10 @@ const Whiteboard = React.createClass({
     this.board.on('mousedown', Events.boardMouseDown);
     this.board.on('mouseup', Events.boardMouseUp);
     this.board.on('mousemove', Events.boardMouseMove);
-    //this.board.on('touchmove', this.processInput);
-    this.board.on('touchstart', this.processInput);
-    //this.board.on('touchend', this.processInput);
 
-    this.board.on('touchmove', this.processInput);
     this.board.on('touchstart', this.processInput);
+    this.board.on('touchmove', this.processInput);
     this.board.on('touchend', this.processInput);
-    //this.board.addEventListener('onTouchStart', this.processInput, false);
   },
   getInitialState() {
     this.mouseData = { type: 'select', prevType: null, selected: null };
@@ -142,7 +129,6 @@ const Whiteboard = React.createClass({
   componentDidUpdate(prevProps, prevState) {
     this.drawData.color = this.props.currentUser.colour;
     let screenChange = prevProps.utilityWindow != this.props.utilityWindow;
-
     if(prevProps.shapes != this.props.shapes) {
       this.deps.Shape.loadShapes();
     }
@@ -158,11 +144,13 @@ const Whiteboard = React.createClass({
   componentDidMount() {
     this.board = SVG('whiteboard-draw');
     this.mainGroup = this.board.group();
-
     let boxSize = "0 0 " + this.drawData.initialWidth + " " + this.drawData.initialHeight;
-    this.board.attr({viewBox: boxSize});
-    this.initScale();
+    this.board.attr({viewBox: boxSize, preserveAspectRatio: "xMidYMid meet" });
+    this.mainGroup.attr({viewBox: boxSize, preserveAspectRatio: "xMidYMid meet", width: "100%", height: this.drawData.initialHeight, x: 0, y: 0 });
+    this.mainGroup.size();
+    this.initScale(this.drawData.initialWidth, this.drawData.initialHeight);
     this.initBoardEvents();
+    this.deps.Shape.loadShapes();
   },
   onRefresh: function(iScrollInstance) {
     this.zoomView = iScrollInstance;
@@ -172,7 +160,6 @@ const Whiteboard = React.createClass({
     if (enabled) {
       this.zoomView.enable();
     } else {
-    //  this.zoomView.zoom(this.zoomView.scale+0.01, 0, 0, 0);
       this.zoomView.disable();
     }
 
@@ -188,9 +175,10 @@ const Whiteboard = React.createClass({
 
           <img className='whiteboard-title' src='/images/title_whiteboard.png' />
           <img className='whiteboard-expand' src={ this.getExpandButtonImage() } onClick={ this.expandWhiteboard } />
+
           <ReactIScroll iScroll={iScroll} options={this.props.options} onRefresh={this.onRefresh} >
           <div className="full-height-width" >
-            <svg id='whiteboard-draw' className='inline-board-section'/>
+            <svg id='whiteboard-draw' className='inline-board-section' preserveAspectRatio="xMidYMid meet"/>
           </div>
           </ReactIScroll>
           { this.showToolbar()}
@@ -200,10 +188,6 @@ const Whiteboard = React.createClass({
     else {
       return (false);
     }
-      //
-      // onTouchStart={ this.processInput }
-      // onTouchMove={ this.processInput }
-      // onTouchEnd={ this.processInput }
   }
 });
 

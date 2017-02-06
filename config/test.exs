@@ -35,3 +35,8 @@ config :klzii_chat, KlziiChat.DatabaseMonitoring.Listener,
 config :exq,
   host: "127.0.0.1",
   database: 4
+
+config :klzii_chat,
+   resources_conf: %{
+   dashboard_url: "http://localhost:3000"
+}
