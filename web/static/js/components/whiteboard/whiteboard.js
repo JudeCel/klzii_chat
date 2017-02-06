@@ -122,9 +122,9 @@ const Whiteboard = React.createClass({
   componentDidMount() {
     this.board = SVG('whiteboard-draw');
     this.mainGroup = this.board.group();
-
     let boxSize = "0 0 " + this.drawData.initialWidth + " " + this.drawData.initialHeight;
-    this.board.attr({viewBox: boxSize});
+    this.board.attr({viewBox: boxSize, preserveAspectRatio: "xMidYMid meet" });
+    this.mainGroup.attr({viewBox: boxSize, preserveAspectRatio: "xMidYMid meet" });
     this.initScale();
     this.initBoardEvents();
     this.deps.Shape.loadShapes();
@@ -137,7 +137,7 @@ const Whiteboard = React.createClass({
           <img className='whiteboard-title' src='/images/title_whiteboard.png' />
           <img className='whiteboard-expand' src={ this.getExpandButtonImage() } onClick={ this.expandWhiteboard } />
 
-          <svg id='whiteboard-draw' className='inline-board-section'/>
+          <svg id='whiteboard-draw' className='inline-board-section' preserveAspectRatio="xMidYMid meet"/>
           { this.showToolbar() }
         </div>
       );
