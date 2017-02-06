@@ -128,7 +128,6 @@ const Whiteboard = React.createClass({
     this.mainGroup.size();
     this.initScale(this.drawData.initialWidth, this.drawData.initialHeight);
     this.initBoardEvents();
-    this.mainGroup.rect(100, 100)
     this.deps.Shape.loadShapes();
   },
   render() {
