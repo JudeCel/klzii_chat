@@ -1199,6 +1199,7 @@
   #whiteboard-box #whiteboard-draw {
     margin: 0 auto;
     width: auto;
+    height: 100%;
   }
 }
 
