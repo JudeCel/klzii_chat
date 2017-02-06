@@ -36,8 +36,8 @@ defmodule KlziiChat.Services.Reports.Types.RecruiterSurvey.Base do
 
   def calculate_stats(survey) do
     survey_questions = Statistic.build_questions(survey.survey_questions)
-    survey_answers = Statistic.map_answers(Enum.map(survey.survey_answers, &(&1.answers)) )
+    survey_answers = Statistic.map_answers(Enum.map(survey.survey_answers, &(&1.answers)))
     questions= Statistic.map_question_list_answers(survey_questions, survey_answers)
-    %{questions: questions, total_count: Enum.count(survey_answers)}
+    %{questions: questions, total_count: Enum.count(survey.survey_answers), total_count_percents: 100 }
   end
 end

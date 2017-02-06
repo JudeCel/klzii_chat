@@ -16,7 +16,8 @@ defmodule KlziiChat.Services.Reports.Types.RecruiterSurvey.Formats.Xlsx do
             |> Sheet.set_cell("C3", "Count")
             |> Sheet.set_cell("C4", get_in(stats, [:total_count]))
             |> Sheet.set_cell("D3", "%")
-            |> Sheet.set_cell("D4", get_in(stats, [:total_count_percents]) || 100)
+            |> Sheet.set_cell("D4", get_in(stats, [:total_count_percents]))
+
     sheet_acc = %{main_sheet: header_sheet, line_number: 5, sheets: [] }
 
     %{main_sheet: main_sheet, sheets: sheets, line_number: _} =
