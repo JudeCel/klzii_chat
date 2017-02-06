@@ -37,7 +37,7 @@ defmodule KlziiChat.Reporting.PreviewView do
       %{name: answer, count: nil, percents: nil}
      end)
   end
-  def get_answers(%{answers: answers}= q) do
+  def get_answers(%{answers: answers}) do
     answers
   end
 

@@ -6,7 +6,7 @@ defmodule KlziiChat.Services.Reports.Types.RecruiterSurvey.Base do
 
   @spec format_modeule(String.t) :: Module.t
   def format_modeule("pdf"), do: {:ok, Formats.Pdf}
-  def format_modeule("xlsx"), do: {:ok, Formats.Csv}
+  def format_modeule("xlsx"), do: {:ok, Formats.Xlsx}
   def format_modeule(format), do: {:error, "module for format #{format} not found"}
 
   def get_data(%{id: id}) do

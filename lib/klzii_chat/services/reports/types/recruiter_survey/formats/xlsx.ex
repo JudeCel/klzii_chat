@@ -1,6 +1,6 @@
-defmodule KlziiChat.Services.Reports.Types.RecruiterSurvey.Formats.Csv do
+defmodule KlziiChat.Services.Reports.Types.RecruiterSurvey.Formats.Xlsx do
   alias KlziiChat.Services.Reports.Types.RecruiterSurvey.DataContainer
-
+  alias Elixlsx.{Sheet, Workbook}
   @spec processe_data(Map.t) :: {String.t}
   def processe_data(data) do
     render_string(data)
@@ -8,15 +8,10 @@ defmodule KlziiChat.Services.Reports.Types.RecruiterSurvey.Formats.Csv do
 
   @spec render_string( Map.t) :: {:ok, String.t} | {:error, Map.t}
   def render_string(data) do
-    # session = get_in(data, ["session"])
-    # fields = get_in(data, ["fields"])
-    # [session_topic |_ ] = get_in(data, ["session_topics"])
-    # {:ok, acc} = Agent.start_link(fn -> [] end)
-    # {:ok, container} = DataContainer.start_link(session.participant_list)
-    # #
-    # Enum.each(session_topic.mini_surveys, &map_data(&1, session, fields, acc, container))
-
-    {:ok, %{data: %{}, header: []}}
+    sheet1 = Sheet.with_name(get_in(data, ["header_title"]))
+    workbook = %Workbook{sheets: [sheet1]}
+    # IO.inspect data
+    {:ok, %{data: workbook, header: []}}
   end
 
   # @spec map_data(Map.t,  Map.t, List.t, Process.t, Process.t) :: List.t

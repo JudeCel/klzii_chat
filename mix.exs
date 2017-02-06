@@ -48,6 +48,7 @@ defmodule KlziiChat.Mixfile do
      {:timex, "~> 3.1"},
      {:quantum, "~> 1.8"},
      {:poison, "~> 2.2"},
+     {:elixlsx, "~> 0.1.0"},
 
      {:arc_ecto, "~> 0.5.0"},
      {:arc, "~> 0.6.0"},

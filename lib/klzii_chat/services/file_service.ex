@@ -88,6 +88,17 @@ defmodule KlziiChat.Services.FileService do
     {:destination, path}
   end
 
+  def write_data_xlsx(path, %{data: data}, binary) do
+    Elixlsx.write_to(data, path)
+    if binary do
+      binary_data = File.read!(path)
+      File.rm(path)
+      {:ok, binary_data}
+    else
+      {:ok, path}
+    end
+  end
+
   def write_data_csv(path, %{data: data, header: header }) do
     data_stream = Agent.get(data, &(&1))
     |> CSV.encode(headers: header)
@@ -120,6 +131,11 @@ defmodule KlziiChat.Services.FileService do
     |> Enum.map(fn({_, {:ok, path}}) -> path end)
     |> Enum.into(%{})
     |> html_elements_to_pdf(binary)
+  end
+  def write_report(%{id: id, format: format, name: name}, data, [binary: binary]) when format in ["xlsx"]  do
+    tmp_dir_path = get_tmp_path(id)
+    {_,file_path} = create_destination_file(tmp_dir_path, name, format)
+    write_data_xlsx(file_path, data, binary)
   end
   def write_report(%{id: id, format: format, name: name}, data, [binary: _]) when format in ["csv"]  do
     tmp_dir_path = get_tmp_path(id)
