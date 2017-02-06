@@ -3,6 +3,9 @@ var wb;
 
 var drawElements = function (element_id, shapes) {
   wb = SVG(element_id);
+  let boxSize = "0 0 925 465";
+  wb.attr({viewBox: boxSize, preserveAspectRatio: "xMidYMid meet" });
+
   shapes.forEach(function(shape) {
     createArrowTip(shape.sessionMemberId, shape.colour);
     draw(wb, shape.event.type, shape.event.element)
