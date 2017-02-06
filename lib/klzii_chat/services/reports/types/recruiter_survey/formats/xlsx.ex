@@ -8,27 +8,42 @@ defmodule KlziiChat.Services.Reports.Types.RecruiterSurvey.Formats.Xlsx do
 
   @spec render_string( Map.t) :: {:ok, String.t} | {:error, Map.t}
   def render_string(data) do
-    sheet1 = Sheet.with_name(get_in(data, ["header_title"]))
-    workbook = %Workbook{sheets: [sheet1]}
-    # IO.inspect data
+    stats =  get_in(data, ["survey_questions_stats"])
+
+    header_sheet = Sheet.with_name(get_in(data, ["header_title"]))
+            |> Sheet.set_cell("A1", "Recruiter Stats Report")
+            |> Sheet.set_cell("A3", get_in(data, ["header_title"]))
+            |> Sheet.set_cell("C3", "Count")
+            |> Sheet.set_cell("D3", "%")
+            |> Sheet.set_cell("A4", "Total Surveys Completed")
+            |> Sheet.set_cell("E4", get_in(stats, [:total_count]))
+    sheet_acc = %{sheet: header_sheet, line_number: 5}
+
+    %{sheet: sheet} =
+      Enum.reduce(get_in(stats, [:questions]), sheet_acc, fn(question, acc) ->
+        tmp_sheet =
+          Sheet.set_cell(acc.sheet, "A#{acc.line_number}", get_in(question, [:name]))
+        Map.put(acc, :sheet, tmp_sheet)
+          |> map_data_answer(question.answers)
+     end)
+
+    workbook = %Workbook{sheets: [sheet]}
     {:ok, %{data: workbook, header: []}}
   end
 
-  # @spec map_data(Map.t,  Map.t, List.t, Process.t, Process.t) :: List.t
-  # def map_data(mini_survey, session, fields, acc, container) do
-  #   Enum.each(mini_survey.mini_survey_answers, fn(answer) ->
-  #     map_fields(fields, mini_survey, answer, session, container)
-  #     |> update_accumulator(acc)
-  #   end)
-  # end
-  #
-  # def update_accumulator(new_data, acc) do
-  #   :ok = Agent.update(acc, fn(data) -> data ++  [Enum.into(new_data,%{})] end)
-  # end
-  #
-  # def map_fields(fields, mini_survey, answer, session, container) do
-  #   Enum.map(fields, fn(field) ->
-  #     {field,  DataContainer.get_value(field, mini_survey, answer, session, container)}
-  #   end)
-  # end
+  @spec map_data_answer(Map.t,  List.t) :: Map.t
+  def map_data_answer(acc, [head| tail]) do
+    map_data_answer(acc, head)
+    |> map_data_answer(tail)
+  end
+
+  def map_data_answer(acc, answer) do
+    tmp_sheet =
+      Sheet.set_cell(acc.sheet, "B#{acc.line_number}", get_in(answer, [:name]))
+      |> Sheet.set_cell("C#{acc.line_number}", get_in(answer, [:count]))
+      |> Sheet.set_cell("D#{acc.line_number}", get_in(answer, [:percents]))
+
+    Map.put(acc, :sheet, tmp_sheet)
+    |> Map.put(:line_number, acc.line_number + 1)
+  end
 end
