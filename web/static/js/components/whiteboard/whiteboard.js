@@ -31,7 +31,9 @@ const Whiteboard = React.createClass({
       options: {
         scrollbars: true,
         scrollX: true,
-        zoom: true
+        zoom: true,
+        click: true,
+        momentum: false
       }
     })
   },
@@ -79,26 +81,41 @@ const Whiteboard = React.createClass({
           type = "mouseup";
           break;
         }
+
+        // let simulatedEvent = new MouseEvent(type, {
+        //   clientX: first.clientX/this.zoomView.scale,
+        //   clientY: first.clientY/this.zoomView.scale
+        // });
         let simulatedEvent = document.createEvent("MouseEvent");
-        let x = (this.zoomView.x + first.screenX);
-        let y = (first.screenY - this.zoomView.y );
+        // let x = (first.clientX/this.zoomView.scale );
+        // let y = (first.screenY/this.zoomView.scale  );
+        let x = (first.clientX/this.zoomView.scale ) / (this.zoomView.scroller.clientWidth/window.innerWidth) + this.zoomView.x/2;
+        let y = ((first.screenY)/this.zoomView.scale) / (this.zoomView.scroller.clientHeight/window.innerHeight) - this.zoomView.y;
+
+
+        //console.log("---", this.zoomView.scroller.clientWidth, this.zoomView.scroller.clientHeight/window.innerWidth);
         simulatedEvent.initMouseEvent(type, true, true, window, 1,
-                                      x/this.zoomView.scale, y/this.zoomView.scale,
-                                      x/this.zoomView.scale, y/this.zoomView.scale, false,
+                                      // x/this.zoomView.scale - this.zoomView.x, y/this.zoomView.scale - this.zoomView.y ,
+                                      // x/this.zoomView.scale - this.zoomView.x, y/this.zoomView.scale - this.zoomView.y, false,
+                                      x, y,
+                                      x , y , false,
                                       false, false, false, 1, null);
 
-        console.log("+", event);
         event.target.dispatchEvent (simulatedEvent);
-
       }
   },
   initBoardEvents() {
     this.board.on('mousedown', Events.boardMouseDown);
     this.board.on('mouseup', Events.boardMouseUp);
     this.board.on('mousemove', Events.boardMouseMove);
+    //this.board.on('touchmove', this.processInput);
+    this.board.on('touchstart', this.processInput);
+    //this.board.on('touchend', this.processInput);
+
     this.board.on('touchmove', this.processInput);
     this.board.on('touchstart', this.processInput);
     this.board.on('touchend', this.processInput);
+    //this.board.addEventListener('onTouchStart', this.processInput, false);
   },
   getInitialState() {
     this.mouseData = { type: 'select', prevType: null, selected: null };
@@ -155,6 +172,7 @@ const Whiteboard = React.createClass({
     if (enabled) {
       this.zoomView.enable();
     } else {
+    //  this.zoomView.zoom(this.zoomView.scale+0.01, 0, 0, 0);
       this.zoomView.disable();
     }
 
@@ -171,7 +189,7 @@ const Whiteboard = React.createClass({
           <img className='whiteboard-title' src='/images/title_whiteboard.png' />
           <img className='whiteboard-expand' src={ this.getExpandButtonImage() } onClick={ this.expandWhiteboard } />
           <ReactIScroll iScroll={iScroll} options={this.props.options} onRefresh={this.onRefresh} >
-          <div className="full-height-width">
+          <div className="full-height-width" >
             <svg id='whiteboard-draw' className='inline-board-section'/>
           </div>
           </ReactIScroll>
@@ -182,6 +200,10 @@ const Whiteboard = React.createClass({
     else {
       return (false);
     }
+      //
+      // onTouchStart={ this.processInput }
+      // onTouchMove={ this.processInput }
+      // onTouchEnd={ this.processInput }
   }
 });
 
