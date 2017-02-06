@@ -124,9 +124,11 @@ const Whiteboard = React.createClass({
     this.mainGroup = this.board.group();
     let boxSize = "0 0 " + this.drawData.initialWidth + " " + this.drawData.initialHeight;
     this.board.attr({viewBox: boxSize, preserveAspectRatio: "xMidYMid meet" });
-    this.mainGroup.attr({viewBox: boxSize, preserveAspectRatio: "xMidYMid meet" });
-    this.initScale();
+    this.mainGroup.attr({viewBox: boxSize, preserveAspectRatio: "xMidYMid meet", width: "100%", height: this.drawData.initialHeight, x: 0, y: 0 });
+    this.mainGroup.size();
+    this.initScale(this.drawData.initialWidth, this.drawData.initialHeight);
     this.initBoardEvents();
+    this.mainGroup.rect(100, 100)
     this.deps.Shape.loadShapes();
   },
   render() {
