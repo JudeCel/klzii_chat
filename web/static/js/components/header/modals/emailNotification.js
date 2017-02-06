@@ -28,7 +28,6 @@ const EmailNotification = React.createClass({
   },
   render() {
     let show = this.showSpecificModal('emailNotification');
-    console.log(this.props.contactDetails);
 
     if(show && this.props.contactDetails) {
 
@@ -36,7 +35,7 @@ const EmailNotification = React.createClass({
         <Modal id="contact-details-modal" dialogClassName='border-red modal-section modal-lg' show={ show } onHide={ this.closeAllModals } onEnter={ this.onEnterModal }>
           <Modal.Header>
             <div className='text-center modal-title'>
-              <h2>Contact Details</h2>
+              <h2>Email Notifications</h2>
             </div>
           </Modal.Header>
 
@@ -44,11 +43,19 @@ const EmailNotification = React.createClass({
             <Form className='row contact-details-fields'>
               <div className="col-xs-12">
 
-                <div className="form-group">
-                  <input checked={ this.state.gender === "male" } value="male" id="genderMale" type="radio" name="radio_gender" className="text-vertical-middle" onChange={ this.setEmailNotification } />
-                  <label className="gender-radio-label" htmlFor="genderMale">Male</label>
-                  <input checked={ this.state.gender === "female" } value="female" id="genderFemale" type="radio" name="radio_gender" className="text-vertical-middle" onChange={ this.setEmailNotification } />
-                  <label className="gender-radio-label" htmlFor="genderFemale">Female</label>
+                <div className="form-group radio-notification-group">
+                  <p>
+                    <input checked={ this.state.emailNotification === "none" } value="none" id="emailNotificationNone" type="radio" name="radio_emailNotification" className="text-vertical-middle" onChange={ this.setEmailNotification } />
+                    <label className="emailNotification-radio-label" htmlFor="emailNotificationNone">Don't send any Notifications</label>
+                  </p>
+                  <p>
+                    <input checked={ this.state.emailNotification === "privateMessages" } value="privateMessages" id="emailNotificationPrivateMessages" type="radio" name="radio_emailNotification" className="text-vertical-middle" onChange={ this.setEmailNotification } />
+                    <label className="emailNotification-radio-label" htmlFor="emailNotificationPrivateMessages">Send only whenever someone sends me a Private Message</label>
+                  </p>
+                  <p>
+                    <input checked={ this.state.emailNotification === "all" } value="all" id="emailNotificationAll" type="radio" name="radio_emailNotification" className="text-vertical-middle" onChange={ this.setEmailNotification } />
+                    <label className="emailNotification-radio-label" htmlFor="emailNotificationAll">Send whenever someone Posts or sends me a Private Message</label>
+                  </p>
                 </div>
                 
               </div>
@@ -57,7 +64,7 @@ const EmailNotification = React.createClass({
 
           <Modal.Footer>
             <button onClick={ this.closeAllModals } className='btn btn-standart btn-red btn-padding-24 pull-left'>Cancel</button>
-            <button className="btn btn-standart btn-green btn-padding-24 pull-right" disabled={ !this.state.canSubmit } onClick={ this.updateEmailNotification }>Save</button>
+            <button className="btn btn-standart btn-green btn-padding-24 pull-right" onClick={ this.updateEmailNotification }>Save</button>
           </Modal.Footer>
         </Modal>
       )
@@ -73,6 +80,7 @@ const mapStateToProps = (state) => {
     jwtToken: state.chat.jwtToken,
     resourcesConf: state.chat.resourcesConf,
     modalWindows: state.modalWindows,
+    colours: state.chat.session.colours,
     contactDetails: state.members.currentUser.contactDetails
   }
 };

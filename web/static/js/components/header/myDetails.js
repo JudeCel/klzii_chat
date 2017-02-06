@@ -19,6 +19,8 @@ const MyDetails = React.createClass({
     this.openSpecificModal('changePassword');
   },
   openEmailNotificationModal() {
+    const { dispatch, jwtToken, resourcesConf } = this.props;
+    dispatch(Actions.getUser(resourcesConf.dashboard_url, jwtToken));
     this.openSpecificModal('emailNotification');
   },
   openCreateNewAccountModal() {
