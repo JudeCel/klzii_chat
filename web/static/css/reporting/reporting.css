@@ -102,9 +102,10 @@ body{
 }
 
 .whiteboard-frame {
-  width: 925px;
-  height: 465px;
-
+  width: auto;
+  height: auto;
+  max-width: 925px;
+  min-width: 300px;
   border: 2px solid #aaa;
   margin: auto;
 }
