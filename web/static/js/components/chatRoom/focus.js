@@ -6,10 +6,11 @@ import Participants         from '../members/participants.js';
 import Messages             from '../messages/messages.js';
 import Console              from '../console/index';
 import Pinboard             from '../pinboard/index.js';
-
+import mixins               from '../../mixins';
 import Whiteboard           from '../whiteboard/whiteboard';
 
 const Focus = React.createClass({
+  mixins:[mixins.validations],
   getInitialState: function() {
     const { colours } = this.props;
     return {
@@ -21,9 +22,17 @@ const Focus = React.createClass({
   },
   renderWhiteboard() {
     if(this.props.pinboardActive) {
-      return <Pinboard />;
+      if (this.hasPermission(['pinboard', 'can_display_pinboard'])) {
+        return <Pinboard />;
+      }else{
+        return false
+      }
     } else {
-      return <Whiteboard member={ this.props }/>;
+      if (this.hasPermission(['whiteboard', 'can_create'])) {
+        return <Whiteboard member={ this.props }/>;
+      }else{
+        return false;
+      }
     }
   },
   render() {
@@ -57,7 +66,8 @@ const Focus = React.createClass({
 const mapStateToProps = (state) => {
   return {
     pinboardActive: state.sessionTopicConsole.data.pinboard,
-    colours: state.chat.session.colours
+    colours: state.chat.session.colours,
+    currentUser: state.members.currentUser
   };
 };
 

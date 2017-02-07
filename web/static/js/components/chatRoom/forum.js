@@ -19,6 +19,13 @@ const Forum = React.createClass({
       }
     };
   },
+  renderWhiteboard() {
+    if (this.hasPermission(['whiteboard', 'can_create'])) {
+      return <Whiteboard member={ this.props }/>;
+    }else{
+      return false;
+    }
+  },
   render() {
     return (
       <div>
@@ -31,7 +38,7 @@ const Forum = React.createClass({
           </div>
           <Console />
           <div className='top-row'>
-            <Whiteboard member={ this.props }/>
+            { this.renderWhiteboard() }
           </div>
         </div>
         <div className='col-md-9 room-section room-section-right' style={ this.state.mainBlockStyles }>
