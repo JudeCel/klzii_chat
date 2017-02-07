@@ -219,9 +219,8 @@ defmodule KlziiChat.SessionTopicChannel do
           broadcast!(socket, "new_message", message)
           Endpoint.broadcast!("sessions:#{message.session_member.sessionId}", "update_member", SessionMembersView.render("member.json", member: message.session_member))
           KlziiChat.BackgroundTasks.Message.update_has_messages(session_member.id, session_topic_id, true)
-          #todo: get facilitator id
-          facilitator_id = 0
-          NotificationService.send_notification_if_need(facilitator_id, Presence.list(socket), session_member.session_id, "chat_message")
+          facilitator = SessionMembersService.facilitator(session_member.session_id)
+          NotificationService.send_notification_if_need(facilitator.id, Presence.list(socket), session_member.session_id, "chat_message")
           {:reply, :ok, socket}
         {:error, reason} ->
           {:reply, {:error, error_view(reason)}, socket}

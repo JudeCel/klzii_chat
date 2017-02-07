@@ -135,4 +135,14 @@ defmodule KlziiChat.Services.SessionMembersService do
   def group_by_role(members) do
     Phoenix.View.render(SessionMembersView, "group_by_role.json", %{ members: members})
   end
+
+  @spec facilitator(Integer.t) :: {:ok, Map.t}
+  def facilitator(session_id) do
+    query =
+      from sm in SessionMember,
+        where: sm.sessionId == ^session_id,
+        where: sm.role == ^"facilitator"
+    result = Repo.one(query)
+    {:ok, result}
+  end
 end

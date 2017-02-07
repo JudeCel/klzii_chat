@@ -1,7 +1,6 @@
 defmodule KlziiChat.Services.NotificationService do
   alias KlziiChat.{Repo}
 
-  #todo: add test for this function
   @spec send_notification_if_need(Integer.t, Map.t, Integer.t, String.t) :: {:ok, Boolean.t} | {:error, String.t}
   def send_notification_if_need(session_member_id, active_members, session_id, type) do
     is_active = Map.has_key?(active_members, to_string(session_member_id))
