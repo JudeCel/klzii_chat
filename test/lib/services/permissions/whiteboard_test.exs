@@ -2,6 +2,11 @@ defmodule KlziiChat.Services.Permissions.WhiteboardTest do
   use ExUnit.Case, async: true
   alias  KlziiChat.Services.Permissions.Whiteboard
 
+  test "#Permissions.Whiteboard can_display_whiteboard" do
+    member = %{id: 1, role: "facilitator"}
+    preference = %{"whiteboardFunctionality" => true, "whiteboardDisplay" => true}
+    assert({:ok} = Whiteboard.can_display_whiteboard(member, preference))
+  end
   test "#Permissions.Whiteboard host can delete shape" do
     member = %{id: 1, role: "facilitator"}
     shape = %{id: 1, sessionMemberId: 2}

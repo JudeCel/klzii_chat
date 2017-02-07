@@ -18,7 +18,7 @@ defmodule KlziiChat.Services.Permissions.MiniSurveys do
   @spec can_create(Map.t) :: {:ok } | {:error, String.t}
   def can_create(member) do
     roles = ["facilitator"]
-    (has_role(member.role, roles))
+    has_role(member.role, roles)
     |> formate_error
   end
 
@@ -29,13 +29,3 @@ defmodule KlziiChat.Services.Permissions.MiniSurveys do
     |> formate_error
   end
 end
-# {"voting": false, "priority": -1, "secureSsl": true, "topicCount": -1,
-# "surveyCount": 1, "paidSmsCount": 0, "planSmsCount": 20, "sessionCount": 1,
-# "importDatabase": true, "chargebeePlanId": "free_trial", "pinboardDisplay": true,
-# "uploadToGallery": false, "accessKlzziFocus": true, "accessKlzziForum": true,
-# "accountUserCount": 1, "contactListCount": 1, "numberOfContacts": -1,
-# "privateMessaging": true, "whiteboardDisplay": false, "reportingFunctions": true,
-# "discussionGuideTips": true, "exportRecruiterStats": true, "contactListMemberCount": -1,
-# "whiteboardFunctionality": false, "brandLogoAndCustomColors": true, "exportRecruiterSurveyData": false,
-# "recruiterContactListCount": 1, "canInviteObserversToSession": true, "availableOnTabletAndMobilePlatforms": true,
-# "exportContactListAndParticipantHistory": false, "customEmailInvitationAndReminderMessages": true}
