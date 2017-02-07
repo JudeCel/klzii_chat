@@ -10,6 +10,12 @@ defmodule KlziiChat.Services.Permissions.PinboardResource do
     |> formate_error
   end
 
+  @spec can_display_pinboard(Map.t, Map.t) :: {:ok } | {:error, String.t}
+  def can_display_pinboard(_, object) do
+    (has_allowed_from_subscription(object, "pinboardDisplay"))
+    |> formate_error
+  end
+
   @spec can_add_resource(Map.t, Map.t) :: {:ok} | {:error, String.t}
   def can_add_resource(member, session) do
     roles = ~w(participant)

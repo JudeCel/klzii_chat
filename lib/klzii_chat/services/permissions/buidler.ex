@@ -61,7 +61,7 @@ defmodule KlziiChat.Services.Permissions.Builder do
         can_board_message: SessionTopicPermissions.can_board_message(session_member) |> to_boolean ,
       },
       whiteboard: %{
-        can_create: Validations.has_allowed_from_subscription(preference, "whiteboardFunctionality"),
+        can_create: WhiteboardPermissions.can_display_whiteboard(session_member, preference) |> to_boolean,
         can_new_shape: WhiteboardPermissions.can_new_shape(session_member, session) |> to_boolean,
         can_add_image: WhiteboardPermissions.can_add_image(session_member) |> to_boolean,
         can_erase_all: WhiteboardPermissions.can_erase_all(session_member) |> to_boolean
@@ -69,6 +69,9 @@ defmodule KlziiChat.Services.Permissions.Builder do
       resources: %{
         can_upload: ResourcePermissions.can_upload(session_member, preference) |> to_boolean,
         can_see_section: ResourcePermissions.can_see_section(session_member) |> to_boolean
+      },
+      mini_surveys: %{
+        can_display_voting: MiniSurveysPermissions.can_display_voting(session_member, preference) |> to_boolean
       },
       reports: %{
         can_report: ReportPermissions.can_use(session_member, preference) |> to_boolean
@@ -78,6 +81,7 @@ defmodule KlziiChat.Services.Permissions.Builder do
       },
       pinboard: %{
         can_enable: PinboardResourcePermissions.can_enable(session_member, session) |> to_boolean,
+        can_display_pinboard: PinboardResourcePermissions.can_display_pinboard(session_member, preference) |> to_boolean,
         can_add_resource: PinboardResourcePermissions.can_add_resource(session_member, session) |> to_boolean
       }
     }

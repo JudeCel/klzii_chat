@@ -35,7 +35,7 @@ const Links = React.createClass({
     }
   },
   clearWhiteboardFunction(style) {
-    if(this.isFacilitator(this.props.currentUser)) {
+    if(this.isFacilitator(this.props.currentUser) && this.hasPermission(['whiteboard', 'can_create'])) {
       return (
         <li style={ style } onClick={ this.clearWhiteboard }>
           <i className='fa fa-paint-brush' />
