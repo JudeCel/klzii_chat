@@ -1,6 +1,6 @@
 defmodule KlziiChat.SessionChannel do
   use KlziiChat.Web, :channel
-  alias KlziiChat.Services.{SessionService, SessionMembersService, SessionReportingService, DirectMessageService}
+  alias KlziiChat.Services.{SessionService, SessionMembersService, SessionReportingService, DirectMessageService, NotificationService}
   alias KlziiChat.Services.Permissions.SessionReporting, as: SessionReportingPermissions
   alias KlziiChat.{Presence, SessionMembersView, SessionTopicsReportView, DirectMessageView, ReportView}
   import(KlziiChat.Authorisations.Channels.Session, only: [authorized?: 2])
@@ -137,9 +137,10 @@ defmodule KlziiChat.SessionChannel do
     DirectMessageService.create_message(current_member.session_id, %{ "recieverId" => other_member_id, "text" => text, "senderId" => current_member.id })
     |> case  do
       { :ok, message } ->
-        encoded = DirectMessageView.render("show.json", message: message);
+        encoded = DirectMessageView.render("show.json", message: message)
         key = message.recieverId |> to_string
         broadcast(socket, "new_direct_message", %{ key => encoded })
+        NotificationService.send_notification_if_need(other_member_id, Presence.list(socket), current_member.session_id, "private_message")
         {:reply, { :ok, %{ message: encoded } }, socket}
       { :error, reason} ->
         {:reply, {:error, error_view(reason)}, socket}
