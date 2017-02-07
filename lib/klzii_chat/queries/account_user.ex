@@ -8,7 +8,8 @@ defmodule KlziiChat.Queries.AccountUser do
       join: s in assoc(sp, :subscription),
       join: a in assoc(s, :account),
       join: au in assoc(a, :account_users),
-      where: au.id == ^account_id
+      where: au.id == ^account_id,
+      preload: [:subscription]
     )
   end
   @spec is_admin(integer) :: Ecto.Query.t

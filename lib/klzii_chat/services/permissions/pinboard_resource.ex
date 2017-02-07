@@ -11,8 +11,8 @@ defmodule KlziiChat.Services.Permissions.PinboardResource do
   end
 
   @spec can_display_pinboard(Map.t, Map.t) :: {:ok } | {:error, String.t}
-  def can_display_pinboard(_, object) do
-    (has_allowed_from_subscription(object, "pinboardDisplay"))
+  def can_display_pinboard(_, %{data: data}) do
+    (has_allowed_from_subscription(data, "pinboardDisplay"))
     |> formate_error
   end
 

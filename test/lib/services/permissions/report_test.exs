@@ -4,13 +4,13 @@ defmodule KlziiChat.Services.Permissions.ReportTest do
 
     describe "host" do
       test "can use when preference" do
-        preference = %{"reportingFunctions" => true}
+        preference = %{data: %{"reportingFunctions" => true}}
         member = %{id: 1, role: "facilitator"}
         assert( {:ok} = ReportPermissions.can_use(member, preference))
       end
 
       test "can't use whitout preference" do
-        preference = %{"reportingFunctions" => false}
+        preference = %{data: %{"reportingFunctions" => false}}
         member = %{id: 1, role: "facilitator"}
         assert( {:error, _} = ReportPermissions.can_use(member, preference))
       end
@@ -18,7 +18,7 @@ defmodule KlziiChat.Services.Permissions.ReportTest do
 
     describe "guest" do
       test "can use" do
-        preference = %{"reportingFunctions" => true}
+        preference = %{data: %{"reportingFunctions" => true}}
         member = %{id: 1, role: "participant"}
         assert( {:error, _} = ReportPermissions.can_use(member, preference))
       end
@@ -26,7 +26,7 @@ defmodule KlziiChat.Services.Permissions.ReportTest do
 
     describe "spectator" do
       test "can use" do
-        preference = %{"reportingFunctions" => true}
+        preference = %{data: %{"reportingFunctions" => true}}
         member = %{id: 1, role: "observer"}
         assert( {:error, _} = ReportPermissions.can_use(member, preference))
       end

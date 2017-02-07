@@ -51,7 +51,8 @@ defmodule KlziiChat.Services.WhiteboardService do
   def create_object(session_member_id, session_topic_id, params) do
     session_member = Repo.get!(SessionMember, session_member_id)
     session = Repo.get!(Session, session_member.sessionId)
-    if WhiteboardPermissions.can_new_shape(session_member, session) do
+    {:ok, preference} = KlziiChat.Services.Permissions.Builder.get_subscription_preference_session(session.id)
+    if WhiteboardPermissions.can_new_shape(session_member, session, preference) do
       changeset = build_assoc(
         session_member, :shapes,
         sessionId: session_member.sessionId,
