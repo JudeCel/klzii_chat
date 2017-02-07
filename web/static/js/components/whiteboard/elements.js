@@ -22,7 +22,7 @@ function init(data) {
 
 function circleEmpty(e, nested, attrs, callback) {
   attrs.fill = 'none';
-  callback(circleFilled(e, nested, attrs));
+  circleFilled(e, nested, attrs, callback);
 }
 
 function circleFilled(e, nested, attrs, callback) {
