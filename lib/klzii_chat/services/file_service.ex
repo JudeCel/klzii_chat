@@ -30,30 +30,24 @@ defmodule KlziiChat.Services.FileService do
     File.close(file)
   end
 
-  @spec html_elements_to_pdf(Keyword.t, boolean) :: {:ok | :error, String.t}
-  def html_elements_to_pdf(paths, binary) do
+  @spec html_elements_to_pdf(Keyword.t) :: {:ok | :error, String.t}
+  def html_elements_to_pdf(paths) do
     Map.to_list(paths)
     |> Enum.all?(fn({_, path}) ->
       File.exists?(path)
     end)
     |>  case do
-          true -> wkhtmltopdf(paths, binary)
+          true -> wkhtmltopdf(paths)
           false -> {:error, "HTML file not found"}
         end
 
   end
 
-  @spec wkhtmltopdf(Map.t, binary) :: {:ok | :error, String.t}
-  def wkhtmltopdf(%{body: body, header: header, destination: destination}, binary) do
+  @spec wkhtmltopdf(Map.t) :: {:ok | :error, String.t}
+  def wkhtmltopdf(%{body: body, header: header, destination: destination}) do
     case conwert_with_xvfb(body, header, destination) do
       {:ok, path} ->
-        if binary do
-          binary_data = File.read!(path)
-          File.rm(path)
-          {:ok, binary_data}
-        else
-          {:ok, path}
-        end
+        {:ok, path}
       {:error, reason} ->
         {:error, reason}
     end
@@ -88,15 +82,9 @@ defmodule KlziiChat.Services.FileService do
     {:destination, path}
   end
 
-  def write_data_xlsx(path, %{data: data}, binary) do
+  def write_data_xlsx(path, %{data: data}) do
     Elixlsx.write_to(data, path)
-    if binary do
-      binary_data = File.read!(path)
-      File.rm(path)
-      {:ok, binary_data}
-    else
-      {:ok, path}
-    end
+    {:ok, path}
   end
 
   def write_data_csv(path, %{data: data, header: header }) do
@@ -118,7 +106,15 @@ defmodule KlziiChat.Services.FileService do
     {:error, %{wrong_data: "path:#{path}, data_map: #{is_map(data)}, data_streem: #{is_function(data)}" }}
   end
 
-  @spec write_report(Map.t, Stream.t | Map.t, Keyword.t) :: {:ok, String.t}
+@spec response_type(Tuple.t, boolean) :: {:ok, String.t} | {:ok, <<>>} | any
+  def response_type({:ok, path}, true) do
+    binary_data = File.read!(path)
+    :ok = File.rm(path)
+    {:ok, binary_data}
+  end
+  def response_type(resp, _), do: resp
+
+  @spec write_report(Map.t, Stream.t | Map.t, Keyword.t) :: {:ok, String.t} | {:ok, <<>>}
   def write_report(%{id: id, format: format, name: name}, data, [binary: binary]) when is_map(data) and format in ["pdf"] do
     tmp_dir_path = get_tmp_path(id)
     [
@@ -130,22 +126,23 @@ defmodule KlziiChat.Services.FileService do
     |> Task.yield_many
     |> Enum.map(fn({_, {:ok, path}}) -> path end)
     |> Enum.into(%{})
-    |> html_elements_to_pdf(binary)
+    |> html_elements_to_pdf()
+    |> response_type(binary)
   end
   def write_report(%{id: id, format: format, name: name}, data, [binary: binary]) when format in ["xlsx"]  do
     tmp_dir_path = get_tmp_path(id)
     {_,file_path} = create_destination_file(tmp_dir_path, name, format)
-    write_data_xlsx(file_path, data, binary)
+    write_data_xlsx(file_path, data) |> response_type(binary)
   end
-  def write_report(%{id: id, format: format, name: name}, data, [binary: _]) when format in ["csv"]  do
+  def write_report(%{id: id, format: format, name: name}, data, [binary: binary]) when format in ["csv"]  do
     tmp_dir_path = get_tmp_path(id)
     {_,file_path} = create_destination_file(tmp_dir_path, name, format)
-    write_data_csv(file_path, data)
+    write_data_csv(file_path, data) |> response_type(binary)
   end
-  def write_report(%{id: id, format: format, name: name}, data, [binary: _]) when format in ["txt"]  do
+  def write_report(%{id: id, format: format, name: name}, data, [binary: binary]) when format in ["txt"]  do
     tmp_dir_path = get_tmp_path(id)
     {_,file_path} = create_destination_file(tmp_dir_path, name, format)
-    write_data_txt(file_path, data)
+    write_data_txt(file_path, data) |> response_type(binary)
   end
   def write_report(%{id: id, format: format, name: name}, data, [binary: _])  do
     {:error, %{wrong_data: "id:#{id}, format:#{format}, name:#{name}, map: #{is_map(data)}, streem: #{is_function(data)}" }}
