@@ -138,11 +138,18 @@ defmodule KlziiChat.Services.SessionMembersService do
 
   @spec facilitator(Integer.t) :: {:ok, Map.t}
   def facilitator(session_id) do
-    query =
-      from sm in SessionMember,
-        where: sm.sessionId == ^session_id,
-        where: sm.role == ^"facilitator"
-    result = Repo.one(query)
-    {:ok, result}
+    (from sm in SessionMember,
+      where: sm.sessionId == ^session_id,
+      where: sm.role == ^"facilitator")
+    |> Repo.one
   end
+
+  @spec not_facilitator(Integer.t) :: {:ok, Map.t}
+  def not_facilitator(session_id) do
+    (from sm in SessionMember,
+      where: sm.sessionId == ^session_id,
+      where: sm.role != ^"facilitator")
+    |> Repo.all
+  end
+
 end

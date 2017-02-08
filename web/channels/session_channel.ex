@@ -140,7 +140,7 @@ defmodule KlziiChat.SessionChannel do
         encoded = DirectMessageView.render("show.json", message: message)
         key = message.recieverId |> to_string
         broadcast(socket, "new_direct_message", %{ key => encoded })
-        NotificationService.send_notification_if_need(other_member_id, Presence.list(socket), current_member.session_id, "private_message")
+        KlziiChat.BackgroundTasks.Message.send_notification(other_member_id, current_member.session_id, Presence.list(socket), "private_message")
         {:reply, { :ok, %{ message: encoded } }, socket}
       { :error, reason} ->
         {:reply, {:error, error_view(reason)}, socket}

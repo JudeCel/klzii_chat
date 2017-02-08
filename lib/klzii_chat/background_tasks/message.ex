@@ -1,5 +1,5 @@
 defmodule KlziiChat.BackgroundTasks.Message do
-  alias KlziiChat.Services.{UnreadMessageService, SessionMembersService}
+  alias KlziiChat.Services.{UnreadMessageService, SessionMembersService, NotificationService}
   alias KlziiChat.{Endpoint}
   alias KlziiChat.BackgroundTasks.{General}
 
@@ -13,6 +13,10 @@ defmodule KlziiChat.BackgroundTasks.Message do
 
   def update_has_messages(session_member_id, session_topic_id, new_message) do
     General.run_task(fn -> SessionMembersService.update_has_messages(session_member_id, session_topic_id, new_message) end)
+  end
+
+  def send_notification(session_member_id, session_id, active_users, type) do
+    General.run_task(fn -> process_send_notification(session_member_id, session_id, active_users, type) end)
   end
 
   def delete(session_id, session_topic_id) do
@@ -40,6 +44,20 @@ defmodule KlziiChat.BackgroundTasks.Message do
         _ ->
           :error
     end
+  end
+
+  defp process_send_notification(session_member_id, session_id, active_users, "chat_message") do
+    facilitator = SessionMembersService.facilitator(session_id)
+    if session_member_id == facilitator.id do
+      users = SessionMembersService.not_facilitator(session_id)
+      Enum.each(users, fn(user) -> 
+        NotificationService.send_notification_if_need(user.id, active_users, session_id, "chat_message")
+      end)
+    end
+  end
+
+  defp process_send_notification(session_member_id, session_id, active_users, "private_message") do
+    NotificationService.send_notification_if_need(session_member_id, active_users, session_id, "private_message")
   end
 
 end

@@ -22,6 +22,7 @@ defmodule KlziiChat.AccountUser do
     field :postCode, :string
     field :companyName, :string
     field :landlineNumber, :string
+    field :emailNotification, :string
     timestamps [inserted_at: :createdAt, updated_at: :updatedAt]
   end
 end
