@@ -69,26 +69,23 @@ defmodule KlziiChat.Services.Reports.Types.RecruiterSurvey.Statistic do
     end)
   end
 
-  def map_question_answer(%{type: "number"} = answe , qestion_statistic, %{model: model}) do
-    qestion_statistic_values =
-      Map.get(qestion_statistic, :values)
-      |> Map.get(model)
-
-    qestion_statistic_count = Map.get(qestion_statistic, :count)
+  def update_answer(answe, statistic_values, qestion_statistic) do
+    statistic_count = Map.get(qestion_statistic, :count)
     order = Map.get(answe, :order)
-    answer_value = Map.get(qestion_statistic_values, order, 0)
-    percents =  calculate_statistic_percents(answer_value, qestion_statistic_count)
+    answer_value = Map.get(statistic_values, order, 0)
+    percents =  calculate_statistic_percents(answer_value, statistic_count)
     Map.put(answe, :count, answer_value)
     |> Map.put(:percents, percents)
   end
+
+  def map_question_answer(%{type: "number"} = answe , qestion_statistic, %{model: model}) do
+    qestion_statistic_values = Map.get(qestion_statistic, :values) |> Map.get(model)
+    update_answer(answe, qestion_statistic_values, qestion_statistic)
+
+  end
   def map_question_answer(%{type: "number"} = answe , qestion_statistic, _) do
     qestion_statistic_values = Map.get(qestion_statistic, :values)
-    qestion_statistic_count = Map.get(qestion_statistic, :count)
-    order = Map.get(answe, :order)
-    answer_value = Map.get(qestion_statistic_values, order, 0)
-    percents =  calculate_statistic_percents(answer_value, qestion_statistic_count)
-    Map.put(answe, :count, answer_value)
-    |> Map.put(:percents, percents)
+    update_answer(answe, qestion_statistic_values, qestion_statistic)
   end
   def map_question_answer(%{type: "list"} = answe , qestion_statistic, _) do
     qestion_statistic_values = Map.get(qestion_statistic, :values)
