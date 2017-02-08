@@ -52,17 +52,17 @@ defmodule KlziiChat.Services.Reports.Types.RecruiterSurvey.Statistic do
   def processed_question_answers(%{"name" => name, "order" => order}, _, _) do
     %{name: name, type: "number", count: 0, percents: 0, order: order}
   end
-  def processed_question_answers(%{"order" => order}, _, question) do
+  def processed_question_answers(%{"order" => order}, _, _) do
     %{order: order, count: 0, type: "list", values: []}
   end
   def processed_question_answers(%{}, _, _), do: :skip
 
 
   @doc """
-    Map with cliemt answers
+    Map with client answers
   """
 
-  def map_question_answers_with_stats(nil, %{answers: answers} = question), do: answers
+  def map_question_answers_with_stats(nil, %{answers: answers}), do: answers
   def map_question_answers_with_stats(qestion_statistic, %{answers: answers} = question) do
     Enum.map(answers, fn(answe) ->
       map_question_answer(answe, qestion_statistic, question)
@@ -73,6 +73,7 @@ defmodule KlziiChat.Services.Reports.Types.RecruiterSurvey.Statistic do
     qestion_statistic_values =
       Map.get(qestion_statistic, :values)
       |> Map.get(model)
+
     qestion_statistic_count = Map.get(qestion_statistic, :count)
     order = Map.get(answe, :order)
     answer_value = Map.get(qestion_statistic_values, order, 0)

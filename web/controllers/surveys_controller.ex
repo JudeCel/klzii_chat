@@ -18,7 +18,7 @@ defmodule KlziiChat.SurveysController do
 
   def export(conn, %{"id" => id, "format" => format, "token" => token}) do
     case get_member_from_token(token) do
-      {:ok, member, _} ->
+      {:ok, _, _} ->
         cond do
           format in ["pdf", "xlsx"] ->
             {:ok, format_modeule} = KlziiChat.Services.Reports.Types.RecruiterSurvey.Base.format_modeule(format)

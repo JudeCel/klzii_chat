@@ -4,11 +4,12 @@ defmodule KlziiChat.Services.Reports.Types.RecruiterSurvey.Base do
   alias KlziiChat.Services.Reports.Types.RecruiterSurvey.Statistic
   import Ecto.Query, only: [from: 2]
 
-  @spec format_modeule(String.t) :: Module.t
+  @spec format_modeule(String.t) :: {:ok, Module.t} | {:error, String.t}
   def format_modeule("pdf"), do: {:ok, Formats.Pdf}
   def format_modeule("xlsx"), do: {:ok, Formats.Xlsx}
   def format_modeule(format), do: {:error, "module for format #{format} not found"}
 
+  @spec get_data(Map.t) :: Map.t
   def get_data(%{id: id}) do
     with {:ok, survey} <- get_recruiter_survey(%{id: id}),
          {:ok, header_title} <- get_header_title(survey),
@@ -34,6 +35,7 @@ defmodule KlziiChat.Services.Reports.Types.RecruiterSurvey.Base do
   end
   def get_recruiter_survey(_), do: {:error, %{not_reqired: "recruiter survey id not reqired"}}
 
+  @spec calculate_stats(Map.t) :: Map.t
   def calculate_stats(survey) do
     survey_questions_task = Task.async(fn -> Statistic.build_questions(survey.survey_questions) end)
     survey_answers_task = Task.async(fn -> Statistic.map_answers(Enum.map(survey.survey_answers, &(&1.answers))) end)

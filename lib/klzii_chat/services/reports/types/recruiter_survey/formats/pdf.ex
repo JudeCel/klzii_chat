@@ -8,7 +8,7 @@ defmodule KlziiChat.Services.Reports.Types.RecruiterSurvey.Formats.Pdf do
   @spec render_string( Map.t) :: {:ok, String.t} | {:error, Map.t}
   def render_string(data) do
 
-    # try do
+    try do
       header =
         Phoenix.View.render_to_string(
           KlziiChat.Reporting.PreviewView, "header.html",
@@ -24,9 +24,9 @@ defmodule KlziiChat.Services.Reports.Types.RecruiterSurvey.Formats.Pdf do
       )
 
       {:ok, %{body: body, header: header}}
-    # catch
-    #   :error, reason ->
-    #     {:error, reason}
-    # end
+    catch
+      :error, reason ->
+        {:error, reason}
+    end
   end
 end

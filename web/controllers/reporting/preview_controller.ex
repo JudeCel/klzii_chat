@@ -83,7 +83,7 @@ defmodule KlziiChat.Reporting.PreviewController do
       })
   end
 
-  def recruiter_survey_stats(conn, %{"id" => id} = params) do
+  def recruiter_survey_stats(conn, %{"id" => id}) do
     report = %{
       id: id,
       type: "recruiter_survey_stats"

@@ -5,7 +5,7 @@ defmodule KlziiChat.Services.Reports.Types.RecruiterSurvey.Formats.Xlsx do
     render_string(data)
   end
 
-  @spec render_string( Map.t) :: {:ok, String.t} | {:error, Map.t}
+  @spec render_string( Map.t) :: {:ok, Map.t} | {:error, String.t}
   def render_string(data) do
     stats =  get_in(data, ["survey_questions_stats"])
 
@@ -29,6 +29,7 @@ defmodule KlziiChat.Services.Reports.Types.RecruiterSurvey.Formats.Xlsx do
     {:ok, %{data: workbook, header: []}}
   end
 
+  @spec map_question(Map.t, Map.t) :: Map.t
   def map_question(acc, %{type: "textarea", name: name} = question) do
     tmp_sheet =
       Sheet.with_name(name)
