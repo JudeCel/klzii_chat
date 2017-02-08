@@ -157,15 +157,40 @@ body{
 }
 
 /* recruiter-rurvey style*/
+.recruiter-rurvey {
+  font-size: 25px;
+}
+
 .recruiter-rurvey .total-count{
   background-color: #C5E0B3;
 }
 .recruiter-rurvey .question-name{
-  width: 15%;
+  width: 300px;
+  vertical-align: top;
+  display: inline-block;
 }
 .recruiter-rurvey .answers{
-  width: 15%;
+  width: 500px;
 }
 .recruiter-rurvey .question{
   background-color: #E2EFD9;
+}
+
+.recruiter-rurvey .answer-row, .recruiter-rurvey .answers, .recruiter-rurvey .answer-count, .recruiter-rurvey .answer-percents, .recruiter-rurvey .answer-column{
+  display: inline-block;
+  vertical-align: top;
+}
+
+.answer-column .answer-percents, .answer-column .answer-count{
+  width: 60px;
+  margin-left: 20px;
+  text-align: center;
+}
+
+.recruiter-rurvey .answer-name {
+  width: 300px;
+  display: inline-block;
+}
+.recruiter-rurvey .answer-row {
+  margin-bottom: 10px;
 }

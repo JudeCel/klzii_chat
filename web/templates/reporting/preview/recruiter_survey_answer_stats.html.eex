@@ -5,19 +5,23 @@
       </div>
 
       <div class='media-body'>
-        <span class='col-md-4 question-name'>
+        <span class='question-name'>
           <%= question.name %>
         </span>
         <div class='answers'>
           <%= for answer <- get_answers(question) do %>
-            <div class='answere-name'>
-              <%= answer.name %>
-            </div>
-            <div class='answere-count'>
-              <%= answer.count %>
-            </div>
-            <div class='answere-percents'>
-              <%= answer.percents %>
+            <div class="answer-row">
+              <div class='answer-name'>
+                <%= answer.name %>
+              </div>
+              <div class="answer-column">
+                <div class='answer-count'>
+                  <%= answer.count %>
+                </div>
+                <div class='answer-percents'>
+                  <%= answer.percents %>
+                </div>
+              </div>
             </div>
           <% end %>
         </div>
