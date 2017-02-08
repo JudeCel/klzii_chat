@@ -3,6 +3,7 @@ defmodule KlziiChat.Reporting.PreviewView do
 
   def brand_logo_path(nil, %{url: url, static: false}), do: url.full
   def brand_logo_path(nil, %{url: url, static: true}), do: Path.expand("./web/static/assets") <> url.full
+  def brand_logo_path(nil, nil), do: nil
   def brand_logo_path(_, %{url: url, static: false}), do: url.full
   def brand_logo_path(_, %{url: url, static: true}), do: url.full
 
@@ -27,6 +28,17 @@ defmodule KlziiChat.Reporting.PreviewView do
   def get_mini_survey_answer(%{ "type" => type, "value" => value }) do
     {:ok, result} = KlziiChat.Decorators.MiniSurveyAnswersDecorator.answer_text(type, value)
     result
+  end
+
+  def get_answers(%{answers: answers, type: "textarea" }) do
+    List.first(answers)
+    |> Map.get(:values)
+    |> Enum.map(fn(answer) ->
+      %{name: answer, count: nil, percents: nil}
+     end)
+  end
+  def get_answers(%{answers: answers}) do
+    answers
   end
 
 end
