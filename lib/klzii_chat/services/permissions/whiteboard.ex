@@ -2,10 +2,20 @@ defmodule KlziiChat.Services.Permissions.Whiteboard do
   import KlziiChat.Services.Permissions.Validations
   import KlziiChat.Services.Permissions.ErrorsHelper, only: [formate_error: 1]
 
-  @spec can_display_whiteboard(Map.t, Map.t) :: {:ok } | {:error, String.t}
-  def can_display_whiteboard(_member, object) do
-    ( has_allowed_from_subscription(object, "whiteboardFunctionality") &&
-      has_allowed_from_subscription(object, "whiteboardDisplay")
+  @spec can_display_whiteboard(Map.t) :: {:ok } | {:error, String.t}
+  def can_display_whiteboard(%{data: data}) do
+    (has_allowed_from_subscription(data, "whiteboardDisplay"))
+    |> formate_error
+  end
+
+  @spec can_enable(Map.t, Map.t, Map.t) :: {:ok } | {:error, String.t}
+  def can_enable(member, session, %{data: data}) do
+    roles = ~w(facilitator)
+    session_types = ~w(focus forum)
+    (
+      has_role(member.role, roles) &&
+      is_in_list(session.type, session_types) &&
+      has_allowed_from_subscription(data, "whiteboardDisplay")
     )
     |> formate_error
   end
@@ -17,18 +27,39 @@ defmodule KlziiChat.Services.Permissions.Whiteboard do
     |> formate_error
   end
 
-  @spec can_new_shape(Map.t, Map.t) :: {:ok } | {:error, String.t}
-  def can_new_shape(member, session) do
-    forum_permissions = %{roles: ["facilitator"], types: ["forum"] }
-    focus_permissions = %{roles: ["facilitator", "participant"], types: ["focus"] }
-    (
-    (has_role(member.role, forum_permissions.roles) &&
-    is_in_list(session.type, forum_permissions.types))
-    ||
-    (has_role(member.role, focus_permissions.roles)
-      && is_in_list(session.type, focus_permissions.types)
-    ))
-    |> formate_error
+  defp validate_subscription(member, preference) do
+    sub_key = case member do
+                %{role: "facilitator"} ->
+                  "whiteboardDisplay"
+                _ ->
+                  "whiteboardFunctionality"
+              end
+    has_allowed_from_subscription(preference, sub_key)
+  end
+
+  defp validate_session(member, session) do
+    roles = case session do
+              %{type: "forum"} ->
+                ["facilitator"]
+              %{type: "focus"} ->
+                ["facilitator", "participant"]
+              _ ->
+                []
+            end
+    has_role(member.role, roles)
+  end
+
+  @spec can_new_shape(Map.t, Map.t, Map.t) :: {:ok } | {:error, String.t}
+  def can_new_shape(member, session, %{data: data}) do
+    with(
+      true <- validate_subscription(member, data),
+      true <- validate_session(member, session)
+    ) do
+        formate_error(true)
+      else
+        _ ->
+          formate_error(false)
+      end
   end
 
   @spec can_add_image(Map.t) :: {:ok } | {:error, String.t}

@@ -13,7 +13,6 @@ defmodule KlziiChat.Services.Permissions.Builder do
   alias KlziiChat.Services.Permissions.Member, as: MemberPermissions
   alias KlziiChat.Services.Permissions.DirectMessage, as: DirectMessagePermissions
   alias KlziiChat.Services.Permissions.MiniSurveys, as: MiniSurveysPermissions
-  alias KlziiChat.Services.Permissions.Validations
 
   @spec error_messages() :: Map.t
   def error_messages do
@@ -61,8 +60,9 @@ defmodule KlziiChat.Services.Permissions.Builder do
         can_board_message: SessionTopicPermissions.can_board_message(session_member) |> to_boolean ,
       },
       whiteboard: %{
-        can_create: WhiteboardPermissions.can_display_whiteboard(session_member, preference) |> to_boolean,
-        can_new_shape: WhiteboardPermissions.can_new_shape(session_member, session) |> to_boolean,
+        can_enable: WhiteboardPermissions.can_enable(session_member, session, preference) |> to_boolean,
+        can_display_whiteboard: WhiteboardPermissions.can_display_whiteboard(preference) |> to_boolean,
+        can_new_shape: WhiteboardPermissions.can_new_shape(session_member, session, preference) |> to_boolean,
         can_add_image: WhiteboardPermissions.can_add_image(session_member) |> to_boolean,
         can_erase_all: WhiteboardPermissions.can_erase_all(session_member) |> to_boolean
       },
@@ -80,8 +80,8 @@ defmodule KlziiChat.Services.Permissions.Builder do
         can_vote_mini_survey: MiniSurveysPermissions.can_answer(session_member) |> to_boolean
       },
       pinboard: %{
-        can_enable: PinboardResourcePermissions.can_enable(session_member, session) |> to_boolean,
-        can_display_pinboard: PinboardResourcePermissions.can_display_pinboard(session_member, preference) |> to_boolean,
+        can_enable: PinboardResourcePermissions.can_enable(session_member, session, preference) |> to_boolean,
+        can_display_pinboard: PinboardResourcePermissions.can_display_pinboard(session_member, session, preference) |> to_boolean,
         can_add_resource: PinboardResourcePermissions.can_add_resource(session_member, session) |> to_boolean
       }
     }
@@ -94,28 +94,28 @@ defmodule KlziiChat.Services.Permissions.Builder do
       |> case do
         nil ->
           if is_admin(AccountUserQueries.is_admin(account_user_id)) do
-            {:ok, %{admin: true}}
+            {:ok, %{data: %{admin: true}}}
           else
             {:error, error_messages().subscription_not_found}
           end
         preference ->
-          {:ok, Map.get(preference, :data, %{})}
+          {:ok, preference}
       end
   end
 
   @spec get_subscription_preference_session(Integer.t) :: Map.t
-  defp get_subscription_preference_session(session_id) do
+  def get_subscription_preference_session(session_id) do
     SessionQueries.get_subscription_preference_session(session_id)
     |> Repo.one
     |> case do
       nil ->
         if is_admin(SessionQueries.is_admin(session_id)) do
-          {:ok, %{admin: true}}
+          {:ok, %{data: %{admin: true}}}
         else
           {:error, error_messages().subscription_not_found}
         end
       preference ->
-          {:ok, Map.get(preference, :data, %{})}
+          {:ok, preference}
       end
   end
 

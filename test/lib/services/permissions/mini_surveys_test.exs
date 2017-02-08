@@ -10,7 +10,7 @@ defmodule KlziiChat.Services.Permissions.MiniSurveysTest do
 
     test "can_display_voting" do
       member = %{id: 1, role: "facilitator"}
-      preference = %{"voting" => true}
+      preference = %{data: %{"voting" => true}}
       assert({:ok} = MiniSurveys.can_display_voting(member, preference))
     end
 
@@ -33,7 +33,7 @@ defmodule KlziiChat.Services.Permissions.MiniSurveysTest do
 
     test "can_display_voting" do
       member = %{id: 1, role: "participant"}
-      preference = %{"voting" => true}
+      preference = %{data: %{"voting" => true}}
       assert({:ok} = MiniSurveys.can_display_voting(member, preference))
     end
 
@@ -56,7 +56,7 @@ defmodule KlziiChat.Services.Permissions.MiniSurveysTest do
 
     test "can_display_voting" do
       member = %{id: 1, role: "observer"}
-      preference = %{"voting" => true}
+      preference = %{data: %{"voting" => true}}
       assert({:ok} = MiniSurveys.can_display_voting(member, preference))
     end
 

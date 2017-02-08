@@ -24,14 +24,6 @@ defmodule KlziiChat.Services.Permissions.Resources do
     |> formate_error
   end
 
-  @spec can_upload(Map.t, Map.t) :: {:ok } | {:error, String.t}
-  def can_upload(member, preference) do
-    roles =  ~w(facilitator accountManager admin participant)
-    (has_role(member.role, roles) && has_allowed_from_subscription(preference, "uploadToGallery"))
-    |> formate_error
-  end
-
-  @spec can_upload(Map.t) :: {:ok } | {:error, String.t}
   def can_upload(member) do
     case KlziiChat.Services.Permissions.Builder.get_subscription_preference_account_user(member.id) do
       {:ok, preference} ->
@@ -39,5 +31,10 @@ defmodule KlziiChat.Services.Permissions.Resources do
       {:error, reason} ->
         {:error, reason}
     end
+  end
+  def can_upload(member, %{data: data}) do
+    roles =  ~w(facilitator accountManager admin participant)
+    (has_role(member.role, roles) && has_allowed_from_subscription(data, "uploadToGallery"))
+    |> formate_error
   end
 end

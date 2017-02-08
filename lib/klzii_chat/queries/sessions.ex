@@ -33,7 +33,8 @@ defmodule KlziiChat.Queries.Sessions do
     join: s in assoc(sp, :subscription),
     join: a in assoc(s, :account),
     join: session in assoc(a, :sessions),
-    where: session.id == ^sessionId
+    where: session.id == ^sessionId,
+    preload: [:subscription]
     )
   end
 

@@ -5,8 +5,10 @@ import Facilitator          from '../members/facilitator.js';
 import Messages             from '../messages/messages.js';
 import Console              from '../console/index';
 import Whiteboard           from '../whiteboard/whiteboard';
+import mixins               from '../../mixins';
 
 const Forum = React.createClass({
+  mixins:[mixins.validations],
   getInitialState: function() {
     const { colours } = this.props;
     return {
@@ -53,7 +55,8 @@ const Forum = React.createClass({
 const mapStateToProps = (state) => {
   return {
     pinboardActive: state.sessionTopicConsole.data.pinboard,
-    colours: state.chat.session.colours
+    colours: state.chat.session.colours,
+    currentUser: state.members.currentUser
   };
 };
 

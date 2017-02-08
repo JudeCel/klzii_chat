@@ -16,6 +16,6 @@ defmodule KlziiChat.Services.Permissions.ErrorsHelper do
     {:ok}
   end
   def formate_error(false) do
-    {:error, %{permissions: messages.action_not_allowed, code: 403}}
+    {:error, %{permissions: messages().action_not_allowed, code: 403}}
   end
 end
