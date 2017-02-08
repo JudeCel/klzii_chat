@@ -25,7 +25,7 @@ defmodule KlziiChat.Services.Permissions.PinboardResource do
   end
 
   @spec can_remove_resource(Map.t, Map.t) :: {:ok} | {:error, String.t}
-  def can_remove_resource(member, object) do
+  def can_remove_resource(member, _bject) do
     role = ~w(facilitator)
     #use this if need owner to remove resource
     #(has_owner(member, object, :sessionMemberId) || has_role(member.role, role))

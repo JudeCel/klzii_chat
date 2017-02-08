@@ -13,7 +13,6 @@ defmodule KlziiChat.Services.Permissions.Builder do
   alias KlziiChat.Services.Permissions.Member, as: MemberPermissions
   alias KlziiChat.Services.Permissions.DirectMessage, as: DirectMessagePermissions
   alias KlziiChat.Services.Permissions.MiniSurveys, as: MiniSurveysPermissions
-  alias KlziiChat.Services.Permissions.Validations
 
   @spec error_messages() :: Map.t
   def error_messages do
