@@ -9,10 +9,8 @@ const EmailNotification = React.createClass({
   mixins: [mixins.modalWindows],
   componentWillReceiveProps(nextProps) {
     if (nextProps.contactDetails) {
-      const { contactDetails } = nextProps;
-      this.setState({ 
-        emailNotification: contactDetails.emailNotification
-      });
+      const { contactDetails: { emailNotification } } = nextProps;
+      this.setState({ emailNotification });
     }
   },
   setEmailNotification(event) {
