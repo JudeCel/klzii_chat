@@ -40,6 +40,7 @@ function plugins() {
 var config = module.exports = {
   // our app's entry points - for this example we'll use a single each for
   // css and js
+  devtool: process.env.NODE_ENV === 'production' ? 'source-map' : 'eval',
   entry: {
     app: [
       web('css/app.sass'),
