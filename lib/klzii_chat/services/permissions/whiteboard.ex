@@ -4,7 +4,7 @@ defmodule KlziiChat.Services.Permissions.Whiteboard do
 
   @spec can_display_whiteboard(Map.t, Map.t) :: {:ok } | {:error, String.t}
   def can_display_whiteboard(_member, %{data: data}) do
-    ( has_allowed_from_subscription(data, "whiteboardFunctionality"))
+    ( has_allowed_from_subscription(data, "whiteboardDisplay"))
     |> formate_error
   end
 
@@ -15,21 +15,39 @@ defmodule KlziiChat.Services.Permissions.Whiteboard do
     |> formate_error
   end
 
-  @spec can_new_shape(Map.t, Map.t, Map.t) :: {:ok } | {:error, String.t}
-  def can_new_shape(member, session, %{data: data, subscription: subscription}) do
-    forum_permissions = %{roles: ["facilitator"], types: ["forum"] }
+  defp validate_subscription(member, preference) do
+    sub_key = case member do
+                %{role: "facilitator"} ->
+                  "whiteboardDisplay"
+                _ ->
+                  "whiteboardFunctionality"
+              end
+    has_allowed_from_subscription(preference, sub_key)
+  end
 
-    focus_permissions = if subscription.planId == "free_trial" do
-                          %{roles: ["facilitator"], types: ["focus"] }
-                        else
-                          %{roles: ["facilitator", "participant"], types: ["focus"] }
-                        end
-    ((
-      (has_role(member.role, forum_permissions.roles) && is_in_list(session.type, forum_permissions.types))
-    ||
-      (has_role(member.role, focus_permissions.roles) && is_in_list(session.type, focus_permissions.types))
-    ) && has_allowed_from_subscription(data, "whiteboardFunctionality"))
-    |> formate_error
+  defp validate_session(member, session) do
+    roles = case session do
+              %{type: "forum"} ->
+                ["facilitator"]
+              %{type: "focus"} ->
+                ["facilitator", "participant"]
+              _ ->
+                []
+            end
+    has_role(member.role, roles)
+  end
+
+  @spec can_new_shape(Map.t, Map.t, Map.t) :: {:ok } | {:error, String.t}
+  def can_new_shape(member, session, %{data: data}) do
+    with(
+      true <- validate_subscription(member, data),
+      true <- validate_session(member, session)
+    ) do
+        formate_error(true)
+      else
+        _ ->
+          formate_error(false)
+      end
   end
 
   @spec can_add_image(Map.t) :: {:ok } | {:error, String.t}

@@ -5,7 +5,7 @@ defmodule KlziiChat.Services.Permissions.WhiteboardTest do
   test "#Permissions.Whiteboard can_display_whiteboard" do
     member = %{id: 1, role: "facilitator"}
     preference = %{data: %{"whiteboardFunctionality" => true, "whiteboardDisplay" => false}}
-    assert({:ok} = Whiteboard.can_display_whiteboard(member, preference))
+    assert({:error, _} = Whiteboard.can_display_whiteboard(member, preference))
   end
 
   test "#Permissions.Whiteboard host can delete shape" do
@@ -56,7 +56,7 @@ defmodule KlziiChat.Services.Permissions.WhiteboardTest do
 
   test "#Permissions.Whiteboard can new shape when session type is focus" do
     roles = ["facilitator", "participant"]
-    preference = %{data: %{"whiteboardFunctionality" =>  true}, subscription: %{planId: "pro_plan"}}
+    preference = %{data: %{"whiteboardFunctionality" =>  true, "whiteboardDisplay" => true}}
     session = %{type: "focus"}
     Enum.map(roles, fn role ->
       member = %{role: role}
@@ -67,7 +67,7 @@ defmodule KlziiChat.Services.Permissions.WhiteboardTest do
   test "#Permissions.Whiteboard can new shape when session type is forum" do
     roles = ["facilitator"]
     session = %{type: "forum"}
-    preference = %{data: %{"whiteboardFunctionality" =>  true}, subscription: %{planId: "free_trial"}}
+    preference = %{data: %{"whiteboardFunctionality" =>  true, "whiteboardDisplay" => true}}
 
     Enum.map(roles, fn role ->
       member = %{role: role}
@@ -79,7 +79,7 @@ defmodule KlziiChat.Services.Permissions.WhiteboardTest do
     roles = ["participant"]
     session = %{type: "forum"}
 
-    preference = %{data: %{"whiteboardFunctionality" =>  true}, subscription: %{planId: "pro_plan"}}
+    preference = %{data: %{"whiteboardFunctionality" =>  true, "whiteboardDisplay" => true}}
     Enum.map(roles, fn role ->
       member = %{role: role}
       assert({:error, _} = Whiteboard.can_new_shape(member, session, preference))
@@ -89,7 +89,7 @@ defmodule KlziiChat.Services.Permissions.WhiteboardTest do
   test "#Permissions.Whiteboard can't new shape" do
     sessions = ["forum", "focus"]
     roles = ["observer"]
-    preference = %{data: %{"whiteboardFunctionality" =>  true}, subscription: %{planId: "free_trial"}}
+    preference = %{data: %{"whiteboardFunctionality" =>  true, "whiteboardDisplay" => true}}
 
     Enum.map(roles, fn role ->
       member = %{role: role}
@@ -100,17 +100,58 @@ defmodule KlziiChat.Services.Permissions.WhiteboardTest do
     end)
   end
 
-  describe "when free trial sub plan" do
-    test "when Host can drow" do
-      session = %{type: "focus"}
+  describe "new shape" do
+    test "when no whiteboardFunctionality, Host and forum" do
+      session = %{type: "forum"}
       member = %{role: "facilitator"}
-      preference = %{data: %{"whiteboardFunctionality" =>  true}, subscription: %{planId: "free_trial"}}
+      preference = %{
+        data: %{"whiteboardFunctionality" =>  false, "whiteboardDisplay" => true}
+      }
       assert({:ok} = Whiteboard.can_new_shape(member, session, preference))
     end
-    test "when Guest can't drow" do
+
+    test "when no whiteboardFunctionality, Host and focus" do
+      session = %{type: "focus"}
+      member = %{role: "facilitator"}
+      preference = %{
+        data: %{"whiteboardFunctionality" =>  false, "whiteboardDisplay" => true}
+      }
+      assert({:ok} = Whiteboard.can_new_shape(member, session, preference))
+    end
+
+    test "when no whiteboardFunctionalit, Guest and forum " do
+      session = %{type: "forum"}
+      member = %{role: "participant"}
+      preference = %{
+        data: %{"whiteboardFunctionality" =>  false, "whiteboardDisplay" => true}
+      }
+      assert({:error, _} = Whiteboard.can_new_shape(member, session, preference))
+    end
+
+    test "when no whiteboardFunctionalit, Guest and forum" do
+      session = %{type: "forum"}
+      member = %{role: "participant"}
+      preference = %{
+        data: %{"whiteboardFunctionality" =>  false, "whiteboardDisplay" => true}
+      }
+      assert({:error, _} = Whiteboard.can_new_shape(member, session, preference))
+    end
+
+    test "when whiteboardFunctionalit enable, Guest and focus " do
       session = %{type: "focus"}
       member = %{role: "participant"}
-      preference = %{data: %{"whiteboardFunctionality" =>  true}, subscription: %{planId: "free_trial"}}
+      preference = %{
+        data: %{"whiteboardFunctionality" =>  true, "whiteboardDisplay" => true}
+      }
+      assert({:ok} = Whiteboard.can_new_shape(member, session, preference))
+    end
+
+    test "when whiteboardFunctionalit enable, Guest and forum" do
+      session = %{type: "forum"}
+      member = %{role: "participant"}
+      preference = %{
+        data: %{"whiteboardFunctionality" =>  true, "whiteboardDisplay" => true}
+      }
       assert({:error, _} = Whiteboard.can_new_shape(member, session, preference))
     end
   end
