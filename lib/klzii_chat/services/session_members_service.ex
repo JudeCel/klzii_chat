@@ -136,20 +136,12 @@ defmodule KlziiChat.Services.SessionMembersService do
     Phoenix.View.render(SessionMembersView, "group_by_role.json", %{ members: members})
   end
 
-  @spec facilitator(Integer.t) :: {:ok, Map.t}
-  def facilitator(session_id) do
-    (from sm in SessionMember,
-      where: sm.sessionId == ^session_id,
-      where: sm.role == ^"facilitator")
-    |> Repo.one
-  end
-
-  @spec not_facilitator(Integer.t) :: {:ok, Map.t}
-  def not_facilitator(session_id) do
-    (from sm in SessionMember,
-      where: sm.sessionId == ^session_id,
-      where: sm.role != ^"facilitator")
+  @spec find_by_roles(Integer.t, Array.t) :: {:ok, Map.t}
+  def find_by_roles(session_id, roles) do
+   (from sm in SessionMember,
+       where: sm.sessionId == ^session_id,
+       where: sm.role in(^roles))
     |> Repo.all
-  end
+  end 
 
 end
