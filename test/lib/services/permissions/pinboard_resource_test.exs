@@ -7,13 +7,15 @@ defmodule KlziiChat.Services.Permissions.PinboardResourceTest do
     test "can't add resource when session type is focus" do
       member = %{id: 1, role: "facilitator"}
       session = %{type: "focus"}
-      assert({:error, _} = PinboardResource.can_add_resource(member, session))
+      preference = %{data: %{"pinboardDisplay" => true }}
+      assert({:error, _} = PinboardResource.can_add_resource(member, session, preference))
     end
 
     test "can't add resource when session type is forum" do
       member = %{id: 1, role: "facilitator"}
       session = %{type: "forum"}
-      assert({:error, _} = PinboardResource.can_add_resource(member, session))
+      preference = %{data: %{"pinboardDisplay" => true }}
+      assert({:error, _} = PinboardResource.can_add_resource(member, session, preference))
     end
 
     test "can enable when session type is focus" do
@@ -41,13 +43,15 @@ defmodule KlziiChat.Services.Permissions.PinboardResourceTest do
     test "can add resource when session type is focus" do
       member = %{id: 1, role: "participant"}
       session = %{type: "focus"}
-      assert({:ok} = PinboardResource.can_add_resource(member, session))
+      preference = %{data: %{"pinboardDisplay" => true }}
+      assert({:ok} = PinboardResource.can_add_resource(member, session, preference))
     end
 
     test "can't add resource when session type is forum" do
       member = %{id: 1, role: "participant"}
       session = %{type: "forum"}
-      assert({:error, _} = PinboardResource.can_add_resource(member, session))
+      preference = %{data: %{"pinboardDisplay" => true }}
+      assert({:error, _} = PinboardResource.can_add_resource(member, session, preference))
     end
 
     test "can't 'enable when session type is focus" do
@@ -81,13 +85,15 @@ defmodule KlziiChat.Services.Permissions.PinboardResourceTest do
     test "can't add resource when session type is focus" do
       member = %{id: 1, role: "observer"}
       session = %{type: "focus"}
-      assert({:error, _} = PinboardResource.can_add_resource(member, session))
+      preference = %{data: %{"pinboardDisplay" => true }}
+      assert({:error, _} = PinboardResource.can_add_resource(member, session, preference))
     end
 
     test "can't add resource when session type is forum" do
       member = %{id: 1, role: "observer"}
       session = %{type: "forum"}
-      assert({:error, _} = PinboardResource.can_add_resource(member, session))
+      preference = %{data: %{"pinboardDisplay" => true }}
+      assert({:error, _} = PinboardResource.can_add_resource(member, session, preference))
     end
 
     test "can't 'enable when session type is focus" do
