@@ -63,7 +63,7 @@ const Resources = React.createClass({
     const resourceButtons = [
       { type: 'video',    className: 'icon-video-1', permission: this.hasPermission(['resources', 'can_upload'])},
       { type: 'audio',    className: 'icon-volume-up', permission: this.hasPermission(['resources', 'can_upload'])},
-      { type: 'pinboard', className: 'icon-camera', permission: this.hasPermission(['pinboard', 'can_add_resource'])},
+      { type: 'pinboard', className: 'icon-camera', permission: this.hasPermission(['pinboard', 'can_enable'])},
       { type: 'survey',   className: 'icon-ok-squared', permission: this.hasPermission(["mini_surveys", "can_display_voting"])},
       { type: 'file',     className: 'icon-pdf', permission: this.hasPermission(['resources', 'can_upload'])},
     ];

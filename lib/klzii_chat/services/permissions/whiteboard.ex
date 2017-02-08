@@ -2,9 +2,21 @@ defmodule KlziiChat.Services.Permissions.Whiteboard do
   import KlziiChat.Services.Permissions.Validations
   import KlziiChat.Services.Permissions.ErrorsHelper, only: [formate_error: 1]
 
-  @spec can_display_whiteboard(Map.t, Map.t) :: {:ok } | {:error, String.t}
-  def can_display_whiteboard(_member, %{data: data}) do
-    ( has_allowed_from_subscription(data, "whiteboardDisplay"))
+  @spec can_display_whiteboard(Map.t) :: {:ok } | {:error, String.t}
+  def can_display_whiteboard(%{data: data}) do
+    (has_allowed_from_subscription(data, "whiteboardDisplay"))
+    |> formate_error
+  end
+
+  @spec can_enable(Map.t, Map.t, Map.t) :: {:ok } | {:error, String.t}
+  def can_enable(member, session, %{data: data}) do
+    roles = ~w(facilitator)
+    session_types = ~w(focus forum)
+    (
+      has_role(member.role, roles) &&
+      is_in_list(session.type, session_types) &&
+      has_allowed_from_subscription(data, "whiteboardDisplay")
+    )
     |> formate_error
   end
 

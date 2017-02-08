@@ -2,17 +2,25 @@ defmodule KlziiChat.Services.Permissions.PinboardResource do
   import KlziiChat.Services.Permissions.Validations
   import KlziiChat.Services.Permissions.ErrorsHelper, only: [formate_error: 1]
 
-  @spec can_enable(Map.t, Map.t) :: {:ok} | {:error, String.t}
-  def can_enable(member, session) do
+  @spec can_enable(Map.t, Map.t, Map.t) :: {:ok} | {:error, String.t}
+  def can_enable(member, session, %{data: data}) do
     roles = ~w(facilitator)
     session_types = ~w(focus)
-    (has_role(member.role, roles) && is_in_list(session.type, session_types))
+    (
+      has_role(member.role, roles) &&
+      is_in_list(session.type, session_types) &&
+      has_allowed_from_subscription(data, "pinboardDisplay")
+    )
     |> formate_error
   end
 
-  @spec can_display_pinboard(Map.t, Map.t) :: {:ok } | {:error, String.t}
-  def can_display_pinboard(_, %{data: data}) do
-    (has_allowed_from_subscription(data, "pinboardDisplay"))
+  @spec can_display_pinboard(Map.t, Map.t, Map.t) :: {:ok } | {:error, String.t}
+  def can_display_pinboard(_, session, %{data: data}) do
+    session_types = ~w(focus)
+    (
+      is_in_list(session.type, session_types) &&
+      has_allowed_from_subscription(data, "pinboardDisplay")
+    )
     |> formate_error
   end
 
