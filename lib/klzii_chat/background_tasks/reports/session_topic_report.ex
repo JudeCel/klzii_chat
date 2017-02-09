@@ -18,13 +18,13 @@ defmodule KlziiChat.BackgroundTasks.Reports.SessionTopicReport do
           raise(reason)
       end
     rescue
-      e in RuntimeError ->
-        {:ok, report} = SessionReportingService.set_failed(e, report_id)
+      error ->
+        {:ok, report} = SessionReportingService.set_failed(error, report_id)
         notify(report.sessionId, report)
-        raise(e)
+        raise(error)
     end
   end
-  
+
   def notify(session_Id, report) do
     Endpoint.broadcast!("sessions:#{session_Id}", "session_topics_report_updated", Repo.preload(report, :resource))
   end

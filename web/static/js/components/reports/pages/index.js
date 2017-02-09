@@ -54,7 +54,7 @@ const ReportsIndex = React.createClass({
       {name: 'whiteboards', typeName: 'whiteboards', typeData: types['whiteboards']},
       {name: 'votes', typeName: 'votes', typeData: types['votes']},
     ];
-      let sessionTopicslist = [...sessionTopics];
+      let sessionTopicslist = [...sessionTopics.filter((i) => {return !i.default})];
       if (mapStruct.multiple_topics[format]) {
         sessionTopicslist.unshift({name: "All topics", id: "all"}); // Hack
       }

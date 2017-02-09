@@ -13,6 +13,7 @@ defmodule KlziiChat.Topic do
     field :boardMessage, :string
     field :board_message_text, :string, virtual: true
     field :stock, :boolean
+    field :default, :boolean, default: false
     timestamps [inserted_at: :createdAt, updated_at: :updatedAt]
   end
 

@@ -7,7 +7,8 @@ defmodule KlziiChat.SessionTopicView do
       boardMessage: session_topic.boardMessage,
       landing: session_topic.landing,
       sign: session_topic.sign,
-      session: session(session_topic.session)
+      session: session(session_topic.session),
+      default: session_topic.topic.default
     }
   end
 
