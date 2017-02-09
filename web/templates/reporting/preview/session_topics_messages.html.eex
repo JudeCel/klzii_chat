@@ -12,6 +12,7 @@
     <%= render "messages.html", messages: session_topic.messages, conn: assigns[:conn], session: assigns[:session] %>
     <hr/>
   </div>
+
   <script>
     var container = document.getElementById('session-topic-images-<%= session_topic.id %>')
     var elements  = <%= {:safe, Poison.encode!(session_topic.shapes)} %>
@@ -20,7 +21,8 @@
       element.innerHTML = item.event.element
       var img = new Image();
       img.src =  element.firstChild.getAttribute('xlink:href')
-      container.appendChild(img)
+      img.id = "session-topic-img"
+      container.appendChild(img);
     })
   </script>
 <% end %>
