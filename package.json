@@ -71,7 +71,6 @@
     "url-loader": "^0.5.7",
     "webpack": "^1.14.0",
     "webpack-raphael": "^2.1.4",
-    "react-iscroll": "^1.0.0",
-    "iscroll": "^5.2.0"
+    "svg.pan-zoom.js": "^2.8.0"
   }
 }
