@@ -47,7 +47,7 @@ defmodule KlziiChat.BackgroundTasks.Message do
   end
 
   defp process_send_notification(session_member_id, session_id, active_users, "chat_message") do
-    facilitator = SessionMembersService.find_by_roles(session_id, ["facilitator"])
+    facilitator = List.first(SessionMembersService.find_by_roles(session_id, ["facilitator"]))
     if session_member_id == facilitator.id do
       users = SessionMembersService.find_by_roles(session_id, ["participant", "observer"])
       Enum.each(users, fn(user) -> 
