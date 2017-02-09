@@ -65,6 +65,7 @@ defmodule KlziiChat.SessionMemberCase do
       exportRecruiterSurveyData: true,
       accessKlzziForum: true,
       accessKlzziFocus: true,
+      pinboardDisplay: true,
       canInviteObserversToSession: true,
       planSmsCount: 75,
       surveyCount: 20,
