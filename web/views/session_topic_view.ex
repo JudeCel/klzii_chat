@@ -23,6 +23,7 @@ defmodule KlziiChat.SessionTopicView do
     %{
       id: session_topic.id,
       name: session_topic.name,
+      boardMessage: session_topic.boardMessage,
       session: session(session_topic.session),
       messages: messages(session_topic.messages),
       mini_surveys: mini_surveys(session_topic.mini_surveys),

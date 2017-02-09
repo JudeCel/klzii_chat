@@ -1,5 +1,10 @@
 <%= for session_topic <- @session_topics do %>
 <div class='session-topics-container'>
+  <div class="session-topic-images-container">
+  <div id="session-topic-images-<%= session_topic.id %>"></div></div>
+  <div class="">
+    <%= session_topic.boardMessage %>
+  </div>
   <div class='report-topic'>
     <%= session_topic.name %>
   </div>
@@ -7,4 +12,15 @@
     <%= render "messages.html", messages: session_topic.messages, conn: assigns[:conn], session: assigns[:session] %>
     <hr/>
   </div>
+  <script>
+    var container = document.getElementById('session-topic-images-<%= session_topic.id %>')
+    var elements  = <%= {:safe, Poison.encode!(session_topic.shapes)} %>
+    elements.map(function(item) {
+      var element = document.createElement('div');
+      element.innerHTML = item.event.element
+      var img = new Image();
+      img.src =  element.firstChild.getAttribute('xlink:href')
+      container.appendChild(img)
+    })
+  </script>
 <% end %>
