@@ -22,7 +22,7 @@ const Forum = React.createClass({
     };
   },
   renderWhiteboard() {
-    if (this.hasPermission(['whiteboard', 'can_create'])) {
+    if (this.hasPermission(['whiteboard', 'can_display_whiteboard'])) {
       return <Whiteboard member={ this.props }/>;
     }else{
       return false;
