@@ -53,6 +53,8 @@ defmodule KlziiChat.BackgroundTasks.Message do
       Enum.each(users, fn(user) -> 
         NotificationService.send_notification_if_need(user.id, active_users, session_id, "chat_message")
       end)
+    else
+      NotificationService.send_notification_if_need(facilitator.id, active_users, session_id, "chat_message")
     end
   end
 
