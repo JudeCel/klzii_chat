@@ -19,12 +19,14 @@ function boardMouseDown(e) {
   whiteboardDelegate.mouseData.holding = true;
   if(whiteboardDelegate.mouseData.type == 'draw') {
       whiteboardDelegate.deps.Shape.createShape(e);
+      whiteboardDelegate.deps.Shape.handler = whiteboardDelegate.shapeData.shape.remember('_paintHandler');
   }
 }
 
 function boardMouseMove(e) {
   if(whiteboardDelegate.mouseData.holding && whiteboardDelegate.mouseData.type == 'stop') {
     if(['scribbleEmpty', 'scribbleFilled'].includes(whiteboardDelegate.drawData.current)) {
+      whiteboardDelegate.shapeData.shape.remember('_paintHandler', whiteboardDelegate.deps.Shape.handler);
       whiteboardDelegate.shapeData.shape.draw('point', e);
     }
   }
