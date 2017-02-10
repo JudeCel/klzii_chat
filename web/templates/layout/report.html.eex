@@ -15,4 +15,8 @@
       <%= render @view_module, @view_template, assigns %>
     </div>
   </body>
+  
+  <script type="text/javascript">
+    window.status = "js-done";
+  </script>
 </html>
