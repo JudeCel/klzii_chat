@@ -18,9 +18,10 @@ import Actions      from './actions';
 import Helpers      from './helpers';
 import ReactDOM     from 'react-dom';
 import svgPosition  from 'svg.pan-zoom.js';
+import touchHandler       from './touchHandler';
 
 const Whiteboard = React.createClass({
-  mixins:[Design, mixins.validations],
+  mixins:[Design, mixins.validations, touchHandler],
   initDefs() {
     this.markers = this.markers || { arrows: {} };
 
@@ -49,39 +50,6 @@ const Whiteboard = React.createClass({
     this.deps.History = History.init(this);
     this.deps.Actions = Actions.init(this);
     this.deps.Helpers = Helpers.init(this);
-  },
-  processInput(event) {
-      if (this.state.zoomEnabled) {
-        return;
-      }
-      let touches = event.changedTouches;
-      let type = "";
-      if (touches) {
-        let first = touches[0];
-        switch(event.type)
-        {
-        case "touchstart": type = "mousedown"; break;
-        case "touchmove":  type = "mousemove"; break;
-        case "touchend":
-        case "touchcancel":
-        default:
-          type = "mouseup";
-          break;
-        }
-
-        if (touches.length == 1) {
-          let simulatedEvent = document.createEvent("MouseEvent");
-          let x = first.clientX;
-          let y = first.clientY;
-
-          simulatedEvent.initMouseEvent(type, true, true, window, 1,
-            x, y,
-            x , y, false,
-            false, false, false, 1, null);
-          event.target.dispatchEvent (simulatedEvent);
-        }
-        event.preventDefault();
-      }
   },
   initBoardEvents() {
     this.board.on('mousedown', Events.boardMouseDown);
