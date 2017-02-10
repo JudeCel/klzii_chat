@@ -8,7 +8,7 @@ defmodule KlziiChat.SessionTopicView do
       landing: session_topic.landing,
       sign: session_topic.sign,
       session: session(session_topic.session),
-      default: session_topic.topic.default
+      default: get_default_topic(session_topic.topic)
     }
   end
 
@@ -49,5 +49,10 @@ defmodule KlziiChat.SessionTopicView do
   def mini_surveys(%{__struct__: Ecto.Association.NotLoaded}), do: []
   def mini_surveys(mini_surveys) do
     render_many(mini_surveys, KlziiChat.MiniSurveyView, "report.json", as: :mini_survey)
+  end
+
+  def get_default_topic(%{__struct__: Ecto.Association.NotLoaded}), do: nil
+  def get_default_topic(topic) do
+    topic.default
   end
 end

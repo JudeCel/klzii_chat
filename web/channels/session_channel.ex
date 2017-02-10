@@ -52,7 +52,8 @@ defmodule KlziiChat.SessionChannel do
             mapStruct =  ReportView.render("map_struct.json", %{session: session})
             push(socket, "contact_list_map_struct", %{mapStruct: mapStruct})
           {:error, reason} ->
-            push(socket, "error_message", reason)
+            nil
+            # push(socket, "error_message", reason)
         end
       {:error, _} ->
         nil
