@@ -41,7 +41,7 @@ defmodule KlziiChat.Services.WhiteboardService do
     session_member = Repo.get!(SessionMember, session_member_id)
     shape = Repo.get_by!(Shape, uid: params["id"])
     if WhiteboardPermissions.can_edit(session_member, shape) do
-      Ecto.Changeset.change(shape, event: params)
+      Shape.changeset(shape, %{event: params})
       |> update
     else
       {:error, %{permissions: "Action not allowed!"}}

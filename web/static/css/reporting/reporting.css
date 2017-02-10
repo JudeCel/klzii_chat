@@ -17,6 +17,11 @@ body{
 .session-topics-container{
   page-break-inside: avoid;
 }
+.session-topics-container img#session-topic-img{
+  padding-right: 20px;
+  max-width: 200px;
+  max-height: 200px;
+}
 .report-section .media-body {
   padding-left: 30px;
   page-break-inside: inherit;

@@ -7,7 +7,8 @@ defmodule KlziiChat.SessionTopicView do
       boardMessage: session_topic.boardMessage,
       landing: session_topic.landing,
       sign: session_topic.sign,
-      session: session(session_topic.session)
+      session: session(session_topic.session),
+      default: session_topic.topic.default
     }
   end
 
@@ -22,6 +23,7 @@ defmodule KlziiChat.SessionTopicView do
     %{
       id: session_topic.id,
       name: session_topic.name,
+      boardMessage: session_topic.boardMessage,
       session: session(session_topic.session),
       messages: messages(session_topic.messages),
       mini_surveys: mini_surveys(session_topic.mini_surveys),

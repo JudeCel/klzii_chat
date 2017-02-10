@@ -1,10 +1,10 @@
 defmodule KlziiChat.Services.Reports.Types.Messages.Base do
   @behaviour KlziiChat.Services.Reports.Types.Behavior
-  alias KlziiChat.{Repo, SessionTopicView, SessionView, SessionTopic}
+  alias KlziiChat.{Repo, SessionTopicView, SessionView, SessionTopic, Topic, Shape}
   alias KlziiChat.Services.Reports.Types.Messages.Formats
   alias KlziiChat.Queries.SessionTopic, as: SessionTopicQueries
   alias KlziiChat.Queries.Sessions, as: SessionQueries
-  import Ecto.Query, only: [from: 2]
+  import Ecto.Query, only: [from: 2, join: 5]
 
   @spec default_fields() :: List.t[String.t]
   def default_fields() do
@@ -71,10 +71,18 @@ defmodule KlziiChat.Services.Reports.Types.Messages.Base do
 
   def preload_session_topic(%{sessionTopicId: nil, sessionId: session_id} = report) do
     SessionTopicQueries.all(session_id)
+    |> join(:right, [st], t in Topic, st.topicId == t.id and t.default == false)
     |> Repo.all
-    |> Repo.preload([messages: preload_messages_query(report)])
+    |> Repo.preload([messages: preload_messages_query(report), shapes: preload_shapes(report)])
   end
-
+  def preload_session_topic(%{sessionTopicId: sessionTopicId, type: "messages_stars_only"} = report) do
+    from(st in SessionTopic,
+      right_join: t in assoc(st, :topic),
+      where: st.id == ^sessionTopicId,
+      where: t.default == false,
+      preload: [messages: ^preload_messages_query(report), shapes: ^preload_shapes(report)]
+    ) |> Repo.all
+  end
   def preload_session_topic(%{sessionTopicId: sessionTopicId} = report) do
     from(st in SessionTopic,
       where: st.id == ^sessionTopicId,
@@ -90,5 +98,12 @@ defmodule KlziiChat.Services.Reports.Types.Messages.Base do
   def preload_messages_query(report) do
     includes_facilitator = !!get_in(report.includes, ["facilitator"])
     KlziiChat.Queries.Messages.session_topic_messages(report.sessionTopicId, [ star: false, facilitator: includes_facilitator ])
+  end
+  
+  def preload_shapes(report) do
+      from(s in Shape,
+      where: [eventType: "image"],
+      order_by: [asc: :id],
+      preload: [:session_member])
   end
 end

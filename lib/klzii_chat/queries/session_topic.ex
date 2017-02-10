@@ -6,7 +6,7 @@ defmodule KlziiChat.Queries.SessionTopic do
   def find(session_topic_id) do
     from(s in SessionTopic,
       where: s.id == ^session_topic_id,
-      preload: [session: [:brand_logo, :account, :brand_project_preference]]
+      preload: [:topic, session: [:brand_logo, :account, :brand_project_preference]]
     )
   end
 
@@ -14,8 +14,8 @@ defmodule KlziiChat.Queries.SessionTopic do
   def all(session_id) do
     from(st in SessionTopic,
       where: st.active == true and st.sessionId == ^session_id,
-      order_by: [ asc: st.order, asc: st.topicId]
+      order_by: [ asc: st.order, asc: st.topicId],
+      preload: [:topic]
     )
   end
-
 end
