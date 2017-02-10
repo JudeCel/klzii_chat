@@ -27,10 +27,7 @@ const Pinboard = React.createClass({
   scalePinboard(svg) {
     const { minimized, maxWidth } = this.state;
     let whiteboard = ReactDOM.findDOMNode(this);
-    let scale = whiteboard.scrollWidth / maxWidth;
     let group = this.getSvgGroup(svg);
-
-    group.transform(`S${scale},${scale},0,0`);
     group.attr({ pointerEvents: minimized ? 'none' : 'all' });
   },
   drawPinboard(svg) {
