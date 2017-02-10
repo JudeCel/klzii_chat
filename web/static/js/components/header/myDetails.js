@@ -6,6 +6,7 @@ import { DropdownButton, MenuItem }   from 'react-bootstrap';
 import ContactDetailsModal            from './modals/contactDetails';
 import ChangePassowordModal           from './modals/changePassword';
 import CreateNewAccountModal          from '../header/modals/createNewAccount';
+import EmailNotificationModal          from '../header/modals/emailNotification';
 
 const MyDetails = React.createClass({
   mixins: [mixins.modalWindows, mixins.validations, mixins.headerActions],
@@ -16,6 +17,11 @@ const MyDetails = React.createClass({
   },
   openChangePasswordModal() {
     this.openSpecificModal('changePassword');
+  },
+  openEmailNotificationModal() {
+    const { dispatch, jwtToken, resourcesConf } = this.props;
+    dispatch(Actions.getUser(resourcesConf.dashboard_url, jwtToken));
+    this.openSpecificModal('emailNotification');
   },
   openCreateNewAccountModal() {
     this.openSpecificModal('createNewAccount');
@@ -35,6 +41,11 @@ const MyDetails = React.createClass({
               <img className="my-details-image" src="/images/icons/password_green_flat.png" />
             </MenuItem>
             <li role="separator" className="my-details-divider divider"></li>
+            <MenuItem className="my-details-item" href="#" onClick={this.openEmailNotificationModal}>
+              Email Notification
+              <img className="my-details-image" src="/images/icons/email_notification.png" />
+            </MenuItem>
+            <li role="separator" className="my-details-divider divider"></li>
             <MenuItem className="my-details-item" href="#" onClick={this.openCreateNewAccountModal}>
               Create New Account
               <img className="my-details-image" src="/images/icons/user_plus_grey.png" />
@@ -49,6 +60,7 @@ const MyDetails = React.createClass({
           <ContactDetailsModal />
           <ChangePassowordModal />
           <CreateNewAccountModal />
+          <EmailNotificationModal />
         </span>
       )
     } else {

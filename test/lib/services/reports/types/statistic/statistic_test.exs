@@ -1,4 +1,4 @@
-defmodule KlziiChat.Services.Reports.Types.StatisticTest do
+defmodule KlziiChat.Services.Reports.Types.Statistic.StatisticTest do
   use KlziiChat.{ModelCase, SessionMemberCase}
   alias KlziiChat.Services.Reports.Types.Statistic
   alias KlziiChat.Services.SessionReportingService

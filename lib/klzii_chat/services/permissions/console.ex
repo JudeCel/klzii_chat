@@ -12,7 +12,7 @@ defmodule KlziiChat.Services.Permissions.Console do
   @spec can_enable_pinboard(Map.t) :: {:ok } | {:error, String.t}
   def can_enable_pinboard(member) do
     roles = ~w(facilitator)
-    has_role(member.role, roles)
+    (has_role(member.role, roles))
     |> formate_error
   end
 

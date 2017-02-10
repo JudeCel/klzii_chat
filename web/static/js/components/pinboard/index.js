@@ -77,7 +77,7 @@ const Pinboard = React.createClass({
           <img className='pinboard-title' src='/images/title_whiteboard.png' />
           <img className='pinboard-expand' src={ this.getPinboardStateIcon() } onClick={ this.changePinboardState } />
 
-          <svg id='pinboard-svg' className='inline-board-section' />
+          <svg id='pinboard-svg' className='inline-board-section' viewBox="0 0 925 465"/>
         </div>
       )
     }

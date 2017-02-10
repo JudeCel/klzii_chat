@@ -40,8 +40,8 @@ const Console = React.createClass({
       { type: 'video',       className: 'icon-video-1',    permission: true },
       { type: 'audio',       className: 'icon-volume-up',  permission: true },
       { type: 'pinboard',    className: 'icon-camera',     permission: this.hasPermission(['pinboard', 'can_add_resource']) },
-      { type: 'mini_survey', className: 'icon-ok-squared', permission: true },
-      { type: 'file',        className: 'icon-pdf',        permission: true },
+      { type: 'mini_survey', className: 'icon-ok-squared', permission: this.hasPermission(["mini_surveys", "can_display_voting"]) },
+      { type: 'file',        className: 'icon-pdf',        permission: true},
     ];
 
     return (
@@ -49,7 +49,7 @@ const Console = React.createClass({
         <div className={this.consoleSectionStyle()}>
           <ul className='icons'>
             {
-              consoleButtons.map((button, index) =>
+              consoleButtons.filter((i)=> {return i.permission}).map((button, index) =>
                 <li key={ index } onClick={ this.openModal.bind(this, button.type, button.permission) } style={ this.consoleButtonStyle(button.type, button.permission) } className={'icon-type-' + button.type}>
                   <i className={ button.className } />
                 </li>

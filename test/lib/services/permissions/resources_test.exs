@@ -3,7 +3,7 @@ defmodule KlziiChat.Services.Permissions.ResourcePermissionsTest do
   alias  KlziiChat.Services.Permissions.Resources
 
   test "can upload" do
-    preference = %{"uploadToGallery" =>  true}
+    preference = %{data: %{"uploadToGallery" =>  true}}
     roles = ["facilitator"]
     Enum.map(roles, fn role ->
       member = %{role: role}
@@ -15,20 +15,6 @@ defmodule KlziiChat.Services.Permissions.ResourcePermissionsTest do
     member = %{id: 1, role: "participant"}
     events = [%{id: 1, sessionMemberId: 1}]
     assert( {:ok} = Resources.can_delete(member, events))
-  end
-
-  test "can zip when accountManager" do
-    member = %{id: 1, role: "accountManager"}
-    events = [%{id: 1, accountUser: 1}]
-    preference = %{"uploadToGallery" => true}
-    assert( {:ok} = Resources.can_zip(member, events, preference))
-  end
-
-  test "can zip when admin " do
-    preference = %{"admin" =>  true}
-    member = %{id: 1, role: "admin"}
-    events = [%{id: 1, accountUser: 1}]
-    assert( {:ok} = Resources.can_zip(member, events, preference))
   end
 
   test "can't guest delete when not  owner " do

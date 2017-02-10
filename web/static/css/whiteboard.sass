@@ -28,7 +28,7 @@
         padding-top: 5px
         @extend #circleShapes
       &.maximized
-        max-width: 925px
+        max-width: 100%
         left: 25%
       &.minimized
         height: 100%
@@ -76,15 +76,6 @@
         width: 100%
         left: calc((100vw - 950px) / 4)
     .whiteboard-section.maximized
-      @media (min-width: 768px)
-        @media (max-width: 1020px)
-          width: 100%
-          max-width: 95vw
-          left: 1vw
-      @media (min-width: 1021px)
-        max-width: 950px
-        width: 100%
-        left: calc((100vw - 950px) / 2)
       @media (min-width: 1500px)
         left: calc((100vw - 950px) / 4)
     .toolbar-section

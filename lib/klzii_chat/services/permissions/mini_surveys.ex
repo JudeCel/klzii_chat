@@ -9,6 +9,12 @@ defmodule KlziiChat.Services.Permissions.MiniSurveys do
     |> formate_error
   end
 
+  @spec can_display_voting(Map.t, Map.t) :: {:ok } | {:error, String.t}
+  def can_display_voting(_, %{data: data}) do
+    (has_allowed_from_subscription(data, "voting"))
+    |> formate_error
+  end
+
   @spec can_create(Map.t) :: {:ok } | {:error, String.t}
   def can_create(member) do
     roles = ["facilitator"]

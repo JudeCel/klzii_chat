@@ -38,7 +38,7 @@ defmodule KlziiChat.Services.Reports.Report do
   def process_data(type_module, report, data) do
     with {:ok, format_modeule } <- type_module.format_modeule(report.format),
          {:ok, data} <- format_modeule.processe_data(data) ,
-         {:ok, file_path} <- FileService.write_report(report, data),
+         {:ok, file_path} <- FileService.write_report(report, data, [binary: false]),
          {:ok, resource} <- create_resource(report, file_path),
          {:ok, update_report} <- add_resource(report, resource),
     do: {:ok, update_report}

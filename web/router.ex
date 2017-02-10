@@ -54,6 +54,7 @@ defmodule KlziiChat.Router do
 
   scope "/reporting", KlziiChat.Reporting do
     pipe_through :browser # Use the default browser stack
+    get "/recruiter_survey_stats/:id/", PreviewController, :recruiter_survey_stats
 
     get "/messages/:session_id/:session_topic_id", PreviewController, :messages
     get "/messages/:session_id/", PreviewController, :messages
@@ -112,8 +113,10 @@ defmodule KlziiChat.Router do
     pipe_through :api
     # CORS Routes
     options "/:id", SurveysController, :show
+    options "/report/:id/:format/:token", SurveysController, :export
     # Generic routes for API be call from original domain
     get "/:id", SurveysController, :show
+    get "/report/:id/:format/:token", SurveysController, :export
   end
 
   scope "/api/banners", KlziiChat do

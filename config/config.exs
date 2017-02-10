@@ -36,10 +36,10 @@ config :phoenix, :generators,
   migration: true,
   binary_id: false
 
-config :quantum, cron: [
-    # Runs every midnight:
-    "@daily":  &KlziiChat.Services.ResourceService.daily_cleanup/0
-  ], timezone: :utc
+config :quantum, klzii_chat: [
+  crons: ["@daily": &KlziiChat.Services.ResourceService.daily_cleanup/0]
+]
+
 
 config :exq,
   name: Exq,

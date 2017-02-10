@@ -61,11 +61,11 @@ const Resources = React.createClass({
     const { session } = this.props;
 
     const resourceButtons = [
-      { type: 'video',    className: 'icon-video-1'},
-      { type: 'audio',    className: 'icon-volume-up'},
-      { type: 'pinboard', className: 'icon-camera'},
-      { type: 'survey',   className: 'icon-ok-squared'},
-      { type: 'file',     className: 'icon-pdf'},
+      { type: 'video',    className: 'icon-video-1', permission: this.hasPermission(['resources', 'can_upload'])},
+      { type: 'audio',    className: 'icon-volume-up', permission: this.hasPermission(['resources', 'can_upload'])},
+      { type: 'pinboard', className: 'icon-camera', permission: this.hasPermission(['pinboard', 'can_enable'])},
+      { type: 'survey',   className: 'icon-ok-squared', permission: this.hasPermission(["mini_surveys", "can_display_voting"])},
+      { type: 'file',     className: 'icon-pdf', permission: this.hasPermission(['resources', 'can_upload'])},
     ];
 
     if(this.hasPermission(['resources', 'can_see_section'])) {
@@ -73,7 +73,7 @@ const Resources = React.createClass({
         <div className='resources-section'>
           <ul className='icons'>
             {
-              resourceButtons.map((button, index) => {
+              resourceButtons.filter((i)=> {return i.permission}).map((button, index) => {
                 if (this.canShowResourceButton(button.type)) {
                   return (
                     <li key={ index } onClick={ this.openModal.bind(this, button.type) }>
