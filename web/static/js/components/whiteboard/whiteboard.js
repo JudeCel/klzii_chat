@@ -21,9 +21,6 @@ import svgPosition  from 'svg.pan-zoom.js';
 
 const Whiteboard = React.createClass({
   mixins:[Design, mixins.validations],
-  getDefaultState() {
-    zoomEnabled: false;
-  },
   initDefs() {
     this.markers = this.markers || { arrows: {} };
 
@@ -115,7 +112,7 @@ const Whiteboard = React.createClass({
     };
 
     this.initDependencies();
-    return { minimized: true };
+    return { minimized: true, zoomEnabled: false };
   },
   componentDidUpdate(prevProps, prevState) {
     this.drawData.color = this.props.currentUser.colour;
@@ -143,9 +140,7 @@ const Whiteboard = React.createClass({
     this.initScale(this.drawData.initialWidth, this.drawData.initialHeight);
     this.initBoardEvents();
     this.deps.Shape.loadShapes();
-    this.pinchHandler = this.mainGroup.panZoom({
-        zoom: [1, 1.5]
-    });
+    this.pinchHandler = this.mainGroup.panZoom({ zoom: [1, 1.5] });
   },
   zoomEnabled (enabled) {
     if (enabled != this.state.zoomEnabled) {
