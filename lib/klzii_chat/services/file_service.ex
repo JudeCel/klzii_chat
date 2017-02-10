@@ -57,7 +57,7 @@ defmodule KlziiChat.Services.FileService do
     options = [
       "--auto-servernum",
       "wkhtmltopdf", "--page-size", "A4", "--dpi", "100",
-      "--header-spacing", "5",
+      "--header-spacing", "5", "--no-stop-slow-scripts",
       "--footer-html", @footer_path, "--header-html", tmp_header, "file://" <> tmp_body, destination_path
     ]
     case System.cmd("xvfb-run", options , stderr_to_stdout: true) do
