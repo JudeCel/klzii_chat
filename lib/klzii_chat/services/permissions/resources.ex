@@ -24,6 +24,25 @@ defmodule KlziiChat.Services.Permissions.Resources do
     |> formate_error
   end
 
+  def can_upload_by_scope(member, scope) do
+    case KlziiChat.Services.Permissions.Builder.get_subscription_preference_account_user(member.id) do
+      {:ok, preference} ->
+        can_upload_by_scope(member, preference, scope)
+      {:error, reason} ->
+        {:error, reason}
+    end
+  end
+  def can_upload_by_scope(member, %{data: data}, "brandLogo") do
+    roles =  ~w(facilitator accountManager admin participant)
+    (has_role(member.role, roles) && has_allowed_from_subscription(data, "brandLogoAndCustomColors"))
+    |> formate_error()
+  end
+  def can_upload_by_scope(member, %{data: data}, _) do
+    roles =  ~w(facilitator accountManager admin participant)
+    (has_role(member.role, roles) && has_allowed_from_subscription(data, "uploadToGallery"))
+    |> formate_error()
+  end
+
   def can_upload(member) do
     case KlziiChat.Services.Permissions.Builder.get_subscription_preference_account_user(member.id) do
       {:ok, preference} ->

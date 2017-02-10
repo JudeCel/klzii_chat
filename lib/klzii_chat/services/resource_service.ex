@@ -10,7 +10,7 @@ defmodule KlziiChat.Services.ResourceService do
   @spec upload(map, integer) ::  {:ok, %Resource{}} | {:error, map}
   def upload(params, account_user_id)  do
     account_user = Repo.get!(AccountUser, account_user_id) |> Repo.preload([:account])
-    case ResourcePermissions.can_upload(account_user) do
+    case ResourcePermissions.can_upload_by_scope(account_user, Map.get(params, "scope")) do
       {:ok} ->
         if account_user.role == "admin" do
           Map.put(params, "stock", (params["stock"] || false))

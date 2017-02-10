@@ -99,8 +99,8 @@ defmodule KlziiChat.Services.Reports.Types.Messages.Base do
     includes_facilitator = !!get_in(report.includes, ["facilitator"])
     KlziiChat.Queries.Messages.session_topic_messages(report.sessionTopicId, [ star: false, facilitator: includes_facilitator ])
   end
-  
-  def preload_shapes(report) do
+
+  def preload_shapes(_) do
       from(s in Shape,
       where: [eventType: "image"],
       order_by: [asc: :id],
