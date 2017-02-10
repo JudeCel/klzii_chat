@@ -14,17 +14,19 @@
     <%= render "messages.html", messages: session_topic.messages, conn: assigns[:conn], session: assigns[:session] %>
     <hr/>
   </div>
+<% end %>
 
-  <script>
-    var container = document.getElementById('session-topic-images-<%= session_topic.id %>')
-    var elements  = <%= {:safe, Poison.encode!(session_topic.shapes)} %>
-    elements.map(function(item) {
+<script>
+  var topics  = <%= {:safe, Poison.encode!(all_shapes(@session_topics))} %>
+  topics.map(function(shapes) {
+    shapes.map(function(item) {
       var element = document.createElement('div');
       element.innerHTML = item.event.element
       var img = new Image();
       img.src =  element.firstChild.getAttribute('xlink:href')
       img.id = "session-topic-img"
-      container.appendChild(img);
+      document.getElementById('session-topic-images-' + item.sessionTopicId).appendChild(img);
     })
-  </script>
-<% end %>
+  })
+  window.status = "js-done"
+</script>

@@ -29,6 +29,12 @@ defmodule KlziiChat.Reporting.PreviewView do
     {:ok, result} = KlziiChat.Decorators.MiniSurveyAnswersDecorator.answer_text(type, value)
     result
   end
+  def all_shapes(topics) do
+    IO.inspect topics
+    Enum.map(topics, fn(topic) ->
+      topic.shapes
+    end)
+  end
 
   def get_answers(%{answers: answers, type: "textarea" }) do
     List.first(answers)
