@@ -17,26 +17,12 @@ import History      from './history';
 import Actions      from './actions';
 import Helpers      from './helpers';
 import ReactDOM     from 'react-dom';
-
-import ReactIScroll from 'react-iscroll';
-var iScroll = require('iscroll/build/iscroll-zoom');
+import svgPosition  from 'svg.pan-zoom.js';
 
 const Whiteboard = React.createClass({
   mixins:[Design, mixins.validations],
   getDefaultState() {
     zoomEnabled: false;
-  },
-  getDefaultProps() {
-    return ({
-      options: {
-        scrollbars: true,
-        scrollX: true,
-        zoom: true,
-        click: true,
-        momentum: false,
-        disableMouse: true
-      }
-    })
   },
   initDefs() {
     this.markers = this.markers || { arrows: {} };
@@ -68,6 +54,9 @@ const Whiteboard = React.createClass({
     this.deps.Helpers = Helpers.init(this);
   },
   processInput(event) {
+      if (this.state.zoomEnabled) {
+        return;
+      }
       let touches = event.changedTouches;
       let type = "";
       if (touches) {
@@ -83,16 +72,18 @@ const Whiteboard = React.createClass({
           break;
         }
 
-        let simulatedEvent = document.createEvent("MouseEvent");
-        let x = first.clientX/this.zoomView.scale;
-        let y = first.clientY/this.zoomView.scale;
+        if (touches.length == 1) {
+          let simulatedEvent = document.createEvent("MouseEvent");
+          let x = first.clientX;
+          let y = first.clientY;
 
-        simulatedEvent.initMouseEvent(type, true, true, window, 1,
-                                      x, y,
-                                      x , y , false,
-                                      false, false, false, 1, null);
-
-        event.target.dispatchEvent (simulatedEvent);
+          simulatedEvent.initMouseEvent(type, true, true, window, 1,
+            x, y,
+            x , y, false,
+            false, false, false, 1, null);
+          event.target.dispatchEvent (simulatedEvent);
+        }
+        event.preventDefault();
       }
   },
   initBoardEvents() {
@@ -144,28 +135,49 @@ const Whiteboard = React.createClass({
   componentDidMount() {
     this.board = SVG('whiteboard-draw');
     this.mainGroup = this.board.group();
+    this.board.size("100%", "100%");
     let boxSize = "0 0 " + this.drawData.initialWidth + " " + this.drawData.initialHeight;
     this.board.attr({viewBox: boxSize, preserveAspectRatio: "xMidYMid meet" });
     this.mainGroup.attr({viewBox: boxSize, preserveAspectRatio: "xMidYMid meet", width: "100%", height: this.drawData.initialHeight, x: 0, y: 0 });
-    this.mainGroup.size();
+    this.mainGroup.size(this.drawData.initialWidth, this.drawData.initialHeight);
     this.initScale(this.drawData.initialWidth, this.drawData.initialHeight);
     this.initBoardEvents();
     this.deps.Shape.loadShapes();
-  },
-  onRefresh: function(iScrollInstance) {
-    this.zoomView = iScrollInstance;
-    this.zoomEnabled(this.state.zoomEnabled);
+    this.pinchHandler = this.mainGroup.panZoom({
+        zoom: [1, 1.5]
+    });
   },
   zoomEnabled (enabled) {
-    if (enabled) {
-      this.zoomView.enable();
-    } else {
-      this.zoomView.disable();
-    }
-
     if (enabled != this.state.zoomEnabled) {
       this.setState({zoomEnabled: enabled});
     }
+  },
+  getCurrentZoom() {
+    return this.pinchHandler.transform ? this.pinchHandler.transform.scaleX : 1;
+  },
+  zoom(zoomIn) {
+    let scale = this.getCurrentZoom();
+    if (zoomIn) {
+      scale += 0.1;
+    } else {
+      scale -= 0.1;
+    }
+    this.pinchHandler.zoom(scale);
+  },
+  resetZoom() {
+    let scale = this.getCurrentZoom();
+    if (this.pinchHandler.transform) {
+      this.pinchHandler.transform.x = 0;
+      this.pinchHandler.transform.y = 0;
+      this.pinchHandler.zoom(1);
+    }
+  },
+  svgClass() {
+    let svgStyle = "inline-board-section";
+    if (this.state.zoomEnabled) {
+      svgStyle += " zooming";
+    }
+    return svgStyle;
   },
   render() {
     if(this.props.channel) {
@@ -176,11 +188,9 @@ const Whiteboard = React.createClass({
           <img className='whiteboard-title' src='/images/title_whiteboard.png' />
           <img className='whiteboard-expand' src={ this.getExpandButtonImage() } onClick={ this.expandWhiteboard } />
 
-          <ReactIScroll iScroll={iScroll} options={this.props.options} onRefresh={this.onRefresh} >
           <div className="full-height-width" >
-            <svg id='whiteboard-draw' className='inline-board-section' preserveAspectRatio="xMidYMid meet"/>
+            <svg id='whiteboard-draw' className={ this.svgClass() } preserveAspectRatio="xMidYMid meet"/>
           </div>
-          </ReactIScroll>
           { this.showToolbar()}
         </div>
       );

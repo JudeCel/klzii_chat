@@ -65,6 +65,12 @@ const Buttons = React.createClass({
   tooltipFormat(text) {
     return <Tooltip id='tooltip'><strong>{ text }</strong></Tooltip>
   },
+  zoomIn(shouldZoomin) {
+    whiteboardDelegate.zoom(shouldZoomin);
+  },
+  zoomRestore(shouldZoomin) {
+    whiteboardDelegate.resetZoom();
+  },
   render() {
     const params = {
       setType: this.setType,
@@ -76,7 +82,9 @@ const Buttons = React.createClass({
       strokeWidth: whiteboardDelegate.drawData.strokeWidth,
       getClassnameParent: this.getClassnameParent,
       tooltipFormat: this.tooltipFormat,
-      activeType: this.state.activeType
+      activeType: this.state.activeType,
+      zoomIn: this.zoomIn,
+      zoomRestore: this.zoomRestore
     };
 
     return (
