@@ -75,13 +75,18 @@ defmodule KlziiChat.Services.Reports.Types.Messages.Base do
     |> Repo.all
     |> Repo.preload([messages: preload_messages_query(report), shapes: preload_shapes(report)])
   end
-
-  def preload_session_topic(%{sessionTopicId: sessionTopicId} = report) do
+  def preload_session_topic(%{sessionTopicId: sessionTopicId, type: "messages_stars_only"} = report) do
     from(st in SessionTopic,
       right_join: t in assoc(st, :topic),
       where: st.id == ^sessionTopicId,
       where: t.default == false,
       preload: [messages: ^preload_messages_query(report), shapes: ^preload_shapes(report)]
+    ) |> Repo.all
+  end
+  def preload_session_topic(%{sessionTopicId: sessionTopicId} = report) do
+    from(st in SessionTopic,
+      where: st.id == ^sessionTopicId,
+      preload: [messages: ^preload_messages_query(report)]
     ) |> Repo.all
   end
 
@@ -94,6 +99,7 @@ defmodule KlziiChat.Services.Reports.Types.Messages.Base do
     includes_facilitator = !!get_in(report.includes, ["facilitator"])
     KlziiChat.Queries.Messages.session_topic_messages(report.sessionTopicId, [ star: false, facilitator: includes_facilitator ])
   end
+  
   def preload_shapes(report) do
       from(s in Shape,
       where: [eventType: "image"],

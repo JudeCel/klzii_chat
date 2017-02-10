@@ -1,11 +1,11 @@
 defmodule KlziiChat.Services.Reports.Types.Votes.Base do
   @behaviour KlziiChat.Services.Reports.Types.Behavior
-  alias KlziiChat.{Repo, SessionTopicView, SessionView, SessionTopic, Topic}
+  alias KlziiChat.{Repo, SessionTopicView, SessionView, SessionTopic}
   alias KlziiChat.Services.Reports.Types.Votes.{Formats}
   alias KlziiChat.Queries.SessionTopic, as: SessionTopicQueries
   alias KlziiChat.Queries.MiniSurvey, as: QueriesMiniSurvey
   alias KlziiChat.Queries.Sessions, as: SessionQueries
-  import Ecto.Query, only: [from: 2, join: 5]
+  import Ecto.Query, only: [from: 2]
 
   @spec default_fields() :: List.t[String.t]
   def default_fields() do
@@ -69,16 +69,13 @@ defmodule KlziiChat.Services.Reports.Types.Votes.Base do
 
   def preload_session_topic(%{sessionTopicId: nil, sessionId: session_id} = report) do
     SessionTopicQueries.all(session_id)
-    |> join(:right, [st], t in Topic, st.topicId == t.id and t.default == false)
     |> Repo.all
     |> Repo.preload([mini_surveys: preload_mini_survey_query(report)])
   end
 
   def preload_session_topic(%{sessionTopicId: sessionTopicId} = report) do
     from(st in SessionTopic,
-      right_join: t in assoc(st, :topic),
       where: st.id == ^sessionTopicId,
-      where: t.default == false,
       preload: [mini_surveys: ^preload_mini_survey_query(report)]
     ) |> Repo.all
   end
