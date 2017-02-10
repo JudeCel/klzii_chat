@@ -65,12 +65,12 @@
     "superagent": "^2.0.0",
     "svg.draggable.js": "^2.2.0",
     "svg.draw.js": "^2.0.1",
+    "svg.pan-zoom.js": "^2.8.0",
     "svg.resize.js": "^1.2.0",
     "svg.select.js": "^2.0.3",
     "svgjs": "^2.4.0",
     "url-loader": "^0.5.7",
     "webpack": "^1.14.0",
-    "webpack-raphael": "^2.1.4",
-    "svg.pan-zoom.js": "^2.8.0"
+    "webpack-raphael": "^2.1.4"
   }
 }
