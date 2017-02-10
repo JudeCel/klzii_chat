@@ -138,3 +138,13 @@
     padding: 3px 19px
   li.active > a
     background-color: orange
+
+.full-height-width
+  width: 100% !important
+  height: 100%  !important
+
+.whiteboard-section.minimized #whiteboard-draw > rect, .whiteboard-section.maximized #whiteboard-draw > rect
+  pointer-events: none !important;
+
+.whiteboard-section.maximized #whiteboard-draw.zooming > rect
+  pointer-events: all !important;

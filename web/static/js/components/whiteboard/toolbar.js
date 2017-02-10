@@ -18,6 +18,7 @@ const Buttons = React.createClass({
   setType(buttonType, shapeType) {
     this.setState({ activeType: buttonType });
     whiteboardDelegate.drawData.current = shapeType;
+    whiteboardDelegate.zoomEnabled(buttonType == 'zoom');
 
     if(buttonType == 'none') {
       whiteboardDelegate.deps.Shape.setMouseType('select');
@@ -64,6 +65,12 @@ const Buttons = React.createClass({
   tooltipFormat(text) {
     return <Tooltip id='tooltip'><strong>{ text }</strong></Tooltip>
   },
+  zoomIn(shouldZoomin) {
+    whiteboardDelegate.zoom(shouldZoomin);
+  },
+  zoomRestore(shouldZoomin) {
+    whiteboardDelegate.resetZoom();
+  },
   render() {
     const params = {
       setType: this.setType,
@@ -75,7 +82,9 @@ const Buttons = React.createClass({
       strokeWidth: whiteboardDelegate.drawData.strokeWidth,
       getClassnameParent: this.getClassnameParent,
       tooltipFormat: this.tooltipFormat,
-      activeType: this.state.activeType
+      activeType: this.state.activeType,
+      zoomIn: this.zoomIn,
+      zoomRestore: this.zoomRestore
     };
 
     return (
@@ -88,6 +97,7 @@ const Buttons = React.createClass({
           <ToolbarButtons.Text    { ...params } />
           <ToolbarButtons.Width   { ...params } />
           <ToolbarButtons.Delete  { ...params } />
+          <ToolbarButtons.Zoom    { ...params } />
           <ToolbarButtons.History { ...params } />
         </span>
       </ButtonToolbar>

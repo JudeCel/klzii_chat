@@ -15,7 +15,6 @@ function init(data) {
 }
 
 function boardMouseDown(e) {
-  e.preventDefault();
   whiteboardDelegate.mouseData.holding = true;
   if(whiteboardDelegate.mouseData.type == 'draw') {
       whiteboardDelegate.deps.Shape.createShape(e);

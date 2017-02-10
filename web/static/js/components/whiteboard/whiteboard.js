@@ -17,9 +17,11 @@ import History      from './history';
 import Actions      from './actions';
 import Helpers      from './helpers';
 import ReactDOM     from 'react-dom';
+import svgPosition  from 'svg.pan-zoom.js';
+import touchHandler       from './touchHandler';
 
 const Whiteboard = React.createClass({
-  mixins:[Design, mixins.validations],
+  mixins:[Design, mixins.validations, touchHandler],
   initDefs() {
     this.markers = this.markers || { arrows: {} };
 
@@ -49,37 +51,13 @@ const Whiteboard = React.createClass({
     this.deps.Actions = Actions.init(this);
     this.deps.Helpers = Helpers.init(this);
   },
-  processInput(event) {
-      let touches = event.changedTouches;
-      let type = "";
-      if (touches) {
-        let first = touches[0];
-        switch(event.type)
-        {
-        case "touchstart": type = "mousedown"; break;
-        case "touchmove":  type = "mousemove"; break;
-        case "touchend":
-        case "touchcancel":
-        default:
-          type = "mouseup";
-          break;
-        }
-        let simulatedEvent = document.createEvent("MouseEvent");
-        simulatedEvent.initMouseEvent(type, true, true, window, 1,
-                                      first.screenX, first.screenY,
-                                      first.clientX, first.clientY, false,
-                                      false, false, false, 1, null);
-
-        event.target.dispatchEvent (simulatedEvent);
-
-      }
-  },
   initBoardEvents() {
     this.board.on('mousedown', Events.boardMouseDown);
     this.board.on('mouseup', Events.boardMouseUp);
     this.board.on('mousemove', Events.boardMouseMove);
-    this.board.on('touchmove', this.processInput);
+
     this.board.on('touchstart', this.processInput);
+    this.board.on('touchmove', this.processInput);
     this.board.on('touchend', this.processInput);
   },
   getInitialState() {
@@ -102,7 +80,7 @@ const Whiteboard = React.createClass({
     };
 
     this.initDependencies();
-    return { minimized: true };
+    return { minimized: true, zoomEnabled: false };
   },
   componentDidUpdate(prevProps, prevState) {
     this.drawData.color = this.props.currentUser.colour;
@@ -122,24 +100,61 @@ const Whiteboard = React.createClass({
   componentDidMount() {
     this.board = SVG('whiteboard-draw');
     this.mainGroup = this.board.group();
+    this.board.size("100%", "100%");
     let boxSize = "0 0 " + this.drawData.initialWidth + " " + this.drawData.initialHeight;
     this.board.attr({viewBox: boxSize, preserveAspectRatio: "xMidYMid meet" });
     this.mainGroup.attr({viewBox: boxSize, preserveAspectRatio: "xMidYMid meet", width: "100%", height: this.drawData.initialHeight, x: 0, y: 0 });
-    this.mainGroup.size();
+    this.mainGroup.size(this.drawData.initialWidth, this.drawData.initialHeight);
     this.initScale(this.drawData.initialWidth, this.drawData.initialHeight);
     this.initBoardEvents();
     this.deps.Shape.loadShapes();
+    this.pinchHandler = this.mainGroup.panZoom({ zoom: [1, 1.5] });
+  },
+  zoomEnabled (enabled) {
+    if (enabled != this.state.zoomEnabled) {
+      this.setState({zoomEnabled: enabled});
+    }
+  },
+  getCurrentZoom() {
+    return this.pinchHandler.transform ? this.pinchHandler.transform.scaleX : 1;
+  },
+  zoom(zoomIn) {
+    let scale = this.getCurrentZoom();
+    if (zoomIn) {
+      scale += 0.1;
+    } else {
+      scale -= 0.1;
+    }
+    this.pinchHandler.zoom(scale);
+  },
+  resetZoom() {
+    let scale = this.getCurrentZoom();
+    if (this.pinchHandler.transform) {
+      this.pinchHandler.transform.x = 0;
+      this.pinchHandler.transform.y = 0;
+      this.pinchHandler.zoom(1);
+    }
+  },
+  svgClass() {
+    let svgStyle = "inline-board-section";
+    if (this.state.zoomEnabled) {
+      svgStyle += " zooming";
+    }
+    return svgStyle;
   },
   render() {
     if(this.props.channel) {
       return (
         <div id='whiteboard-box' className={'whiteboard-section' + this.expandButtonClass() }>
           <span className="icon-whiteboard-hide-mobile" onClick={ this.expandWhiteboard }></span>
+
           <img className='whiteboard-title' src='/images/title_whiteboard.png' />
           <img className='whiteboard-expand' src={ this.getExpandButtonImage() } onClick={ this.expandWhiteboard } />
 
-          <svg id='whiteboard-draw' className='inline-board-section' preserveAspectRatio="xMidYMid meet"/>
-          { this.showToolbar() }
+          <div className="full-height-width" >
+            <svg id='whiteboard-draw' className={ this.svgClass() } preserveAspectRatio="xMidYMid meet"/>
+          </div>
+          { this.showToolbar()}
         </div>
       );
     }
