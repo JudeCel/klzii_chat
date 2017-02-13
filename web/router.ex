@@ -9,7 +9,7 @@ defmodule KlziiChat.Router do
     plug :put_secure_browser_headers
   end
 
-  pipeline :tasks do
+  pipeline :admin do
     plug :accepts, ["html"]
     plug :fetch_session
     plug :fetch_flash
@@ -25,6 +25,14 @@ defmodule KlziiChat.Router do
     plug :put_secure_browser_headers
     plug PlugBasicAuth, validation: &KlziiChat.Plugs.ExqUiAuth.is_authorized/2
     plug ExqUi.RouterPlug, namespace: "exq"
+  end
+
+  scope "/admin", KlziiChat.Admin do
+    pipe_through :admin
+    get "/", DashboardController, :index
+    get "/logs", LogsController, :index
+    get "/tasks/reports", Tasks.ReportController, :index
+    get "/tasks/reports/delete_all_report", Tasks.ReportController, :delete_all_report
   end
 
   pipeline :api do
@@ -45,12 +53,6 @@ defmodule KlziiChat.Router do
   scope "/exq", ExqUi do
     pipe_through :exq
     forward "/", RouterPlug.Router, :index
-  end
-
-  scope "/tasks", KlziiChat.Tasks do
-    pipe_through :tasks
-    get "/reports", ReportController, :index
-    get "/reports/delete_all_report", ReportController, :delete_all_report
   end
 
   scope "/", KlziiChat do

@@ -19,7 +19,7 @@ function plugins() {
   ]
 
   var defaultList = [
-    new ExtractTextPlugin('css/app.css'),
+    new ExtractTextPlugin('css/[name].css'),
     new webpack.optimize.OccurenceOrderPlugin(),
     new webpack.NoErrorsPlugin(),
     new CopyWebpackPlugin([{ from: 'web/static/assets/images', to: "images" }]),
@@ -46,12 +46,19 @@ var config = module.exports = {
       web('css/app.sass'),
       web('js/app.js'),
     ],
+    admin: [
+      web('css/admin.sass'),
+      web('js/admin.js'),
+    ],
+    admin_logs: [
+      web('js/admin_logs.js')
+    ],
   },
 
   // where webpack should output our files
   output: {
     path: join('priv/static'),
-    filename: 'js/app.js',
+    filename: 'js/[name].js',
   },
 
   resolve: {
