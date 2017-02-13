@@ -55,6 +55,7 @@ const Whiteboard = React.createClass({
     this.board.on('mousedown', Events.boardMouseDown);
     this.board.on('mouseup', Events.boardMouseUp);
     this.board.on('mousemove', Events.boardMouseMove);
+    this.board.on('mouseleave', Events.boardMouseLeave);
 
     this.board.on('touchstart', this.processInput);
     this.board.on('touchmove', this.processInput);
