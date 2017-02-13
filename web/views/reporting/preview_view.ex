@@ -30,7 +30,6 @@ defmodule KlziiChat.Reporting.PreviewView do
     result
   end
   def all_shapes(topics) do
-    IO.inspect topics
     Enum.map(topics, fn(topic) ->
       topic.shapes
     end)
