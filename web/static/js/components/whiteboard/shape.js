@@ -55,8 +55,6 @@ function addNewOrChange() {
       loadOne(object.event.element);
       initShapeEvents(whiteboardDelegate.shapeData.shape, object.permissions);
     }
-
-
   }
 }
 

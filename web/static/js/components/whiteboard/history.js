@@ -66,7 +66,6 @@ function _actionUndo(object) {
       whiteboardDelegate.deps.Actions.shapeDelete(SVG.get(object.id));
       break;
     case 'remove':
-      whiteboardDelegate.deps.Shape.loadOne(object.element);
       whiteboardDelegate.deps.Actions.shapeCreate(object);
       break;
     case 'removeAll':
