@@ -33,6 +33,15 @@ defmodule KlziiChat.Router do
     plug Guardian.Plug.LoadResource
   end
 
+  pipeline :logger do
+    plug :accepts, ["json"]
+  end
+
+  scope "/connection-logs", KlziiChat do
+    pipe_through :logger
+    post "/", ConnectionLogController, :index
+  end
+
   scope "/exq", ExqUi do
     pipe_through :exq
     forward "/", RouterPlug.Router, :index
@@ -50,7 +59,6 @@ defmodule KlziiChat.Router do
     get "/logout", ChatController, :logout
     get "/logout_all", ChatController, :logout_all
   end
-
 
   scope "/reporting", KlziiChat.Reporting do
     pipe_through :browser # Use the default browser stack
