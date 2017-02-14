@@ -26,7 +26,7 @@ function plugins() {
     new CopyWebpackPlugin([{ from: 'web/static/assets/sounds', to: "sounds" }]),
     new CopyWebpackPlugin([{ from: 'web/static/css/reporting', to: "css/reporting" }]),
     new CopyWebpackPlugin([{ from: 'web/static/js/reporting', to: "js/reporting" }]),
-    new webpack.optimize.DedupePlugin()
+    // new webpack.optimize.DedupePlugin()
   ]
 
   switch (process.env.NODE_ENV) {
@@ -50,8 +50,8 @@ var config = module.exports = {
       web('css/admin.sass'),
       web('js/admin.js'),
     ],
-    admin_logs: [
-      web('js/admin_logs.js')
+    'adminLogs': [
+      web('js/adminLogs.js')
     ],
   },
 

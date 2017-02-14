@@ -3,14 +3,14 @@ defmodule KlziiChat.Admin.LogsChannel do
   alias KlziiChat.{Repo}
 
 
-  intercept ["pull_update"]
+  intercept ["new_log_entry"]
 
   def join("logs:pull", _, socket) do
     {:ok, socket}
   end
 
-  def handle_out("pull_update", payload, socket) do
-    push socket, "pull_update", payload
+  def handle_out("new_log_entry", payload, socket) do
+    push socket, "new_log_entry", payload
     {:noreply, socket}
   end
 
