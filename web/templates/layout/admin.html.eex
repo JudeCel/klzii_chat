@@ -24,19 +24,20 @@
   </head>
 
     <body>
-      <ul class="nav nav-pills">
-        <li role="presentation" class="<%= current_link(@conn, dashboard_path(@conn, :index))%>">
-          <%= link("Index", to: dashboard_path(@conn, :index)) %>
-        </li>
-        <li role="presentation" class="<%= current_link(@conn, report_path(@conn, :index))%>">
-          <%= link("Tasks", to: report_path(@conn, :index)) %>
-        </li>
-        <li role="presentation" class="<%= current_link(@conn, logs_path(@conn, :index))%>" >
-          <%= link("Logs", to: logs_path(@conn, :index)) %>
-        </li>
-      </ul>
-
-      <%= render @view_module, @view_template, assigns %>
+      <div class="container-fluid">
+        <ul class="nav nav-pills">
+          <li role="presentation" class="<%= current_link(@conn, dashboard_path(@conn, :index))%>">
+            <%= link("Index", to: dashboard_path(@conn, :index)) %>
+          </li>
+          <li role="presentation" class="<%= current_link(@conn, report_path(@conn, :index))%>">
+            <%= link("Tasks", to: report_path(@conn, :index)) %>
+          </li>
+          <li role="presentation" class="<%= current_link(@conn, logs_path(@conn, :index))%>" >
+            <%= link("Logs", to: logs_path(@conn, :index)) %>
+          </li>
+        </ul>
+        <%= render @view_module, @view_template, assigns %>
+      </div>
     </div>
       <script src="<%= static_path(@conn, "/js/admin.js") %>"></script>
   </body>

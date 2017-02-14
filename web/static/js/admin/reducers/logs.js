@@ -9,6 +9,8 @@ const initialState = {
 
 export default function reducer(state = initialState, action = {}) {
   switch (action.type) {
+    case 'SET_LOGS_CHANNEL':
+      return { ...state, socket: action.socket, channel: action.channel };
     case 'SET_SOCKET_EVENTS':
       return { ...state, ready: true };
     case 'SOCKET_CONNECTION_ERROR':

@@ -23,7 +23,7 @@ defmodule KlziiChat.Admin.UserSocket do
     {:ok, socket}
   end
 
-  def connect(_params, _socket), do: :error
+  # def connect(_params, _socket), do: :error
   # Socket id's are topics that allow you to identify all sockets for a given user:
   #
   #     def id(socket), do: "users_socket:#{socket.assigns.user_id}"
@@ -34,5 +34,5 @@ defmodule KlziiChat.Admin.UserSocket do
   #     KlziiChat.Endpoint.broadcast("users_socket:#{user.id}", "disconnect", %{})
   #
   # Returning `nil` makes this socket anonymous.
-  def id(socket), do: nil
+  def id(_socket), do: nil
 end

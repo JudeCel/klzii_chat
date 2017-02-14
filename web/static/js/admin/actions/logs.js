@@ -8,7 +8,7 @@ export function joinChannal(dispatch) {
   const channel = socket.channel(`logs:pull`);
   if (channel.state != 'joined') {
     dispatch({
-      type: 'SET_SESSION_CHANNEL',
+      type: 'SET_LOGS_CHANNEL',
       socket,
       channel
     });
@@ -16,7 +16,6 @@ export function joinChannal(dispatch) {
 
     channel.join()
     .receive('ok', (resp) => {
-      console.log(resp);
       dispatch({
         type: 'SET_LOGS_DATA',
         resp
@@ -60,6 +59,17 @@ const Actions = {
         });
       });
     }
-  }
+  },
+  change_filter: (channel, payload) => {
+    return dispatch => {
+      channel.push("change_filter", payload).receive('ok', (resp) =>{
+        dispatch({
+          type: 'SET_LOGS_DATA',
+          resp
+        });
+      }).receive('error', (errors) => {
+      });
+    };
+  },
 }
 export default Actions;

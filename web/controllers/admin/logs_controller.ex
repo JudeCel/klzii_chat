@@ -2,7 +2,7 @@ defmodule KlziiChat.Admin.LogsController do
   use KlziiChat.Web, :controller
   alias KlziiChat.Services.ConnectionLogService
 
-  def index(conn, params) do
+  def index(conn, _) do
     put_layout(conn, "admin.html")
     |> render("index.html")
   end
@@ -12,7 +12,7 @@ defmodule KlziiChat.Admin.LogsController do
       {:ok, connection_log} ->
         put_layout(conn, "admin.html")
         |> render("show.html", connection_log: connection_log)
-      {:error, resaon} ->
+      {:error, _} ->
         put_layout(conn, "admin.html")
         |> render("show.html", log: %{})
     end

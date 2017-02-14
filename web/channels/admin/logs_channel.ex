@@ -1,6 +1,5 @@
 defmodule KlziiChat.Admin.LogsChannel do
   use KlziiChat.Web, :channel
-  alias KlziiChat.{Repo}
   alias KlziiChat.Services.ConnectionLogService
 
   intercept ["new_log_entry"]
@@ -9,18 +8,17 @@ defmodule KlziiChat.Admin.LogsChannel do
     socket = set_default_filters(socket)
     case ConnectionLogService.history(get_filter(socket)) do
       {:ok, list} ->
-        IO.inspect list
         {:ok, %{history: list, filters: get_filter(socket)}, socket}
       {:error, reason} ->
         {:error, reason}
     end
   end
 
-  def handle_in("add_filter", %{"key" => key, "id" => id}, socket) do
+  def handle_in("change_filter", %{"key" => key, "id" => id}, socket) do
     socket = add_filter(socket, key, id)
     case ConnectionLogService.history(get_filter(socket)) do
       {:ok, list} ->
-          push(socket, "self_info", %{history: list, filters: get_filter(socket)})
+        {:reply, {:ok, %{history: list, filters: get_filter(socket)}}, socket}
       {:error, reason} ->
         {:error, reason}
     end
@@ -36,9 +34,10 @@ defmodule KlziiChat.Admin.LogsChannel do
   end
 
   def add_filter(socket, key, id) do
+    IO.inspect id
     filters =
       get_filter(socket)
-      |> Map.put(key, id)
+      |> Map.put(key, parse_id(id))
     assign(socket, :filters, filters)
   end
 
@@ -48,6 +47,9 @@ defmodule KlziiChat.Admin.LogsChannel do
       |> default_filters()
     assign(socket, :filters, filtres)
   end
+
+  def parse_id(""), do: nil
+  def parse_id("" <> id), do: String.to_integer(id)
 
   def default_filters(%{}) do
     %{"accountId" => nil, "accountUserId" => nil, "userId" => nil, "limit" => 100}
