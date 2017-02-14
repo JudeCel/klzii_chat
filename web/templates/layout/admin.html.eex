@@ -35,6 +35,9 @@
           <li role="presentation" class="<%= current_link(@conn, logs_path(@conn, :index))%>" >
             <%= link("Logs", to: logs_path(@conn, :index)) %>
           </li>
+          <li role="presentation" >
+          <a href="/exq" target="blank"> Exq</a>
+          </li>
         </ul>
         <%= render @view_module, @view_template, assigns %>
       </div>
