@@ -30,6 +30,11 @@ function loadShapes() {
     deleteAllShapes();
   }
   else if(newLength) {
+    if(whiteboardDelegate.shapeData.shape.node) {
+      const id = whiteboardDelegate.shapeData.shape.node.id;
+      oldKeys = oldKeys.filter((key) => key !== id);
+    }
+
     removeOld(oldKeys);
     addNewOrChange();
   }
@@ -48,20 +53,18 @@ function addNewOrChange() {
     var object = whiteboardDelegate.props.shapes[id];
     var existing = whiteboardDelegate.shapeData.added[object.uid];
     if(!existing) {
-      loadOne(object.event.element);
-      initShapeEvents(whiteboardDelegate.shapeData.shape, object.permissions);
+      loadOne(object.event.element, object.permissions);
     } else if(object.event.element != existing.svg()) {
       existing.parent().remove();
-      loadOne(object.event.element);
-      initShapeEvents(whiteboardDelegate.shapeData.shape, object.permissions);
+      loadOne(object.event.element, object.permissions);
     }
   }
 }
 
-function loadOne(data) {
+function loadOne(data, permissions) {
   var nested = whiteboardDelegate.mainGroup.nested();
   nested.svg(data);
-  whiteboardDelegate.shapeData.shape = nested.first();
+  initShapeEvents(nested.first(), permissions);
 }
 
 function createShape(e) {
