@@ -1210,6 +1210,9 @@
     width: 100%;
     position: fixed;
   }
+  .inline-board-section {
+    height: auto !important;
+  }
 }
 @media (max-device-width: 767px) and (orientation: portrait) {
   body {

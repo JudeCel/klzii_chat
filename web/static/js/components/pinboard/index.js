@@ -50,12 +50,20 @@ const Pinboard = React.createClass({
   getInitialState() {
     return { minimized: true, maxWidth: 950 };
   },
+  componentDidMount() {
+    window.addEventListener('resize', (e) => {
+      this.redrawFrames();
+    });
+  },
+  redrawFrames() {
+    let svg = this.getSvg();
+    svg.clear();
+    this.drawPinboard(svg);
+    this.scalePinboard(svg);
+  },
   componentDidUpdate(props, state) {
     if(props.pinboard != this.props.pinboard) {
-      let svg = this.getSvg();
-      svg.clear();
-      this.drawPinboard(svg);
-      this.scalePinboard(svg);
+      this.redrawFrames();
     }
     else {
       let screenChange = JSON.stringify(props.utilityWindow) != JSON.stringify(this.props.utilityWindow);
