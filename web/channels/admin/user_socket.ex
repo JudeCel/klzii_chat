@@ -19,8 +19,18 @@ defmodule KlziiChat.Admin.UserSocket do
   #
   # See `Phoenix.Token` documentation for examples in
   # performing token verification on connect.
-  def connect(_, socket) do
-    {:ok, socket}
+
+  def connect(%{"token" => token}, socket) do
+    case Phoenix.Token.verify(socket, access_key_name(), token) do
+      {:ok, key} ->
+        if key == access_key() do
+          {:ok, socket}
+        else
+          :error
+        end
+      {:error, _} ->
+        :error
+    end
   end
 
   # def connect(_params, _socket), do: :error
@@ -35,4 +45,8 @@ defmodule KlziiChat.Admin.UserSocket do
   #
   # Returning `nil` makes this socket anonymous.
   def id(_socket), do: nil
+
+
+  def access_key(), do: "psdnm3234 sdjhsd7we43m"
+  def access_key_name(), do: "someKeynamE"
 end

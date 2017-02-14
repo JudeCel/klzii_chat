@@ -2,7 +2,10 @@ import { Socket } from 'phoenix';
 
 export function joinChannal(dispatch) {
   const socket = new Socket('/admin', {
-    // logger: (kind, msg, data) => { console.log(`${kind}: ${msg}`, data); },
+    params: {
+      token: localStorage.getItem("access-key")
+    },
+    logger: (kind, msg, data) => { console.log(`${kind}: ${msg}`, data); },
   });
 
   const channel = socket.channel(`logs:pull`);
