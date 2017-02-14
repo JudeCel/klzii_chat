@@ -25,8 +25,21 @@ defmodule KlziiChat.Admin.LogsChannel do
   end
 
   def handle_out("new_log_entry", payload, socket) do
-    push socket, "new_log_entry", payload
+    if(filter_payload(payload, get_filter(socket))) do
+      push socket, "new_log_entry", payload
+    end
     {:noreply, socket}
+  end
+
+  def filter_payload(payload, filters) do
+    Enum.reduce(["accountId", "accountUserId", "userId"], true, fn(key, acc) ->
+      filter = Map.get(filters, key, nil)
+      if filter && acc do
+        Map.get(filters, key, nil) == Map.get(payload, String.to_atom(key))
+      else
+        acc
+      end
+    end)
   end
 
   def get_filter(socket) do
@@ -34,7 +47,6 @@ defmodule KlziiChat.Admin.LogsChannel do
   end
 
   def add_filter(socket, key, id) do
-    IO.inspect id
     filters =
       get_filter(socket)
       |> Map.put(key, parse_id(id))
