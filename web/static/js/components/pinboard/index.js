@@ -51,13 +51,6 @@ const Pinboard = React.createClass({
   getInitialState() {
     return { minimized: true, maxWidth: 950 };
   },
-  componentDidMount() {
-    if (mobileScreenHelpers.isMobile()) {
-      window.addEventListener('resize', (e) => {
-        this.redrawFrames();
-      });
-    }
-  },
   redrawFrames() {
     let svg = this.getSvg();
     svg.clear();
@@ -71,7 +64,11 @@ const Pinboard = React.createClass({
     else {
       let screenChange = JSON.stringify(props.utilityWindow) != JSON.stringify(this.props.utilityWindow);
       if(state.minimized != this.state.minimized || screenChange) {
-        this.scalePinboard(this.getSvg());
+        if (mobileScreenHelpers.isMobile()) {
+          this.redrawFrames();
+        } else {
+          this.scalePinboard(this.getSvg());
+        }
       }
     }
   },
