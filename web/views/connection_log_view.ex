@@ -10,6 +10,9 @@ defmodule KlziiChat.ConnectionLogView do
       accountUserId: connection_log.accountUserId,
       responseTime: connection_log.responseTime,
       level: connection_log.level,
+      path: get_in(connection_log.req, ["url"]),
+      response_status_code: get_in(connection_log.res, ["statusCode"]),
+      accountUserRole: get_in(connection_log.meta, ["currentResources", "accountUser", "role"]),
       details_url: logs_path(KlziiChat.Endpoint, :show, connection_log.id)
     }
   end

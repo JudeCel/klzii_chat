@@ -58,20 +58,26 @@ const Logs = React.createClass({
                 <th>Level</th>
                 <th>User ID</th>
                 <th>Account User ID</th>
+                <th>Account User Role</th>
                 <th>Account ID</th>
+                <th>Path</th>
+                <th>Response status</th>
                 <th>Response Time</th>
-                <th>Meta</th>
+                <th>Details</th>
               </tr>
             </thead>
             <tbody>
               {
                 logs.map((entry) =>
                   <tr key={entry.id}>
-                    <th scope="row">{entry.id}</th>
-                    <td>{entry.userId}</td>
+                    <td>{entry.id}</td>
                     <td>{entry.level}</td>
+                    <td>{entry.userId}</td>
                     <td>{entry.accountUserId}</td>
+                    <td>{entry.accountUserRole}</td>
                     <td>{entry.accountId}</td>
+                    <td>{entry.path}</td>
+                    <td>{entry.response_status_code}</td>
                     <td>{entry.responseTime} ms</td>
                     <td>
                       <a className="btn btn-default" href={entry.details_url} target='_blank'>Details</a>
