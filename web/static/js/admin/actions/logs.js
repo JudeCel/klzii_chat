@@ -16,6 +16,11 @@ export function joinChannal(dispatch) {
 
     channel.join()
     .receive('ok', (resp) => {
+      console.log(resp);
+      dispatch({
+        type: 'SET_LOGS_DATA',
+        resp
+      });
     })
     .receive('error', (error) =>{
       dispatch({

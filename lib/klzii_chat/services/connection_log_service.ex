@@ -1,6 +1,16 @@
 defmodule KlziiChat.Services.ConnectionLogService do
-  alias KlziiChat.{Repo, Endpoint, ConnectionLog}
+  alias KlziiChat.{Repo, Endpoint, ConnectionLog, ConnectionLogView}
+  alias KlziiChat.Queries.ConnectionLogs, as: ConnectionLogsQueries
   import Ecto.Query, only: [from: 2]
+
+  def history(filter) do
+    result =
+      ConnectionLogsQueries.base()
+      |> ConnectionLogsQueries.filter(filter)
+      |> Repo.all
+      |> Phoenix.View.render_many(ConnectionLogView, "index.json", as: :connection_log)
+      {:ok, result}
+  end
 
   def save(%{"params" => params, "method" => "collect"}) do
     ConnectionLog.changeset(%ConnectionLog{}, parse_params(params))
@@ -9,7 +19,7 @@ defmodule KlziiChat.Services.ConnectionLogService do
         {:ok, connection_log} ->
           Endpoint.broadcast!("logs:pull",
           "new_log_entry",
-          KlziiChat.ConnectionLogView.render("index.json", %{connection_log: connection_log})
+          ConnectionLogView.render("index.json", %{connection_log: connection_log})
           )
           {:ok, connection_log}
         {:error, reason} ->
@@ -36,7 +46,7 @@ defmodule KlziiChat.Services.ConnectionLogService do
         nil ->
           {:error, "not found"}
         connection_log ->
-          {:ok, KlziiChat.ConnectionLogView.render("show.json", %{connection_log: connection_log})}
+          {:ok, ConnectionLogView.render("show.json", %{connection_log: connection_log})}
       end
   end
 end
