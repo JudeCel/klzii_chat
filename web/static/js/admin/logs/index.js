@@ -8,7 +8,7 @@ const Logs = React.createClass({
   componentDidMount(){
     this.props.dispatch(LogsActions.connectToChannel());
   },
-  loadData(){
+  loadDetail(){
 
   },
   render(){
@@ -25,23 +25,21 @@ const Logs = React.createClass({
                 <th>Account ID</th>
                 <th>Response Time</th>
                 <th>Meta</th>
-                <th>Req</th>
-                <th>Res</th>
               </tr>
             </thead>
             <tbody>
               {
                 logs.map((entry) =>
                   <tr key={entry.id}>
-                  <th scope="row">{entry.id}</th>
-                  <td>{entry.userId}</td>
-                  <td>{entry.level}</td>
-                  <td>{entry.accountUserId}</td>
-                  <td>{entry.accountId}</td>
-                  <td>{entry.responseTime} ms</td>
-                  <td><Button onClick={this.loadData.bind(this, entry.id, 'meta')}>Load Meta</Button></td>
-                  <td><Button onClick={this.loadData.bind(this, entry.id, 'res')}>Load Request</Button></td>
-                  <td><Button onClick={this.loadData.bind(this, entry.id, 'req')}>Load Response</Button></td>
+                    <th scope="row">{entry.id}</th>
+                    <td>{entry.userId}</td>
+                    <td>{entry.level}</td>
+                    <td>{entry.accountUserId}</td>
+                    <td>{entry.accountId}</td>
+                    <td>{entry.responseTime} ms</td>
+                    <td>
+                      <a className="btn btn-default" href={entry.details_url} target='_blank'>Details</a>
+                    </td>
                   </tr>
                 )
               }

@@ -31,6 +31,7 @@ defmodule KlziiChat.Router do
     pipe_through :admin
     get "/", DashboardController, :index
     get "/logs", LogsController, :index
+    get "/logs/:id", LogsController, :show
     get "/tasks/reports", Tasks.ReportController, :index
     get "/tasks/reports/delete_all_report", Tasks.ReportController, :delete_all_report
   end
