@@ -21,7 +21,7 @@ import svgPosition  from 'svg.pan-zoom.js';
 import touchHandler       from './touchHandler';
 
 const Whiteboard = React.createClass({
-  mixins:[Design, mixins.validations, touchHandler],
+  mixins:[Design, mixins.validations, touchHandler, mixins.mobileHelpers],
   initDefs() {
     this.markers = this.markers || { arrows: {} };
 
@@ -39,6 +39,14 @@ const Whiteboard = React.createClass({
   },
   initScale() {
     const { minimized } = this.state;
+    if(minimized) {
+      this.mouseData.type = 'none';
+      this.deps.Shape.deselectShape();
+    }
+    else {
+      this.mouseData.type = 'select';
+    }
+    this.pinchHandler = this.mainGroup.panZoom({ zoom: [1, this.isMobile() ? 1.5 : 1] });
     this.board.attr({ 'pointer-events': minimized ? 'none' : 'all' });
   },
   initDependencies() {
@@ -90,17 +98,11 @@ const Whiteboard = React.createClass({
       this.deps.Shape.loadShapes();
     }
     else if(prevState.minimized != this.state.minimized || screenChange) {
-      if(this.state.minimized) {
-        this.mouseData.type = 'none';
-        this.deps.Shape.deselectShape();
-      }
-      else {
-        this.mouseData.type = 'select';
-      }
       this.initScale();
     }
-
-    this.initDefs();
+    else if(JSON.stringify(prevProps.participants) != JSON.stringify(this.props.participants)) {
+      this.initDefs();
+    }
   },
   componentDidMount() {
     this.board = SVG('whiteboard-draw');
@@ -110,10 +112,9 @@ const Whiteboard = React.createClass({
     this.board.attr({viewBox: boxSize, preserveAspectRatio: "xMidYMid meet" });
     this.mainGroup.attr({viewBox: boxSize, preserveAspectRatio: "xMidYMid meet", width: "100%", height: this.drawData.initialHeight, x: 0, y: 0 });
     this.mainGroup.size(this.drawData.initialWidth, this.drawData.initialHeight);
-    this.initScale(this.drawData.initialWidth, this.drawData.initialHeight);
+    this.initScale();
     this.initBoardEvents();
     this.deps.Shape.loadShapes();
-    this.pinchHandler = this.mainGroup.panZoom({ zoom: [1, 1.5] });
   },
   zoomEnabled (enabled) {
     if (enabled != this.state.zoomEnabled) {
