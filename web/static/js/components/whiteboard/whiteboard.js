@@ -62,7 +62,7 @@ const Whiteboard = React.createClass({
     this.board.on('touchend', this.processInput);
   },
   getInitialState() {
-    this.mouseData = { type: 'select', prevType: null, selected: null };
+    this.mouseData = { type: 'none', prevType: null, selected: null };
     this.shapeData = { shape: {}, added: {} };
     this.drawData = {
       initialWidth: 925,
@@ -91,7 +91,11 @@ const Whiteboard = React.createClass({
     }
     else if(prevState.minimized != this.state.minimized || screenChange) {
       if(this.state.minimized) {
+        this.mouseData.type = 'none';
         this.deps.Shape.deselectShape();
+      }
+      else {
+        this.mouseData.type = 'select';
       }
       this.initScale();
     }
