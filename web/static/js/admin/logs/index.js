@@ -56,6 +56,7 @@ const Logs = React.createClass({
               <tr>
                 <th>ID</th>
                 <th>Level</th>
+                <th>Application</th>
                 <th>User ID</th>
                 <th>Account User ID</th>
                 <th>Account User Role</th>
@@ -72,6 +73,7 @@ const Logs = React.createClass({
                   <tr key={entry.id}>
                     <td>{entry.id}</td>
                     <td>{entry.level}</td>
+                    <td>{entry.application}</td>
                     <td>{entry.userId}</td>
                     <td>{entry.accountUserId}</td>
                     <td>{entry.accountUserRole}</td>

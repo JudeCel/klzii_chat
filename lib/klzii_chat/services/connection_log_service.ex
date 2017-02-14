@@ -32,6 +32,7 @@ defmodule KlziiChat.Services.ConnectionLogService do
       userId:  get_in(params, ["meta", "currentResources", "user", "id"]),
       accountUserId: get_in(params, ["meta", "currentResources", "accountUser", "id"]),
       accountId:  get_in(params, ["meta", "currentResources", "account", "id"]),
+      application:  get_in(params, ["meta", "application"]),
       meta: get_in(params, ["meta"]),
       req: get_in(params, ["meta", "req"]),
       res: get_in(params, ["meta", "res"]),

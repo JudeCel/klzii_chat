@@ -7,6 +7,7 @@ defmodule KlziiChat.ConnectionLog do
     belongs_to :account_user, KlziiChat.AccountUser, [foreign_key: :accountUserId]
     field :responseTime, :integer
     field :level, :string
+    field :application, :string
     field :meta, :map
     field :req, :map
     field :res, :map
@@ -16,7 +17,7 @@ defmodule KlziiChat.ConnectionLog do
 
   def changeset(model, params \\ %{}) do
     model
-    |> cast(params, [:accountId, :userId, :accountUserId, :responseTime, :level, :meta, :req, :res])
-    |> validate_required([:level, :responseTime])
+    |> cast(params, [:accountId, :userId, :accountUserId, :responseTime, :level, :application, :meta, :req, :res])
+    |> validate_required([:level, :responseTime, :application])
   end
 end
