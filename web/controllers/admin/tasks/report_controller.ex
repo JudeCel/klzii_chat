@@ -9,7 +9,7 @@ defmodule KlziiChat.Admin.Tasks.ReportController do
 
   def delete_all_report(conn, _) do
     {count, _} = SessionReportingService.delete_all()
-    put_layout(conn, "tasks.html")
+    put_layout(conn, "admin.html")
     |> render("delete_all_report.html", count: count)
   end
 end
