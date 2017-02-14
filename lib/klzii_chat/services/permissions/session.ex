@@ -6,6 +6,9 @@ defmodule KlziiChat.Services.Permissions.Session do
   def can_access?(%AccountUser{role: "accountManager"}, %SessionMember{role: "facilitator"}, %Session{}) do
     {:ok}
   end
+  def can_access?(%AccountUser{role: "admin"}, _, %Session{}) do
+    {:ok}
+  end
   @spec can_access?(%AccountUser{}, %SessionMember{}, %Session{}) :: {:ok} | {:error, String.t}
   def can_access?(%AccountUser{role: "accountManager"}, %SessionMember{role: "participant"}, %Session{}) do
     {:ok}

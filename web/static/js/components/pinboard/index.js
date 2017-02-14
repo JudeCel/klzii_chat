@@ -4,6 +4,7 @@ import { connect }        from 'react-redux';
 import ReactDOM           from 'react-dom';
 import PinboardActions    from '../../actions/pinboard';
 import Builder            from './builder';
+import mobileScreenHelpers from '../../mixins/mobileHelpers';
 
 const Pinboard = React.createClass({
   mixins: [Builder],
@@ -51,9 +52,11 @@ const Pinboard = React.createClass({
     return { minimized: true, maxWidth: 950 };
   },
   componentDidMount() {
-    window.addEventListener('resize', (e) => {
-      this.redrawFrames();
-    });
+    if (mobileScreenHelpers.isMobile()) {
+      window.addEventListener('resize', (e) => {
+        this.redrawFrames();
+      });
+    }
   },
   redrawFrames() {
     let svg = this.getSvg();
