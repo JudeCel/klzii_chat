@@ -17,6 +17,7 @@ const Buttons = React.createClass({
   },
   setType(buttonType, shapeType) {
     this.setState({ activeType: buttonType });
+    whiteboardDelegate.drawData.category = buttonType;
     whiteboardDelegate.drawData.current = shapeType;
     whiteboardDelegate.zoomEnabled(buttonType == 'zoom');
 

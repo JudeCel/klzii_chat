@@ -4,6 +4,7 @@ import modalWindows     from './modalWindows';
 import helpers          from './helpers';
 import headerActions    from './headerActions';
 import paginationHelper from './paginationHelper';
+import mobileHelpers    from './mobileHelpers';
 
 export default {
   validations,
@@ -11,5 +12,6 @@ export default {
   modalWindows,
   helpers,
   headerActions,
-  paginationHelper
+  paginationHelper,
+  mobileHelpers
 };

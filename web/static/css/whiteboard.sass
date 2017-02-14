@@ -31,7 +31,7 @@
         max-width: 100%
         left: 25%
         #whiteboard-draw, #pinboard-svg
-          height: 465px
+          height: auto
       &.minimized
         height: 100%
         position: inherit
@@ -130,8 +130,18 @@
 #wb-buttons-width
   padding: 9px 12px
 
-#whiteboard-draw g svg
-  cursor: pointer
+#whiteboard-box
+  &.minimized
+    svg
+      cursor: auto
+  &.maximized
+    svg
+      cursor: pointer
+      text
+        -webkit-user-select: none
+        -moz-user-select: none
+        -ms-user-select: none
+        user-select: none
 
 #wb-buttons-width + .dropdown-menu
   width: 47px

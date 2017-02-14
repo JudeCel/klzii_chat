@@ -4,6 +4,7 @@ import { connect }        from 'react-redux';
 import ReactDOM           from 'react-dom';
 import PinboardActions    from '../../actions/pinboard';
 import Builder            from './builder';
+import mobileScreenHelpers from '../../mixins/mobileHelpers';
 
 const Pinboard = React.createClass({
   mixins: [Builder],
@@ -50,17 +51,24 @@ const Pinboard = React.createClass({
   getInitialState() {
     return { minimized: true, maxWidth: 950 };
   },
+  redrawFrames() {
+    let svg = this.getSvg();
+    svg.clear();
+    this.drawPinboard(svg);
+    this.scalePinboard(svg);
+  },
   componentDidUpdate(props, state) {
     if(props.pinboard != this.props.pinboard) {
-      let svg = this.getSvg();
-      svg.clear();
-      this.drawPinboard(svg);
-      this.scalePinboard(svg);
+      this.redrawFrames();
     }
     else {
       let screenChange = JSON.stringify(props.utilityWindow) != JSON.stringify(this.props.utilityWindow);
       if(state.minimized != this.state.minimized || screenChange) {
-        this.scalePinboard(this.getSvg());
+        if (mobileScreenHelpers.isMobile()) {
+          this.redrawFrames();
+        } else {
+          this.scalePinboard(this.getSvg());
+        }
       }
     }
   },

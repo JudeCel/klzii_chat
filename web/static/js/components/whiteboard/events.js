@@ -3,6 +3,7 @@ module.exports = {
   boardMouseDown,
   boardMouseMove,
   boardMouseUp,
+  boardMouseLeave,
   shapeWasCreated,
   shapeWillUpdate,
   shapeWasUpdated
@@ -16,9 +17,14 @@ function init(data) {
 
 function boardMouseDown(e) {
   whiteboardDelegate.mouseData.holding = true;
-  if(whiteboardDelegate.mouseData.type == 'draw') {
+  switch(whiteboardDelegate.mouseData.type) {
+    case 'select':
+      whiteboardDelegate.deps.Shape.deselectShape();
+      break;
+    case 'draw':
       whiteboardDelegate.deps.Shape.createShape(e);
       whiteboardDelegate.deps.Shape.handler = whiteboardDelegate.shapeData.shape.remember('_paintHandler');
+      break;
   }
 }
 
@@ -43,6 +49,13 @@ function boardMouseUp(e) {
       whiteboardDelegate.shapeData.shape.draw('stop', e);
       whiteboardDelegate.deps.Shape.setMouseType(whiteboardDelegate.mouseData.prevType);
       break;
+  }
+}
+
+function boardMouseLeave(e) {
+  var category = whiteboardDelegate.drawData.category === 'poly';
+  if(category && whiteboardDelegate.shapeData.shape && whiteboardDelegate.mouseData.holding) {
+    boardMouseUp(e);
   }
 }
 
