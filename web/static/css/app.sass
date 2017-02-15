@@ -403,7 +403,8 @@ body
           margin-right: -50px
         .innerbox
           width: 17vw !important
-          max-width: 360px
+          @media (min-width: 768px)
+            max-width: 360px
           @media (max-width: 1499px)
             width: 20vw !important
     .console-section
