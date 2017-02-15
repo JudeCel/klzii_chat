@@ -27,7 +27,7 @@ spec:
         name: chat
     spec:
       imagePullSecrets:
-        - name: docker-hub-secret
+        - name: docker-hub-secret-2
       containers:
       - env:
         - name: REDIS_HOST
