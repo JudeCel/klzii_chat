@@ -17,6 +17,7 @@
 <% end %>
 
 <script>
+  window.state = "js-processing"
   var getImages = function(item) {
     return(
       new Promise(function (resolve, reject) {
@@ -25,7 +26,7 @@
         var img = new Image();
         img.src =  element.firstChild.getAttribute('xlink:href');
         img.id = "session-topic-img";
-        
+
         img.onload = function(){
           document.getElementById('session-topic-images-' + item.sessionTopicId).appendChild(img);
           resolve();

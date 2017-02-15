@@ -15,8 +15,10 @@
       <%= render @view_module, @view_template, assigns %>
     </div>
   </body>
-  
+
   <script type="text/javascript">
+  if (window.state != "js-processing" ) {
     window.status = "js-done";
+  }
   </script>
 </html>
