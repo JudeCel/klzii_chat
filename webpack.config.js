@@ -19,14 +19,14 @@ function plugins() {
   ]
 
   var defaultList = [
-    new ExtractTextPlugin('css/app.css'),
+    new ExtractTextPlugin('css/[name].css'),
     new webpack.optimize.OccurenceOrderPlugin(),
     new webpack.NoErrorsPlugin(),
     new CopyWebpackPlugin([{ from: 'web/static/assets/images', to: "images" }]),
     new CopyWebpackPlugin([{ from: 'web/static/assets/sounds', to: "sounds" }]),
     new CopyWebpackPlugin([{ from: 'web/static/css/reporting', to: "css/reporting" }]),
     new CopyWebpackPlugin([{ from: 'web/static/js/reporting', to: "js/reporting" }]),
-    new webpack.optimize.DedupePlugin()
+    // new webpack.optimize.DedupePlugin()
   ]
 
   switch (process.env.NODE_ENV) {
@@ -46,12 +46,19 @@ var config = module.exports = {
       web('css/app.sass'),
       web('js/app.js'),
     ],
+    admin: [
+      web('css/admin.sass'),
+      web('js/admin.js'),
+    ],
+    'adminLogs': [
+      web('js/adminLogs.js')
+    ],
   },
 
   // where webpack should output our files
   output: {
     path: join('priv/static'),
-    filename: 'js/app.js',
+    filename: 'js/[name].js',
   },
 
   resolve: {

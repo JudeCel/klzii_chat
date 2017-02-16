@@ -2,8 +2,10 @@
 
 ## Dependencies
   * Node.js 6.x LTS
+  * Install yarn `yarn` [yarn](https://yarnpkg.com/en/docs/install)
+  * Install JS dependencies `yarn install`
   * [Kliiko](https://github.com/DiatomEnterprises/Kliiko)
-  * Elixir v1.3.2
+  * Elixir v1.4.x
   * [FS Listener](https://github.com/synrc/fs#backends)
   * ``` xvfb ```
   * [Wkhtmltopdf](http://wkhtmltopdf.org/downloads.html)
@@ -15,11 +17,15 @@
 
 1) Go to project folder
 
-2) copy ``` config/dev.exs.example ``` to ``` config/dev.exs``` and change with necessary database credentials.
+2) Install hex ```mix local.hex --force```
 
-2) Run ``` mix deps.get ``` in project directory to install dependencies.
+3) Install rebar ```mix local.rebar --force```
 
-3) Run ``` npm install ``` in project directory to install packages.
+4) Copy ``` config/dev.exs.example ``` to ``` config/dev.exs``` and change with necessary database credentials.
+
+5) Run ``` mix deps.get ``` in project directory to install dependencies.
+
+6 Run ``` yarn install ``` in project directory to install packages.
 
 ## Run project
 
@@ -57,4 +63,4 @@ Run
 
  ``` mocha test```
 or
- ``` npm test ```
+ ``` yarn test ```

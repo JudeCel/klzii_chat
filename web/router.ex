@@ -9,7 +9,7 @@ defmodule KlziiChat.Router do
     plug :put_secure_browser_headers
   end
 
-  pipeline :tasks do
+  pipeline :admin do
     plug :accepts, ["html"]
     plug :fetch_session
     plug :fetch_flash
@@ -27,21 +27,33 @@ defmodule KlziiChat.Router do
     plug ExqUi.RouterPlug, namespace: "exq"
   end
 
+  scope "/admin", KlziiChat.Admin do
+    pipe_through :admin
+    get "/", DashboardController, :index
+    get "/logs", LogsController, :index
+    get "/logs/:id", LogsController, :show
+    get "/tasks/reports", Tasks.ReportController, :index
+    get "/tasks/reports/delete_all_report", Tasks.ReportController, :delete_all_report
+  end
+
   pipeline :api do
     plug :accepts, ["json"]
     plug Guardian.Plug.VerifyHeader
     plug Guardian.Plug.LoadResource
   end
 
+  pipeline :logger do
+    plug :accepts, ["json"]
+  end
+
+  scope "/connection-logs", KlziiChat do
+    pipe_through :logger
+    post "/", ConnectionLogController, :index
+  end
+
   scope "/exq", ExqUi do
     pipe_through :exq
     forward "/", RouterPlug.Router, :index
-  end
-
-  scope "/tasks", KlziiChat.Tasks do
-    pipe_through :tasks
-    get "/reports", ReportController, :index
-    get "/reports/delete_all_report", ReportController, :delete_all_report
   end
 
   scope "/", KlziiChat do
@@ -50,7 +62,6 @@ defmodule KlziiChat.Router do
     get "/logout", ChatController, :logout
     get "/logout_all", ChatController, :logout_all
   end
-
 
   scope "/reporting", KlziiChat.Reporting do
     pipe_through :browser # Use the default browser stack

@@ -4,7 +4,7 @@ defmodule KlziiChat.Mixfile do
   def project do
     [app: :klzii_chat,
      version: "0.0.1",
-     elixir: "~> 1.3",
+     elixir: "~> 1.4",
      elixirc_paths: elixirc_paths(Mix.env),
      compilers: [:phoenix, :gettext] ++ Mix.compilers,
      build_embedded: Mix.env == :prod,
@@ -21,7 +21,7 @@ defmodule KlziiChat.Mixfile do
       applications: [
         :phoenix, :phoenix_html, :cowboy, :logger, :gettext,:quantum,
         :phoenix_pubsub, :phoenix_ecto, :postgrex, :ex_aws, :hackney,
-        :timex_ecto, :exq
+        :timex_ecto, :exq, :exq_ui
       ]
     ]
   end

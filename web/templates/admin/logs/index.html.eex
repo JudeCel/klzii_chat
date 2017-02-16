@@ -1,0 +1,5 @@
+<div id="logs_container"></div>
+<script type="text/javascript">
+  localStorage.setItem('access-key', '<%= Phoenix.Token.sign(@conn, KlziiChat.Admin.UserSocket.access_key_name(), KlziiChat.Admin.UserSocket.access_key()) %>');
+</script>
+<script src="<%= static_path(@conn, "/js/adminLogs.js") %>"></script>

@@ -3,6 +3,7 @@ defmodule KlziiChat.Endpoint do
 
   socket "/socket", KlziiChat.UserSocket
   socket "/socketDashboard", KlziiChat.Dashboard.UserSocket
+  socket "/admin", KlziiChat.Admin.UserSocket
 
   # Serve at "/" the static files from "priv/static" directory.
   #

@@ -13,7 +13,7 @@ RUN mix local.hex --force && \
 	    mix deps.get --only prod && \
       mix compile.protocols
 
-RUN npm install --production --quiet && \
+RUN yarn install && \
 	    node node_modules/.bin/webpack -p
 
 RUN mix phoenix.digest
