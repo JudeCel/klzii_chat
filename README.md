@@ -7,6 +7,7 @@
   * [FS Listener](https://github.com/synrc/fs#backends)
   * ``` xvfb ```
   * [Wkhtmltopdf](http://wkhtmltopdf.org/downloads.html)
+  * [ImageMagick](http://www.imagemagick.org/)
 
 ## Setup project
 
