@@ -2,6 +2,7 @@ defmodule KlziiChat.Admin.TasksController do
   use KlziiChat.Web, :controller
   alias KlziiChat.Services.SessionReportingService
   alias KlziiChat.Services.ResourceService
+  alias KlziiChat.Services.PackageUpdateService
 
   def index(conn, _) do
     put_layout(conn, "admin.html")
@@ -18,5 +19,11 @@ defmodule KlziiChat.Admin.TasksController do
     {count, _} = SessionReportingService.delete_all()
     put_layout(conn, "admin.html")
     |> render("delete_all_report.html", count: count)
+  end
+
+  def find_package_updates(conn, _) do
+    {yarn, mix} = PackageUpdateService.find()
+    put_layout(conn, "admin.html")
+    |> render("find_package_updates.html", mix: mix, yarn: yarn)
   end
 end
