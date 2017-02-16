@@ -47,7 +47,11 @@ const ChatView = React.createClass({
   },
   componentDidMount() {
     window.addEventListener('resize', (e) => {
-      this.props.dispatch({ type: Constants.SCREEN_SIZE_CHANGED, window: { width: this.getScreenWidthForAvatar(e.target.innerWidth), height: document.body.clientHeight } });
+      let self = this;
+      let windowUtility = { width: this.getScreenWidthForAvatar(e.target.innerWidth), height: document.body.clientHeight };
+      if (JSON.stringify(this.props.utilityWindow) != JSON.stringify(windowUtility)) {
+        this.props.dispatch({ type: Constants.SCREEN_SIZE_CHANGED, window: windowUtility });
+      }
     });
     this.props.dispatch({ type: Constants.SCREEN_SIZE_CHANGED, window: { width: this.getScreenWidthForAvatar(window.innerWidth), height: document.body.clientHeight } });
     SessionExpire.init();
@@ -122,7 +126,8 @@ const mapStateToProps = (state) => {
     socket: state.chat.socket,
     notifications: state.notifications,
     role: state.members.currentUser.role,
-    type: state.chat.session.type
+    type: state.chat.session.type,
+    utilityWindow: state.utility.window
   };
 };
 
