@@ -22,7 +22,13 @@ defmodule KlziiChat.Uploaders.Image do
   def transform(:thumb, _) do
     {:convert, "-strip -thumbnail 250x250>"}
   end
-  def transform(:gallery_thumb, _) do
-     {:convert, "-strip -thumbnail 250x250^ -gravity center -extent 250x250"}
+  def transform(:gallery_thumb, {file, _scope}) do
+    case Path.extname(file.file_name) do
+      ".gif" ->
+        {:convert, "-coalesce -repage 0x0 -gravity center +repage"}
+      _ ->
+        {:convert, "-strip -thumbnail 250x250^ -gravity center -extent 250x250"}
+    end
+
   end
 end
