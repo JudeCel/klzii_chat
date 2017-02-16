@@ -1,0 +1,7 @@
+<pre id="log-content">
+</pre>
+<script>
+  var element = document.getElementById('log-content')
+  var log = <%= {:safe, Poison.encode!(@connection_log)} %>
+  element.innerHTML = JSON.stringify(log, undefined, 2);
+</script>

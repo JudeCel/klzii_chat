@@ -6,4 +6,12 @@ defmodule KlziiChat.LayoutView do
 
   def path_to_js_css(nil, path), do: Path.expand("./web/static") <> path
   def path_to_js_css(_, path), do: path
+
+  def current_link(conn, path) do
+    if (path == conn.request_path) do
+      "active"
+    else
+      ""
+    end
+  end
 end
