@@ -1,0 +1,11 @@
+<br/>
+<div class="tasks-container">
+  <ul>
+    <li>
+      <a href="<%= tasks_path(@conn, :delete_all_report) %>">Delete all reports</a>
+    </li>
+    <li>
+      <a href="<%= tasks_path(@conn, :recalculate_all_images) %>">Recalculate all images</a>
+    </li>
+  </ul>
+</div>

@@ -1,8 +1,15 @@
-defmodule KlziiChat.Admin.Tasks.ReportController do
+defmodule KlziiChat.Admin.TasksController do
   use KlziiChat.Web, :controller
   alias KlziiChat.Services.SessionReportingService
+  alias KlziiChat.Services.ResourceService
 
   def index(conn, _) do
+    put_layout(conn, "admin.html")
+    |> render("index.html")
+  end
+
+  def recalculate_all_images(conn, _) do
+    { :ok } = ResourceService.recalculate_all_images()
     put_layout(conn, "admin.html")
     |> render("index.html")
   end
