@@ -5,6 +5,14 @@
 </div>
 
 <script>
+
+  var frames = document.getElementsByClassName('whiteboard-frame');
+  var scale = (713 / 925 );
+
+  for (var i = 0; i < frames.length; i++) {
+    frames[i].style.height = (scale * 465) + "px";
+  }
+
   var arrows =  [];
   var wb;
   var drawSVGElements = function (element_id, shapes) {
