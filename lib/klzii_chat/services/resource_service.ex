@@ -97,6 +97,7 @@ defmodule KlziiChat.Services.ResourceService do
         {:ok, resource } ->
           {:ok, resource}
         {:error, reason} ->
+          Repo.delete(resource)
           {:error, Map.put(reason, :code, 400)}
        end
   end
