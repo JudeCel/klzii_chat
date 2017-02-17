@@ -22,8 +22,11 @@ defmodule KlziiChat.Admin.TasksController do
   end
 
   def find_package_updates(conn, _) do
-    {yarn, mix} = PackageUpdateService.find()
+    { :ok, list } = PackageUpdateService.find
+
+    [ok: mix, ok: yarn, ok: node] = Enum.map(list, fn({ key, value }) -> value end)
+
     put_layout(conn, "admin.html")
-    |> render("find_package_updates.html", mix: mix, yarn: yarn)
+    |> render("find_package_updates.html", mix: mix, yarn: yarn, node: node)
   end
 end

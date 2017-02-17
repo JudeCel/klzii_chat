@@ -2,7 +2,8 @@ import "babel-polyfill";
 const ansiHTML = require('ansi-html');
 
 ansiHTML.setColors({
-  reset: ['transparent', 'transparent']
+  reset: ['transparent', 'transparent'],
+  cyan: '0794B6'
 });
 
 const elements = document.getElementsByTagName('pre');
