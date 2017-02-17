@@ -1,5 +1,4 @@
-<pre id="log-content">
-</pre>
+<pre id="log-content"></pre>
 <script>
   var element = document.getElementById('log-content')
   var log = <%= {:safe, Poison.encode!(@connection_log)} %>

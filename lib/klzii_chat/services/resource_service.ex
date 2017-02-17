@@ -7,6 +7,28 @@ defmodule KlziiChat.Services.ResourceService do
 
   import Ecto.Query
 
+  @spec recalculate_all_images() ::  {:ok}
+  def recalculate_all_images() do
+    from(r in Resource, where: [type: "image"])
+    |> Repo.all()
+    |> Enum.each(&(resave_resource(&1)))
+    {:ok}
+  end
+
+  def resave_resource(item) do
+    type = item.type
+    uploader = get_uploader(type)
+
+    if field = Map.get(item, String.to_atom(type)) do
+      extname = Map.get(field, :file_name)
+      |> Path.extname
+      Enum.each(uploader.versions, fn version ->
+        url = uploader.url({item.type, item}, version) <> extname
+        uploader.store({url, item})
+      end)
+    end
+  end
+
   @spec upload(map, integer) ::  {:ok, %Resource{}} | {:error, map}
   def upload(params, account_user_id)  do
     account_user = Repo.get!(AccountUser, account_user_id) |> Repo.preload([:account])

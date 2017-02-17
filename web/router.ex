@@ -32,8 +32,9 @@ defmodule KlziiChat.Router do
     get "/", DashboardController, :index
     get "/logs", LogsController, :index
     get "/logs/:id", LogsController, :show
-    get "/tasks/reports", Tasks.ReportController, :index
-    get "/tasks/reports/delete_all_report", Tasks.ReportController, :delete_all_report
+    get "/tasks", TasksController, :index
+    get "/tasks/delete_all_report", TasksController, :delete_all_report
+    get "/tasks/recalculate_all_images", TasksController, :recalculate_all_images
   end
 
   pipeline :api do
