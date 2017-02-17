@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
 import { connect }        from 'react-redux';
-import Snap               from 'snapsvg';
+import SVG                from 'svgjs';
 import mixins             from '../../mixins';
 import MemberActions      from '../../actions/member';
 
@@ -48,12 +48,21 @@ const Avatar = React.createClass({
     let image = avatar.image(`/images/observer.png`, 10, 10, 123, 80);
     image.addClass('svg-avatar-element');
   },
+  getSVGStyle() {
+    return {
+      'maxWidth': this.boxWidth + "px",
+      'maxHeight': this.boxHeight + "px"
+    }
+  },
   findAvatar() {
-    return Snap('#' + this.pickId());
+    let avatar = SVG(this.pickId());
+    let boxSize = "0 0 " + this.boxWidth + " " + this.boxHeight;
+    avatar.attr({viewBox: boxSize, preserveAspectRatio: "xMidYMid meet"});
+    return avatar;
   },
   clearAvatar(avatar) {
     if(this.shouldClearPrevious) {
-      avatar.clear();
+      //avatar.clear();
       this.shouldClearPrevious = false;
     }
   },
@@ -98,11 +107,11 @@ const Avatar = React.createClass({
   },
   drawLabelAndText(avatar) {
     const { username, colour, currentTopic, online, animate } = this.props.member;
-    var el1 = avatar.rect(25, 125, 100, 20, 1, 1).attr({fill: colour}).addClass('svg-avatar-label');
-    var el2 = avatar.text(76, 138, username).attr({fill: '#fff', 'font-size': '75%', 'text-anchor': 'middle'}).addClass('svg-avatar-label');
+    // var el1 = avatar.rect(25, 125, 100, 20, 1, 1).attr({fill: colour}).addClass('svg-avatar-label');
+    // var el2 = avatar.text(76, 138, username).attr({fill: '#fff', 'font-size': '75%', 'text-anchor': 'middle'}).addClass('svg-avatar-label');
 
     if(currentTopic && online) {
-      avatar.text(76, 158, currentTopic.name).attr({fill: '#000', 'font-size': '75%', 'text-anchor': 'middle'}).addClass('svg-avatar-label svg-avatar-topic');
+      //avatar.text(76, 158, currentTopic.name).attr({fill: '#000', 'font-size': '75%', 'text-anchor': 'middle'}).addClass('svg-avatar-label svg-avatar-topic');
     }
 
     if (animate) {
@@ -110,32 +119,18 @@ const Avatar = React.createClass({
        this.shakeElement(el2);
     }
   },
-  scaleAvatar(group) {
-    if(group) {
-      let minWidth = 1200;
-      const { width } = this.props.utilityWindow;
-
-      if(width  < minWidth) {
-        group.transform(`scale(${width / minWidth})`);
-      }
-      else {
-        group.transform(`scale(1)`);
-      }
-    }
-  },
   componentDidMount() {
     const { avatarData, username, sessionTopicContext, currentTopic } = this.props.member;
-
     let avatar = this.findAvatar();
     this.clearAvatar(avatar);
     this.drawAvatar(avatar);
     this.drawLabelAndText(avatar);
 
-    let array = [...avatar.selectAll('image'), ...avatar.selectAll('rect'), ...avatar.selectAll('text')]
-    let group = avatar.group(...array);
-    if(!this.props.specificId) {
-      this.scaleAvatar(group);
-    }
+    // let array = [...avatar.selectAll('image'), ...avatar.selectAll('rect'), ...avatar.selectAll('text')]
+    // let group = avatar.group(...array);
+    // if(!this.props.specificId) {
+    //   this.scaleAvatar(group);
+    // }
 
     this.previousData = { avatarData, username, sessionTopicContext, currentTopic };
   },
@@ -145,8 +140,7 @@ const Avatar = React.createClass({
       let sessionTopicContext = JSON.stringify(this.previousData.sessionTopicContext) != JSON.stringify(nextProps.member.sessionTopicContext);
       let username = this.previousData.username != nextProps.member.username;
       let currentTopic = this.previousData.currentTopic != nextProps.member.currentTopic;
-      let screenChange = JSON.stringify(nextProps.utilityWindow) != JSON.stringify(this.props.utilityWindow);
-      return(!(username && avatarData && sessionTopicContext && currentTopic) || screenChange);
+      return(!(username && avatarData && sessionTopicContext && currentTopic));
     }
     else {
       return true;
@@ -157,12 +151,16 @@ const Avatar = React.createClass({
 
     if(avatar) {
       this.shouldClearPrevious = true;
-      this.componentDidMount();
+      //this.componentDidMount();
     }
+  },
+  componentWillMount() {
+    this.boxWidth = 150;
+    this.boxHeight = 160;
   },
   render() {
     return (
-      <svg id={ this.pickId() } className='svg-avatar' width='150px' height='160px'/>
+      <svg id={ this.pickId() } className='svg-avatar' style={ this.getSVGStyle() }/>
     )
   }
 });
