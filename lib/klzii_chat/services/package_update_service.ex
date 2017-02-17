@@ -1,10 +1,8 @@
 defmodule KlziiChat.Services.PackageUpdateService do
   def find do
-    data =
-      Task.async_stream([:elixir, :yarn, :node], &(dependencies(&1)) )
-      |> Enum.to_list
-
-    { :ok, data }
+    Task.async_stream([:elixir, :yarn, :node], &(dependencies(&1)) )
+    |> Enum.to_list
+    |> Enum.map(fn({ key, { _, value } }) -> value end)
   end
 
   def dependencies(:elixir) do
@@ -28,8 +26,12 @@ defmodule KlziiChat.Services.PackageUpdateService do
   def dependencies(:node) do
     case node_dependencies do
       { :ok, res } ->
-        { :ok, %{ "data" => data } } = Poison.decode(res)
-        { :ok, replace(data) }
+        case Poison.decode(res) do
+          { :ok, %{ "data" => data } } ->
+            { :ok, replace(data) }
+          { :ok, %{ "error" => error } } ->
+            { :error, replace(error) }
+        end
       { :error, error } ->
         { :error, error }
     end
@@ -37,11 +39,12 @@ defmodule KlziiChat.Services.PackageUpdateService do
 
   def node_dependencies do
     %{ dashboard_url: dashboard } = Application.get_env(:klzii_chat, :resources_conf)
-    case :hackney.get(<<dashboard <> "/updatePackages">>, [], <<>>, []) do
+    # Temp token
+    case :hackney.get(<<dashboard <> "/updatePackages?token=securityToken123">>, [], <<>>, []) do
       { :ok, code, headers, client } ->
         :hackney.body(client)
       { :error, error } ->
-        { :error, error }
+        { :error, Atom.to_string(error) }
     end
   end
 
