@@ -5,6 +5,7 @@
 # is restricted to this project.
 use Mix.Config
 
+config :elixir, ansi_enabled: true
 # General application configuration
 config :klzii_chat,
   ecto_repos: [KlziiChat.Repo]

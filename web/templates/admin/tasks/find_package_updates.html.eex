@@ -1,3 +1,11 @@
-<%= raw(@mix) %>
+<style>
+  u {
+    text-decoration: none;
+  }
+</style>
+
+<pre><%= raw(@mix) %></pre>
 <br />
-<%= raw(@yarn) %>
+<pre><%= raw(@yarn) %></pre>
+
+<script src="<%= static_path(@conn, "/js/updatePackages.js") %>"></script>
