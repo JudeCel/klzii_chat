@@ -23,7 +23,7 @@ defmodule KlziiChat.WhiteboardChannelTest do
   test "can push new shape", %{socket: socket, whiteboard_name: whiteboard_name} do
       socket = subscribe_and_join!(socket, WhiteboardChannel, whiteboard_name)
 
-      body = %{"type" => "23", "id" => "12"}
+      body = %{"event" => %{"type" => "iamge"}, "id" => "12"}
       push(socket, "draw", body)
       assert_receive(%Phoenix.Socket.Broadcast{})
       assert_push "draw", shape
@@ -33,7 +33,7 @@ defmodule KlziiChat.WhiteboardChannelTest do
   test "can push update shape", %{socket: socket, whiteboard_name: whiteboard_name} do
       socket = subscribe_and_join!(socket, WhiteboardChannel, whiteboard_name)
 
-      body =  %{"type" => 23, "id" => "12"}
+      body =  %{"event" => %{"type" => "iamge"}, "id" => "12", }
       ref = push(socket, "draw", body)
       assert_reply(ref, :ok)
       assert_push "draw", shape
@@ -51,7 +51,7 @@ defmodule KlziiChat.WhiteboardChannelTest do
   test "can push delete shape", %{socket: socket, whiteboard_name: whiteboard_name} do
     socket = subscribe_and_join!(socket, WhiteboardChannel, whiteboard_name)
 
-    body =  %{"type" => 23, "id" => "12"}
+    body = %{"event" => %{"type" => "iamge"}, "id" => "12"}
     ref = push(socket, "draw", body)
     assert_reply(ref, :ok)
 
@@ -67,7 +67,7 @@ defmodule KlziiChat.WhiteboardChannelTest do
   test "can push delete all shape", %{socket: socket, whiteboard_name: whiteboard_name} do
     socket = subscribe_and_join!(socket, WhiteboardChannel, whiteboard_name)
 
-    body =  %{"type" => 23, "id" => "12"}
+    body = %{"event" => %{"type" => "iamge"}, "id" => "12"}
     ref = push(socket, "draw", body)
     assert_reply(ref, :ok)
     assert_push "draw", %{}
