@@ -62,7 +62,7 @@ const Avatar = React.createClass({
   },
   clearAvatar(avatar) {
     if(this.shouldClearPrevious) {
-      //avatar.clear();
+      avatar.clear();
       this.shouldClearPrevious = false;
     }
   },
@@ -107,13 +107,11 @@ const Avatar = React.createClass({
   },
   drawLabelAndText(avatar) {
     const { username, colour, currentTopic, online, animate } = this.props.member;
-    // var el1 = avatar.rect(25, 125, 100, 20, 1, 1).attr({fill: colour}).addClass('svg-avatar-label');
-    // var el2 = avatar.text(76, 138, username).attr({fill: '#fff', 'font-size': '75%', 'text-anchor': 'middle'}).addClass('svg-avatar-label');
-
+    var el1 = avatar.rect(100, 20, 1, 1).attr({fill: colour, x: 25, y: 125}).addClass('svg-avatar-label');
+    var el2 = avatar.text(username).attr({fill: '#fff', 'font-size': '75%', 'text-anchor': 'middle', x: 76, y: 138}).addClass('svg-avatar-label');
     if(currentTopic && online) {
-      //avatar.text(76, 158, currentTopic.name).attr({fill: '#000', 'font-size': '75%', 'text-anchor': 'middle'}).addClass('svg-avatar-label svg-avatar-topic');
+      avatar.text(currentTopic.name).attr({fill: '#000', 'font-size': '75%', 'text-anchor': 'middle', x: 76, y: 158}).addClass('svg-avatar-label svg-avatar-topic');
     }
-
     if (animate) {
        this.shakeElement(el1, this.props.member);
        this.shakeElement(el2);
@@ -125,13 +123,6 @@ const Avatar = React.createClass({
     this.clearAvatar(avatar);
     this.drawAvatar(avatar);
     this.drawLabelAndText(avatar);
-
-    // let array = [...avatar.selectAll('image'), ...avatar.selectAll('rect'), ...avatar.selectAll('text')]
-    // let group = avatar.group(...array);
-    // if(!this.props.specificId) {
-    //   this.scaleAvatar(group);
-    // }
-
     this.previousData = { avatarData, username, sessionTopicContext, currentTopic };
   },
   shouldComponentUpdate(nextProps) {
@@ -140,7 +131,8 @@ const Avatar = React.createClass({
       let sessionTopicContext = JSON.stringify(this.previousData.sessionTopicContext) != JSON.stringify(nextProps.member.sessionTopicContext);
       let username = this.previousData.username != nextProps.member.username;
       let currentTopic = this.previousData.currentTopic != nextProps.member.currentTopic;
-      return(!(username && avatarData && sessionTopicContext && currentTopic));
+      let willUpdate = (username || avatarData || sessionTopicContext || currentTopic);
+      return willUpdate;
     }
     else {
       return true;
@@ -148,10 +140,9 @@ const Avatar = React.createClass({
   },
   componentDidUpdate() {
     let avatar = this.findAvatar();
-
     if(avatar) {
       this.shouldClearPrevious = true;
-      //this.componentDidMount();
+      this.componentDidMount();
     }
   },
   componentWillMount() {
@@ -159,6 +150,8 @@ const Avatar = React.createClass({
     this.boxHeight = 160;
   },
   render() {
+    const { username, colour, currentTopic, online, animate } = this.props.member;
+
     return (
       <svg id={ this.pickId() } className='svg-avatar' style={ this.getSVGStyle() }/>
     )
