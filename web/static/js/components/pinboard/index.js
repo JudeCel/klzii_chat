@@ -1,5 +1,5 @@
 import React, {PropTypes} from 'react';
-import Snap               from 'snapsvg';
+import SVG                from 'svgjs';
 import { connect }        from 'react-redux';
 import ReactDOM           from 'react-dom';
 import PinboardActions    from '../../actions/pinboard';
@@ -33,20 +33,23 @@ const Pinboard = React.createClass({
   },
   drawPinboard(svg) {
     let data = this.startingData();
-    let group = this.getSvgGroup(svg) || svg.group();
+    this.group = this.getSvgGroup(svg);
 
     let startX = data.x;
     for(var key in this.props.pinboard) {
       let item = this.props.pinboard[key];
-      this.addImageAndFrame(svg, group, data, item);
+      this.addImageAndFrame(svg, this.group, data, item);
       this.setNextPositionForPinboard(startX, data, item);
     }
   },
   getSvg() {
-    return Snap('#pinboard-svg');
+    return SVG('pinboard-svg');
   },
   getSvgGroup(svg) {
-    return svg.select('g');
+    if (!this.group) {
+      this.group = svg.group();
+    }
+    return this.group;
   },
   getInitialState() {
     return { minimized: true, maxWidth: 950 };
@@ -54,6 +57,7 @@ const Pinboard = React.createClass({
   redrawFrames() {
     let svg = this.getSvg();
     svg.clear();
+    this.group = null;
     this.drawPinboard(svg);
     this.scalePinboard(svg);
   },
