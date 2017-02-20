@@ -329,14 +329,6 @@
     display:none;
   }
 
-  .message-section svg {
-    /*transform: scale(0.5) translate(-37.5px, -37.5px);
-    margin-left: -20px !important;
-    margin-top: -30px !important;
-    padding-top: 0px !important;
-    margin-bottom: -100px;*/
-  }
-
   .facilitator-section .outerbox {
     left: 110px !important;
     background-color: #fff;
