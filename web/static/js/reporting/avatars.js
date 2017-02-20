@@ -4,6 +4,6 @@ function setAvatar(id, avatarData, imgPath) {
   for(var u in array) {
     var key = array[u];
     var value = avatarData[key];
-    if(value >= 0) svg.image(imgPath + '/' + key + '_0' + value + '.svg', 0, 0, 150, 70);
+    if(value >= 0) svg.image(imgPath + '/' + key + '_0' + value + '.svg', 150, 70);
   }
 }
