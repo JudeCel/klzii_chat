@@ -1,5 +1,5 @@
 import React, {PropTypes} from 'react';
-import Snap               from 'snapsvg';
+import SVG                from 'svgjs';
 import { connect }        from 'react-redux';
 import ReactDOM           from 'react-dom';
 import PinboardActions    from '../../actions/pinboard';
@@ -25,37 +25,40 @@ const Pinboard = React.createClass({
       dispatch(PinboardActions.delete(channel, id));
     }
   },
-  scalePinboard(svg) {
+  scalePinboard() {
     const { minimized, maxWidth } = this.state;
     let whiteboard = ReactDOM.findDOMNode(this);
-    let group = this.getSvgGroup(svg);
-    group.attr({ pointerEvents: minimized ? 'none' : 'all' });
+    this.getSvgGroup();
+    this.group.attr({ pointerEvents: minimized ? 'none' : 'all' });
   },
   drawPinboard(svg) {
     let data = this.startingData();
-    let group = this.getSvgGroup(svg) || svg.group();
-
     let startX = data.x;
     for(var key in this.props.pinboard) {
       let item = this.props.pinboard[key];
-      this.addImageAndFrame(svg, group, data, item);
+      this.addImageAndFrame(svg, this.group, data, item);
       this.setNextPositionForPinboard(startX, data, item);
     }
   },
   getSvg() {
-    return Snap('#pinboard-svg');
+    return SVG('pinboard-svg');
   },
-  getSvgGroup(svg) {
-    return svg.select('g');
+  getSvgGroup() {
+    if (!this.group) {
+      this.group = this.svg.group();
+    }
+    return this.group;
   },
   getInitialState() {
     return { minimized: true, maxWidth: 950 };
   },
   redrawFrames() {
-    let svg = this.getSvg();
-    svg.clear();
-    this.drawPinboard(svg);
-    this.scalePinboard(svg);
+    this.svg = this.getSvg();
+    this.svg.clear();
+    this.group = null;
+    this.getSvgGroup();
+    this.drawPinboard();
+    this.scalePinboard();
   },
   componentDidUpdate(props, state) {
     if(props.pinboard != this.props.pinboard) {
@@ -67,7 +70,7 @@ const Pinboard = React.createClass({
         if (mobileScreenHelpers.isMobile()) {
           this.redrawFrames();
         } else {
-          this.scalePinboard(this.getSvg());
+          this.scalePinboard();
         }
       }
     }

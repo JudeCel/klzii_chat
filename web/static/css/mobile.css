@@ -8,7 +8,6 @@
   .participants-section .col-md-3 {
     float:left;
     width: 25%;
-    height: 125px;
   }
 
   .participants-section svg{
@@ -328,14 +327,6 @@
 
   .facilitator-section svg text, .facilitator-section svg rect, .message-section svg text, .message-section svg rect {
     display:none;
-  }
-
-  .message-section svg {
-    transform: scale(0.5) translate(-37.5px, -37.5px);
-    margin-left: -20px !important;
-    margin-top: -30px !important;
-    padding-top: 0px !important;
-    margin-bottom: -100px;
   }
 
   .facilitator-section .outerbox {
