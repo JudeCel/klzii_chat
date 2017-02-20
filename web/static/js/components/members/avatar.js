@@ -150,8 +150,6 @@ const Avatar = React.createClass({
     this.boxHeight = 160;
   },
   render() {
-    const { username, colour, currentTopic, online, animate } = this.props.member;
-
     return (
       <svg id={ this.pickId() } className='svg-avatar' style={ this.getSVGStyle() }/>
     )
