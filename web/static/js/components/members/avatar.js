@@ -6,6 +6,12 @@ import MemberActions      from '../../actions/member';
 
 const Avatar = React.createClass({
   mixins: [mixins.helpers],
+  getInitialState() {
+    return {
+      boxWidth: 150,
+      boxHeight: 160
+    };
+  },
   padToTwo(number) {
     if (number<=99) { number = ("0"+number).slice(-2); }
     return number;
@@ -50,13 +56,13 @@ const Avatar = React.createClass({
   },
   getSVGStyle() {
     return {
-      'maxWidth': this.boxWidth + "px",
-      'maxHeight': this.boxHeight + "px"
+      'maxWidth': this.state.boxWidth + "px",
+      'maxHeight': this.state.boxHeight + "px"
     }
   },
   findAvatar() {
     let avatar = SVG(this.pickId());
-    let boxSize = "0 0 " + this.boxWidth + " " + this.boxHeight;
+    let boxSize = "0 0 " + this.state.boxWidth + " " + this.state.boxHeight;
     avatar.attr({viewBox: boxSize, preserveAspectRatio: "xMidYMid meet"});
     return avatar;
   },
@@ -144,10 +150,6 @@ const Avatar = React.createClass({
       this.shouldClearPrevious = true;
       this.componentDidMount();
     }
-  },
-  componentWillMount() {
-    this.boxWidth = 150;
-    this.boxHeight = 160;
   },
   render() {
     return (
