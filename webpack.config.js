@@ -53,6 +53,9 @@ var config = module.exports = {
     'adminLogs': [
       web('js/adminLogs.js')
     ],
+    'updatePackages': [
+      web('js/updatePackages.js')
+    ],
   },
 
   // where webpack should output our files
@@ -91,7 +94,7 @@ var config = module.exports = {
         loader: ExtractTextPlugin.extract('style', 'css!sass?indentedSyntax&includePaths[]=' + __dirname +  '/node_modules'),
       },
       {
-        test: /\.(ttf|eot|svg|woff(2)?)(\?[a-z0-9]+)?$/,
+        test: /\.(json|ttf|eot|svg|woff(2)?)(\?[a-z0-9]+)?$/,
         loader: 'url-loader?limit=8192'
       }
     ],

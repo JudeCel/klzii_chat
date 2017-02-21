@@ -35,6 +35,7 @@ defmodule KlziiChat.Router do
     get "/tasks", TasksController, :index
     get "/tasks/delete_all_report", TasksController, :delete_all_report
     get "/tasks/recalculate_all_images", TasksController, :recalculate_all_images
+    get "/tasks/find_package_updates", TasksController, :find_package_updates
   end
 
   pipeline :api do
