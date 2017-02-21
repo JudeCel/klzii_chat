@@ -121,10 +121,10 @@ const MobileHeader = React.createClass({
                   <div>Click on Avatar to Customize Your Biizu</div>
                 </li>
                 <li onClick={this.toggleTopics}>
-                    <span className='fa fa-coffee'></span>Topic Menu
-                    <span className='fa fa-angle-right'></span>
-                    <Badge type='normal' data={ unread_messages.summary } />
-                    <Badge type='reply' data={ unread_messages.summary } />
+                  <span className='fa fa-coffee'></span>Topic Menu
+                  <span className='fa fa-angle-right'></span>
+                  <Badge type='normal' data={ unread_messages.summary } />
+                  <Badge type='reply' data={ unread_messages.summary } />
                 </li>
                 <li onClick={this.messagesClick} style={ this.getMenuItemStyle('messages', 'can_direct_message') }>
                   <span className='fa fa-comment'></span>Messages { this.directMessageBadge() }
@@ -143,7 +143,7 @@ const MobileHeader = React.createClass({
                 </li>
               </ul>
               <div className='powered-by'>
-                Powered by <a href='http://www.klzii.com' target='_blank'>klzii</a>
+                Get Free <a href='//www.klzii.com' target='_blank'>klzii Chat</a>
               </div>
             </div>
             <div className='mobile-side-menu-topics' style={ this.getMobileSideMenuTopicsStyle() }>
