@@ -1,5 +1,4 @@
 import React, {PropTypes} from 'react';
-import Snap               from 'snapsvg';
 
 const AvatarPreview = React.createClass({
   padToTwo(number) {

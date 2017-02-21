@@ -94,10 +94,6 @@ var config = module.exports = {
         loader: ExtractTextPlugin.extract('style', 'css!sass?indentedSyntax&includePaths[]=' + __dirname +  '/node_modules'),
       },
       {
-        test: require.resolve('snapsvg'),
-        loader: 'imports-loader?this=>window,fix=>module.exports=0'
-      },
-      {
         test: /\.(json|ttf|eot|svg|woff(2)?)(\?[a-z0-9]+)?$/,
         loader: 'url-loader?limit=8192'
       }

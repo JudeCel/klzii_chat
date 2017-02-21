@@ -1,11 +1,17 @@
 import React, {PropTypes} from 'react';
 import { connect }        from 'react-redux';
-import Snap               from 'snapsvg';
+import SVG                from 'svgjs';
 import mixins             from '../../mixins';
 import MemberActions      from '../../actions/member';
 
 const Avatar = React.createClass({
   mixins: [mixins.helpers],
+  getInitialState() {
+    return {
+      boxWidth: 150,
+      boxHeight: 160
+    };
+  },
   padToTwo(number) {
     if (number<=99) { number = ("0"+number).slice(-2); }
     return number;
@@ -48,8 +54,17 @@ const Avatar = React.createClass({
     let image = avatar.image(`/images/observer.png`, 10, 10, 123, 80);
     image.addClass('svg-avatar-element');
   },
+  getSVGStyle() {
+    return {
+      'maxWidth': this.state.boxWidth + "px",
+      'maxHeight': this.state.boxHeight + "px"
+    }
+  },
   findAvatar() {
-    return Snap('#' + this.pickId());
+    let avatar = SVG(this.pickId());
+    let boxSize = "0 0 " + this.state.boxWidth + " " + this.state.boxHeight;
+    avatar.attr({viewBox: boxSize, preserveAspectRatio: "xMidYMid meet"});
+    return avatar;
   },
   clearAvatar(avatar) {
     if(this.shouldClearPrevious) {
@@ -98,45 +113,22 @@ const Avatar = React.createClass({
   },
   drawLabelAndText(avatar) {
     const { username, colour, currentTopic, online, animate } = this.props.member;
-    var el1 = avatar.rect(25, 125, 100, 20, 1, 1).attr({fill: colour}).addClass('svg-avatar-label');
-    var el2 = avatar.text(76, 138, username).attr({fill: '#fff', 'font-size': '75%', 'text-anchor': 'middle'}).addClass('svg-avatar-label');
-
+    var el1 = avatar.rect(100, 20, 1, 1).attr({fill: colour, x: 25, y: 125}).addClass('svg-avatar-label');
+    var el2 = avatar.text(username).attr({fill: '#fff', 'font-size': '75%', 'text-anchor': 'middle', x: 76, y: 138}).addClass('svg-avatar-label');
     if(currentTopic && online) {
-      avatar.text(76, 158, currentTopic.name).attr({fill: '#000', 'font-size': '75%', 'text-anchor': 'middle'}).addClass('svg-avatar-label svg-avatar-topic');
+      avatar.text(currentTopic.name).attr({fill: '#000', 'font-size': '75%', 'text-anchor': 'middle', x: 76, y: 158}).addClass('svg-avatar-label svg-avatar-topic');
     }
-
     if (animate) {
        this.shakeElement(el1, this.props.member);
        this.shakeElement(el2);
     }
   },
-  scaleAvatar(group) {
-    if(group) {
-      let minWidth = 1200;
-      const { width } = this.props.utilityWindow;
-
-      if(width  < minWidth) {
-        group.transform(`scale(${width / minWidth})`);
-      }
-      else {
-        group.transform(`scale(1)`);
-      }
-    }
-  },
   componentDidMount() {
     const { avatarData, username, sessionTopicContext, currentTopic } = this.props.member;
-
     let avatar = this.findAvatar();
     this.clearAvatar(avatar);
     this.drawAvatar(avatar);
     this.drawLabelAndText(avatar);
-
-    let array = [...avatar.selectAll('image'), ...avatar.selectAll('rect'), ...avatar.selectAll('text')]
-    let group = avatar.group(...array);
-    if(!this.props.specificId) {
-      this.scaleAvatar(group);
-    }
-
     this.previousData = { avatarData, username, sessionTopicContext, currentTopic };
   },
   shouldComponentUpdate(nextProps) {
@@ -145,8 +137,8 @@ const Avatar = React.createClass({
       let sessionTopicContext = JSON.stringify(this.previousData.sessionTopicContext) != JSON.stringify(nextProps.member.sessionTopicContext);
       let username = this.previousData.username != nextProps.member.username;
       let currentTopic = this.previousData.currentTopic != nextProps.member.currentTopic;
-      let screenChange = JSON.stringify(nextProps.utilityWindow) != JSON.stringify(this.props.utilityWindow);
-      return(!(username && avatarData && sessionTopicContext && currentTopic) || screenChange);
+      let willUpdate = (username || avatarData || sessionTopicContext || currentTopic);
+      return willUpdate;
     }
     else {
       return true;
@@ -154,7 +146,6 @@ const Avatar = React.createClass({
   },
   componentDidUpdate() {
     let avatar = this.findAvatar();
-
     if(avatar) {
       this.shouldClearPrevious = true;
       this.componentDidMount();
@@ -162,7 +153,7 @@ const Avatar = React.createClass({
   },
   render() {
     return (
-      <svg id={ this.pickId() } className='svg-avatar' width='150px' height='160px'/>
+      <svg id={ this.pickId() } className='svg-avatar' style={ this.getSVGStyle() }/>
     )
   }
 });
