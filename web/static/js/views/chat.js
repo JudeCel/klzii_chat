@@ -98,7 +98,7 @@ const ChatView = React.createClass({
 
           </div>
           <div className="footer text-center">
-            <span>Powered by <a href="//www.klzii.com" target="_blank"> <b>klzii.</b> </a> </span>
+            <span>Get Free <a href='//www.klzii.com' target='_blank'><b>klzii Chat</b></a></span>
           </div>
           <div id="small-screen">
             <div>This site is not compatible with small window sizes.</div>
