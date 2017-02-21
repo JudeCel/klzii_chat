@@ -7,204 +7,204 @@ defmodule KlziiChat.SessionTypeCase do
 
     properties = %{
       
-      "focus" => {
-        "steps" => {
-          "setUp" => {
+      "focus" => %{
+        "steps" => %{
+          "setUp" => %{
             "enabled" => true,
             "socialMediaGraphics" => false
           }, 
-          "facilitatiorAndTopics" => {
+          "facilitatiorAndTopics" => %{
             "enabled" => true,
             "survays" => false
           }, 
-          "manageSessionEmails" => {
+          "manageSessionEmails" => %{
             "enabled" => true
           },
-          "manageSessionParticipants" => {
+          "manageSessionParticipants" => %{
             "enabled" => true,
             "sendGroupSms" => true
           }, 
-          "inviteSessionObservers" => {
+          "inviteSessionObservers" => %{
             "enabled" => true,
             "sendGroupSms" => false
           }
         },
-        "features" => {
-          "survay" => {
-            "prizeDraw" => {
+        "features" => %{
+          "survay" => %{
+            "prizeDraw" => %{
               "enabled" => false
             },
-            "contactList" => {
+            "contactList" => %{
               "enabled" => false
             },
           },
-          "unidentifiedParticipants" => {
+          "unidentifiedParticipants" => %{
             "enabled" => false
           },
-          "whiteboard" => {
+          "whiteboard" => %{
             "enabled" => true,
             "canWrite" => ["facilitator", "participant"]
           },
-          "pinboard" => {
+          "pinboard" => %{
             "enabled" => true
           },
-          "sendSms" => {
+          "sendSms" => %{
             "enabled" => true
           },
-          "closeSession" => {
+          "closeSession" => %{
             "enabled" => true
           },
-          "dateAndTime" => {
+          "dateAndTime" => %{
             "enabled" => true
           },
-          "anonymous" => {
+          "anonymous" => %{
             "enabled" => true
           },
-          "colorScheme" => {
+          "colorScheme" => %{
             "type" => "focus"
           }
         },
-        "validations" => {
-          "participant" => {
+        "validations" => %{
+          "participant" => %{
             "max" => 8
           },
-          "observer" => {
+          "observer" => %{
             "max" => -1
           }
         }
       },
 
-      "forum" => {
-        "steps" => {
-          "setUp" => {
+      "forum" => %{
+        "steps" => %{
+          "setUp" => %{
             "enabled" => true,
             "socialMediaGraphics" => false
           }, 
-          "facilitatiorAndTopics" => {
+          "facilitatiorAndTopics" => %{
             "enabled" => true,
             "survays" => false
           }, 
-          "manageSessionEmails" => {
+          "manageSessionEmails" => %{
             "enabled" => true
           },
-          "manageSessionParticipants" => {
+          "manageSessionParticipants" => %{
             "enabled" => true,
             "sendGroupSms" => false
           }, 
-          "inviteSessionObservers" => {
+          "inviteSessionObservers" => %{
             "enabled" => true,
             "sendGroupSms" => false
           }
         },
-        "features" => {
-          "survay" => {
-            "prizeDraw" => {
+        "features" => %{
+          "survay" => %{
+            "prizeDraw" => %{
               "enabled" => false
             },
-            "contactList" => {
+            "contactList" => %{
               "enabled" => false
             },
           },
-          "unidentifiedParticipants" => {
+          "unidentifiedParticipants" => %{
             "enabled" => false
           },
-          "whiteboard" => {
+          "whiteboard" => %{
             "enabled" => true,
             "canWrite" => ["facilitator"]
           },
-          "pinboard" => {
+          "pinboard" => %{
             "enabled" => false
           },
-          "sendSms" => {
+          "sendSms" => %{
             "enabled" => false
           },
-          "closeSession" => {
+          "closeSession" => %{
             "enabled" => true
           },
-          "dateAndTime" => {
+          "dateAndTime" => %{
             "enabled" => true
           },
-          "anonymous" => {
+          "anonymous" => %{
             "enabled" => true
           },
-          "colorScheme" => {
+          "colorScheme" => %{
             "type" => "forum"
           }
         },
-        "validations" => {
-          "participant" => {
+        "validations" => %{
+          "participant" => %{
             "max" => -1
           },
-          "observer" => {
+          "observer" => %{
             "max" => -1
           }
         }
       },
 
-      "socialForum" => {
-        "steps" => {
-          "setUp" => {
+      "socialForum" => %{
+        "steps" => %{
+          "setUp" => %{
             "enabled" => true,
             "socialMediaGraphics" => true
           }, 
-          "facilitatiorAndTopics" => {
+          "facilitatiorAndTopics" => %{
             "enabled" => true,
             "survays" => true
           }, 
-          "manageSessionEmails" => {
+          "manageSessionEmails" => %{
             "enabled" => false
           },
-          "manageSessionParticipants" => {
+          "manageSessionParticipants" => %{
             "enabled" => false
           }, 
-          "inviteSessionObservers" => {
+          "inviteSessionObservers" => %{
             "enabled" => false
           }
         },
-        "features" => {
-          "survay" => {
-            "prizeDraw" => {
+        "features" => %{
+          "survay" => %{
+            "prizeDraw" => %{
               "enabled" => true
             },
-            "contactList" => {
+            "contactList" => %{
               "enabled" => true
             },
           },
-          "unidentifiedParticipants" => {
+          "unidentifiedParticipants" => %{
             "enabled" => true
           },
-          "whiteboard" => {
+          "whiteboard" => %{
             "enabled" => true,
             "canWrite" => ["facilitator"]
           },
-          "pinboard" => {
+          "pinboard" => %{
             "enabled" => false
           },
-          "sendSms" => {
+          "sendSms" => %{
             "enabled" => false
           },
-          "closeSession" => {
+          "closeSession" => %{
             "enabled" => false
           },
-          "dateAndTime" => {
+          "dateAndTime" => %{
             "enabled" => false,
             #message will be updated with TA1560
             "message" => "Not avaliable"
           },
-          "anonymous" => {
+          "anonymous" => %{
             "enabled" => false,
             #message will be updated with TA1560
             "message" => "Not avaliable"
           },
-          "colorScheme" => {
+          "colorScheme" => %{
             "type" => "forum"
           }
         },
-        "validations" => {
-          "participant" => {
+        "validations" => %{
+          "participant" => %{
             "max" => 0
           },
-          "observer" => {
+          "observer" => %{
             "max" => 0
           }
         }
@@ -212,6 +212,6 @@ defmodule KlziiChat.SessionTypeCase do
 
     }
 
-    {:ok, "properties" => properties}
+    {:ok, properties: properties}
   end
 end

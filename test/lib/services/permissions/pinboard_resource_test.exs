@@ -1,32 +1,33 @@
 defmodule KlziiChat.Services.Permissions.PinboardResourceTest do
   use ExUnit.Case, async: true
+  use KlziiChat.{SessionTypeCase}
   alias KlziiChat.Services.Permissions.PinboardResource
 
   describe("host") do
-    test "can't add resource when session type is focus" do
+    test "can't add resource when session type is focus", %{properties: properties} do
       member = %{id: 1, role: "facilitator"}
-      session = %{type: "focus"}
+      session = %{session_type: %{properties: properties["focus"]}}
       preference = %{data: %{"pinboardDisplay" => true }}
       assert({:error, _} = PinboardResource.can_add_resource(member, session, preference))
     end
 
-    test "can't add resource when session type is forum" do
+    test "can't add resource when session type is forum", %{properties: properties} do
       member = %{id: 1, role: "facilitator"}
-      session = %{type: "forum"}
+      session = %{session_type: %{properties: properties["forum"]}}
       preference = %{data: %{"pinboardDisplay" => true }}
       assert({:error, _} = PinboardResource.can_add_resource(member, session, preference))
     end
 
-    test "can enable when session type is focus" do
+    test "can enable when session type is focus", %{properties: properties} do
       member = %{id: 1, role: "facilitator"}
-      session = %{type: "focus"}
+      session = %{session_type: %{properties: properties["focus"]}}
       preference = %{data: %{"pinboardDisplay" => true }}
       assert({:ok} = PinboardResource.can_enable(member, session, preference))
     end
 
-    test "can't enable when session type is forum" do
+    test "can't enable when session type is forum", %{properties: properties} do
       member = %{id: 1, role: "facilitator"}
-      session = %{type: "forum"}
+      session = %{session_type: %{properties: properties["forum"]}}
       reference = %{data: %{"pinboardDisplay" => true }}
       assert({:error, _} = PinboardResource.can_enable(member, session, reference))
     end
@@ -39,30 +40,30 @@ defmodule KlziiChat.Services.Permissions.PinboardResourceTest do
   end
 
   describe("guest") do
-    test "can add resource when session type is focus" do
+    test "can add resource when session type is focus", %{properties: properties} do
       member = %{id: 1, role: "participant"}
-      session = %{type: "focus"}
+      session = %{session_type: %{properties: properties["focus"]}}
       preference = %{data: %{"pinboardDisplay" => true }}
       assert({:ok} = PinboardResource.can_add_resource(member, session, preference))
     end
 
-    test "can't add resource when session type is forum" do
+    test "can't add resource when session type is forum", %{properties: properties} do
       member = %{id: 1, role: "participant"}
-      session = %{type: "forum"}
+      session = %{session_type: %{properties: properties["forum"]}}
       preference = %{data: %{"pinboardDisplay" => true }}
       assert({:error, _} = PinboardResource.can_add_resource(member, session, preference))
     end
 
-    test "can't 'enable when session type is focus" do
+    test "can't 'enable when session type is focus", %{properties: properties} do
       member = %{id: 1, role: "participant"}
-      session = %{type: "focus"}
+      session = %{session_type: %{properties: properties["focus"]}}
       reference = %{data: %{"pinboardDisplay" => true }}
       assert({:error, _} = PinboardResource.can_enable(member, session, reference))
     end
 
-    test "can't 'enable when session type is forum" do
+    test "can't 'enable when session type is forum", %{properties: properties} do
       member = %{id: 1, role: "participant"}
-      session = %{type: "forum"}
+      session = %{session_type: %{properties: properties["forum"]}}
       reference = %{data: %{"pinboardDisplay" => true }}
       assert({:error, _} = PinboardResource.can_enable(member, session, reference))
     end
@@ -81,30 +82,30 @@ defmodule KlziiChat.Services.Permissions.PinboardResourceTest do
   end
 
   describe("spectator") do
-    test "can't add resource when session type is focus" do
+    test "can't add resource when session type is focus", %{properties: properties} do
       member = %{id: 1, role: "observer"}
-      session = %{type: "focus"}
+      session = %{session_type: %{properties: properties["focus"]}}
       preference = %{data: %{"pinboardDisplay" => true }}
       assert({:error, _} = PinboardResource.can_add_resource(member, session, preference))
     end
 
-    test "can't add resource when session type is forum" do
+    test "can't add resource when session type is forum", %{properties: properties} do
       member = %{id: 1, role: "observer"}
-      session = %{type: "forum"}
+      session = %{session_type: %{properties: properties["forum"]}}
       preference = %{data: %{"pinboardDisplay" => true }}
       assert({:error, _} = PinboardResource.can_add_resource(member, session, preference))
     end
 
-    test "can't 'enable when session type is focus" do
+    test "can't 'enable when session type is focus", %{properties: properties} do
       member = %{id: 1, role: "observer"}
-      session = %{type: "focus"}
+      session = %{session_type: %{properties: properties["focus"]}}
       reference = %{data: %{"pinboardDisplay" => true }}
       assert({:error, _} = PinboardResource.can_enable(member, session, reference))
     end
 
-    test "can't 'enable when session type is forum" do
+    test "can't 'enable when session type is forum", %{properties: properties} do
       member = %{id: 1, role: "observer"}
-      session = %{type: "forum"}
+      session = %{session_type: %{properties: properties["forum"]}}
       reference = %{data: %{"pinboardDisplay" => true }}
       assert({:error, _} = PinboardResource.can_enable(member, session, reference))
     end
