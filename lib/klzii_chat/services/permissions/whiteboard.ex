@@ -11,10 +11,9 @@ defmodule KlziiChat.Services.Permissions.Whiteboard do
   @spec can_enable(Map.t, Map.t, Map.t) :: {:ok } | {:error, String.t}
   def can_enable(member, session, %{data: data}) do
     roles = ~w(facilitator)
-    session_types = ~w(focus forum)
     (
       has_role(member.role, roles) &&
-      is_in_list(session.type, session_types) &&
+      session.session_type.properties["features"]["whiteboard"]["enabled"] &&
       has_allowed_from_subscription(data, "whiteboardDisplay")
     )
     |> formate_error
@@ -38,14 +37,13 @@ defmodule KlziiChat.Services.Permissions.Whiteboard do
   end
 
   defp validate_session(member, session) do
-    roles = case session do
-              %{type: "forum"} ->
-                ["facilitator"]
-              %{type: "focus"} ->
-                ["facilitator", "participant"]
-              _ ->
-                []
-            end
+    whiteboard_properties = session.session_type.properties["features"]["whiteboard"]
+    roles = case whiteboard_properties["enabled"] do
+      true ->
+        whiteboard_properties["canWrite"]
+      _ ->
+        []
+    end
     has_role(member.role, roles)
   end
 

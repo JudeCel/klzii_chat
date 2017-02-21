@@ -71,6 +71,7 @@ defmodule KlziiChat.Services.PinboardResourceService do
     session_topic_id = IntegerHelper.get_num(session_topic_id)
     session_member = Repo.get!(SessionMember, session_member_id)
     session = Repo.get!(Session, session_member.sessionId)
+      |> Repo.preload([:session_type])
     {:ok, preference} = KlziiChat.Services.Permissions.Builder.get_subscription_preference_session(session.id)
 
     PinboardResourcePermissions.can_add_resource(session_member, session, preference)

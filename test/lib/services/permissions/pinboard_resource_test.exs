@@ -2,7 +2,6 @@ defmodule KlziiChat.Services.Permissions.PinboardResourceTest do
   use ExUnit.Case, async: true
   alias KlziiChat.Services.Permissions.PinboardResource
 
-
   describe("host") do
     test "can't add resource when session type is focus" do
       member = %{id: 1, role: "facilitator"}
