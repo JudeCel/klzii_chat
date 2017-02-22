@@ -207,6 +207,7 @@ const Uploads = React.createClass({
           <Modal.Body>
             <div className='row uploads-section'>
               <UploadsIndex { ...{ rendering, tabActive, afterChange: this.afterChange, modalName: modalData.type } } />
+              { this.fileSizeMessage(title) }
             </div>
           </Modal.Body>
         </Modal>
@@ -214,6 +215,15 @@ const Uploads = React.createClass({
     }
     else {
       return (false)
+    }
+  },
+  fileSizeMessage(title){
+    if(title == "Upload file") {
+      return (
+        <div className='col-md-12'>
+          <p className="col-md-offset-2 col-md-10 file-size-message">Maximum file size is 5MB.</p>
+        </div>
+      )
     }
   }
 });
