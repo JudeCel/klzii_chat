@@ -9,13 +9,13 @@ defmodule KlziiChat.Services.Reports.Types.Messages.Formats.Txt do
   @spec render_string( Map.t) :: {:ok, String.t} | {:error, Map.t}
   def render_string(data) do
     session = get_in(data, ["session"])
-    fields = get_in(data, ["fields"])
+    fields = ["Comment"]
     [session_topic |_ ] = get_in(data, ["session_topics"])
     {:ok, acc} = Agent.start_link(fn -> [] end)
     {:ok, container} = DataContainer.start_link(session.participant_list)
 
     map_data(session_topic.messages, session, fields, container, acc)
-    {:ok, %{header: fields, data: acc}}
+    {:ok, %{header: [session_topic.name], data: acc}}
   end
 
   @spec map_data(List.t,  Map.t, List.t, Process.t, Process.t) :: List.t
@@ -37,6 +37,6 @@ defmodule KlziiChat.Services.Reports.Types.Messages.Formats.Txt do
     row = Enum.map(fields, fn(field) ->
       DataContainer.get_value(field, message, session, container)
     end) |> Enum.join(", ")
-    [row <> "\r\n\r\n"]
+    ["\r\n\r\n" <> row]
   end
 end
