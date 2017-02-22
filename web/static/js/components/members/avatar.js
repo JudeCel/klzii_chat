@@ -133,11 +133,12 @@ const Avatar = React.createClass({
   },
   shouldComponentUpdate(nextProps) {
     if(this.previousData) {
-      let avatarData = JSON.stringify(this.props.avatarData) != JSON.stringify(nextProps.member.avatarData);
+      let avatarData = JSON.stringify(this.props.member.avatarData) != JSON.stringify(nextProps.member.avatarData);
       let sessionTopicContext = JSON.stringify(this.previousData.sessionTopicContext) != JSON.stringify(nextProps.member.sessionTopicContext);
       let username = this.previousData.username != nextProps.member.username;
       let currentTopic = this.previousData.currentTopic != nextProps.member.currentTopic;
       let willUpdate = (username || avatarData || sessionTopicContext || currentTopic);
+
       return willUpdate;
     }
     else {
