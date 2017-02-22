@@ -37,6 +37,6 @@ defmodule KlziiChat.Services.Reports.Types.Messages.Formats.Txt do
     row = Enum.map(fields, fn(field) ->
       DataContainer.get_value(field, message, session, container)
     end) |> Enum.join(", ")
-    ["\r\n\r\n" <> row]
+    ["\r\n" <> row]
   end
 end
