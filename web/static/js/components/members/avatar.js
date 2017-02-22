@@ -113,7 +113,7 @@ const Avatar = React.createClass({
   },
   drawLabelAndText(avatar) {
     const { username, colour, currentTopic, online, animate } = this.props.member;
-    var el1 = avatar.rect(100, 20, 1, 1).attr({fill: colour, x: 25, y: 125}).addClass('svg-avatar-label');
+    var el1 = avatar.rect(100, 20).attr({fill: colour, x: 25, y: 125}).addClass('svg-avatar-label');
     var el2 = avatar.text(username).attr({fill: '#fff', 'font-size': '75%', 'text-anchor': 'middle', x: 76, y: 138}).addClass('svg-avatar-label');
     if(currentTopic && currentTopic.name && online) {
       avatar.text(currentTopic.name).attr({fill: '#000', 'font-size': '75%', 'text-anchor': 'middle', x: 76, y: 158}).addClass('svg-avatar-label svg-avatar-topic');
