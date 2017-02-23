@@ -1,0 +1,8 @@
+<ul class="nav nav-pills">
+  <li role="presentation" class="<%= current_link(@conn, info_path(@conn, :index))%>">
+    <%= link("Info", to: info_path(@conn, :index)) %>
+  </li>
+  <li role="presentation" class="<%= current_link(@conn, logs_path(@conn, :index))%>">
+    <%= link("Logs", to: logs_path(@conn, :index)) %>
+  </li>
+</ul>

@@ -32,8 +32,8 @@
           <li role="presentation" class="<%= current_link(@conn, tasks_path(@conn, :index))%>">
             <%= link("Tasks", to: tasks_path(@conn, :index)) %>
           </li>
-          <li role="presentation" class="<%= current_link(@conn, logs_path(@conn, :index))%>" >
-            <%= link("Logs", to: logs_path(@conn, :index)) %>
+          <li role="presentation" class="<%= current_link(@conn, monitoring_path(@conn, :index))%>" >
+            <%= link("Monitoring", to: monitoring_path(@conn, :index)) %>
           </li>
           <li role="presentation" >
           <a href="/exq" target="blank"> Exq</a>

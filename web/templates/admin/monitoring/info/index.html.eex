@@ -4,11 +4,4 @@
   }
 </style>
 
-Node YARN:
-<pre><%= raw(@node) %></pre>
-Elixir YARN:
-<pre><%= raw(@yarn) %></pre>
-Elixir MIX:
-<pre><%= raw(@mix) %></pre>
-
 <script src="<%= static_path(@conn, "/js/updatePackages.js") %>"></script>
