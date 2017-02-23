@@ -1,6 +1,7 @@
 defmodule KlziiChat.Endpoint do
   use Phoenix.Endpoint, otp_app: :klzii_chat
 
+  socket "/monitoring", KlziiChat.Monitoring.UserSocket
   socket "/socket", KlziiChat.UserSocket
   socket "/socketDashboard", KlziiChat.Dashboard.UserSocket
   socket "/admin", KlziiChat.Admin.UserSocket
