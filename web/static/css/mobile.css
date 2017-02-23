@@ -253,6 +253,9 @@
   }
   .modal-title > h2 {
     font-size: 12px;
+    overflow: auto;
+    margin: 0 !important;
+    height: 40px;
   }
 
   .modal-header .col-md-2 {
