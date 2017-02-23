@@ -10,12 +10,10 @@ defmodule KlziiChat.SessionTypeCase do
       "focus" => %{
         "steps" => %{
           "setUp" => %{
-            "enabled" => true,
-            "socialMediaGraphics" => false
+            "enabled" => true
           }, 
           "facilitatiorAndTopics" => %{
-            "enabled" => true,
-            "survays" => false
+            "enabled" => true
           }, 
           "manageSessionEmails" => %{
             "enabled" => true
@@ -31,12 +29,7 @@ defmodule KlziiChat.SessionTypeCase do
         },
         "features" => %{
           "survay" => %{
-            "prizeDraw" => %{
-              "enabled" => false
-            },
-            "contactList" => %{
-              "enabled" => false
-            },
+            "enabled" => false
           },
           "unidentifiedParticipants" => %{
             "enabled" => false
@@ -62,6 +55,9 @@ defmodule KlziiChat.SessionTypeCase do
           },
           "colorScheme" => %{
             "type" => "focus"
+          },
+          "socialMediaGraphics"=> {
+            "enabled"=> false
           }
         },
         "validations" => %{
@@ -77,12 +73,10 @@ defmodule KlziiChat.SessionTypeCase do
       "forum" => %{
         "steps" => %{
           "setUp" => %{
-            "enabled" => true,
-            "socialMediaGraphics" => false
+            "enabled" => true
           }, 
           "facilitatiorAndTopics" => %{
-            "enabled" => true,
-            "survays" => false
+            "enabled" => true
           }, 
           "manageSessionEmails" => %{
             "enabled" => true
@@ -98,12 +92,7 @@ defmodule KlziiChat.SessionTypeCase do
         },
         "features" => %{
           "survay" => %{
-            "prizeDraw" => %{
-              "enabled" => false
-            },
-            "contactList" => %{
-              "enabled" => false
-            },
+            "enabled" => false
           },
           "unidentifiedParticipants" => %{
             "enabled" => false
@@ -129,6 +118,9 @@ defmodule KlziiChat.SessionTypeCase do
           },
           "colorScheme" => %{
             "type" => "forum"
+          },
+          "socialMediaGraphics"=> {
+            "enabled"=> false
           }
         },
         "validations" => %{
@@ -144,12 +136,10 @@ defmodule KlziiChat.SessionTypeCase do
       "socialForum" => %{
         "steps" => %{
           "setUp" => %{
-            "enabled" => true,
-            "socialMediaGraphics" => true
+            "enabled" => true
           }, 
           "facilitatiorAndTopics" => %{
-            "enabled" => true,
-            "survays" => true
+            "enabled" => true
           }, 
           "manageSessionEmails" => %{
             "enabled" => false
@@ -163,12 +153,7 @@ defmodule KlziiChat.SessionTypeCase do
         },
         "features" => %{
           "survay" => %{
-            "prizeDraw" => %{
-              "enabled" => true
-            },
-            "contactList" => %{
-              "enabled" => true
-            },
+            "enabled" => true
           },
           "unidentifiedParticipants" => %{
             "enabled" => true
@@ -188,16 +173,17 @@ defmodule KlziiChat.SessionTypeCase do
           },
           "dateAndTime" => %{
             "enabled" => false,
-            #message will be updated with TA1560
-            "message" => "Not avaliable"
+            "message" => "Yay! One less thing you have to do. Start & End Date isn't required with Social Forum"
           },
           "anonymous" => %{
-            "enabled" => false,
-            #message will be updated with TA1560
-            "message" => "Not avaliable"
+            "enabled" => false
           },
           "colorScheme" => %{
             "type" => "forum"
+          },
+          "socialMediaGraphics"=> {
+            "enabled"=> true,
+            "message"=> "We're currently building an exciting tool for you to customize your social media posts and help your Chat Session stand out. We'll keep you updated on progress ☺"
           }
         },
         "validations" => %{
