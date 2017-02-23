@@ -251,6 +251,9 @@
     width: 100%;
     padding-right: 180px;
   }
+  .modal-title > h2 {
+    font-size: 12px;
+  }
 
   .modal-header .col-md-2 {
     padding: 0px !important;
@@ -1169,11 +1172,11 @@
   .inline-board-section {
     height: auto !important;
     text-align: center;
-  	position: relative;
-  	top: 40% !important;
-  	-webkit-transform: translateY(-50%);
-  	-o-transform: translateY(-50%);
-  	transform: translateY(-50%);
+    position: relative;
+    top: 40% !important;
+    -webkit-transform: translateY(-50%);
+    -o-transform: translateY(-50%);
+    transform: translateY(-50%);
   }
 
   .whiteboard-section .panel-buttons-section {
