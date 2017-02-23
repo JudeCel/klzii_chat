@@ -36,22 +36,22 @@ const Avatar = React.createClass({
 
     if(face) {
       if(this.props.removeAnim) {
-        let image = avatar.image(`/images/avatar/${type}_${this.pickFace(index, this.props.member.online)}.svg`, 0, 0, 152, 140);
+        let image = avatar.image(`/images/avatar/${type}_${this.pickFace(index, this.props.member.online)}.svg`, 152, 140).attr({x: 0, y: 0});
         image.addClass('svg-avatar-element');
       }
       else {
         const startPos = 6*152;
-        let image = avatar.image(`/images/avatar/${type}_${this.pickFace(index, this.props.member.online)}_anim.svg`, 0, 0, startPos, 140);
+        let image = avatar.image(`/images/avatar/${type}_${this.pickFace(index, this.props.member.online)}_anim.svg`, startPos, 140).attr({x: 0, y: 0});
         image.addClass(`svg-avatar-element emotion-avatar-${index}`);
       }
     }
     else {
-      let image = avatar.image(`/images/avatar/${type}_${this.padToTwo(index)}.svg`, 0, 0, 152, 140);
+      let image = avatar.image(`/images/avatar/${type}_${this.padToTwo(index)}.svg`, 152, 140).attr({x: 0, y: 0});
       image.addClass('svg-avatar-element');
     }
   },
   shouldAddObserverAvatar(avatar) {
-    let image = avatar.image(`/images/observer.png`, 10, 10, 123, 80);
+    let image = avatar.image(`/images/observer.png`, 123, 80).attr({x: 10, y: 10});
     image.addClass('svg-avatar-element');
   },
   getSVGStyle() {
@@ -113,9 +113,9 @@ const Avatar = React.createClass({
   },
   drawLabelAndText(avatar) {
     const { username, colour, currentTopic, online, animate } = this.props.member;
-    var el1 = avatar.rect(100, 20, 1, 1).attr({fill: colour, x: 25, y: 125}).addClass('svg-avatar-label');
+    var el1 = avatar.rect(100, 20).attr({fill: colour, x: 25, y: 125}).addClass('svg-avatar-label');
     var el2 = avatar.text(username).attr({fill: '#fff', 'font-size': '75%', 'text-anchor': 'middle', x: 76, y: 138}).addClass('svg-avatar-label');
-    if(currentTopic && online) {
+    if(currentTopic && currentTopic.name && online) {
       avatar.text(currentTopic.name).attr({fill: '#000', 'font-size': '75%', 'text-anchor': 'middle', x: 76, y: 158}).addClass('svg-avatar-label svg-avatar-topic');
     }
     if (animate) {
@@ -133,11 +133,12 @@ const Avatar = React.createClass({
   },
   shouldComponentUpdate(nextProps) {
     if(this.previousData) {
-      let avatarData = JSON.stringify(this.previousData.avatarData) != JSON.stringify(nextProps.member.avatarData);
+      let avatarData = JSON.stringify(this.props.member.avatarData) != JSON.stringify(nextProps.member.avatarData);
       let sessionTopicContext = JSON.stringify(this.previousData.sessionTopicContext) != JSON.stringify(nextProps.member.sessionTopicContext);
       let username = this.previousData.username != nextProps.member.username;
       let currentTopic = this.previousData.currentTopic != nextProps.member.currentTopic;
       let willUpdate = (username || avatarData || sessionTopicContext || currentTopic);
+
       return willUpdate;
     }
     else {
