@@ -49,10 +49,10 @@ defmodule KlziiChat.Services.Reports.Types.Messages.Formats.TxtTest do
       assert(Enum.count(data) == 4)
     end
 
-    test "one element contains same all elements from fields lis", %{result: result, fields: fields} do
+    test "one element contains same all elements from fields lis", %{result: result} do
       data = Agent.get(result.data, &(&1)) |> List.first
       row = String.split(data, ",")
-      assert(length(fields) == length(row))
+      assert(length(row) == 1)
     end
   end
 end
