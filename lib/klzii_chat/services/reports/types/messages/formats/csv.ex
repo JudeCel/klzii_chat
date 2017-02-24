@@ -9,7 +9,7 @@ defmodule KlziiChat.Services.Reports.Types.Messages.Formats.Csv do
   @spec render_string( Map.t) :: {:ok, String.t} | {:error, Map.t}
   def render_string(data) do
     session = get_in(data, ["session"])
-    fields = get_in(data, ["fields"])
+    fields = get_in(data, ["fields"]) ++ ["Emotion"]
     [session_topic |_ ] = get_in(data, ["session_topics"])
     {:ok, acc} = Agent.start_link(fn -> [] end)
     {:ok, container} = DataContainer.start_link(session.participant_list)

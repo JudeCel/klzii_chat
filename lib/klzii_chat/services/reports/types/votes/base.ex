@@ -15,7 +15,6 @@ defmodule KlziiChat.Services.Reports.Types.Votes.Base do
   @spec format_modeule(String.t) :: Module.t
   def format_modeule("pdf"), do: {:ok, Formats.Pdf}
   def format_modeule("csv"), do: {:ok, Formats.Csv}
-  def format_modeule("txt"), do: {:ok, Formats.Txt}
   def format_modeule(format), do: {:error, "module for format #{format} not found"}
 
   def get_data(report) do
