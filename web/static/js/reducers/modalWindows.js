@@ -8,6 +8,7 @@ const initialState = {
   reports: false,
   whiteboardText: false,
   whiteboardImage: false,
+  clearWhiteboard: false,
   observerList: false,
   participantList: false,
   postData: false,
