@@ -35,10 +35,6 @@ defmodule KlziiChat.Services.Reports.Types.BaseTest do
       assert({:ok, Votes.Formats.Csv} == Votes.Base.format_modeule("csv"))
     end
 
-    test "txt" do
-      assert({:ok, Votes.Formats.Txt} == Votes.Base.format_modeule("txt"))
-    end
-
     test "not exists" do
       module = "bar"
       assert({:error, "module for format #{module} not found"} == Votes.Base.format_modeule(module))

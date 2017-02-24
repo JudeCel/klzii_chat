@@ -23,7 +23,7 @@ defmodule KlziiChat.ReportView do
           formats: %{
             pdf: %{ render: true, custom_fields: false },
             csv: %{ render: true, custom_fields: true },
-            txt: %{ render: true, custom_fields: true }
+            txt: %{ render: true, custom_fields: false }
           },
           defaultFields: default_fileds_list(["First Name", "Comment", "Date", "Is Star", "Is Reply"], session)
         },
@@ -33,7 +33,7 @@ defmodule KlziiChat.ReportView do
           formats: %{
             pdf: %{ render: true, custom_fields: false },
             csv: %{ render: true, custom_fields: true },
-            txt: %{ render: true, custom_fields: true }
+            txt: %{ render: true, custom_fields: false }
           },
           defaultFields: default_fileds_list(["First Name", "Comment", "Date", "Is Reply"], session)
         },
@@ -43,7 +43,7 @@ defmodule KlziiChat.ReportView do
           formats: %{
             pdf: %{ render: true, custom_fields: false },
             csv: %{ render: true, custom_fields: true },
-            txt: %{ render: true, custom_fields: true }
+            txt: %{ render: false, custom_fields: false }
           },
           defaultFields: default_fileds_list(["Title", "Question", "First Name", "Answer", "Date" ], session)
         },

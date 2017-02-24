@@ -85,13 +85,6 @@ defmodule KlziiChat.Services.Reports.ReportTest do
       report = Repo.preload(report, [:resource])
       assert(report.resource.file)
     end
-
-    test "txt", %{txt_report: txt_report} do
-      assert({:ok, report} = Report.run(txt_report.id))
-      assert(is_integer(report.resourceId))
-      report = Repo.preload(report, [:resource])
-      assert(report.resource.file)
-    end
   end
 
   describe "whiteboards" do

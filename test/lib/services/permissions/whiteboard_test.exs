@@ -1,10 +1,11 @@
 defmodule KlziiChat.Services.Permissions.WhiteboardTest do
   use ExUnit.Case, async: true
+  use KlziiChat.{SessionTypeCase}
   alias  KlziiChat.Services.Permissions.Whiteboard
 
-  test "#Permissions.Whiteboard can_enable" do
+  test "#Permissions.Whiteboard can_enable", %{properties: properties} do
     member = %{role: "facilitator"}
-    session = %{type: "focus"}
+    session = %{session_type: %{properties: properties["focus"]}}
     preference = %{data: %{"whiteboardFunctionality" => true, "whiteboardDisplay" => true}}
     assert({:ok} = Whiteboard.can_enable(member, session,preference))
   end
@@ -34,6 +35,7 @@ defmodule KlziiChat.Services.Permissions.WhiteboardTest do
     member = %{id: 1, role: "facilitator"}
     assert({:ok} = Whiteboard.can_add_image(member))
   end
+
   test "#Permissions.Whiteboard guest or observer can't add image" do
     roles = ["observer", "participant"]
     Enum.map(roles, fn role ->
@@ -60,19 +62,19 @@ defmodule KlziiChat.Services.Permissions.WhiteboardTest do
     assert({:ok} = Whiteboard.can_edit(member, shape))
   end
 
-  test "#Permissions.Whiteboard can new shape when session type is focus" do
+  test "#Permissions.Whiteboard can new shape when session type is focus", %{properties: properties} do
     roles = ["facilitator", "participant"]
     preference = %{data: %{"whiteboardFunctionality" =>  true, "whiteboardDisplay" => true}}
-    session = %{type: "focus"}
+    session = %{session_type: %{properties: properties["focus"]}}
     Enum.map(roles, fn role ->
       member = %{role: role}
       assert({:ok} = Whiteboard.can_new_shape(member, session, preference))
     end)
   end
 
-  test "#Permissions.Whiteboard can new shape when session type is forum" do
+  test "#Permissions.Whiteboard can new shape when session type is forum", %{properties: properties} do
     roles = ["facilitator"]
-    session = %{type: "forum"}
+    session = %{session_type: %{properties: properties["forum"]}}
     preference = %{data: %{"whiteboardFunctionality" =>  true, "whiteboardDisplay" => true}}
 
     Enum.map(roles, fn role ->
@@ -81,9 +83,9 @@ defmodule KlziiChat.Services.Permissions.WhiteboardTest do
     end)
   end
 
-  test "#Permissions.Whiteboard can't new shape when session type is forum" do
+  test "#Permissions.Whiteboard can't new shape when session type is forum", %{properties: properties} do
     roles = ["participant"]
-    session = %{type: "forum"}
+    session = %{session_type: %{properties: properties["forum"]}}
 
     preference = %{data: %{"whiteboardFunctionality" =>  true, "whiteboardDisplay" => true}}
     Enum.map(roles, fn role ->
@@ -92,7 +94,7 @@ defmodule KlziiChat.Services.Permissions.WhiteboardTest do
     end)
   end
 
-  test "#Permissions.Whiteboard can't new shape" do
+  test "#Permissions.Whiteboard can't new shape", %{properties: properties} do
     sessions = ["forum", "focus"]
     roles = ["observer"]
     preference = %{data: %{"whiteboardFunctionality" =>  true, "whiteboardDisplay" => true}}
@@ -100,15 +102,15 @@ defmodule KlziiChat.Services.Permissions.WhiteboardTest do
     Enum.map(roles, fn role ->
       member = %{role: role}
       Enum.map(sessions, fn type ->
-        session = %{type: type}
+        session = %{session_type: %{properties: properties[type]}}
         assert({:error, _} = Whiteboard.can_new_shape(member, session, preference))
       end)
     end)
   end
 
   describe "new shape" do
-    test "when no whiteboardFunctionality, Host and forum" do
-      session = %{type: "forum"}
+    test "when no whiteboardFunctionality, Host and forum", %{properties: properties} do
+      session = %{session_type: %{properties: properties["forum"]}}
       member = %{role: "facilitator"}
       preference = %{
         data: %{"whiteboardFunctionality" =>  false, "whiteboardDisplay" => true}
@@ -116,8 +118,8 @@ defmodule KlziiChat.Services.Permissions.WhiteboardTest do
       assert({:ok} = Whiteboard.can_new_shape(member, session, preference))
     end
 
-    test "when no whiteboardFunctionality, Host and focus" do
-      session = %{type: "focus"}
+    test "when no whiteboardFunctionality, Host and focus", %{properties: properties} do
+      session = %{session_type: %{properties: properties["focus"]}}
       member = %{role: "facilitator"}
       preference = %{
         data: %{"whiteboardFunctionality" =>  false, "whiteboardDisplay" => true}
@@ -125,8 +127,8 @@ defmodule KlziiChat.Services.Permissions.WhiteboardTest do
       assert({:ok} = Whiteboard.can_new_shape(member, session, preference))
     end
 
-    test "when no whiteboardFunctionalit, Guest and forum " do
-      session = %{type: "forum"}
+    test "when no whiteboardFunctionalit, Guest and focus", %{properties: properties} do
+      session = %{session_type: %{properties: properties["focus"]}}
       member = %{role: "participant"}
       preference = %{
         data: %{"whiteboardFunctionality" =>  false, "whiteboardDisplay" => true}
@@ -134,8 +136,8 @@ defmodule KlziiChat.Services.Permissions.WhiteboardTest do
       assert({:error, _} = Whiteboard.can_new_shape(member, session, preference))
     end
 
-    test "when no whiteboardFunctionalit, Guest and forum" do
-      session = %{type: "forum"}
+    test "when no whiteboardFunctionalit, Guest and forum", %{properties: properties} do
+      session = %{session_type: %{properties: properties["forum"]}}
       member = %{role: "participant"}
       preference = %{
         data: %{"whiteboardFunctionality" =>  false, "whiteboardDisplay" => true}
@@ -143,8 +145,8 @@ defmodule KlziiChat.Services.Permissions.WhiteboardTest do
       assert({:error, _} = Whiteboard.can_new_shape(member, session, preference))
     end
 
-    test "when whiteboardFunctionalit enable, Guest and focus " do
-      session = %{type: "focus"}
+    test "when whiteboardFunctionalit enable, Guest and focus", %{properties: properties} do
+      session = %{session_type: %{properties: properties["focus"]}}
       member = %{role: "participant"}
       preference = %{
         data: %{"whiteboardFunctionality" =>  true, "whiteboardDisplay" => true}
@@ -152,8 +154,8 @@ defmodule KlziiChat.Services.Permissions.WhiteboardTest do
       assert({:ok} = Whiteboard.can_new_shape(member, session, preference))
     end
 
-    test "when whiteboardFunctionalit enable, Guest and forum" do
-      session = %{type: "forum"}
+    test "when whiteboardFunctionalit enable, Guest and forum", %{properties: properties} do
+      session = %{session_type: %{properties: properties["forum"]}}
       member = %{role: "participant"}
       preference = %{
         data: %{"whiteboardFunctionality" =>  true, "whiteboardDisplay" => true}
