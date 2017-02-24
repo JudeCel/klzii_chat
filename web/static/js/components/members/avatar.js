@@ -9,7 +9,8 @@ const Avatar = React.createClass({
   getInitialState() {
     return {
       boxWidth: 150,
-      boxHeight: 160
+      boxHeight: 160,
+      currentData: {}
     };
   },
   padToTwo(number) {
@@ -129,21 +130,16 @@ const Avatar = React.createClass({
     this.clearAvatar(avatar);
     this.drawAvatar(avatar);
     this.drawLabelAndText(avatar);
-    this.previousData = { avatarData, username, sessionTopicContext, currentTopic };
+    this.setState({currentData: { avatarData, username, sessionTopicContext, currentTopic }});
   },
   shouldComponentUpdate(nextProps) {
-    if(this.previousData) {
-      let avatarData = JSON.stringify(this.props.member.avatarData) != JSON.stringify(nextProps.member.avatarData);
-      let sessionTopicContext = JSON.stringify(this.previousData.sessionTopicContext) != JSON.stringify(nextProps.member.sessionTopicContext);
-      let username = this.previousData.username != nextProps.member.username;
-      let currentTopic = this.previousData.currentTopic != nextProps.member.currentTopic;
-      let willUpdate = (username || avatarData || sessionTopicContext || currentTopic);
+    let avatarData = JSON.stringify(this.state.currentData.avatarData) != JSON.stringify(nextProps.member.avatarData);
+    let sessionTopicContext = JSON.stringify(this.state.currentData.sessionTopicContext) != JSON.stringify(nextProps.member.sessionTopicContext);
+    let username = this.state.currentData.username != nextProps.member.username;
+    let currentTopic = this.state.currentData.currentTopic != nextProps.member.currentTopic;
+    let willUpdate = (username || avatarData || sessionTopicContext || currentTopic);
 
-      return willUpdate;
-    }
-    else {
-      return true;
-    }
+    return willUpdate;
   },
   componentDidUpdate() {
     let avatar = this.findAvatar();
