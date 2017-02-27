@@ -108,10 +108,12 @@
   }
 
   .emotion-chat-avatar {
-    height: 52px;
-    width: 52px;
+    height: 75px;
+    width: 75px;
     margin-left: -1px;
   }
+
+
 
   .direct-message-modal .direct-message-section .messages-section .unread-separator hr {
     width: calc(100% / 2 - 110px) !important;
@@ -326,6 +328,8 @@
 
   .facilitator-section svg {
     height: 67px !important;
+    margin-right: 10px;
+    transform: scale(1.2) translate(5px, 5px);
   }
 
   .facilitator-section svg text, .facilitator-section svg rect, .message-section svg text, .message-section svg rect {
