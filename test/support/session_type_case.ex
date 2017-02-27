@@ -16,7 +16,8 @@ defmodule KlziiChat.SessionTypeCase do
             "enabled" => true
           }, 
           "manageSessionEmails" => %{
-            "enabled" => true
+            "enabled" => true,
+            "hideNext"=> true
           },
           "manageSessionParticipants" => %{
             "enabled" => true,
@@ -25,7 +26,8 @@ defmodule KlziiChat.SessionTypeCase do
           "inviteSessionObservers" => %{
             "enabled" => true,
             "sendGroupSms" => false
-          }
+          },
+          "message" => "It's even easier to build Social Forum, so you don't need steps 3 to 5."
         },
         "features" => %{
           "survay" => %{
