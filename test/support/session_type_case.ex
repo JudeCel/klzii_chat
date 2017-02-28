@@ -58,7 +58,7 @@ defmodule KlziiChat.SessionTypeCase do
           "colorScheme" => %{
             "type" => "focus"
           },
-          "socialMediaGraphics"=> {
+          "socialMediaGraphics" => %{
             "enabled"=> false
           }
         },
@@ -121,7 +121,7 @@ defmodule KlziiChat.SessionTypeCase do
           "colorScheme" => %{
             "type" => "forum"
           },
-          "socialMediaGraphics"=> {
+          "socialMediaGraphics" => %{
             "enabled"=> false
           }
         },
@@ -183,7 +183,7 @@ defmodule KlziiChat.SessionTypeCase do
           "colorScheme" => %{
             "type" => "forum"
           },
-          "socialMediaGraphics"=> {
+          "socialMediaGraphics"=> %{
             "enabled"=> true,
             "message"=> "We're currently building an exciting tool for you to customize your social media posts and help your Chat Session stand out. We'll keep you updated on progress ☺"
           }
