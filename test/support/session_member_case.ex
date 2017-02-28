@@ -114,6 +114,7 @@ defmodule KlziiChat.SessionMemberCase do
       type: "focus",
       participantListId: contact_list.id,
     } |> Repo.insert!
+      |> Repo.preload([:session_type])
 
     [
       account_user_account_manager,

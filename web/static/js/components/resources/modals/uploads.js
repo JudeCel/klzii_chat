@@ -215,7 +215,7 @@ const Uploads = React.createClass({
     else {
       return (false)
     }
-  }
+  },
 });
 
 const mapStateToProps = (state) => {

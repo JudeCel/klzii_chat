@@ -129,7 +129,6 @@
           background-color: #f5f5f5
     .messages-section > .message, .list-group > .list-group-item
       .avatar
-        transform: scale($avatar-emotion-half-scale) translate(-$scaled-avatar-emotion-size/2, -$scaled-avatar-emotion-size/2)
         float: left
         width: $scaled-avatar-emotion-size
         height: $scaled-avatar-emotion-size
@@ -399,7 +398,11 @@ body.modal-open
       margin-top: 20px
     .survey-answer
      font-size: 16px
-      
+
+.file-size-message
+  margin-top: 5px
+  font-size: 15px
+  font-style: italic
 
 @media screen and (min-width: 768px)
   .reports-modal
@@ -454,5 +457,3 @@ body.modal-open
         margin-right: 20px
       .emailNotification-radio-label
         font-size: 16px
-
-

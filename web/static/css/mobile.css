@@ -27,11 +27,6 @@
     left: 0 !important;
   }
 
-  .facilitator-section .outerbox {
-    left:17%;
-    position:absolute;
-  }
-
   .modal-title {
     float: left;
     width: 74%;
@@ -113,10 +108,12 @@
   }
 
   .emotion-chat-avatar {
-    height: 52px;
-    width: 52px;
+    height: 75px;
+    width: 75px;
     margin-left: -1px;
   }
+
+
 
   .direct-message-modal .direct-message-section .messages-section .unread-separator hr {
     width: calc(100% / 2 - 110px) !important;
@@ -251,6 +248,12 @@
     width: 100%;
     padding-right: 180px;
   }
+  .modal-title > h2 {
+    font-size: 12px;
+    overflow: auto;
+    margin: 0 !important;
+    height: 40px;
+  }
 
   .modal-header .col-md-2 {
     padding: 0px !important;
@@ -319,10 +322,14 @@
     box-shadow: 0px 4px 5px rgba(0, 0, 0, 0.2);
     z-index: 99;
     border-bottom: 2px solid rgb(229, 30, 57);
+    max-width: 100% !important;
+    display: flex !important;
   }
 
   .facilitator-section svg {
     height: 67px !important;
+    margin-right: 10px;
+    transform: scale(1.2) translate(5px, 5px);
   }
 
   .facilitator-section svg text, .facilitator-section svg rect, .message-section svg text, .message-section svg rect {
@@ -330,20 +337,23 @@
   }
 
   .facilitator-section .outerbox {
-    left: 110px !important;
     background-color: #fff;
     z-index:666;
-    width: calc(100vw - 85px) !important;
     font-weight: bold;
   }
 
+  .facilitator-section .outerbox .triangle {
+    display: none;
+  }
   .facilitator-section .outerbox .innerbox {
     height: 64px !important;
-    width: 100% !important;
   }
 
   .facilitator-section .outerbox .innerbox p {
     height: 40px;
+    overflow-y: hidden;
+  }
+  .facilitator-section .outerbox .innerbox p > p {
     overflow: auto;
   }
 
@@ -816,19 +826,12 @@
     margin-right: -15px;
   }
 
+  .type-forum .room-section-left .top-row .facilitator-section .say-section .outerbox {
+    display: flex !important;
+  }
+
   .type-forum .room-section-left .facilitator-section > div.div-inline-block {
     display: inline-block !important;
-  }
-
-  .type-forum .room-section-left .top-row .facilitator-section .say-section .outerbox {
-    position: absolute !important;
-    width: calc(100vw - 85px) !important;
-    margin-left: -30px !important;
-  }
-
-  .type-forum .room-section-left .top-row .facilitator-section .say-section .outerbox .innerbox {
-    width: 100% !important;
-    margin-left: 50px;
   }
 
   .type-forum .room-section-left .facilitator-section svg {
@@ -1169,11 +1172,11 @@
   .inline-board-section {
     height: auto !important;
     text-align: center;
-  	position: relative;
-  	top: 40% !important;
-  	-webkit-transform: translateY(-50%);
-  	-o-transform: translateY(-50%);
-  	transform: translateY(-50%);
+    position: relative;
+    top: 40% !important;
+    -webkit-transform: translateY(-50%);
+    -o-transform: translateY(-50%);
+    transform: translateY(-50%);
   }
 
   .whiteboard-section .panel-buttons-section {

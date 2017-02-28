@@ -248,6 +248,8 @@ body
       border: 0px
       width: 80px
       svg
+        width: 150px
+        height: 160px
         transform: scale(0.5) translate(-37.5px, -37.5px)
         margin: -45px -95px -90px -45px
         cursor: pointer
@@ -327,19 +329,19 @@ body
     display: flex
     .facilitator-section
       flex: 1
-      display: inline-block
+      display: flex
+      max-width: 50%
       margin-bottom: 20px
       .say-section
+        flex: 1
         vertical-align: top
-        display: inline-block
         .outerbox
-          margin-left: -20px
+          display: flex
           .triangle
             margin-top: -10px
             vertical-align: top
             position: relative
             top: 2em
-            display: inline-block
             width: 0
             height: 0
             border-style: solid
@@ -349,10 +351,11 @@ body
             _border-color: #000000 $message-facilitator #000000 #000000
             _filter: progid:DXImageTransform.Microsoft.Chroma(color='#000000')
           .innerbox
-            display: inline-block
+            flex: 1
             background-color: $message-facilitator
             min-height: 4em
             width: 15vw
+            margin-right: 5px
             p
               margin: 2px 5px
               font-size: 18px
@@ -387,20 +390,24 @@ body
       text-align: left
       padding-left: 8%
     .facilitator-section
+      display: block
+      max-width: 100%
+      margin-bottom: 10px
       > div.div-inline-block
         display: block
       svg
         @media (max-width: 1199px)
-          width: 13vw
+          width: 13vw !important
           height: 14vw
       svg text.svg-avatar-topic
         display: none
       .outerbox
-        margin-left: 20px !important
+        display: block !important
         left: 0
         position: inherit
         .triangle
-          margin-top: -40px !important
+          left: 30px
+          top: 2px !important
           border-width: 0 15px 15px 15px !important
           border-color: transparent transparent $message-facilitator transparent !important
           _border-color: #000000 #000000 $message-facilitator #000000 !important
@@ -443,8 +450,6 @@ body
           .emotion-chat-avatar
             display: block !important
             svg
-              transform: scale(0.5) translate(-37.5px, -37.5px)
-              margin: -22px -45px -75px -20px
               padding-top: 3px
               rect
                 display: none
@@ -476,9 +481,7 @@ body
 
 @media (max-width: 1200px)
   .outerbox
-    margin-left: -30px !important
     .innerbox
-      width: 18vw !important
       p
         font-size: 14px !important
 

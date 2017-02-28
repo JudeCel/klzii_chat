@@ -5,18 +5,19 @@ import mixins             from '../../../../mixins';
 import MemberActions      from '../../../../actions/member';
 import Avatar             from '../../avatar';
 import AvatarPreview      from './preview';
+import _                  from 'lodash';
 
 const ChangeAvatarModal = React.createClass({
   mixins: [mixins.modalWindows, mixins.validations],
   getInitialState() {
-    return { tabActive: 'hair' };
+    return { tabActive: 'hair', avatarData: {} };
   },
   componentWillReceiveProps() {
     this.setStateBasedOnCurrentUser();
   },
   setStateBasedOnCurrentUser() {
     const { id, username, avatarData, colour } = this.props.currentUser;
-    this.setState({ id, username, colour, avatarData: { ...avatarData } });
+    this.setState({ id, username, colour, avatarData:  _.cloneDeep(avatarData) });
   },
   onClose(e) {
     this.setState(this.getInitialState());
@@ -85,6 +86,7 @@ const ChangeAvatarModal = React.createClass({
     const show = this.showSpecificModal('avatar');
     const { colours } = this.props;
     const { id, username, avatarData, colour, tabActive } = this.state;
+    let memberData = { id: "change-avatar", username, colour, avatarData, online: true, edit: true };
     const tabs = [
       { type: 'hair' },
       { type: 'head' },
@@ -113,7 +115,7 @@ const ChangeAvatarModal = React.createClass({
             <div className='customize-avatar-section'>
               <div className='row biizu-section div-inline-block'>
                 <div className='preview-section div-inline-block' style={ { borderColor: colours.mainBorder } }>
-                  <Avatar member={ { id, username, colour, avatarData, online: true, edit: true } } specificId='change-avatar' />
+                  <Avatar member={ _.cloneDeep(memberData) } specificId="change-avatar-modal"/>
                 </div>
 
                 <div className='elements-section div-inline-block' style={ { borderColor: colours.mainBorder } }>

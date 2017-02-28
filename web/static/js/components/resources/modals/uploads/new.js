@@ -38,6 +38,9 @@ const UploadNew = React.createClass({
       return (
         <div className={ this.activeClass(3) }>
           <NewUpload { ...{ modalName, afterChange }} />
+          <div className='col-md-12'>
+            <p className="col-md-offset-2 col-md-10 file-size-message">Maximum file size is 5MB.</p>
+          </div>
         </div>
       )
     }

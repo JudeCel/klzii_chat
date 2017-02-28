@@ -8,20 +8,12 @@ import LeaveOrDetails     from './leaveOrDetails';
 
 const Links = React.createClass({
   mixins: [mixins.modalWindows, mixins.validations],
-  getInitialState() {
-    return {showClearWhiteboardModal: false};
-  },
-  clearWhiteboard() {
-    this.setState({ showClearWhiteboardModal: true });
-  },
-  clearWhiteboardCanceled() {
-    this.setState({ showClearWhiteboardModal: false });
-  },
   clearWhiteboardAccepted() {
-    this.setState({ showClearWhiteboardModal: false });
-    const { sessionTopicConsole, currentUser, channel, dispatch, whiteboardChannel } = this.props;
+    const { sessionTopicConsole, channel, dispatch, whiteboardChannel } = this.props;
+
+    this.closeAllModals();
     dispatch(WhiteboardActions.deleteAll(whiteboardChannel));
-    if(sessionTopicConsole.data.pinboard && currentUser.permissions.pinboard.can_enable) {
+    if(sessionTopicConsole.data.pinboard && this.hasPermission(['pinboard', 'can_enable'])) {
       dispatch(PinboardActions.enable(channel, false));
     }
   },
@@ -37,7 +29,7 @@ const Links = React.createClass({
   clearWhiteboardFunction(style) {
     if(this.isFacilitator(this.props.currentUser) && this.hasPermission(['whiteboard', 'can_display_whiteboard'])) {
       return (
-        <li style={ style } onClick={ this.clearWhiteboard }>
+        <li style={ style } onClick={ this.openSpecificModal.bind(this, 'clearWhiteboard') }>
           <i className='fa fa-paint-brush' />
         </li>
       )
@@ -72,6 +64,7 @@ const Links = React.createClass({
   render() {
     const { colours } = this.props;
     const count = this.countAllUnread() || null;
+    const show = this.showSpecificModal('clearWhiteboard');
     const style = {
       backgroundColor: colours.headerButton
     };
@@ -89,7 +82,7 @@ const Links = React.createClass({
           <LeaveOrDetails />
         </ul>
 
-        <ConfirmModal show={this.state.showClearWhiteboardModal} onAccept={this.clearWhiteboardAccepted} onClose={this.clearWhiteboardCanceled} description='Are you sure you want to clean the Whiteboard?' title="Are you sure?"/>
+        <ConfirmModal show={ show } onAccept={this.clearWhiteboardAccepted} onClose={this.closeAllModals} description='Are you sure you want to clean the Whiteboard?' title="Are you sure?"/>
       </div>
     )
   }

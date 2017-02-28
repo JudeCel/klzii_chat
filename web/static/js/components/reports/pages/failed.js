@@ -19,7 +19,7 @@ const ReportsDownload = React.createClass({
     return (
       <div className='download-section'>
         <div className='col-md-12 text-center'>
-          <h3>Something went wrong with this report</h3>
+          <h3>There are no Posts to Report in this Topic</h3>
         </div>
 
         <div className='col-md-6 text-center'>
