@@ -20,9 +20,19 @@ defmodule KlziiChat.SessionMembersView do
       sessionTopicContext: member.sessionTopicContext,
       role: member.role,
       currentTopic: member.currentTopic,
-      firstName: member.account_user.firstName,
-      lastName: member.account_user.lastName
+      firstName: account_user_last_name(member.account_user),
+      lastName: account_user_last_name(member.account_user)
     }
+  end
+
+  defp account_user_first_name(nil), do: nil
+  defp account_user_first_name(account_user) do
+    account_user.firstName
+  end
+
+  defp account_user_last_name(nil), do: nil
+  defp account_user_last_name(account_user) do
+    account_user.lastName
   end
 
   def render("message_info.json", %{ member: member}) do
