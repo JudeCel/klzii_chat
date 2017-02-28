@@ -33,7 +33,7 @@ defmodule KlziiChat.SessionTypeCase do
           "survay" => %{
             "enabled" => false
           },
-          "unidentifiedParticipants" => %{
+          "ghostParticipants" => %{
             "enabled" => false
           },
           "whiteboard" => %{
@@ -96,7 +96,7 @@ defmodule KlziiChat.SessionTypeCase do
           "survay" => %{
             "enabled" => false
           },
-          "unidentifiedParticipants" => %{
+          "ghostParticipants" => %{
             "enabled" => false
           },
           "whiteboard" => %{
@@ -157,7 +157,7 @@ defmodule KlziiChat.SessionTypeCase do
           "survay" => %{
             "enabled" => true
           },
-          "unidentifiedParticipants" => %{
+          "ghostParticipants" => %{
             "enabled" => true
           },
           "whiteboard" => %{
