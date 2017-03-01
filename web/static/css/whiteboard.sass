@@ -42,7 +42,8 @@
         height: 100%
         position: inherit
         #whiteboard-draw, #pinboard-svg
-          height: 230px
+          @media all and (-ms-high-contrast: none), (-ms-high-contrast: active)
+            height: 230px
         .panel-buttons-section, .remove-button
           display: none
         #pinboard-svg
