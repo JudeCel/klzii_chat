@@ -13,13 +13,21 @@ const ReportsDownload = React.createClass({
     dispatch(ReportsActions.recreate(channel, reportId));
     changePage('index');
   },
+  renderError(error) {
+    if(error && error.status == 300) {
+      return error.message;
+    }
+    else {
+      return "There are no Posts to Report in this Topic";
+    }
+  },
   render() {
     const { report } = this.props;
 
     return (
       <div className='download-section'>
         <div className='col-md-12 text-center'>
-          <h3>There are no Posts to Report in this Topic</h3>
+          <h3>{ this.renderError(report.message) }</h3>
         </div>
 
         <div className='col-md-6 text-center'>

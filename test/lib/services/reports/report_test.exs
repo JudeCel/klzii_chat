@@ -3,7 +3,15 @@ defmodule KlziiChat.Services.Reports.ReportTest do
   alias KlziiChat.Services.Reports.Report
   alias KlziiChat.Services.SessionReportingService
   describe "messages" do
-    setup %{session_topic_1: session_topic, facilitator: facilitator} do
+    setup %{session_topic_1: session_topic, facilitator: facilitator, participant: participant} do
+      Ecto.build_assoc(
+        session_topic, :messages,
+        sessionTopicId: session_topic.id,
+        sessionMemberId: participant.id,
+        body: "test message 2",
+        emotion: 1,
+      ) |> Repo.insert!()
+
       payload_messages_pdf =  %{"sessionTopicId" => session_topic.id, "format" => "pdf", "type" => "messages", "scopes" => %{} }
       payload_messages_csv =  %{"sessionTopicId" => session_topic.id, "format" => "csv", "type" => "messages", "scopes" => %{} }
       payload_messages_txt =  %{"sessionTopicId" => session_topic.id, "format" => "txt", "type" => "messages", "scopes" => %{} }

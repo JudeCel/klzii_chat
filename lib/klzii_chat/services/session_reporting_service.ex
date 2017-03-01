@@ -121,6 +121,7 @@ defmodule KlziiChat.Services.SessionReportingService do
   def generate_fiele_name(%{"type" =>"statistic"}, %{name: name}), do: {:ok, "Statistic Report #{name}_" |> normalize_name}
   def generate_fiele_name(_, _), do: {:ok, "Session_Report" |> normalize_name}
 
+  # TODO check if used anymore
   @spec set_status({:ok, Map.t} | {:error, String.t}, integer) :: {atom, Map.t}
   def set_status({:ok, resource}, report_id) do
     Repo.get!(SessionTopicsReport, report_id)
