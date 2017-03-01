@@ -76,8 +76,9 @@ const ChatView = React.createClass({
     if(error) {
       return (<div>{error}</div>)
     }
-    else if(sessionReady && sessionTopicReady) {
-      let className = 'role-' + role + ' type-' + type + (relatedType ? ' type-' + relatedType : "");
+    else if(sessionReady && sessionTopicReady) { 
+      let relatedTypeClass = relatedType ? "type-" + relatedType : "";
+      let className = `role-${role} type-${type} ${relatedTypeClass}`;
       return (
         <div id='chat-app-container' className={ className }>
           <Loading />
