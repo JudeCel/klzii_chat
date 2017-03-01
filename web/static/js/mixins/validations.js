@@ -45,7 +45,7 @@ const validations = {
     return member.role == "observer";
   },
   isForum() {
-    return this.props.session.type == "forum";
+    return this.props.session.type == "forum" || this.props.session.type == "socialForum";
   },
 }
 

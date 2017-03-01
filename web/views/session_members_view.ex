@@ -21,7 +21,8 @@ defmodule KlziiChat.SessionMembersView do
       role: member.role,
       currentTopic: member.currentTopic,
       firstName: account_user_last_name(member.account_user),
-      lastName: account_user_last_name(member.account_user)
+      lastName: account_user_last_name(member.account_user),
+      ghost: member.ghost
     }
   end
 

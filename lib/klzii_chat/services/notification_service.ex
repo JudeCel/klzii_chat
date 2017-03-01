@@ -19,12 +19,16 @@ defmodule KlziiChat.Services.NotificationService do
         where: sm.id == ^session_member_id,
         preload: [:account_user])
       |> Repo.one
-    email_notification = session_member.account_user.emailNotification
 
-    if email_notification == "all" || email_notification == "privateMessages" && type == "private_message" do
-      send_notification(session_member.account_user.id, session_id)
-    else
+    if session_member.ghost do
       {:ok, false}
+    else
+      email_notification = session_member.account_user.emailNotification
+      if email_notification == "all" || email_notification == "privateMessages" && type == "private_message" do
+        send_notification(session_member.account_user.id, session_id)
+      else
+        {:ok, false}
+      end
     end
   end
 
