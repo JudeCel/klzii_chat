@@ -21,6 +21,8 @@ defmodule KlziiChat.ChatController do
   def index(conn, %{"uid_token" => token}) do
     session_member = Repo.get_by(SessionMember, token: token)
     if session_member != nil && session_member.ghost do
+      %{ dashboard_url: dashboard } = Application.get_env(:klzii_chat, :resources_conf)
+      conn = set_redirect_url(conn, dashboard <> "/logout")
       Guardian.Plug.sign_in(conn, session_member)
       |> render("index.html", session_id: session_member.sessionId)
     else

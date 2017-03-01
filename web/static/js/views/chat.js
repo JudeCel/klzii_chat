@@ -66,10 +66,8 @@ const ChatView = React.createClass({
   },
   getRelatedUIType() {
     const { type } = this.props;
-    switch(type) {
-      case 'socialForum': return 'forum';
-      default: return null;
-    }
+    if (type == 'socialForum') return 'forum';
+    return null;
   },
   render() {
     const { error, sessionReady, sessionTopicReady, brand_logo, role, type } = this.props;
