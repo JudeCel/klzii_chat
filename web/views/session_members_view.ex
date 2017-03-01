@@ -76,7 +76,8 @@ defmodule KlziiChat.SessionMembersView do
       jwt: buildJWT(member),
       account_user_id: member.accountUserId,
       session_id: member.sessionId,
-      permissions: permissions_map
+      permissions: permissions_map,
+      ghost: member.ghost
     }
 
 

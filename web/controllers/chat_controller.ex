@@ -14,7 +14,19 @@ defmodule KlziiChat.ChatController do
         Guardian.Plug.sign_in(conn, session_member)
         |> render("index.html", session_id: session_member.sessionId)
       _ ->
-        send_resp(conn, 401, Poison.encode!(%{error: "unauthorized, allow only dev"}))
+        send_resp(conn, 401, Poison.encode!(%{error: "Unauthorized, allow only dev"}))
+    end
+  end
+
+  def index(conn, %{"uid_token" => token}) do
+    session_member = Repo.get_by(SessionMember, token: token)
+    if session_member != nil && session_member.ghost do
+      Guardian.Plug.sign_in(conn, session_member)
+      |> render("index.html", session_id: session_member.sessionId)
+    else
+      resp =  KlziiChat.ChangesetView.render("error.json", %{not_found: "Session member not found"})
+      |> Poison.encode!
+      send_resp(conn, 401, resp)
     end
   end
 

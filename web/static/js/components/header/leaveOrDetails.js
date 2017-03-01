@@ -18,8 +18,7 @@ const LeaveOrDetails = React.createClass({
   },
   render() {
     const { currentUser } = this.props;
-
-    return this.isFacilitator(currentUser) ? this.leaveButton() : this.myDetailsButton();
+    return this.isFacilitator(currentUser) || currentUser.ghost ? this.leaveButton() : this.myDetailsButton();
   }
 });
 
