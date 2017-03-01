@@ -15,7 +15,7 @@ defmodule KlziiChat.BackgroundTasks.Reports.SessionTopicReport do
         {:error, reason} ->
           {:ok, report} = SessionReportingService.set_failed(reason, report_id)
           notify(report.sessionId, report)
-          raise(reason)
+          {:error, reason}
       end
     rescue
       error ->

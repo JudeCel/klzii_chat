@@ -63,10 +63,22 @@ defmodule KlziiChat.Services.Reports.Types.Messages.Base do
   def get_session(_), do: {:error, %{not_reqired: "session id not reqired"}}
 
   def get_session_topics(report) do
-    data =
-      preload_session_topic(report)
+    preload_session_topic(report)
       |> Phoenix.View.render_many(SessionTopicView, "report.json", as: :session_topic)
-    {:ok, data}
+      |> filter_topics_with_no_messages()
+      |> validate_topic_message_count()
+  end
+
+  @spec validate_topic_message_count(List.t) :: {:ok, List.t} | {:error, Map.t}
+  def validate_topic_message_count([]) do
+    {:error, %{message: "There are no Posts to Report in this Topic", status: 300}}
+  end
+  def validate_topic_message_count(list) do
+    {:ok, list}
+  end
+
+  def filter_topics_with_no_messages(list) do
+    Enum.filter(list, fn(item) -> item.messages |> length() != 0 end)
   end
 
   def preload_session_topic(%{sessionTopicId: nil, sessionId: session_id} = report) do

@@ -7,7 +7,7 @@ defmodule KlziiChat.SessionTopicsReportView do
       id: report.id,
       includes: report.includes,
       format: report.format,
-      message: report.message,
+      message: get_message(report.message),
       sessionId: report.sessionId,
       sessionTopicId: get_session_topic_id(report),
       status: report.status,
@@ -35,6 +35,16 @@ defmodule KlziiChat.SessionTopicsReportView do
         Map.put(acc, session_topic_id, %{format => %{type => render("show.json", %{report: report})}})
       end
     end)
+  end
+
+  def get_message(nil), do: nil
+  def get_message(message) do
+    case Poison.decode(message) do
+      {:ok, result} ->
+        result
+      {:error, _error} ->
+        message
+    end
   end
 
   def get_session_topic_id(report) do

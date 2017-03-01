@@ -11,6 +11,7 @@ defmodule KlziiChat.Services.Reports.Report do
     do: {:ok, report_data}
   end
 
+  # TODO check if used anymore
   def validate_report(%{status: "failed", resourceId: nil}), do: {:ok}
   def validate_report(%{status: "failed", resourceId: resourceId}) do
     KlziiChat.Services.ResourceService.deleteByIds([resourceId])
