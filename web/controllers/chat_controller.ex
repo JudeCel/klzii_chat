@@ -18,18 +18,19 @@ defmodule KlziiChat.ChatController do
     end
   end
 
-  def index(conn, %{"uid_token" => token}) do
+  def index(conn, %{"ghost_token" => token}) do
     session_member = Repo.get_by(SessionMember, token: token)
-    if session_member != nil && session_member.ghost do
-      %{ dashboard_url: dashboard } = Application.get_env(:klzii_chat, :resources_conf)
-      conn = set_redirect_url(conn, dashboard <> "/logout")
-      Guardian.Plug.sign_in(conn, session_member)
-      |> render("index.html", session_id: session_member.sessionId)
-    else
-      resp =  KlziiChat.ChangesetView.render("error.json", %{not_found: "Session member not found"})
-      |> Poison.encode!
-      send_resp(conn, 401, resp)
-    end
+    case (session_member) do
+      %{ghost: true} ->
+        %{ dashboard_url: dashboard } = Application.get_env(:klzii_chat, :resources_conf)
+        conn = set_redirect_url(conn, dashboard <> "/logout")
+        Guardian.Plug.sign_in(conn, session_member)
+        |> render("index.html", session_id: session_member.sessionId)
+      _ ->
+        resp = KlziiChat.ChangesetView.render("error.json", %{not_found: "Session member not found"})
+        |> Poison.encode!
+        send_resp(conn, 401, resp)
+    end 
   end
 
   def index(conn, %{"token" => token}) do

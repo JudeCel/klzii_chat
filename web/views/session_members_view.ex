@@ -27,14 +27,10 @@ defmodule KlziiChat.SessionMembersView do
   end
 
   defp account_user_first_name(nil), do: nil
-  defp account_user_first_name(account_user) do
-    account_user.firstName
-  end
+  defp account_user_first_name(%{firstName: firstName}), do: firstName
 
   defp account_user_last_name(nil), do: nil
-  defp account_user_last_name(account_user) do
-    account_user.lastName
-  end
+  defp account_user_last_name(%{lastName: lastName}), do: lastName
 
   def render("message_info.json", %{ member: member}) do
     %{

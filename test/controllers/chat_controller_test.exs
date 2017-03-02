@@ -1,9 +1,9 @@
 defmodule KlziiChat.ChatControllerTest do
   use KlziiChat.{ConnCase, SessionMemberCase}, async: true
 
-  setup %{conn: conn, facilitator: facilitator, participant_ghost: participant_ghost} do
+  setup %{conn: conn, facilitator: facilitator} do
     { :ok, jwt, _encoded_claims } =  Guardian.encode_and_sign(facilitator)
-    {:ok, conn: conn, token: jwt,}
+    { :ok, conn: conn, token: jwt }
   end
 
   describe("Join") do
@@ -18,7 +18,7 @@ defmodule KlziiChat.ChatControllerTest do
     end
 
     test "when ghost user", %{conn: conn, participant_ghost: participant_ghost} do
-      conn = get(conn, "/", uid_token: participant_ghost.token)
+      conn = get(conn, "/", ghost_token: participant_ghost.token)
       assert(html_response(conn, 200))
     end
   end
