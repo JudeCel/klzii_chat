@@ -7,20 +7,24 @@ defmodule KlziiChat.Services.NotificationService do
     is_active = Map.has_key?(active_members, to_string(session_member_id))
     case is_active do
      false -> 
-      check_config_and_send_notification(session_member_id, session_id, type)
+      prepare_check_and_send_notification(session_member_id, session_id, type)
      true ->
       {:ok, false}
     end
   end
 
-  defp check_config_and_send_notification(session_member_id, session_id, type) do
+  defp prepare_check_and_send_notification(session_member_id, session_id, type) do
     session_member = 
       (from sm in SessionMember,
         where: sm.id == ^session_member_id,
         preload: [:account_user])
       |> Repo.one
-    email_notification = session_member.account_user.emailNotification
+    check_and_send_notification(session_member, session_id, type)
+  end
 
+  defp check_and_send_notification(%{ghost: true}, _, _), do: {:ok, false}
+  defp check_and_send_notification(session_member, session_id, type) do 
+    email_notification = session_member.account_user.emailNotification
     if email_notification == "all" || email_notification == "privateMessages" && type == "private_message" do
       send_notification(session_member.account_user.id, session_id)
     else

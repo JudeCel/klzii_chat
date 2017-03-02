@@ -12,12 +12,15 @@ const ParticipantListModal = React.createClass({
   componentDidUpdate() {
     setTimeout(() => { this.initPaginatorButton('participantsPaginator') }, 0);
   },
+  participantName(participant) {
+    return participant.ghost ? participant.username : participant.firstName + " " + participant.lastName;
+  },
   renderParticipant(participant) {
     return (
       <div className='col-md-3' key={ participant.id }>
         <div className='fa fa-users'></div>
         <div className='participant-name'>
-          <div>{ participant.firstName } { participant.lastName }</div>
+          <div>{ this.participantName(participant) }</div>
           <div>{ participant.currentTopic.name }</div>
         </div>
       </div>

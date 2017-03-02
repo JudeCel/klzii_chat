@@ -33,7 +33,7 @@ defmodule KlziiChat.SessionTypeCase do
           "survay" => %{
             "enabled" => false
           },
-          "unidentifiedParticipants" => %{
+          "ghostParticipants" => %{
             "enabled" => false
           },
           "whiteboard" => %{
@@ -59,7 +59,7 @@ defmodule KlziiChat.SessionTypeCase do
             "type" => "focus"
           },
           "socialMediaGraphics" => %{
-            "enabled"=> false
+            "enabled" => false
           }
         },
         "validations" => %{
@@ -96,7 +96,7 @@ defmodule KlziiChat.SessionTypeCase do
           "survay" => %{
             "enabled" => false
           },
-          "unidentifiedParticipants" => %{
+          "ghostParticipants" => %{
             "enabled" => false
           },
           "whiteboard" => %{
@@ -122,7 +122,7 @@ defmodule KlziiChat.SessionTypeCase do
             "type" => "forum"
           },
           "socialMediaGraphics" => %{
-            "enabled"=> false
+            "enabled" => false
           }
         },
         "validations" => %{
@@ -157,7 +157,7 @@ defmodule KlziiChat.SessionTypeCase do
           "survay" => %{
             "enabled" => true
           },
-          "unidentifiedParticipants" => %{
+          "ghostParticipants" => %{
             "enabled" => true
           },
           "whiteboard" => %{
@@ -183,7 +183,7 @@ defmodule KlziiChat.SessionTypeCase do
           "colorScheme" => %{
             "type" => "forum"
           },
-          "socialMediaGraphics"=> %{
+          "socialMediaGraphics" => %{
             "enabled"=> true,
             "message"=> "We're currently building an exciting tool for you to customize your social media posts and help your Chat Session stand out. We'll keep you updated on progress ☺"
           }

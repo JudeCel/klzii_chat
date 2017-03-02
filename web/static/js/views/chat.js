@@ -61,17 +61,29 @@ const ChatView = React.createClass({
     switch(type) {
       case 'forum': return <Forum/>;
       case 'focus': return <Focus/>;
+      case 'socialForum': return <Forum/>;
     }
   },
+  getRelatedUIType() {
+    const { type } = this.props;
+    if (type == 'socialForum') return 'forum';
+    return null;
+  },
+  getAppContainerClass() {
+    const { role, type } = this.props;
+    let relatedType = this.getRelatedUIType();
+    let relatedTypeClass = relatedType ? "type-" + relatedType : "";
+    return `role-${role} type-${type} ${relatedTypeClass}`;
+  },
   render() {
-    const { error, sessionReady, sessionTopicReady, brand_logo, role, type } = this.props;
+    const { error, sessionReady, sessionTopicReady, brand_logo } = this.props;
 
     if(error) {
       return (<div>{error}</div>)
     }
-    else if(sessionReady && sessionTopicReady) {
+    else if(sessionReady && sessionTopicReady) { 
       return (
-        <div id='chat-app-container' className={ 'role-' + role + ' type-' + type }>
+        <div id='chat-app-container' className={ this.getAppContainerClass() }>
           <Loading />
           <ToastContainer ref='notification' className='toast-top-right' toastMessageFactory={ ToastMessageFactory } />
 

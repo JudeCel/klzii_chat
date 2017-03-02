@@ -116,6 +116,18 @@ defmodule KlziiChat.SessionMemberCase do
     } |> Repo.insert!
       |> Repo.preload([:session_type])
 
+    session_social = %Session{
+      name: "cool session 2",
+      startTime: nil,
+      endTime: nil,
+      accountId: account.id,
+      timeZone: Timex.now |> Timex.format!( "%Z", :strftime),
+      status: "open",
+      type: "socialForum",
+      participantListId: contact_list.id,
+    } |> Repo.insert!
+      |> Repo.preload([:session_type])
+
     [
       account_user_account_manager,
       account_user_participant,
@@ -139,6 +151,7 @@ defmodule KlziiChat.SessionMemberCase do
       name: "cool topic 1",
       boardMessage: "cool session topic 1"
     ) |> Repo.insert!
+
     session_topic_1 = Ecto.build_assoc(topic_1, :session_topics,
       session: session,
       name: "cool session topic 1",
@@ -156,6 +169,13 @@ defmodule KlziiChat.SessionMemberCase do
       name: "cool session topic 2",
       order: 2,
       boardMessage: "greeting message for cool session topic 2 !"
+    ) |> Repo.insert!
+
+    session_topic_3 = Ecto.build_assoc(topic_1, :session_topics,
+      session: session_social,
+      name: "cool session topic 3",
+      order: 1,
+      boardMessage: "greeting message for cool session topic 3 !"
     ) |> Repo.insert!
 
     facilitator = %SessionMember{
@@ -185,6 +205,25 @@ defmodule KlziiChat.SessionMemberCase do
       accountUserId: account_user_participant_2.id
     } |> Repo.insert!
 
+    facilitator_social = %SessionMember{
+      token: "=oasu8asnx",
+      username: "cool member",
+      sessionId: session_social.id,
+      role: "facilitator",
+      colour: "00000",
+      accountUserId: account_user_account_manager.id
+    } |> Repo.insert!
+
+    participant_ghost = %SessionMember{
+      token: "===oasu8asnx",
+      username: "cool member 3",
+      sessionId: session_social.id,
+      colour: "00000",
+      role: "participant",
+      accountUserId: nil,
+      ghost: true
+    } |> Repo.insert!
+
     observer = %SessionMember{
       token: "==oasu8asnx",
       username: "cool member",
@@ -199,11 +238,15 @@ defmodule KlziiChat.SessionMemberCase do
       topic_2: topic_2,
       session_topic_1: session_topic_1,
       session_topic_2: session_topic_2,
+      session_topic_3: session_topic_3,
       facilitator: facilitator,
       participant: participant,
       participant2: participant2,
+      facilitator_social: facilitator_social,
+      participant_ghost: participant_ghost,
       observer: observer,
       session: session,
+      session_social: session_social,
       account_user_account_manager: account_user_account_manager,
       account_user_participant: account_user_participant,
       account_user_participant_2: account_user_participant_2,

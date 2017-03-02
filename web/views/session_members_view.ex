@@ -20,10 +20,17 @@ defmodule KlziiChat.SessionMembersView do
       sessionTopicContext: member.sessionTopicContext,
       role: member.role,
       currentTopic: member.currentTopic,
-      firstName: member.account_user.firstName,
-      lastName: member.account_user.lastName
+      firstName: account_user_last_name(member.account_user),
+      lastName: account_user_last_name(member.account_user),
+      ghost: member.ghost
     }
   end
+
+  defp account_user_first_name(nil), do: nil
+  defp account_user_first_name(%{firstName: firstName}), do: firstName
+
+  defp account_user_last_name(nil), do: nil
+  defp account_user_last_name(%{lastName: lastName}), do: lastName
 
   def render("message_info.json", %{ member: member}) do
     %{
@@ -65,7 +72,8 @@ defmodule KlziiChat.SessionMembersView do
       jwt: buildJWT(member),
       account_user_id: member.accountUserId,
       session_id: member.sessionId,
-      permissions: permissions_map
+      permissions: permissions_map,
+      ghost: member.ghost
     }
 
 

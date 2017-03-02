@@ -21,6 +21,7 @@ defmodule KlziiChat.SessionMember do
     field :currentTopic, :map, default: %{"id" => nil, "name" => nil, "date" => nil}
     field :token, :string
     field :role, :string
+    field :ghost, :boolean
     timestamps [inserted_at: :createdAt, updated_at: :updatedAt]
 
   end
