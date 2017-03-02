@@ -326,8 +326,9 @@
     display: flex !important;
   }
 
-  .facilitator-section svg {
+  .type-forum .room-section-left .facilitator-section svg, .facilitator-section svg {
     height: 67px !important;
+    width: 67px !important;
     margin-right: 10px;
     transform: scale(1.2) translate(5px, 5px);
   }
@@ -835,7 +836,7 @@
   }
 
   .type-forum .room-section-left .facilitator-section svg {
-    width: 150px !important;
+    width: 150px;
   }
 
   .type-forum .room-section-right {
