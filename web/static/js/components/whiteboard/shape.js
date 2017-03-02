@@ -52,26 +52,28 @@ function addNewOrChange() {
   for(var id in whiteboardDelegate.props.shapes) {
     var object = whiteboardDelegate.props.shapes[id];
     var existing = whiteboardDelegate.shapeData.added[object.uid];
+
     if(!existing) {
-      loadOne(object.event.element, object.permissions);
-    } else if(object.event.element != existing.svg()) {
+      loadOne(object.event.element, object.permissions, object.updatedAt);
+    } else if(!existing.updatedAt) {
+      existing.updatedAt = object.updatedAt;
+    } else if(object.updatedAt != existing.updatedAt) {
       existing.parent().remove();
-      loadOne(object.event.element, object.permissions);
+      loadOne(object.event.element, object.permissions, object.updatedAt);
     }
   }
 }
 
-function loadOne(data, permissions) {
+function loadOne(data, permissions, updatedAt) {
   var nested = whiteboardDelegate.mainGroup.nested();
   nested.svg(data);
-  initShapeEvents(nested.first(), permissions);
+  initShapeEvents(nested.first(), permissions, updatedAt);
 }
 
 function createShape(e) {
   if(e) {
     buildShape(e, function(shape) {
       whiteboardDelegate.shapeData.shape = shape;
-      whiteboardDelegate.shapeData.added[shape.id()] = shape;
       initShapeEvents(whiteboardDelegate.shapeData.shape, {can_edit: true});
       if(whiteboardDelegate.shapeData.shape) {
         whiteboardDelegate.shapeData.shape.on('drawstop', whiteboardDelegate.deps.Events.shapeWasCreated);
@@ -83,7 +85,6 @@ function createShape(e) {
 function createShapeWithDefaultCoords() {
   buildShape(null, function(shape) {
     whiteboardDelegate.shapeData.shape = shape;
-    whiteboardDelegate.shapeData.added[shape.id()] = shape;
     initShapeEvents(whiteboardDelegate.shapeData.shape, {can_edit: true});
     if(whiteboardDelegate.shapeData.shape) {
       whiteboardDelegate.shapeData.shape.on('drawstop', whiteboardDelegate.deps.Events.shapeWasCreated);
@@ -95,7 +96,8 @@ function createShapeWithDefaultCoords() {
 }
 
 
-function initShapeEvents(shape, permissions) {
+function initShapeEvents(shape, permissions, updatedAt) {
+  shape.updatedAt = updatedAt;
   whiteboardDelegate.shapeData.added[shape.id()] = shape;
   if (permissions && permissions.can_edit) {
     shape.off();
