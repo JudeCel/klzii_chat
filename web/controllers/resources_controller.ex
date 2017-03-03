@@ -18,6 +18,7 @@ defmodule KlziiChat.ResourcesController do
       QueriesResources.base_query(member.account_user)
       |> QueriesResources.find_by_params(params)
       |> QueriesResources.stock_query(%{"stock" => false})
+      |> QueriesResources.skip_reports()
       |> Repo.all
     stock_resources =
       QueriesResources.base_query

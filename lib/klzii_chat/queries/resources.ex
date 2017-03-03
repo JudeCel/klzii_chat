@@ -96,4 +96,8 @@ defmodule KlziiChat.Queries.Resources do
     session_resource_ids = Enum.map(session_resources, fn(%{resourceId: resource_id}) -> resource_id end)
     from(r in query, where: not r.id in ^session_resource_ids)
   end
+
+  def skip_reports(query) do
+    from(r in query, left_join: sr in assoc(r, :session_topics_reports), where: is_nil(sr.id))
+  end
 end
