@@ -350,11 +350,8 @@
     height: 64px !important;
   }
 
-  .facilitator-section .outerbox .innerbox p {
+  .facilitator-section .outerbox .innerbox > p {
     height: 40px;
-    overflow-y: hidden;
-  }
-  .facilitator-section .outerbox .innerbox p > p {
     overflow: auto;
   }
 
