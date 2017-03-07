@@ -46,8 +46,11 @@ defmodule KlziiChat.SessionTypeCase do
           "sendSms" => %{
             "enabled" => true
           },
-          "closeSession" => %{
+          "closeSessionButton" => %{
             "enabled" => true
+          },
+          "closeSessionToggle" => %{
+            "enabled" => false
           },
           "dateAndTime" => %{
             "enabled" => true
@@ -59,6 +62,9 @@ defmodule KlziiChat.SessionTypeCase do
             "type" => "focus"
           },
           "socialMediaGraphics" => %{
+            "enabled" => false
+          },
+          "publish" => %{
             "enabled" => false
           }
         },
@@ -109,8 +115,11 @@ defmodule KlziiChat.SessionTypeCase do
           "sendSms" => %{
             "enabled" => false
           },
-          "closeSession" => %{
+          "closeSessionButton" => %{
             "enabled" => true
+          },
+          "closeSessionToggle" => %{
+            "enabled" => false
           },
           "dateAndTime" => %{
             "enabled" => true
@@ -122,6 +131,9 @@ defmodule KlziiChat.SessionTypeCase do
             "type" => "forum"
           },
           "socialMediaGraphics" => %{
+            "enabled" => false
+          },
+          "publish" => %{
             "enabled" => false
           }
         },
@@ -170,8 +182,11 @@ defmodule KlziiChat.SessionTypeCase do
           "sendSms" => %{
             "enabled" => false
           },
-          "closeSession" => %{
+          "closeSessionButton" => %{
             "enabled" => false
+          },
+          "closeSessionToggle" => %{
+            "enabled" => true
           },
           "dateAndTime" => %{
             "enabled" => false,
@@ -186,6 +201,9 @@ defmodule KlziiChat.SessionTypeCase do
           "socialMediaGraphics" => %{
             "enabled"=> true,
             "message"=> "We're currently building an exciting tool for you to customize your social media posts and help your Chat Session stand out. We'll keep you updated on progress ☺"
+          },
+          "publish" => %{
+            "enabled" => true
           }
         },
         "validations" => %{
