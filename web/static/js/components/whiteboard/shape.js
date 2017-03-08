@@ -57,6 +57,7 @@ function addNewOrChange() {
       loadOne(object.event.element, object.permissions, object.updatedAt);
     } else if(!existing.updatedAt) {
       existing.updatedAt = object.updatedAt;
+      existing.permissions = object.permissions;
     } else if(object.updatedAt != existing.updatedAt) {
       existing.parent().remove();
       loadOne(object.event.element, object.permissions, object.updatedAt);
@@ -98,6 +99,7 @@ function createShapeWithDefaultCoords() {
 
 function initShapeEvents(shape, permissions, updatedAt) {
   shape.updatedAt = updatedAt;
+  shape.permissions = permissions;
   whiteboardDelegate.shapeData.added[shape.id()] = shape;
   if (permissions && permissions.can_edit) {
     shape.off();

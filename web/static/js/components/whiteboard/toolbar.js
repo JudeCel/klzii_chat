@@ -43,8 +43,15 @@ const Buttons = React.createClass({
   },
   setDelete(all) {
     if(all) {
-      whiteboardDelegate.deps.History.add(whiteboardDelegate.shapeData.added, 'removeAll');
-      whiteboardDelegate.deps.Actions.shapeDeleteAll();
+      const filtered = {}, short = whiteboardDelegate.shapeData.added;
+      for(let key in short) {
+        if(short[key].permissions.can_delete) filtered[key] = short[key];
+      }
+
+      if(Object.keys(filtered).length) {
+        whiteboardDelegate.deps.History.add(filtered, 'removeAll');
+        whiteboardDelegate.deps.Actions.shapeDeleteAll();
+      }
     }
     else if (whiteboardDelegate.mouseData.selected){
       whiteboardDelegate.deps.History.add(whiteboardDelegate.mouseData.selected, 'remove');
