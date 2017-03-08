@@ -47,6 +47,9 @@ const PinboardConsole = React.createClass({
           <Modal.Body>
             <div className='row pinboard-upload-section'>
               <UploadImage modalName='image' afterChange={ this.afterChange } mobileCamera={ true } />
+              <div className='col-md-12'>
+                <p className="col-md-offset-2 col-md-10 file-size-message">Maximum file size is 5MB.</p>
+              </div>
             </div>
           </Modal.Body>
         </Modal>
