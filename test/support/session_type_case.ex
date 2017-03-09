@@ -66,6 +66,9 @@ defmodule KlziiChat.SessionTypeCase do
           },
           "publish" => %{
             "enabled" => false
+          },
+          "inviteAgainTopic" => %{
+            "enabled" => false
           }
         },
         "validations" => %{
@@ -135,6 +138,9 @@ defmodule KlziiChat.SessionTypeCase do
           },
           "publish" => %{
             "enabled" => false
+          },
+          "inviteAgainTopic" => %{
+            "enabled" => false
           }
         },
         "validations" => %{
@@ -203,6 +209,9 @@ defmodule KlziiChat.SessionTypeCase do
             "message"=> "We're currently building an exciting tool for you to customize your social media posts and help your Chat Session stand out. We'll keep you updated on progress ☺"
           },
           "publish" => %{
+            "enabled" => true
+          },
+          "inviteAgainTopic" => %{
             "enabled" => true
           }
         },
