@@ -35,7 +35,24 @@ const Console = React.createClass({
     return sectionStyle;
   },
   render() {
+    const { currentTopic } = this.props;
+    return currentTopic.inviteAgain ? this.renderInviteAgain() : this.renderConsole();
+  },
+  renderInviteAgain() {
+    //todo: set values
+    let inviteAgainUrl = "#";
+    let noThanksUrl = "#";
+
+    return (
+      <div className="inviteAgainButtons">
+        <a href={inviteAgainUrl} className="inviteAgainButton">Invite Again!</a>
+        <a href={noThanksUrl} className="noThanksButton">No Thanks</a>
+      </div>
+    )
+  },
+  renderConsole() {
     const { modalName } = this.state;
+    
     const consoleButtons = [
       { type: 'video',       className: 'icon-video-1',    permission: true },
       { type: 'audio',       className: 'icon-volume-up',  permission: true },
@@ -71,7 +88,8 @@ const mapStateToProps = (state) => {
     currentUser: state.members.currentUser,
     colours: state.chat.session.colours,
     modalWindows: state.modalWindows,
-    sessionTopicConsole: state.sessionTopicConsole
+    sessionTopicConsole: state.sessionTopicConsole,
+    currentTopic: state.sessionTopic.current
   }
 };
 
