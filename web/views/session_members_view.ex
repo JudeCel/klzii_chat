@@ -12,7 +12,6 @@ defmodule KlziiChat.SessionMembersView do
       token: member.token
     }
   end
-
   def render("memberfull.json", %{member: member}) do
     %{id: member.id,
       username: member.username,
@@ -26,13 +25,6 @@ defmodule KlziiChat.SessionMembersView do
       ghost: member.ghost
     }
   end
-
-  defp account_user_first_name(nil), do: nil
-  defp account_user_first_name(%{firstName: firstName}), do: firstName
-
-  defp account_user_last_name(nil), do: nil
-  defp account_user_last_name(%{lastName: lastName}), do: lastName
-
   def render("message_info.json", %{ member: member}) do
     %{
       id: member.id,
@@ -46,7 +38,6 @@ defmodule KlziiChat.SessionMembersView do
       role: member.role
     }
   end
-
   def render("report.json", %{ member: member}) do
     %{
       id: member.id,
@@ -65,7 +56,6 @@ defmodule KlziiChat.SessionMembersView do
       username: member.username,
     }
   end
-
   def render("current_member.json", %{ member: member, permissions_map: permissions_map}) do
     member_map = render("member.json", %{ member: member})
 
@@ -88,7 +78,6 @@ defmodule KlziiChat.SessionMembersView do
 
     Map.merge(member_map, Map.put(current_member_info, :logout_path, logout_path))
   end
-
   def render("group_by_role.json", %{ members: members}) do
     accumulator = %{"facilitator" => %{}, "observer" =>  [], "participant" => []}
 
@@ -110,4 +99,11 @@ defmodule KlziiChat.SessionMembersView do
     { :ok, jwt, _encoded_claims } =  Guardian.encode_and_sign(%KlziiChat.SessionMember{id: member.id})
     jwt
   end
+
+  defp account_user_first_name(nil), do: nil
+  defp account_user_first_name(%{firstName: firstName}), do: firstName
+
+  defp account_user_last_name(nil), do: nil
+  defp account_user_last_name(%{lastName: lastName}), do: lastName
+
 end

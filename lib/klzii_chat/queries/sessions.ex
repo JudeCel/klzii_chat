@@ -7,23 +7,38 @@ defmodule KlziiChat.Queries.Sessions do
     session_topic_query = KlziiChat.Queries.SessionTopic.all(session_id)
     from(s in Session,
       where: s.id == ^session_id,
-      preload: [:brand_logo, :brand_project_preference, :session_type, session_topics: ^session_topic_query]
+      preload: [
+        :brand_logo,
+        :brand_project_preference,
+        :session_type,
+        [session_survey: [:survey]],
+        session_topics: ^session_topic_query]
     )
   end
 
   @spec find_for_report(Integer) :: Ecto.Query.t
   def find_for_report(session_id) do
     from(s in Session,  where: s.id == ^session_id,
-    preload: [ :account, :brand_logo, :brand_project_preference,
-      [ participant_list: [ contact_list_users: [:account_user] ]] ]
+    preload: [
+      :account,
+      :brand_logo,
+      :brand_project_preference,
+      [session_survey: [:survey]],
+      [ participant_list: [ contact_list_users: [:account_user] ]]
+    ]
     )
   end
 
   @spec find_for_report_statistic(Integer) :: Ecto.Query.t
   def find_for_report_statistic(session_id) do
     from(s in Session,  where: s.id == ^session_id,
-    preload: [:session_topics, :account, :session_members,
-    [ participant_list: [ contact_list_users: [:account_user] ]]]
+    preload: [
+      :session_topics,
+      :account,
+      :session_members,
+      :session_survey,
+      [ participant_list: [ contact_list_users: [:account_user] ]]
+    ]
     )
   end
 
