@@ -38,17 +38,31 @@ const Console = React.createClass({
     const { currentTopic } = this.props;
     return currentTopic.inviteAgain ? this.renderInviteAgain() : this.renderConsole();
   },
+  renderInviteAgainButton(url, className, text) {
+    if (url) {
+      return (<a href={url} className={className}>{text}</a>);
+    } else {
+      return null;
+    }
+  },
   renderInviteAgain() {
-    const { currentUser: { token } } = this.props;
+    const { currentUser: { token }, surveys } = this.props;
+    
+    let inviteAgainUrl = null;
+    let noThanksUrl = null;
 
-    //todo: set values
-    let inviteAgainUrl = "#" + "?token=" + token;
-    let noThanksUrl = "#" + "?token=" + token;
+    surveys.forEach((element, index, array) => {
+      if (element.survey.type == "sessionContactList") {
+        inviteAgainUrl = element.survey.url + "?token=" + token;;
+      } else if (element.survey.type == "sessionPrizeDraw") {
+        noThanksUrl = element.survey.url + "?token=" + token;;
+      }
+    });
 
     return (
       <div className="inviteAgainButtons">
-        <a href={inviteAgainUrl} className="inviteAgainButton">Invite Again!</a>
-        <a href={noThanksUrl} className="noThanksButton">No Thanks</a>
+        { this.renderInviteAgainButton(inviteAgainUrl, "inviteAgainButton", "Invite Again!") }
+        { this.renderInviteAgainButton(noThanksUrl, "noThanksButton", "No Thanks") }
       </div>
     )
   },
@@ -91,7 +105,8 @@ const mapStateToProps = (state) => {
     colours: state.chat.session.colours,
     modalWindows: state.modalWindows,
     sessionTopicConsole: state.sessionTopicConsole,
-    currentTopic: state.sessionTopic.current
+    currentTopic: state.sessionTopic.current,
+    surveys: state.chat.session.session_surveys
   }
 };
 
