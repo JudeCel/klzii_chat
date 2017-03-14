@@ -11,7 +11,7 @@ defmodule KlziiChat.Queries.Sessions do
         :brand_logo,
         :brand_project_preference,
         :session_type,
-        [session_survey: [:survey]],
+        [session_surveys: [:survey]],
         session_topics: ^session_topic_query]
     )
   end
@@ -23,7 +23,7 @@ defmodule KlziiChat.Queries.Sessions do
       :account,
       :brand_logo,
       :brand_project_preference,
-      [session_survey: [:survey]],
+      [session_surveys: [:survey]],
       [ participant_list: [ contact_list_users: [:account_user] ]]
     ]
     )
@@ -36,7 +36,7 @@ defmodule KlziiChat.Queries.Sessions do
       :session_topics,
       :account,
       :session_members,
-      :session_survey,
+      :session_surveys,
       [ participant_list: [ contact_list_users: [:account_user] ]]
     ]
     )
