@@ -71,7 +71,7 @@ const ReportIcon = React.createClass({
   render() {
     let { type, format } = this.props
     const report = this.getReport();
-    if(type.typeData.formats[format].render) {
+    if(type.formats[format].render) {
       return (
         <i className={ this.selectCorrectFormat(report.status) } onClick={ this.onClick.bind(this, report) } />
       )

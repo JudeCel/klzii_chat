@@ -42,19 +42,38 @@ const ReportsIndex = React.createClass({
       return ""
     }
   },
+  buildReportTypes(types, session){
+    const sessionType = session.type;
+    const reportTypes = [];
+
+    for (let value of Object.keys(types)) {
+      let type = types[value];
+      if (type.session_types.indexOf(sessionType) > -1 && type.section == "table") {
+        type.typeName = value;
+        reportTypes.push(type);
+      }
+    }
+    return reportTypes.sort((a, b) => {
+      return a.position - b.position;
+    });
+
+  },
   render() {
     const { sessionTopics, reports, changePage, mapStruct, session } = this.props;
     const { types } = reports.mapStruct
     const { format, facilitator } = this.state;
 
     const reportFormatsOrder = ['pdf', 'csv', 'txt'];
-    const reportTypes = [
-      {name: 'messages', typeName: 'messages', typeData: types['messages']},
-      {name: 'messages_stars_only', typeName: 'messages_stars_only', typeData: types['messages_stars_only']},
-      {name: 'whiteboards', typeName: 'whiteboards', typeData: types['whiteboards']},
-      {name: 'votes', typeName: 'votes', typeData: types['votes']},
-    ];
+    const reportTypes = this.buildReportTypes(types, session);
+    // console.log(reportTypes)
+    // const reportTypes = [
+    //   {name: 'messages', typeName: 'messages', typeData: types['messages']},
+    //   {name: 'messages_stars_only', typeName: 'messages_stars_only', typeData: types['messages_stars_only']},
+    //   {name: 'whiteboards', typeName: 'whiteboards', typeData: types['whiteboards']},
+    //   {name: 'votes', typeName: 'votes', typeData: types['votes']},
+    // ];
       let sessionTopicslist = [...sessionTopics.filter((i) => {return !i.default})];
+
       if (mapStruct.multiple_topics[format]) {
         sessionTopicslist.unshift({name: "All topics", id: "all"}); // Hack
       }
