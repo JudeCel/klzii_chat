@@ -8,7 +8,8 @@ defmodule KlziiChat.SessionMembersView do
       avatarData: member.avatarData,
       sessionTopicContext: member.sessionTopicContext,
       role: member.role,
-      currentTopic: member.currentTopic
+      currentTopic: member.currentTopic,
+      token: member.token
     }
   end
 

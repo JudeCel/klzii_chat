@@ -39,9 +39,11 @@ const Console = React.createClass({
     return currentTopic.inviteAgain ? this.renderInviteAgain() : this.renderConsole();
   },
   renderInviteAgain() {
+    const { currentUser: { token } } = this.props;
+
     //todo: set values
-    let inviteAgainUrl = "#";
-    let noThanksUrl = "#";
+    let inviteAgainUrl = "#" + "?token=" + token;
+    let noThanksUrl = "#" + "?token=" + token;
 
     return (
       <div className="inviteAgainButtons">
