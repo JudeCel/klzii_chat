@@ -11,7 +11,7 @@ defmodule KlziiChat.SessionView do
       endTime: session.endTime,
       colours: brand_project_preference(session.brand_project_preference),
       brand_logo: brand_logo(session.brand_logo),
-      session_survey: render_one(session_survey(session.session_survey), SessionSurveyView, "show.json", as: :session_survey),
+      session_surveys: render_many(session_surveys(session.session_surveys), SessionSurveyView, "show.json", as: :session_survey),
       session_topics: render_many(session_topics(session.session_topics), SessionTopicView, "show.json", as: :session_topic),
       timeZone: session.timeZone,
       account: render_one(account(session.account), AccountView, "show.json", as: :account)
@@ -62,8 +62,9 @@ defmodule KlziiChat.SessionView do
 
   defp account(%{__struct__: Ecto.Association.NotLoaded}), do: nil
   defp account(account), do: account
-  defp session_survey(%{__struct__: Ecto.Association.NotLoaded}), do: nil
-  defp session_survey(session_survey), do: session_survey
+
+  defp session_surveys(%{__struct__: Ecto.Association.NotLoaded}), do: []
+  defp session_surveys(session_surveys), do: session_surveys
 
   defp participant_list(%{__struct__: Ecto.Association.NotLoaded}), do: nil
   defp participant_list(contact_list), do: contact_list
