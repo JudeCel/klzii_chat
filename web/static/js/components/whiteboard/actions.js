@@ -1,6 +1,6 @@
 import Actions from '../../actions/whiteboard';
 
-module.exports = {
+export default {
   init,
   shapeCreate,
   shapeUpdate,
