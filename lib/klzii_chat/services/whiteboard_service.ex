@@ -2,7 +2,6 @@ defmodule KlziiChat.Services.WhiteboardService do
   alias KlziiChat.{Repo, Shape, ShapeView, SessionMember, SessionTopic, Session}
   alias KlziiChat.Services.Permissions.Whiteboard, as: WhiteboardPermissions
   alias KlziiChat.Queries.Shapes, as: ShapesQueries
-  import Ecto
   import Ecto.Query, only: [from: 2, preload: 2]
 
   def history(session_topic_id, session_member_id) do
@@ -50,7 +49,7 @@ defmodule KlziiChat.Services.WhiteboardService do
 
   def create_object(session_member_id, session_topic_id, params) do
     session_member = Repo.get!(SessionMember, session_member_id)
-    session = Repo.get!(Session, session_member.sessionId) 
+    session = Repo.get!(Session, session_member.sessionId)
       |> Repo.preload([:session_type])
     {:ok, preference} = KlziiChat.Services.Permissions.Builder.get_subscription_preference_session(session.id)
     if WhiteboardPermissions.can_new_shape(session_member, session, preference) do
