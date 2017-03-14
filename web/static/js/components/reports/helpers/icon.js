@@ -45,10 +45,9 @@ const ReportIcon = React.createClass({
     }
   },
   shouldShowCustomFields() {
-    const { type, format, mapStruct } = this.props;
+    const { type, format } = this.props;
 
-    let structData = mapStruct.types[type.name];
-    return structData.formats[format].custom_fields && structData.formats[format].render;
+    return type.formats[format].custom_fields && type.formats[format].render;
   },
   getReport() {
     const { type, format, sessionTopicId, facilitator, reports } = this.props
@@ -71,6 +70,7 @@ const ReportIcon = React.createClass({
   render() {
     let { type, format } = this.props
     const report = this.getReport();
+    
     if(type.formats[format].render) {
       return (
         <i className={ this.selectCorrectFormat(report.status) } onClick={ this.onClick.bind(this, report) } />

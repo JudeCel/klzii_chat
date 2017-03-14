@@ -25,7 +25,7 @@ defmodule KlziiChat.ReportView do
           section: "table",
           selected: false,
           session_types: ["focus", "forum", "socialForum"],
-          name: "star only",
+          name: "Chat Room History \n Stars Only",
           formats: %{
             pdf: %{ render: true, custom_fields: false },
             csv: %{ render: true, custom_fields: true },
@@ -75,7 +75,7 @@ defmodule KlziiChat.ReportView do
         statistic: %{
           position: 5,
           section: "",
-          name: "statistic",
+          name: "Statistic",
           session_types: ["focus", "forum", "socialForum"],
           selected: false,
           formats: %{

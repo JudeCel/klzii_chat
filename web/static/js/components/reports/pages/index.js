@@ -23,7 +23,8 @@ const ReportsIndex = React.createClass({
   statisticReport(){
     const { reports, mapStruct, changePage } = this.props;
     const { format, facilitator } = this.state;
-    let type = {name: 'statistic', typeName: 'statistic', typeData: mapStruct.types.statistic}
+    let type = {...mapStruct.types.statistic}
+    type.typeName = "statistic"
     if (mapStruct.types.statistic.formats[format].render) {
       return(
         <div className="chat-room-statistics">
@@ -56,7 +57,6 @@ const ReportsIndex = React.createClass({
     return reportTypes.sort((a, b) => {
       return a.position - b.position;
     });
-
   },
   render() {
     const { sessionTopics, reports, changePage, mapStruct, session } = this.props;
@@ -65,18 +65,11 @@ const ReportsIndex = React.createClass({
 
     const reportFormatsOrder = ['pdf', 'csv', 'txt'];
     const reportTypes = this.buildReportTypes(types, session);
-    // console.log(reportTypes)
-    // const reportTypes = [
-    //   {name: 'messages', typeName: 'messages', typeData: types['messages']},
-    //   {name: 'messages_stars_only', typeName: 'messages_stars_only', typeData: types['messages_stars_only']},
-    //   {name: 'whiteboards', typeName: 'whiteboards', typeData: types['whiteboards']},
-    //   {name: 'votes', typeName: 'votes', typeData: types['votes']},
-    // ];
-      let sessionTopicslist = [...sessionTopics.filter((i) => {return !i.default})];
+    let sessionTopicslist = [...sessionTopics.filter((i) => {return !i.default})];
 
-      if (mapStruct.multiple_topics[format]) {
-        sessionTopicslist.unshift({name: "All topics", id: "all"}); // Hack
-      }
+    if (mapStruct.multiple_topics[format]) {
+      sessionTopicslist.unshift({name: "All topics", id: "all"}); // Hack
+    }
 
     const colMdSizes = { all: 2, star: 3, whiteboard: 3,  votes: 1 };
     return (
@@ -105,10 +98,11 @@ const ReportsIndex = React.createClass({
           <thead>
             <tr>
               <th>Topics</th>
-              <th>All</th>
-              <th>Chat Room History<br /> Stars Only</th>
-              <th>Whiteboard</th>
-              <th>Votes</th>
+              {
+                reportTypes.map((item) =>
+                <th key={item.position}>{item.name}</th>
+              )
+              }
             </tr>
           </thead>
           <tbody>
@@ -121,7 +115,7 @@ const ReportsIndex = React.createClass({
                       <td className={ 'col-md-' + colMdSizes[type] } key={ fIndex }>
                         <ReportIcon
                           { ...{ format, type, facilitator, sessionTopicId: topic.id } }
-                          { ...{ createReport: this.createReport, changePage: changePage, mapStruct: mapStruct } }
+                          { ...{ createReport: this.createReport, changePage: changePage } }
                         />
                       </td>
                     )
