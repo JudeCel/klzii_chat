@@ -23,7 +23,7 @@ defmodule KlziiChat.Session do
     belongs_to :account, KlziiChat.Account, [foreign_key: :accountId]
     belongs_to :participant_list, KlziiChat.ContactList, [foreign_key: :participantListId]
     has_many :session_topics, KlziiChat.SessionTopic, [foreign_key: :sessionId]
-    has_one :session_survey, KlziiChat.SessionSurvey, [foreign_key: :sessionId]
+    has_many :session_surveys, KlziiChat.SessionSurvey, [foreign_key: :sessionId]
     has_many :topics, through: [:session_topics, :topic]
     has_many :direct_messages, KlziiChat.DirectMessage, [foreign_key: :sessionId]
     belongs_to :session_type, KlziiChat.SessionType, [foreign_key: :type, references: :name, type: :string]

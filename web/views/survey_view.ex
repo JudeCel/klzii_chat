@@ -20,6 +20,13 @@ defmodule KlziiChat.SurveyView do
       survey_answers: render_many(survey.survey_answers, SurveyAnswersView, "report.json", as: :survey_answer)
     }
   end
+  def render("survey_preview.json", %{survey: survey}) do
+    %{
+      id: survey.id,
+      url: survey.url,
+      type: survey.surveyType
+    }
+  end
 
   defp resource(%{__struct__: Ecto.Association.NotLoaded}), do: nil
   defp resource(resource), do: resource
