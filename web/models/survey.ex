@@ -18,6 +18,7 @@ defmodule KlziiChat.Survey do
     field :closed, :boolean
     field :confirmedAt, Timex.Ecto.DateTime
     field :url, :string
+    field :surveyType, :string
     timestamps [inserted_at: :createdAt, updated_at: :updatedAt]
   end
 end
