@@ -60,13 +60,18 @@ defmodule KlziiChat.ReportView do
       },
       multiple_topics: %{"pdf" => true},
       fields: %{
-        custom: Enum.concat(@default_field, session.participant_list.customFields)
+        custom: Enum.concat(@default_field, participant_list_custom_fields(session.participant_list))
       },
       includes: %{
         facilitator: true
       }
     }
   end
+
+  def participant_list_custom_fields(%{__struct__: Ecto.Association.NotLoaded}), do: []
+  def participant_list_custom_fields(nil), do: []
+  def participant_list_custom_fields(participant_list), do: participant_list.customFields
+
 
   def default_fileds_list(list, session) do
     case session do

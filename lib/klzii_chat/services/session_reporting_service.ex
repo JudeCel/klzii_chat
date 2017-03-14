@@ -215,14 +215,9 @@ defmodule KlziiChat.Services.SessionReportingService do
   end
 
   def get_session_contact_list(session_id) do
-    Repo.get(Session, session_id)
-    |>  Repo.preload([:participant_list])
-    |>  case do
-          %{participant_list: nil} ->
-            {:error, %{not_found: "Contact list not found for this session"}}
-          %{participant_list: _} = session ->
-            {:ok , session}
-        end
-
+    session =
+      Repo.get(Session, session_id)
+      |>  Repo.preload([:participant_list])
+      {:ok, session}
   end
 end
