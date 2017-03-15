@@ -1,6 +1,6 @@
 import mobileScreenHelpers from '../../mixins/mobileHelpers';
 
-module.exports = {
+export default {
   init,
   createShape,
   loadShapes,

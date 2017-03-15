@@ -15,18 +15,20 @@ function plugins() {
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': '"production"'
     }),
-    new webpack.optimize.UglifyJsPlugin({ minimize: true })
+    new webpack.optimize.UglifyJsPlugin({ sourceMap: true, minimize: true })
   ]
 
   var defaultList = [
-    new ExtractTextPlugin('css/[name].css'),
-    new webpack.optimize.OccurenceOrderPlugin(),
-    new webpack.NoErrorsPlugin(),
+    new ExtractTextPlugin({
+      filename: 'css/[name].css',
+      disable: false,
+      allChunks: true
+    }),
+    new webpack.NoEmitOnErrorsPlugin(),
     new CopyWebpackPlugin([{ from: 'web/static/assets/images', to: "images" }]),
     new CopyWebpackPlugin([{ from: 'web/static/assets/sounds', to: "sounds" }]),
     new CopyWebpackPlugin([{ from: 'web/static/css/reporting', to: "css/reporting" }]),
     new CopyWebpackPlugin([{ from: 'web/static/js/reporting', to: "js/reporting" }]),
-    // new webpack.optimize.DedupePlugin()
   ]
 
   switch (process.env.NODE_ENV) {
@@ -65,12 +67,7 @@ var config = module.exports = {
   },
 
   resolve: {
-    extensions: ['', '.js', '.sass', '.scss'],
-    modulesDirectories: ['node_modules'],
-  },
-
-  resolveLoader: {
-    root: path.join(__dirname, 'node_modules')
+    modules: ['node_modules', 'web/static']
   },
 
   // more information on how our modules are structured, and
@@ -79,23 +76,22 @@ var config = module.exports = {
   // we use regexes to tell Webpack what files require special treatment, and
   // what patterns to exclude.
   module: {
-    loaders: [
+    rules: [
       {
         test: /\.js$/,
         exclude: /node_modules/,
-        loader: 'babel',
-        query: {
-          cacheDirectory: true,
-          plugins: ['transform-decorators-legacy']
-        },
+        loader: 'babel-loader'
       },
       {
         test: /\.sass$/,
-        loader: ExtractTextPlugin.extract('style', 'css!sass?indentedSyntax&includePaths[]=' + __dirname +  '/node_modules'),
+        loader: ExtractTextPlugin.extract({
+          fallback: "style-loader",
+          use: ["css-loader","sass-loader"],
+        }),
       },
       {
         test: /\.(json|ttf|eot|svg|woff(2)?)(\?[a-z0-9]+)?$/,
-        loader: 'url-loader?limit=8192'
+        use:[ "url-loader" ]
       }
     ],
   },
