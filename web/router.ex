@@ -127,9 +127,11 @@ defmodule KlziiChat.Router do
     # CORS Routes
     options "/:id", SurveysController, :show
     options "/report/:id/:format/:token", SurveysController, :export
+    options "/list_report/:format/:token/?ids=:ids", SurveysController, :export_list
     # Generic routes for API be call from original domain
     get "/:id", SurveysController, :show
     get "/report/:id/:format/:token", SurveysController, :export
+    get "/list_report/:format/:token", SurveysController, :export_list
   end
 
   scope "/api/banners", KlziiChat do

@@ -36,4 +36,28 @@ defmodule KlziiChat.SurveysController do
         json(conn, %{error: reason})
     end
   end
+
+  def export_list(conn, %{"format" => format, "token" => token, "ids" => ids}) do
+    case get_member_from_token(token) do
+      {:ok, _, _} ->
+        cond do
+          format in ["pdf", "xlsx"] ->
+            {:ok, format_modeule} = KlziiChat.Services.Reports.Types.SurveyList.Base.format_modeule(format)
+            parts=String.split ids, ","
+            IO.inspect parts
+            {:ok, data} = KlziiChat.Services.Reports.Types.SurveyList.Base.get_data(%{id: Enum.at(parts, 0)})
+            {:ok, html} = format_modeule.processe_data(data)
+            {:ok, binary} = KlziiChat.Services.FileService.write_report(%{id: Enum.at(parts, 0), format: format, name: "some_name_now"},html, [binary: true])
+            conn
+            |> put_resp_content_type("application/#{format}")
+            |> put_resp_header("content-disposition", "attachment; filename=\"#{data["header_title"]}.#{format}\"")
+            |> send_resp(200, binary)
+          true ->
+              json(conn, %{error: "wrong format: #{format}"})
+          end
+      {:error, reason } ->
+        json(conn, %{error: reason})
+    end
+  end
+
 end
