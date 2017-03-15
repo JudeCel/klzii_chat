@@ -38,24 +38,24 @@ const Console = React.createClass({
     const { currentTopic } = this.props;
     return currentTopic.inviteAgain ? this.renderInviteAgain() : this.renderConsole();
   },
-  renderInviteAgainButton(url, className, text) {
-    if (url) {
+  renderInviteAgainButton(surveyUrl, className, text) {
+    if (surveyUrl) {
+      const { currentUser: { token } } = this.props;
+      let url = surveyUrl + "?token=" + token;
       return (<a href={url} className={className}>{text}</a>);
-    } else {
-      return null;
     }
   },
   renderInviteAgain() {
-    const { currentUser: { token }, surveys } = this.props;
+    const { surveys } = this.props;
     
     let inviteAgainUrl = null;
     let noThanksUrl = null;
 
     surveys.forEach((element, index, array) => {
       if (element.survey.type == "sessionContactList") {
-        inviteAgainUrl = element.survey.url + "?token=" + token;;
+        inviteAgainUrl = element.survey.url;
       } else if (element.survey.type == "sessionPrizeDraw") {
-        noThanksUrl = element.survey.url + "?token=" + token;;
+        noThanksUrl = element.survey.url;
       }
     });
 
