@@ -100,7 +100,7 @@ const ReportsIndex = React.createClass({
               <th>Topics</th>
               {
                 reportTypes.map((item) =>
-                <th key={item.position}>{item.name}</th>
+                <th key={item.position}><p>{item.name}</p></th>
               )
               }
             </tr>
