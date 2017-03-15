@@ -6,11 +6,10 @@ defmodule KlziiChat.SessionTopicView do
       name: session_topic.name,
       boardMessage: session_topic.boardMessage,
       landing: session_topic.landing,
-      landing: session_topic.landing,
       sign: session_topic.sign,
       session: session(session_topic.session),
       default: get_default_topic(session_topic.topic),
-      invite_again: get_invite_again_topic(session_topic.topic)
+      inviteAgain: get_invite_again_topic(session_topic.topic)
     }
   end
 
