@@ -35,7 +35,40 @@ const Console = React.createClass({
     return sectionStyle;
   },
   render() {
+    const { currentTopic } = this.props;
+    return currentTopic.inviteAgain ? this.renderInviteAgain() : this.renderConsole();
+  },
+  renderInviteAgainButton(surveyUrl, className, text) {
+    if (surveyUrl) {
+      const { currentUser: { token } } = this.props;
+      let url = surveyUrl + "?token=" + token;
+      return (<a href={url} className={className}>{text}</a>);
+    }
+  },
+  renderInviteAgain() {
+    const { surveys } = this.props;
+    
+    let inviteAgainUrl = null;
+    let noThanksUrl = null;
+
+    surveys.forEach((element, index, array) => {
+      if (element.survey.type == "sessionContactList") {
+        inviteAgainUrl = element.survey.url;
+      } else if (element.survey.type == "sessionPrizeDraw") {
+        noThanksUrl = element.survey.url;
+      }
+    });
+
+    return (
+      <div className="inviteAgainButtons">
+        { this.renderInviteAgainButton(inviteAgainUrl, "inviteAgainButton", "Invite Again!") }
+        { this.renderInviteAgainButton(noThanksUrl, "noThanksButton", "No Thanks") }
+      </div>
+    )
+  },
+  renderConsole() {
     const { modalName } = this.state;
+    
     const consoleButtons = [
       { type: 'video',       className: 'icon-video-1',    permission: true },
       { type: 'audio',       className: 'icon-volume-up',  permission: true },
@@ -71,7 +104,9 @@ const mapStateToProps = (state) => {
     currentUser: state.members.currentUser,
     colours: state.chat.session.colours,
     modalWindows: state.modalWindows,
-    sessionTopicConsole: state.sessionTopicConsole
+    sessionTopicConsole: state.sessionTopicConsole,
+    currentTopic: state.sessionTopic.current,
+    surveys: state.chat.session.session_surveys
   }
 };
 
