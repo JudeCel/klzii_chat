@@ -33,20 +33,27 @@ const ReportIcon = React.createClass({
     }
   },
   onClick(report) {
-    switch (report.status) {
-      case 'progress':
-        return;
-      case 'completed':
-        return this.props.changePage('download', report);
-      case 'failed':
-        return this.props.changePage('failed', report);
-      default:
-        if(this.shouldShowCustomFields()) {
-          this.props.changePage('selectCustom', report);
-        }
-        else {
-          return this.props.createReport(report);
-        }
+    if (report.enabled) {
+      switch (report.status) {
+        case 'progress':
+          return;
+        case 'completed':
+          if (report.type == "prize_draw") {
+            return this.props.changePage('download_prize_draw', report);
+          }else{
+            return this.props.changePage('download', report);
+          }
+        case 'failed':
+          return this.props.changePage('failed', report);
+        default:
+          if(this.shouldShowCustomFields()) {
+            this.props.changePage('selectCustom', report);
+          } else {
+            return this.props.createReport(report);
+          }
+      }
+    }else{
+      return this.props.changePage('accessDenied', report);
     }
   },
   shouldShowCustomFields() {
