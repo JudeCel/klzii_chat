@@ -34,7 +34,7 @@ defmodule KlziiChat.Services.SessionReportingService do
 
   @spec validate_type(Map.t) :: :ok | {:error, String.t}
   def validate_type(%{"type" => type}) do
-    if type in ["statistic", "messages", "messages_stars_only", "whiteboards", "votes"]  do
+    if type in ["prize_draw","statistic", "messages", "messages_stars_only", "whiteboards", "votes"]  do
       {:ok}
     else
       {:error, %{type: "incorrect report type: #{type}"}}
@@ -119,6 +119,7 @@ defmodule KlziiChat.Services.SessionReportingService do
   def generate_fiele_name(%{"type" =>"whiteboards"}, %{name: name}), do: {:ok, "Whiteboards Report #{name}_" |> normalize_name}
   def generate_fiele_name(%{"type" =>"votes"}, %{name: name}), do: {:ok, "Votes Report #{name}_" |> normalize_name}
   def generate_fiele_name(%{"type" =>"statistic"}, %{name: name}), do: {:ok, "Statistic Report #{name}_" |> normalize_name}
+  def generate_fiele_name(%{"type" =>"prize_draw"}, _), do: {:ok, "prizedrawonly_" |> normalize_name}
   def generate_fiele_name(_, _), do: {:ok, "Session_Report" |> normalize_name}
 
   # TODO check if used anymore

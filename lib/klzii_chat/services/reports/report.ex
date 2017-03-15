@@ -1,6 +1,6 @@
 defmodule KlziiChat.Services.Reports.Report do
   alias KlziiChat.{Repo, SessionTopicsReport, Resource}
-  alias KlziiChat.Services.Reports.Types.{Messages, Votes, Whiteboards, Statistic}
+  alias KlziiChat.Services.Reports.Types.{Messages, Votes, Whiteboards, Statistic, PrizeDraw}
   alias KlziiChat.Services.FileService
 
   def run(report_id) do
@@ -79,6 +79,7 @@ defmodule KlziiChat.Services.Reports.Report do
   def select_type("messages"), do: {:ok, Messages.Base}
   def select_type("statistic"), do: {:ok, Statistic.Base}
   def select_type("messages_stars_only"), do: {:ok, Messages.Base}
+  def select_type("prize_draw"), do: {:ok, PrizeDraw.Base}
   def select_type("votes"), do: {:ok, Votes.Base}
   def select_type("whiteboards"), do: {:ok, Whiteboards.Base}
   def select_type(type), do: {:error, "module for type #{type} not found"}
