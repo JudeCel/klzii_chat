@@ -19,14 +19,16 @@ defmodule KlziiChat.Services.Reports.Types.PrizeDraw.Formats.Csv do
     map_data(tail, fields, acc)
   end
   def map_data(%{answers: answers}, fields, acc) do
-    contactDetails = get_in(answers, ["2", "contactDetails"])
-    
-    answer =
-      Enum.reduce(fields, %{}, fn(field, local_acc) ->
-        Map.put(local_acc, field, get_field(field, contactDetails))
-      end)
+    if get_in(answers, ["1", "value"]) == 0 do
+      contactDetails = get_in(answers, ["2", "contactDetails"])
 
-    :ok = Agent.update(acc, fn(data) -> data ++  [answer] end)
+      answer =
+        Enum.reduce(fields, %{}, fn(field, local_acc) ->
+          Map.put(local_acc, field, get_field(field, contactDetails))
+        end)
+
+        :ok = Agent.update(acc, fn(data) -> data ++  [answer] end)
+    end
   end
 
   def get_field("First Name", contactDetails), do: get_in(contactDetails, ["firstName"])

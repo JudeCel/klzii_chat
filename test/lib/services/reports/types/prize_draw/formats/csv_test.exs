@@ -33,6 +33,25 @@ defmodule KlziiChat.Services.Reports.Types.PrizeDraw.Formats.CsvTest do
           }},
         "3" => %{"type" => "number", "value"=> 1}},
     }|> Repo.insert!
+    
+    %SurveyAnswer{
+      surveyId: survey.id,
+      answers: %{
+        "1" =>  %{"type" =>  "number", "value" =>  1},
+        "2" =>  %{
+          "type" =>  "object",
+          "value" => nil,
+          "tagHandled" =>  true,
+          "contactDetails" =>  %{
+            "age" => "45-49",
+            "email" => "asda@dfd.lv",
+            "gender" => "male",
+            "mobile" =>  "+21334444332",
+            "lastName" => "sddsd",
+            "firstName" => "wwd"
+          }},
+        "3" => %{"type" => "number", "value"=> 1}},
+    }|> Repo.insert!
 
     %Survey{
       accountId: session.accountId,
