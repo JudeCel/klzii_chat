@@ -114,7 +114,7 @@ const ReportsIndex = React.createClass({
                     reportTypes.map((type, fIndex) =>
                       <td className={ 'col-md-' + colMdSizes[type] } key={ fIndex }>
                         <ReportIcon
-                          { ...{ format, type, facilitator, sessionTopicId: topic.id } }
+                          { ...{ format, type, facilitator, topic, sessionTopicId: topic.id } }
                           { ...{ createReport: this.createReport, changePage: changePage } }
                         />
                       </td>

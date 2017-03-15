@@ -67,11 +67,18 @@ const ReportIcon = React.createClass({
     return _.get(reports, flow, tmpObject);
 
   },
+  canRender(type, topic, format){
+    if (type.typeName == "prize_draw") {
+      return (type.formats[format].render && topic.inviteAgain)
+    }else{
+      return type.formats[format].render
+    }
+  },
   render() {
-    let { type, format } = this.props
-    const report = this.getReport();
-    
-    if(type.formats[format].render) {
+    let { type, format, topic } = this.props
+
+    if(this.canRender(type, topic, format)) {
+      const report = this.getReport();
       return (
         <i className={ this.selectCorrectFormat(report.status) } onClick={ this.onClick.bind(this, report) } />
       )
