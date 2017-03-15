@@ -19,7 +19,8 @@ defmodule KlziiChat.Services.Reports.Types.PrizeDraw.Formats.Csv do
     map_data(tail, fields, acc)
   end
   def map_data(%{answers: answers}, fields, acc) do
-    contactDetails = get_in(answers, ["2"])
+    contactDetails = get_in(answers, ["2", "contactDetails"])
+    
     answer =
       Enum.reduce(fields, %{}, fn(field, local_acc) ->
         Map.put(local_acc, field, get_field(field, contactDetails))

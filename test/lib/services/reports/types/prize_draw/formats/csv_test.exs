@@ -58,5 +58,13 @@ defmodule KlziiChat.Services.Reports.Types.PrizeDraw.Formats.CsvTest do
     test "topic report", %{topic_report_data: topic_report_data} do
       assert({:ok, _} = PrizeDraw.Formats.Csv.processe_data(topic_report_data))
     end
+    
+    test " one item", %{topic_report_data: topic_report_data} do
+      assert({:ok, result} = PrizeDraw.Formats.Csv.processe_data(topic_report_data))
+      data = Agent.get(result.data, &(&1))
+      expect_result = [%{"Contact Number" => "+21334444332", "Email" => "asda@dfd.lv",
+   "First Name" => "wwd", "Last Name" => "sddsd"}]
+    assert(expect_result == data)
+    end
   end
 end
