@@ -25,10 +25,4 @@ const DownloadPrizeDrawReport = React.createClass({
   }
 });
 
-const mapStateToProps = (state) => {
-  return {
-    channel: state.chat.channel
-  }
-};
-
 export default connect(mapStateToProps)(DownloadPrizeDrawReport);
