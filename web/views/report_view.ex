@@ -70,7 +70,7 @@ defmodule KlziiChat.ReportView do
         statistic: %{
           position: 5,
           section: "",
-          name: "Statistic",
+          name: "statistic",
           session_types: ["focus", "forum", "socialForum"],
           formats: %{
             pdf: %{ render: false, custom_fields: false },
@@ -96,7 +96,7 @@ defmodule KlziiChat.ReportView do
   def participant_list_custom_fields(participant_list), do: participant_list.customFields
 
   def get_default_format(%{type: "socialForum"}), do: "csv"
-  def get_default_format(_), do: "pdf" 
+  def get_default_format(_), do: "pdf"
 
   def default_fileds_list(list, session) do
     case session do
