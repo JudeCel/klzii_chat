@@ -44,7 +44,6 @@ defmodule KlziiChat.SurveysController do
           format in ["pdf", "xlsx"] ->
             {:ok, format_modeule} = KlziiChat.Services.Reports.Types.SurveyList.Base.format_modeule(format)
             parts=String.split ids, ","
-            IO.inspect parts
             {:ok, data} = KlziiChat.Services.Reports.Types.SurveyList.Base.get_data(%{id: Enum.at(parts, 0)})
             {:ok, html} = format_modeule.processe_data(data)
             {:ok, binary} = KlziiChat.Services.FileService.write_report(%{id: Enum.at(parts, 0), format: format, name: "some_name_now"},html, [binary: true])

@@ -1,0 +1,11 @@
+<div class='recruiter-rurvey'>
+  <div class='title'>
+    <strong>Name <%= @survey.name %></strong>
+    <br/>
+  </div>
+  <div class="total-count">Total Surveys Completed <%= @survey_questions_stats.total_count %></div>
+
+  <div class='questions'>
+    <%= render "session_survey_answer_stats.html", survey_questions: @survey_questions_stats.questions %>
+  </div>
+</div>

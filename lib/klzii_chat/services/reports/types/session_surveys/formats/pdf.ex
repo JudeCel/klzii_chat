@@ -15,9 +15,8 @@ defmodule KlziiChat.Services.Reports.Types.SurveyList.Formats.Pdf do
           brand_logo: get_in(data, ["survey", :resource]),
           header_title: get_in(data, ["header_title"])
         )
-
       body = Phoenix.View.render_to_string(
-        KlziiChat.Reporting.PreviewView, "survey_stats.html",
+        KlziiChat.Reporting.PreviewView, "session_survey_stats.html",
         survey: get_in(data, ["survey"]),
         survey_questions_stats: get_in(data, ["survey_questions_stats"]),
         layout: {KlziiChat.LayoutView, "report.html"}
