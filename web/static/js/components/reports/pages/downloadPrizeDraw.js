@@ -1,5 +1,4 @@
 import React, {PropTypes} from 'react';
-import { connect }        from 'react-redux';
 
 const DownloadPrizeDrawReport = React.createClass({
   render() {
@@ -25,4 +24,4 @@ const DownloadPrizeDrawReport = React.createClass({
   }
 });
 
-export default connect(mapStateToProps)(DownloadPrizeDrawReport);
+export default DownloadPrizeDrawReport;
