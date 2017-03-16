@@ -53,12 +53,8 @@ defmodule KlziiChat.SessionTopicView do
   end
 
   def get_default_topic(%{__struct__: Ecto.Association.NotLoaded}), do: nil
-  def get_default_topic(topic) do
-    topic.default
-  end
+  def get_default_topic(topic), do: topic.default
 
   def get_invite_again_topic(%{__struct__: Ecto.Association.NotLoaded}), do: nil
-  def get_invite_again_topic(topic) do
-    topic.inviteAgain
-  end
+  def get_invite_again_topic(topic), do: topic.inviteAgain
 end

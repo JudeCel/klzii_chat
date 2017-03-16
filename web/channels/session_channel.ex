@@ -53,7 +53,6 @@ defmodule KlziiChat.SessionChannel do
             push(socket, "contact_list_map_struct", %{mapStruct: mapStruct})
           {:error, _reason} ->
             nil
-            # push(socket, "error_message", reason)
         end
       {:error, _} ->
         nil

@@ -9,4 +9,11 @@ defmodule KlziiChat.SessionSurveyView do
       survey: render_one(session_survey.survey, SurveyView, "survey_preview.json", as: :survey)
     }
   end
+  @spec render(String.t, Map.t) :: Map.t
+  def render("report.json", %{session_survey: session_survey}) do
+    %{
+      id: session_survey.id,
+      survey: render_one(session_survey.survey, SurveyView, "report.json", as: :survey)
+    }
+  end
 end

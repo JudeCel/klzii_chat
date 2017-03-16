@@ -1,11 +1,14 @@
 import React, {PropTypes} from 'react';
 import { connect }        from 'react-redux';
 import _                  from 'lodash';
+import mixins             from '../../../mixins';
 
 const ReportIcon = React.createClass({
+  mixins: [mixins.validations],
   selectCorrectClassName(status, className) {
     const size = ' fa-2x';
     const pointer = ' cursor-pointer';
+
     switch (status) {
       case 'progress':
         return 'fa fa-spinner fa-pulse fa-fw' + size;
@@ -17,38 +20,46 @@ const ReportIcon = React.createClass({
         return className + size + pointer;
     }
   },
-  selectCorrectFormat(status) {
+  selectCorrectFormat(status, enabled) {
+    const classStatus = enabled ? " enable" : " disabled";
+
     switch (this.props.format) {
       case 'pdf':
-        return this.selectCorrectClassName(status, 'fa fa-file-pdf-o');
+        return this.selectCorrectClassName(status, 'fa fa-file-pdf-o' + classStatus);
       case 'csv':
-        return this.selectCorrectClassName(status, 'fa fa-file-excel-o');
+        return this.selectCorrectClassName(status, 'fa fa-file-excel-o' + classStatus);
       case 'txt':
-        return this.selectCorrectClassName(status, 'fa fa-file-code-o');
+        return this.selectCorrectClassName(status, 'fa fa-file-code-o' + classStatus);
     }
   },
   onClick(report) {
-    switch (report.status) {
-      case 'progress':
-        return;
-      case 'completed':
-        return this.props.changePage('download', report);
-      case 'failed':
-        return this.props.changePage('failed', report);
-      default:
-        if(this.shouldShowCustomFields()) {
-          this.props.changePage('selectCustom', report);
-        }
-        else {
-          return this.props.createReport(report);
-        }
+    if (report.enabled) {
+      switch (report.status) {
+        case 'progress':
+          return;
+        case 'completed':
+          if (report.type == "prize_draw") {
+            return this.props.changePage('download_prize_draw', report);
+          }else{
+            return this.props.changePage('download', report);
+          }
+        case 'failed':
+          return this.props.changePage('failed', report);
+        default:
+          if(this.shouldShowCustomFields()) {
+            this.props.changePage('selectCustom', report);
+          } else {
+            return this.props.createReport(report);
+          }
+      }
+    }else{
+      return this.props.changePage('accessDenied', report);
     }
   },
   shouldShowCustomFields() {
-    const { type, format, mapStruct } = this.props;
+    const { type, format } = this.props;
 
-    let structData = mapStruct.types[type.name];
-    return structData.formats[format].custom_fields && structData.formats[format].render;
+    return type.formats[format].custom_fields && type.formats[format].render;
   },
   getReport() {
     const { type, format, sessionTopicId, facilitator, reports } = this.props
@@ -64,16 +75,30 @@ const ReportIcon = React.createClass({
     if (type.name == "statistic") {
       flow = ["statistic", format, type.typeName];
     }
+    const report = _.get(reports, flow, tmpObject);
+    const permission = this.hasPermission(['reports', 'can_report']);
+    report.enabled = permission;
 
-    return _.get(reports, flow, tmpObject);
+    if (type.typeName == "prize_draw"){
+      report.enabled = true;
+    }
 
+    return report;
+  },
+  canRender(type, topic, format){
+    if (type.typeName == "prize_draw") {
+      return (type.formats[format].render && topic.inviteAgain)
+    }else{
+      return type.formats[format].render
+    }
   },
   render() {
-    let { type, format } = this.props
-    const report = this.getReport();
-    if(type.typeData.formats[format].render) {
+    let { type, format, topic } = this.props
+
+    if(this.canRender(type, topic, format)) {
+      const report = this.getReport();
       return (
-        <i className={ this.selectCorrectFormat(report.status) } onClick={ this.onClick.bind(this, report) } />
+        <i className={ this.selectCorrectFormat(report.status, report.enabled)} onClick={ this.onClick.bind(this, report) } />
       )
     }
     else {
@@ -84,7 +109,8 @@ const ReportIcon = React.createClass({
 
 const mapStateToProps = (state) => {
   return {
-    reports: state.reports.data
+    reports: state.reports.data,
+    currentUser: state.members.currentUser
   }
 };
 
