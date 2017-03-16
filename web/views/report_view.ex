@@ -12,7 +12,6 @@ defmodule KlziiChat.ReportView do
           section: "table",
           name: "All",
           session_types: ["focus", "forum", "socialForum"],
-          selected: true,
           formats: %{
             pdf: %{ render: true, custom_fields: false },
             csv: %{ render: true, custom_fields: true },
@@ -23,7 +22,6 @@ defmodule KlziiChat.ReportView do
         messages_stars_only: %{
           position: 1,
           section: "table",
-          selected: false,
           session_types: ["focus", "forum", "socialForum"],
           name: "Chat Room History \n Stars Only",
           formats: %{
@@ -36,7 +34,6 @@ defmodule KlziiChat.ReportView do
         prize_draw: %{
           position: 2,
           section: "table",
-          selected: false,
           session_types: ["socialForum"],
           name: "Prize Draw",
           formats: %{
@@ -49,7 +46,6 @@ defmodule KlziiChat.ReportView do
         votes: %{
           position: 3,
           section: "table",
-          selected: false,
           session_types: ["focus", "forum", "socialForum"],
           name: "Votes",
           formats: %{
@@ -62,7 +58,6 @@ defmodule KlziiChat.ReportView do
         whiteboards: %{
           position: 4,
           section: "table",
-          selected: false,
           session_types: ["focus", "forum", "socialForum"],
           name: "Whiteboard",
           formats: %{
@@ -77,7 +72,6 @@ defmodule KlziiChat.ReportView do
           section: "",
           name: "Statistic",
           session_types: ["focus", "forum", "socialForum"],
-          selected: false,
           formats: %{
             pdf: %{ render: false, custom_fields: false },
             csv: %{ render: true, custom_fields: false },
@@ -90,6 +84,7 @@ defmodule KlziiChat.ReportView do
       fields: %{
         custom: Enum.concat(@default_field, participant_list_custom_fields(session.participant_list))
       },
+      default_format: get_default_format(session),
       includes: %{
         facilitator: true
       }
@@ -100,6 +95,8 @@ defmodule KlziiChat.ReportView do
   def participant_list_custom_fields(nil), do: []
   def participant_list_custom_fields(participant_list), do: participant_list.customFields
 
+  def get_default_format(%{type: "socialForum"}), do: "csv"
+  def get_default_format(_), do: "pdf" 
 
   def default_fileds_list(list, session) do
     case session do

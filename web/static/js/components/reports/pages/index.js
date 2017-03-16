@@ -6,7 +6,7 @@ import ReportsActions     from '../../../actions/reports';
 const ReportsIndex = React.createClass({
   getInitialState() {
     const { reports, report } = this.props
-    return { format: ((report && report.format) || 'pdf'), facilitator: reports.mapStruct.includes.facilitator };
+    return { format: ((report && report.format) || reports.mapStruct.default_format), facilitator: reports.mapStruct.includes.facilitator };
   },
   onChange(key, value) {
     this.setState({ [key]: value });
