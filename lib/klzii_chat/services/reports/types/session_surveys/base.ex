@@ -10,24 +10,41 @@ defmodule KlziiChat.Services.Reports.Types.SurveyList.Base do
   def format_modeule(format), do: {:error, "module for format #{format} not found"}
 
   @spec get_data(Map.t) :: Map.t
-  def get_data(%{id: id}) do
-    with {:ok, survey} <- get_survey(%{id: id}),
-         {:ok, header_title} <- get_header_title(survey),
-    do:  {:ok, %{
-              "survey" => survey,
-              "survey_questions_stats" => calculate_stats(survey),
-              "header_title" => header_title,
-            }
-          }
+  def get_data(%{ids: ids}) do
+      with {:ok, surveys} <- get_surveys(%{ids: ids}),
+      do:  {:ok, %{ "surveys" => get_survey_list(surveys) }}
+  end
+
+  def get_survey_list(surveys) do
+    {:ok, questions_buffer} = Agent.start_link(fn -> [] end)
+    Enum.each(surveys, fn(survey) ->
+      el = %{
+        "survey" => survey,
+        "survey_questions_stats" => calculate_stats(survey),
+        "header_title" => get_header_title(survey)
+      }
+      Agent.update(questions_buffer, &(&1 ++ [el]))
+    end)
+
+    Agent.get(questions_buffer, &(&1))
+  end
+
+  @spec get_surveys(Map.t) :: {:ok, Map.t} | {:error, Map.t}
+  def get_surveys(%{ids: ids}) do
+      surveys =
+        from(s in Survey, where: s.id in ^ids, preload: [:survey_answers, :resource, survey_questions: [:resource]])
+        |> Repo.all
+    {:ok, Phoenix.View.render_many(surveys, KlziiChat.SurveyView, "report.json", as: :survey)}
   end
 
   @spec get_header_title(Map.t) :: {:ok, String.t}
   def get_header_title(%{name: name}) do
-    {:ok, "#{name}"}
+    newName = name
   end
 
   @spec get_survey(Map.t) :: {:ok, Map.t} | {:error, Map.t}
   def get_survey(%{id: id}) do
+
       survey =
         from(s in Survey, where: [id: ^id], preload: [:survey_answers, :resource, survey_questions: [:resource]])
         |> Repo.one
@@ -39,12 +56,10 @@ defmodule KlziiChat.Services.Reports.Types.SurveyList.Base do
   def calculate_stats(survey) do
     survey_questions_task = Task.async(fn -> Statistic.build_questions(survey.survey_questions) end)
     survey_answers_task = Task.async(fn -> Statistic.map_answers(Enum.map(survey.survey_answers, &(&1.answers))) end)
-
     survey_questions = Task.await(survey_questions_task)
     survey_answers = Task.await(survey_answers_task)
 
     questions = Statistic.map_question_list_answers(survey_questions, survey_answers)
-
     %{questions: questions, total_count: Enum.count(survey.survey_answers), total_count_percents: 100 }
   end
 end

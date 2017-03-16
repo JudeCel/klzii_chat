@@ -40,8 +40,10 @@ defmodule KlziiChat.Services.Reports.Types.SurveyList.Statistic do
         name: answer_model["name"],
         model: answer_model["model"]
       }
+
+      options = answer_model["options"] || [];
       answers =
-        Enum.map(answer_model["options"], fn(option) ->
+        Enum.map(options, fn(option) ->
           %{name: option, order: option, type: "number", count: 0, percents: 0}
         end)
       Map.put(new_question, :answers, answers)
