@@ -16,8 +16,8 @@ defmodule KlziiChat.SurveyView do
       id: survey.id,
       name: survey.name,
       type: survey.surveyType,
-      resource: render_one(survey.resource, ResourceView, "resource.json"),
-      survey_questions: render_many(survey.survey_questions, SurveyQuestionView, "report.json"),
+      resource: render_one(resource(survey.resource), ResourceView, "resource.json"),
+      survey_questions: render_many(survey_questions(survey.survey_questions), SurveyQuestionView, "report.json"),
       survey_answers: render_many(survey.survey_answers, SurveyAnswersView, "report.json", as: :survey_answer)
     }
   end

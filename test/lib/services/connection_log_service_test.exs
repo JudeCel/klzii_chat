@@ -1,4 +1,4 @@
-defmodule KlziiChat.Services.SessionServiceTest do
+defmodule KlziiChat.Services.ConnectionLogServiceTest do
   use KlziiChat.{ModelCase}
   alias KlziiChat.Services.ConnectionLogService
 
@@ -10,6 +10,7 @@ defmodule KlziiChat.Services.SessionServiceTest do
           "level" => "info",
           "message" => "HTTP GET /account-hub",
           "meta" => %{
+            "application" => "klzii",
             "currentResources" => %{
               "account" => %{"admin" => true, "id" => 1, "name" => "admin", "subdomain" => "admin"},
               "accountUser" => %{"id" => 1, "role" => "admin"},
@@ -46,6 +47,7 @@ defmodule KlziiChat.Services.SessionServiceTest do
           "level" => "info",
           "message" => "HTTP GET /account-hub",
           "meta" => %{
+            "application" => "klzii",
             "req" => %{
               "headers" => %{
                 "accept" => "image/webp,image/*,*/*;q=0.8",

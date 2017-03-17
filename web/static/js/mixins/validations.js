@@ -29,8 +29,8 @@ const validations = {
     return permission || false;
   },
   hasNoIconEye(member) {
-    var isForumObserver = this.isObserver(member) && this.isForum(member);
-    return !isForumObserver && !this.isFacilitator(member);
+    var isForumObserver = this.isObserver(member) && this.isForum();
+    return !isForumObserver && !this.isFacilitator(member) || this.isSocialForum();
   },
   hasNoParticipantsIcon(member) {
     return !this.isFacilitator(member) && !this.isObserver(member) || !this.isForum();
@@ -46,6 +46,9 @@ const validations = {
   },
   isForum() {
     return this.props.session.type == "forum" || this.props.session.type == "socialForum";
+  },
+  isSocialForum() {
+    return this.props.session.type == "socialForum";
   },
 }
 

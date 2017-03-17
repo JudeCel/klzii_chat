@@ -6,7 +6,7 @@ defmodule KlziiChat.SurveyQuestionView do
   def render("show.json", %{survey_question: survey_question}) do
     %{
       id: survey_question.id,
-      resource: render_one(survey_question.resource, ResourceView, "resource.json")
+      resource: render_one(resource(survey_question.resource), ResourceView, "resource.json")
     }
   end
   def render("report.json", %{survey_question: survey_question}) do
@@ -16,8 +16,11 @@ defmodule KlziiChat.SurveyQuestionView do
       question: survey_question.question,
       order: survey_question.order,
       type: survey_question.type,
-      resource: render_one(survey_question.resource, ResourceView, "resource.json"),
+      resource: render_one(resource(survey_question.resource), ResourceView, "resource.json"),
       answers: survey_question.answers
     }
   end
+
+  defp resource(%{__struct__: Ecto.Association.NotLoaded}), do: nil
+  defp resource(resource), do: resource
 end

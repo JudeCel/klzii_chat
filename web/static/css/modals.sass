@@ -71,8 +71,14 @@
     .fa
       font-size: 50px
   .reports-section
+    table thead th p
+      display: inline
     .fa-exclamation
       padding-left: 8px
+    .view-pdf, .view-csv, .view-txt
+      .fa
+        &.disabled
+          color: #ccc
     .view-pdf
       .fa
         @extend .font-color-red
@@ -457,3 +463,8 @@ body.modal-open
         margin-right: 20px
       .emailNotification-radio-label
         font-size: 16px
+
+
+.dialog-text-mod
+  margin-top: -20px
+  margin-bottom: 20px

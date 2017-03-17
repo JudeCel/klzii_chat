@@ -1,6 +1,6 @@
 defmodule KlziiChat.Services.Reports.Report do
   alias KlziiChat.{Repo, SessionTopicsReport, Resource}
-  alias KlziiChat.Services.Reports.Types.{Messages, Votes, Whiteboards, Statistic}
+  alias KlziiChat.Services.Reports.Types.{Messages, Votes, Whiteboards, Statistic, PrizeDraw}
   alias KlziiChat.Services.FileService
 
   def run(report_id) do
@@ -9,12 +9,6 @@ defmodule KlziiChat.Services.Reports.Report do
         {:ok, report_data} <- process_data(type_module, report),
         {:ok, report_data} <- process_data(type_module, report, report_data),
     do: {:ok, report_data}
-  end
-
-  # TODO check if used anymore
-  def validate_report(%{status: "failed", resourceId: nil}), do: {:ok}
-  def validate_report(%{status: "failed", resourceId: resourceId}) do
-    KlziiChat.Services.ResourceService.deleteByIds([resourceId])
   end
 
   defp get_report(report_id) do
@@ -38,7 +32,7 @@ defmodule KlziiChat.Services.Reports.Report do
 
   def process_data(type_module, report, data) do
     with {:ok, format_modeule } <- type_module.format_modeule(report.format),
-         {:ok, data} <- format_modeule.processe_data(data) ,
+         {:ok, data} <- format_modeule.processe_data(data),
          {:ok, file_path} <- FileService.write_report(report, data, [binary: false]),
          {:ok, resource} <- create_resource(report, file_path),
          {:ok, update_report} <- add_resource(report, resource),
@@ -79,6 +73,7 @@ defmodule KlziiChat.Services.Reports.Report do
   def select_type("messages"), do: {:ok, Messages.Base}
   def select_type("statistic"), do: {:ok, Statistic.Base}
   def select_type("messages_stars_only"), do: {:ok, Messages.Base}
+  def select_type("prize_draw"), do: {:ok, PrizeDraw.Base}
   def select_type("votes"), do: {:ok, Votes.Base}
   def select_type("whiteboards"), do: {:ok, Whiteboards.Base}
   def select_type(type), do: {:error, "module for type #{type} not found"}
