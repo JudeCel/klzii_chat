@@ -50,7 +50,7 @@ defmodule KlziiChat.Services.Reports.Types.PrizeDraw.Base do
       from(sy in SessionSurvey, where: [sessionId: ^session_id],
         left_join: s in assoc(sy, :survey),
         where: s.surveyType == "sessionPrizeDraw",
-        preload: [survey: [:survey_answers]]
+        preload: [survey: [:survey_answers, :survey_questions]]
       )
       |> Repo.one
     {:ok, Phoenix.View.render(SessionSurveyView,"report.json", %{session_survey: session_survey})}

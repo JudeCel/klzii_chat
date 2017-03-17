@@ -2,7 +2,7 @@ defmodule KlziiChat.Services.Reports.Types.PrizeDraw.Formats.CsvTest do
   use KlziiChat.{ModelCase, SessionMemberCase}
   alias KlziiChat.Services.Reports.Types.PrizeDraw
   alias KlziiChat.Services.{SessionReportingService}
-  alias KlziiChat.{Survey, SurveyAnswer}
+  alias KlziiChat.{Survey, SurveyAnswer,SurveyQuestion}
 
   setup %{session_topic_1: session_topic, facilitator: facilitator, session: session} do
     survey = %Survey{
@@ -15,11 +15,31 @@ defmodule KlziiChat.Services.Reports.Types.PrizeDraw.Formats.CsvTest do
       surveyType: "sessionPrizeDraw"
     }|> Repo.insert!
 
+    interest =
+       %SurveyQuestion{
+      surveyId: survey.id,
+      question: "pff3",
+      name: "Interest",
+      type: "radio",
+      answers: [],
+      order: 2
+    }|> Repo.insert!
+
+    contact_details =
+      %SurveyQuestion{
+      surveyId: survey.id,
+      question: "pff3",
+      name: "Contact Details",
+      type: "input",
+      answers: [],
+      order: 4
+    }|> Repo.insert!
+
     %SurveyAnswer{
       surveyId: survey.id,
       answers: %{
-        "1" =>  %{"type" =>  "number", "value" =>  0},
-        "2" =>  %{
+        "#{interest.id}" =>  %{"type" =>  "number", "value" =>  0},
+        "#{contact_details.id}" =>  %{
           "type" =>  "object",
           "value" => nil,
           "tagHandled" =>  true,
@@ -33,7 +53,7 @@ defmodule KlziiChat.Services.Reports.Types.PrizeDraw.Formats.CsvTest do
           }},
         "3" => %{"type" => "number", "value"=> 1}},
     }|> Repo.insert!
-    
+
     %SurveyAnswer{
       surveyId: survey.id,
       answers: %{
@@ -77,7 +97,7 @@ defmodule KlziiChat.Services.Reports.Types.PrizeDraw.Formats.CsvTest do
     test "topic report", %{topic_report_data: topic_report_data} do
       assert({:ok, _} = PrizeDraw.Formats.Csv.processe_data(topic_report_data))
     end
-    
+
     test " one item", %{topic_report_data: topic_report_data} do
       assert({:ok, result} = PrizeDraw.Formats.Csv.processe_data(topic_report_data))
       data = Agent.get(result.data, &(&1))

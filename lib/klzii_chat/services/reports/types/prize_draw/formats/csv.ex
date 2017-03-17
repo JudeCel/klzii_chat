@@ -7,20 +7,23 @@ defmodule KlziiChat.Services.Reports.Types.PrizeDraw.Formats.Csv do
   @spec render_string( Map.t) :: {:ok, String.t} | {:error, Map.t}
   def render_string(data) do
     fields = get_in(data, ["fields"])
+    survey_questions =
+      get_in(data, ["prize_draw_survey", :survey, :survey_questions])
+      |> Enum.map(&({&1.name, "#{&1.id}"})) |> Enum.into(%{})
     answers = get_in(data, ["prize_draw_survey", :survey, :survey_answers])
     {:ok, acc} = Agent.start_link(fn -> [] end)
-    map_data(answers, fields, acc)
+    map_data(answers, survey_questions, fields, acc)
     {:ok, %{header: fields, data: acc}}
   end
 
-  def map_data([], _, acc), do: acc
-  def map_data([head | tail], fields, acc) do
-    map_data(head, fields, acc)
-    map_data(tail, fields, acc)
+  def map_data([], _, _, acc), do: acc
+  def map_data([head | tail], survey_questions, fields, acc) do
+    map_data(head, survey_questions, fields, acc)
+    map_data(tail, survey_questions, fields, acc)
   end
-  def map_data(%{answers: answers}, fields, acc) do
-    if get_in(answers, ["1", "value"]) == 0 do
-      contactDetails = get_in(answers, ["2", "contactDetails"])
+  def map_data(%{answers: answers}, survey_questions, fields, acc) do
+    if get_in(answers, [survey_questions["Interest"], "value"]) == 0 do
+      contactDetails = get_in(answers, [survey_questions["Contact Details"], "contactDetails"])
 
       answer =
         Enum.reduce(fields, %{}, fn(field, local_acc) ->

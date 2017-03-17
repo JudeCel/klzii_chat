@@ -1,4 +1,4 @@
-defmodule KlziiChat.Services.SessionServiceTest do
+defmodule KlziiChat.Services.ConnectionLogServiceTest do
   use KlziiChat.{ModelCase}
   alias KlziiChat.Services.ConnectionLogService
 
