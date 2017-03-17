@@ -55,13 +55,13 @@ defmodule KlziiChat.Services.FileService do
 
   def conwert_with_xvfb(tmp_body, tmp_header, destination_path) do
     options = [
-      #{}"--auto-servernum",
-      #{}"wkhtmltopdf",
+      "--auto-servernum",
+      "wkhtmltopdf",
       "--page-size", "A4", "--dpi", "100",
       "--header-spacing", "5", "--window-status", "js-done",
       "--footer-html", @footer_path, "--header-html", tmp_header, "file://" <> tmp_body, destination_path
     ]
-    case System.cmd("wkhtmltopdf", options , stderr_to_stdout: true) do
+    case System.cmd("xvfb-run", options , stderr_to_stdout: true) do
       {_, 0} ->
         :ok = File.rm(tmp_header)
         :ok = File.rm(tmp_body)
