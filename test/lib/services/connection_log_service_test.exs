@@ -10,6 +10,7 @@ defmodule KlziiChat.Services.ConnectionLogServiceTest do
           "level" => "info",
           "message" => "HTTP GET /account-hub",
           "meta" => %{
+            "application" => "klzii",
             "currentResources" => %{
               "account" => %{"admin" => true, "id" => 1, "name" => "admin", "subdomain" => "admin"},
               "accountUser" => %{"id" => 1, "role" => "admin"},
@@ -46,6 +47,7 @@ defmodule KlziiChat.Services.ConnectionLogServiceTest do
           "level" => "info",
           "message" => "HTTP GET /account-hub",
           "meta" => %{
+            "application" => "klzii",
             "req" => %{
               "headers" => %{
                 "accept" => "image/webp,image/*,*/*;q=0.8",
