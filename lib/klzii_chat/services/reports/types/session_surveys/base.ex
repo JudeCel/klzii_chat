@@ -12,7 +12,11 @@ defmodule KlziiChat.Services.Reports.Types.SurveyList.Base do
   @spec get_data(Map.t) :: Map.t
   def get_data(%{ids: ids}) do
       with {:ok, surveys} <- get_surveys(%{ids: ids}),
-      do:  {:ok, %{ "surveys" => get_survey_list(surveys) }}
+      do:  {:ok, %{ "surveys" => get_survey_list(surveys), "name" => get_survey_name(surveys)}}
+  end
+
+  def get_survey_name(surveys) do
+    Enum.at(surveys, 0).name
   end
 
   def get_survey_list(surveys) do

@@ -38,19 +38,23 @@ defmodule KlziiChat.SurveysController do
   end
 
   def export_list(conn, %{"format" => format, "token" => token, "ids" => ids}) do
+    parts=String.split ids, ","
+    export_list_with_ids(conn, format, token, parts)
+  end
+
+  def export_list_with_ids(conn, format, token, ids) do
     case get_member_from_token(token) do
       {:ok, _, _} ->
         cond do
           format in ["pdf", "xlsx"] ->
             {:ok, format_modeule} = KlziiChat.Services.Reports.Types.SurveyList.Base.format_modeule(format)
-            parts=String.split ids, ","
-            {:ok, data} = KlziiChat.Services.Reports.Types.SurveyList.Base.get_data(%{ids: parts})
+            {:ok, data} = KlziiChat.Services.Reports.Types.SurveyList.Base.get_data(%{ids: ids})
             {:ok, html} = format_modeule.processe_data(data)
-            {:ok, binary} = KlziiChat.Services.FileService.write_report(%{id: Enum.at(parts, 0), format: format, name: "some_name_now"},html, [binary: true])
-
+            {:ok, binary} = KlziiChat.Services.FileService.write_report(%{id: Enum.at(ids, 0), format: format, name: "some_name_now"},html, [binary: true])
+            fileName =  get_in(data, ["name"])
             conn
             |> put_resp_content_type("application/#{format}")
-            |> put_resp_header("content-disposition", "attachment; filename=\"#{data["header_title"]}.#{format}\"")
+            |> put_resp_header("content-disposition", "attachment; filename=\"#{fileName}.#{format}\"")
             |> send_resp(200, binary)
           true ->
               json(conn, %{error: "wrong format: #{format}"})
