@@ -8,4 +8,9 @@
   <div class='questions'>
     <%= render "session_survey_answer_stats.html", survey_questions: @survey_questions_stats.questions %>
   </div>
+
+  <%= for s <- @surveys do %>
+  ====
+    <strong>Name <%= get_survey(s) %></strong>
+  <% end %>
 </div>

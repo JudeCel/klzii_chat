@@ -16,17 +16,17 @@ defmodule KlziiChat.Services.Reports.Types.SurveyList.Base do
   end
 
   def get_survey_list(surveys) do
-    {:ok, questions_buffer} = Agent.start_link(fn -> [] end)
+    {:ok, surveys_buffer} = Agent.start_link(fn -> [] end)
     Enum.each(surveys, fn(survey) ->
       el = %{
         "survey" => survey,
         "survey_questions_stats" => calculate_stats(survey),
         "header_title" => get_header_title(survey)
       }
-      Agent.update(questions_buffer, &(&1 ++ [el]))
+      Agent.update(surveys_buffer, &(&1 ++ [el]))
     end)
 
-    Agent.get(questions_buffer, &(&1))
+    Agent.get(surveys_buffer, &(&1))
   end
 
   @spec get_surveys(Map.t) :: {:ok, Map.t} | {:error, Map.t}
