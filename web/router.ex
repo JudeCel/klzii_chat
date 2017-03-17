@@ -132,6 +132,7 @@ defmodule KlziiChat.Router do
     get "/:id", SurveysController, :show
     get "/report/:id/:format/:token", SurveysController, :export
     get "/list_report/:format/:token", SurveysController, :export_list
+    get "/session_report/:id/:format/:token", SurveysController, :export_session_surveys
   end
 
   scope "/api/banners", KlziiChat do

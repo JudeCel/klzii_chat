@@ -1,6 +1,6 @@
 defmodule KlziiChat.SurveysController do
   use KlziiChat.Web, :controller
-  alias KlziiChat.{Survey, Repo, SurveyView}
+  alias KlziiChat.{Survey, Repo, SurveyView, SessionSurvey}
   import KlziiChat.Services.SessionMembersService, only: [get_member_from_token: 1]
 
   import Ecto.Query, only: [from: 2]
@@ -35,6 +35,17 @@ defmodule KlziiChat.SurveysController do
       {:error, reason } ->
         json(conn, %{error: reason})
     end
+  end
+
+  def session_surveys(id) do
+    from(ss in SessionSurvey, where: ss.sessionId == ^id, select: {ss.surveyId})
+    |> Repo.all
+    |> Enum.map(fn ({id})-> id end)
+  end
+
+  def export_session_surveys(conn, %{"id" => id, "format" => format, "token" => token}) do
+      surveyIds = session_surveys(id)
+      export_list_with_ids(conn, format, token, surveyIds)
   end
 
   def export_list(conn, %{"format" => format, "token" => token, "ids" => ids}) do
