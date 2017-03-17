@@ -4,7 +4,7 @@ defmodule KlziiChat.Services.Report.DataContainers.ContactListUsers do
   def start_link(data) when is_map(data) do
     Agent.start_link(fn -> prepare_data(data) end)
   end
-  def start_link(_), do: raise "Contact list not present!"
+  def start_link(_), do: Agent.start_link(fn -> %{} end)
 
   def get_key(agent, key, id) do
     Agent.get(agent, fn state -> find_key(state, key, id) end)
