@@ -45,8 +45,4 @@ defmodule KlziiChat.Reporting.PreviewView do
   def get_answers(%{answers: answers}) do
     answers
   end
-  def get_survey(%{header_title: header_title}) do
-    IO.inspect header_title
-    header_title
-  end
 end
