@@ -16,17 +16,13 @@ defmodule KlziiChat.Services.Reports.Types.SurveyList.Base do
   end
 
   def get_survey_list(surveys) do
-    {:ok, surveys_buffer} = Agent.start_link(fn -> [] end)
-    Enum.each(surveys, fn(survey) ->
-      el = %{
+    Enum.map(surveys, fn(survey) ->
+      %{
         "survey" => survey,
         "survey_questions_stats" => calculate_stats(survey),
         "header_title" => get_header_title(survey)
       }
-      Agent.update(surveys_buffer, &(&1 ++ [el]))
     end)
-
-    Agent.get(surveys_buffer, &(&1))
   end
 
   @spec get_surveys(Map.t) :: {:ok, Map.t} | {:error, Map.t}
@@ -38,8 +34,18 @@ defmodule KlziiChat.Services.Reports.Types.SurveyList.Base do
   end
 
   @spec get_header_title(Map.t) :: {:ok, String.t}
-  def get_header_title(%{name: name}) do
-    newName = name
+  def get_header_title(%{type: "sessionPrizeDraw"}) do
+    "Contact List Questions"
+  end
+
+  @spec get_header_title(Map.t) :: {:ok, String.t}
+  def get_header_title(%{type: "sessionContactList"}) do
+    "Prize Draw"
+  end
+
+  @spec get_header_title(Map.t) :: {:ok, String.t}
+  def get_header_title(_) do
+    "Survey"
   end
 
   @spec get_survey(Map.t) :: {:ok, Map.t} | {:error, Map.t}

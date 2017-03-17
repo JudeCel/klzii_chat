@@ -46,7 +46,6 @@ defmodule KlziiChat.SurveysController do
             parts=String.split ids, ","
             {:ok, data} = KlziiChat.Services.Reports.Types.SurveyList.Base.get_data(%{ids: parts})
             {:ok, html} = format_modeule.processe_data(data)
-            IO.inspect format
             {:ok, binary} = KlziiChat.Services.FileService.write_report(%{id: Enum.at(parts, 0), format: format, name: "some_name_now"},html, [binary: true])
 
             conn

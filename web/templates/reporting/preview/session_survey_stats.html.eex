@@ -1,7 +1,7 @@
 <div class='recruiter-rurvey'>
   <%= for surveyData <- @surveys do %>
     <div class='title'>
-      <strong>Name <%= surveyData["survey"].name %></strong>
+      <strong> <%= surveyData["header_title"] %>: <%= surveyData["survey"].name %></strong>
       <br/>
     </div>
     <div class="total-count">Total Surveys Completed <%= surveyData["survey_questions_stats"].total_count %></div>
