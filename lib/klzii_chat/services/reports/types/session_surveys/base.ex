@@ -38,12 +38,12 @@ defmodule KlziiChat.Services.Reports.Types.SurveyList.Base do
 
   @spec get_header_title(Map.t) :: {:ok, String.t}
   def get_header_title(%{type: "sessionPrizeDraw"}) do
-    "Contact List Questions"
+    "Prize Draw"
   end
 
   @spec get_header_title(Map.t) :: {:ok, String.t}
   def get_header_title(%{type: "sessionContactList"}) do
-    "Prize Draw"
+    "Contact List Questions"
   end
 
   @spec get_header_title(Map.t) :: {:ok, String.t}
