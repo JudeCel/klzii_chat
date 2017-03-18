@@ -11,7 +11,7 @@ defmodule KlziiChat.Services.Reports.Types.SurveyList.Formats.Xlsx do
       stats =  get_in(data, ["survey_questions_stats"])
 
       header_sheet = Sheet.with_name(get_in(data, ["header_title"]))
-              |> Sheet.set_cell("A1", "Stats Report")
+              |> Sheet.set_cell("A1", "Social Forum Stats Report ")
               |> Sheet.set_cell("A3", get_in(data, ["header_title"]))
               |> Sheet.set_cell("A4", "Total Surveys Completed")
               |> Sheet.set_cell("C3", "Count")

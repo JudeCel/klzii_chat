@@ -16,7 +16,14 @@ defmodule KlziiChat.Services.Reports.Types.SurveyList.Base do
   end
 
   def get_survey_name(surveys) do
-    Enum.at(surveys, 0).name
+    item = Enum.at(surveys, 0)
+    cond do
+      item ->
+         item.name
+      true->
+        "Empty"
+    end
+
   end
 
   def get_survey_list(surveys) do
