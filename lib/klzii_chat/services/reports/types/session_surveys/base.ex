@@ -15,16 +15,8 @@ defmodule KlziiChat.Services.Reports.Types.SurveyList.Base do
       do:  {:ok, %{ "surveys" => get_survey_list(surveys), "name" => get_survey_name(surveys)}}
   end
 
-  def get_survey_name(surveys) do
-    item = Enum.at(surveys, 0)
-    cond do
-      item ->
-         item.name
-      true->
-        "Empty"
-    end
-
-  end
+  def get_survey_name([item | _]), do: item.name
+  def get_survey_name(_), do: "Empty"
 
   def get_survey_list(surveys) do
     Enum.map(surveys, fn(survey) ->
@@ -67,7 +59,7 @@ defmodule KlziiChat.Services.Reports.Types.SurveyList.Base do
         |> Repo.one
     {:ok, Phoenix.View.render( KlziiChat.SurveyView,"report.json", %{survey: survey})}
   end
-  def get_survey(_), do: {:error, %{not_reqired: "survey id not reqired"}}
+  def get_survey(_), do: {:error, %{not_reqired: "survey id not required"}}
 
   @spec calculate_stats(Map.t) :: Map.t
   def calculate_stats(survey) do
