@@ -1,4 +1,4 @@
-defmodule KlziiChat.Services.Reports.Types.SurveyList.Formats.Pdf do
+defmodule KlziiChat.Services.Reports.Types.SessionSurveys.Formats.Pdf do
 
   @spec processe_data(Map.t) :: {String.t}
   def processe_data(data) do

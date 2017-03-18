@@ -1,7 +1,7 @@
-defmodule KlziiChat.Services.Reports.Types.SurveyList.Base do
+defmodule KlziiChat.Services.Reports.Types.SessionSurveys.Base do
   alias KlziiChat.{Repo, Survey}
-  alias KlziiChat.Services.Reports.Types.SurveyList.{Formats}
-  alias KlziiChat.Services.Reports.Types.SurveyList.Statistic
+  alias KlziiChat.Services.Reports.Types.SessionSurveys.{Formats}
+  alias KlziiChat.Services.Reports.Types.SessionSurveys.Statistic
   import Ecto.Query, only: [from: 2]
 
   @spec format_modeule(String.t) :: {:ok, Module.t} | {:error, String.t}

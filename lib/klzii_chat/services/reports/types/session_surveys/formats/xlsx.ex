@@ -1,4 +1,4 @@
-defmodule KlziiChat.Services.Reports.Types.SurveyList.Formats.Xlsx do
+defmodule KlziiChat.Services.Reports.Types.SessionSurveys.Formats.Xlsx do
   alias Elixlsx.{Sheet, Workbook}
   @spec processe_data(Map.t) :: {String.t}
   def processe_data(data) do

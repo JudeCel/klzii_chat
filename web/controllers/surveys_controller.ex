@@ -58,8 +58,8 @@ defmodule KlziiChat.SurveysController do
       {:ok, _, _} ->
         cond do
           format in ["pdf", "xlsx"] ->
-            {:ok, format_modeule} = KlziiChat.Services.Reports.Types.SurveyList.Base.format_modeule(format)
-            {:ok, data} = KlziiChat.Services.Reports.Types.SurveyList.Base.get_data(%{ids: ids})
+            {:ok, format_modeule} = KlziiChat.Services.Reports.Types.SessionSurveys.Base.format_modeule(format)
+            {:ok, data} = KlziiChat.Services.Reports.Types.SessionSurveys.Base.get_data(%{ids: ids})
             {:ok, html} = format_modeule.processe_data(data)
             {:ok, binary} = KlziiChat.Services.FileService.write_report(%{id: Enum.at(ids, 0), format: format, name: "some_name_now"},html, [binary: true])
             fileName =  get_in(data, ["name"])

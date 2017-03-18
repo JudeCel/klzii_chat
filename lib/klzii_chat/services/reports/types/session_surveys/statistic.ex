@@ -1,4 +1,4 @@
-defmodule KlziiChat.Services.Reports.Types.SurveyList.Statistic do
+defmodule KlziiChat.Services.Reports.Types.SessionSurveys.Statistic do
   @countable_contact_list_fields  ["age", "gender"]
 
   def map_question_list_answers(questions, answer_map) do
