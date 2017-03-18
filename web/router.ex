@@ -131,7 +131,6 @@ defmodule KlziiChat.Router do
     # Generic routes for API be call from original domain
     get "/:id", SurveysController, :show
     get "/report/:id/:format/:token", SurveysController, :export
-    get "/list_report/:format/:token", SurveysController, :export_list
     get "/session_report/:id/:format/:token", SurveysController, :export_session_surveys
   end
 

@@ -48,11 +48,6 @@ defmodule KlziiChat.SurveysController do
       export_list_with_ids(conn, format, token, surveyIds)
   end
 
-  def export_list(conn, %{"format" => format, "token" => token, "ids" => ids}) do
-    parts=String.split ids, ","
-    export_list_with_ids(conn, format, token, parts)
-  end
-
   def export_list_with_ids(conn, format, token, ids) do
     case get_member_from_token(token) do
       {:ok, _, _} ->
