@@ -44,19 +44,15 @@ defmodule KlziiChat.SurveysController do
   end
 
   def export_session_surveys(conn, %{"id" => id, "format" => format, "token" => token}) do
-      surveyIds = session_surveys(id)
-      export_list_with_ids(conn, format, token, surveyIds)
-  end
-
-  def export_list_with_ids(conn, format, token, ids) do
+    surveyIds = session_surveys(id)
     case get_member_from_token(token) do
       {:ok, _, _} ->
         cond do
           format in ["pdf", "xlsx"] ->
             {:ok, format_modeule} = KlziiChat.Services.Reports.Types.SessionSurveys.Base.format_modeule(format)
-            {:ok, data} = KlziiChat.Services.Reports.Types.SessionSurveys.Base.get_data(%{ids: ids})
+            {:ok, data} = KlziiChat.Services.Reports.Types.SessionSurveys.Base.get_data(%{ids: surveyIds})
             {:ok, html} = format_modeule.processe_data(data)
-            {:ok, binary} = KlziiChat.Services.FileService.write_report(%{id: Enum.at(ids, 0), format: format, name: "some_name_now"},html, [binary: true])
+            {:ok, binary} = KlziiChat.Services.FileService.write_report(%{id: id, format: format, name: "some_name_now"},html, [binary: true])
             fileName =  get_in(data, ["name"])
             conn
             |> put_resp_content_type("application/#{format}")
@@ -69,5 +65,4 @@ defmodule KlziiChat.SurveysController do
         json(conn, %{error: reason})
     end
   end
-
 end
