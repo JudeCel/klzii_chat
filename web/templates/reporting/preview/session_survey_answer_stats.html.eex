@@ -1,0 +1,32 @@
+<%= for question <- @survey_questions do %>
+  <div class='question media'>
+    <div class='media-left media-top'>
+      <div class='media-heading'>
+      </div>
+
+      <div class='media-body'>
+        <span class='question-name'>
+          <%= question.name %>
+        </span>
+        <div class='answers'>
+          <%= for answer <- get_answers(question) do %>
+            <div class="answer-row">
+              <div class='answer-name'>
+                <%= answer.name %>
+              </div>
+              <div class="answer-column">
+                <div class='answer-count'>
+                  <%= answer.count %>
+                </div>
+                <div class='answer-percents'>
+                  <%= answer.percents %>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+    <hr/>
+  </div>
+<% end %>

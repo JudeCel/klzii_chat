@@ -45,5 +45,4 @@ defmodule KlziiChat.Reporting.PreviewView do
   def get_answers(%{answers: answers}) do
     answers
   end
-
 end

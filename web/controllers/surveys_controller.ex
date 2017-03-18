@@ -1,6 +1,6 @@
 defmodule KlziiChat.SurveysController do
   use KlziiChat.Web, :controller
-  alias KlziiChat.{Survey, Repo, SurveyView}
+  alias KlziiChat.{Survey, Repo, SurveyView, SessionSurvey}
   import KlziiChat.Services.SessionMembersService, only: [get_member_from_token: 1]
 
   import Ecto.Query, only: [from: 2]
@@ -28,6 +28,35 @@ defmodule KlziiChat.SurveysController do
             conn
             |> put_resp_content_type("application/#{format}")
             |> put_resp_header("content-disposition", "attachment; filename=\"#{data["header_title"]}.#{format}\"")
+            |> send_resp(200, binary)
+          true ->
+              json(conn, %{error: "wrong format: #{format}"})
+          end
+      {:error, reason } ->
+        json(conn, %{error: reason})
+    end
+  end
+
+  def session_surveys(id) do
+    from(ss in SessionSurvey, where: ss.sessionId == ^id, select: {ss.surveyId})
+    |> Repo.all
+    |> Enum.map(fn ({id})-> id end)
+  end
+
+  def export_session_surveys(conn, %{"id" => id, "format" => format, "token" => token}) do
+    surveyIds = session_surveys(id)
+    case get_member_from_token(token) do
+      {:ok, _, _} ->
+        cond do
+          format in ["pdf", "xlsx"] ->
+            {:ok, format_modeule} = KlziiChat.Services.Reports.Types.SessionSurveys.Base.format_modeule(format)
+            {:ok, data} = KlziiChat.Services.Reports.Types.SessionSurveys.Base.get_data(%{ids: surveyIds})
+            {:ok, html} = format_modeule.processe_data(data)
+            {:ok, binary} = KlziiChat.Services.FileService.write_report(%{id: id, format: format, name: "some_name_now"},html, [binary: true])
+            fileName =  get_in(data, ["name"])
+            conn
+            |> put_resp_content_type("application/#{format}")
+            |> put_resp_header("content-disposition", "attachment; filename=\"#{fileName}.#{format}\"")
             |> send_resp(200, binary)
           true ->
               json(conn, %{error: "wrong format: #{format}"})
