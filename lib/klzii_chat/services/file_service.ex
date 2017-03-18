@@ -56,8 +56,7 @@ defmodule KlziiChat.Services.FileService do
   def conwert_with_xvfb(tmp_body, tmp_header, destination_path) do
     options = [
       "--auto-servernum",
-      "wkhtmltopdf",
-      "--page-size", "A4", "--dpi", "100",
+      "wkhtmltopdf", "--page-size", "A4", "--dpi", "100",
       "--header-spacing", "5", "--window-status", "js-done",
       "--footer-html", @footer_path, "--header-html", tmp_header, "file://" <> tmp_body, destination_path
     ]
