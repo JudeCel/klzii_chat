@@ -15,14 +15,14 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
--- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: -
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
 --
 
 CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 
 
 --
--- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: -
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
 --
 
 COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
@@ -31,7 +31,7 @@ COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 SET search_path = public, pg_catalog;
 
 --
--- Name: enum_AccountUsers_emailNotification; Type: TYPE; Schema: public; Owner: -
+-- Name: enum_AccountUsers_emailNotification; Type: TYPE; Schema: public; Owner: postgres
 --
 
 CREATE TYPE "enum_AccountUsers_emailNotification" AS ENUM (
@@ -41,8 +41,10 @@ CREATE TYPE "enum_AccountUsers_emailNotification" AS ENUM (
 );
 
 
+ALTER TYPE "enum_AccountUsers_emailNotification" OWNER TO postgres;
+
 --
--- Name: enum_AccountUsers_gender; Type: TYPE; Schema: public; Owner: -
+-- Name: enum_AccountUsers_gender; Type: TYPE; Schema: public; Owner: postgres
 --
 
 CREATE TYPE "enum_AccountUsers_gender" AS ENUM (
@@ -52,8 +54,10 @@ CREATE TYPE "enum_AccountUsers_gender" AS ENUM (
 );
 
 
+ALTER TYPE "enum_AccountUsers_gender" OWNER TO postgres;
+
 --
--- Name: enum_AccountUsers_role; Type: TYPE; Schema: public; Owner: -
+-- Name: enum_AccountUsers_role; Type: TYPE; Schema: public; Owner: postgres
 --
 
 CREATE TYPE "enum_AccountUsers_role" AS ENUM (
@@ -65,8 +69,10 @@ CREATE TYPE "enum_AccountUsers_role" AS ENUM (
 );
 
 
+ALTER TYPE "enum_AccountUsers_role" OWNER TO postgres;
+
 --
--- Name: enum_AccountUsers_status; Type: TYPE; Schema: public; Owner: -
+-- Name: enum_AccountUsers_status; Type: TYPE; Schema: public; Owner: postgres
 --
 
 CREATE TYPE "enum_AccountUsers_status" AS ENUM (
@@ -77,8 +83,10 @@ CREATE TYPE "enum_AccountUsers_status" AS ENUM (
 );
 
 
+ALTER TYPE "enum_AccountUsers_status" OWNER TO postgres;
+
 --
--- Name: enum_Banners_page; Type: TYPE; Schema: public; Owner: -
+-- Name: enum_Banners_page; Type: TYPE; Schema: public; Owner: postgres
 --
 
 CREATE TYPE "enum_Banners_page" AS ENUM (
@@ -88,8 +96,10 @@ CREATE TYPE "enum_Banners_page" AS ENUM (
 );
 
 
+ALTER TYPE "enum_Banners_page" OWNER TO postgres;
+
 --
--- Name: enum_BrandProjectPreferences_type; Type: TYPE; Schema: public; Owner: -
+-- Name: enum_BrandProjectPreferences_type; Type: TYPE; Schema: public; Owner: postgres
 --
 
 CREATE TYPE "enum_BrandProjectPreferences_type" AS ENUM (
@@ -98,8 +108,10 @@ CREATE TYPE "enum_BrandProjectPreferences_type" AS ENUM (
 );
 
 
+ALTER TYPE "enum_BrandProjectPreferences_type" OWNER TO postgres;
+
 --
--- Name: enum_ContactLists_role; Type: TYPE; Schema: public; Owner: -
+-- Name: enum_ContactLists_role; Type: TYPE; Schema: public; Owner: postgres
 --
 
 CREATE TYPE "enum_ContactLists_role" AS ENUM (
@@ -111,8 +123,10 @@ CREATE TYPE "enum_ContactLists_role" AS ENUM (
 );
 
 
+ALTER TYPE "enum_ContactLists_role" OWNER TO postgres;
+
 --
--- Name: enum_Invites_emailStatus; Type: TYPE; Schema: public; Owner: -
+-- Name: enum_Invites_emailStatus; Type: TYPE; Schema: public; Owner: postgres
 --
 
 CREATE TYPE "enum_Invites_emailStatus" AS ENUM (
@@ -122,8 +136,10 @@ CREATE TYPE "enum_Invites_emailStatus" AS ENUM (
 );
 
 
+ALTER TYPE "enum_Invites_emailStatus" OWNER TO postgres;
+
 --
--- Name: enum_Invites_mailProvider; Type: TYPE; Schema: public; Owner: -
+-- Name: enum_Invites_mailProvider; Type: TYPE; Schema: public; Owner: postgres
 --
 
 CREATE TYPE "enum_Invites_mailProvider" AS ENUM (
@@ -131,8 +147,10 @@ CREATE TYPE "enum_Invites_mailProvider" AS ENUM (
 );
 
 
+ALTER TYPE "enum_Invites_mailProvider" OWNER TO postgres;
+
 --
--- Name: enum_Invites_role; Type: TYPE; Schema: public; Owner: -
+-- Name: enum_Invites_role; Type: TYPE; Schema: public; Owner: postgres
 --
 
 CREATE TYPE "enum_Invites_role" AS ENUM (
@@ -144,8 +162,10 @@ CREATE TYPE "enum_Invites_role" AS ENUM (
 );
 
 
+ALTER TYPE "enum_Invites_role" OWNER TO postgres;
+
 --
--- Name: enum_Invites_status; Type: TYPE; Schema: public; Owner: -
+-- Name: enum_Invites_status; Type: TYPE; Schema: public; Owner: postgres
 --
 
 CREATE TYPE "enum_Invites_status" AS ENUM (
@@ -160,8 +180,10 @@ CREATE TYPE "enum_Invites_status" AS ENUM (
 );
 
 
+ALTER TYPE "enum_Invites_status" OWNER TO postgres;
+
 --
--- Name: enum_MailTemplateBases_category; Type: TYPE; Schema: public; Owner: -
+-- Name: enum_MailTemplateBases_category; Type: TYPE; Schema: public; Owner: postgres
 --
 
 CREATE TYPE "enum_MailTemplateBases_category" AS ENUM (
@@ -190,8 +212,10 @@ CREATE TYPE "enum_MailTemplateBases_category" AS ENUM (
 );
 
 
+ALTER TYPE "enum_MailTemplateBases_category" OWNER TO postgres;
+
 --
--- Name: enum_MiniSurveys_type; Type: TYPE; Schema: public; Owner: -
+-- Name: enum_MiniSurveys_type; Type: TYPE; Schema: public; Owner: postgres
 --
 
 CREATE TYPE "enum_MiniSurveys_type" AS ENUM (
@@ -200,8 +224,10 @@ CREATE TYPE "enum_MiniSurveys_type" AS ENUM (
 );
 
 
+ALTER TYPE "enum_MiniSurveys_type" OWNER TO postgres;
+
 --
--- Name: enum_Resources_scope; Type: TYPE; Schema: public; Owner: -
+-- Name: enum_Resources_scope; Type: TYPE; Schema: public; Owner: postgres
 --
 
 CREATE TYPE "enum_Resources_scope" AS ENUM (
@@ -217,8 +243,10 @@ CREATE TYPE "enum_Resources_scope" AS ENUM (
 );
 
 
+ALTER TYPE "enum_Resources_scope" OWNER TO postgres;
+
 --
--- Name: enum_Resources_source; Type: TYPE; Schema: public; Owner: -
+-- Name: enum_Resources_source; Type: TYPE; Schema: public; Owner: postgres
 --
 
 CREATE TYPE "enum_Resources_source" AS ENUM (
@@ -227,8 +255,10 @@ CREATE TYPE "enum_Resources_source" AS ENUM (
 );
 
 
+ALTER TYPE "enum_Resources_source" OWNER TO postgres;
+
 --
--- Name: enum_Resources_status; Type: TYPE; Schema: public; Owner: -
+-- Name: enum_Resources_status; Type: TYPE; Schema: public; Owner: postgres
 --
 
 CREATE TYPE "enum_Resources_status" AS ENUM (
@@ -238,8 +268,10 @@ CREATE TYPE "enum_Resources_status" AS ENUM (
 );
 
 
+ALTER TYPE "enum_Resources_status" OWNER TO postgres;
+
 --
--- Name: enum_Resources_type; Type: TYPE; Schema: public; Owner: -
+-- Name: enum_Resources_type; Type: TYPE; Schema: public; Owner: postgres
 --
 
 CREATE TYPE "enum_Resources_type" AS ENUM (
@@ -251,8 +283,10 @@ CREATE TYPE "enum_Resources_type" AS ENUM (
 );
 
 
+ALTER TYPE "enum_Resources_type" OWNER TO postgres;
+
 --
--- Name: enum_SessionMembers_role; Type: TYPE; Schema: public; Owner: -
+-- Name: enum_SessionMembers_role; Type: TYPE; Schema: public; Owner: postgres
 --
 
 CREATE TYPE "enum_SessionMembers_role" AS ENUM (
@@ -262,8 +296,10 @@ CREATE TYPE "enum_SessionMembers_role" AS ENUM (
 );
 
 
+ALTER TYPE "enum_SessionMembers_role" OWNER TO postgres;
+
 --
--- Name: enum_SessionMembers_typeOfCreation; Type: TYPE; Schema: public; Owner: -
+-- Name: enum_SessionMembers_typeOfCreation; Type: TYPE; Schema: public; Owner: postgres
 --
 
 CREATE TYPE "enum_SessionMembers_typeOfCreation" AS ENUM (
@@ -272,8 +308,10 @@ CREATE TYPE "enum_SessionMembers_typeOfCreation" AS ENUM (
 );
 
 
+ALTER TYPE "enum_SessionMembers_typeOfCreation" OWNER TO postgres;
+
 --
--- Name: enum_SessionTopicsReports_format; Type: TYPE; Schema: public; Owner: -
+-- Name: enum_SessionTopicsReports_format; Type: TYPE; Schema: public; Owner: postgres
 --
 
 CREATE TYPE "enum_SessionTopicsReports_format" AS ENUM (
@@ -283,8 +321,10 @@ CREATE TYPE "enum_SessionTopicsReports_format" AS ENUM (
 );
 
 
+ALTER TYPE "enum_SessionTopicsReports_format" OWNER TO postgres;
+
 --
--- Name: enum_SessionTopicsReports_status; Type: TYPE; Schema: public; Owner: -
+-- Name: enum_SessionTopicsReports_status; Type: TYPE; Schema: public; Owner: postgres
 --
 
 CREATE TYPE "enum_SessionTopicsReports_status" AS ENUM (
@@ -294,8 +334,10 @@ CREATE TYPE "enum_SessionTopicsReports_status" AS ENUM (
 );
 
 
+ALTER TYPE "enum_SessionTopicsReports_status" OWNER TO postgres;
+
 --
--- Name: enum_Sessions_status; Type: TYPE; Schema: public; Owner: -
+-- Name: enum_Sessions_status; Type: TYPE; Schema: public; Owner: postgres
 --
 
 CREATE TYPE "enum_Sessions_status" AS ENUM (
@@ -304,8 +346,10 @@ CREATE TYPE "enum_Sessions_status" AS ENUM (
 );
 
 
+ALTER TYPE "enum_Sessions_status" OWNER TO postgres;
+
 --
--- Name: enum_Sessions_step; Type: TYPE; Schema: public; Owner: -
+-- Name: enum_Sessions_step; Type: TYPE; Schema: public; Owner: postgres
 --
 
 CREATE TYPE "enum_Sessions_step" AS ENUM (
@@ -317,18 +361,10 @@ CREATE TYPE "enum_Sessions_step" AS ENUM (
 );
 
 
---
--- Name: enum_Sessions_type; Type: TYPE; Schema: public; Owner: -
---
-
-CREATE TYPE "enum_Sessions_type" AS ENUM (
-    'focus',
-    'forum'
-);
-
+ALTER TYPE "enum_Sessions_step" OWNER TO postgres;
 
 --
--- Name: enum_SocialProfiles_provider; Type: TYPE; Schema: public; Owner: -
+-- Name: enum_SocialProfiles_provider; Type: TYPE; Schema: public; Owner: postgres
 --
 
 CREATE TYPE "enum_SocialProfiles_provider" AS ENUM (
@@ -337,8 +373,10 @@ CREATE TYPE "enum_SocialProfiles_provider" AS ENUM (
 );
 
 
+ALTER TYPE "enum_SocialProfiles_provider" OWNER TO postgres;
+
 --
--- Name: enum_SurveyQuestions_type; Type: TYPE; Schema: public; Owner: -
+-- Name: enum_SurveyQuestions_type; Type: TYPE; Schema: public; Owner: postgres
 --
 
 CREATE TYPE "enum_SurveyQuestions_type" AS ENUM (
@@ -349,8 +387,10 @@ CREATE TYPE "enum_SurveyQuestions_type" AS ENUM (
 );
 
 
+ALTER TYPE "enum_SurveyQuestions_type" OWNER TO postgres;
+
 --
--- Name: enum_Surveys_surveyType; Type: TYPE; Schema: public; Owner: -
+-- Name: enum_Surveys_surveyType; Type: TYPE; Schema: public; Owner: postgres
 --
 
 CREATE TYPE "enum_Surveys_surveyType" AS ENUM (
@@ -360,8 +400,10 @@ CREATE TYPE "enum_Surveys_surveyType" AS ENUM (
 );
 
 
+ALTER TYPE "enum_Surveys_surveyType" OWNER TO postgres;
+
 --
--- Name: enum_UnreadMessages_scope; Type: TYPE; Schema: public; Owner: -
+-- Name: enum_UnreadMessages_scope; Type: TYPE; Schema: public; Owner: postgres
 --
 
 CREATE TYPE "enum_UnreadMessages_scope" AS ENUM (
@@ -370,37 +412,14 @@ CREATE TYPE "enum_UnreadMessages_scope" AS ENUM (
 );
 
 
---
--- Name: table_update_notify(); Type: FUNCTION; Schema: public; Owner: -
---
-
-CREATE FUNCTION table_update_notify() RETURNS trigger
-    LANGUAGE plpgsql
-    AS $$
-    DECLARE
-      id bigint;
-      data jsonb;
-    BEGIN
-
-    IF TG_OP = 'INSERT' OR TG_OP = 'UPDATE' THEN
-      data = row_to_json(NEW);
-    ELSE
-      data = row_to_json(OLD);
-    END IF;
-
-    PERFORM pg_notify('table_update', json_build_object('table', TG_TABLE_NAME, 'data', data, 'type', TG_OP)::text);
-
-    RETURN NEW;
-  END;
-  $$;
-
+ALTER TYPE "enum_UnreadMessages_scope" OWNER TO postgres;
 
 SET default_tablespace = '';
 
 SET default_with_oids = false;
 
 --
--- Name: AccountUsers; Type: TABLE; Schema: public; Owner: -
+-- Name: AccountUsers; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE "AccountUsers" (
@@ -435,8 +454,10 @@ CREATE TABLE "AccountUsers" (
 );
 
 
+ALTER TABLE "AccountUsers" OWNER TO postgres;
+
 --
--- Name: AccountUsers_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: AccountUsers_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
 CREATE SEQUENCE "AccountUsers_id_seq"
@@ -447,15 +468,17 @@ CREATE SEQUENCE "AccountUsers_id_seq"
     CACHE 1;
 
 
+ALTER TABLE "AccountUsers_id_seq" OWNER TO postgres;
+
 --
--- Name: AccountUsers_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: AccountUsers_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
 ALTER SEQUENCE "AccountUsers_id_seq" OWNED BY "AccountUsers".id;
 
 
 --
--- Name: Accounts; Type: TABLE; Schema: public; Owner: -
+-- Name: Accounts; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE "Accounts" (
@@ -469,8 +492,10 @@ CREATE TABLE "Accounts" (
 );
 
 
+ALTER TABLE "Accounts" OWNER TO postgres;
+
 --
--- Name: Accounts_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: Accounts_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
 CREATE SEQUENCE "Accounts_id_seq"
@@ -481,15 +506,17 @@ CREATE SEQUENCE "Accounts_id_seq"
     CACHE 1;
 
 
+ALTER TABLE "Accounts_id_seq" OWNER TO postgres;
+
 --
--- Name: Accounts_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: Accounts_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
 ALTER SEQUENCE "Accounts_id_seq" OWNED BY "Accounts".id;
 
 
 --
--- Name: Banners; Type: TABLE; Schema: public; Owner: -
+-- Name: Banners; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE "Banners" (
@@ -502,8 +529,10 @@ CREATE TABLE "Banners" (
 );
 
 
+ALTER TABLE "Banners" OWNER TO postgres;
+
 --
--- Name: Banners_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: Banners_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
 CREATE SEQUENCE "Banners_id_seq"
@@ -514,15 +543,17 @@ CREATE SEQUENCE "Banners_id_seq"
     CACHE 1;
 
 
+ALTER TABLE "Banners_id_seq" OWNER TO postgres;
+
 --
--- Name: Banners_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: Banners_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
 ALTER SEQUENCE "Banners_id_seq" OWNED BY "Banners".id;
 
 
 --
--- Name: BrandProjectPreferences; Type: TABLE; Schema: public; Owner: -
+-- Name: BrandProjectPreferences; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE "BrandProjectPreferences" (
@@ -538,8 +569,10 @@ CREATE TABLE "BrandProjectPreferences" (
 );
 
 
+ALTER TABLE "BrandProjectPreferences" OWNER TO postgres;
+
 --
--- Name: BrandProjectPreferences_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: BrandProjectPreferences_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
 CREATE SEQUENCE "BrandProjectPreferences_id_seq"
@@ -550,15 +583,17 @@ CREATE SEQUENCE "BrandProjectPreferences_id_seq"
     CACHE 1;
 
 
+ALTER TABLE "BrandProjectPreferences_id_seq" OWNER TO postgres;
+
 --
--- Name: BrandProjectPreferences_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: BrandProjectPreferences_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
 ALTER SEQUENCE "BrandProjectPreferences_id_seq" OWNED BY "BrandProjectPreferences".id;
 
 
 --
--- Name: BrandProjects; Type: TABLE; Schema: public; Owner: -
+-- Name: BrandProjects; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE "BrandProjects" (
@@ -575,8 +610,10 @@ CREATE TABLE "BrandProjects" (
 );
 
 
+ALTER TABLE "BrandProjects" OWNER TO postgres;
+
 --
--- Name: BrandProjects_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: BrandProjects_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
 CREATE SEQUENCE "BrandProjects_id_seq"
@@ -587,15 +624,17 @@ CREATE SEQUENCE "BrandProjects_id_seq"
     CACHE 1;
 
 
+ALTER TABLE "BrandProjects_id_seq" OWNER TO postgres;
+
 --
--- Name: BrandProjects_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: BrandProjects_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
 ALTER SEQUENCE "BrandProjects_id_seq" OWNED BY "BrandProjects".id;
 
 
 --
--- Name: ConnectionLogs; Type: TABLE; Schema: public; Owner: -
+-- Name: ConnectionLogs; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE "ConnectionLogs" (
@@ -613,8 +652,10 @@ CREATE TABLE "ConnectionLogs" (
 );
 
 
+ALTER TABLE "ConnectionLogs" OWNER TO postgres;
+
 --
--- Name: ConnectionLogs_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: ConnectionLogs_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
 CREATE SEQUENCE "ConnectionLogs_id_seq"
@@ -625,15 +666,17 @@ CREATE SEQUENCE "ConnectionLogs_id_seq"
     CACHE 1;
 
 
+ALTER TABLE "ConnectionLogs_id_seq" OWNER TO postgres;
+
 --
--- Name: ConnectionLogs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: ConnectionLogs_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
 ALTER SEQUENCE "ConnectionLogs_id_seq" OWNED BY "ConnectionLogs".id;
 
 
 --
--- Name: Consoles; Type: TABLE; Schema: public; Owner: -
+-- Name: Consoles; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE "Consoles" (
@@ -650,8 +693,10 @@ CREATE TABLE "Consoles" (
 );
 
 
+ALTER TABLE "Consoles" OWNER TO postgres;
+
 --
--- Name: Consoles_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: Consoles_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
 CREATE SEQUENCE "Consoles_id_seq"
@@ -662,15 +707,17 @@ CREATE SEQUENCE "Consoles_id_seq"
     CACHE 1;
 
 
+ALTER TABLE "Consoles_id_seq" OWNER TO postgres;
+
 --
--- Name: Consoles_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: Consoles_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
 ALTER SEQUENCE "Consoles_id_seq" OWNED BY "Consoles".id;
 
 
 --
--- Name: ContactListUsers; Type: TABLE; Schema: public; Owner: -
+-- Name: ContactListUsers; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE "ContactListUsers" (
@@ -687,8 +734,10 @@ CREATE TABLE "ContactListUsers" (
 );
 
 
+ALTER TABLE "ContactListUsers" OWNER TO postgres;
+
 --
--- Name: ContactListUsers_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: ContactListUsers_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
 CREATE SEQUENCE "ContactListUsers_id_seq"
@@ -699,15 +748,17 @@ CREATE SEQUENCE "ContactListUsers_id_seq"
     CACHE 1;
 
 
+ALTER TABLE "ContactListUsers_id_seq" OWNER TO postgres;
+
 --
--- Name: ContactListUsers_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: ContactListUsers_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
 ALTER SEQUENCE "ContactListUsers_id_seq" OWNED BY "ContactListUsers".id;
 
 
 --
--- Name: ContactLists; Type: TABLE; Schema: public; Owner: -
+-- Name: ContactLists; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE "ContactLists" (
@@ -726,8 +777,10 @@ CREATE TABLE "ContactLists" (
 );
 
 
+ALTER TABLE "ContactLists" OWNER TO postgres;
+
 --
--- Name: ContactLists_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: ContactLists_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
 CREATE SEQUENCE "ContactLists_id_seq"
@@ -738,15 +791,17 @@ CREATE SEQUENCE "ContactLists_id_seq"
     CACHE 1;
 
 
+ALTER TABLE "ContactLists_id_seq" OWNER TO postgres;
+
 --
--- Name: ContactLists_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: ContactLists_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
 ALTER SEQUENCE "ContactLists_id_seq" OWNED BY "ContactLists".id;
 
 
 --
--- Name: DirectMessages; Type: TABLE; Schema: public; Owner: -
+-- Name: DirectMessages; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE "DirectMessages" (
@@ -761,8 +816,10 @@ CREATE TABLE "DirectMessages" (
 );
 
 
+ALTER TABLE "DirectMessages" OWNER TO postgres;
+
 --
--- Name: DirectMessages_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: DirectMessages_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
 CREATE SEQUENCE "DirectMessages_id_seq"
@@ -773,15 +830,17 @@ CREATE SEQUENCE "DirectMessages_id_seq"
     CACHE 1;
 
 
+ALTER TABLE "DirectMessages_id_seq" OWNER TO postgres;
+
 --
--- Name: DirectMessages_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: DirectMessages_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
 ALTER SEQUENCE "DirectMessages_id_seq" OWNED BY "DirectMessages".id;
 
 
 --
--- Name: Invites; Type: TABLE; Schema: public; Owner: -
+-- Name: Invites; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE "Invites" (
@@ -805,8 +864,10 @@ CREATE TABLE "Invites" (
 );
 
 
+ALTER TABLE "Invites" OWNER TO postgres;
+
 --
--- Name: Invites_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: Invites_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
 CREATE SEQUENCE "Invites_id_seq"
@@ -817,15 +878,17 @@ CREATE SEQUENCE "Invites_id_seq"
     CACHE 1;
 
 
+ALTER TABLE "Invites_id_seq" OWNER TO postgres;
+
 --
--- Name: Invites_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: Invites_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
 ALTER SEQUENCE "Invites_id_seq" OWNED BY "Invites".id;
 
 
 --
--- Name: MailTemplateBases; Type: TABLE; Schema: public; Owner: -
+-- Name: MailTemplateBases; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE "MailTemplateBases" (
@@ -841,8 +904,10 @@ CREATE TABLE "MailTemplateBases" (
 );
 
 
+ALTER TABLE "MailTemplateBases" OWNER TO postgres;
+
 --
--- Name: MailTemplateBases_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: MailTemplateBases_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
 CREATE SEQUENCE "MailTemplateBases_id_seq"
@@ -853,15 +918,17 @@ CREATE SEQUENCE "MailTemplateBases_id_seq"
     CACHE 1;
 
 
+ALTER TABLE "MailTemplateBases_id_seq" OWNER TO postgres;
+
 --
--- Name: MailTemplateBases_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: MailTemplateBases_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
 ALTER SEQUENCE "MailTemplateBases_id_seq" OWNED BY "MailTemplateBases".id;
 
 
 --
--- Name: MailTemplateResources; Type: TABLE; Schema: public; Owner: -
+-- Name: MailTemplateResources; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE "MailTemplateResources" (
@@ -873,8 +940,10 @@ CREATE TABLE "MailTemplateResources" (
 );
 
 
+ALTER TABLE "MailTemplateResources" OWNER TO postgres;
+
 --
--- Name: MailTemplateResources_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: MailTemplateResources_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
 CREATE SEQUENCE "MailTemplateResources_id_seq"
@@ -885,15 +954,17 @@ CREATE SEQUENCE "MailTemplateResources_id_seq"
     CACHE 1;
 
 
+ALTER TABLE "MailTemplateResources_id_seq" OWNER TO postgres;
+
 --
--- Name: MailTemplateResources_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: MailTemplateResources_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
 ALTER SEQUENCE "MailTemplateResources_id_seq" OWNED BY "MailTemplateResources".id;
 
 
 --
--- Name: MailTemplates; Type: TABLE; Schema: public; Owner: -
+-- Name: MailTemplates; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE "MailTemplates" (
@@ -912,8 +983,10 @@ CREATE TABLE "MailTemplates" (
 );
 
 
+ALTER TABLE "MailTemplates" OWNER TO postgres;
+
 --
--- Name: MailTemplates_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: MailTemplates_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
 CREATE SEQUENCE "MailTemplates_id_seq"
@@ -924,15 +997,17 @@ CREATE SEQUENCE "MailTemplates_id_seq"
     CACHE 1;
 
 
+ALTER TABLE "MailTemplates_id_seq" OWNER TO postgres;
+
 --
--- Name: MailTemplates_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: MailTemplates_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
 ALTER SEQUENCE "MailTemplates_id_seq" OWNED BY "MailTemplates".id;
 
 
 --
--- Name: Messages; Type: TABLE; Schema: public; Owner: -
+-- Name: Messages; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE "Messages" (
@@ -950,8 +1025,10 @@ CREATE TABLE "Messages" (
 );
 
 
+ALTER TABLE "Messages" OWNER TO postgres;
+
 --
--- Name: Messages_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: Messages_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
 CREATE SEQUENCE "Messages_id_seq"
@@ -962,15 +1039,17 @@ CREATE SEQUENCE "Messages_id_seq"
     CACHE 1;
 
 
+ALTER TABLE "Messages_id_seq" OWNER TO postgres;
+
 --
--- Name: Messages_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: Messages_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
 ALTER SEQUENCE "Messages_id_seq" OWNED BY "Messages".id;
 
 
 --
--- Name: MiniSurveyAnswers; Type: TABLE; Schema: public; Owner: -
+-- Name: MiniSurveyAnswers; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE "MiniSurveyAnswers" (
@@ -983,8 +1062,10 @@ CREATE TABLE "MiniSurveyAnswers" (
 );
 
 
+ALTER TABLE "MiniSurveyAnswers" OWNER TO postgres;
+
 --
--- Name: MiniSurveyAnswers_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: MiniSurveyAnswers_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
 CREATE SEQUENCE "MiniSurveyAnswers_id_seq"
@@ -995,15 +1076,17 @@ CREATE SEQUENCE "MiniSurveyAnswers_id_seq"
     CACHE 1;
 
 
+ALTER TABLE "MiniSurveyAnswers_id_seq" OWNER TO postgres;
+
 --
--- Name: MiniSurveyAnswers_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: MiniSurveyAnswers_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
 ALTER SEQUENCE "MiniSurveyAnswers_id_seq" OWNED BY "MiniSurveyAnswers".id;
 
 
 --
--- Name: MiniSurveys; Type: TABLE; Schema: public; Owner: -
+-- Name: MiniSurveys; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE "MiniSurveys" (
@@ -1018,8 +1101,10 @@ CREATE TABLE "MiniSurveys" (
 );
 
 
+ALTER TABLE "MiniSurveys" OWNER TO postgres;
+
 --
--- Name: MiniSurveys_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: MiniSurveys_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
 CREATE SEQUENCE "MiniSurveys_id_seq"
@@ -1030,15 +1115,17 @@ CREATE SEQUENCE "MiniSurveys_id_seq"
     CACHE 1;
 
 
+ALTER TABLE "MiniSurveys_id_seq" OWNER TO postgres;
+
 --
--- Name: MiniSurveys_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: MiniSurveys_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
 ALTER SEQUENCE "MiniSurveys_id_seq" OWNED BY "MiniSurveys".id;
 
 
 --
--- Name: PinboardResources; Type: TABLE; Schema: public; Owner: -
+-- Name: PinboardResources; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE "PinboardResources" (
@@ -1051,8 +1138,10 @@ CREATE TABLE "PinboardResources" (
 );
 
 
+ALTER TABLE "PinboardResources" OWNER TO postgres;
+
 --
--- Name: PinboardResources_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: PinboardResources_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
 CREATE SEQUENCE "PinboardResources_id_seq"
@@ -1063,15 +1152,17 @@ CREATE SEQUENCE "PinboardResources_id_seq"
     CACHE 1;
 
 
+ALTER TABLE "PinboardResources_id_seq" OWNER TO postgres;
+
 --
--- Name: PinboardResources_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: PinboardResources_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
 ALTER SEQUENCE "PinboardResources_id_seq" OWNED BY "PinboardResources".id;
 
 
 --
--- Name: Resources; Type: TABLE; Schema: public; Owner: -
+-- Name: Resources; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE "Resources" (
@@ -1097,8 +1188,10 @@ CREATE TABLE "Resources" (
 );
 
 
+ALTER TABLE "Resources" OWNER TO postgres;
+
 --
--- Name: Resources_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: Resources_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
 CREATE SEQUENCE "Resources_id_seq"
@@ -1109,15 +1202,17 @@ CREATE SEQUENCE "Resources_id_seq"
     CACHE 1;
 
 
+ALTER TABLE "Resources_id_seq" OWNER TO postgres;
+
 --
--- Name: Resources_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: Resources_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
 ALTER SEQUENCE "Resources_id_seq" OWNED BY "Resources".id;
 
 
 --
--- Name: SessionMembers; Type: TABLE; Schema: public; Owner: -
+-- Name: SessionMembers; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE "SessionMembers" (
@@ -1141,8 +1236,10 @@ CREATE TABLE "SessionMembers" (
 );
 
 
+ALTER TABLE "SessionMembers" OWNER TO postgres;
+
 --
--- Name: SessionMembers_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: SessionMembers_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
 CREATE SEQUENCE "SessionMembers_id_seq"
@@ -1153,15 +1250,17 @@ CREATE SEQUENCE "SessionMembers_id_seq"
     CACHE 1;
 
 
+ALTER TABLE "SessionMembers_id_seq" OWNER TO postgres;
+
 --
--- Name: SessionMembers_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: SessionMembers_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
 ALTER SEQUENCE "SessionMembers_id_seq" OWNED BY "SessionMembers".id;
 
 
 --
--- Name: SessionResources; Type: TABLE; Schema: public; Owner: -
+-- Name: SessionResources; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE "SessionResources" (
@@ -1173,8 +1272,10 @@ CREATE TABLE "SessionResources" (
 );
 
 
+ALTER TABLE "SessionResources" OWNER TO postgres;
+
 --
--- Name: SessionResources_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: SessionResources_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
 CREATE SEQUENCE "SessionResources_id_seq"
@@ -1185,15 +1286,17 @@ CREATE SEQUENCE "SessionResources_id_seq"
     CACHE 1;
 
 
+ALTER TABLE "SessionResources_id_seq" OWNER TO postgres;
+
 --
--- Name: SessionResources_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: SessionResources_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
 ALTER SEQUENCE "SessionResources_id_seq" OWNED BY "SessionResources".id;
 
 
 --
--- Name: SessionSurveys; Type: TABLE; Schema: public; Owner: -
+-- Name: SessionSurveys; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE "SessionSurveys" (
@@ -1206,8 +1309,10 @@ CREATE TABLE "SessionSurveys" (
 );
 
 
+ALTER TABLE "SessionSurveys" OWNER TO postgres;
+
 --
--- Name: SessionSurveys_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: SessionSurveys_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
 CREATE SEQUENCE "SessionSurveys_id_seq"
@@ -1218,15 +1323,17 @@ CREATE SEQUENCE "SessionSurveys_id_seq"
     CACHE 1;
 
 
+ALTER TABLE "SessionSurveys_id_seq" OWNER TO postgres;
+
 --
--- Name: SessionSurveys_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: SessionSurveys_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
 ALTER SEQUENCE "SessionSurveys_id_seq" OWNED BY "SessionSurveys".id;
 
 
 --
--- Name: SessionTopics; Type: TABLE; Schema: public; Owner: -
+-- Name: SessionTopics; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE "SessionTopics" (
@@ -1245,8 +1352,10 @@ CREATE TABLE "SessionTopics" (
 );
 
 
+ALTER TABLE "SessionTopics" OWNER TO postgres;
+
 --
--- Name: SessionTopicsReports; Type: TABLE; Schema: public; Owner: -
+-- Name: SessionTopicsReports; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE "SessionTopicsReports" (
@@ -1268,8 +1377,10 @@ CREATE TABLE "SessionTopicsReports" (
 );
 
 
+ALTER TABLE "SessionTopicsReports" OWNER TO postgres;
+
 --
--- Name: SessionTopicsReports_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: SessionTopicsReports_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
 CREATE SEQUENCE "SessionTopicsReports_id_seq"
@@ -1280,15 +1391,17 @@ CREATE SEQUENCE "SessionTopicsReports_id_seq"
     CACHE 1;
 
 
+ALTER TABLE "SessionTopicsReports_id_seq" OWNER TO postgres;
+
 --
--- Name: SessionTopicsReports_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: SessionTopicsReports_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
 ALTER SEQUENCE "SessionTopicsReports_id_seq" OWNED BY "SessionTopicsReports".id;
 
 
 --
--- Name: SessionTopics_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: SessionTopics_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
 CREATE SEQUENCE "SessionTopics_id_seq"
@@ -1299,15 +1412,17 @@ CREATE SEQUENCE "SessionTopics_id_seq"
     CACHE 1;
 
 
+ALTER TABLE "SessionTopics_id_seq" OWNER TO postgres;
+
 --
--- Name: SessionTopics_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: SessionTopics_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
 ALTER SEQUENCE "SessionTopics_id_seq" OWNED BY "SessionTopics".id;
 
 
 --
--- Name: SessionTypes; Type: TABLE; Schema: public; Owner: -
+-- Name: SessionTypes; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE "SessionTypes" (
@@ -1318,8 +1433,10 @@ CREATE TABLE "SessionTypes" (
 );
 
 
+ALTER TABLE "SessionTypes" OWNER TO postgres;
+
 --
--- Name: Sessions; Type: TABLE; Schema: public; Owner: -
+-- Name: Sessions; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE "Sessions" (
@@ -1348,8 +1465,10 @@ CREATE TABLE "Sessions" (
 );
 
 
+ALTER TABLE "Sessions" OWNER TO postgres;
+
 --
--- Name: Sessions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: Sessions_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
 CREATE SEQUENCE "Sessions_id_seq"
@@ -1360,15 +1479,17 @@ CREATE SEQUENCE "Sessions_id_seq"
     CACHE 1;
 
 
+ALTER TABLE "Sessions_id_seq" OWNER TO postgres;
+
 --
--- Name: Sessions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: Sessions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
 ALTER SEQUENCE "Sessions_id_seq" OWNED BY "Sessions".id;
 
 
 --
--- Name: Shapes; Type: TABLE; Schema: public; Owner: -
+-- Name: Shapes; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE "Shapes" (
@@ -1383,8 +1504,10 @@ CREATE TABLE "Shapes" (
 );
 
 
+ALTER TABLE "Shapes" OWNER TO postgres;
+
 --
--- Name: Shapes_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: Shapes_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
 CREATE SEQUENCE "Shapes_id_seq"
@@ -1395,15 +1518,17 @@ CREATE SEQUENCE "Shapes_id_seq"
     CACHE 1;
 
 
+ALTER TABLE "Shapes_id_seq" OWNER TO postgres;
+
 --
--- Name: Shapes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: Shapes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
 ALTER SEQUENCE "Shapes_id_seq" OWNED BY "Shapes".id;
 
 
 --
--- Name: SocialProfiles; Type: TABLE; Schema: public; Owner: -
+-- Name: SocialProfiles; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE "SocialProfiles" (
@@ -1416,8 +1541,10 @@ CREATE TABLE "SocialProfiles" (
 );
 
 
+ALTER TABLE "SocialProfiles" OWNER TO postgres;
+
 --
--- Name: SocialProfiles_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: SocialProfiles_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
 CREATE SEQUENCE "SocialProfiles_id_seq"
@@ -1428,15 +1555,17 @@ CREATE SEQUENCE "SocialProfiles_id_seq"
     CACHE 1;
 
 
+ALTER TABLE "SocialProfiles_id_seq" OWNER TO postgres;
+
 --
--- Name: SocialProfiles_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: SocialProfiles_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
 ALTER SEQUENCE "SocialProfiles_id_seq" OWNED BY "SocialProfiles".id;
 
 
 --
--- Name: SubscriptionPlans; Type: TABLE; Schema: public; Owner: -
+-- Name: SubscriptionPlans; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE "SubscriptionPlans" (
@@ -1471,8 +1600,10 @@ CREATE TABLE "SubscriptionPlans" (
 );
 
 
+ALTER TABLE "SubscriptionPlans" OWNER TO postgres;
+
 --
--- Name: SubscriptionPlans_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: SubscriptionPlans_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
 CREATE SEQUENCE "SubscriptionPlans_id_seq"
@@ -1483,15 +1614,17 @@ CREATE SEQUENCE "SubscriptionPlans_id_seq"
     CACHE 1;
 
 
+ALTER TABLE "SubscriptionPlans_id_seq" OWNER TO postgres;
+
 --
--- Name: SubscriptionPlans_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: SubscriptionPlans_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
 ALTER SEQUENCE "SubscriptionPlans_id_seq" OWNED BY "SubscriptionPlans".id;
 
 
 --
--- Name: SubscriptionPreferences; Type: TABLE; Schema: public; Owner: -
+-- Name: SubscriptionPreferences; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE "SubscriptionPreferences" (
@@ -1503,8 +1636,10 @@ CREATE TABLE "SubscriptionPreferences" (
 );
 
 
+ALTER TABLE "SubscriptionPreferences" OWNER TO postgres;
+
 --
--- Name: SubscriptionPreferences_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: SubscriptionPreferences_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
 CREATE SEQUENCE "SubscriptionPreferences_id_seq"
@@ -1515,15 +1650,17 @@ CREATE SEQUENCE "SubscriptionPreferences_id_seq"
     CACHE 1;
 
 
+ALTER TABLE "SubscriptionPreferences_id_seq" OWNER TO postgres;
+
 --
--- Name: SubscriptionPreferences_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: SubscriptionPreferences_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
 ALTER SEQUENCE "SubscriptionPreferences_id_seq" OWNED BY "SubscriptionPreferences".id;
 
 
 --
--- Name: Subscriptions; Type: TABLE; Schema: public; Owner: -
+-- Name: Subscriptions; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE "Subscriptions" (
@@ -1542,8 +1679,10 @@ CREATE TABLE "Subscriptions" (
 );
 
 
+ALTER TABLE "Subscriptions" OWNER TO postgres;
+
 --
--- Name: Subscriptions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: Subscriptions_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
 CREATE SEQUENCE "Subscriptions_id_seq"
@@ -1554,15 +1693,17 @@ CREATE SEQUENCE "Subscriptions_id_seq"
     CACHE 1;
 
 
+ALTER TABLE "Subscriptions_id_seq" OWNER TO postgres;
+
 --
--- Name: Subscriptions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: Subscriptions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
 ALTER SEQUENCE "Subscriptions_id_seq" OWNED BY "Subscriptions".id;
 
 
 --
--- Name: SurveyAnswers; Type: TABLE; Schema: public; Owner: -
+-- Name: SurveyAnswers; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE "SurveyAnswers" (
@@ -1574,8 +1715,10 @@ CREATE TABLE "SurveyAnswers" (
 );
 
 
+ALTER TABLE "SurveyAnswers" OWNER TO postgres;
+
 --
--- Name: SurveyAnswers_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: SurveyAnswers_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
 CREATE SEQUENCE "SurveyAnswers_id_seq"
@@ -1586,15 +1729,17 @@ CREATE SEQUENCE "SurveyAnswers_id_seq"
     CACHE 1;
 
 
+ALTER TABLE "SurveyAnswers_id_seq" OWNER TO postgres;
+
 --
--- Name: SurveyAnswers_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: SurveyAnswers_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
 ALTER SEQUENCE "SurveyAnswers_id_seq" OWNED BY "SurveyAnswers".id;
 
 
 --
--- Name: SurveyQuestions; Type: TABLE; Schema: public; Owner: -
+-- Name: SurveyQuestions; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE "SurveyQuestions" (
@@ -1612,8 +1757,10 @@ CREATE TABLE "SurveyQuestions" (
 );
 
 
+ALTER TABLE "SurveyQuestions" OWNER TO postgres;
+
 --
--- Name: SurveyQuestions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: SurveyQuestions_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
 CREATE SEQUENCE "SurveyQuestions_id_seq"
@@ -1624,15 +1771,17 @@ CREATE SEQUENCE "SurveyQuestions_id_seq"
     CACHE 1;
 
 
+ALTER TABLE "SurveyQuestions_id_seq" OWNER TO postgres;
+
 --
--- Name: SurveyQuestions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: SurveyQuestions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
 ALTER SEQUENCE "SurveyQuestions_id_seq" OWNED BY "SurveyQuestions".id;
 
 
 --
--- Name: Surveys; Type: TABLE; Schema: public; Owner: -
+-- Name: Surveys; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE "Surveys" (
@@ -1653,8 +1802,10 @@ CREATE TABLE "Surveys" (
 );
 
 
+ALTER TABLE "Surveys" OWNER TO postgres;
+
 --
--- Name: Surveys_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: Surveys_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
 CREATE SEQUENCE "Surveys_id_seq"
@@ -1665,15 +1816,17 @@ CREATE SEQUENCE "Surveys_id_seq"
     CACHE 1;
 
 
+ALTER TABLE "Surveys_id_seq" OWNER TO postgres;
+
 --
--- Name: Surveys_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: Surveys_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
 ALTER SEQUENCE "Surveys_id_seq" OWNED BY "Surveys".id;
 
 
 --
--- Name: Topics; Type: TABLE; Schema: public; Owner: -
+-- Name: Topics; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE "Topics" (
@@ -1691,8 +1844,10 @@ CREATE TABLE "Topics" (
 );
 
 
+ALTER TABLE "Topics" OWNER TO postgres;
+
 --
--- Name: Topics_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: Topics_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
 CREATE SEQUENCE "Topics_id_seq"
@@ -1703,15 +1858,17 @@ CREATE SEQUENCE "Topics_id_seq"
     CACHE 1;
 
 
+ALTER TABLE "Topics_id_seq" OWNER TO postgres;
+
 --
--- Name: Topics_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: Topics_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
 ALTER SEQUENCE "Topics_id_seq" OWNED BY "Topics".id;
 
 
 --
--- Name: UnreadMessages; Type: TABLE; Schema: public; Owner: -
+-- Name: UnreadMessages; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE "UnreadMessages" (
@@ -1725,8 +1882,10 @@ CREATE TABLE "UnreadMessages" (
 );
 
 
+ALTER TABLE "UnreadMessages" OWNER TO postgres;
+
 --
--- Name: UnreadMessages_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: UnreadMessages_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
 CREATE SEQUENCE "UnreadMessages_id_seq"
@@ -1737,15 +1896,17 @@ CREATE SEQUENCE "UnreadMessages_id_seq"
     CACHE 1;
 
 
+ALTER TABLE "UnreadMessages_id_seq" OWNER TO postgres;
+
 --
--- Name: UnreadMessages_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: UnreadMessages_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
 ALTER SEQUENCE "UnreadMessages_id_seq" OWNED BY "UnreadMessages".id;
 
 
 --
--- Name: Users; Type: TABLE; Schema: public; Owner: -
+-- Name: Users; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE "Users" (
@@ -1766,8 +1927,10 @@ CREATE TABLE "Users" (
 );
 
 
+ALTER TABLE "Users" OWNER TO postgres;
+
 --
--- Name: Users_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: Users_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
 CREATE SEQUENCE "Users_id_seq"
@@ -1778,15 +1941,17 @@ CREATE SEQUENCE "Users_id_seq"
     CACHE 1;
 
 
+ALTER TABLE "Users_id_seq" OWNER TO postgres;
+
 --
--- Name: Users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: Users_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
 ALTER SEQUENCE "Users_id_seq" OWNED BY "Users".id;
 
 
 --
--- Name: Votes; Type: TABLE; Schema: public; Owner: -
+-- Name: Votes; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE "Votes" (
@@ -1798,8 +1963,10 @@ CREATE TABLE "Votes" (
 );
 
 
+ALTER TABLE "Votes" OWNER TO postgres;
+
 --
--- Name: Votes_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: Votes_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
 CREATE SEQUENCE "Votes_id_seq"
@@ -1810,15 +1977,29 @@ CREATE SEQUENCE "Votes_id_seq"
     CACHE 1;
 
 
+ALTER TABLE "Votes_id_seq" OWNER TO postgres;
+
 --
--- Name: Votes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: Votes_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
 ALTER SEQUENCE "Votes_id_seq" OWNED BY "Votes".id;
 
 
 --
--- Name: session_staff; Type: TABLE; Schema: public; Owner: -
+-- Name: schema_migrations; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE schema_migrations (
+    version bigint NOT NULL,
+    inserted_at timestamp without time zone
+);
+
+
+ALTER TABLE schema_migrations OWNER TO postgres;
+
+--
+-- Name: session_staff; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE session_staff (
@@ -1835,8 +2016,10 @@ CREATE TABLE session_staff (
 );
 
 
+ALTER TABLE session_staff OWNER TO postgres;
+
 --
--- Name: session_staff_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+-- Name: session_staff_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
 --
 
 CREATE SEQUENCE session_staff_id_seq
@@ -1847,281 +2030,872 @@ CREATE SEQUENCE session_staff_id_seq
     CACHE 1;
 
 
+ALTER TABLE session_staff_id_seq OWNER TO postgres;
+
 --
--- Name: session_staff_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+-- Name: session_staff_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
 --
 
 ALTER SEQUENCE session_staff_id_seq OWNED BY session_staff.id;
 
 
 --
--- Name: AccountUsers id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: AccountUsers id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "AccountUsers" ALTER COLUMN id SET DEFAULT nextval('"AccountUsers_id_seq"'::regclass);
 
 
 --
--- Name: Accounts id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: Accounts id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "Accounts" ALTER COLUMN id SET DEFAULT nextval('"Accounts_id_seq"'::regclass);
 
 
 --
--- Name: Banners id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: Banners id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "Banners" ALTER COLUMN id SET DEFAULT nextval('"Banners_id_seq"'::regclass);
 
 
 --
--- Name: BrandProjectPreferences id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: BrandProjectPreferences id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "BrandProjectPreferences" ALTER COLUMN id SET DEFAULT nextval('"BrandProjectPreferences_id_seq"'::regclass);
 
 
 --
--- Name: BrandProjects id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: BrandProjects id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "BrandProjects" ALTER COLUMN id SET DEFAULT nextval('"BrandProjects_id_seq"'::regclass);
 
 
 --
--- Name: ConnectionLogs id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: ConnectionLogs id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "ConnectionLogs" ALTER COLUMN id SET DEFAULT nextval('"ConnectionLogs_id_seq"'::regclass);
 
 
 --
--- Name: Consoles id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: Consoles id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "Consoles" ALTER COLUMN id SET DEFAULT nextval('"Consoles_id_seq"'::regclass);
 
 
 --
--- Name: ContactListUsers id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: ContactListUsers id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "ContactListUsers" ALTER COLUMN id SET DEFAULT nextval('"ContactListUsers_id_seq"'::regclass);
 
 
 --
--- Name: ContactLists id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: ContactLists id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "ContactLists" ALTER COLUMN id SET DEFAULT nextval('"ContactLists_id_seq"'::regclass);
 
 
 --
--- Name: DirectMessages id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: DirectMessages id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "DirectMessages" ALTER COLUMN id SET DEFAULT nextval('"DirectMessages_id_seq"'::regclass);
 
 
 --
--- Name: Invites id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: Invites id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "Invites" ALTER COLUMN id SET DEFAULT nextval('"Invites_id_seq"'::regclass);
 
 
 --
--- Name: MailTemplateBases id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: MailTemplateBases id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "MailTemplateBases" ALTER COLUMN id SET DEFAULT nextval('"MailTemplateBases_id_seq"'::regclass);
 
 
 --
--- Name: MailTemplateResources id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: MailTemplateResources id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "MailTemplateResources" ALTER COLUMN id SET DEFAULT nextval('"MailTemplateResources_id_seq"'::regclass);
 
 
 --
--- Name: MailTemplates id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: MailTemplates id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "MailTemplates" ALTER COLUMN id SET DEFAULT nextval('"MailTemplates_id_seq"'::regclass);
 
 
 --
--- Name: Messages id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: Messages id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "Messages" ALTER COLUMN id SET DEFAULT nextval('"Messages_id_seq"'::regclass);
 
 
 --
--- Name: MiniSurveyAnswers id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: MiniSurveyAnswers id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "MiniSurveyAnswers" ALTER COLUMN id SET DEFAULT nextval('"MiniSurveyAnswers_id_seq"'::regclass);
 
 
 --
--- Name: MiniSurveys id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: MiniSurveys id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "MiniSurveys" ALTER COLUMN id SET DEFAULT nextval('"MiniSurveys_id_seq"'::regclass);
 
 
 --
--- Name: PinboardResources id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: PinboardResources id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "PinboardResources" ALTER COLUMN id SET DEFAULT nextval('"PinboardResources_id_seq"'::regclass);
 
 
 --
--- Name: Resources id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: Resources id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "Resources" ALTER COLUMN id SET DEFAULT nextval('"Resources_id_seq"'::regclass);
 
 
 --
--- Name: SessionMembers id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: SessionMembers id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "SessionMembers" ALTER COLUMN id SET DEFAULT nextval('"SessionMembers_id_seq"'::regclass);
 
 
 --
--- Name: SessionResources id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: SessionResources id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "SessionResources" ALTER COLUMN id SET DEFAULT nextval('"SessionResources_id_seq"'::regclass);
 
 
 --
--- Name: SessionSurveys id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: SessionSurveys id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "SessionSurveys" ALTER COLUMN id SET DEFAULT nextval('"SessionSurveys_id_seq"'::regclass);
 
 
 --
--- Name: SessionTopics id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: SessionTopics id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "SessionTopics" ALTER COLUMN id SET DEFAULT nextval('"SessionTopics_id_seq"'::regclass);
 
 
 --
--- Name: SessionTopicsReports id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: SessionTopicsReports id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "SessionTopicsReports" ALTER COLUMN id SET DEFAULT nextval('"SessionTopicsReports_id_seq"'::regclass);
 
 
 --
--- Name: Sessions id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: Sessions id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "Sessions" ALTER COLUMN id SET DEFAULT nextval('"Sessions_id_seq"'::regclass);
 
 
 --
--- Name: Shapes id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: Shapes id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "Shapes" ALTER COLUMN id SET DEFAULT nextval('"Shapes_id_seq"'::regclass);
 
 
 --
--- Name: SocialProfiles id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: SocialProfiles id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "SocialProfiles" ALTER COLUMN id SET DEFAULT nextval('"SocialProfiles_id_seq"'::regclass);
 
 
 --
--- Name: SubscriptionPlans id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: SubscriptionPlans id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "SubscriptionPlans" ALTER COLUMN id SET DEFAULT nextval('"SubscriptionPlans_id_seq"'::regclass);
 
 
 --
--- Name: SubscriptionPreferences id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: SubscriptionPreferences id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "SubscriptionPreferences" ALTER COLUMN id SET DEFAULT nextval('"SubscriptionPreferences_id_seq"'::regclass);
 
 
 --
--- Name: Subscriptions id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: Subscriptions id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "Subscriptions" ALTER COLUMN id SET DEFAULT nextval('"Subscriptions_id_seq"'::regclass);
 
 
 --
--- Name: SurveyAnswers id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: SurveyAnswers id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "SurveyAnswers" ALTER COLUMN id SET DEFAULT nextval('"SurveyAnswers_id_seq"'::regclass);
 
 
 --
--- Name: SurveyQuestions id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: SurveyQuestions id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "SurveyQuestions" ALTER COLUMN id SET DEFAULT nextval('"SurveyQuestions_id_seq"'::regclass);
 
 
 --
--- Name: Surveys id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: Surveys id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "Surveys" ALTER COLUMN id SET DEFAULT nextval('"Surveys_id_seq"'::regclass);
 
 
 --
--- Name: Topics id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: Topics id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "Topics" ALTER COLUMN id SET DEFAULT nextval('"Topics_id_seq"'::regclass);
 
 
 --
--- Name: UnreadMessages id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: UnreadMessages id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "UnreadMessages" ALTER COLUMN id SET DEFAULT nextval('"UnreadMessages_id_seq"'::regclass);
 
 
 --
--- Name: Users id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: Users id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "Users" ALTER COLUMN id SET DEFAULT nextval('"Users_id_seq"'::regclass);
 
 
 --
--- Name: Votes id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: Votes id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "Votes" ALTER COLUMN id SET DEFAULT nextval('"Votes_id_seq"'::regclass);
 
 
 --
--- Name: session_staff id; Type: DEFAULT; Schema: public; Owner: -
+-- Name: session_staff id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY session_staff ALTER COLUMN id SET DEFAULT nextval('session_staff_id_seq'::regclass);
 
 
 --
--- Name: AccountUsers AccountUsers_AccountId_UserId_key; Type: CONSTRAINT; Schema: public; Owner: -
+-- Data for Name: AccountUsers; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY "AccountUsers" (id, "firstName", "lastName", gender, owner, active, "reveiveNewsLetters", role, status, state, "postalAddress", city, country, "postCode", "companyName", "phoneCountryData", "landlineNumberCountryData", "landlineNumber", mobile, comment, email, "invitesInfo", "emailNotification", "isRemoved", "createdAt", "updatedAt", "AccountId", "UserId") FROM stdin;
+\.
+
+
+--
+-- Name: AccountUsers_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('"AccountUsers_id_seq"', 1241, true);
+
+
+--
+-- Data for Name: Accounts; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY "Accounts" (id, "selectedPlanOnRegistration", admin, subdomain, name, "createdAt", "updatedAt") FROM stdin;
+\.
+
+
+--
+-- Name: Accounts_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('"Accounts_id_seq"', 554, true);
+
+
+--
+-- Data for Name: Banners; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY "Banners" (id, page, link, "resourceId", "createdAt", "updatedAt") FROM stdin;
+\.
+
+
+--
+-- Name: Banners_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('"Banners_id_seq"', 1, false);
+
+
+--
+-- Data for Name: BrandProjectPreferences; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY "BrandProjectPreferences" (id, name, "accountId", colours, type, "default", "createdAt", "updatedAt", brand_project_id) FROM stdin;
+\.
+
+
+--
+-- Name: BrandProjectPreferences_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('"BrandProjectPreferences_id_seq"', 1, false);
+
+
+--
+-- Data for Name: BrandProjects; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY "BrandProjects" (id, name, client_company_logo_url, client_company_logo_thumbnail_url, enable_chatroom_logo, session_replay_date, moderator_active, "createdAt", "updatedAt", "deletedAt") FROM stdin;
+\.
+
+
+--
+-- Name: BrandProjects_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('"BrandProjects_id_seq"', 1, false);
+
+
+--
+-- Data for Name: ConnectionLogs; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY "ConnectionLogs" (id, "userId", "accountUserId", "accountId", "responseTime", level, application, meta, req, res, "createdAt") FROM stdin;
+\.
+
+
+--
+-- Name: ConnectionLogs_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('"ConnectionLogs_id_seq"', 2, true);
+
+
+--
+-- Data for Name: Consoles; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY "Consoles" (id, "sessionTopicId", "audioId", "videoId", pinboard, "fileId", "miniSurveyId", "createdAt", "updatedAt", "imageId") FROM stdin;
+\.
+
+
+--
+-- Name: Consoles_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('"Consoles_id_seq"', 42, true);
+
+
+--
+-- Data for Name: ContactListUsers; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY "ContactListUsers" (id, "accountUserId", "accountId", "userId", "contactListId", "position", "customFields", "unsubscribeToken", "createdAt", "updatedAt") FROM stdin;
+\.
+
+
+--
+-- Name: ContactListUsers_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('"ContactListUsers_id_seq"', 687, true);
+
+
+--
+-- Data for Name: ContactLists; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY "ContactLists" (id, "accountId", name, editable, active, role, "defaultFields", "visibleFields", "participantsFields", "customFields", "createdAt", "updatedAt") FROM stdin;
+\.
+
+
+--
+-- Name: ContactLists_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('"ContactLists_id_seq"', 229, true);
+
+
+--
+-- Data for Name: DirectMessages; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY "DirectMessages" (id, "senderId", "recieverId", "sessionId", "readAt", text, "createdAt", "updatedAt") FROM stdin;
+\.
+
+
+--
+-- Name: DirectMessages_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('"DirectMessages_id_seq"', 15, true);
+
+
+--
+-- Data for Name: Invites; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY "Invites" (id, token, "sentAt", role, "accountUserId", status, "emailStatus", "mailProvider", "mailMessageId", "webhookMessage", "webhookEvent", "webhookTime", "createdAt", "updatedAt", "accountId", "userId", "sessionId") FROM stdin;
+\.
+
+
+--
+-- Name: Invites_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('"Invites_id_seq"', 6, true);
+
+
+--
+-- Data for Name: MailTemplateBases; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY "MailTemplateBases" (id, name, subject, content, "systemMessage", category, "mailTemplateActive", "createdAt", "updatedAt") FROM stdin;
+\.
+
+
+--
+-- Name: MailTemplateBases_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('"MailTemplateBases_id_seq"', 1, false);
+
+
+--
+-- Data for Name: MailTemplateResources; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY "MailTemplateResources" (id, "mailTemplateId", "resourceId", "createdAt", "updatedAt") FROM stdin;
+\.
+
+
+--
+-- Name: MailTemplateResources_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('"MailTemplateResources_id_seq"', 1, false);
+
+
+--
+-- Data for Name: MailTemplates; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY "MailTemplates" (id, name, subject, content, "systemMessage", "sessionId", required, "isCopy", "createdAt", "updatedAt", "MailTemplateBaseId", "AccountId") FROM stdin;
+\.
+
+
+--
+-- Name: MailTemplates_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('"MailTemplates_id_seq"', 1, false);
+
+
+--
+-- Data for Name: Messages; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY "Messages" (id, "sessionMemberId", "sessionTopicId", "replyId", "replyLevel", emotion, body, star, "childrenStars", "createdAt", "updatedAt") FROM stdin;
+\.
+
+
+--
+-- Name: Messages_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('"Messages_id_seq"', 147, true);
+
+
+--
+-- Data for Name: MiniSurveyAnswers; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY "MiniSurveyAnswers" (id, "miniSurveyId", "sessionMemberId", answer, "createdAt", "updatedAt") FROM stdin;
+\.
+
+
+--
+-- Name: MiniSurveyAnswers_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('"MiniSurveyAnswers_id_seq"', 19, true);
+
+
+--
+-- Data for Name: MiniSurveys; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY "MiniSurveys" (id, "sessionId", "sessionTopicId", title, question, type, "createdAt", "updatedAt") FROM stdin;
+\.
+
+
+--
+-- Name: MiniSurveys_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('"MiniSurveys_id_seq"', 42, true);
+
+
+--
+-- Data for Name: PinboardResources; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY "PinboardResources" (id, "sessionTopicId", "sessionMemberId", "resourceId", "createdAt", "updatedAt") FROM stdin;
+\.
+
+
+--
+-- Name: PinboardResources_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('"PinboardResources_id_seq"', 5, true);
+
+
+--
+-- Data for Name: Resources; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY "Resources" (id, stock, "accountId", name, "accountUserId", "topicId", image, video, file, audio, link, "expiryDate", properties, status, type, scope, source, "createdAt", "updatedAt") FROM stdin;
+\.
+
+
+--
+-- Name: Resources_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('"Resources_id_seq"', 122, true);
+
+
+--
+-- Data for Name: SessionMembers; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY "SessionMembers" (id, "sessionId", "accountUserId", token, username, colour, "avatarData", "sessionTopicContext", "currentTopic", role, comment, rating, "closeEmailSent", "typeOfCreation", ghost, "createdAt", "updatedAt") FROM stdin;
+\.
+
+
+--
+-- Name: SessionMembers_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('"SessionMembers_id_seq"', 1374, true);
+
+
+--
+-- Data for Name: SessionResources; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY "SessionResources" (id, "sessionId", "resourceId", "createdAt", "updatedAt") FROM stdin;
+\.
+
+
+--
+-- Name: SessionResources_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('"SessionResources_id_seq"', 17, true);
+
+
+--
+-- Data for Name: SessionSurveys; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY "SessionSurveys" (id, "sessionId", "surveyId", active, "createdAt", "updatedAt") FROM stdin;
+\.
+
+
+--
+-- Name: SessionSurveys_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('"SessionSurveys_id_seq"', 7, true);
+
+
+--
+-- Data for Name: SessionTopics; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY "SessionTopics" (id, "topicId", "sessionId", "order", active, landing, "boardMessage", name, sign, "lastSign", "createdAt", "updatedAt") FROM stdin;
+\.
+
+
+--
+-- Data for Name: SessionTopicsReports; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY "SessionTopicsReports" (id, "sessionId", "sessionTopicId", "resourceId", type, scopes, "includeFields", includes, format, status, message, name, "deletedAt", "createdAt", "updatedAt") FROM stdin;
+\.
+
+
+--
+-- Name: SessionTopicsReports_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('"SessionTopicsReports_id_seq"', 121, true);
+
+
+--
+-- Name: SessionTopics_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('"SessionTopics_id_seq"', 687, true);
+
+
+--
+-- Data for Name: SessionTypes; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY "SessionTypes" (name, properties, "createdAt", "updatedAt") FROM stdin;
+focus	{"steps": {"setUp": {"enabled": true}, "manageSessionEmails": {"enabled": true}, "facilitatiorAndTopics": {"enabled": true}, "inviteSessionObservers": {"enabled": true, "sendGroupSms": false}, "manageSessionParticipants": {"enabled": true, "sendGroupSms": true}}, "features": {"survay": {"enabled": false}, "publish": {"enabled": false}, "sendSms": {"enabled": true}, "pinboard": {"enabled": true}, "anonymous": {"enabled": true}, "whiteboard": {"enabled": true, "canWrite": ["facilitator", "participant"]}, "colorScheme": {"type": "focus"}, "dateAndTime": {"enabled": true}, "inviteAgainTopic": {"enabled": false}, "ghostParticipants": {"enabled": false}, "closeSessionButton": {"enabled": true}, "closeSessionToggle": {"enabled": false}, "socialMediaGraphics": {"enabled": false}}, "validations": {"observer": {"max": -1}, "participant": {"max": 8}}}	2017-03-20 11:38:08.63+02	2017-03-20 11:38:08.63+02
+forum	{"steps": {"setUp": {"enabled": true}, "manageSessionEmails": {"enabled": true}, "facilitatiorAndTopics": {"enabled": true}, "inviteSessionObservers": {"enabled": true, "sendGroupSms": false}, "manageSessionParticipants": {"enabled": true, "sendGroupSms": false}}, "features": {"survay": {"enabled": false}, "publish": {"enabled": false}, "sendSms": {"enabled": false}, "pinboard": {"enabled": false}, "anonymous": {"enabled": true}, "whiteboard": {"enabled": true, "canWrite": ["facilitator"]}, "colorScheme": {"type": "forum"}, "dateAndTime": {"enabled": true}, "inviteAgainTopic": {"enabled": false}, "ghostParticipants": {"enabled": false}, "closeSessionButton": {"enabled": true}, "closeSessionToggle": {"enabled": false}, "socialMediaGraphics": {"enabled": false}}, "validations": {"observer": {"max": -1}, "participant": {"max": -1}}}	2017-03-20 11:38:08.641+02	2017-03-20 11:38:08.641+02
+socialForum	{"steps": {"setUp": {"enabled": true}, "message": "It's even easier to build Social Forum, so you don't need steps 3 to 5.", "manageSessionEmails": {"enabled": false}, "facilitatiorAndTopics": {"enabled": true, "hideNext": true}, "inviteSessionObservers": {"enabled": false}, "manageSessionParticipants": {"enabled": false}}, "features": {"survay": {"enabled": true}, "publish": {"enabled": true}, "sendSms": {"enabled": false}, "pinboard": {"enabled": false}, "anonymous": {"enabled": false}, "whiteboard": {"enabled": true, "canWrite": ["facilitator"]}, "colorScheme": {"type": "forum"}, "dateAndTime": {"enabled": false, "message": "Yay! One less thing you have to do.<br/>Start & End Date isn't required<br/>with Social Forum"}, "inviteAgainTopic": {"enabled": true}, "ghostParticipants": {"enabled": true}, "closeSessionButton": {"enabled": false}, "closeSessionToggle": {"enabled": true}, "socialMediaGraphics": {"enabled": true, "message": "We're currently building an exciting tool for you to customize your social media posts and help your Chat Session stand out. We'll keep you updated on progress ☺"}}, "validations": {"observer": {"max": 0}, "participant": {"max": 0}}}	2017-03-20 11:38:08.645+02	2017-03-20 11:38:08.645+02
+\.
+
+
+--
+-- Data for Name: Sessions; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY "Sessions" (id, brand_project_id, "accountId", "participantListId", "brandProjectPreferenceId", name, "startTime", "endTime", "timeZone", incentive_details, colours_used, step, status, type, anonymous, "isInactive", "isVisited", "publicUid", "createdAt", "updatedAt", "sessionId", "resourceId") FROM stdin;
+\.
+
+
+--
+-- Name: Sessions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('"Sessions_id_seq"', 458, true);
+
+
+--
+-- Data for Name: Shapes; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY "Shapes" (id, "sessionMemberId", "sessionTopicId", uid, event, "eventType", "createdAt", "updatedAt") FROM stdin;
+\.
+
+
+--
+-- Name: Shapes_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('"Shapes_id_seq"', 12, true);
+
+
+--
+-- Data for Name: SocialProfiles; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY "SocialProfiles" (id, provider, "providerUserId", "userId", "createdAt", "updatedAt") FROM stdin;
+\.
+
+
+--
+-- Name: SocialProfiles_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('"SocialProfiles_id_seq"', 1, false);
+
+
+--
+-- Data for Name: SubscriptionPlans; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY "SubscriptionPlans" (id, "sessionCount", "contactListCount", "recruiterContactListCount", "importDatabase", "brandLogoAndCustomColors", "contactListMemberCount", "accountUserCount", "exportContactListAndParticipantHistory", "exportRecruiterSurveyData", "accessKlzziForum", "accessKlzziFocus", "canInviteObserversToSession", "planSmsCount", "discussionGuideTips", "whiteboardFunctionality", "uploadToGallery", "reportingFunctions", "availableOnTabletAndMobilePlatforms", "customEmailInvitationAndReminderMessages", "topicCount", priority, "surveyCount", "canBuySms", "chargebeePlanId", "createdAt", "updatedAt", "deletedAt") FROM stdin;
+\.
+
+
+--
+-- Name: SubscriptionPlans_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('"SubscriptionPlans_id_seq"', 301, true);
+
+
+--
+-- Data for Name: SubscriptionPreferences; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY "SubscriptionPreferences" (id, "subscriptionId", data, "createdAt", "updatedAt") FROM stdin;
+\.
+
+
+--
+-- Name: SubscriptionPreferences_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('"SubscriptionPreferences_id_seq"', 301, true);
+
+
+--
+-- Data for Name: Subscriptions; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY "Subscriptions" (id, "accountId", "subscriptionPlanId", "planId", "customerId", "lastWebhookId", "subscriptionId", active, "endDate", "createdAt", "updatedAt", "deletedAt") FROM stdin;
+\.
+
+
+--
+-- Name: Subscriptions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('"Subscriptions_id_seq"', 301, true);
+
+
+--
+-- Data for Name: SurveyAnswers; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY "SurveyAnswers" (id, "surveyId", answers, "createdAt", "updatedAt") FROM stdin;
+\.
+
+
+--
+-- Name: SurveyAnswers_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('"SurveyAnswers_id_seq"', 9, true);
+
+
+--
+-- Data for Name: SurveyQuestions; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY "SurveyQuestions" (id, "surveyId", "resourceId", required, name, question, "order", type, answers, "createdAt", "updatedAt") FROM stdin;
+\.
+
+
+--
+-- Name: SurveyQuestions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('"SurveyQuestions_id_seq"', 4, true);
+
+
+--
+-- Data for Name: Surveys; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY "Surveys" (id, "accountId", "resourceId", "contactListId", name, description, thanks, closed, "confirmedAt", "closedAt", url, "surveyType", "createdAt", "updatedAt") FROM stdin;
+\.
+
+
+--
+-- Name: Surveys_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('"Surveys_id_seq"', 14, true);
+
+
+--
+-- Data for Name: Topics; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY "Topics" (id, "accountId", "parentTopicId", "boardMessage", name, sign, "default", stock, "inviteAgain", "createdAt", "updatedAt") FROM stdin;
+\.
+
+
+--
+-- Name: Topics_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('"Topics_id_seq"', 458, true);
+
+
+--
+-- Data for Name: UnreadMessages; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY "UnreadMessages" (id, "sessionMemberId", "messageId", "sessionTopicId", scope, "createdAt", "updatedAt") FROM stdin;
+\.
+
+
+--
+-- Name: UnreadMessages_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('"UnreadMessages_id_seq"', 53, true);
+
+
+--
+-- Data for Name: Users; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY "Users" (id, email, "encryptedPassword", "resetPasswordToken", "resetPasswordSentAt", "confirmationToken", "confirmationSentAt", "confirmedAt", "currentSignInIp", "signInCount", "tipsAndUpdate", "selectedPlanOnRegistration", "createdAt", "updatedAt") FROM stdin;
+\.
+
+
+--
+-- Name: Users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('"Users_id_seq"', 1241, true);
+
+
+--
+-- Data for Name: Votes; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY "Votes" (id, "createdAt", "updatedAt", "messageId", "sessionMemberId") FROM stdin;
+\.
+
+
+--
+-- Name: Votes_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('"Votes_id_seq"', 1, true);
+
+
+--
+-- Data for Name: schema_migrations; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY schema_migrations (version, inserted_at) FROM stdin;
+\.
+
+
+--
+-- Data for Name: session_staff; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY session_staff (id, "userId", "topicId", "sessionId", comments, type, active, "createdAt", "updatedAt", "deletedAt") FROM stdin;
+\.
+
+
+--
+-- Name: session_staff_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('session_staff_id_seq', 1, false);
+
+
+--
+-- Name: AccountUsers AccountUsers_AccountId_UserId_key; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "AccountUsers"
@@ -2129,7 +2903,7 @@ ALTER TABLE ONLY "AccountUsers"
 
 
 --
--- Name: AccountUsers AccountUsers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: AccountUsers AccountUsers_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "AccountUsers"
@@ -2137,7 +2911,7 @@ ALTER TABLE ONLY "AccountUsers"
 
 
 --
--- Name: Accounts Accounts_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: Accounts Accounts_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "Accounts"
@@ -2145,7 +2919,7 @@ ALTER TABLE ONLY "Accounts"
 
 
 --
--- Name: Banners Banners_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: Banners Banners_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "Banners"
@@ -2153,7 +2927,7 @@ ALTER TABLE ONLY "Banners"
 
 
 --
--- Name: BrandProjectPreferences BrandProjectPreferences_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: BrandProjectPreferences BrandProjectPreferences_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "BrandProjectPreferences"
@@ -2161,7 +2935,7 @@ ALTER TABLE ONLY "BrandProjectPreferences"
 
 
 --
--- Name: BrandProjects BrandProjects_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: BrandProjects BrandProjects_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "BrandProjects"
@@ -2169,7 +2943,7 @@ ALTER TABLE ONLY "BrandProjects"
 
 
 --
--- Name: ConnectionLogs ConnectionLogs_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: ConnectionLogs ConnectionLogs_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "ConnectionLogs"
@@ -2177,7 +2951,7 @@ ALTER TABLE ONLY "ConnectionLogs"
 
 
 --
--- Name: Consoles Consoles_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: Consoles Consoles_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "Consoles"
@@ -2185,7 +2959,7 @@ ALTER TABLE ONLY "Consoles"
 
 
 --
--- Name: ContactListUsers ContactListUsers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: ContactListUsers ContactListUsers_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "ContactListUsers"
@@ -2193,7 +2967,7 @@ ALTER TABLE ONLY "ContactListUsers"
 
 
 --
--- Name: ContactLists ContactLists_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: ContactLists ContactLists_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "ContactLists"
@@ -2201,7 +2975,7 @@ ALTER TABLE ONLY "ContactLists"
 
 
 --
--- Name: DirectMessages DirectMessages_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: DirectMessages DirectMessages_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "DirectMessages"
@@ -2209,7 +2983,7 @@ ALTER TABLE ONLY "DirectMessages"
 
 
 --
--- Name: Invites Invites_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: Invites Invites_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "Invites"
@@ -2217,7 +2991,7 @@ ALTER TABLE ONLY "Invites"
 
 
 --
--- Name: MailTemplateBases MailTemplateBases_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: MailTemplateBases MailTemplateBases_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "MailTemplateBases"
@@ -2225,7 +2999,7 @@ ALTER TABLE ONLY "MailTemplateBases"
 
 
 --
--- Name: MailTemplateResources MailTemplateResources_mailTemplateId_resourceId_key; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: MailTemplateResources MailTemplateResources_mailTemplateId_resourceId_key; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "MailTemplateResources"
@@ -2233,7 +3007,7 @@ ALTER TABLE ONLY "MailTemplateResources"
 
 
 --
--- Name: MailTemplateResources MailTemplateResources_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: MailTemplateResources MailTemplateResources_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "MailTemplateResources"
@@ -2241,7 +3015,7 @@ ALTER TABLE ONLY "MailTemplateResources"
 
 
 --
--- Name: MailTemplates MailTemplates_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: MailTemplates MailTemplates_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "MailTemplates"
@@ -2249,7 +3023,7 @@ ALTER TABLE ONLY "MailTemplates"
 
 
 --
--- Name: Messages Messages_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: Messages Messages_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "Messages"
@@ -2257,7 +3031,7 @@ ALTER TABLE ONLY "Messages"
 
 
 --
--- Name: MiniSurveyAnswers MiniSurveyAnswers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: MiniSurveyAnswers MiniSurveyAnswers_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "MiniSurveyAnswers"
@@ -2265,7 +3039,7 @@ ALTER TABLE ONLY "MiniSurveyAnswers"
 
 
 --
--- Name: MiniSurveys MiniSurveys_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: MiniSurveys MiniSurveys_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "MiniSurveys"
@@ -2273,7 +3047,7 @@ ALTER TABLE ONLY "MiniSurveys"
 
 
 --
--- Name: PinboardResources PinboardResources_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: PinboardResources PinboardResources_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "PinboardResources"
@@ -2281,7 +3055,7 @@ ALTER TABLE ONLY "PinboardResources"
 
 
 --
--- Name: Resources Resources_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: Resources Resources_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "Resources"
@@ -2289,7 +3063,7 @@ ALTER TABLE ONLY "Resources"
 
 
 --
--- Name: SessionMembers SessionMembers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: SessionMembers SessionMembers_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "SessionMembers"
@@ -2297,7 +3071,7 @@ ALTER TABLE ONLY "SessionMembers"
 
 
 --
--- Name: SessionResources SessionResources_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: SessionResources SessionResources_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "SessionResources"
@@ -2305,7 +3079,7 @@ ALTER TABLE ONLY "SessionResources"
 
 
 --
--- Name: SessionResources SessionResources_sessionId_resourceId_key; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: SessionResources SessionResources_sessionId_resourceId_key; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "SessionResources"
@@ -2313,7 +3087,7 @@ ALTER TABLE ONLY "SessionResources"
 
 
 --
--- Name: SessionSurveys SessionSurveys_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: SessionSurveys SessionSurveys_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "SessionSurveys"
@@ -2321,7 +3095,7 @@ ALTER TABLE ONLY "SessionSurveys"
 
 
 --
--- Name: SessionSurveys SessionSurveys_sessionId_surveyId_key; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: SessionSurveys SessionSurveys_sessionId_surveyId_key; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "SessionSurveys"
@@ -2329,7 +3103,7 @@ ALTER TABLE ONLY "SessionSurveys"
 
 
 --
--- Name: SessionTopicsReports SessionTopicsReports_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: SessionTopicsReports SessionTopicsReports_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "SessionTopicsReports"
@@ -2337,7 +3111,7 @@ ALTER TABLE ONLY "SessionTopicsReports"
 
 
 --
--- Name: SessionTopics SessionTopics_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: SessionTopics SessionTopics_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "SessionTopics"
@@ -2345,7 +3119,7 @@ ALTER TABLE ONLY "SessionTopics"
 
 
 --
--- Name: SessionTopics SessionTopics_topicId_sessionId_key; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: SessionTopics SessionTopics_topicId_sessionId_key; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "SessionTopics"
@@ -2353,7 +3127,7 @@ ALTER TABLE ONLY "SessionTopics"
 
 
 --
--- Name: SessionTypes SessionTypes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: SessionTypes SessionTypes_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "SessionTypes"
@@ -2361,7 +3135,7 @@ ALTER TABLE ONLY "SessionTypes"
 
 
 --
--- Name: Sessions Sessions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: Sessions Sessions_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "Sessions"
@@ -2369,7 +3143,7 @@ ALTER TABLE ONLY "Sessions"
 
 
 --
--- Name: Shapes Shapes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: Shapes Shapes_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "Shapes"
@@ -2377,7 +3151,7 @@ ALTER TABLE ONLY "Shapes"
 
 
 --
--- Name: SocialProfiles SocialProfiles_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: SocialProfiles SocialProfiles_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "SocialProfiles"
@@ -2385,7 +3159,7 @@ ALTER TABLE ONLY "SocialProfiles"
 
 
 --
--- Name: SubscriptionPlans SubscriptionPlans_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: SubscriptionPlans SubscriptionPlans_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "SubscriptionPlans"
@@ -2393,7 +3167,7 @@ ALTER TABLE ONLY "SubscriptionPlans"
 
 
 --
--- Name: SubscriptionPreferences SubscriptionPreferences_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: SubscriptionPreferences SubscriptionPreferences_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "SubscriptionPreferences"
@@ -2401,7 +3175,7 @@ ALTER TABLE ONLY "SubscriptionPreferences"
 
 
 --
--- Name: Subscriptions Subscriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: Subscriptions Subscriptions_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "Subscriptions"
@@ -2409,7 +3183,7 @@ ALTER TABLE ONLY "Subscriptions"
 
 
 --
--- Name: SurveyAnswers SurveyAnswers_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: SurveyAnswers SurveyAnswers_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "SurveyAnswers"
@@ -2417,7 +3191,7 @@ ALTER TABLE ONLY "SurveyAnswers"
 
 
 --
--- Name: SurveyQuestions SurveyQuestions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: SurveyQuestions SurveyQuestions_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "SurveyQuestions"
@@ -2425,7 +3199,7 @@ ALTER TABLE ONLY "SurveyQuestions"
 
 
 --
--- Name: Surveys Surveys_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: Surveys Surveys_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "Surveys"
@@ -2433,7 +3207,7 @@ ALTER TABLE ONLY "Surveys"
 
 
 --
--- Name: Topics Topics_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: Topics Topics_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "Topics"
@@ -2441,7 +3215,7 @@ ALTER TABLE ONLY "Topics"
 
 
 --
--- Name: UnreadMessages UnreadMessages_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: UnreadMessages UnreadMessages_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "UnreadMessages"
@@ -2449,7 +3223,7 @@ ALTER TABLE ONLY "UnreadMessages"
 
 
 --
--- Name: Users Users_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: Users Users_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "Users"
@@ -2457,7 +3231,7 @@ ALTER TABLE ONLY "Users"
 
 
 --
--- Name: Votes Votes_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: Votes Votes_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "Votes"
@@ -2465,7 +3239,15 @@ ALTER TABLE ONLY "Votes"
 
 
 --
--- Name: session_staff session_staff_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+-- Name: schema_migrations schema_migrations_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY schema_migrations
+    ADD CONSTRAINT schema_migrations_pkey PRIMARY KEY (version);
+
+
+--
+-- Name: session_staff session_staff_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY session_staff
@@ -2473,259 +3255,231 @@ ALTER TABLE ONLY session_staff
 
 
 --
--- Name: SocialProfileProviderIndex; Type: INDEX; Schema: public; Owner: -
+-- Name: SocialProfileProviderIndex; Type: INDEX; Schema: public; Owner: postgres
 --
 
 CREATE INDEX "SocialProfileProviderIndex" ON "SocialProfiles" USING btree (provider);
 
 
 --
--- Name: SocialProfileUserIndex; Type: INDEX; Schema: public; Owner: -
+-- Name: SocialProfileUserIndex; Type: INDEX; Schema: public; Owner: postgres
 --
 
 CREATE INDEX "SocialProfileUserIndex" ON "SocialProfiles" USING btree ("userId");
 
 
 --
--- Name: UniqEmailContactList; Type: INDEX; Schema: public; Owner: -
+-- Name: UniqEmailContactList; Type: INDEX; Schema: public; Owner: postgres
 --
 
 CREATE UNIQUE INDEX "UniqEmailContactList" ON "ContactListUsers" USING btree ("userId", "accountUserId", "contactListId", "accountId");
 
 
 --
--- Name: UniqResourceNameByAccount; Type: INDEX; Schema: public; Owner: -
+-- Name: UniqResourceNameByAccount; Type: INDEX; Schema: public; Owner: postgres
 --
 
 CREATE UNIQUE INDEX "UniqResourceNameByAccount" ON "Resources" USING btree ("accountId", name, type);
 
 
 --
--- Name: account_users_email; Type: INDEX; Schema: public; Owner: -
+-- Name: account_users_email; Type: INDEX; Schema: public; Owner: postgres
 --
 
 CREATE INDEX account_users_email ON "AccountUsers" USING btree (email);
 
 
 --
--- Name: account_users_id; Type: INDEX; Schema: public; Owner: -
+-- Name: account_users_id; Type: INDEX; Schema: public; Owner: postgres
 --
 
 CREATE INDEX account_users_id ON "AccountUsers" USING btree (id);
 
 
 --
--- Name: accounts_id; Type: INDEX; Schema: public; Owner: -
+-- Name: accounts_id; Type: INDEX; Schema: public; Owner: postgres
 --
 
 CREATE INDEX accounts_id ON "Accounts" USING btree (id);
 
 
 --
--- Name: accounts_subdomain; Type: INDEX; Schema: public; Owner: -
+-- Name: accounts_subdomain; Type: INDEX; Schema: public; Owner: postgres
 --
 
 CREATE INDEX accounts_subdomain ON "Accounts" USING btree (subdomain);
 
 
 --
--- Name: accounts_unique_name; Type: INDEX; Schema: public; Owner: -
+-- Name: accounts_unique_name; Type: INDEX; Schema: public; Owner: postgres
 --
 
 CREATE UNIQUE INDEX accounts_unique_name ON "Accounts" USING btree (subdomain);
 
 
 --
--- Name: compositeAccountIdMailTemplateBaseIdAndTemplateName; Type: INDEX; Schema: public; Owner: -
+-- Name: compositeAccountIdMailTemplateBaseIdAndTemplateName; Type: INDEX; Schema: public; Owner: postgres
 --
 
 CREATE UNIQUE INDEX "compositeAccountIdMailTemplateBaseIdAndTemplateName" ON "MailTemplates" USING btree (name, "AccountId", "MailTemplateBaseId");
 
 
 --
--- Name: compositeUserIdAndAccountIdAndEmail; Type: INDEX; Schema: public; Owner: -
+-- Name: compositeUserIdAndAccountIdAndEmail; Type: INDEX; Schema: public; Owner: postgres
 --
 
 CREATE UNIQUE INDEX "compositeUserIdAndAccountIdAndEmail" ON "AccountUsers" USING btree (email, "UserId", "AccountId");
 
 
 --
--- Name: messages_reply_id; Type: INDEX; Schema: public; Owner: -
+-- Name: messages_reply_id; Type: INDEX; Schema: public; Owner: postgres
 --
 
 CREATE INDEX messages_reply_id ON "Messages" USING btree ("replyId");
 
 
 --
--- Name: messages_session_member_id; Type: INDEX; Schema: public; Owner: -
+-- Name: messages_session_member_id; Type: INDEX; Schema: public; Owner: postgres
 --
 
 CREATE INDEX messages_session_member_id ON "Messages" USING btree ("sessionMemberId");
 
 
 --
--- Name: messages_session_topic_id; Type: INDEX; Schema: public; Owner: -
+-- Name: messages_session_topic_id; Type: INDEX; Schema: public; Owner: postgres
 --
 
 CREATE INDEX messages_session_topic_id ON "Messages" USING btree ("sessionTopicId");
 
 
 --
--- Name: messages_star; Type: INDEX; Schema: public; Owner: -
+-- Name: messages_star; Type: INDEX; Schema: public; Owner: postgres
 --
 
 CREATE INDEX messages_star ON "Messages" USING btree (star);
 
 
 --
--- Name: session_members_account_user_id; Type: INDEX; Schema: public; Owner: -
+-- Name: session_members_account_user_id; Type: INDEX; Schema: public; Owner: postgres
 --
 
 CREATE INDEX session_members_account_user_id ON "SessionMembers" USING btree ("accountUserId");
 
 
 --
--- Name: session_members_session_id; Type: INDEX; Schema: public; Owner: -
+-- Name: session_members_session_id; Type: INDEX; Schema: public; Owner: postgres
 --
 
 CREATE INDEX session_members_session_id ON "SessionMembers" USING btree ("sessionId");
 
 
 --
--- Name: session_members_token; Type: INDEX; Schema: public; Owner: -
+-- Name: session_members_token; Type: INDEX; Schema: public; Owner: postgres
 --
 
 CREATE INDEX session_members_token ON "SessionMembers" USING btree (token);
 
 
 --
--- Name: session_members_type_of_creation; Type: INDEX; Schema: public; Owner: -
+-- Name: session_members_type_of_creation; Type: INDEX; Schema: public; Owner: postgres
 --
 
 CREATE INDEX session_members_type_of_creation ON "SessionMembers" USING btree ("typeOfCreation");
 
 
 --
--- Name: shapes_event_type; Type: INDEX; Schema: public; Owner: -
+-- Name: shapes_event_type; Type: INDEX; Schema: public; Owner: postgres
 --
 
 CREATE INDEX shapes_event_type ON "Shapes" USING btree ("eventType");
 
 
 --
--- Name: shapes_session_member_id; Type: INDEX; Schema: public; Owner: -
+-- Name: shapes_session_member_id; Type: INDEX; Schema: public; Owner: postgres
 --
 
 CREATE INDEX shapes_session_member_id ON "Shapes" USING btree ("sessionMemberId");
 
 
 --
--- Name: shapes_session_topic_id; Type: INDEX; Schema: public; Owner: -
+-- Name: shapes_session_topic_id; Type: INDEX; Schema: public; Owner: postgres
 --
 
 CREATE INDEX shapes_session_topic_id ON "Shapes" USING btree ("sessionTopicId");
 
 
 --
--- Name: shapes_uid; Type: INDEX; Schema: public; Owner: -
+-- Name: shapes_uid; Type: INDEX; Schema: public; Owner: postgres
 --
 
 CREATE INDEX shapes_uid ON "Shapes" USING btree (uid);
 
 
 --
--- Name: social_profiles_provider_provider_user_id; Type: INDEX; Schema: public; Owner: -
+-- Name: social_profiles_provider_provider_user_id; Type: INDEX; Schema: public; Owner: postgres
 --
 
 CREATE UNIQUE INDEX social_profiles_provider_provider_user_id ON "SocialProfiles" USING btree (provider, "providerUserId");
 
 
 --
--- Name: uniquePinboardResource; Type: INDEX; Schema: public; Owner: -
+-- Name: uniquePinboardResource; Type: INDEX; Schema: public; Owner: postgres
 --
 
 CREATE UNIQUE INDEX "uniquePinboardResource" ON "PinboardResources" USING btree ("sessionTopicId", "sessionMemberId");
 
 
 --
--- Name: unread_messages_message_id; Type: INDEX; Schema: public; Owner: -
+-- Name: unread_messages_message_id; Type: INDEX; Schema: public; Owner: postgres
 --
 
 CREATE INDEX unread_messages_message_id ON "UnreadMessages" USING btree ("messageId");
 
 
 --
--- Name: unread_messages_scope; Type: INDEX; Schema: public; Owner: -
+-- Name: unread_messages_scope; Type: INDEX; Schema: public; Owner: postgres
 --
 
 CREATE INDEX unread_messages_scope ON "UnreadMessages" USING btree (scope);
 
 
 --
--- Name: unread_messages_session_member_id; Type: INDEX; Schema: public; Owner: -
+-- Name: unread_messages_session_member_id; Type: INDEX; Schema: public; Owner: postgres
 --
 
 CREATE INDEX unread_messages_session_member_id ON "UnreadMessages" USING btree ("sessionMemberId");
 
 
 --
--- Name: unread_messages_session_topic_id; Type: INDEX; Schema: public; Owner: -
+-- Name: unread_messages_session_topic_id; Type: INDEX; Schema: public; Owner: postgres
 --
 
 CREATE INDEX unread_messages_session_topic_id ON "UnreadMessages" USING btree ("sessionTopicId");
 
 
 --
--- Name: userUniqueEmail; Type: INDEX; Schema: public; Owner: -
+-- Name: userUniqueEmail; Type: INDEX; Schema: public; Owner: postgres
 --
 
 CREATE UNIQUE INDEX "userUniqueEmail" ON "Users" USING btree (email);
 
 
 --
--- Name: users_email; Type: INDEX; Schema: public; Owner: -
+-- Name: users_email; Type: INDEX; Schema: public; Owner: postgres
 --
 
 CREATE INDEX users_email ON "Users" USING btree (email);
 
 
 --
--- Name: users_id; Type: INDEX; Schema: public; Owner: -
+-- Name: users_id; Type: INDEX; Schema: public; Owner: postgres
 --
 
 CREATE INDEX users_id ON "Users" USING btree (id);
 
 
 --
--- Name: Invites invite_notify; Type: TRIGGER; Schema: public; Owner: -
---
-
-CREATE TRIGGER invite_notify AFTER INSERT OR DELETE OR UPDATE ON "Invites" FOR EACH ROW EXECUTE PROCEDURE table_update_notify();
-
-
---
--- Name: SessionMembers session_members_notify; Type: TRIGGER; Schema: public; Owner: -
---
-
-CREATE TRIGGER session_members_notify AFTER INSERT OR DELETE OR UPDATE ON "SessionMembers" FOR EACH ROW EXECUTE PROCEDURE table_update_notify();
-
-
---
--- Name: Sessions session_notify; Type: TRIGGER; Schema: public; Owner: -
---
-
-CREATE TRIGGER session_notify AFTER INSERT OR DELETE OR UPDATE ON "Sessions" FOR EACH ROW EXECUTE PROCEDURE table_update_notify();
-
-
---
--- Name: SessionTopics session_topic_notify; Type: TRIGGER; Schema: public; Owner: -
---
-
-CREATE TRIGGER session_topic_notify AFTER INSERT OR DELETE OR UPDATE ON "SessionTopics" FOR EACH ROW EXECUTE PROCEDURE table_update_notify();
-
-
---
--- Name: AccountUsers AccountUsers_AccountId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: AccountUsers AccountUsers_AccountId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "AccountUsers"
@@ -2733,7 +3487,7 @@ ALTER TABLE ONLY "AccountUsers"
 
 
 --
--- Name: AccountUsers AccountUsers_UserId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: AccountUsers AccountUsers_UserId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "AccountUsers"
@@ -2741,7 +3495,7 @@ ALTER TABLE ONLY "AccountUsers"
 
 
 --
--- Name: Banners Banners_resourceId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: Banners Banners_resourceId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "Banners"
@@ -2749,7 +3503,7 @@ ALTER TABLE ONLY "Banners"
 
 
 --
--- Name: BrandProjectPreferences BrandProjectPreferences_accountId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: BrandProjectPreferences BrandProjectPreferences_accountId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "BrandProjectPreferences"
@@ -2757,7 +3511,7 @@ ALTER TABLE ONLY "BrandProjectPreferences"
 
 
 --
--- Name: BrandProjectPreferences BrandProjectPreferences_brand_project_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: BrandProjectPreferences BrandProjectPreferences_brand_project_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "BrandProjectPreferences"
@@ -2765,7 +3519,7 @@ ALTER TABLE ONLY "BrandProjectPreferences"
 
 
 --
--- Name: Consoles Consoles_audioId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: Consoles Consoles_audioId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "Consoles"
@@ -2773,7 +3527,7 @@ ALTER TABLE ONLY "Consoles"
 
 
 --
--- Name: Consoles Consoles_fileId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: Consoles Consoles_fileId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "Consoles"
@@ -2781,7 +3535,7 @@ ALTER TABLE ONLY "Consoles"
 
 
 --
--- Name: Consoles Consoles_imageId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: Consoles Consoles_imageId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "Consoles"
@@ -2789,7 +3543,7 @@ ALTER TABLE ONLY "Consoles"
 
 
 --
--- Name: Consoles Consoles_miniSurveyId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: Consoles Consoles_miniSurveyId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "Consoles"
@@ -2797,7 +3551,7 @@ ALTER TABLE ONLY "Consoles"
 
 
 --
--- Name: Consoles Consoles_sessionTopicId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: Consoles Consoles_sessionTopicId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "Consoles"
@@ -2805,7 +3559,7 @@ ALTER TABLE ONLY "Consoles"
 
 
 --
--- Name: Consoles Consoles_videoId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: Consoles Consoles_videoId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "Consoles"
@@ -2813,7 +3567,7 @@ ALTER TABLE ONLY "Consoles"
 
 
 --
--- Name: ContactListUsers ContactListUsers_accountId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: ContactListUsers ContactListUsers_accountId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "ContactListUsers"
@@ -2821,7 +3575,7 @@ ALTER TABLE ONLY "ContactListUsers"
 
 
 --
--- Name: ContactListUsers ContactListUsers_accountUserId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: ContactListUsers ContactListUsers_accountUserId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "ContactListUsers"
@@ -2829,7 +3583,7 @@ ALTER TABLE ONLY "ContactListUsers"
 
 
 --
--- Name: ContactListUsers ContactListUsers_contactListId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: ContactListUsers ContactListUsers_contactListId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "ContactListUsers"
@@ -2837,7 +3591,7 @@ ALTER TABLE ONLY "ContactListUsers"
 
 
 --
--- Name: ContactListUsers ContactListUsers_userId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: ContactListUsers ContactListUsers_userId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "ContactListUsers"
@@ -2845,7 +3599,7 @@ ALTER TABLE ONLY "ContactListUsers"
 
 
 --
--- Name: ContactLists ContactLists_accountId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: ContactLists ContactLists_accountId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "ContactLists"
@@ -2853,7 +3607,7 @@ ALTER TABLE ONLY "ContactLists"
 
 
 --
--- Name: DirectMessages DirectMessages_recieverId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: DirectMessages DirectMessages_recieverId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "DirectMessages"
@@ -2861,7 +3615,7 @@ ALTER TABLE ONLY "DirectMessages"
 
 
 --
--- Name: DirectMessages DirectMessages_senderId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: DirectMessages DirectMessages_senderId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "DirectMessages"
@@ -2869,7 +3623,7 @@ ALTER TABLE ONLY "DirectMessages"
 
 
 --
--- Name: DirectMessages DirectMessages_sessionId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: DirectMessages DirectMessages_sessionId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "DirectMessages"
@@ -2877,7 +3631,7 @@ ALTER TABLE ONLY "DirectMessages"
 
 
 --
--- Name: Invites Invites_accountId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: Invites Invites_accountId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "Invites"
@@ -2885,7 +3639,7 @@ ALTER TABLE ONLY "Invites"
 
 
 --
--- Name: Invites Invites_accountUserId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: Invites Invites_accountUserId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "Invites"
@@ -2893,7 +3647,7 @@ ALTER TABLE ONLY "Invites"
 
 
 --
--- Name: Invites Invites_sessionId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: Invites Invites_sessionId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "Invites"
@@ -2901,7 +3655,7 @@ ALTER TABLE ONLY "Invites"
 
 
 --
--- Name: Invites Invites_userId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: Invites Invites_userId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "Invites"
@@ -2909,7 +3663,7 @@ ALTER TABLE ONLY "Invites"
 
 
 --
--- Name: MailTemplateResources MailTemplateResources_mailTemplateId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: MailTemplateResources MailTemplateResources_mailTemplateId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "MailTemplateResources"
@@ -2917,7 +3671,7 @@ ALTER TABLE ONLY "MailTemplateResources"
 
 
 --
--- Name: MailTemplateResources MailTemplateResources_resourceId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: MailTemplateResources MailTemplateResources_resourceId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "MailTemplateResources"
@@ -2925,7 +3679,7 @@ ALTER TABLE ONLY "MailTemplateResources"
 
 
 --
--- Name: MailTemplates MailTemplates_AccountId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: MailTemplates MailTemplates_AccountId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "MailTemplates"
@@ -2933,7 +3687,7 @@ ALTER TABLE ONLY "MailTemplates"
 
 
 --
--- Name: MailTemplates MailTemplates_MailTemplateBaseId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: MailTemplates MailTemplates_MailTemplateBaseId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "MailTemplates"
@@ -2941,7 +3695,7 @@ ALTER TABLE ONLY "MailTemplates"
 
 
 --
--- Name: MailTemplates MailTemplates_sessionId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: MailTemplates MailTemplates_sessionId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "MailTemplates"
@@ -2949,7 +3703,7 @@ ALTER TABLE ONLY "MailTemplates"
 
 
 --
--- Name: Messages Messages_sessionMemberId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: Messages Messages_sessionMemberId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "Messages"
@@ -2957,7 +3711,7 @@ ALTER TABLE ONLY "Messages"
 
 
 --
--- Name: Messages Messages_sessionTopicId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: Messages Messages_sessionTopicId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "Messages"
@@ -2965,7 +3719,7 @@ ALTER TABLE ONLY "Messages"
 
 
 --
--- Name: MiniSurveyAnswers MiniSurveyAnswers_miniSurveyId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: MiniSurveyAnswers MiniSurveyAnswers_miniSurveyId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "MiniSurveyAnswers"
@@ -2973,7 +3727,7 @@ ALTER TABLE ONLY "MiniSurveyAnswers"
 
 
 --
--- Name: MiniSurveyAnswers MiniSurveyAnswers_sessionMemberId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: MiniSurveyAnswers MiniSurveyAnswers_sessionMemberId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "MiniSurveyAnswers"
@@ -2981,7 +3735,7 @@ ALTER TABLE ONLY "MiniSurveyAnswers"
 
 
 --
--- Name: MiniSurveys MiniSurveys_sessionId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: MiniSurveys MiniSurveys_sessionId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "MiniSurveys"
@@ -2989,7 +3743,7 @@ ALTER TABLE ONLY "MiniSurveys"
 
 
 --
--- Name: MiniSurveys MiniSurveys_sessionTopicId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: MiniSurveys MiniSurveys_sessionTopicId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "MiniSurveys"
@@ -2997,7 +3751,7 @@ ALTER TABLE ONLY "MiniSurveys"
 
 
 --
--- Name: PinboardResources PinboardResources_resourceId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: PinboardResources PinboardResources_resourceId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "PinboardResources"
@@ -3005,7 +3759,7 @@ ALTER TABLE ONLY "PinboardResources"
 
 
 --
--- Name: PinboardResources PinboardResources_sessionMemberId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: PinboardResources PinboardResources_sessionMemberId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "PinboardResources"
@@ -3013,7 +3767,7 @@ ALTER TABLE ONLY "PinboardResources"
 
 
 --
--- Name: PinboardResources PinboardResources_sessionTopicId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: PinboardResources PinboardResources_sessionTopicId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "PinboardResources"
@@ -3021,7 +3775,7 @@ ALTER TABLE ONLY "PinboardResources"
 
 
 --
--- Name: Resources Resources_accountId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: Resources Resources_accountId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "Resources"
@@ -3029,7 +3783,7 @@ ALTER TABLE ONLY "Resources"
 
 
 --
--- Name: Resources Resources_accountUserId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: Resources Resources_accountUserId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "Resources"
@@ -3037,7 +3791,7 @@ ALTER TABLE ONLY "Resources"
 
 
 --
--- Name: Resources Resources_topicId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: Resources Resources_topicId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "Resources"
@@ -3045,7 +3799,7 @@ ALTER TABLE ONLY "Resources"
 
 
 --
--- Name: SessionMembers SessionMembers_accountUserId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: SessionMembers SessionMembers_accountUserId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "SessionMembers"
@@ -3053,7 +3807,7 @@ ALTER TABLE ONLY "SessionMembers"
 
 
 --
--- Name: SessionMembers SessionMembers_sessionId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: SessionMembers SessionMembers_sessionId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "SessionMembers"
@@ -3061,7 +3815,7 @@ ALTER TABLE ONLY "SessionMembers"
 
 
 --
--- Name: SessionResources SessionResources_resourceId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: SessionResources SessionResources_resourceId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "SessionResources"
@@ -3069,7 +3823,7 @@ ALTER TABLE ONLY "SessionResources"
 
 
 --
--- Name: SessionResources SessionResources_sessionId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: SessionResources SessionResources_sessionId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "SessionResources"
@@ -3077,7 +3831,7 @@ ALTER TABLE ONLY "SessionResources"
 
 
 --
--- Name: SessionSurveys SessionSurveys_sessionId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: SessionSurveys SessionSurveys_sessionId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "SessionSurveys"
@@ -3085,7 +3839,7 @@ ALTER TABLE ONLY "SessionSurveys"
 
 
 --
--- Name: SessionSurveys SessionSurveys_surveyId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: SessionSurveys SessionSurveys_surveyId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "SessionSurveys"
@@ -3093,7 +3847,7 @@ ALTER TABLE ONLY "SessionSurveys"
 
 
 --
--- Name: SessionTopicsReports SessionTopicsReports_resourceId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: SessionTopicsReports SessionTopicsReports_resourceId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "SessionTopicsReports"
@@ -3101,7 +3855,7 @@ ALTER TABLE ONLY "SessionTopicsReports"
 
 
 --
--- Name: SessionTopicsReports SessionTopicsReports_sessionId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: SessionTopicsReports SessionTopicsReports_sessionId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "SessionTopicsReports"
@@ -3109,7 +3863,7 @@ ALTER TABLE ONLY "SessionTopicsReports"
 
 
 --
--- Name: SessionTopicsReports SessionTopicsReports_sessionTopicId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: SessionTopicsReports SessionTopicsReports_sessionTopicId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "SessionTopicsReports"
@@ -3117,7 +3871,7 @@ ALTER TABLE ONLY "SessionTopicsReports"
 
 
 --
--- Name: SessionTopics SessionTopics_sessionId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: SessionTopics SessionTopics_sessionId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "SessionTopics"
@@ -3125,7 +3879,7 @@ ALTER TABLE ONLY "SessionTopics"
 
 
 --
--- Name: SessionTopics SessionTopics_topicId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: SessionTopics SessionTopics_topicId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "SessionTopics"
@@ -3133,7 +3887,7 @@ ALTER TABLE ONLY "SessionTopics"
 
 
 --
--- Name: Sessions Sessions_accountId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: Sessions Sessions_accountId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "Sessions"
@@ -3141,7 +3895,7 @@ ALTER TABLE ONLY "Sessions"
 
 
 --
--- Name: Sessions Sessions_brandProjectPreferenceId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: Sessions Sessions_brandProjectPreferenceId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "Sessions"
@@ -3149,7 +3903,7 @@ ALTER TABLE ONLY "Sessions"
 
 
 --
--- Name: Sessions Sessions_brand_project_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: Sessions Sessions_brand_project_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "Sessions"
@@ -3157,7 +3911,7 @@ ALTER TABLE ONLY "Sessions"
 
 
 --
--- Name: Sessions Sessions_participantListId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: Sessions Sessions_participantListId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "Sessions"
@@ -3165,7 +3919,7 @@ ALTER TABLE ONLY "Sessions"
 
 
 --
--- Name: Sessions Sessions_resourceId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: Sessions Sessions_resourceId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "Sessions"
@@ -3173,7 +3927,7 @@ ALTER TABLE ONLY "Sessions"
 
 
 --
--- Name: Sessions Sessions_sessionId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: Sessions Sessions_sessionId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "Sessions"
@@ -3181,7 +3935,7 @@ ALTER TABLE ONLY "Sessions"
 
 
 --
--- Name: Sessions Sessions_type_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: Sessions Sessions_type_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "Sessions"
@@ -3189,7 +3943,7 @@ ALTER TABLE ONLY "Sessions"
 
 
 --
--- Name: Shapes Shapes_sessionMemberId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: Shapes Shapes_sessionMemberId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "Shapes"
@@ -3197,7 +3951,7 @@ ALTER TABLE ONLY "Shapes"
 
 
 --
--- Name: Shapes Shapes_sessionTopicId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: Shapes Shapes_sessionTopicId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "Shapes"
@@ -3205,7 +3959,7 @@ ALTER TABLE ONLY "Shapes"
 
 
 --
--- Name: SocialProfiles SocialProfiles_userId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: SocialProfiles SocialProfiles_userId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "SocialProfiles"
@@ -3213,7 +3967,7 @@ ALTER TABLE ONLY "SocialProfiles"
 
 
 --
--- Name: SubscriptionPreferences SubscriptionPreferences_subscriptionId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: SubscriptionPreferences SubscriptionPreferences_subscriptionId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "SubscriptionPreferences"
@@ -3221,7 +3975,7 @@ ALTER TABLE ONLY "SubscriptionPreferences"
 
 
 --
--- Name: Subscriptions Subscriptions_accountId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: Subscriptions Subscriptions_accountId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "Subscriptions"
@@ -3229,7 +3983,7 @@ ALTER TABLE ONLY "Subscriptions"
 
 
 --
--- Name: Subscriptions Subscriptions_subscriptionPlanId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: Subscriptions Subscriptions_subscriptionPlanId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "Subscriptions"
@@ -3237,7 +3991,7 @@ ALTER TABLE ONLY "Subscriptions"
 
 
 --
--- Name: SurveyAnswers SurveyAnswers_surveyId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: SurveyAnswers SurveyAnswers_surveyId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "SurveyAnswers"
@@ -3245,7 +3999,7 @@ ALTER TABLE ONLY "SurveyAnswers"
 
 
 --
--- Name: SurveyQuestions SurveyQuestions_resourceId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: SurveyQuestions SurveyQuestions_resourceId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "SurveyQuestions"
@@ -3253,7 +4007,7 @@ ALTER TABLE ONLY "SurveyQuestions"
 
 
 --
--- Name: SurveyQuestions SurveyQuestions_surveyId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: SurveyQuestions SurveyQuestions_surveyId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "SurveyQuestions"
@@ -3261,7 +4015,7 @@ ALTER TABLE ONLY "SurveyQuestions"
 
 
 --
--- Name: Surveys Surveys_accountId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: Surveys Surveys_accountId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "Surveys"
@@ -3269,7 +4023,7 @@ ALTER TABLE ONLY "Surveys"
 
 
 --
--- Name: Surveys Surveys_contactListId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: Surveys Surveys_contactListId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "Surveys"
@@ -3277,7 +4031,7 @@ ALTER TABLE ONLY "Surveys"
 
 
 --
--- Name: Surveys Surveys_resourceId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: Surveys Surveys_resourceId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "Surveys"
@@ -3285,7 +4039,7 @@ ALTER TABLE ONLY "Surveys"
 
 
 --
--- Name: UnreadMessages UnreadMessages_messageId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: UnreadMessages UnreadMessages_messageId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "UnreadMessages"
@@ -3293,7 +4047,7 @@ ALTER TABLE ONLY "UnreadMessages"
 
 
 --
--- Name: UnreadMessages UnreadMessages_sessionMemberId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: UnreadMessages UnreadMessages_sessionMemberId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "UnreadMessages"
@@ -3301,7 +4055,7 @@ ALTER TABLE ONLY "UnreadMessages"
 
 
 --
--- Name: UnreadMessages UnreadMessages_sessionTopicId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: UnreadMessages UnreadMessages_sessionTopicId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "UnreadMessages"
@@ -3309,7 +4063,7 @@ ALTER TABLE ONLY "UnreadMessages"
 
 
 --
--- Name: Votes Votes_messageId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: Votes Votes_messageId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "Votes"
@@ -3317,7 +4071,7 @@ ALTER TABLE ONLY "Votes"
 
 
 --
--- Name: Votes Votes_sessionMemberId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: Votes Votes_sessionMemberId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY "Votes"
@@ -3325,7 +4079,7 @@ ALTER TABLE ONLY "Votes"
 
 
 --
--- Name: session_staff session_staff_sessionId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: session_staff session_staff_sessionId_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY session_staff

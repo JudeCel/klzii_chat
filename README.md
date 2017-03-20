@@ -59,7 +59,12 @@ Observers users
 ``` http://localhost:3000/reporting/mini_survey/:session_id/:session_topic_id ```
 
 ### Tests
+
+Extract clean Test DB ```pg_dump -U postgres -h localhost klzii_chat_test > priv/repo/structure.sql ```
+
 Run
 1) ``` mix ecto.create ```
-2) ``` psql -U postgres -h localhost klzii_chat_test priv/repo/structure.sql ```
-3) ``` mix  test```
+
+2) ``` psql -U postgres -h localhost klzii_chat_test < priv/repo/structure.sql ```
+
+3) ``` mix test```
