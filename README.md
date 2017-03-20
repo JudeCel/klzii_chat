@@ -60,7 +60,6 @@ Observers users
 
 ### Tests
 Run
-
- ``` mocha test```
-or
- ``` yarn test ```
+1) ``` mix ecto.create ```
+2) ``` psql -U postgres -h localhost klzii_chat_test priv/repo/structure.sql ```
+3) ``` mix  test```
