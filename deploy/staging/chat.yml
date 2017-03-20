@@ -57,7 +57,7 @@ spec:
         - name: DB_HOST
           value: postgres-master
         - name: DB_DATABASE
-          value: klzii_production
+          value: klzii_production2
         - name: SERVER_HOST
           value: chat.klzii.chat
         - name: GUARDIAN_SECRET_KEY
