@@ -1,10 +1,12 @@
 defmodule KlziiChat.BackgroundTasks.Sessions do
   alias KlziiChat.Services.{SessionService}
+  alias KlziiChat.Services.Session.{CleanupService}
   alias KlziiChat.{Endpoint}
 
   def perform(id, type) do
     case type do
       "DELETE" ->
+        CleanupService.clean_reports()
         Endpoint.broadcast!("sessionsBuilder:#{id}", "session_deleted", %{})
       _ ->
         update_session(id)
