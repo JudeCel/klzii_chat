@@ -4004,9 +4004,9 @@ svg.select.js@^2.0.3:
   dependencies:
     svg.js "^2.2.5"
 
-svgjs@^2.4.0:
-  version "2.5.0"
-  resolved "https://registry.yarnpkg.com/svgjs/-/svgjs-2.5.0.tgz#de25af89ef4fb928dda2b8a1570b005782a107e4"
+svgjs@2.4.0:
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/svgjs/-/svgjs-2.4.0.tgz#2cc74cb70e964171f599fa4e2156772019aaa873"
 
 svgo@^0.7.0:
   version "0.7.2"

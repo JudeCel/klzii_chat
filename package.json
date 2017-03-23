@@ -67,7 +67,7 @@
     "svg.pan-zoom.js": "^2.8.0",
     "svg.resize.js": "^1.2.0",
     "svg.select.js": "^2.0.3",
-    "svgjs": "^2.4.0",
+    "svgjs": "2.4.0",
     "url-loader": "^0.5.7",
     "webpack": "^2.2.1",
     "webpack-raphael": "^2.1.4"
