@@ -61,16 +61,8 @@ const Links = React.createClass({
 
     this.openSpecificModal('directMessage', { member: member });
   },
-  helpButtonRedirect(style){
-    let link = ""
-
-    if (this.props.currentUser.role == "facilitator") {
-      link = "http://104.154.43.190/chat_help/Host/"
-    } else {
-      link = "http://104.154.43.190/chat_help/Guest/"
-    }
-
-    window.open(link, '_blank');
+  helpButtonRedirect(){
+    window.open(this.props.currentUser.helpPage, '_blank');
   },
   render() {
     const { colours } = this.props;
@@ -86,7 +78,7 @@ const Links = React.createClass({
           { this.clearWhiteboardFunction(style) }
           { this.reportsFunction(style) }
           { this.directMessageFunction(style, count) }
-          <li style={ style } onClick={ this.helpButtonRedirect.bind(this, style) }>
+          <li style={ style } onClick={ this.helpButtonRedirect }>
             <i className='icon-help' />
           </li>
 
