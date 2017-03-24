@@ -61,6 +61,7 @@ defmodule KlziiChat.SessionMembersView do
 
     current_member_info = %{
       jwt: buildJWT(member),
+      helpPage: get_help_page_url(member),
       account_user_id: member.accountUserId,
       session_id: member.sessionId,
       permissions: permissions_map,
@@ -92,6 +93,14 @@ defmodule KlziiChat.SessionMembersView do
           Map.put(acc, member.role, new_list)
       end
     end)
+  end
+
+  @spec get_help_page_url(Map.t) :: String.t
+  def get_help_page_url(%{ role: "facilitator" }) do
+    System.get_env("HOST_HELP_URL") || "http://104.154.43.190/chat_help/Host/"
+  end
+  def get_help_page_url(_) do
+    System.get_env("GUEST_HELP_URL") || "http://104.154.43.190/chat_help/Guest/"
   end
 
   @spec buildJWT(Map.t) :: Map.t

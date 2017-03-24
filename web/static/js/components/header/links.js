@@ -61,6 +61,9 @@ const Links = React.createClass({
 
     this.openSpecificModal('directMessage', { member: member });
   },
+  helpButtonRedirect(){
+    window.open(this.props.currentUser.helpPage, '_blank');
+  },
   render() {
     const { colours } = this.props;
     const count = this.countAllUnread() || null;
@@ -75,10 +78,10 @@ const Links = React.createClass({
           { this.clearWhiteboardFunction(style) }
           { this.reportsFunction(style) }
           { this.directMessageFunction(style, count) }
-
-          <li style={ style }>
+          <li style={ style } onClick={ this.helpButtonRedirect }>
             <i className='icon-help' />
           </li>
+
           <LeaveOrDetails />
         </ul>
 
