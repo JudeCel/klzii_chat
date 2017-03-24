@@ -21,7 +21,7 @@ import svgPosition  from 'svg.pan-zoom.js';
 import touchHandler       from './touchHandler';
 
 const Whiteboard = React.createClass({
-  mixins:[Design, mixins.validations, touchHandler, mixins.mobileHelpers],
+  mixins:[Design, mixins.validations, touchHandler, mixins.mobileHelpers, mixins.helpers],
   initDefs() {
     this.markers = this.markers || { arrows: {} };
 
@@ -37,6 +37,20 @@ const Whiteboard = React.createClass({
       this.markers.arrows[id] = marker;
     }
   },
+  ieFixScale(minimized) {
+    if(!this.isBrowserIE() || !this.refs.box) return;
+    const { box } = this.refs;
+
+    if(minimized) {
+      const initialH = 250;
+      const initialW = 468;
+      const aspect = box.clientWidth / initialW;
+      box.style.height = (initialH * aspect) + 'px';
+    }
+    else {
+      box.style.height = 'auto';
+    }
+  },
   initScale() {
     const { minimized } = this.state;
     if(minimized) {
@@ -46,6 +60,7 @@ const Whiteboard = React.createClass({
     else {
       this.mouseData.type = 'select';
     }
+    this.ieFixScale(minimized);
     this.pinchHandler = this.mainGroup.panZoom({ zoom: [1, this.isMobile() ? 1.5 : 1] });
     this.board.attr({ 'pointer-events': minimized ? 'none' : 'all' });
   },
@@ -152,7 +167,7 @@ const Whiteboard = React.createClass({
   render() {
     if(this.props.channel) {
       return (
-        <div id='whiteboard-box' className={'whiteboard-section' + this.expandButtonClass() }>
+        <div ref='box' id='whiteboard-box' className={'whiteboard-section' + this.expandButtonClass() }>
           <span className="icon-whiteboard-hide-mobile" onClick={ this.expandWhiteboard }></span>
 
           <img className='whiteboard-title' src='/images/title_whiteboard.png' />

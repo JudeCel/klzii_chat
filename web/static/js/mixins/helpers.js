@@ -1,6 +1,9 @@
 import moment               from 'moment';
 
 const helpers = {
+  isBrowserIE() {
+    return /(MSIE|Trident\/)/i.test(navigator.userAgent);
+  },
   getConsoleResourceId(type) {
     if (this.props.sessionTopicConsole.postingData) { return false}
 
