@@ -17,7 +17,7 @@ defmodule KlziiChat.Queries.Resources do
 
   @spec base_query() :: Ecto.Query.t
   def base_query() do
-    from(r in Resource, where: r.scope != "banner")
+    from(r in Resource)
   end
 
   @spec stock_query(Ecto.Query.t, map) :: Ecto.Query.t
