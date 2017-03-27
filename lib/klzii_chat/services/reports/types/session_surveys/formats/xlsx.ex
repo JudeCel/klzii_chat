@@ -21,7 +21,7 @@ defmodule KlziiChat.Services.Reports.Types.SessionSurveys.Formats.Xlsx do
 
       sheet_acc = %{main_sheet: header_sheet, line_number: 5, sheets: [] }
 
-      %{main_sheet: main_sheet, sheets: sheets, line_number: _} =
+      %{main_sheet: main_sheet, sheets: _, line_number: _} =
         Enum.reduce(get_in(stats, [:questions]), sheet_acc, fn(question, acc) ->
           map_question(acc, question)
        end)

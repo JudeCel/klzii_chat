@@ -6,7 +6,7 @@ defmodule KlziiChat.Queries.Resources do
 
   @spec base_query(%AccountUser{}) :: Ecto.Query.t
   def base_query(account_user) do
-    from(r in assoc(account_user.account, :resources))
+    from(r in assoc(account_user.account, :resources), where: r.scope != "banner")
   end
 
   @spec by_account_or_stock_query(%AccountUser{}) :: Ecto.Query.t
@@ -17,7 +17,7 @@ defmodule KlziiChat.Queries.Resources do
 
   @spec base_query() :: Ecto.Query.t
   def base_query() do
-    from(r in Resource)
+    from(r in Resource, where: r.scope != "banner")
   end
 
   @spec stock_query(Ecto.Query.t, map) :: Ecto.Query.t
