@@ -6,7 +6,11 @@ defmodule KlziiChat.BackgroundTasks.SessionMembers do
   end
 
   def update_session_member(id) do
-    session_member = Repo.get_by!(SessionMember, id: id)
-    Endpoint.broadcast!("sessions:#{session_member.sessionId}", "update_member", session_member)
+    case Repo.get_by(SessionMember, id: id) do
+      nil ->
+        :ok
+      session_member ->
+        Endpoint.broadcast!("sessions:#{session_member.sessionId}", "update_member", session_member)
+    end
   end
 end
