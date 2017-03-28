@@ -30,7 +30,7 @@ function loadShapes() {
     deleteAllShapes();
   }
   else if(newLength) {
-    if(whiteboardDelegate.shapeData.shape.node) {
+    if(whiteboardDelegate.shapeData.shape.node && newLength > oldLength) {
       const id = whiteboardDelegate.shapeData.shape.node.id;
       oldKeys = oldKeys.filter((key) => key !== id);
     }
