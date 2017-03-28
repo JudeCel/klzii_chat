@@ -151,6 +151,19 @@ defmodule KlziiChat.Services.ResourceService do
         end
   end
 
+  @spec find_stock(integer) :: {:ok, list}
+  def find_stock(id) do
+    QueriesResources.only_stock()
+      |> QueriesResources.get_by_ids([id])
+      |> Repo.one
+      |> case  do
+          nil ->
+            {:error, %{code: 404, not_found: "Resource not found"}}
+          resource ->
+            {:ok, resource}
+        end
+  end
+
   def validations(account_user, query) do
     with result <- Repo.all(query),
          {:ok} <- ResourcePermissions.can_delete(account_user, result),
