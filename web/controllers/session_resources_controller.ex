@@ -60,21 +60,25 @@ defmodule KlziiChat.SessionResourcesController do
 
   def gallery(conn, params, member, _) do
     {:ok, session_resources} = SessionResourcesService.get_session_resources(member.session_member.id, params)
-    account_resources =
-      QueriesResources.base_query(member.account_user)
-      |> QueriesResources.find_by_params(params)
-      |> QueriesResources.stock_query(%{"stock" => false})
-      |> QueriesResources.exclude_by_ids(session_resources)
-      |> Repo.all
-
-    stock_resources =
-      QueriesResources.base_query
+    account_resources_task =
+      Task.async(fn ->
+        QueriesResources.base_query(member.account_user)
         |> QueriesResources.find_by_params(params)
-        |> QueriesResources.stock_query(%{"stock" => true})
+        |> QueriesResources.stock_query(%{"stock" => false})
         |> QueriesResources.exclude_by_ids(session_resources)
         |> Repo.all
+      end)
+      
+    stock_resources_task =
+      Task.async(fn ->
+        QueriesResources.base_query
+          |> QueriesResources.find_by_params(params)
+          |> QueriesResources.stock_query(%{"stock" => true})
+          |> QueriesResources.exclude_by_ids(session_resources)
+          |> Repo.all
+      end)
 
-    all_resources = (stock_resources ++ account_resources)
+    all_resources = (Task.await(stock_resources_task) ++ Task.await(account_resources_task))
     page = case Integer.parse(params["page"] || "1") do
       :error ->
         @default_page
