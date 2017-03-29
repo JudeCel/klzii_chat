@@ -29,6 +29,7 @@ defmodule KlziiChat.Services.SessionTopicService do
   @spec session_topic_board_message(Integer, String) :: {:ok, Map} | {:error, String.t}
   defp session_topic_board_message(session_topic_id, message) do
     Repo.get!(SessionTopic, session_topic_id)
+    |> Repo.preload([:topic])
     |> SessionTopic.changeset(%{ boardMessage: message}) 
     |> Repo.update
   end
