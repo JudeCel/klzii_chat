@@ -1,5 +1,5 @@
 defmodule KlziiChat.Services.ResourceService do
-  alias KlziiChat.{Repo, AccountUser, Resource, ResourceView}
+  alias KlziiChat.{Repo, AccountUser, Resource, ResourceView, Session}
   alias KlziiChat.Services.Permissions.Resources, as: ResourcePermissions
   alias KlziiChat.Queries.Resources, as: QueriesResources
   alias KlziiChat.Services.Validations.Resource, as: ResourceValidations
@@ -151,9 +151,11 @@ defmodule KlziiChat.Services.ResourceService do
         end
   end
 
-  @spec find_stock(integer) :: {:ok, list}
-  def find_stock(id) do
-    QueriesResources.only_stock()
+  @spec find_by_session(integer, integer) :: {:ok, list}
+  def find_by_session(session_id, id) do
+    Repo.get!(Session, session_id)
+      |> Repo.preload([:account])
+      |> QueriesResources.by_account_or_stock_query
       |> QueriesResources.get_by_ids([id])
       |> Repo.one
       |> case  do
