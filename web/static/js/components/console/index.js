@@ -36,7 +36,6 @@ const Console = React.createClass({
   },
   render() {
     const { currentTopic } = this.props;
-    console.log(currentTopic);
     return currentTopic.inviteAgain ? this.renderInviteAgain() : this.renderConsole();
   },
   renderInviteAgainButton(surveyUrl, className, text) {
