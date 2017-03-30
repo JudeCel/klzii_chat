@@ -41,7 +41,7 @@ Faciitator users
 Participents users
  * participantone
  * participanttwo
- * participantthree
+ * participantthre
  * participantfour
  * participantfive
  * participantsix

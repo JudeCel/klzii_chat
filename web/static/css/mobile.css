@@ -1168,7 +1168,7 @@
   }
 
   .inline-board-section {
-    height: auto !important;
+    height: 50% !important;
     text-align: center;
     position: relative;
     top: 40% !important;
