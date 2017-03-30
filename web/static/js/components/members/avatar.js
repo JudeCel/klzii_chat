@@ -92,25 +92,13 @@ const Avatar = React.createClass({
   },
   shakeElement(el, member) {
     const { dispatch } = this.props;
-    let count = 3;
-    function anim1() {
-      count--;
-      if (count > 0) {
-        el.animate({transform: 'r0.5,150,-20'}, 20, anim2);
-      } else if (member) {
+      el
+      .animate(20, '>', 100).rotate(5, '50%', '50%')
+      .animate(20, '>', 100).rotate(-5, '50%', '50%')
+      .animate(20, '>', 100).rotate(0, '50%', '50%')
+      if (member) {
         dispatch(MemberActions.stopAnimation(member));
       }
-    }
-    function anim2() {
-      el.animate({transform: 'r0,0,0'}, 20, anim3);
-    }
-    function anim3() {
-      el.animate({transform: 'r-0.5,-150,20'}, 20, anim4);
-    }
-    function anim4() {
-      el.animate({transform: 'r0,0,0'}, 20, anim1);
-    }
-    anim1();
   },
   drawLabelAndText(avatar) {
     const { username, colour, currentTopic, online, animate } = this.props.member;
@@ -120,8 +108,7 @@ const Avatar = React.createClass({
       avatar.text(currentTopic.name).attr({fill: '#000', 'font-size': '75%', 'text-anchor': 'middle', x: 76, y: 158}).addClass('svg-avatar-label svg-avatar-topic');
     }
     if (animate) {
-       this.shakeElement(el1, this.props.member);
-       this.shakeElement(el2);
+       this.shakeElement(avatar, this.props.member);
     }
   },
   componentDidMount() {
