@@ -1,6 +1,7 @@
 defmodule KlziiChat.Services.ConnectionLogService do
   alias KlziiChat.{Repo, Endpoint, ConnectionLog, ConnectionLogView}
   alias KlziiChat.Queries.ConnectionLogs, as: ConnectionLogsQueries
+  import Ecto.Query, only: [from: 2]
 
   def history(filters) do
     result =
@@ -48,5 +49,14 @@ defmodule KlziiChat.Services.ConnectionLogService do
         connection_log ->
           {:ok, ConnectionLogView.render("show.json", %{connection_log: connection_log})}
       end
+  end
+
+  @spec daily_cleanup() :: {:ok, list}
+  def daily_cleanup() do
+    date  = Timex.now("UTC") |> Timex.shift(months: -2)
+    from(e in ConnectionLog,
+      where: e.createdAt < ^date,
+    )
+    |> Repo.delete_all
   end
 end

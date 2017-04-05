@@ -38,7 +38,10 @@ config :phoenix, :generators,
   binary_id: false
 
 config :quantum, klzii_chat: [
-  crons: ["@daily": &KlziiChat.Services.ResourceService.daily_cleanup/0]
+  crons: [
+    "@daily": {KlziiChat.Services.ResourceService, :daily_cleanup},
+    "@daily": {KlziiChat.Services.ConnectionLogService, :daily_cleanup}
+  ]
 ]
 
 config :exq,
