@@ -41,7 +41,6 @@ config :quantum, klzii_chat: [
   crons: ["@daily": &KlziiChat.Services.ResourceService.daily_cleanup/0]
 ]
 
-
 config :exq,
   name: Exq,
   namespace: "resque",
