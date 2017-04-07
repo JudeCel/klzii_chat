@@ -63,7 +63,7 @@ const Select = React.createClass({
   renderSessionNameBlock() {
     const { session } = this.props;
 
-    if (session.type == 'forum') {
+    if (["socialForum", "forum"].indexOf(session.type) > -1) {
     return (
       <div className='session-name'>
         { session.name }
