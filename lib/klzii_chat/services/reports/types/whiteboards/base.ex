@@ -16,6 +16,7 @@ defmodule KlziiChat.Services.Reports.Types.Whiteboards.Base do
   def format_modeule("pdf"), do: {:ok, Formats.Pdf}
   def format_modeule(format), do: {:error, "module for format #{format} not found"}
 
+  @spec get_data(Map.t) :: {:ok , Module.t | :error, String.t}
   def get_data(report) do
     with {:ok, session} <- get_session(report),
          {:ok, header_title} <- get_header_title(session, report),
@@ -54,12 +55,12 @@ defmodule KlziiChat.Services.Reports.Types.Whiteboards.Base do
     {:ok, data}
   end
 
+  @spec preload_session_topic(Map.t) :: Map.t
   def preload_session_topic(%{sessionTopicId: nil, sessionId: session_id} = report) do
     SessionTopicQueries.all(session_id)
     |> Repo.all
     |> Repo.preload([shapes: preload_shapes(report)])
   end
-
   def preload_session_topic(%{sessionTopicId: sessionTopicId} = report) do
     from(st in SessionTopic,
       where: st.id == ^sessionTopicId,
@@ -67,6 +68,7 @@ defmodule KlziiChat.Services.Reports.Types.Whiteboards.Base do
     ) |> Repo.all
   end
 
+  @spec preload_session_topic(Map.t) :: Ecto.Query.t
   def preload_shapes(report) do
     QueriesShapes.base_query(%{ sessionTopicId: report.sessionTopicId })
   end

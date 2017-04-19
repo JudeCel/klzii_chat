@@ -68,3 +68,9 @@ Run
 2) ``` psql -U postgres -h localhost klzii_chat_test < priv/repo/structure.sql ```
 
 3) ``` mix test```
+
+### Docs
+
+  ``` mix docs ```
+
+  Open in browser docs/index.html 

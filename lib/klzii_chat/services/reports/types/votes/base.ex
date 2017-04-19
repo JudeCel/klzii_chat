@@ -58,7 +58,7 @@ defmodule KlziiChat.Services.Reports.Types.Votes.Base do
   end
   def get_session(_), do: {:error, %{not_reqired: "session id not reqired"}}
 
-
+  @spec get_session_topics(Map.t) :: {:ok, Map.t}
   def get_session_topics(report) do
     data =
       preload_session_topic(report)
@@ -66,12 +66,12 @@ defmodule KlziiChat.Services.Reports.Types.Votes.Base do
     {:ok, data}
   end
 
+  @spec preload_session_topic(Map.t) :: Map.t
   def preload_session_topic(%{sessionTopicId: nil, sessionId: session_id} = report) do
     SessionTopicQueries.all(session_id)
     |> Repo.all
     |> Repo.preload([mini_surveys: preload_mini_survey_query(report)])
   end
-
   def preload_session_topic(%{sessionTopicId: sessionTopicId} = report) do
     from(st in SessionTopic,
       where: st.id == ^sessionTopicId,
@@ -79,6 +79,7 @@ defmodule KlziiChat.Services.Reports.Types.Votes.Base do
     ) |> Repo.all
   end
 
+  @spec preload_mini_survey_query(Map.t) :: Ecto.Query.t
   def preload_mini_survey_query(report) do
     includes_facilitator = !get_in(report.includes, ["facilitator"])
     QueriesMiniSurvey.report_query(report.sessionTopicId, !includes_facilitator)

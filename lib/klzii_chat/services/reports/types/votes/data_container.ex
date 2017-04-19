@@ -3,10 +3,11 @@ defmodule KlziiChat.Services.Reports.Types.Votes.DataContainer do
   alias KlziiChat.Helpers.DateTimeHelper
   alias KlziiChat.Services.Report.DataContainers.ContactListUsers, as: ContactListUsersDataContainers
 
+  @spec start_link(Map.t) :: {:ok, pid}
   def start_link(data) do
     ContactListUsersDataContainers.start_link(data)
   end
-
+  @spec get_value(String.t, Map.t,Map.t, Map.t, pid) :: {:ok, pid}
   def get_value("Anonymous",_mini_survey, %{session_member: %{role: "facilitator"}}, %{ anonymous: true }, _container) do
     ""
   end

@@ -30,11 +30,12 @@ defmodule KlziiChat.Services.Reports.Types.Votes.Formats.Txt do
     end)
   end
 
-
+  @spec update_accumulator(Map.t, Process.t) :: {:ok}
   def update_accumulator(new_data, acc) do
     :ok = Agent.update(acc, fn(data) -> data ++ new_data end)
   end
 
+  @spec map_fields(List.t, Map.t, Map.t, Map.t, Process.t) :: {:ok}
   def map_fields(fields, mini_survey, answer, session, container) do
     row = Enum.map(fields, fn(field) ->
       DataContainer.get_value(field, mini_survey, answer, session, container)
