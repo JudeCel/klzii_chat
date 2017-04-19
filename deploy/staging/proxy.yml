@@ -56,7 +56,7 @@ spec:
     spec:
       containers:
       - name: nginx-ssl-proxy
-        image: dainisl/nginx-ssl-proxy:latest
+        image: klzii/nginx-ssl-proxy:latest
         imagePullPolicy: Always
         env:
         - name: SERVICE_HOST_ENV_NAME

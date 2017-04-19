@@ -1,4 +1,4 @@
-FROM dainisl/phoenix-docker
+FROM klzii/phoenix-docker
 
 ENV MIX_ENV=prod \
     NODE_ENV=production \
