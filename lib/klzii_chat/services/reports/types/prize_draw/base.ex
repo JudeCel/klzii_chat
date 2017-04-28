@@ -19,11 +19,11 @@ defmodule KlziiChat.Services.Reports.Types.PrizeDraw.Base do
   def get_data(report) do
     with {:ok, session} <- get_session(report),
          {:ok, header_title} <- get_header_title(session),
-         {:ok, prize_draw_survey} <- get_prize_draw_survey(report),
+         {:ok, prize_draw_surveys} <- get_prize_draw_surveys(report),
     do:  {:ok, %{
               "session" => session,
               "header_title" => header_title,
-              "prize_draw_survey" => prize_draw_survey,
+              "prize_draw_surveys" => prize_draw_surveys,
               "fields" => default_fields()
             }
           }
@@ -44,16 +44,17 @@ defmodule KlziiChat.Services.Reports.Types.PrizeDraw.Base do
   end
   def get_session(_), do: {:error, %{not_reqired: "session id not reqired"}}
 
-  @spec get_prize_draw_survey(Map.t) :: {:ok, Map.t} | {:error, Map.t}
-  def get_prize_draw_survey(%{sessionId: session_id}) do
-    session_survey =
+  @spec get_prize_draw_surveys(Map.t) :: {:ok, Map.t} | {:error, Map.t}
+  def get_prize_draw_surveys(%{sessionId: session_id}) do
+    session_surveys =
       from(sy in SessionSurvey, where: [sessionId: ^session_id],
         left_join: s in assoc(sy, :survey),
         where: s.surveyType == "sessionPrizeDraw",
+        or_where: s.surveyType == "sessionContactList",
         preload: [survey: [:survey_answers, :survey_questions]]
       )
-      |> Repo.one
-    {:ok, Phoenix.View.render(SessionSurveyView,"report.json", %{session_survey: session_survey})}
+      |> Repo.all
+    {:ok, Phoenix.View.render_many(session_surveys, SessionSurveyView,"report.json", as: :session_survey)}
   end
-  def get_prize_draw_survey(_), do: {:error, %{not_reqired: "prize draw survey id not reqired"}}
+  def get_prize_draw_surveys(_), do: {:error, %{not_reqired: "prize draw survey id not reqired"}}
 end

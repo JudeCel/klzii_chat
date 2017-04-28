@@ -73,12 +73,12 @@ defmodule KlziiChat.Services.Reports.Types.PrizeDraw.PrizeDrawTest do
 
     test "structure", %{data: data} do
       assert(
-        %{"session" => session, "header_title" => header_title, "prize_draw_survey" => prize_draw_survey, "fields" => fields} = data
+        %{"session" => session, "header_title" => header_title, "prize_draw_surveys" => prize_draw_surveys, "fields" => fields} = data
       )
 
       assert(is_map(session))
       assert(is_bitstring(header_title))
-      assert(is_map(prize_draw_survey))
+      assert(is_list(prize_draw_surveys))
       assert(is_list(fields))
     end
 
@@ -88,9 +88,9 @@ defmodule KlziiChat.Services.Reports.Types.PrizeDraw.PrizeDrawTest do
     end
   end
 
-  describe "get_prize_draw_survey" do
+  describe "get_prize_draw_surveys" do
     test "return statistic for each session members", %{session_report: session_report} do
-      assert({:ok, _} = PrizeDraw.Base.get_prize_draw_survey(session_report))
+      assert({:ok, _} = PrizeDraw.Base.get_prize_draw_surveys(session_report))
     end
   end
 end

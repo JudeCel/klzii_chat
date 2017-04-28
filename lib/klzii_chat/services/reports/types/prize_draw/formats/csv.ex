@@ -7,13 +7,20 @@ defmodule KlziiChat.Services.Reports.Types.PrizeDraw.Formats.Csv do
   @spec render_string( Map.t) :: {:ok, String.t} | {:error, Map.t}
   def render_string(data) do
     fields = get_in(data, ["fields"])
-    survey_questions =
-      get_in(data, ["prize_draw_survey", :survey, :survey_questions])
-      |> Enum.map(&({&1.name, "#{&1.id}"})) |> Enum.into(%{})
-    answers = get_in(data, ["prize_draw_survey", :survey, :survey_answers])
     {:ok, acc} = Agent.start_link(fn -> [] end)
-    map_data(answers, survey_questions, fields, acc)
+
+      get_in(data, ["prize_draw_surveys"])
+      |> Task.async_stream(fn(session_survey) -> process_results(session_survey, fields, acc) end)
+      |> Enum.to_list()
     {:ok, %{header: fields, data: acc}}
+  end
+
+  def process_results(session_survey, fields, acc) do
+    survey_questions =
+      get_in(session_survey, [:survey, :survey_questions])
+      |> Enum.map(&({&1.name, "#{&1.id}"})) |> Enum.into(%{})
+    answers = get_in(session_survey, [:survey, :survey_answers])
+    map_data(answers, survey_questions, fields, acc)
   end
 
   def map_data([], _, _, acc), do: acc
