@@ -49,8 +49,7 @@ defmodule KlziiChat.Services.Reports.Types.PrizeDraw.Base do
     session_surveys =
       from(sy in SessionSurvey, where: [sessionId: ^session_id],
         left_join: s in assoc(sy, :survey),
-        where: s.surveyType == "sessionPrizeDraw",
-        or_where: s.surveyType == "sessionContactList",
+        where: s.surveyType in ["sessionPrizeDraw", "sessionContactList"],
         preload: [survey: [:survey_answers, :survey_questions]]
       )
       |> Repo.all
