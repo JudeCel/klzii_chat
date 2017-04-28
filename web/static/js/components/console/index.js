@@ -38,16 +38,19 @@ const Console = React.createClass({
     const { currentTopic } = this.props;
     return currentTopic.inviteAgain ? this.renderInviteAgain() : this.renderConsole();
   },
-  renderInviteAgainButton(surveyUrl, className, text) {
+  renderInviteAgainButton(surveyUrl, className, text, redirectSurveyLink) {
     if (surveyUrl) {
       const { currentUser: { token } } = this.props;
       let url = surveyUrl + "?token=" + token;
+      if (redirectSurveyLink) {
+        url = url +"&redirectSurveyLink=" + redirectSurveyLink;
+      }
       return (<a href={url} className={className}>{text}</a>);
     }
   },
   renderInviteAgain() {
     const { surveys } = this.props;
-    
+
     let inviteAgainUrl = null;
     let noThanksUrl = null;
 
@@ -61,14 +64,14 @@ const Console = React.createClass({
 
     return (
       <div className="inviteAgainButtons">
-        { this.renderInviteAgainButton(inviteAgainUrl, "inviteAgainButton", "Invite Again!") }
+        { this.renderInviteAgainButton(inviteAgainUrl, "inviteAgainButton", "Invite Again!", noThanksUrl) }
         { this.renderInviteAgainButton(noThanksUrl, "noThanksButton", "No Thanks") }
       </div>
     )
   },
   renderConsole() {
     const { modalName } = this.state;
-    
+
     const consoleButtons = [
       { type: 'video',       className: 'icon-video-1',    permission: true },
       { type: 'audio',       className: 'icon-volume-up',  permission: true },
