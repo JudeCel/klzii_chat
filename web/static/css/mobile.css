@@ -567,7 +567,9 @@
   }
 
   .mobile-side-menu .mobile-side-menu-topics {
-    height: 100vh;
+    height: 100%;
+    padding-bottom: 70px;
+    overflow: auto;
     width: 70%;
     text-align: left;
     background-color: #fff;
