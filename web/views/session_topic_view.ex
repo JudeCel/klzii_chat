@@ -17,6 +17,7 @@ defmodule KlziiChat.SessionTopicView do
     %{
       id: session_topic.id,
       name: session_topic.name,
+      order: session_topic.order
     }
   end
 

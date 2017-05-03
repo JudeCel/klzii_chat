@@ -16,6 +16,7 @@ defmodule KlziiChat.Services.Reports.Types.Statistic.Formats.Csv do
 
     topic_list =
       session.session_topics
+      |> Enum.sort(fn(%{order: order_prev}, %{order: order_next}) ->  order_next >= order_prev end)
       |> Enum.map(&({&1.id, &1.name}))
 
     topic_map = Enum.into(topic_list, %{})
