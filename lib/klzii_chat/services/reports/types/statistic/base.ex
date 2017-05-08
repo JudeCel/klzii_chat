@@ -64,8 +64,8 @@ defmodule KlziiChat.Services.Reports.Types.Statistic.Base do
     from(sm in SessionMember,
       left_join: m in Message, on: sm.id == m.sessionMemberId,
       where: sm.sessionId == ^session_id,
-      group_by: [sm.accountUserId, m.sessionTopicId, sm.username],
-      select: {sm.accountUserId, count(m.id), sm.username, m.sessionTopicId}
+      group_by: [sm.id, m.sessionTopicId, sm.username],
+      select: {sm.id, count(m.id), sm.username, m.sessionTopicId}
     )
     |> Repo.all
     |> Enum.group_by(fn({id, _, _, _}) -> id end)
