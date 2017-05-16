@@ -14,7 +14,7 @@ defmodule KlziiChat.Services.Permissions.BuilderPermissionsTest do
   }, subscription: %{planId: "free_trial"}}
 
   test "build basic permissions map", %{session: session} do
-    member = %{id: 1, role: "facilitator"}
+    member = %{id: 1, role: "facilitator", account_user: %{role: "accountManger"}}
     %{
       messages: messages,
       resources: resources,

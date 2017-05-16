@@ -53,7 +53,6 @@ defmodule KlziiChat.Services.ResourceService do
       scope: scope,
       accountId: account_user.account.id,
       accountUserId: account_user.id,
-      type: type,
       name: name,
       stock: stock,
       id: id
@@ -68,7 +67,6 @@ defmodule KlziiChat.Services.ResourceService do
 
   def save_resource(%{"stock" => stock, "type" => type, "scope" => scope, "file" => file, "name" => name}, account_user) do
     params = %{
-      type: type,
       scope: scope,
       accountId: account_user.account.id,
       accountUserId: account_user.id,

@@ -2,7 +2,8 @@ defmodule KlziiChat.Services.Permissions.Builder do
   import KlziiChat.Services.Permissions.ErrorsHelper, only: [to_boolean: 1]
   alias KlziiChat.Queries.Sessions, as: SessionQueries
   alias KlziiChat.Queries.AccountUser, as: AccountUserQueries
-  alias KlziiChat.{Repo, SessionMember}
+  alias KlziiChat.Queries.SessionMember, as: SessionMemberQueries
+  alias KlziiChat.{Repo}
   alias KlziiChat.Services.Permissions.Messages, as: MessagePermissions
   alias KlziiChat.Services.Permissions.Resources, as: ResourcePermissions
   alias KlziiChat.Services.Permissions.SessionTopic, as: SessionTopicPermissions
@@ -30,7 +31,9 @@ defmodule KlziiChat.Services.Permissions.Builder do
 
   @spec session_member_permissions(Integer) :: Map.t
   def session_member_permissions(session_member_id) do
-    session_member = Repo.get!(SessionMember, session_member_id)
+    session_member =
+      SessionMemberQueries.permissions(session_member_id)
+      |> Repo.one!()
 
     case get_subscription_preference_session(session_member.sessionId) do
       {:ok, preference} ->

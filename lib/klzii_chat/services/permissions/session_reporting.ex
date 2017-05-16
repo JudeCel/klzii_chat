@@ -5,10 +5,9 @@ defmodule KlziiChat.Services.Permissions.SessionReporting do
 
   @spec can_create_report(Map.t) :: {:ok } | {:error, String.t}
   def can_create_report(session_member) do
-    roles = ["facilitator"]
     case Builder.session_member_permissions(session_member.id) do
       {:ok, %{reports: %{can_report: can_report}}} ->
-        has_role(session_member.role, roles) && can_report
+        can_report
       _ ->
         false
     end |> formate_error
@@ -16,10 +15,9 @@ defmodule KlziiChat.Services.Permissions.SessionReporting do
 
   @spec can_delete_report(Map.t) :: {:ok } | {:error, String.t}
   def can_delete_report(session_member) do
-    roles = ["facilitator"]
     case Builder.session_member_permissions(session_member.id) do
       {:ok, %{reports: %{can_report: can_report}}} ->
-        has_role(session_member.role, roles) && can_report
+        can_report
       _ ->
         false
     end |> formate_error
@@ -27,10 +25,9 @@ defmodule KlziiChat.Services.Permissions.SessionReporting do
 
   @spec can_get_reports(Map.t) :: {:ok } | {:error, String.t}
   def can_get_reports(session_member) do
-    roles = ["facilitator"]
     case Builder.session_member_permissions(session_member.id) do
       {:ok, %{reports: %{can_report: can_report}}} ->
-        has_role(session_member.role, roles) && can_report
+        can_report
       _ ->
         false
     end |> formate_error
