@@ -1,5 +1,4 @@
 defmodule KlziiChat.Services.Permissions.SessionReporting do
-  import KlziiChat.Services.Permissions.Validations
   import KlziiChat.Services.Permissions.ErrorsHelper, only: [formate_error: 1]
   alias KlziiChat.Services.Permissions.Builder
 
