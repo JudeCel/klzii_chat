@@ -3,22 +3,32 @@ defmodule KlziiChat.WhiteboardChannelTest do
   use KlziiChat.SessionMemberCase
   alias KlziiChat.{Repo, UserSocket, WhiteboardChannel}
 
-  setup %{session_topic_1: session_topic_1, facilitator: facilitator} do
+  setup %{session_topic_1: session_topic_1, facilitator: facilitator, participant: participant} do
     Ecto.Adapters.SQL.Sandbox.mode(Repo, {:shared, self()})
     whiteboard_name =  "whiteboard:" <> Integer.to_string(session_topic_1.id)
     { :ok, jwt, _encoded_claims } =  Guardian.encode_and_sign(facilitator)
+    { :ok, jwt2, _encoded_claims } =  Guardian.encode_and_sign(participant)
     {:ok, socket} = connect(UserSocket, %{"token" => jwt})
-    {:ok, socket: socket, whiteboard_name: whiteboard_name}
+    {:ok, socket2} = connect(UserSocket, %{"token" => jwt2})
+    {:ok, socket2: socket2, socket: socket, whiteboard_name: whiteboard_name}
   end
 
   test "when unauthorized", %{socket: socket, whiteboard_name: whiteboard_name} do
     {:error,  %{reason: "unauthorized"}} = subscribe_and_join(socket, WhiteboardChannel, whiteboard_name <> "2233")
   end
 
-  test "can join and get history ", %{socket: socket, whiteboard_name: whiteboard_name} do
-    {:ok, replay, _socket} = subscribe_and_join(socket, WhiteboardChannel, whiteboard_name)
-    is_list(replay) |> assert
-  end
+  [:socket, :socket2]
+  |> Enum.each(fn(item) ->
+    @socket item
+    test "can join and get history #{item}", context do
+      whiteboard_name = context[:whiteboard_name]
+      socket = context[@socket]
+      %{socket: socket, whiteboard_name: whiteboard_name}
+      {:ok, replay, _socket} = subscribe_and_join(socket, WhiteboardChannel, whiteboard_name)
+      is_list(replay) |> assert
+    end
+   end)
+
 
   test "can push new shape", %{socket: socket, whiteboard_name: whiteboard_name} do
       socket = subscribe_and_join!(socket, WhiteboardChannel, whiteboard_name)

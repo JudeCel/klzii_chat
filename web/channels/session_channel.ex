@@ -89,7 +89,6 @@ defmodule KlziiChat.SessionChannel do
         {:error, %{reason: reason}}
     end
   end
-
   def handle_in("create_session_topic_report", payload, socket) do
     case SessionReportingService.create_report(get_session_member(socket).id, payload) do
       {:ok, report} ->
@@ -98,7 +97,6 @@ defmodule KlziiChat.SessionChannel do
         {:error, %{reason: reason}}
     end
   end
-
   def handle_in("delete_session_topic_report", %{"id" => session_topic_report_id}, socket) do
     case SessionReportingService.delete_session_topic_report(session_topic_report_id, get_session_member(socket).id) do
       {:ok, _} ->
@@ -107,7 +105,6 @@ defmodule KlziiChat.SessionChannel do
         {:error, %{reason: reason}}
     end
   end
-
   def handle_in("recreate_session_topic_report", %{"id" => session_topic_report_id}, socket) do
     case SessionReportingService.recreate_report(session_topic_report_id, get_session_member(socket).id) do
       {:ok, session_topics_report} ->
@@ -116,7 +113,6 @@ defmodule KlziiChat.SessionChannel do
         {:error, %{reason: reason}}
     end
   end
-
   def handle_in("get_session_topics_reports", _, socket) do
     case SessionReportingService.get_session_topics_reports(socket.assigns.session_id, get_session_member(socket).id) do
       {:ok, session_topics_reports} ->
@@ -125,14 +121,12 @@ defmodule KlziiChat.SessionChannel do
         {:error, %{reason: reason}}
     end
   end
-
   def handle_in("get_all_direct_messages", %{ "recieverId" => other_member_id, "page" => page }, socket) do
     current_member_id = get_session_member(socket).id
 
     messages = DirectMessageService.get_all_direct_messages(current_member_id, other_member_id, page)
     {:reply, {:ok, %{ messages: DirectMessageView.render("messages.json", messages: messages, prevPage: page) }}, socket}
   end
-
   def handle_in("create_direct_message", %{ "recieverId" => other_member_id, "text" => text }, socket) do
     current_member = get_session_member(socket)
 
@@ -148,7 +142,6 @@ defmodule KlziiChat.SessionChannel do
         {:reply, {:error, error_view(reason)}, socket}
       end
   end
-
   def handle_in("set_read_direct_messages", %{ "senderId" => other_member_id }, socket) do
     current_member = get_session_member(socket)
 
@@ -156,12 +149,10 @@ defmodule KlziiChat.SessionChannel do
     count = DirectMessageService.get_unread_count(current_member.id)
     {:reply, { :ok, %{ count: count } }, socket}
   end
-
   def handle_in("get_last_messages", _, socket) do
     current_member = get_session_member(socket)
     {:reply, { :ok, %{ messages: DirectMessageService.get_last_messages(current_member.id) } }, socket}
   end
-
   def handle_in("get_unread_count", _, socket) do
     current_member = get_session_member(socket)
     count = DirectMessageService.get_unread_count(current_member.id)
@@ -178,19 +169,16 @@ defmodule KlziiChat.SessionChannel do
     end
     {:noreply, socket}
   end
-
   def handle_out("session_topics_report_updated", payload, socket) do
     if SessionReportingPermissions.can_create_report(get_session_member(socket)) do
       push socket, "session_topics_report_updated", SessionTopicsReportView.render("show.json", %{report: payload})
     end
     {:noreply, socket}
   end
-
   def handle_out("update_member", payload, socket) do
     push socket, "update_member", SessionMembersView.render("member.json", %{member: payload})
     {:noreply, socket}
   end
-
   def handle_out("unread_messages", payload, socket) do
     id = get_session_member(socket).id |> to_string
     case Map.get(payload, id, nil) do
@@ -201,7 +189,6 @@ defmodule KlziiChat.SessionChannel do
     end
     {:noreply, socket}
   end
-
   def handle_out("read_message", payload, socket) do
     session_member = get_session_member(socket)
     if session_member.id == payload.session_member_id do
@@ -215,7 +202,6 @@ defmodule KlziiChat.SessionChannel do
     end
     {:noreply, socket}
   end
-
   def handle_out("self_info", payload, socket) do
     session_member = get_session_member(socket)
     if session_member.id == payload.id do
