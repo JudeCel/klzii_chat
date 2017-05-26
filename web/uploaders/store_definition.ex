@@ -1,6 +1,17 @@
 defmodule KlziiChat.Uploaders.StoreDefinition do
   defmacro __using__(_) do
     quote do
+
+      def get_extension(file_name) do
+        Path.extname(file_name)
+        |> String.downcase()
+      end
+
+      # Whitelist file extensions:
+      def validate({file, _}) do
+        allowed_extensions() |> Enum.member?(get_extension(file.file_name))
+      end
+
       def storage_dir(_, {_file, scope}) do
         case Mix.env do
           :prod ->

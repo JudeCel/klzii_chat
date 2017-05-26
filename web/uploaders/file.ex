@@ -14,9 +14,4 @@ defmodule KlziiChat.Uploaders.File do
   def allowed_extensions() do
     ~w(.pdf .csv .xls .zip .txt)
   end
-
-  # Whitelist file extensions:
-  def validate({file, _}) do
-    allowed_extensions() |> Enum.member?(Path.extname(file.file_name))
-  end
 end

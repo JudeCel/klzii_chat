@@ -14,9 +14,4 @@ defmodule KlziiChat.Uploaders.Video do
   def allowed_extensions() do
     ~w(.mp4 .mpeg )
   end
-
-  # Whitelist file extensions:
-  def validate({file, _}) do
-    ~w(.mp4 .mpeg ) |> Enum.member?(Path.extname(file.file_name))
-  end
 end

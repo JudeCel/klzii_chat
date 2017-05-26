@@ -13,11 +13,6 @@ defmodule KlziiChat.Uploaders.Image do
     ~w(.gif .png .jpg .jpeg .bmp)
   end
 
-  # Whitelist file extensions:
-  def validate({file, _}) do
-    allowed_extensions() |> Enum.member?(Path.extname(file.file_name))
-  end
-
   # Define a thumbnail transformation:
   def transform(:thumb, _) do
     {:convert, "-strip -thumbnail 250x250>"}
