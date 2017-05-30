@@ -73,6 +73,9 @@
 }
 
 @media (max-width: 767px) {
+  .emotion-picker-section .dropdown-menu {
+    bottom: 97px;
+  }
   .type-forum .room-section-left {
     width: 100% !important;
     float: none !important;
