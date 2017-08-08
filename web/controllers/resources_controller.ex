@@ -67,7 +67,8 @@ defmodule KlziiChat.ResourcesController do
   end
 
   def show(conn, %{"id" => id}, member, _) do
-    case ResourceService.find(member.account_user.id, id) do
+    #don't use ResourceService.find(member.account_user.id, id) here because Social Forum Guests don't have account_user
+    case ResourceService.find_by_session(member.session_member.sessionId, id) do
       {:ok, resource} ->
         json(conn, %{ resource: ResourceView.render("resource.json", %{resource: resource}) })
       {:error, reason} ->
