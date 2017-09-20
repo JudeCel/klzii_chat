@@ -97,10 +97,10 @@ defmodule KlziiChat.SessionMembersView do
 
   @spec get_help_page_url(Map.t) :: String.t
   def get_help_page_url(%{ role: "facilitator" }) do
-    System.get_env("HOST_HELP_URL") || "http://104.154.43.190/chat_help/Host/"
+    System.get_env("HOST_HELP_URL") || "https://klzii.com/help/"
   end
   def get_help_page_url(_) do
-    System.get_env("GUEST_HELP_URL") || "http://104.154.43.190/chat_help/Guest/"
+    System.get_env("GUEST_HELP_URL") || "https://klzii.com/help/"
   end
 
   @spec buildJWT(Map.t) :: Map.t
