@@ -1,3 +1,5 @@
+
+
 import React, { PropTypes } from 'react';
 import { connect }          from 'react-redux';
 import Input                from '../messages/input.js';
@@ -14,12 +16,20 @@ const Forum = React.createClass({
     return {
       mainBlockStyles: {
         backgroundColor: colours.mainBackground,
-        borderColor: colours.mainBorder
+        borderColor: colours.mainBorder,
       },
       aboutThisTopicHeaderStyles: {
         backgroundColor: colours.mainBorder
       }
     };
+  },
+  setChatHeight() {
+    var element = document.getElementsByClassName('top-row test');
+    if (!element || !element[0]){
+      return {};
+    }else{
+      return  {height: "calc(100vh - " + element[0].offsetHeight.toString() + "px)" };
+    }
   },
   renderWhiteboard() {
     if (this.hasPermission(['whiteboard', 'can_display_whiteboard'])) {
@@ -35,7 +45,7 @@ const Forum = React.createClass({
           <div className='aboutThisTopic' style={ this.state.aboutThisTopicHeaderStyles }>
             About this Topic
           </div>
-          <div className='top-row'>
+          <div className='top-row test'>
             <Facilitator />
           </div>
           <Console />
@@ -43,7 +53,7 @@ const Forum = React.createClass({
             { this.renderWhiteboard() }
           </div>
         </div>
-        <div className='col-md-9 room-section room-section-right' style={ this.state.mainBlockStyles }>
+        <div className='col-md-9 room-section room-section-right' style={ this.state.mainBlockStyles } style={ this.setChatHeight() }>
           <Messages/>
           <Input/>
         </div>
