@@ -118,9 +118,6 @@ const MobileHeader = React.createClass({
               <span className='icon-bar'></span>
             </button>
             <MobileConsole />
-            <span className="icon-type-mini_survey-green">
-              <i className="icon-ok-squared"></i>
-            </span>
             <span className='navbar-brand'><img src={brand_logo.url.full} /></span>
           </div>
           <div className='mobile-side-menu' style={this.getMobileSideMenuStyle()}>

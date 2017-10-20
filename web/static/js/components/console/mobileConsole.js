@@ -3,7 +3,7 @@ import { connect }        from 'react-redux';
 import Modals             from './modals';
 import mixins             from '../../mixins';
 
-const { UploadsModal } = Modals;
+const { UploadsModal, SurveyModal } = Modals;
 
 const MobileConsole = React.createClass({
   mixins: [mixins.modalWindows, mixins.helpers, mixins.validations],
@@ -27,20 +27,36 @@ const MobileConsole = React.createClass({
   getCurrentResourceType() {
     return this.resourceTypes.find(type => { return this.getConsoleResourceId(type) != null });
   },
-  render() {
+  getResourceButtons() {
     var type = this.getCurrentResourceType();
-    
+
     if(!type) return null;
 
+    return (            
+        <span onClick={ this.openModal.bind(this, type, true) } className="icon-type-video-green">
+          <i className="icon-video-1"></i>
+        </span>
+      );
+  },
+  getMiniSurveyButton() {
+    if (!this.isConsoleActive('mini_survey')) return null;
+
+    return (            
+        <span onClick={ this.openModal.bind(this, 'mini_survey', true) } className="icon-type-mini_survey-green">
+          <i className="icon-ok-squared"></i>
+        </span>
+      );
+  },
+  render() {
     const { modalName } = this.state;
 
     return (
         <div>
-            <span onClick={ this.openModal.bind(this, type, true) } className="icon-type-video-green">
-                <i className="icon-video-1"></i>
-            </span>
+            { this.getResourceButtons() }
+            { this.getMiniSurveyButton() }
 
             <UploadsModal show={ this.shouldShow(this.resourceTypes) } modalName={ modalName } />
+            <SurveyModal show={ this.shouldShow(['mini_survey']) } />
         </div>
     );
   }
