@@ -725,7 +725,7 @@
     height: calc(100vh - 152px);
   }
   .type-forum .room-section-right .chat-section {
-    height: calc(100vh - 260px);
+    height: calc(100vh - 220px);
     padding-top: 5px;
   }
   .type-forum .room-section-left .console-section {
@@ -796,7 +796,6 @@
   margin-bottom: 5px !important;
   border-radius: 0px;
   padding-left: 4px;
-  margin-left: -5px;
   margin-top: 11px;
 }
 
@@ -816,8 +815,24 @@
   margin: -18px 0px 0px 15px;
 }
 
+.header-innerbox-mobile .navbar-header .icon-coffee .access-topics-icon {
+    float: left;
+}
+
+.header-innerbox-mobile .navbar-header .icon-coffee .badges {
+    float: left;
+    margin-top: 8px;
+    margin-right: 5px;
+}
+
+.header-innerbox-mobile .navbar-header .icon-coffee .badges .badge{
+    padding: 2px 4px;
+    font-size: 8px;
+    margin-top: 3px;
+}
+
 .header-innerbox-mobile .navbar-header .icon-coffee .fa-coffee {
-  margin-right: 30px;
+  margin-right: 5px;
   margin-top: 0px;
   color: #34BDE8;
   font-size: 60px;
@@ -830,7 +845,7 @@
   font-size: 12px;
   position: absolute;
   left: 21px;
-  top: 13px;
+  top: 12px;
   text-align: center;
   line-height: 17px;
   letter-spacing: 1px;
@@ -1119,7 +1134,7 @@
   }
 }
 
-@media (max-device-width: 355px) {
+@media (max-device-width: 356px) {
   .header-innerbox-mobile .navbar-header .navbar-brand img {
     height: 17px;
   }

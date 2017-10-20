@@ -102,8 +102,14 @@ const MobileHeader = React.createClass({
         <div className='header-innerbox header-innerbox-mobile'>
           <div className='navbar-header'>
             <div className="icon-coffee" onClick={this.toggleTopics}>
-              <span className="fa fa-coffee"></span>
-              <span className="text">Access<br />Topics</span>
+              <div className="access-topics-icon">
+                <span className="fa fa-coffee"></span>
+                <span className="text">Access<br />Topics</span>
+              </div>
+              <div className="badges">
+                <Badge type='normal' data={unread_messages.summary} /><br />
+                <Badge type='reply' data={unread_messages.summary} />
+              </div>
             </div>
             <button type='button' className='navbar-toggle' onClick={this.toggleMenu}>
               <span className='icon-bar'></span>
@@ -157,7 +163,7 @@ const MobileHeader = React.createClass({
             </div>
           </div>
           <div className='mobile-side-menu' style={this.getMobileSideMenuTopicsStyle()}>
-          <div className='mobile-side-menu-bg'></div>
+            <div className='mobile-side-menu-bg'></div>
             <div className='mobile-side-menu-topics'>
               <ul>
                 <li className='navbar-back'>
