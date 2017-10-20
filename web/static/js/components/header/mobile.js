@@ -5,6 +5,7 @@ import mixins from '../../mixins';
 import Badge from '../sessionTopics/badge';
 import Avatar from '../members/avatar.js';
 import Constants from '../../constants';
+import MobileConsole from '../../components/console/mobileConsole.js';
 
 const MobileHeader = React.createClass({
   mixins: [mixins.modalWindows, mixins.validations, mixins.headerActions],
@@ -116,9 +117,7 @@ const MobileHeader = React.createClass({
               <span className='icon-bar'></span>
               <span className='icon-bar'></span>
             </button>
-            <span className="icon-type-video-green">
-              <i className="icon-video-1"></i>
-            </span>
+            <MobileConsole />
             <span className="icon-type-mini_survey-green">
               <i className="icon-ok-squared"></i>
             </span>
