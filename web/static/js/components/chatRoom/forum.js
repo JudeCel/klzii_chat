@@ -28,7 +28,7 @@ const Forum = React.createClass({
     if (!element || !element[0]){
       return {};
     }else{
-      return  {height: "calc(100vh - " + element[0].offsetHeight.toString() + "px)" };
+      return  {height: "calc(100vh - " + (element[0].offsetHeight + 80).toString() + "px)" };
     }
   },
   renderWhiteboard() {
