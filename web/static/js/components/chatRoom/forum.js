@@ -45,7 +45,7 @@ const Forum = React.createClass({
           <div className='aboutThisTopic' style={ this.state.aboutThisTopicHeaderStyles }>
             About this Topic
           </div>
-          <div className='top-row test'>
+          <div className='top-row'>
             <Facilitator />
           </div>
           <Console />
