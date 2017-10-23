@@ -1,9 +1,11 @@
-import React, {PropTypes} from 'react';
-import { connect }        from 'react-redux';
-import mixins             from '../../mixins';
-import Badge              from '../sessionTopics/badge';
-import Avatar             from '../members/avatar.js';
-import Constants          from '../../constants';
+
+import React, { PropTypes } from 'react';
+import { connect } from 'react-redux';
+import mixins from '../../mixins';
+import Badge from '../sessionTopics/badge';
+import Avatar from '../members/avatar.js';
+import Constants from '../../constants';
+import MobileConsole from '../../components/console/mobileConsole.js';
 
 const MobileHeader = React.createClass({
   mixins: [mixins.modalWindows, mixins.validations, mixins.headerActions],
@@ -11,6 +13,7 @@ const MobileHeader = React.createClass({
     return { mobileSideMenuVisibility: false, mobileSideMenuTopicsVisibility: false };
   },
   whiteboardIconClick() {
+    this.setState({ mobileSideMenuVisibility: false, mobileSideMenuTopicsVisibility: false });
     const { sessionConsole } = this.props;
     document.getElementsByClassName(sessionConsole.pinboard ? "pinboard-expand" : "whiteboard-expand")[0].click();
   },
@@ -45,10 +48,10 @@ const MobileHeader = React.createClass({
     };
   },
   toggleMenu() {
-    this.setState({mobileSideMenuVisibility: !this.state.mobileSideMenuVisibility, mobileSideMenuTopicsVisibility: false});
+    this.setState({ mobileSideMenuVisibility: !this.state.mobileSideMenuVisibility, mobileSideMenuTopicsVisibility: false });
   },
   toggleTopics() {
-    this.setState({mobileSideMenuTopicsVisibility: !this.state.mobileSideMenuTopicsVisibility});
+    this.setState({ mobileSideMenuVisibility: false, mobileSideMenuTopicsVisibility: !this.state.mobileSideMenuTopicsVisibility });
   },
   getMobileSideMenuStyle() {
     return {
@@ -64,16 +67,16 @@ const MobileHeader = React.createClass({
     const { dispatch } = this.props;
     dispatch({ type: Constants.SET_INPUT_REPLY, replyId: null });
     this.setSessionTopic(id);
-    this.toggleMenu();
+    this.toggleTopics();
   },
   directMessageBadge() {
     const { unreadDirectMessages } = this.props;
     let count = 0;
-    for(let i in unreadDirectMessages) {
+    for (let i in unreadDirectMessages) {
       count += unreadDirectMessages[i];
     }
     return (
-      <span className={ 'badge badge-messages-' + count  }>{ count }</span>
+      <span className={'badge badge-messages-' + count}>{count}</span>
     );
   },
   changeAvatar() {
@@ -99,71 +102,82 @@ const MobileHeader = React.createClass({
       return (
         <div className='header-innerbox header-innerbox-mobile'>
           <div className='navbar-header'>
+            <div className="icon-coffee" onClick={this.toggleTopics}>
+              <div className="access-topics-icon">
+                <span className="fa fa-coffee"></span>
+                <span className="text">Access<br />Topics</span>
+              </div>
+              <div className="badges">
+                <Badge type='normal' data={unread_messages.summary} /><br />
+                <Badge type='reply' data={unread_messages.summary} />
+              </div>
+            </div>
             <button type='button' className='navbar-toggle' onClick={this.toggleMenu}>
               <span className='icon-bar'></span>
               <span className='icon-bar'></span>
               <span className='icon-bar'></span>
             </button>
-            <span className='navbar-brand'><img src={brand_logo.url.full}/></span>
-            <span className='navbar-whiteboard' onClick={this.whiteboardIconClick} style={{ backgroundColor: colours.headerButton }}>
-              <img src='/images/whiteboard-icon.png'/>
-            </span>
+            <MobileConsole />
+            <span className='navbar-brand'><img src={brand_logo.url.full} /></span>
           </div>
-          <div className='mobile-side-menu' style={ this.getMobileSideMenuStyle() }>
+          <div className='mobile-side-menu' style={this.getMobileSideMenuStyle()}>
             <div className='mobile-side-menu-bg'></div>
             <div className='mobile-side-menu-content'>
               <ul>
-                <li className='navbar-title'>{ session.name }</li>
-                <li className={ "navbar-avatar " + currentUser.role } >
+                <li className='navbar-title'>{session.name}</li>
+                <li className={"navbar-avatar " + currentUser.role} >
                   <span onClick={this.changeAvatar}>
-                    <Avatar member={ { id: currentUser.id, username: currentUser.username, colour: currentUser.colour, avatarData: currentUser.avatarData, online: true, edit: false } } specificId={ 'mobile-menu-avatar' } />
+                    <Avatar member={{ id: currentUser.id, username: currentUser.username, colour: currentUser.colour, avatarData: currentUser.avatarData, online: true, edit: false }} specificId={'mobile-menu-avatar'} />
                   </span>
                   <div>Click on Avatar to Customize Your Biizu</div>
                 </li>
-                <li onClick={this.toggleTopics}>
-                  <span className='fa fa-coffee'></span>Topic Menu
-                  <span className='fa fa-angle-right'></span>
-                  <Badge type='normal' data={ unread_messages.summary } />
-                  <Badge type='reply' data={ unread_messages.summary } />
+                <li onClick={this.whiteboardIconClick}>
+                  <span className='navbar-whiteboard' style={{ backgroundColor: colours.headerButton }}>
+                    <img src='/images/whiteboard-icon.png' />
+                  </span>
+                  <span></span>Whiteboard
+                    </li>
+                <li onClick={this.messagesClick} style={this.getMenuItemStyle('messages', 'can_direct_message')}>
+                  <span className='fa fa-comment'></span>Messages {this.directMessageBadge()}
                 </li>
-                <li onClick={this.messagesClick} style={ this.getMenuItemStyle('messages', 'can_direct_message') }>
-                  <span className='fa fa-comment'></span>Messages { this.directMessageBadge() }
-                </li>
-                <li onClick={ this.spectatorsClick } style={ this.getSpectatorOrOGuestsMenuItemStyle() }>
+                <li onClick={this.spectatorsClick} style={this.getSpectatorOrOGuestsMenuItemStyle()}>
                   <span className='fa fa-eye'></span>Spectators
-                </li>
-                <li onClick={ this.guestsClick } style={ this.getSpectatorOrOGuestsMenuItemStyle() }>
+                    </li>
+                <li onClick={this.guestsClick} style={this.getSpectatorOrOGuestsMenuItemStyle()}>
                   <span className='fa fa-users'></span>Guests
-                </li>
+                    </li>
                 <li onClick={this.toggleMenu}>
                   <span className='fa fa-question'></span>Help
-                </li>
-                <li onClick={this.logoutClick} style={ this.getMenuItemStyle('can_redirect', 'logout') }>
+                    </li>
+                <li onClick={this.logoutClick} style={this.getMenuItemStyle('can_redirect', 'logout')}>
                   <span className='fa fa-sign-out'></span>Log out
-                </li>
+                    </li>
               </ul>
               <div className='powered-by'>
-                Get Free <a href='//www.klzii.com' target='_blank'>klzii Chat</a>
+                Get <a href='//www.klzii.com' target='_blank'>klzii Chat</a>
               </div>
             </div>
-            <div className='mobile-side-menu-topics' style={ this.getMobileSideMenuTopicsStyle() }>
+          </div>
+          <div className='mobile-side-menu' style={this.getMobileSideMenuTopicsStyle()}>
+            <div className='mobile-side-menu-bg'></div>
+            <div className='mobile-side-menu-topics'>
               <ul>
                 <li className='navbar-back'>
-                  <span className='fa icon-reply' onClick={ this.toggleTopics }></span>
+                  <span className='fa icon-reply' onClick={this.toggleTopics}></span>
                 </li>
-                  {
-                    sessionTopics.map((sessionTopic) => {
-                      return (
-                        <li key={ 'sessionTopic-' + sessionTopic.id } className='clearfix' onClick={ this.changeSessionTopic.bind(this, sessionTopic.id) }>
-                          <span className={'pull-left' + this.getHasMessagesClassName(sessionTopic)}>{ sessionTopic.name }</span>
-                          <span className='pull-right'>
-                            <Badge type='normal' data={ unread_messages.session_topics[sessionTopic.id] } />
-                            <Badge type='reply' data={ unread_messages.session_topics[sessionTopic.id] } />
-                          </span>
-                        </li>
-                      )
-                    })
-                  }
+                {
+                  sessionTopics.map((sessionTopic) => {
+                    return (
+                      <li key={'sessionTopic-' + sessionTopic.id} className='clearfix' onClick={this.changeSessionTopic.bind(this, sessionTopic.id)}>
+                        <span className={'pull-left' + this.getHasMessagesClassName(sessionTopic)}>{sessionTopic.name}</span>
+                        <span className='pull-right'>
+                          <Badge type='normal' data={unread_messages.session_topics[sessionTopic.id]} />
+                          <Badge type='reply' data={unread_messages.session_topics[sessionTopic.id]} />
+                        </span>
+                      </li>
+                    )
+                  })
+                }
               </ul>
             </div>
           </div>
