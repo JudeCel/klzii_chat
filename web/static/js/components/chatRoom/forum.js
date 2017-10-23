@@ -24,11 +24,11 @@ const Forum = React.createClass({
     };
   },
   setChatHeight() {
-    var element = document.getElementsByClassName('top-row test');
-    if (!element || !element[0]){
-      return {};
-    }else{
-      return  {height: "calc(100vh - " + (element[0].offsetHeight + 80).toString() + "px)" };
+    var element = document.getElementById('topicSection');
+    if (element){
+      return { height: "calc(100vh - " + (element.offsetHeight + 80).toString() + "px)" };
+    } else {
+      return  {};
     }
   },
   renderWhiteboard() {
@@ -45,7 +45,7 @@ const Forum = React.createClass({
           <div className='aboutThisTopic' style={ this.state.aboutThisTopicHeaderStyles }>
             About this Topic
           </div>
-          <div className='top-row'>
+          <div id="topicSection" className='top-row'>
             <Facilitator />
           </div>
           <Console />
