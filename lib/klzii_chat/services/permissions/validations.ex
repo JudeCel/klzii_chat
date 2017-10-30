@@ -5,9 +5,16 @@ defmodule KlziiChat.Services.Permissions.Validations do
     member.id == Map.get(object, key) || false
   end
 
-  @spec has_role(String.t, List.t) :: Boolean.t
-  def has_role(role, roles) do
-    is_in_list(role, roles)
+  # we should use this methods in order to check user's role
+  @spec has_role(Map.t, List.t) :: Boolean.t
+  def has_role(%{role: session_member_role, account_user: %{role: account_user_role}}, roles) do
+    (is_in_list(session_member_role, roles) || is_in_list(account_user_role, roles))
+  end
+
+  # ideally this methods should not be used, because it skips account_user.role
+  @spec has_role(Map.t, List.t) :: Boolean.t
+  def has_role(%{role: session_member_role}, roles) do
+     is_in_list(session_member_role, roles)
   end
 
   @spec is_in_list(String.t, List.t) :: Boolean.t
