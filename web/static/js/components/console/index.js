@@ -51,21 +51,33 @@ const Console = React.createClass({
   renderInviteAgain() {
     const { surveys } = this.props;
 
-    let inviteAgainUrl = null;
-    let noThanksUrl = null;
+    let contactListSurvey;
+    let prizeDrawSurvey;
 
     surveys.forEach((element, index, array) => {
-      if (element.survey.type == "sessionContactList") {
-        inviteAgainUrl = element.survey.url;
-      } else if (element.survey.type == "sessionPrizeDraw") {
-        noThanksUrl = element.survey.url;
+      if (element.survey.type === "sessionContactList") {
+        contactListSurvey = element;
+      } else if (element.survey.type === "sessionPrizeDraw") {
+        prizeDrawSurvey = element;
       }
     });
 
+    let inviteAgainUrl = contactListSurvey.survey.url;
+    let noThanksUrl = prizeDrawSurvey.survey.url;
+
     return (
       <div className="inviteAgainButtons">
-        { this.renderInviteAgainButton(inviteAgainUrl, "inviteAgainButton", "Invite Again!", noThanksUrl) }
-        { this.renderInviteAgainButton(noThanksUrl, "noThanksButton", "No Thanks") }
+        { this.renderInviteAgainButton(
+          contactListSurvey.active ? inviteAgainUrl : noThanksUrl,
+          "inviteAgainButton",
+          contactListSurvey.active ? "Invite Again!" : "Enter Prize Draw",
+          noThanksUrl
+        ) }
+        { this.renderInviteAgainButton(
+          contactListSurvey.active ? noThanksUrl : inviteAgainUrl,
+          "noThanksButton",
+          "No Thanks"
+        ) }
       </div>
     )
   },

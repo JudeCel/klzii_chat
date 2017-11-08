@@ -6,6 +6,7 @@ defmodule KlziiChat.SessionSurveyView do
   def render("show.json", %{session_survey: session_survey}) do
     %{
       id: session_survey.id,
+      active: session_survey.active,
       survey: render_one(session_survey.survey, SurveyView, "survey_preview.json", as: :survey)
     }
   end
