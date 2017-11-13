@@ -9,6 +9,10 @@ import MobileConsole from '../../components/console/mobileConsole.js';
 
 const MobileHeader = React.createClass({
   mixins: [mixins.modalWindows, mixins.validations, mixins.headerActions],
+  componentDidMount() {
+    // TA1906 - if you want to go back users are clicking the back arrow but it takes them out of the Session and back to the login
+    window.onbeforeunload = function() { return ""; };
+  },
   getInitialState() {
     return { mobileSideMenuVisibility: false, mobileSideMenuTopicsVisibility: false };
   },
