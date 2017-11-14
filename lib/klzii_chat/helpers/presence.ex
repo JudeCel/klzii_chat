@@ -10,4 +10,9 @@ defmodule KlziiChat.Helpers.Presence do
   def session_presences_ids(session_id) do
     Presence.list("sessions:#{session_id}") |> Map.keys |> Enum.map(&(String.to_integer(&1)))
   end
+
+  @spec session_presences(String.t) :: List.t
+  def session_presences(session_id) do
+    Presence.list("sessions:#{session_id}")
+  end
 end
