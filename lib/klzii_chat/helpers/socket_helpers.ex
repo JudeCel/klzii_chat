@@ -1,10 +1,23 @@
 defmodule KlziiChat.Helpers.SocketHelper do
-  alias KlziiChat.{Presence}
+  alias KlziiChat.{Presence, Repo, AccountUser}
   alias KlziiChat.Dashboard.Presence, as: DashboardPresence
 
   @spec get_session_member(%Phoenix.Socket{}) :: Map.t
   def get_session_member(socket) do
-    socket.assigns.session_member
+    # get account user in order to be able to check account_user.role across whole system
+    account_user_id = Map.get(socket.assigns.session_member, "account_user_id")
+    account_user_summary = case account_user_id do
+      nil -> %{}
+      _ ->
+        account_user = Repo.get!(AccountUser, socket.assigns.session_member.account_user_id)
+      %{
+        id: account_user.id,
+        role: account_user.role,
+        firstName: account_user.firstName,
+        lastName: account_user.lastName,
+      }
+    end
+    Map.put_new(socket.assigns.session_member, :account_user, account_user_summary)
   end
 
   @spec get_account_user(%Phoenix.Socket{}) :: Map.t

@@ -2,6 +2,7 @@ defmodule KlziiChat.Channels.Sessions.FocusForumTest do
   use KlziiChat.{ChannelCase, SessionMemberCase}
   alias KlziiChat.{Repo, UserSocket, SessionChannel}
   alias KlziiChat.Services.SessionReportingService
+  alias KlziiChat.Helpers.SocketHelper
 
   setup %{session_topic_1: session_topic_1, session: session, session: session, facilitator: facilitator, participant: participant} do
     Ecto.Adapters.SQL.Sandbox.mode(Repo, {:shared, self()})
@@ -22,7 +23,7 @@ defmodule KlziiChat.Channels.Sessions.FocusForumTest do
   test "after join events", %{socket: socket, session: session, channel_name: channel_name} do
     {:ok, reply, socket} =
       join(socket, SessionChannel, channel_name)
-    session_member = socket.assigns.session_member
+    session_member = SocketHelper.get_session_member(socket)
 
     assert(reply.name == session.name)
 

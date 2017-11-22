@@ -5,7 +5,7 @@ defmodule KlziiChat.Services.WhiteboardService do
   import Ecto.Query, only: [from: 2, preload: 2]
 
   def history(session_topic_id, session_member_id) do
-    session_member = Repo.get!(SessionMember, session_member_id)
+    session_member = Repo.get!(SessionMember, session_member_id) |> Repo.preload(:account_user)
 
     resp =
       ShapesQueries.base_query(%{sessionTopicId: session_topic_id})
@@ -37,7 +37,7 @@ defmodule KlziiChat.Services.WhiteboardService do
   end
 
   def update_object(session_member_id, _, params) do
-    session_member = Repo.get!(SessionMember, session_member_id)
+    session_member = Repo.get!(SessionMember, session_member_id) |> Repo.preload(:account_user)
     shape = Repo.get_by!(Shape, uid: params["id"])
     if WhiteboardPermissions.can_edit(session_member, shape) do
       Shape.changeset(shape, %{event: params})
@@ -48,7 +48,7 @@ defmodule KlziiChat.Services.WhiteboardService do
   end
 
   def create_object(session_member_id, session_topic_id, params) do
-    session_member = Repo.get!(SessionMember, session_member_id)
+    session_member = Repo.get!(SessionMember, session_member_id) |> Repo.preload(:account_user)
     session = Repo.get!(Session, session_member.sessionId)
       |> Repo.preload([:session_type])
     {:ok, preference} = KlziiChat.Services.Permissions.Builder.get_subscription_preference_session(session.id)
@@ -68,7 +68,7 @@ defmodule KlziiChat.Services.WhiteboardService do
   end
 
   def deleteAll(session_member_id, session_topic_id) do
-    session_member = Repo.get!(SessionMember, session_member_id)
+    session_member = Repo.get!(SessionMember, session_member_id) |> Repo.preload(:account_user)
     session_topic = Repo.get!(SessionTopic, session_topic_id)
     {_count, shapes}  =
       ShapesQueries.find_shapes_for_delete(session_member, session_topic)
@@ -78,7 +78,7 @@ defmodule KlziiChat.Services.WhiteboardService do
   end
 
   def deleteByUid(session_member_id, id) do
-    session_member = Repo.get!(SessionMember, session_member_id)
+    session_member = Repo.get!(SessionMember, session_member_id) |> Repo.preload(:account_user)
     query = from(e in Shape, where: e.uid == ^id)
     shape = Repo.one(query)
 
