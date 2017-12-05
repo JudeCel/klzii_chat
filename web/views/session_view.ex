@@ -69,7 +69,7 @@ defmodule KlziiChat.SessionView do
   defp participant_list(%{__struct__: Ecto.Association.NotLoaded}), do: nil
   defp participant_list(contact_list), do: contact_list
 
-  defp brand_logo(nil), do: %{url: %{full: "/images/klzii_logo.png"}, static: true}
+  defp brand_logo(nil), do: %{url: %{full: "/images/cliizii_logo.png"}, static: true}
   defp brand_logo(brand_logo) do
     render_one(brand_logo, ResourceView, "resource.json")
   end
