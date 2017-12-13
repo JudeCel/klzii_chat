@@ -1,4 +1,3 @@
-
 import React, { PropTypes } from 'react';
 import { connect } from 'react-redux';
 import mixins from '../../mixins';
@@ -11,7 +10,16 @@ const MobileHeader = React.createClass({
   mixins: [mixins.modalWindows, mixins.validations, mixins.headerActions],
   componentDidMount() {
     // TA1906 - if you want to go back users are clicking the back arrow but it takes them out of the Session and back to the login
-    window.onbeforeunload = function() { return ""; };
+    window.onload = function () {
+      history.pushState(Math.random(), null, null);
+      window.onpopstate = function () {
+        if (confirm('You are about leaving the page. Do you want to leave it?')) {
+          history.back();
+        } else {
+          history.pushState(Math.random(), null, null);
+        }
+      };
+    };
   },
   getInitialState() {
     return { mobileSideMenuVisibility: false, mobileSideMenuTopicsVisibility: false };
