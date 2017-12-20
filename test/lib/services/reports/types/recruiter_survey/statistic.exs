@@ -191,7 +191,7 @@ defmodule KlziiChat.Services.Reports.Types.RecruiterSurvey.StatisticTest do
           answers: [
             %{"link" => %{
                 "name" => "Privace Policy",
-                "url" => "https://klzii.com/privacy-policy/"},
+                "url" => "https://cliizii.com/privacy-policy/"},
               "name" => "Yes - I am aged 18 or over & give you permission to contact me in future about a discussion group",
               "order" => 0,
               "tag" => "InterestYesTag"
