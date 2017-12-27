@@ -29,8 +29,6 @@ defmodule KlziiChat.Endpoint do
   plug Plug.RequestId
   plug Plug.Logger
 
-  # the const for MAX_FILE_SIZE is used also on the frontend of account-hub;
-  # consider to move it into some storage of cross-project variables
   plug Plug.Parsers,
     parsers: [:urlencoded, :multipart, :json],
     pass: ["*/*"],

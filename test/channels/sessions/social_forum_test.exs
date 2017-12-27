@@ -2,7 +2,6 @@ defmodule KlziiChat.Channels.Sessions.SocialForumTest do
   use KlziiChat.{ChannelCase, SessionMemberCase}
   alias KlziiChat.{UserSocket, SessionChannel}
   alias KlziiChat.Services.SessionReportingService
-  alias KlziiChat.Helpers.SocketHelper
 
 
   setup %{session_topic_3: session_topic_1,session_social: session, facilitator_social: facilitator, participant_ghost: participant} do
@@ -23,13 +22,13 @@ defmodule KlziiChat.Channels.Sessions.SocialForumTest do
   test "after join events", %{socket: socket, session: session, channel_name: channel_name} do
     {:ok, reply, socket} =
       join(socket, SessionChannel, channel_name)
-    session_member = SocketHelper.get_session_member(socket)
+    session_member = socket.assigns.session_member
 
     assert(reply.name == session.name)
 
     assert_push "self_info", self_info
 
-    assert( self_info == session_member)
+    assert(self_info == session_member)
 
     assert_push "members", %{
       "facilitator" => %{},

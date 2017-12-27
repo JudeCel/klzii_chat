@@ -14,7 +14,7 @@ defmodule KlziiChat.Services.MiniSurveysService do
 
   @spec create(Integer, Integer, Map.t) :: {:ok, %MiniSurvey{}} | {:error, Ecto.Changeset.t}
   def create(session_member_id, session_topic_id, %{"type" => type, "question" => question, "title" => title} ) do
-    session_member = Repo.get!(SessionMember, session_member_id) |> Repo.preload(:account_user)
+    session_member = Repo.get!(SessionMember, session_member_id)
     case MiniSurveysPermissions.can_create(session_member) do
       {:ok} ->
         session_topic = Repo.get!(SessionTopic, session_topic_id)
@@ -32,7 +32,7 @@ defmodule KlziiChat.Services.MiniSurveysService do
 
   @spec delete(Integer, Integer) :: {:ok, %MiniSurvey{}}
   def delete(session_member_id, id) do
-    session_member = Repo.get!(SessionMember, session_member_id) |> Repo.preload(:account_user)
+    session_member = Repo.get!(SessionMember, session_member_id)
     mini_survey = Repo.get!(MiniSurvey, id) |> Repo.preload([:consoles])
     case MiniSurveysPermissions.can_delete(session_member, mini_survey) do
       {:ok} ->
@@ -45,14 +45,14 @@ defmodule KlziiChat.Services.MiniSurveysService do
 
   @spec delete_related_consoles(List, Integer) :: :ok
   def delete_related_consoles(consoles, session_member_id) do
-    session_member = Repo.get!(SessionMember, session_member_id) |> Repo.preload(:account_user)
+    session_member = Repo.get!(SessionMember, session_member_id)
     ConsoleService.tidy_up(consoles, "miniSurvey", session_member.id)
     :ok
   end
 
   @spec create_answer(Integer, Integer, Map.t) :: {:ok, %MiniSurvey{}} | {:error, Ecto.Changeset.t}
   def create_answer(session_member_id, mini_survey_id, answer) do
-    session_member = Repo.get!(SessionMember, session_member_id) |> Repo.preload(:account_user)
+    session_member = Repo.get!(SessionMember, session_member_id)
     case MiniSurveysPermissions.can_answer(session_member) do
       {:ok} ->
         mini_survey = Repo.get!(MiniSurvey, mini_survey_id)
@@ -84,7 +84,7 @@ defmodule KlziiChat.Services.MiniSurveysService do
 
   @spec get_for_console(Integer, Integer) :: {:ok, %MiniSurvey{}}
   def get_for_console(session_member_id, mini_survey_id) do
-    session_member = Repo.get!(SessionMember, session_member_id) |> Repo.preload(:account_user)
+    session_member = Repo.get!(SessionMember, session_member_id)
     mini_survey = Repo.get!(MiniSurvey, mini_survey_id)
     |> Repo.preload([mini_survey_answers: from(msa in MiniSurveyAnswer, where: msa.sessionMemberId == ^session_member.id, preload: [:session_member])])
     {:ok, mini_survey}

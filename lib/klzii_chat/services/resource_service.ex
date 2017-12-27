@@ -74,20 +74,11 @@ defmodule KlziiChat.Services.ResourceService do
       name: name,
       stock: stock
     }
-    # wrap storing of file into transaction
-    with {:ok, result} <- Repo.transaction(
-      fn ->
-        with {:ok} <- ResourceValidations.validate(file, params),
-             {:ok, resource} <- insert_recource(Resource.changeset(%Resource{}, params)),
-             {:ok, result} <- add_file(resource, file)
-          do
-          result
-        else
-          error -> Repo.rollback(error)
-        end
-      end
-    ),
-         do: {:ok, result}
+
+    with {:ok} <- ResourceValidations.validate(file, params),
+      {:ok, resource} <- insert_recource(Resource.changeset(%Resource{}, params)),
+      {:ok, result} <- add_file(resource, file),
+    do: {:ok, result}
   end
 
   @spec insert_recource(%Resource{}) :: {:ok, %Resource{}} | {:error, map}

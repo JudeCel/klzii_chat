@@ -69,7 +69,7 @@ defmodule KlziiChat.Services.PinboardResourceService do
   @spec add(integer, integer, integer) :: {:ok} | {:error, String.t}
   def add(session_member_id, session_topic_id, resource_id) do
     session_topic_id = IntegerHelper.get_num(session_topic_id)
-    session_member = Repo.get!(SessionMember, session_member_id) |> Repo.preload(:account_user)
+    session_member = Repo.get!(SessionMember, session_member_id)
     session = Repo.get!(Session, session_member.sessionId)
       |> Repo.preload([:session_type])
     {:ok, preference} = KlziiChat.Services.Permissions.Builder.get_subscription_preference_session(session.id)
@@ -100,7 +100,7 @@ defmodule KlziiChat.Services.PinboardResourceService do
 
   @spec delete(integer, integer) :: {:ok, } | {:error, String.t}
   def delete(session_member_id, pinboard_resource_id) do
-    session_member = Repo.get!(SessionMember, session_member_id) |> Repo.preload(:account_user)
+    session_member = Repo.get!(SessionMember, session_member_id)
     pinboard_resource = find_by_id(pinboard_resource_id)
 
     PinboardResourcePermissions.can_remove_resource(session_member, pinboard_resource)

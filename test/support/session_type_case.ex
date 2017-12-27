@@ -6,15 +6,15 @@ defmodule KlziiChat.SessionTypeCase do
   setup do
 
     properties = %{
-
+      
       "focus" => %{
         "steps" => %{
           "setUp" => %{
             "enabled" => true
-          },
+          }, 
           "facilitatiorAndTopics" => %{
             "enabled" => true
-          },
+          }, 
           "manageSessionEmails" => %{
             "enabled" => true,
             "hideNext"=> true
@@ -22,7 +22,7 @@ defmodule KlziiChat.SessionTypeCase do
           "manageSessionParticipants" => %{
             "enabled" => true,
             "sendGroupSms" => true
-          },
+          }, 
           "inviteSessionObservers" => %{
             "enabled" => true,
             "sendGroupSms" => false
@@ -38,7 +38,7 @@ defmodule KlziiChat.SessionTypeCase do
           },
           "whiteboard" => %{
             "enabled" => true,
-            "canWrite" => ["facilitator", "accountManager", "admin", "participant"]
+            "canWrite" => ["facilitator", "participant"]
           },
           "pinboard" => %{
             "enabled" => true
@@ -85,17 +85,17 @@ defmodule KlziiChat.SessionTypeCase do
         "steps" => %{
           "setUp" => %{
             "enabled" => true
-          },
+          }, 
           "facilitatiorAndTopics" => %{
             "enabled" => true
-          },
+          }, 
           "manageSessionEmails" => %{
             "enabled" => true
           },
           "manageSessionParticipants" => %{
             "enabled" => true,
             "sendGroupSms" => false
-          },
+          }, 
           "inviteSessionObservers" => %{
             "enabled" => true,
             "sendGroupSms" => false
@@ -110,7 +110,7 @@ defmodule KlziiChat.SessionTypeCase do
           },
           "whiteboard" => %{
             "enabled" => true,
-            "canWrite" => ["facilitator", "accountManager", "admin"]
+            "canWrite" => ["facilitator"]
           },
           "pinboard" => %{
             "enabled" => false
@@ -157,16 +157,16 @@ defmodule KlziiChat.SessionTypeCase do
         "steps" => %{
           "setUp" => %{
             "enabled" => true
-          },
+          }, 
           "facilitatiorAndTopics" => %{
             "enabled" => true
-          },
+          }, 
           "manageSessionEmails" => %{
             "enabled" => false
           },
           "manageSessionParticipants" => %{
             "enabled" => false
-          },
+          }, 
           "inviteSessionObservers" => %{
             "enabled" => false
           }
@@ -180,7 +180,7 @@ defmodule KlziiChat.SessionTypeCase do
           },
           "whiteboard" => %{
             "enabled" => true,
-            "canWrite" => ["facilitator", "accountManager", "admin"]
+            "canWrite" => ["facilitator"]
           },
           "pinboard" => %{
             "enabled" => false

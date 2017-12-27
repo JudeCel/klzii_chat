@@ -7,7 +7,6 @@ defmodule KlziiChat.SessionTopicChannel do
   import(KlziiChat.Authorisations.Channels.SessionTopic, only: [authorized?: 2])
   import(KlziiChat.Helpers.SocketHelper, only: [get_session_member: 1, track: 1])
   import KlziiChat.ErrorHelpers, only: [error_view: 1]
-  import KlziiChat.Helpers.Presence, only: [session_presences: 1]
 
 
   @moduledoc """
@@ -220,8 +219,7 @@ defmodule KlziiChat.SessionTopicChannel do
           broadcast!(socket, "new_message", message)
           Endpoint.broadcast!("sessions:#{message.session_member.sessionId}", "update_member", SessionMembersView.render("member.json", member: message.session_member))
           KlziiChat.BackgroundTasks.Message.update_has_messages(session_member.id, session_topic_id, true)
-          current_session_presences = session_presences(session_member.session_id)
-          KlziiChat.BackgroundTasks.Message.send_notification(session_member.id, session_member.session_id, current_session_presences, "chat_message")
+          KlziiChat.BackgroundTasks.Message.send_notification(session_member.id, session_member.session_id, Presence.list(socket), "chat_message")
           {:reply, :ok, socket}
         {:error, reason} ->
           {:reply, {:error, error_view(reason)}, socket}

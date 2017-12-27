@@ -8,7 +8,7 @@ defmodule KlziiChat.Services.SessionResourcesService do
   import Ecto.Query
 
   def add_session_resources(resource_ids, session_member_id) do
-    session_member = Repo.get!(SessionMember, session_member_id) |> Repo.preload(:account_user)
+    session_member = Repo.get!(SessionMember, session_member_id)
     if(SessionResourcesPermissions.can_add_resources(session_member)) do
       do_add(session_member.sessionId, resource_ids)
     else
@@ -33,7 +33,7 @@ defmodule KlziiChat.Services.SessionResourcesService do
 
   @spec delete(Integer, Integer) :: {:ok, %SessionResource{}} | {:error, String}
   def delete(session_member_id, session_resource_id) do
-    session_member = Repo.get!(SessionMember, session_member_id) |> Repo.preload(:account_user)
+    session_member = Repo.get!(SessionMember, session_member_id)
     case SessionResourcesPermissions.can_get_resources(session_member) do
       {:ok} ->
         session_resource = Repo.get_by!(SessionResource, id: session_resource_id) |> Repo.preload([:resource]) |> Repo.delete!
@@ -46,7 +46,7 @@ defmodule KlziiChat.Services.SessionResourcesService do
 
   @spec delete_related_consoles(%Resource{}, Integer) :: :ok
   def delete_related_consoles(resource, session_member_id) do
-    session_member = Repo.get!(SessionMember, session_member_id) |> Repo.preload(:account_user)
+    session_member = Repo.get!(SessionMember, session_member_id)
     resource_id = resource.id
     session_topic_ids = from(st in SessionTopic, where: st.sessionId == ^session_member.sessionId, select: st.id) |> Repo.all
     from(c in Console,
@@ -61,7 +61,7 @@ defmodule KlziiChat.Services.SessionResourcesService do
   end
 
   def find(session_member_id, id) do
-    session_member = Repo.get!(SessionMember, session_member_id) |> Repo.preload(:account_user)
+    session_member = Repo.get!(SessionMember, session_member_id)
     case SessionResourcesPermissions.can_get_resources(session_member) do
       {:ok} ->
         session_resource = from(sr in SessionResource,

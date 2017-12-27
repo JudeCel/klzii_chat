@@ -50,9 +50,9 @@ defmodule KlziiChat.Mixfile do
      {:poison, "~> 2.2"},
      {:elixlsx, "~> 0.1.0"},
 
-     {:arc_ecto, "~> 0.7.0"},
-     {:arc, "~> 0.8.0"},
-     {:ex_aws, "~> 1.1.0"},
+     {:arc_ecto, "~> 0.5.0"},
+     {:arc, "~> 0.6.0"},
+     {:ex_aws, "~> 1.0.0"},
      {:hackney, "~>1.6"},
      {:sweet_xml, "~> 0.6"},
 

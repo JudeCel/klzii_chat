@@ -11,9 +11,9 @@ defmodule KlziiChat.Services.Permissions.Whiteboard do
 
   @spec can_enable(Map.t, Map.t, Map.t) :: {:ok } | {:error, String.t}
   def can_enable(member, session, %{data: data}) do
-    roles = ~w(facilitator accountManager)
+    roles = ~w(facilitator)
     (
-      has_role(member, roles) &&
+      has_role(member.role, roles) &&
       SessionTypeProperty.get_value(session, ["features", "whiteboard", "enabled"]) &&
       has_allowed_from_subscription(data, "whiteboardDisplay")
     )
@@ -22,17 +22,18 @@ defmodule KlziiChat.Services.Permissions.Whiteboard do
 
   @spec can_delete(Map.t, Map.t) :: {:ok } | {:error, String.t}
   def can_delete(member, object) do
-    roles = ["facilitator", "accountManager"]
-    (has_owner(member, object, :sessionMemberId) || has_role(member, roles))
+    roles = ["facilitator"]
+    (has_owner(member, object, :sessionMemberId) || has_role(member.role, roles))
     |> formate_error
   end
 
   defp validate_subscription(member, preference) do
-    roles = ["facilitator", "accountManager"]
-    sub_key = case has_role(member, roles) do
-      true -> "whiteboardDisplay"
-      _ -> "whiteboardFunctionality"
-    end
+    sub_key = case member do
+                %{role: "facilitator"} ->
+                  "whiteboardDisplay"
+                _ ->
+                  "whiteboardFunctionality"
+              end
     has_allowed_from_subscription(preference, sub_key)
   end
 
@@ -44,7 +45,7 @@ defmodule KlziiChat.Services.Permissions.Whiteboard do
       _ ->
         []
     end
-    has_role(member, roles)
+    has_role(member.role, roles)
   end
 
   @spec can_new_shape(Map.t, Map.t, Map.t) :: {:ok } | {:error, String.t}
@@ -62,22 +63,22 @@ defmodule KlziiChat.Services.Permissions.Whiteboard do
 
   @spec can_add_image(Map.t) :: {:ok } | {:error, String.t}
   def can_add_image(member) do
-    roles = ["facilitator", "accountManager"]
-    has_role(member, roles)
+    roles = ["facilitator"]
+    has_role(member.role, roles)
     |> formate_error
   end
 
   @spec can_erase_all(Map.t) :: {:ok } | {:error, String.t}
   def can_erase_all(member) do
-    roles = ["facilitator", "accountManager"]
-    has_role(member, roles)
+    roles = ["facilitator"]
+    has_role(member.role, roles)
     |> formate_error
   end
 
   @spec can_edit(Map.t, Map.t) :: {:ok } | {:error, String.t}
   def can_edit(member, object) do
-    roles = ["facilitator", "accountManager"]
-    (has_owner(member, object, :sessionMemberId) || has_role(member, roles))
+    roles = ["facilitator"]
+    (has_owner(member, object, :sessionMemberId) || has_role(member.role, roles))
     |> formate_error
   end
 end
