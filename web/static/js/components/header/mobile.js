@@ -166,7 +166,7 @@ const MobileHeader = React.createClass({
                     </li>
               </ul>
               <div className='powered-by'>
-                Get <a href='//www.klzii.com' target='_blank'>klzii Chat</a>
+                Get <a href='//www.cliizii.com' target='_blank'>cliizii Chat</a>
               </div>
             </div>
           </div>
