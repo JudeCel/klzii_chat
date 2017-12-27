@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Klzii Chat history</title>
+    <title>Cliizii Chat history</title>
       <link rel="stylesheet" type = "text/css" href="<%= path_to_js_css(assigns[:conn], "/css/reporting/bootstrap.min.css") %>">
       <link rel="stylesheet" type = "text/css" href="<%= path_to_js_css(assigns[:conn], "/css/reporting/reporting.css") %>">
       <script type="text/javascript" src="<%= path_to_js_css(assigns[:conn],"/js/reporting/promise.js") %>"></script>
