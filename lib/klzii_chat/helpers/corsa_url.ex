@@ -1,7 +1,7 @@
 defmodule KlziiChat.Helpers.CorsaUrl do
   def compile_url do
-    ["^https?://(.*\.?)klzii\.com",
-     "^https?://(.*\.?)klzii\.chat",
+    ["^https?://(.*\.?)cliizii\.com",
+     "^https?://(.*\.?)cliizii\.chat",
      "^https?://(.*\.?)focus\.com",
      "^https?://(.*\.?)kliiko\.diatomdemo\.com",
      "^https?://(.*\.?)test\.klzii\.com"
