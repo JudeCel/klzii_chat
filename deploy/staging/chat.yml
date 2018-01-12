@@ -31,9 +31,9 @@ spec:
       containers:
       - env:
         - name: HOST_HELP_URL
-          value: https://klzii.com/help/
+          value: https://cliizii.com/help/
         - name: GUEST_HELP_URL
-          value: https://klzii.com/help/
+          value: https://cliizii.com/help/
         - name: REDIS_HOST
           value: "redis-master"
         - name: AWS_ACCESS_KEY_ID

@@ -31,9 +31,9 @@ spec:
       containers:
       - env:
         - name: HOST_HELP_URL
-          value: https://klzii.com/help/
+          value: https://cliizii.com/help/
         - name: GUEST_HELP_URL
-          value: https://klzii.com/help/
+          value: https://cliizii.com/help/
         - name: REDIS_HOST
           value: "redis-master"
         - name: AWS_ACCESS_KEY_ID
@@ -47,7 +47,7 @@ spec:
         - name: SECRET_KEY_BASE
           value: 265728C3CEE6D163E3A210D2C7952CF50EF3E1765E3FB69DC13E70C93E6D0EF8
         - name: CORS_URL
-          value: ^https?://(.*\.?)test.klzii\.com
+          value: ^https?://(.*\.?)test.cliizii\.com
         - name: DB_USERNAME
           valueFrom:
             secretKeyRef:
@@ -63,11 +63,11 @@ spec:
         - name: DB_DATABASE
           value: klzii_test
         - name: SERVER_HOST
-          value: chat.test.klzii.com
+          value: chat.cliizii.com
         - name: GUARDIAN_SECRET_KEY
           value: "SttPra/cddsnX+Vko2i8KA=="
         - name: DASHBOARD_URL
-          value: "http://www.test.klzii.com"
+          value: "http://www.test.cliizii.com"
         volumeMounts:
           - name: postgres-credentials
             mountPath: /etc/postgres-credentials
