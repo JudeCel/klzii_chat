@@ -28,7 +28,7 @@ const MobileHeader = React.createClass({
     const { sessionConsole } = this.props;
     this.closeAllModals();
     var boardExpandButton = document.getElementsByClassName(sessionConsole.pinboard ? "pinboard-expand" : "whiteboard-expand")[0];
-    if (boardExpandButton.src.includes('expand')) {
+    if (boardExpandButton && boardExpandButton.src.includes('expand')) {
       boardExpandButton.click();
     }
   },
