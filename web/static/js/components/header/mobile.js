@@ -27,8 +27,9 @@ const MobileHeader = React.createClass({
     this.setState({ mobileSideMenuVisibility: false, mobileSideMenuTopicsVisibility: false });
     const { sessionConsole } = this.props;
     this.closeAllModals();
-    if (document.getElementsByClassName(sessionConsole.pinboard ? "pinboard-expand" : "whiteboard-expand")[0].src.includes('expand')) {
-      document.getElementsByClassName(sessionConsole.pinboard ? "pinboard-expand" : "whiteboard-expand")[0].click();
+    var boardExpandButton = document.getElementsByClassName(sessionConsole.pinboard ? "pinboard-expand" : "whiteboard-expand")[0];
+    if (boardExpandButton.src.includes('expand')) {
+      boardExpandButton.click();
     }
   },
   messagesClick() {
