@@ -97,7 +97,7 @@ const ChangeAvatarModal = React.createClass({
     if(show) {
       return (
         <Modal dialogClassName='modal-section change-avatar-modal' show={ show } onHide={ this.onClose } onEnter={ this.onOpen }>
-          <Modal.Header>
+          <Modal.Header className='biizu-header-section'>
             <div className='col-md-2'>
               <span className='pull-left fa icon-reply' onClick={ this.onClose }></span>
             </div>
@@ -111,7 +111,7 @@ const ChangeAvatarModal = React.createClass({
             </div>
           </Modal.Header>
 
-          <Modal.Body>
+          <Modal.Body className='biizu-body-section'>
             <div className='customize-avatar-section'>
               <div className='row biizu-section div-inline-block'>
                 <div className='preview-section div-inline-block' style={ { borderColor: colours.mainBorder } }>
@@ -141,7 +141,7 @@ const ChangeAvatarModal = React.createClass({
               </div>
 
               <div className='row selection-section'>
-                <div className='form-inline div-inline-block'>
+                <div className='form-inline div-inline-block displayname-section'>
                   <div className='form-group'>
                     { this.renderUsername(username) }
                   </div>
