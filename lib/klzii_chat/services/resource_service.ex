@@ -83,7 +83,7 @@ defmodule KlziiChat.Services.ResourceService do
           do
           result
         else
-          error -> Repo.rollback(error)
+          {:error, error} -> Repo.rollback(error)
         end
       end
     ),
