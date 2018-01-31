@@ -27,4 +27,11 @@ defmodule KlziiChat.Services.Permissions.Validations do
   def has_allowed_from_subscription(subscription_preference, key) do
     Map.get(subscription_preference, key, false)
   end
+
+  @spec has_enough_amount_from_subscription(Map.t, Atom.t, Atom.t) :: Boolean.t
+  def has_enough_amount_from_subscription(%{admin: true}, _, _), do: true
+  def has_enough_amount_from_subscription(subscription_preference, key, current_count) do
+    allowed_amount = Map.get(subscription_preference, key, false)
+    allowed_amount > current_count
+  end
 end
