@@ -3,7 +3,7 @@ defmodule KlziiChat.Services.Permissions.BuilderPermissionsTest do
   alias KlziiChat.Services.Permissions.Builder
   @subscription_keys %{data: %{
     "importDatabase" =>  true,
-    "brandLogoAndCustomColors" =>  true,
+    "brandLogoAndCustomColors" =>  1,
     "accessKlzziForum" =>  true,
     "accessKlzziFocus" =>  true,
     "discussionGuideTips" =>  true,

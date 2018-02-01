@@ -58,7 +58,7 @@ defmodule KlziiChat.SessionMemberCase do
       contactListCount: 4,
       recruiterContactListCount: 4,
       importDatabase: true,
-      brandLogoAndCustomColors: true,
+      brandLogoAndCustomColors: 1,
       contactListMemberCount: -1,
       accountUserCount: 5,
       exportContactListAndParticipantHistory: true,

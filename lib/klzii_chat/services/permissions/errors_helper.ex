@@ -18,4 +18,11 @@ defmodule KlziiChat.Services.Permissions.ErrorsHelper do
   def formate_error(false) do
     {:error, %{permissions: messages().action_not_allowed, code: 403}}
   end
+  @spec format_limit_error(boolean, Any.t) :: tuple
+  def format_limit_error(true, _) do
+    {:ok}
+  end
+  def format_limit_error(false, scope) do
+    {:error, %{permissions: "You have reached limit for #{scope}.", code: 403}}
+  end
 end
