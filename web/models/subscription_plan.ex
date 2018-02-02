@@ -11,7 +11,7 @@ defmodule KlziiChat.SubscriptionPlan do
     field :contactListCount, :integer
     field :recruiterContactListCount, :integer
     field :importDatabase, :boolean
-    field :brandLogoAndCustomColors, :boolean
+    field :brandLogoAndCustomColors, :integer
     field :contactListMemberCount, :integer
     field :accountUserCount, :integer
     field :exportContactListAndParticipantHistory, :boolean

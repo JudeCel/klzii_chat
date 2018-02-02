@@ -25,7 +25,7 @@ defmodule KlziiChat.Services.Validations.Resource do
   def validate_file_scope(%Plug.Upload{path: path}, %{scope:  scope}) when scope in ["brandLogo"] do
     import Mogrify
     %Mogrify.Image{height: height, width: width} =  open(path) |> verbose
-    if height == @validation_constants.brand_logo.size.height && width == @validation_constants.brand_logo.size.width do
+    if height <= @validation_constants.brand_logo.size.height && width <= @validation_constants.brand_logo.size.width do
       {:ok}
     else
       {:error, file_scope_error_message(@validation_constants.brand_logo.size.width, @validation_constants.brand_logo.size.height)}

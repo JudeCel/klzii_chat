@@ -10,15 +10,14 @@ const MobileHeader = React.createClass({
   mixins: [mixins.modalWindows, mixins.validations, mixins.headerActions],
   componentDidMount() {
     // TA1906 - if you want to go back users are clicking the back arrow but it takes them out of the Session and back to the login
-    window.onload = function () {
-      history.pushState(Math.random(), null, null);
-      window.onpopstate = function () {
-        if (confirm('You are about leaving the page. Do you want to leave it?')) {
-          history.back();
-        } else {
-          history.pushState(Math.random(), null, null);
-        }
-      };
+    
+    history.pushState(Math.random(), null, null);
+    window.onpopstate = function () {
+      if (confirm('Do you really want to leave us?')) {
+        history.back();
+      } else {
+        history.pushState(Math.random(), null, null);
+      }
     };
   },
   getInitialState() {
@@ -27,7 +26,11 @@ const MobileHeader = React.createClass({
   whiteboardIconClick() {
     this.setState({ mobileSideMenuVisibility: false, mobileSideMenuTopicsVisibility: false });
     const { sessionConsole } = this.props;
-    document.getElementsByClassName(sessionConsole.pinboard ? "pinboard-expand" : "whiteboard-expand")[0].click();
+    this.closeAllModals();
+    var boardExpandButton = document.getElementsByClassName(sessionConsole.pinboard ? "pinboard-expand" : "whiteboard-expand")[0];
+    if (boardExpandButton && boardExpandButton.src.includes('expand')) {
+      boardExpandButton.click();
+    }
   },
   messagesClick() {
     const { currentUser, firstParticipant, facilitator } = this.props;
@@ -129,7 +132,9 @@ const MobileHeader = React.createClass({
               <span className='icon-bar'></span>
               <span className='icon-bar'></span>
             </button>
-            <MobileConsole />
+            <div onClick={this.state.mobileSideMenuVisibility ? this.toggleMenu : null}>
+              <MobileConsole />
+            </div>
             <span className='navbar-brand'><img src={brand_logo.url.full} /></span>
           </div>
           <div className='mobile-side-menu' style={this.getMobileSideMenuStyle()}>
@@ -158,9 +163,10 @@ const MobileHeader = React.createClass({
                 <li onClick={this.guestsClick} style={this.getSpectatorOrOGuestsMenuItemStyle()}>
                   <span className='fa fa-users'></span>Guests
                     </li>
+                    <a target="_blank" href="https://cliizii.com/help/" style={{ color: 'rgb(88, 89, 91)' }}>
                 <li onClick={this.toggleMenu}>
                   <span className='fa fa-question'></span>Help
-                    </li>
+                    </li></a>
                 <li onClick={this.logoutClick} style={this.getMenuItemStyle('can_redirect', 'logout')}>
                   <span className='fa fa-sign-out'></span>Log out
                     </li>

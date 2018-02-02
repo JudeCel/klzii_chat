@@ -15,14 +15,14 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
--- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner:
 --
 
 CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 
 
 --
--- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner:
 --
 
 COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
@@ -1574,7 +1574,7 @@ CREATE TABLE "SubscriptionPlans" (
     "contactListCount" integer NOT NULL,
     "recruiterContactListCount" integer NOT NULL,
     "importDatabase" boolean DEFAULT false NOT NULL,
-    "brandLogoAndCustomColors" boolean DEFAULT false NOT NULL,
+    "brandLogoAndCustomColors" integer DEFAULT 0 NOT NULL,
     "contactListMemberCount" integer NOT NULL,
     "accountUserCount" integer NOT NULL,
     "exportContactListAndParticipantHistory" boolean DEFAULT false NOT NULL,
