@@ -2,11 +2,13 @@ defmodule KlziiChat.Services.MessageService do
   alias KlziiChat.{Repo, Message, UnreadMessage, MessageView, SessionMember, Vote, SessionTopic}
   alias KlziiChat.Services.Permissions.Messages, as: MessagePermissions
   alias KlziiChat.Helpers.IntegerHelper
+  alias KlziiChat.Queries.SessionMember, as: SessionMemberQueries
   import Ecto
   import Ecto.Query
 
   @spec history(Integer.t, Map.t) :: {:ok, List.t }
   def history(session_topic_id, session_member) do
+    session_member1 = SessionMemberQueries.permissions(session_member.id) |> Repo.one!();
     session_topic = Repo.get!(SessionTopic, session_topic_id)
     all_messages = Repo.all(
       from e in assoc(session_topic, :messages),
@@ -16,7 +18,7 @@ defmodule KlziiChat.Services.MessageService do
       )
     {:ok, messages} = preload_dependencies(all_messages, session_member.id)
     resp = Enum.map(messages, fn message ->
-      MessageView.render("show.json", %{message: message, member: session_member})
+      MessageView.render("show.json", %{message: message, member: session_member1})
     end)
     {:ok, resp}
   end
@@ -26,7 +28,7 @@ defmodule KlziiChat.Services.MessageService do
     case MessagePermissions.can_new_message(session_member) do
       {:ok} ->
         {reply_level} = reply_message_data(replyId)
-        session_member = Repo.get!(SessionMember, session_member.id)
+        session_member = Repo.get!(SessionMember, session_member.id) |> Repo.preload(:account_user)
         map = %{
           replyId: IntegerHelper.get_num(replyId),
           sessionId: session_member.sessionId,
@@ -47,7 +49,7 @@ defmodule KlziiChat.Services.MessageService do
   def create_message(session_member, session_topic_id, %{"emotion" => emotion, "body" => body}) do
     case MessagePermissions.can_new_message(session_member) do
       {:ok} ->
-        session_member = Repo.get!(SessionMember, session_member.id)
+        session_member = Repo.get!(SessionMember, session_member.id) |> Repo.preload(:account_user)
         map = %{sessionId: session_member.sessionId,
           body: body,
           emotion: IntegerHelper.get_num(emotion),

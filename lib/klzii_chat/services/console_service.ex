@@ -37,7 +37,7 @@ defmodule KlziiChat.Services.ConsoleService do
 
   @spec set_resource(Integer, Integer, Integer) :: {:ok, %Console{}} | {:error, String.t}
   def set_resource(member_id, session_topic_id, resource_id) do
-    session_member = Repo.get!(SessionMember, member_id)
+    session_member = Repo.get!(SessionMember, member_id) |> Repo.preload(:account_user)
     resource = Repo.get!(Resource, resource_id)
 
     {:ok, console} = get(session_member.sessionId, session_topic_id)
@@ -55,7 +55,7 @@ defmodule KlziiChat.Services.ConsoleService do
 
   @spec enable_pinboard(Integer, Integer, Boolean) :: {:ok, %Console{}} | {:error, String.t}
   def enable_pinboard(member_id, session_topic_id, enable) do
-    session_member = Repo.get!(SessionMember, member_id)
+    session_member = Repo.get!(SessionMember, member_id) |> Repo.preload(:account_user)
     case ConsolePermissions.can_enable_pinboard(session_member) do
       {:ok} ->
         {:ok, console} = get(session_member.sessionId, session_topic_id)
@@ -105,7 +105,7 @@ defmodule KlziiChat.Services.ConsoleService do
 
   @spec set_mini_survey(Integer, Integer, Integer) :: {:ok, %Console{}} | {:error, String.t}
   def set_mini_survey(member_id, session_topic_id, mini_survey_id) do
-    session_member = Repo.get!(SessionMember, member_id)
+    session_member = Repo.get!(SessionMember, member_id) |> Repo.preload(:account_user)
     case ConsolePermissions.can_enable_pinboard(session_member) do
       {:ok} ->
         {:ok, console} = get(session_member.sessionId, session_topic_id)
@@ -119,7 +119,7 @@ defmodule KlziiChat.Services.ConsoleService do
 
   @spec remove(Integer, Integer, String.t) ::  {:ok, %Console{}} | {:error, String.t}
   def remove(member_id, session_topic_id, type) do
-    session_member = Repo.get!(SessionMember, member_id)
+    session_member = Repo.get!(SessionMember, member_id) |> Repo.preload(:account_user)
     case ConsolePermissions.can_remove_resource(session_member) do
       {:ok} ->
         {:ok, console} = get(session_member.sessionId, session_topic_id)

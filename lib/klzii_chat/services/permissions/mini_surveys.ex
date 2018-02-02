@@ -4,8 +4,8 @@ defmodule KlziiChat.Services.Permissions.MiniSurveys do
 
   @spec can_delete(Map.t, Map.t) :: {:ok } | {:error, String.t}
   def can_delete(member, _) do
-    roles = ["facilitator"]
-    has_role(member.role, roles)
+    roles = ["facilitator", "accountManager"]
+    has_role(member, roles)
     |> formate_error
   end
 
@@ -17,15 +17,15 @@ defmodule KlziiChat.Services.Permissions.MiniSurveys do
 
   @spec can_create(Map.t) :: {:ok } | {:error, String.t}
   def can_create(member) do
-    roles = ["facilitator"]
-    has_role(member.role, roles)
+    roles = ["facilitator", "accountManager"]
+    has_role(member, roles)
     |> formate_error
   end
 
   @spec can_answer(Map.t) :: {:ok } | {:error, String.t}
   def can_answer(member) do
     roles = ["participant"]
-    has_role(member.role, roles)
+    has_role(member, roles)
     |> formate_error
   end
 end
