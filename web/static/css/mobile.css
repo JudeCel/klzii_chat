@@ -1180,3 +1180,13 @@
 .mobile-side-menu-topics .has-no-messages {
   color: #b25019 !important;
 }
+
+img.leave-chat-icon {
+  position: absolute;
+  top: 12px;
+  right: 20px;
+}
+
+.modal-section.modal-leave-chat {
+  width: 335px;
+}
