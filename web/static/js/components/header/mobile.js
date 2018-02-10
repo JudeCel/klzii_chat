@@ -6,19 +6,16 @@ import Avatar from '../members/avatar.js';
 import Constants from '../../constants';
 import MobileConsole from '../../components/console/mobileConsole.js';
 
+const preventBack = "preventBack";
+
 const MobileHeader = React.createClass({
   mixins: [mixins.modalWindows, mixins.validations, mixins.headerActions],
   componentDidMount() {
     // TA1906 - if you want to go back users are clicking the back arrow but it takes them out of the Session and back to the login
-    
-    history.pushState(Math.random(), null, null);
-    window.onpopstate = function () {
-      if (confirm('Do you really want to leave us?')) {
-        history.back();
-      } else {
-        history.pushState(Math.random(), null, null);
-      }
-    };
+    if(history.state != preventBack) {
+      history.pushState(preventBack, null, null);
+    }
+    window.onpopstate = this.handleBackButton;
   },
   getInitialState() {
     return { mobileSideMenuVisibility: false, mobileSideMenuTopicsVisibility: false };
@@ -108,6 +105,10 @@ const MobileHeader = React.createClass({
     } else {
       return currentUser.sessionTopicContext[topic.id] && currentUser.sessionTopicContext[topic.id].hasMessages ? "" : " has-no-messages";
     }
+  },
+  handleBackButton(e) {
+    history.pushState(preventBack, null, null);
+    this.openSpecificModal('leaveChat');
   },
   render() {
     const { sessionTopics, unread_messages, currentUser, brand_logo, colours, session } = this.props;
