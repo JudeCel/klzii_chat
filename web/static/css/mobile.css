@@ -942,7 +942,7 @@
     flex-direction: column;
   }
   .room-section > div.row > .col-md-8 {
-    min-height: 85px;
+    min-height: inherit;
     order: 1;
   }
   .room-section > div.row > .col-md-12 {
@@ -1154,7 +1154,7 @@
 @media (max-device-width: 380px) {
 
   .col-md-9.room-section.room-section-right {
-    
+
   }
 
   .col-md-9.room-section.room-section-right .chat-section.add-overflow-y {
