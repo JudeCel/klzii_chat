@@ -63,7 +63,7 @@ spec:
         - name: DB_DATABASE
           value: klzii_test
         - name: SERVER_HOST
-          value: chat.cliizii.com
+          value: chat.test.cliizii.com
         - name: GUARDIAN_SECRET_KEY
           value: "SttPra/cddsnX+Vko2i8KA=="
         - name: DASHBOARD_URL
