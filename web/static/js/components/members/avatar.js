@@ -3,6 +3,7 @@ import { connect }        from 'react-redux';
 import SVG                from 'svgjs';
 import mixins             from '../../mixins';
 import MemberActions      from '../../actions/member';
+import _                  from 'lodash';
 
 const Avatar = React.createClass({
   mixins: [mixins.helpers],
@@ -113,6 +114,9 @@ const Avatar = React.createClass({
   },
   componentDidMount() {
     const { avatarData, username, sessionTopicContext, currentTopic } = this.props.member;
+    if (_.isEmpty(avatarData)) {
+      return;
+    }
     let avatar = this.findAvatar();
     this.clearAvatar(avatar);
     this.drawAvatar(avatar);
