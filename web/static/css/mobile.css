@@ -947,7 +947,7 @@
   }
   .room-section > div.row > .col-md-12 {
     margin-bottom: 0;
-    min-height: 115px;
+    min-height: 60px;
     background: white;
     order: 3;
   }
@@ -993,7 +993,7 @@
   }
   .room-section > div.row > .col-md-4 {
     padding-bottom: 0;
-    margin-bottom: 115px;
+    margin-bottom: 60px;
     order: 2;
     height: 100%;
     overflow: scroll;
@@ -1098,6 +1098,11 @@
     padding-top: 0 !important;
     position: fixed;
     bottom: 0;
+  }
+  .room-section .input-section .form-group {
+    position: fixed;
+    bottom: 0;
+    margin-bottom: 5px;
   }
   .whiteboard-section.maximized {
     z-index: 1000 !important;
