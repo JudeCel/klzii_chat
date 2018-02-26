@@ -5,17 +5,23 @@ import Badge from '../sessionTopics/badge';
 import Avatar from '../members/avatar.js';
 import Constants from '../../constants';
 import MobileConsole from '../../components/console/mobileConsole.js';
+import { detectMobile } from '../util/mobileDetection.js';
 
 const preventBack = "preventBack";
 
 const MobileHeader = React.createClass({
   mixins: [mixins.modalWindows, mixins.validations, mixins.headerActions],
   componentDidMount() {
-    // TA1906 - if you want to go back users are clicking the back arrow but it takes them out of the Session and back to the login
+    // TA1906 - if you want to go back users are clicking the back arrow but it takes them out of the Session and back to the login   
     if(history.state != preventBack) {
       history.pushState(preventBack, null, null);
     }
-    window.onpopstate = this.handleBackButton;
+
+    if(detectMobile()) {
+      window.onpopstate = this.handleMobileBackButton;
+    } else {
+      window.onpopstate = this.handleBackButton;
+    }
   },
   getInitialState() {
     return { mobileSideMenuVisibility: false, mobileSideMenuTopicsVisibility: false };
@@ -107,6 +113,15 @@ const MobileHeader = React.createClass({
     }
   },
   handleBackButton(e) {
+    if(history.state != preventBack) {
+      history.pushState(preventBack, null, null);
+    }
+
+    if (confirm('Do you really want to leave us?')) {
+      history.go(-2);
+    }
+  },
+  handleMobileBackButton(e) {
     history.pushState(preventBack, null, null);
     this.openSpecificModal('leaveChat');
   },

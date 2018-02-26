@@ -942,12 +942,12 @@
     flex-direction: column;
   }
   .room-section > div.row > .col-md-8 {
-    min-height: 85px;
+    min-height: inherit;
     order: 1;
   }
   .room-section > div.row > .col-md-12 {
     margin-bottom: 0;
-    min-height: 115px;
+    min-height: 60px;
     background: white;
     order: 3;
   }
@@ -993,7 +993,7 @@
   }
   .room-section > div.row > .col-md-4 {
     padding-bottom: 0;
-    margin-bottom: 115px;
+    margin-bottom: 60px;
     order: 2;
     height: 100%;
     overflow: scroll;
@@ -1099,6 +1099,11 @@
     position: fixed;
     bottom: 0;
   }
+  .room-section .input-section .form-group {
+    position: fixed;
+    bottom: 0;
+    margin-bottom: 5px;
+  }
   .whiteboard-section.maximized {
     z-index: 1000 !important;
     padding: 0 !important;
@@ -1154,7 +1159,7 @@
 @media (max-device-width: 380px) {
 
   .col-md-9.room-section.room-section-right {
-    
+
   }
 
   .col-md-9.room-section.room-section-right .chat-section.add-overflow-y {
