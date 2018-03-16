@@ -38,7 +38,7 @@ defmodule KlziiChat.Services.Reports.Types.Statistic.Formats.Csv do
       |> Enum.into(%{})
 
     topics_data =
-      Enum.reduce(list, topics, fn({_, message_count, _,sessionTopicId}, acc) ->
+      Enum.reduce(list, topics, fn({_, message_count, _,sessionTopicId, _, _}, acc) ->
         name = Map.get(topic_map, sessionTopicId)
         if name do
           Map.put(acc, name, message_count)
