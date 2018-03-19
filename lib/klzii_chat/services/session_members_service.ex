@@ -30,6 +30,22 @@ defmodule KlziiChat.Services.SessionMembersService do
     end
   end
 
+  @spec update_device(Integer.t, Map.t) :: Map.t
+  def update_device(id, device) do
+    session_member =
+      Repo.get_by!(SessionMember, id: id)
+
+    params = %{device: Atom.to_string(device)}
+      
+    case validate(session_member, params) do
+      {:ok} ->
+        SessionMember.changeset(session_member, params)
+        |> update_member
+      {:error, reason} ->
+        {:error, reason}
+    end
+  end
+
   @spec update_emotion(Integer) :: Map.t
   def update_emotion(message_id) do
     message =  Repo.get_by!(Message, id: message_id) |> Repo.preload([:session_member, :session_topic])

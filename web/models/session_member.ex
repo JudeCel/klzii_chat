@@ -22,6 +22,7 @@ defmodule KlziiChat.SessionMember do
     field :token, :string
     field :role, :string
     field :ghost, :boolean
+    field :device, :string
     timestamps [inserted_at: :createdAt, updated_at: :updatedAt]
 
   end
@@ -34,7 +35,7 @@ defmodule KlziiChat.SessionMember do
   """
   def changeset(model, params \\ %{}) do
     model
-    |> cast(params, [:username, :avatarData, :sessionTopicContext, :currentTopic])
+    |> cast(params, [:username, :avatarData, :sessionTopicContext, :currentTopic, :device])
     |> validate_required([:username])
     |> validate_length(:username, min: 1)
   end

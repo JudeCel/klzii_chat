@@ -64,7 +64,9 @@ defmodule KlziiChat.Mixfile do
      {:mogrify, "~> 0.5"},
      {:earmark, "~> 1.1", only: :dev},
      {:ex_doc, "~> 0.14", only: :dev},
-     {:credo, "~> 0.4", only: :dev}
+     {:credo, "~> 0.4", only: :dev},
+
+     {:browser, "~> 0.4.1"}
     ]
   end
 
