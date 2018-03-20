@@ -7,7 +7,7 @@ defmodule KlziiChat.Services.Reports.Types.Statistic.Base do
 
   @spec default_fields() :: List.t[String.t]
   def default_fields() do
-    ["First Name", "Last Name"]
+    ["First Name", "Last Name", "Device"]
   end
 
   @spec format_modeule(String.t) :: Module.t

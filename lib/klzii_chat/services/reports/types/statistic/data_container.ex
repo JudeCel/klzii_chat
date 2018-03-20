@@ -12,15 +12,29 @@ defmodule KlziiChat.Services.Reports.Types.Statistic.DataContainer do
     {:ok, value} = ContactListUsersDataContainers.get_key(container, "firstName", account_user_id)
     value
   end
-  def get_value("Last Name", {_, _, _, _, _, lastName}, session, _) do
+  def get_value("Last Name", {_, _, _, _, _, lastName}, _, _) do
     lastName
+  end
+  def get_value("Device", {account_user_id, _, _, _, _, _}, session, _) do
+    get_device(account_user_id, session.session_members)
   end
   def get_value("Anonymous", {_, _, username, _},_, _) do
     username
   end
-  def get_value(key,{account_user_id, _, _, _}, _session, container) do
+  def get_value(key, {account_user_id, _, _, _, _, _}, _session, container) do
     # This is ok if raise error
     {:ok, value} = ContactListUsersDataContainers.get_key(container, key, account_user_id)
     value
+  end
+  def get_device(id, members) do
+    sm = Enum.find(members, fn(member) ->
+      member.id == id
+    end)
+    case sm do
+      nil ->
+        nil
+      _ ->
+        sm.device
+    end
   end
 end
