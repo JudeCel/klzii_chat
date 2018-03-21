@@ -54,6 +54,7 @@ defmodule KlziiChat.SessionMembersView do
     %{
       id: member.id,
       username: member.username,
+      device: member.device,
     }
   end
   def render("current_member.json", %{ member: member, permissions_map: permissions_map}) do

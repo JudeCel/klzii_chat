@@ -1,13 +1,13 @@
 defmodule KlziiChat.Services.Reports.Types.Statistic.Base do
   @behaviour KlziiChat.Services.Reports.Types.Behavior
-  alias KlziiChat.{Repo, SessionView, SessionMember, Message}
+  alias KlziiChat.{Repo, SessionView, SessionMember, Message, AccountUser}
   alias KlziiChat.Services.Reports.Types.Statistic.Formats
   alias KlziiChat.Queries.Sessions, as: SessionQueries
   import Ecto.Query, only: [from: 2]
 
   @spec default_fields() :: List.t[String.t]
   def default_fields() do
-    ["First Name"]
+    ["First Name", "Last Name", "Device"]
   end
 
   @spec format_modeule(String.t) :: Module.t
@@ -63,12 +63,13 @@ defmodule KlziiChat.Services.Reports.Types.Statistic.Base do
   def preload_statistic(%{sessionId: session_id}) when is_integer(session_id) do
     from(sm in SessionMember,
       left_join: m in Message, on: sm.id == m.sessionMemberId,
+      left_join: au in AccountUser, on: sm.accountUserId == au.id,
       where: sm.sessionId == ^session_id,
-      group_by: [sm.id, m.sessionTopicId, sm.username],
-      select: {sm.id, count(m.id), sm.username, m.sessionTopicId}
+      group_by: [sm.id, m.sessionTopicId, sm.username, au.firstName, au.lastName],
+      select: {sm.id, count(m.id), sm.username, m.sessionTopicId, au.firstName, au.lastName}
     )
     |> Repo.all
-    |> Enum.group_by(fn({id, _, _, _}) -> id end)
+    |> Enum.group_by(fn({id, _, _, _, _, _}) -> id end)
   end
   def preload_statistic(_), do: {:error, "no session Id for statisitc in report"}
 end
