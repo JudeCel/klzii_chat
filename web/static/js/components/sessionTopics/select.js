@@ -140,7 +140,7 @@ const Select = React.createClass({
                         <span className='pull-right'>
                           <Badge type='reply' data={ unread_messages.session_topics[sessionTopic.id] } />
                           <Badge type='normal' data={ unread_messages.session_topics[sessionTopic.id] } />
-                          <Toogle data={ unread_messages.session_topics[sessionTopic.id] } />
+                          <Toogle sessionTopic={ sessionTopic } />
                         </span>
                       </div>
                     </MenuItem>

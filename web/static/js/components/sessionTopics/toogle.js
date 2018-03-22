@@ -4,21 +4,23 @@ import mixins             from '../../mixins';
 import ToggleButton       from 'react-toggle-button';
 
 const Toogle = React.createClass({
-  mixins: [mixins.validations],
+  mixins: [mixins.headerActions, mixins.validations],
   getInitialState() {
+    //todo: get value from sessionTopic
     return { value: true };
   },
   changeState() {
     const { value } = this.state;
-    this.setState({
-      value: !value,
-    });
-    
+    const { sessionTopic } = this.props;
+    let newValue = !value;
+
+    this.setSessionTopicActive(sessionTopic.id, newValue);
+    this.setState({ value: newValue });
   },
   render() {
-    const { data, currentUser } = this.props;
+    const { currentUser, sessionTopic } = this.props;
     
-    if (this.isFacilitator(currentUser)) {
+    if (!sessionTopic.inviteAgain && this.isFacilitator(currentUser)) {
       return (
         <ToggleButton
           thumbStyle={{ borderRadius: 2 }}
@@ -51,7 +53,8 @@ const Toogle = React.createClass({
 
 const mapStateToProps = (state) => {
   return {
-    currentUser: state.members.currentUser
+    currentUser: state.members.currentUser,
+    channel: state.sessionTopic.channel,
   };
 };
 
