@@ -2,15 +2,23 @@ import React, {PropTypes}                           from 'react';
 import { connect }                                  from 'react-redux';
 import { Dropdown, Button, SplitButton, MenuItem }  from 'react-bootstrap'
 import Badge                                        from './badge';
+import Toogle                                       from './toogle';
 import mixins                                       from '../../mixins';
 import Constants                                    from '../../constants';
 
 const Select = React.createClass({
   mixins: [mixins.headerActions, mixins.validations, mixins.modalWindows],
-  changeSessionTopic(id) {
-    const { dispatch } = this.props;
-    dispatch({ type: Constants.SET_INPUT_REPLY, replyId: null });
-    this.setSessionTopic(id);
+  getInitialState() {
+    return { open: false, canclose: true };
+  },
+  changeSessionTopic(id, _, e) {
+    if (e._dispatchListeners.length == 1) {
+      const { dispatch } = this.props;
+      dispatch({ type: Constants.SET_INPUT_REPLY, replyId: null });
+      this.setSessionTopic(id);
+    } else {
+      this.state.canclose = false;
+    }
   },
   renderIconEye() {
     const { currentUser } = this.props;
@@ -93,6 +101,16 @@ const Select = React.createClass({
       return currentUser.sessionTopicContext[topic.id] && currentUser.sessionTopicContext[topic.id].hasMessages ? "" : " has-no-messages";
     }
   },
+  changeState() {
+    const { open } = this.state;
+    if (this.state.canclose) {
+      this.setState({
+        open: !open,
+      });
+    } else {
+      this.state.canclose = true;
+    }
+  },
   render() {
     const { sessionTopics, unread_messages } = this.props;
     let current = this.getCurrentSessionTopic();
@@ -102,7 +120,7 @@ const Select = React.createClass({
         <div className='topic-select-box'>
           { this.renderSessionNameBlock() }
 
-          <Dropdown id='topic-selector'>
+          <Dropdown id='topic-selector' open={ this.state.open } onToggle={ this.changeState }>
             <Dropdown.Toggle className='no-border-radius' noCaret>
               <div className={ 'no-border-radius btn btn-default name' + this.getHasMessagesClassName(current)}>
                 { current.name }
@@ -122,6 +140,7 @@ const Select = React.createClass({
                         <span className='pull-right'>
                           <Badge type='reply' data={ unread_messages.session_topics[sessionTopic.id] } />
                           <Badge type='normal' data={ unread_messages.session_topics[sessionTopic.id] } />
+                          <Toogle data={ unread_messages.session_topics[sessionTopic.id] } />
                         </span>
                       </div>
                     </MenuItem>
