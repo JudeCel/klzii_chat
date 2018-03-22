@@ -15,7 +15,7 @@ defmodule KlziiChat.SessionTopicChannel do
     History for specific session topic
   """
 
-  intercept ["new_message", "update_message", "thumbs_up", "delete_pinboard_resource", "new_pinboard_resource"]
+  intercept ["new_message", "update_message", "thumbs_up", "delete_pinboard_resource", "new_pinboard_resource", "typing_message"]
 
   def join("session_topic:" <> session_topic_id, _payload, socket) do
     if authorized?(socket, session_topic_id) do
@@ -270,6 +270,18 @@ defmodule KlziiChat.SessionTopicChannel do
       {:error, reason} ->
         {:reply, {:error, error_view(reason)}, socket}
     end
+  end
+
+  def handle_in("typing_message", %{"typing" => typing}, socket) do
+    session_member = get_session_member(socket)
+    session_topic_id = socket.assigns.session_topic_id
+    broadcast!(socket, "typing_message", %{ typing: typing, session_member_id: session_member.id, session_topic_id: session_topic_id })
+    {:reply, :ok, socket}
+  end
+
+  def handle_out(message, payload, socket) when message in ["typing_message"] do
+    push socket, message, payload
+    {:noreply, socket}
   end
 
   def handle_out(message, payload, socket) when message in ["new_pinboard_resource"] do
