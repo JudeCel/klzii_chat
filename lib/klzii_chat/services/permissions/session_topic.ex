@@ -8,4 +8,11 @@ defmodule KlziiChat.Services.Permissions.SessionTopic do
     has_role(member, roles)
     |> formate_error
   end
+
+  @spec can_change_active(Map.t) :: {:ok } | {:error, String.t}
+  def can_change_active(member) do
+    roles = ["facilitator", "accountManager"]
+    has_role(member, roles)
+    |> formate_error
+  end
 end

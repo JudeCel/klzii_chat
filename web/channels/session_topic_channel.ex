@@ -280,8 +280,13 @@ defmodule KlziiChat.SessionTopicChannel do
   end
 
   def handle_in("set_session_topic_active", %{"active" => active, "id" => id}, socket) do
-    #todo: check permissions and save value
-    {:reply, :ok, socket}
+    session_member = get_session_member(socket)
+      case SessionTopicService.change_active(session_member.id, id, active) do
+        {:ok, _} ->
+          {:reply, :ok, socket}
+        {:error, reason} ->
+          {:reply, {:error, error_view(reason)}, socket}
+      end
   end
 
   def handle_out(message, payload, socket) when message in ["typing_message"] do

@@ -6,8 +6,8 @@ import ToggleButton       from 'react-toggle-button';
 const Toogle = React.createClass({
   mixins: [mixins.headerActions, mixins.validations],
   getInitialState() {
-    //todo: get value from sessionTopic
-    return { value: true };
+    const { sessionTopic } = this.props;
+    return { value: sessionTopic.active };
   },
   changeState() {
     const { value } = this.state;

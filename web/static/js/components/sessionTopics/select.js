@@ -133,18 +133,20 @@ const Select = React.createClass({
             <Dropdown.Menu className='no-border-radius'>
               {
                 sessionTopics.map((sessionTopic) => {
-                  return (
-                    <MenuItem onSelect={ this.changeSessionTopic.bind(this, sessionTopic.id) } key={ 'sessionTopic-' + sessionTopic.id } active={ current.id == sessionTopic.id }>
-                      <div className='clearfix'>
-                        <span className={'pull-left' + this.getHasMessagesClassName(sessionTopic)}>{ sessionTopic.name }</span>
-                        <span className='pull-right'>
-                          <Badge type='reply' data={ unread_messages.session_topics[sessionTopic.id] } />
-                          <Badge type='normal' data={ unread_messages.session_topics[sessionTopic.id] } />
-                          <Toogle sessionTopic={ sessionTopic } />
-                        </span>
-                      </div>
-                    </MenuItem>
-                  )
+                  if (sessionTopic.active || this.isFacilitator(this.props.currentUser)){
+                    return (
+                      <MenuItem onSelect={ this.changeSessionTopic.bind(this, sessionTopic.id) } key={ 'sessionTopic-' + sessionTopic.id } active={ current.id == sessionTopic.id }>
+                        <div className='clearfix'>
+                          <span className={'pull-left' + this.getHasMessagesClassName(sessionTopic)}>{ sessionTopic.name }</span>
+                          <span className='pull-right'>
+                            <Badge type='reply' data={ unread_messages.session_topics[sessionTopic.id] } />
+                            <Badge type='normal' data={ unread_messages.session_topics[sessionTopic.id] } />
+                            <Toogle sessionTopic={ sessionTopic } />
+                          </span>
+                        </div>
+                      </MenuItem>
+                    )
+                  }
                 })
               }
             </Dropdown.Menu>
