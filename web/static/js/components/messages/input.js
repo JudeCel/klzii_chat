@@ -10,19 +10,37 @@ import Avatar             from '../members/avatar.js';
 
 const Input = React.createClass({
   mixins: [mixins.modalWindows, mixins.validations],
+  getInitialState() {
+    return { typingTimer: null };
+  },
   handleChange(e) {
-    const { dispatch } = this.props;
+    const { dispatch, topicChannel } = this.props;
+
     dispatch(InputActions.changeValue(e.target.value));
+
+    if (this.state.typingTimer == null) {
+      dispatch(MessagesActions.typingMessage(topicChannel, true));
+    } else {
+      clearTimeout(this.state.typingTimer);
+    }
+    this.state.typingTimer = setTimeout(this.finishTyping, 3000);
   },
   onKeyDown(e) {
     if((e.keyCode == 10 || e.keyCode == 13) && (e.ctrlKey || e.metaKey)) {
       this.sendMessage();
     }
   },
+  finishTyping() {
+    const { topicChannel, dispatch } = this.props;
+    this.state.typingTimer = null;
+    dispatch(MessagesActions.typingMessage(topicChannel, false));
+  },
   sendMessage() {
     const { topicChannel, currentInput, dispatch } = this.props;
     if(currentInput.value.length > 0) {
       dispatch(MessagesActions.sendMessage(topicChannel, currentInput));
+      clearTimeout(this.state.typingTimer);
+      this.finishTyping();
     }
   },
   changeAvatar() {
@@ -53,6 +71,29 @@ const Input = React.createClass({
       input.focus();
     }
   },
+  somebodyTyping(){
+    const { sessionTopics, currentUser } = this.props;
+    for(var i in sessionTopics.all) {
+      if(sessionTopics.all[i].id == sessionTopics.current.id) {
+        let typingMembers = sessionTopics.all[i].typingMembers;
+        if (typingMembers && (typingMembers.length > 1 || typingMembers.length == 1 && currentUser.id != typingMembers[0])) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+    }
+    return false;
+  },
+  typingBlock() {
+    if (this.somebodyTyping()) {
+      return (
+        <div className='typing-info'>Someone else is posting a comment</div>
+      )
+    } else {
+      return false;
+    }
+  },
   render() {
     const { currentInput, currentUser } = this.props;
 
@@ -60,6 +101,7 @@ const Input = React.createClass({
       return (
         <div className='input-section'>
           <div className='form-group'>
+            { this.typingBlock() }
             <div className='input-group input-group-lg'>
               <div className='input-group-addon no-border-radius emotion-picker-section'><EmotionPicker /></div>
               <TextareaAutosize { ...this.defaultProps() } />
@@ -84,7 +126,8 @@ const mapStateToProps = (state) => {
   return {
     currentUser: state.members.currentUser,
     currentInput: state.currentInput,
-    topicChannel: state.sessionTopic.channel
+    topicChannel: state.sessionTopic.channel,
+    sessionTopics: state.sessionTopic
   }
 };
 

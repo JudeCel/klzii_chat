@@ -66,6 +66,10 @@
 }
 
 @media (max-width: 767px) {
+  .typing-info {
+    padding-left: 0px !important;
+    margin-bottom: 14px;
+  }
   .emotion-picker-section .dropdown-menu {
     bottom: 97px;
   }
