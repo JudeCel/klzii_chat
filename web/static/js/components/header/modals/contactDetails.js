@@ -17,7 +17,7 @@ const ContactDetails = React.createClass({
   componentWillReceiveProps(nextProps) {
     if (nextProps.contactDetails) {
       const { contactDetails } = nextProps;
-      this.setState({ 
+      this.setState({
         firstName: contactDetails.firstName,
         lastName: contactDetails.lastName,
         email: contactDetails.email,
@@ -42,10 +42,10 @@ const ContactDetails = React.createClass({
     return "";
   },
   setFirstName(event) {
-    this.setState({ firstName: event.currentTarget.value});       
+    this.setState({ firstName: event.currentTarget.value});
   },
   setLastName(event) {
-    this.setState({ lastName: event.target.value});  
+    this.setState({ lastName: event.target.value});
   },
   setEmail(event) {
     this.setState({ email: event.target.value});
@@ -108,7 +108,7 @@ const ContactDetails = React.createClass({
         landlineNumberCountryData: this.state.landlineNumberCountryData,
         mobile: this.state.mobile
       };
-      
+
       dispatch(Actions.postUser(resourcesConf.dashboard_url, jwtToken, contactDetails));
   },
   enableButton() {
@@ -144,6 +144,8 @@ const ContactDetails = React.createClass({
                         <label className="gender-radio-label" htmlFor="genderMale">Male</label>
                         <input checked={ this.state.gender === "female" } value="female" id="genderFemale" type="radio" name="radio_gender" className="text-vertical-middle" onChange={ this.setGender } />
                         <label className="gender-radio-label" htmlFor="genderFemale">Female</label>
+                        <input checked={ this.state.gender === "neither" } value="neither" id="genderNeither" type="radio" name="radio_gender" className="text-vertical-middle" onChange={ this.setGender } />
+                        <label className="gender-radio-label" htmlFor="genderNeither">Neither</label>
                       </div>
                     </div>
                   </div>
@@ -165,7 +167,7 @@ const ContactDetails = React.createClass({
                   <MyDetailsTextBox name="country" type="text" value={ this.getContactDetailValue(this.state.country) } label="Country" placeholder="Country" inputId="country"onBlur={ this.setCountry } />
                   <MyDetailsTextBox name="companyName" type="text" value={ this.getContactDetailValue(this.state.companyName) } label="Company name" placeholder="Company name" inputId="companyName" onBlur={ this.setCompanyName } />
                 </div>
-                
+
               </div>
             </Form>
           </Modal.Body>

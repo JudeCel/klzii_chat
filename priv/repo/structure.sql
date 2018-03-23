@@ -50,7 +50,8 @@ ALTER TYPE "enum_AccountUsers_emailNotification" OWNER TO postgres;
 CREATE TYPE "enum_AccountUsers_gender" AS ENUM (
     '',
     'male',
-    'female'
+    'female',
+    'neither'
 );
 
 

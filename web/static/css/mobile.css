@@ -143,7 +143,6 @@
   .room-outerbox {
     padding: 0px !important;
     margin: 0 -15px 0px -15px !important;
-    padding-top: 46px !important;
   }
   .room-outerbox > div {
     overflow: hidden;
@@ -932,7 +931,7 @@
 
 @media (max-device-width: 767px) and (orientation: portrait) {
   .facilitator-section {
-    margin-top: 12px;
+    margin-top: 5px;
   }
   .container-fluid, #chat-app-container, main#main_container, main#main_container > div, div.col-md-12.room-section, .room-section > div.row {
     height: 100%;

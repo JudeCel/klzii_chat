@@ -1,6 +1,6 @@
 defmodule KlziiChat.ChatController do
   use KlziiChat.Web, :controller
-  import KlziiChat.Services.SessionMembersService, only: [get_member_from_token: 1, clean_current_topic: 1]
+  import KlziiChat.Services.SessionMembersService, only: [get_member_from_token: 1, clean_current_topic: 1, update_device: 2]
   alias KlziiChat.{SessionMember, Repo}
 
   @doc """
@@ -11,6 +11,7 @@ defmodule KlziiChat.ChatController do
     case Mix.env do
       env when env in [:dev, :test] ->
         session_member = Repo.get_by!(SessionMember, token: token)
+        update_device(session_member.id, Browser.device_type(conn))
         Guardian.Plug.sign_in(conn, session_member)
         |> render("index.html", session_id: session_member.sessionId)
       _ ->
@@ -24,6 +25,7 @@ defmodule KlziiChat.ChatController do
       %{ghost: true} ->
         %{ dashboard_url: dashboard } = Application.get_env(:klzii_chat, :resources_conf)
         conn = set_redirect_url(conn, dashboard <> "/logout")
+        update_device(session_member.id, Browser.device_type(conn))
         Guardian.Plug.sign_in(conn, session_member)
         |> render("index.html", session_id: session_member.sessionId)
       _ ->
@@ -38,7 +40,7 @@ defmodule KlziiChat.ChatController do
       {:ok, member, callback_url} ->
         conn = set_redirect_url(conn, callback_url)
         |> Guardian.Plug.sign_in(member.session_member)
-
+        update_device(member.session_member.id, Browser.device_type(conn))
         put_resp_cookie(conn, "chat_token", Guardian.Plug.current_token(conn), max_age: get_cookie_espire_time())
         |> render("index.html", session_id: member.session_member.sessionId)
       {:error, _reason } ->
@@ -53,6 +55,7 @@ defmodule KlziiChat.ChatController do
       case get_member_from_token(chat_token) do
         {:ok, member, _} ->
           conn = Guardian.Plug.sign_in(conn, member.session_member)
+          update_device(member.session_member.id, Browser.device_type(conn))
           put_resp_cookie(conn, "chat_token", Guardian.Plug.current_token(conn), max_age: get_cookie_espire_time())
           |> render("index.html", session_id: member.session_member.sessionId)
         {:error, _reason } ->
