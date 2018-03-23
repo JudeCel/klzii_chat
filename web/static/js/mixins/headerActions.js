@@ -4,7 +4,6 @@ import Actions             from '../actions/sessionTopic';
 const headerActions = {
   setSessionTopic(id) {
     const { dispatch, channel, whiteboardChannel } = this.props;
-    console.log(this.props);
     dispatch(Actions.changeSessionTopic(channel, whiteboardChannel, id));
   },
   setSessionTopicActive(id, active) {
