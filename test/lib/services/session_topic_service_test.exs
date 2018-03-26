@@ -33,7 +33,7 @@ defmodule KlziiChat.Services.SessionTopicServiceTest do
       create_date2: create_date2, session_name: session.name, session_topic_name: session_topic_1.name}
   end
 
-  test "#SessionTopicService - facilitator can update board message ", %{facilitator: facilitator, session_topic_1: session_topic_1} do
+  test "#SessionTopicService - facilitator can update board message", %{facilitator: facilitator, session_topic_1: session_topic_1} do
     message = " jeee"
     {:ok, session_topic} = SessionTopicService.board_message(facilitator.id, session_topic_1.id, %{"message" => message})
     assert(message == session_topic.boardMessage)
@@ -46,7 +46,7 @@ defmodule KlziiChat.Services.SessionTopicServiceTest do
     assert(message == topic.boardMessage)
   end
 
-  test "#SessionTopicService - participent can't update board message ", %{participant: participant, session_topic_1: session_topic_1} do
+  test "#SessionTopicService - participant can't update board message", %{participant: participant, session_topic_1: session_topic_1} do
     message = " jeee"
     {:error, %{permissions: error_message}} = SessionTopicService.board_message(participant.id, session_topic_1.id, %{"message" => message})
     assert(error_message == SessionTopicService.errors_messages.action_not_allowed)
@@ -57,7 +57,7 @@ defmodule KlziiChat.Services.SessionTopicServiceTest do
     assert(false == session_topic.active)
   end
 
-  test "#SessionTopicService - participent can't change topic active", %{participant: participant, session_topic_1: session_topic_1} do
+  test "#SessionTopicService - participant can't change topic active", %{participant: participant, session_topic_1: session_topic_1} do
     {:error, %{permissions: error_message}} = SessionTopicService.change_active(participant.id, session_topic_1.id, false)
     assert(error_message == SessionTopicService.errors_messages.action_not_allowed)
   end
