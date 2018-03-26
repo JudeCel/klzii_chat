@@ -51,7 +51,7 @@ defmodule KlziiChat.Services.Reports.Types.Statistic.Formats.CsvTest do
     test "one element contains same all elements from fields lis", %{result: result} do
       data = Agent.get(result.data, &(&1)) |> List.first |> Map.keys
       assert(length(result.header) == length(data))
-      assert(length(result.header) == 3)
+      assert(length(result.header) == 5)
     end
   end
 

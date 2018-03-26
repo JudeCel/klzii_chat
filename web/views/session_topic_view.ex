@@ -9,7 +9,8 @@ defmodule KlziiChat.SessionTopicView do
       sign: session_topic.sign,
       session: session(session_topic.session),
       default: get_default_topic(session_topic.topic),
-      inviteAgain: get_invite_again_topic(session_topic.topic)
+      inviteAgain: get_invite_again_topic(session_topic.topic),
+      active: session_topic.active
     }
   end
 

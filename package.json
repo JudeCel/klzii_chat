@@ -70,6 +70,7 @@
     "svgjs": "2.4.0",
     "url-loader": "^0.5.7",
     "webpack": "^2.2.1",
-    "webpack-raphael": "^2.1.4"
+    "webpack-raphael": "^2.1.4",
+    "react-toggle-button": "^2.2.0"
   }
 }

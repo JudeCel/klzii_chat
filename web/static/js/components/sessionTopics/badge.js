@@ -6,17 +6,12 @@ const Badge = React.createClass({
   },
   render() {
     const { data, type } = this.props;
+    
+    let val = data && data[type] ? data[type] : "";
 
-    if(data && data[type]) {
-      return (
-        <span className={ this.selectClass() }>{ data[type] }</span>
-      )
-    }
-    else {
-      return (
-        <span className={ this.selectClass() }></span>
-      )
-    }
+    return (
+      <span className={ this.selectClass() }>{ val }</span>
+    )
   }
 });
 
