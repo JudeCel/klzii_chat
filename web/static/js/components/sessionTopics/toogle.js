@@ -20,7 +20,7 @@ const Toogle = React.createClass({
   render() {
     const { currentUser, sessionTopic } = this.props;
     
-    if (!sessionTopic.inviteAgain && this.isFacilitator(currentUser)) {
+    if (!sessionTopic.inviteAgain && this.hasPermission(['topics', 'can_change_active'])) {
       return (
         <ToggleButton
           thumbStyle={{ borderRadius: 2 }}

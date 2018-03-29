@@ -133,7 +133,7 @@ const Select = React.createClass({
             <Dropdown.Menu className='no-border-radius'>
               {
                 sessionTopics.map((sessionTopic) => {
-                  if (sessionTopic.active || this.isFacilitator(this.props.currentUser)){
+                  if (sessionTopic.active || this.hasPermission(['topics', 'can_change_active'])){
                     return (
                       <MenuItem onSelect={ this.changeSessionTopic.bind(this, sessionTopic.id) } key={ 'sessionTopic-' + sessionTopic.id } active={ current.id == sessionTopic.id }>
                         <div className='clearfix'>
