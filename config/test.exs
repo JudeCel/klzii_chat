@@ -15,7 +15,7 @@ config :klzii_chat, KlziiChat.Repo,
   adapter: Ecto.Adapters.Postgres,
   username: (System.get_env("KlZII_CHAT_TEST_USERNAME") || "postgres"),
   password: (System.get_env("KlZII_CHAT_TEST_PASSWORD") || "postgres"),
-  database: (System.get_env("KlZII_CHAT_TEST_DB") || "klzii_chat_test"),
+  database: (System.get_env("KlZII_CHAT_TEST_DB") || "kliiko_test"),
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox,
   sql_sandbox: true
@@ -27,7 +27,7 @@ config :arc,
   storage: Arc.Storage.Local
 
 config :klzii_chat, KlziiChat.DatabaseMonitoring.Listener,
-  database: (System.get_env("KlZII_CHAT_TEST_DB") || "klzii_chat_test"),
+  database: (System.get_env("KlZII_CHAT_TEST_DB") || "kliiko_test"),
   username: (System.get_env("KlZII_CHAT_TEST_USERNAME") || "postgres"),
   password: (System.get_env("KlZII_CHAT_TEST_PASSWORD") || "postgres"),
   hostname: "localhost"

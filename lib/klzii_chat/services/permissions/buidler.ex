@@ -86,6 +86,9 @@ defmodule KlziiChat.Services.Permissions.Builder do
         can_enable: PinboardResourcePermissions.can_enable(session_member, session, preference) |> to_boolean,
         can_display_pinboard: PinboardResourcePermissions.can_display_pinboard(session_member, session, preference) |> to_boolean,
         can_add_resource: PinboardResourcePermissions.can_add_resource(session_member, session, preference) |> to_boolean
+      },
+      topics: %{
+        can_change_active: SessionTopicPermissions.can_change_active(session_member) |> to_boolean
       }
     }
   end

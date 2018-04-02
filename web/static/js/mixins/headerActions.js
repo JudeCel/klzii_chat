@@ -6,6 +6,10 @@ const headerActions = {
     const { dispatch, channel, whiteboardChannel } = this.props;
     dispatch(Actions.changeSessionTopic(channel, whiteboardChannel, id));
   },
+  setSessionTopicActive(id, active) {
+    const { dispatch, channel } = this.props;
+    dispatch(Actions.setSessionTopicActive(channel, id, active));
+  },
   logOut() {
     if (this.props.currentUser.logout_path) {
       let token = localStorage.getItem("sessionMemberToken");

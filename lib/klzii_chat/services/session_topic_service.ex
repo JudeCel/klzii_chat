@@ -34,6 +34,13 @@ defmodule KlziiChat.Services.SessionTopicService do
     |> Repo.update
   end
 
+  @spec session_topic_active(Integer, Bool) :: {:ok, Map} | {:error, String.t}
+  defp session_topic_active(session_topic_id, active) do
+    Repo.get!(SessionTopic, session_topic_id)
+    |> SessionTopic.changeset(%{ active: active})
+    |> Repo.update
+  end
+
   @spec topic_board_message(Integer, String) :: {:ok, Map} | {:error, String.t}
   defp topic_board_message(topic_id, message) do
     Repo.get!(Topic, topic_id)
@@ -47,6 +54,18 @@ defmodule KlziiChat.Services.SessionTopicService do
       KlziiChat.Queries.SessionTopic.all(session_id)
       |> Repo.all
     {:ok, session_topics}
+  end
+
+  @spec change_active(Integer, Integer, Bool) :: {:ok} | {:error, String.t}
+  def change_active(session_member_id, session_topic_id, active) do
+    session_member = Repo.get!(SessionMember, session_member_id) |> Repo.preload(:account_user)
+
+    case SessionTopicPermissions.can_change_active(session_member) do
+      {:ok} ->
+        session_topic_active(session_topic_id, active)
+      {:error, reason} ->
+        {:error, reason}
+    end
   end
 
 end

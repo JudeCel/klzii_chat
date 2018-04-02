@@ -87,6 +87,14 @@ const Actions = {
       tidyUp(dispatch);
       joinChannal(dispatch, currentChannal.socket, sessionTopicId);
     }
+  },
+  setSessionTopicActive: (channel, sessionTopicId, active) =>{
+    return dispatch => {
+      channel.push('set_session_topic_active', { active: active, id: sessionTopicId })
+      .receive('error', (errors) => {
+        NotificationActions.showErrorNotification(dispatch, errors);
+      });
+    };
   }
 }
 
