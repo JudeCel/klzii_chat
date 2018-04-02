@@ -75,7 +75,6 @@ const Links = React.createClass({
     return (
       <div className='links-section'>
         <ul className='icons'>
-          { this.clearWhiteboardFunction(style) }
           { this.reportsFunction(style) }
           { this.directMessageFunction(style, count) }
           <li style={ style } onClick={ this.helpButtonRedirect }>

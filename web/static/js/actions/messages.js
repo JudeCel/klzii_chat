@@ -25,6 +25,12 @@ function delete_message(dispatch, data) {
     message: data
   });
 }
+function typing_message(dispatch, data) {
+  return dispatch({
+    type: Constants.TYPING_MESSAGE,
+    message: data
+  });
+}
 function update_message(dispatch, message) {
   return dispatch({
     type: Constants.UPDATE_MESSAGE,
@@ -86,6 +92,10 @@ const Actions = {
         return delete_message(dispatch, resp);
       });
 
+      channel.on("typing_message", (resp) =>{
+        return typing_message(dispatch, resp);
+      });
+
       channel.on("update_message", (resp) =>{
         return update_message(dispatch, resp);
       });
@@ -107,6 +117,14 @@ const Actions = {
   deleteMessage: (channel, payload) => {
     return dispatch => {
       channel.push('delete_message', payload)
+      .receive('error', (errors) => {
+        NotificationActions.showErrorNotification(dispatch, errors);
+      });
+    };
+  },
+  typingMessage: (channel, typing) => {
+    return dispatch => {
+      channel.push('typing_message', { typing: typing })
       .receive('error', (errors) => {
         NotificationActions.showErrorNotification(dispatch, errors);
       });

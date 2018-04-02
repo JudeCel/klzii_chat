@@ -24,10 +24,12 @@ const Facilitator = React.createClass({
     let boardContent = this.getCurrentSessionTopic().boardMessage;
     const permission = this.hasPermission(['messages', 'can_board_message']);
 
+    let facilitatorMember = this.isForum() ? Object.assign(facilitator, { online: true }) : facilitator;
+    
     return (
       <div className='facilitator-section'>
         <div className='div-inline-block'>
-          <Member key={ facilitator.id } member={ facilitator } />
+          <Member key={ facilitator.id } member={ facilitatorMember } />
         </div>
 
         <div className='say-section'>
@@ -53,6 +55,7 @@ const mapStateToProps = (state) => {
     currentUser: state.members.currentUser,
     current: state.sessionTopic.current,
     sessionTopics: state.sessionTopic.all,
+    session: state.chat.session,
   }
 };
 
