@@ -89,7 +89,7 @@ defmodule KlziiChat.Channels.SessionTopic.MessageTest do
     assert(resp.has_voted)
   end
 
-  test "can reply ", %{socket: socket, session_topic_1_name: session_topic_1_name} do
+  test "can reply", %{socket: socket, session_topic_1_name: session_topic_1_name} do
     {:ok, _, socket} = subscribe_and_join(socket, SessionTopicChannel, session_topic_1_name)
     message_body = "hey!!"
 
@@ -137,5 +137,26 @@ defmodule KlziiChat.Channels.SessionTopic.MessageTest do
     assert_push "self_info", self_info
     hasMessages = get_in(self_info.sessionTopicContext, [Integer.to_string(session_topic_1.id), "hasMessages"])
     assert(!hasMessages)
+  end
+
+  test "can typing message", %{socket: socket, session_topic_1_name: session_topic_1_name, session: session, session_topic_1: session_topic_1} do
+    session_channel_name =  "sessions:" <> Integer.to_string(session.id)
+    {:ok, _, _} = subscribe_and_join(socket, SessionChannel, session_channel_name)
+    {:ok, _, socket} = subscribe_and_join(socket, SessionTopicChannel, session_topic_1_name)
+
+    ref = push socket, "typing_message", %{"typing" => true}
+    assert_reply ref, :ok
+
+    assert_push "typing_message", resp
+    assert(resp.typing)
+  end
+
+  test "can set session topic active", %{socket: socket, session_topic_1_name: session_topic_1_name, session: session, session_topic_1: session_topic_1} do
+    session_channel_name =  "sessions:" <> Integer.to_string(session.id)
+    {:ok, _, _} = subscribe_and_join(socket, SessionChannel, session_channel_name)
+    {:ok, _, socket} = subscribe_and_join(socket, SessionTopicChannel, session_topic_1_name)
+
+    ref = push socket, "set_session_topic_active", %{"active" => false, "id" => session_topic_1.id}
+    assert_reply ref, :ok
   end
 end
