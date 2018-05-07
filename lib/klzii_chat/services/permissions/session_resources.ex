@@ -4,21 +4,21 @@ defmodule KlziiChat.Services.Permissions.SessionResources do
 
   @spec can_add_resources(Map.t) :: {:ok } | {:error, String.t}
   def can_add_resources(member) do
-    roles = ["facilitator", "accountManager"]
+    roles = ["facilitator", "accountManager", "admin"]
     has_role(member, roles)
     |> formate_error
   end
 
   @spec can_remove_resource(Map.t) :: {:ok } | {:error, String.t}
   def can_remove_resource(member) do
-    roles = ["facilitator", "accountManager"]
+    roles = ["facilitator", "accountManager", "admin"]
     has_role(member, roles)
     |> formate_error
   end
 
   @spec can_get_resources(Map.t) :: {:ok } | {:error, String.t}
   def can_get_resources(member) do
-    roles = ["facilitator", "accountManager"]
+    roles = ["facilitator", "accountManager", "admin"]
     has_role(member, roles)
     |> formate_error
   end

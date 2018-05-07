@@ -4,7 +4,7 @@ defmodule KlziiChat.Services.Permissions.Redirect do
 
   @spec can_redirect(Map.t) :: {:ok} | {:error, String.t}
   def can_redirect(member) do
-    roles =  ~w(facilitator participant observer)
+    roles =  ~w(facilitator participant observer admin)
     has_role(member, roles)
     |> formate_error
   end

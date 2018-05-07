@@ -6,7 +6,7 @@ defmodule KlziiChat.Services.Permissions.DirectMessage do
   def can_write(current_member, other_member) do
     participant = ["participant"]
     observer = ["observer"]
-    facilitator = ["facilitator", "accountManager"]
+    facilitator = ["facilitator", "accountManager", "admin"]
 
     current_member.id != other_member.id && (
       has_role(current_member, participant) && has_role(other_member, facilitator) ||

@@ -4,14 +4,14 @@ defmodule KlziiChat.Services.Permissions.SessionTopic do
 
   @spec can_board_message(Map.t) :: {:ok } | {:error, String.t}
   def can_board_message(member) do
-    roles = ["facilitator", "accountManager"]
+    roles = ["facilitator", "accountManager", "admin"]
     has_role(member, roles)
     |> formate_error
   end
 
   @spec can_change_active(Map.t) :: {:ok } | {:error, String.t}
   def can_change_active(member) do
-    roles = ["facilitator", "accountManager"]
+    roles = ["facilitator", "accountManager", "admin"]
     has_role(member, roles)
     |> formate_error
   end
