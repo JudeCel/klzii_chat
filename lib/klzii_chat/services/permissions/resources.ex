@@ -21,7 +21,7 @@ defmodule KlziiChat.Services.Permissions.Resources do
 
   @spec can_see_section(Map.t) :: {:ok } | {:error, String.t}
   def can_see_section(member) do
-    roles = ~w(facilitator accountManager)
+    roles = ~w(facilitator accountManager admin)
     (has_role(member, roles))
     |> formate_error
   end
