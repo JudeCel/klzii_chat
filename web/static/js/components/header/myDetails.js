@@ -28,6 +28,7 @@ const MyDetails = React.createClass({
   },
   render() {
     if (this.hasPermission(['can_redirect', 'logout'])) {
+      const canAddNewAccount = this.hasPermission(['account', 'can_add_new']);
       return (
         <span>
           <DropdownButton className="my-details-button" title="My Details" id="my-details">
@@ -45,11 +46,17 @@ const MyDetails = React.createClass({
               Email Notification
               <img className="my-details-image" src="/images/icons/email_notification.png" />
             </MenuItem>
-            <li role="separator" className="my-details-divider divider"></li>
-            <MenuItem className="my-details-item" href="#" onClick={this.openCreateNewAccountModal}>
-              Create New Account
-              <img className="my-details-image" src="/images/icons/user_plus_grey.png" />
-            </MenuItem>
+            {
+              canAddNewAccount &&
+              <li role="separator" className="my-details-divider divider"></li>
+            }
+            {
+              canAddNewAccount &&
+                <MenuItem className="my-details-item" href="#" onClick={this.openCreateNewAccountModal}>
+                  Create New Account
+                  <img className="my-details-image" src="/images/icons/user_plus_grey.png" />
+                </MenuItem>
+            }
             <li role="separator" className="my-details-divider divider"></li>
             <MenuItem className="my-details-item" href="#" onClick={this.dashboardLogout}>
               Logout
