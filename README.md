@@ -65,7 +65,7 @@ Extract clean Test DB ```pg_dump -U postgres -h localhost klzii_chat_test > priv
 Run
 1) ``` mix ecto.create ```
 
-2) ``` psql -U postgres -h localhost klzii_chat_test < priv/repo/structure.sql ```
+2) ``` psql -U postgres -h localhost kliiko_test < priv/repo/structure.sql ```
 
 3) ``` mix test```
 

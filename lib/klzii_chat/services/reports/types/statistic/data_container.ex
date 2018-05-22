@@ -5,6 +5,9 @@ defmodule KlziiChat.Services.Reports.Types.Statistic.DataContainer do
     ContactListUsersDataContainers.start_link(data)
   end
 
+  def get_value("First Name", {_, _, username, _, _, _}, %{anonymous: false},_) do
+    username
+  end
   def get_value("First Name", {_, _, _, _, firstName, _ }, %{anonymous: false},_) do
     firstName
   end

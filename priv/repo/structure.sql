@@ -1232,6 +1232,7 @@ CREATE TABLE "SessionMembers" (
     "closeEmailSent" boolean DEFAULT false NOT NULL,
     "typeOfCreation" "enum_SessionMembers_typeOfCreation" DEFAULT 'invite'::"enum_SessionMembers_typeOfCreation" NOT NULL,
     ghost boolean DEFAULT false NOT NULL,
+    "device" varchar(255) DEFAULT NULL::character varying,
     "createdAt" timestamp with time zone NOT NULL,
     "updatedAt" timestamp with time zone NOT NULL
 );

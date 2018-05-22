@@ -5,7 +5,7 @@ defmodule KlziiChat.Services.Permissions.PinboardResource do
 
   @spec can_enable(Map.t, Map.t, Map.t) :: {:ok} | {:error, String.t}
   def can_enable(member, session, %{data: data}) do
-    roles = ~w(facilitator accountManager)
+    roles = ~w(facilitator accountManager admin)
     (
       has_role(member, roles) &&
       SessionTypeProperty.get_value(session, ["features", "pinboard", "enabled"]) &&
@@ -36,7 +36,7 @@ defmodule KlziiChat.Services.Permissions.PinboardResource do
 
   @spec can_remove_resource(Map.t, Map.t) :: {:ok} | {:error, String.t}
   def can_remove_resource(member, _bject) do
-    role = ~w(facilitator accountManager)
+    role = ~w(facilitator accountManager admin)
     #use this if need owner to remove resource
     #(has_owner(member, object, :sessionMemberId) || has_role(member, role))
     has_role(member, role)

@@ -14,6 +14,7 @@ defmodule KlziiChat.Services.Permissions.Builder do
   alias KlziiChat.Services.Permissions.Member, as: MemberPermissions
   alias KlziiChat.Services.Permissions.DirectMessage, as: DirectMessagePermissions
   alias KlziiChat.Services.Permissions.MiniSurveys, as: MiniSurveysPermissions
+  alias KlziiChat.Services.Permissions.Account, as: AccountPermissions
 
   @spec error_messages() :: Map.t
   def error_messages do
@@ -89,7 +90,10 @@ defmodule KlziiChat.Services.Permissions.Builder do
       },
       topics: %{
         can_change_active: SessionTopicPermissions.can_change_active(session_member) |> to_boolean
-      }
+      },
+      account: %{
+        can_add_new: AccountPermissions.can_add_new(session_member) |> to_boolean
+      },
     }
   end
 
