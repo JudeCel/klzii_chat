@@ -44,6 +44,10 @@ body
   text-align: right
   position: relative
   .header-innerbox
+    display: -webkit-box
+    display: -moz-box
+    display: -ms-flexbox
+    display: -webkit-flex
     display: flex
     justify-content: space-between
   .topic-select-section
@@ -326,9 +330,22 @@ body
     .avatar-odd
       margin-top: 10%
   .top-row
+    display: -webkit-box
+    display: -moz-box
+    display: -ms-flexbox
+    display: -webkit-flex
     display: flex
     .facilitator-section
       flex: 1
+      -webkit-flex: 1
+      -webkit-box-flex: 1
+      -moz-flex: 1
+      -moz-box-flex: 1
+      -ms-flex: 1
+      display: -webkit-box
+      display: -moz-box
+      display: -ms-flexbox
+      display: -webkit-flex
       display: flex
       max-width: 50%
       margin-bottom: 20px
@@ -336,6 +353,10 @@ body
         flex: 1
         vertical-align: top
         .outerbox
+          display: -webkit-box
+          display: -moz-box
+          display: -ms-flexbox
+          display: -webkit-flex
           display: flex
           .triangle
             margin-top: -10px
