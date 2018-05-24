@@ -281,7 +281,6 @@
     border-bottom: 2px solid rgb(229, 30, 57);
     max-width: 100% !important;
     display: -webkit-flex !important;
-    display: -webkit-box !important;
     display: -moz-flex !important;
     display: -moz-box !important;
     display: -ms-flexbox !important;
@@ -427,7 +426,6 @@
   .direct-message-modal .messages-section .message .info .header {
     float: none !important;
     display: -webkit-flex !important;
-    display: -webkit-box !important;
     display: -moz-flex !important;
     display: -moz-box !important;
     display: -ms-flexbox !important;
@@ -733,7 +731,6 @@
   }
   .type-forum .room-section-left .top-row {
     display: -webkit-flex !important;
-    display: -webkit-box !important;
     display: -moz-flex !important;
     display: -moz-box !important;
     display: -ms-flexbox !important;
@@ -743,7 +740,6 @@
   }
   .type-forum .room-section-left .top-row .facilitator-section .say-section .outerbox {
     display: -webkit-flex !important;
-    display: -webkit-box !important;
     display: -moz-flex !important;
     display: -moz-box !important;
     display: -ms-flexbox !important;
@@ -962,49 +958,53 @@
   }
   .room-section > div.row {
     display: -webkit-flex;
-    display: -webkit-box;
     display: -moz-flex;
     display: -moz-box;
     display: -ms-flexbox;
     display: flex;
+    -webkit-flex-direction: column;
     flex-direction: column;
   }
   .room-section > div.row > .col-md-8 {
     min-height: inherit;
+    -webkit-order: 1;
     order: 1;
   }
   .room-section > div.row > .col-md-12 {
     margin-bottom: 0;
     min-height: 60px;
     background: white;
+    -webkit-order: 3;
     order: 3;
   }
   .room-outerbox > div {
     display: -webkit-flex;
-    display: -webkit-box;
     display: -moz-flex;
     display: -moz-box;
     display: -ms-flexbox;
     display: flex;
+    -webkit-flex-direction: column;
     flex-direction: column;
     height: 100%;
   }
   div.col-md-3.room-section.room-section-left {
+    -webkit-order: 1;
     order: 1;
     min-height: 85px;
   }
   .col-md-9.room-section.room-section-right {
     display: -webkit-flex;
-    display: -webkit-box;
     display: -moz-flex;
     display: -moz-box;
     display: -ms-flexbox;
     display: flex;
-    flex-direction: column;
+    -webkit-flex-direction: column;
     width: 50%;
+    -webkit-order: 2;
     order: 2;
   }
   .col-md-9.room-section.room-section-right .chat-section.add-overflow-y {
+    -webkit-order: 1;
     order: 1;
     padding-top: 15px;
     height: calc(100% - 61px) !important;
@@ -1016,6 +1016,7 @@
   .col-md-9.room-section.room-section-right .input-section {
     min-height: 60px;
     background: white;
+      -webkit-order: 2;
     order: 2;
     width: 100%;
   }
@@ -1032,6 +1033,7 @@
   .room-section > div.row > .col-md-4 {
     padding-bottom: 0;
     margin-bottom: 60px;
+      -webkit-order: 2;
     order: 2;
     height: 100%;
     overflow: scroll;
@@ -1091,7 +1093,7 @@
     position: fixed;
     bottom: 55px;
     top: auto;
-    //z-index: 100;
+    z-index: 100;
   }
   .console-section-no-input {
     bottom: 0;
@@ -1208,6 +1210,9 @@
 }
 
 @media (max-device-width: 356px) {
+  .col-md-9.room-section.room-section-right {
+      height: calc(100% - 80px) !important;
+  }
   .header-innerbox-mobile .navbar-header .navbar-brand img {
     height: 17px;
   }
