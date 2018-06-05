@@ -65,7 +65,7 @@ const ReportsIndex = React.createClass({
 
     const reportFormatsOrder = ['pdf', 'csv', 'txt'];
     const reportTypes = this.buildReportTypes(types, session);
-    let sessionTopicslist = [...sessionTopics.filter((i) => {return !i.default})];
+    let sessionTopicslist = [...sessionTopics];
 
     if (mapStruct.multiple_topics[format]) {
       sessionTopicslist.unshift({name: "All topics", id: "all"}); // Hack
