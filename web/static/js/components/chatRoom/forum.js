@@ -23,14 +23,6 @@ const Forum = React.createClass({
       }
     };
   },
-  setChatHeight() {
-    var element = document.getElementById('topicSection');
-    if (element){
-      return { height: "calc(100vh - " + (element.offsetHeight + 80).toString() + "px)" };
-    } else {
-      return  {};
-    }
-  },
   renderWhiteboard() {
     if (this.hasPermission(['whiteboard', 'can_display_whiteboard'])) {
       return <Whiteboard member={ this.props }/>;
@@ -53,7 +45,7 @@ const Forum = React.createClass({
             { this.renderWhiteboard() }
           </div>
         </div>
-        <div className='col-md-9 room-section room-section-right' style={ this.state.mainBlockStyles } style={ this.setChatHeight() }>
+        <div className='col-md-9 room-section room-section-right' style={ this.state.mainBlockStyles }>
           <Messages/>
           <Input/>
         </div>
