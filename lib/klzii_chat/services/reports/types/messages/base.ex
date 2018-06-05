@@ -83,7 +83,7 @@ defmodule KlziiChat.Services.Reports.Types.Messages.Base do
 
   def preload_session_topic(%{sessionTopicId: nil, sessionId: session_id} = report) do
     SessionTopicQueries.all(session_id)
-    |> join(:right, [st], t in Topic, st.topicId == t.id and t.default == false)
+    |> join(:right, [st], t in Topic, st.topicId == t.id)
     |> Repo.all
     |> Repo.preload([messages: preload_messages_query(report), shapes: preload_shapes(report)])
   end
@@ -91,7 +91,6 @@ defmodule KlziiChat.Services.Reports.Types.Messages.Base do
     from(st in SessionTopic,
       right_join: t in assoc(st, :topic),
       where: st.id == ^sessionTopicId,
-      where: t.default == false,
       preload: [messages: ^preload_messages_query(report), shapes: ^preload_shapes(report)]
     ) |> Repo.all
   end
