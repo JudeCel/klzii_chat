@@ -12,7 +12,7 @@ const preventBack = "preventBack";
 const MobileHeader = React.createClass({
   mixins: [mixins.modalWindows, mixins.validations, mixins.headerActions],
   componentDidMount() {
-    // TA1906 - if you want to go back users are clicking the back arrow but it takes them out of the Session and back to the login   
+    // TA1906 - if you want to go back users are clicking the back arrow but it takes them out of the Session and back to the login
     if(history.state != preventBack) {
       history.pushState(preventBack, null, null);
     }
@@ -199,19 +199,23 @@ const MobileHeader = React.createClass({
                 <li className='navbar-back'>
                   <span className='fa icon-reply' onClick={this.toggleTopics}></span>
                 </li>
-                {
-                  sessionTopics.map((sessionTopic) => {
-                    return (
-                      <li key={'sessionTopic-' + sessionTopic.id} className='clearfix' onClick={this.changeSessionTopic.bind(this, sessionTopic.id)}>
-                        <span className={'pull-left' + this.getHasMessagesClassName(sessionTopic)}>{sessionTopic.name}</span>
-                        <span className='pull-right'>
-                          <Badge type='normal' data={unread_messages.session_topics[sessionTopic.id]} />
-                          <Badge type='reply' data={unread_messages.session_topics[sessionTopic.id]} />
+                  {
+                      sessionTopics.map((sessionTopic) => {
+                          if (sessionTopic.active || this.hasPermission(['topics', 'can_change_active'])){
+                              return (
+                                  <li key={'sessionTopic-' + sessionTopic.id} className='clearfix'
+                                      onClick={this.changeSessionTopic.bind(this, sessionTopic.id)}>
+                                      <span
+                                          className={'pull-left' + this.getHasMessagesClassName(sessionTopic)}>{sessionTopic.name}</span>
+                                      <span className='pull-right'>
+                          <Badge type='normal' data={unread_messages.session_topics[sessionTopic.id]}/>
+                          <Badge type='reply' data={unread_messages.session_topics[sessionTopic.id]}/>
                         </span>
-                      </li>
-                    )
-                  })
-                }
+                                  </li>
+                              )
+                          }
+                      })
+                  }
               </ul>
             </div>
           </div>
