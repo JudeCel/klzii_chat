@@ -191,7 +191,7 @@
     background-color: #fff !important;
     padding-right: 0px !important;
   }
-  #whiteboard-box .panel-buttons-section, {
+  #whiteboard-box .panel-buttons-section {
     padding-left: 5px;
   }
   #whiteboard-box .panel-buttons-section .btn {
@@ -583,7 +583,6 @@
     display: none;
   }
   .customize-avatar-section .biizu-section {
-    position: relative !important;
     display: block !important;
     width: auto !important;
     padding-right: 10px !important;
@@ -605,12 +604,11 @@
     padding: 0px 5px !important;
     overflow-x: hidden;
     overflow-y: auto;
-    bottom: 55px;
-    position: absolute;
+    position: fixed;
     right: 15px;
     left: 5px;
-    top: 160px;
-    height: auto !important;
+    top: 188px;
+    bottom: 55px;
   }
   .customize-avatar-section .preview-section {
     text-align: center;
@@ -646,7 +644,7 @@
     overflow-x: hidden !important;
     min-height: 340px;
     position: relative;
-    height: calc(100vh - 172px);
+    height: calc(100vh - 116px);
     margin-bottom: 12px;
   }
   .biizu-header-section {
@@ -672,28 +670,24 @@
     background-color: #F0E936;
     margin-left: -35px !important;
     width: 100vw !important;
-    margin-bottom: -16px !important;
-    height: 56px;
-    position: absolute;
+    margin-bottom: 0 !important;
+    height: 54px;
+    position: fixed;
     display: block;
-    bottom: 0px;
+    bottom: 0;
   }
   .customize-avatar-section .selection-section > div {
     display: block;
   }
   .customize-avatar-section .selection-section > div:first-child {
-    position: absolute;
+    position: fixed;
     width: 90vw;
     text-align: center;
     white-space: nowrap;
-    top: calc(-100vh + 320px);
+    top: 152px;
     margin-left: 5vw;
   }
-  @media (max-height: 512px) {
-    .customize-avatar-section .selection-section > div:first-child {
-      top: -197px;
-    }
-  }
+
   .customize-avatar-section .selection-section > div:first-child > div > * {
     display: inline !important;
     width: 50% !important;
@@ -758,7 +752,7 @@
     -webkit-box-shadow: 0px -4px 5px rgba(0, 0, 0, 0.2);
     -moz-box-shadow: 0px -4px 5px rgba(0, 0, 0, 0.2);
     box-shadow: 0px -4px 5px rgba(0, 0, 0, 0.2);
-    */ position: fixed;
+    position: fixed;
     bottom: 0;
     height: 60px;
     width: 100%;
@@ -831,19 +825,19 @@
 }
 
 .header-innerbox-mobile .navbar-header .icon-coffee .access-topics-icon {
-    float: left;
+  float: left;
 }
 
 .header-innerbox-mobile .navbar-header .icon-coffee .badges {
-    float: left;
-    margin-top: 8px;
-    margin-right: 5px;
+  float: left;
+  margin-top: 8px;
+  margin-right: 5px;
 }
 
 .header-innerbox-mobile .navbar-header .icon-coffee .badges .badge{
-    padding: 2px 4px;
-    font-size: 8px;
-    margin-top: 3px;
+  padding: 2px 4px;
+  font-size: 8px;
+  margin-top: 3px;
 }
 
 .header-innerbox-mobile .navbar-header .icon-coffee .fa-coffee {
@@ -981,6 +975,7 @@
   .col-md-9.room-section.room-section-right .input-section {
     min-height: 60px;
     background: white;
+    -webkit-order: 2;
     order: 2;
     width: 100%;
   }
@@ -997,6 +992,7 @@
   .room-section > div.row > .col-md-4 {
     padding-bottom: 0;
     margin-bottom: 60px;
+    -webkit-order: 2;
     order: 2;
     height: 100%;
     overflow: scroll;
@@ -1173,6 +1169,9 @@
 }
 
 @media (max-device-width: 356px) {
+  .col-md-9.room-section.room-section-right {
+    height: calc(100% - 80px) !important;
+  }
   .header-innerbox-mobile .navbar-header .navbar-brand img {
     height: 17px;
   }
