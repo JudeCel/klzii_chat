@@ -71,7 +71,7 @@ spec:
         volumeMounts:
           - name: postgres-credentials
             mountPath: /etc/postgres-credentials
-        image: index.docker.io/klzii/klzii_chat:stable
+        image: index.docker.io/cliizii/chat:stable
         imagePullPolicy: Always
         name: chat
         ports:
